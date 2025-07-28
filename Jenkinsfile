@@ -4,6 +4,8 @@ pipeline {
   environment {
     GIT_SSH_COMMAND = "ssh -o StrictHostKeyChecking=no"
     PROJECT_KEY = 'scout_frontend'
+    SONARQUBE_SCANNER = 'SonarLocal' // Must match what you set in Jenkins
+    SONARQUBE_SERVER  = 'SonarQubeServer'    // Must match the server name in Jenkins
   }
 
   stages {
@@ -24,13 +26,12 @@ pipeline {
 
     stage('SonarQube Analysis') {
       steps {
-        dir('repo') {
-           withSonarQubeEnv('SonarQubeServer') {
-            sh './gradlew sonarqube' // or use sonar-scanner if JS
-          }
+        withSonarQubeEnv('SonarQubeServer') {
+          sh 'sonar-scanner'
         }
       }
     }
+
 
     stage('Quality Gate') {
       steps {
