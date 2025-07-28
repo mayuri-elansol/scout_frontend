@@ -29,7 +29,8 @@ pipeline {
             sh './gradlew sonarqube' // or use sonar-scanner if JS
           }
         }
-     }
+      }
+    }
 
     stage('Quality Gate') {
       steps {
