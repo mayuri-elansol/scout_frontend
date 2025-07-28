@@ -25,6 +25,11 @@ pipeline {
     }
 
     stage('SonarQube Analysis') {
+      agent {
+        docker {
+          image 'sonarsource/sonar-scanner-cli:latest'
+        }
+      }
       steps {
         withSonarQubeEnv('SonarQubeServer') {
           sh 'sonar-scanner'
