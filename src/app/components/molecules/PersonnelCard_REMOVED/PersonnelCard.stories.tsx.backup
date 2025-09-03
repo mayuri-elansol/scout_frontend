@@ -1,0 +1,251 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import PersonnelCard from './PersonnelCard';
+
+const meta: Meta<typeof PersonnelCard> = {
+  title: 'Components/Molecules/PersonnelCard',
+  component: PersonnelCard,
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'SCOUT Personnel Card component for tracking employee status and location. Shows live feed preview, status badges, and action buttons for tracking and profile access.',
+      },
+    },
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    status: {
+      control: 'select',
+      options: ['active', 'on_break', 'missing', 'offline'],
+      description: 'Employee status',
+    },
+    liveFeedStatus: {
+      control: 'select',
+      options: ['live', 'offline', 'loading'],
+      description: 'Live feed status',
+    },
+    employeeName: {
+      control: 'text',
+      description: 'Employee name',
+    },
+    zone: {
+      control: 'text',
+      description: 'Current zone location',
+    },
+    shift: {
+      control: 'text',
+      description: 'Work shift',
+    },
+    role: {
+      control: 'text',
+      description: 'Job role/title',
+    },
+    employeeId: {
+      control: 'text',
+      description: 'Employee ID',
+    },
+    lastSeen: {
+      control: 'text',
+      description: 'Last seen timestamp (ISO string)',
+    },
+    onTrack: {
+      action: 'track-clicked',
+      description: 'Track button handler',
+    },
+    onProfile: {
+      action: 'profile-clicked',
+      description: 'Profile button handler',
+    },
+    onViewFeed: {
+      action: 'feed-clicked',
+      description: 'Live feed click handler',
+    },
+    onClick: {
+      action: 'card-clicked',
+      description: 'Card click handler',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const ActiveEmployee: Story = {
+  args: {
+    employeeId: 'EMP-4521',
+    employeeName: 'John Mitchell',
+    zone: 'Reactor Control Room',
+    shift: 'Day Shift',
+    role: 'Level 3 Operator',
+    status: 'active',
+    liveFeedStatus: 'live',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Active employee card with live feed preview (matches screenshot).',
+      },
+    },
+  },
+};
+
+export const OnBreakEmployee: Story = {
+  args: {
+    employeeId: 'EMP-3847',
+    employeeName: 'Sarah Chen',
+    zone: 'Chemical Processing Unit',
+    shift: 'Day Shift',
+    role: 'Senior Technician',
+    status: 'on_break',
+    liveFeedStatus: 'live',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Employee on break with orange status badge (matches screenshot).',
+      },
+    },
+  },
+};
+
+export const MissingEmployee: Story = {
+  args: {
+    employeeId: 'EMP-7891',
+    employeeName: 'Lisa Anderson',
+    zone: 'Quality Control Lab',
+    shift: 'Day Shift',
+    role: 'Lab Supervisor',
+    status: 'missing',
+    liveFeedStatus: 'offline',
+    lastSeen: '2024-01-15T14:30:00',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Missing employee with red status badge and last seen info (matches screenshot).',
+      },
+    },
+  },
+};
+
+export const OfflineEmployee: Story = {
+  args: {
+    employeeId: 'EMP-2234',
+    employeeName: 'Michael Torres',
+    zone: 'Emergency Response Station',
+    shift: 'Day Shift',
+    role: 'Safety Coordinator',
+    status: 'offline',
+    liveFeedStatus: 'offline',
+    lastSeen: '2024-01-15T16:45:00',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Offline employee with gray status and no live feed.',
+      },
+    },
+  },
+};
+
+export const LoadingFeedEmployee: Story = {
+  args: {
+    employeeId: 'EMP-5623',
+    employeeName: 'Michael Torres',
+    zone: 'Emergency Response Station',
+    shift: 'Day Shift',
+    role: 'Safety Coordinator',
+    status: 'active',
+    liveFeedStatus: 'loading',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Active employee with loading live feed preview.',
+      },
+    },
+  },
+};
+
+export const PersonnelGrid: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+      <PersonnelCard
+        employeeId="EMP-4521"
+        employeeName="John Mitchell"
+        zone="Reactor Control Room"
+        shift="Day Shift"
+        role="Level 3 Operator"
+        status="active"
+        liveFeedStatus="live"
+      />
+      <PersonnelCard
+        employeeId="EMP-3847"
+        employeeName="Sarah Chen"
+        zone="Chemical Processing Unit"
+        shift="Day Shift"
+        role="Senior Technician"
+        status="on_break"
+        liveFeedStatus="live"
+      />
+      <PersonnelCard
+        employeeId="EMP-5623"
+        employeeName="Michael Torres"
+        zone="Emergency Response Station"
+        shift="Day Shift"
+        role="Safety Coordinator"
+        status="active"
+        liveFeedStatus="live"
+      />
+      <PersonnelCard
+        employeeId="EMP-7891"
+        employeeName="Lisa Anderson"
+        zone="Quality Control Lab"
+        shift="Day Shift"
+        role="Lab Supervisor"
+        status="missing"
+        liveFeedStatus="offline"
+        lastSeen="2024-01-15T14:30:00"
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Grid of personnel cards showing different statuses (replicates screenshot layout).',
+      },
+    },
+  },
+};
+
+export const CriticalZonePersonnel: Story = {
+  render: () => (
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', maxWidth: '600px' }}>
+      <PersonnelCard
+        employeeId="EMP-4521"
+        employeeName="John Mitchell"
+        zone="Reactor Control Room"
+        shift="Day Shift"
+        role="Level 3 Operator"
+        status="active"
+        liveFeedStatus="live"
+      />
+      <PersonnelCard
+        employeeId="EMP-3847"
+        employeeName="Sarah Chen"
+        zone="Chemical Processing Unit"
+        shift="Day Shift"
+        role="Senior Technician"
+        status="on_break"
+        liveFeedStatus="live"
+      />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story: 'Critical zone personnel cards as shown in the screenshot.',
+      },
+    },
+  },
+};
