@@ -1,0 +1,14 @@
+{
+  "dashboard": true,
+  "alerts": true,
+  "reports": true,
+  "settings": true,
+  "live-streaming": true,
+  "ppe-detection": true,
+  "object-detection": true,
+  "fire-detection": true,
+  "vehicle-speed": true,
+  "intrusion-detection": true,
+  "employee-presence": true,
+  "people-count": false
+}

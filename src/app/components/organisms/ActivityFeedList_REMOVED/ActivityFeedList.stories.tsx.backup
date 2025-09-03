@@ -1,0 +1,137 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import ActivityFeedList from './ActivityFeedList';
+
+const meta: Meta<typeof ActivityFeedList> = {
+  title: 'Components/Organisms/ActivityFeedList',
+  component: ActivityFeedList,
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component: 'SCOUT Activity Feed List component for displaying a scrollable list of alerts and activities. Combines multiple AlertCard components in a organized, scrollable container.',
+      },
+    },
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    title: {
+      control: 'text',
+      description: 'Feed title',
+    },
+    maxHeight: {
+      control: 'text',
+      description: 'Maximum height of scrollable area',
+    },
+    showDividers: {
+      control: 'boolean',
+      description: 'Show dividers between activity items',
+    },
+    onActivityClick: {
+      action: 'activity-clicked',
+      description: 'Activity item click handler',
+    },
+    onAcknowledge: {
+      action: 'acknowledge-clicked',
+      description: 'Acknowledge button handler',
+    },
+    onViewDetails: {
+      action: 'view-details-clicked',
+      description: 'View details button handler',
+    },
+    onViewProfile: {
+      action: 'view-profile-clicked',
+      description: 'View profile button handler',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const sampleActivities = [
+  {
+    id: 'alert-001',
+    alertType: 'ppe_violation' as const,
+    title: 'Hard hat missing',
+    location: 'Production Zone A',
+    timestamp: '2024-01-15T14:32:00',
+    workerId: 'W-4521',
+    priority: 'high' as const,
+    status: 'active' as const,
+    description: 'Worker detected without required safety helmet.',
+    imagePreview: true,
+  },
+  {
+    id: 'alert-002',
+    alertType: 'security_breach' as const,
+    title: 'Unauthorized person at main gate',
+    location: 'Main Gate',
+    timestamp: '2024-01-15T15:45:00',
+    cameraId: 'C1-45-42',
+    priority: 'critical' as const,
+    status: 'active' as const,
+    description: 'Intruder detected at security checkpoint.',
+    imagePreview: true,
+  },
+  {
+    id: 'alert-003',
+    alertType: 'personnel_tracking' as const,
+    title: 'Michael Torres',
+    location: 'Emergency Response Station',
+    timestamp: '2024-01-15T13:20:00',
+    workerId: 'EMP-5623',
+    priority: 'medium' as const,
+    status: 'active' as const,
+    description: 'Safety Coordinator on duty.',
+    imagePreview: true,
+  },
+];
+
+export const RecentActivity: Story = {
+  args: {
+    title: 'Recent Activity',
+    activities: sampleActivities,
+    maxHeight: '500px',
+    showDividers: true,
+  },
+};
+
+export const SecurityAlerts: Story = {
+  args: {
+    title: 'Security Alerts',
+    activities: [
+      {
+        id: 'sec-001',
+        alertType: 'security_breach' as const,
+        title: 'Unauthorized person at main gate',
+        location: 'Main Gate',
+        timestamp: '2024-01-15T15:45:00',
+        cameraId: 'C1-45-42',
+        priority: 'critical' as const,
+        status: 'active' as const,
+        imagePreview: true,
+      },
+      {
+        id: 'sec-002',
+        alertType: 'security_breach' as const,
+        title: 'Perimeter breach detected',
+        location: 'North Fence',
+        timestamp: '2024-01-15T14:20:00',
+        cameraId: 'C3-22-15',
+        priority: 'high' as const,
+        status: 'investigating' as const,
+        imagePreview: true,
+      },
+    ],
+    maxHeight: '400px',
+    showDividers: true,
+  },
+};
+
+export const EmptyFeed: Story = {
+  args: {
+    title: 'Recent Activity',
+    activities: [],
+    maxHeight: '200px',
+  },
+};
