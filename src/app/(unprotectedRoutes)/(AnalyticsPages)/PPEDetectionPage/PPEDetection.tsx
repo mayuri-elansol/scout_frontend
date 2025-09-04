@@ -19,6 +19,7 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 //import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
@@ -94,7 +95,7 @@ const PPEDetection: React.FC = () => {
       title: "Hard hat missing",
       location: "Production Zone A",
       time: "14:32",
-      workerId: "W-4521",
+      Id: "W-4521",
       severity: "HIGH",
       status: "ACTIVE",
       imageUrl: "https://picsum.photos/400/200?random=1",
@@ -103,7 +104,7 @@ const PPEDetection: React.FC = () => {
       title: "Safety vest not worn",
       location: "Warehouse Zone B",
       time: "14:18",
-      workerId: "W-3847",
+      Id: "W-3847",
       severity: "MEDIUM",
       status: "ACKNOWLEDGED",
       imageUrl: "https://picsum.photos/400/200?random=2",
@@ -195,10 +196,11 @@ const PPEDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         {/* item xs={12} lg={8} */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          {/* <RecentViolations
+          <RecentViolations
+            label="Recent PPE Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
-          /> */}
+          />
         </Grid>
 
         {/* PPE Compliance by Zone */}
@@ -370,21 +372,21 @@ const PPEDetection: React.FC = () => {
             resolution: "Supervisor notified",
           },
         ]}
-        // filters={[
-        //   { id: "name", label: "Search Name", type: "text" },
-        //   {
-        //     id: "employeeId",
-        //     label: "Employee",
-        //     type: "select",
-        //     options: ["David Kim", "Missing", "Resolved"],
-        //   },
-        //   { id: "createdAt", label: "Start Date", type: "date" },
-        //   { id: "resolvedAt", label: "End Date", type: "date" },
-        // ]}
-        // onSubmit={handleSubmitFilter}
-        // onReset={handleReset}
-        // onExport={handleExport}
-        //  isSubmitDisabled={loading}
+        filters={[
+          { id: "name", label: "Search Name", type: "text" },
+          {
+            id: "employeeId",
+            label: "Employee",
+            type: "select",
+            options: ["David Kim", "Missing", "Resolved"],
+          },
+          { id: "createdAt", label: "Start Date", type: "date" },
+          { id: "resolvedAt", label: "End Date", type: "date" },
+        ]}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        // isSubmitDisabled={loading}
         downloadFileName="ppe-violations-report"
       />
     </Box>

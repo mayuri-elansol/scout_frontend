@@ -23,6 +23,7 @@ import {
   Circle,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 
 const EmployeePresence: React.FC = () => {
   const theme = useTheme();
@@ -112,44 +113,44 @@ const EmployeePresence: React.FC = () => {
 
   const activePersonnel = [
     {
-      name: "John Mitchell",
-      employeeId: "EMP-4521",
-      zone: "Reactor Control Room",
-      certification: "Level 3 Operator",
-      status: "ACTIVE",
-      shift: "Day Shift",
-      bgColor: "#e8f5e9",
-      statusColor: "#4caf50",
+      title: "John Mitchell - Level 3 Operator", // name + certification
+      location: "Reactor Control Room", // zone
+      time: "Day Shift", // shift
+      Id: "EMP-4521", // employeeId
+      severity: "N/A", // no severity in personnel data
+      status: "ACTIVE", // status
+      bgColor: "#e8f5e9", // from personnel
+      imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
-      name: "Sarah Chen",
-      employeeId: "EMP-3847",
-      zone: "Chemical Processing Unit",
-      certification: "Senior Technician",
+      title: "Sarah Chen - Senior Technician",
+      location: "Chemical Processing Unit",
+      time: "Day Shift",
+      Id: "EMP-3847",
+      severity: "N/A",
       status: "ON_BREAK",
-      shift: "Day Shift",
       bgColor: "#fff8e1",
-      statusColor: "#ff9800",
+      imageUrl: "https://picsum.photos/1200/600?random=12",
     },
     {
-      name: "Michael Torres",
-      employeeId: "EMP-5623",
-      zone: "Emergency Response Station",
-      certification: "Safety Coordinator",
+      title: "Michael Torres - Safety Coordinator",
+      location: "Emergency Response Station",
+      time: "Day Shift",
+      Id: "EMP-5623",
+      severity: "N/A",
       status: "ACTIVE",
-      shift: "Day Shift",
       bgColor: "#e8f5e9",
-      statusColor: "#4caf50",
+      imageUrl: "https://picsum.photos/1200/600?random=13",
     },
     {
-      name: "Lisa Anderson",
-      employeeId: "EMP-7891",
-      zone: "Quality Control Lab",
-      certification: "Lab Supervisor",
+      title: "Lisa Anderson - Lab Supervisor",
+      location: "Quality Control Lab",
+      time: "Day Shift",
+      Id: "EMP-7891",
+      severity: "N/A",
       status: "MISSING",
-      shift: "Day Shift",
       bgColor: "#ffebee",
-      statusColor: "#f44336",
+      imageUrl: "https://picsum.photos/1200/600?random=14",
     },
   ];
 
@@ -281,176 +282,13 @@ const EmployeePresence: React.FC = () => {
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Active Critical Zone Personnel */}
-        {/* item xs={12} lg={8} */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          <Card>
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 2.5,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <People sx={{ fontSize: 20, color: "#2196f3" }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#1c2025" }}
-                  >
-                    Active Critical Zone Personnel
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Visibility />}
-                  sx={{
-                    color: "#1976d2",
-                    borderColor: "#1976d2",
-                    fontSize: "14px",
-                    textTransform: "none",
-                  }}
-                >
-                  View All
-                </Button>
-              </Box>
-
-              <Grid container spacing={2}>
-                {activePersonnel.map((employee, index) => (
-                  // item xs={12} md={6}
-                  <Grid size={{ xs: 12, md: 6 }} key={index}>
-                    <Card
-                      sx={{
-                        height: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        backgroundColor: employee.bgColor,
-                        border: "1px solid #ddd",
-                        borderRadius: 1,
-                      }}
-                    >
-                      <CardContent sx={{ p: 2, flexGrow: 1 }}>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 1.5,
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontSize: "16px",
-                                fontWeight: 600,
-                                color: "#1c2025",
-                                mb: 0.5,
-                              }}
-                            >
-                              {employee.name}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                                mb: 0.25,
-                              }}
-                            >
-                              {employee.zone} • {employee.shift}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                              }}
-                            >
-                              ID: {employee.employeeId} •{" "}
-                              {employee.certification}
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 0.5,
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                backgroundColor: employee.statusColor,
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {employee.status}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Live Feed Preview */}
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: 120,
-                            backgroundColor: "#e9ecef",
-                            borderRadius: 0.75,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mb: 1.5,
-                            border: "1px solid #dee2e6",
-                          }}
-                        >
-                          <Box sx={{ textAlign: "center", color: "#6c757d" }}>
-                            <CameraAlt sx={{ fontSize: 24, mb: 0.5 }} />
-                            <Typography sx={{ fontSize: "12px" }}>
-                              Live Feed Preview
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Action Buttons */}
-
-                        <Box sx={{ display: "flex", gap: 1, mt: "auto" }}>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              flex: 1,
-                              backgroundColor: "#2196f3",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            Track
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              flex: 1,
-                              color: "#1976d2",
-                              borderColor: "#1976d2",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            Profile
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
+          <RecentViolations
+            label=" Active Critical Zone Personnel"
+            violations={activePersonnel}
+            onViewAll={() => console.log("View all clicked")}
+          />
         </Grid>
-
         {/* Critical Zones Status */}
         {/* item xs={12} lg={4} */}
 
@@ -674,7 +512,54 @@ const EmployeePresence: React.FC = () => {
             resolution: "Quality checks ongoing",
           },
         ]}
-        downloadFileName="employee-presence-report.csv"
+        filters={[
+          { id: "employeeId", label: "Employee", type: "text" },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: [
+              "Reactor Control Room",
+              "Quality Control Lab",
+              "Chemical Processing Unit",
+              "Emergency Response Station",
+              "Maintenance Workshop",
+            ],
+          },
+          {
+            id: "certification",
+            label: "Certification",
+            type: "select",
+            options: [
+              "Level 3 Operator",
+              "Lab Supervisor",
+              "Senior Technician",
+              "Safety Coordinator",
+              "Tech Cert",
+              "Level 2 Technician",
+              "Lab Cert",
+            ],
+          },
+          {
+            id: "status",
+            label: "Status",
+            type: "select",
+            options: ["ACTIVE", "MISSING", "ON_BREAK", "LATE_ARRIVAL"],
+          },
+          {
+            id: "priority",
+            label: "Priority",
+            type: "select",
+            options: ["Critical", "High", "Medium"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
+        ]}
+        // onSubmit={handleSubmitFilter}
+        // onReset={handleReset}
+        // onExport={handleExport}
+        // isSubmitDisabled={loading}
+        downloadFileName="employee-presence-report"
       />
     </Box>
   );
