@@ -183,7 +183,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
                 flexWrap: "wrap",
                 gap: 2.5,
                 mb: 4,
-                px: 2,
+                // px: 2,
               }}
             >
               {kpiData.map((kpi, index) => (
@@ -205,7 +205,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
                 display: "flex",
                 gap: 3,
                 flexWrap: "wrap",
-                px: 2,
+                // px: 2,
               }}
             >
               <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
