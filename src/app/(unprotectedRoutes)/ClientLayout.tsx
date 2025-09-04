@@ -61,7 +61,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             onPageChange={handlePageChange}
           />
         )}
-        <Box sx={{ flex: 1, p: 1, pt: 8, backgroundColor: "#f5f7fa" }}>
+        <Box sx={{ flex: 1, p:4, pt: 8, backgroundColor: "#f5f7fa" }}>
           <Breadcrumb
             currentPage={currentPage}
             onPageChange={handlePageChange}

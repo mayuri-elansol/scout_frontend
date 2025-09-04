@@ -353,3 +353,255 @@ const Phonesidebar: React.FC<SidebarProps> = ({
 };
 
 export default Phonesidebar;
+
+
+
+// "use client";
+// import React, { useState, useRef } from "react";
+// import {
+//   Drawer,
+//   Box,
+//   List,
+//   ListItem,
+//   ListItemButton,
+//   ListItemIcon,
+//   ListItemText,
+//   Popover,
+//   Typography,
+//   useTheme,
+// } from "@mui/material";
+// import { usePathname } from "next/navigation";
+// import Link from "next/link";
+// import {
+//   dashboardMenu,
+//   alertMenu,
+//   analyticsMenu,
+//   AnalyticsCategoryConfig,
+//   MenuItemConfig,
+// } from "../../../config/menuConfig";
+
+// const drawerWidth = 70;
+
+// const Phonesidebar: React.FC = () => {
+//   const theme = useTheme();
+//   const pathname = usePathname();
+
+//   // Hover state for analytics categories
+//   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+//   const [hoverMenu, setHoverMenu] = useState<AnalyticsCategoryConfig | null>(
+//     null
+//   );
+//   const [popoverOpen, setPopoverOpen] = useState(false);
+//   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+//   const handleMouseEnter = (
+//     event: React.MouseEvent<HTMLElement>,
+//     category: AnalyticsCategoryConfig
+//   ) => {
+//     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+
+//     if (category.items && category.items.length > 0) {
+//       setAnchorEl(event.currentTarget);
+//       setHoverMenu(category);
+//       setPopoverOpen(true);
+//     } else {
+//       setPopoverOpen(false);
+//       setHoverMenu(null);
+//       setAnchorEl(null);
+//     }
+//   };
+
+//   const handlePopoverMouseLeave = () => {
+//     setPopoverOpen(false);
+//     setAnchorEl(null);
+//     setHoverMenu(null);
+//   };
+
+//   const getButtonStyles = (isSelected: boolean) => ({
+//     borderRadius: 1,
+//     minHeight: 48,
+//     justifyContent: "center",
+//     mx: 1,
+//     backgroundColor: isSelected
+//       ? theme.palette.primary.main
+//       : "transparent",
+//     color: isSelected ? "white" : "inherit",
+//     "&:hover": {
+//       backgroundColor: isSelected
+//         ? theme.palette.primary.dark
+//         : theme.palette.action.hover,
+//     },
+//     transition: "background-color 0.2s ease-in-out",
+//   });
+
+//   // Helper to check if parent is active (when sub-route is selected)
+//   const isParentSelected = (category: AnalyticsCategoryConfig) => {
+//     return category.items.some((item) => item.path === pathname);
+//   };
+
+//   return (
+//     <>
+//       <Drawer
+//         variant="permanent"
+//         sx={{
+//           width: drawerWidth,
+//           flexShrink: 0,
+//           "& .MuiDrawer-paper": {
+//             width: drawerWidth,
+//             boxSizing: "border-box",
+//             mt: "64px",
+//             height: "calc(100vh - 64px)",
+//             overflowY: "auto",
+//             borderRight: "1px solid #e0e0e0",
+//             backgroundColor: "#fff",
+//           },
+//         }}
+//       >
+//         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+//           <List sx={{ flex: 1, pt: 2 }}>
+//             {/* Dashboard + Alerts */}
+//             {[...dashboardMenu, ...alertMenu].map((item: MenuItemConfig) => (
+//               <ListItem key={item.name} disablePadding sx={{ mb: 1 }}>
+//                 <ListItemButton
+//                   component={Link}
+//                   href={item.path}
+//                   prefetch
+//                   selected={pathname === item.path}
+//                   sx={getButtonStyles(pathname === item.path)}
+//                 >
+//                   <ListItemIcon
+//                     sx={{
+//                       minWidth: 0,
+//                       justifyContent: "center",
+//                       color:
+//                         pathname === item.path
+//                           ? "white"
+//                           : theme.palette.action.active,
+//                     }}
+//                   >
+//                     <item.icon />
+//                   </ListItemIcon>
+//                 </ListItemButton>
+//               </ListItem>
+//             ))}
+
+//             {/* Analytics Categories */}
+//             {analyticsMenu.map((category) => (
+//               <ListItem
+//                 key={category.title}
+//                 disablePadding
+//                 sx={{ mb: 1 }}
+//                 onMouseEnter={(e) => handleMouseEnter(e, category)}
+//                 onMouseLeave={() => setPopoverOpen(false)}
+//               >
+//                 <ListItemButton
+//                   sx={getButtonStyles(isParentSelected(category))}
+//                 >
+//                   <ListItemIcon
+//                     sx={{
+//                       minWidth: 0,
+//                       justifyContent: "center",
+//                       color: isParentSelected(category)
+//                         ? "white"
+//                         : theme.palette.action.active,
+//                     }}
+//                   >
+//                     <category.icon />
+//                   </ListItemIcon>
+//                 </ListItemButton>
+//               </ListItem>
+//             ))}
+//           </List>
+//         </Box>
+//       </Drawer>
+
+//       {/* Popover with sub-items */}
+//       <Popover
+//         open={popoverOpen && Boolean(hoverMenu)}
+//         anchorEl={anchorEl}
+//         anchorOrigin={{
+//           vertical: "top",
+//           horizontal: "right",
+//         }}
+//         transformOrigin={{
+//           vertical: "top",
+//           horizontal: "left",
+//         }}
+//         disableAutoFocus
+//         disableEnforceFocus
+//         disableRestoreFocus
+//         onClose={handlePopoverMouseLeave}
+//         sx={{
+//           "& .MuiPopover-paper": {
+//             ml: 1,
+//             minWidth: 240,
+//             boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+//             border: "1px solid #e0e0e0",
+//             borderRadius: 2,
+//           },
+//         }}
+//       >
+//         <Box
+//           onMouseLeave={handlePopoverMouseLeave}
+//           sx={{
+//             py: 1,
+//             backgroundColor: "#fff",
+//           }}
+//         >
+//           <Typography
+//             variant="subtitle2"
+//             sx={{
+//               px: 2,
+//               py: 1,
+//               fontWeight: 600,
+//               color: theme.palette.primary.main,
+//               borderBottom: `1px solid ${theme.palette.divider}`,
+//               mb: 1,
+//               fontSize: "0.875rem",
+//             }}
+//           >
+//             {hoverMenu?.title}
+//           </Typography>
+//           <List sx={{ py: 0 }}>
+//             {hoverMenu?.items.map((subItem) => (
+//               <ListItem key={subItem.path} disablePadding>
+//                 <ListItemButton
+//                   component={Link}
+//                   href={subItem.path}
+//                   prefetch
+//                   selected={pathname === subItem.path}
+//                   sx={{
+//                     px: 2,
+//                     py: 1.5,
+//                     "&.Mui-selected": {
+//                       backgroundColor: theme.palette.primary.light,
+//                       color: theme.palette.primary.main,
+//                       "&:hover": {
+//                         backgroundColor: theme.palette.primary.light,
+//                       },
+//                     },
+//                     "&:hover": {
+//                       backgroundColor: theme.palette.action.hover,
+//                     },
+//                   }}
+//                 >
+//                   <ListItemText
+//                     primary={subItem.name}
+//                     primaryTypographyProps={{
+//                       fontSize: "0.875rem",
+//                       lineHeight: 1.4,
+//                       fontWeight:
+//                         pathname === subItem.path ? 600 : 400,
+//                     }}
+//                   />
+//                 </ListItemButton>
+//               </ListItem>
+//             ))}
+//           </List>
+//         </Box>
+//       </Popover>
+//     </>
+//   );
+// };
+
+// export default Phonesidebar;
