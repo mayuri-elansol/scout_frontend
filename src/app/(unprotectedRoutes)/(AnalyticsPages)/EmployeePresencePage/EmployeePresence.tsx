@@ -453,6 +453,7 @@ const EmployeePresence: React.FC = () => {
 
         {/* Critical Zones Status */}
         {/* item xs={12} lg={4} */}
+
         <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>

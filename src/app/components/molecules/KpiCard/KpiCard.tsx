@@ -5,6 +5,7 @@ import {
   Box,
   Typography,
   Chip,
+  useTheme,
 } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 
@@ -38,6 +39,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   customWidth,
   customHeight,
 }) => {
+  const theme = useTheme();
 
   // Get variant-specific styling
   const getVariantStyles = () => {

@@ -1,4 +1,3 @@
-
 "use client";
 import { ReactNode, useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
@@ -35,7 +34,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     if (currentItem) {
       setCurrentPage(currentItem.page!);
     } else {
-      setCurrentPage("dashboard"); 
+      setCurrentPage("dashboard");
     }
   }, [pathname]);
 
@@ -49,7 +48,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh", }}>
+      <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <Header />
         {!isTabletOrPhone && (
           <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
@@ -62,7 +61,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             onPageChange={handlePageChange}
           />
         )}
-        <Box sx={{ flex: 1, p: 4, pt: 8 , backgroundColor: "#f5f7fa" }}>
+        <Box sx={{ flex: 1, p: 1, pt: 8, backgroundColor: "#f5f7fa" }}>
           <Breadcrumb
             currentPage={currentPage}
             onPageChange={handlePageChange}

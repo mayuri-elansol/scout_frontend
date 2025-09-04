@@ -45,21 +45,21 @@ const SystemAlerts: React.FC = () => {
     },
     {
       value: "2",
-      label: "Active Alerts",
+      label: "Safety and Compliances",
       color: "#f44336",
       borderColor: "#f44336",
     },
-    { value: "2", label: "Critical", color: "#d32f2f", borderColor: "#d32f2f" },
+    // { value: "2", label: "Critical", color: "#d32f2f", borderColor: "#d32f2f" },
     {
       value: "3",
-      label: "High Priority",
+      label: "Security Monitoring",
       color: "#ff9800",
       borderColor: "#ff9800",
     },
-    { value: "3", label: "Medium", color: "#ffa726", borderColor: "#ffa726" },
+    // { value: "3", label: "Medium", color: "#ffa726", borderColor: "#ffa726" },
     {
       value: "2",
-      label: "Low Priority",
+      label: "Workforce Monitoring",
       color: "#4caf50",
       borderColor: "#4caf50",
     },
@@ -218,7 +218,7 @@ const SystemAlerts: React.FC = () => {
                   >
                     {alert.title}
                   </Typography>
-                  <Chip
+                  {/* <Chip
                     label={alert.severity}
                     size="small"
                     sx={{
@@ -228,8 +228,8 @@ const SystemAlerts: React.FC = () => {
                       backgroundColor: severityColors.bgColor,
                       height: 20,
                     }}
-                  />
-                  <Chip
+                  /> */}
+                  {/* <Chip
                     label={alert.status}
                     size="small"
                     sx={{
@@ -239,7 +239,7 @@ const SystemAlerts: React.FC = () => {
                       backgroundColor: statusColors.bgColor,
                       height: 20,
                     }}
-                  />
+                  /> */}
                 </Box>
                 <Typography sx={{ color: "#666", fontSize: "14px", mb: 1.5 }}>
                   {alert.description}
@@ -247,7 +247,7 @@ const SystemAlerts: React.FC = () => {
               </Box>
             </Box>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {/* <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Typography sx={{ color: "#999", fontSize: "12px" }}>
                 {alert.id}
               </Typography>
@@ -264,7 +264,7 @@ const SystemAlerts: React.FC = () => {
               >
                 View Details
               </Button>
-            </Box>
+            </Box> */}
           </Box>
 
           {/* Alert Metadata */}
@@ -296,7 +296,7 @@ const SystemAlerts: React.FC = () => {
           </Box>
 
           {/* Quick Actions */}
-          <Box>
+          {/* <Box>
             <Typography sx={{ fontSize: "12px", color: "#666", mb: 1 }}>
               Quick Actions:
             </Typography>
@@ -323,7 +323,7 @@ const SystemAlerts: React.FC = () => {
                 </Button>
               ))}
             </Box>
-          </Box>
+          </Box> */}
         </CardContent>
       </Card>
     );
@@ -355,7 +355,8 @@ const SystemAlerts: React.FC = () => {
       {/* Alert Statistics */}
       <Grid container spacing={2} sx={{ mb: 4 }} alignItems="stretch">
         {alertStats.map((stat, index) => (
-          <Grid size={{xs:12,sm :6,md:2}}  key={index}>
+          // item xs={12} sm={6} md={2}
+          <Grid size={{ xs: 12, sm: 6, md: 2 }} key={index}>
             <Paper
               sx={{
                 p: 2,
@@ -392,7 +393,7 @@ const SystemAlerts: React.FC = () => {
         <CardContent sx={{ p: 3 }}>
           <Grid container spacing={3} alignItems="center">
             {/* Search */}
-            <Grid size={{xs:12,lg:4}} >
+            <Grid size={{ xs: 12, lg: 4 }}>
               <TextField
                 fullWidth
                 placeholder="Search by title, description, or location"
@@ -415,7 +416,7 @@ const SystemAlerts: React.FC = () => {
             </Grid>
 
             {/* Severity */}
-            <Grid size={{xs:12,lg:3}} >
+            <Grid size={{ xs: 12, lg: 3 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Severity Level</InputLabel>
                 <Select
@@ -433,7 +434,8 @@ const SystemAlerts: React.FC = () => {
             </Grid>
 
             {/* Category */}
-            <Grid size={{xs:12,lg:3}}>
+            {/* item xs={12} lg={3} */}
+            <Grid size={{ xs: 12, lg: 3 }}>
               <FormControl fullWidth size="small">
                 <InputLabel>Category</InputLabel>
                 <Select
@@ -451,7 +453,8 @@ const SystemAlerts: React.FC = () => {
             </Grid>
 
             {/* Buttons */}
-            <Grid size={{xs:12,lg:2}}>
+            {/* item xs={12} lg={2} */}
+            <Grid size={{ xs: 12, lg: 2 }}>
               <Box sx={{ display: "flex", gap: 1 }}>
                 <Button
                   variant="contained"
