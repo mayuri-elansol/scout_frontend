@@ -19,6 +19,10 @@
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+<<<<<<< HEAD
+=======
+    "react-i18next": "^15.7.3",
+>>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
     "react-redux": "^9.2.0",
     "zustand": "^5.0.8"
   },

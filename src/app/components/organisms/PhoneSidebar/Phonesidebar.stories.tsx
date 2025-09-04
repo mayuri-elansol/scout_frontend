@@ -37,12 +37,21 @@ export const DashboardSelected: Story = {
   },
 };
 
+<<<<<<< HEAD
 export const AnalyticsExpanded: Story = {
   render: (args) => <SidebarWrapper {...args} />,
   args: {
     currentPage: "analytics",
   },
 };
+=======
+// export const AnalyticsExpanded: Story = {
+//   render: (args) => <SidebarWrapper {...args} />,
+//   args: {
+//     currentPage: "analytics",
+//   },
+// };
+>>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 
 export const SubTaskSelected: Story = {
   render: (args) => <SidebarWrapper {...args} />,
