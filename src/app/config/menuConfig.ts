@@ -48,8 +48,8 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     items: [
       { name: 'Personal Protective Equipment (PPE) Detection', page: 'ppe-detection', path: '/PPEDetectionPage' },
       { name: 'Object Detection in Walking Bays', page: 'object-detection', path: '/ObjectDetection' },
-      { name: 'Fire, Smoke, Oil and Gas Leak Detection', page: 'fire-detection', path: '/FireDetection' },
-      { name: 'Vehicle Speed Monitoring inside premises', page: 'vehicle-speed', path: '/VehicleSpeed' },
+      { name: 'Fire, Smoke, Oil and Gas Leak Detection', page: 'fire-smoke-oil-leak-detection', path: '/FireSmokeOilLeakDetection' },
+      { name: 'Vehicle Speed Monitoring inside premises', page: 'vehicle-speed', path: '/VehicalSpeedMonitoring' },
     ],
   },
   {
