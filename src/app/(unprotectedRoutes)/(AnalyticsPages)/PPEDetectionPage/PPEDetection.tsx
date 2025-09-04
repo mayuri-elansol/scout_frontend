@@ -20,6 +20,7 @@ import {
   Circle,
 } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
+import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 //import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
@@ -68,28 +69,6 @@ const PPEDetection: React.FC = () => {
     },
   ];
 
-  // const recentViolations = [
-  //   {
-  //     title: "Hard hat missing",
-  //     location: "Production Zone A",
-  //     time: "14:32",
-  //     workerId: "W-4521",
-  //     severity: "HIGH",
-  //     status: "ACTIVE",
-  //     imageUrl:
-  //       "https://www.google.com/search?sca_esv=8c966bae1d54a914&rlz=1C1CHBD_enIN1164IN1164&udm=2&fbs=AIIjpHxU7SXXniUZfeShr2fp4giZ1Y6MJ25_tmWITc7uy4KIeioyp3OhN11EY0n5qfq-zEMZldv_eRjZ2XLYc5GnVnMEIxC4WQfoNDH7FwchyAayyomVtyMIlwCjX48LT0TrXSNU5mLhW4DIlZIt3-gwG8mMeXC-Y0JFzx5GBuU59za0o5XLXRovSVas40d3y4gTUxobLZ8-C-h3aNfCXmcENPvCZqzMdA&q=image&sa=X&ved=2ahUKEwjkq5eA77uPAxVR3TgGHYInHUAQtKgLegQIFhAB&biw=1920&bih=945&dpr=1#vhid=2brKLR3s5kTpPM&vssid=mosaic",
-  //   },
-  //   {
-  //     title: "Safety vest not worn",
-  //     location: "Warehouse Zone B",
-  //     time: "14:18",
-  //     workerId: "W-3847",
-  //     severity: "MEDIUM",
-  //     status: "ACKNOWLEDGED",
-  //     imageUrl:
-  //       "https://www.vecteezy.com/photo/57068323-single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image",
-  //   },
-  // ];
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -193,8 +172,7 @@ const PPEDetection: React.FC = () => {
 
       {/* Content Grid */}
       <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        {/* item xs={12} lg={8} */}
+        {/* Recent PPE Violations */}      
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
             label="Recent PPE Violations"
@@ -202,102 +180,10 @@ const PPEDetection: React.FC = () => {
             onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
+                {/* PPE Compliance by Zone */}
 
-        {/* PPE Compliance by Zone */}
-        {/* item xs={12} lg={4} */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, color: "#1c2025", mb: 2.5 }}
-              >
-                PPE Compliance by Zone
-              </Typography>
-
-              <Box>
-                {complianceByZone.map((zone, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      py: 2,
-                      borderBottom:
-                        index < complianceByZone.length - 1
-                          ? "1px solid #f0f0f0"
-                          : "none",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 1,
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 500, fontSize: "14px" }}>
-                        {zone.zone}
-                      </Typography>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        <Circle
-                          sx={{
-                            fontSize: 8,
-                            color: getStatusColor(zone.status),
-                          }}
-                        />
-                        <Typography
-                          sx={{
-                            fontSize: "12px",
-                            fontWeight: 500,
-                            color: getStatusColor(zone.status),
-                          }}
-                        >
-                          {zone.compliance}%
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        fontSize: "12px",
-                        color: "#5c6b7d",
-                      }}
-                    >
-                      <span>{zone.cameras} cameras active</span>
-                      <span>{zone.violations} violations today</span>
-                    </Box>
-
-                    {/* Progress Bar */}
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: 4,
-                        backgroundColor: "#f0f0f0",
-                        borderRadius: 0.25,
-                        mt: 1,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: `${zone.compliance}%`,
-                          height: "100%",
-                          backgroundColor: getStatusColor(zone.status),
-                          borderRadius: 0.25,
-                          transition: "width 0.3s ease",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
+          <ZoneNotification zones={complianceByZone} />
         </Grid>
       </Grid>
 

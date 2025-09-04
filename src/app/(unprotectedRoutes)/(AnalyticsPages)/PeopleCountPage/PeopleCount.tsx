@@ -22,9 +22,31 @@ import {
   Circle,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
+import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 
 const PeopleCount: React.FC = () => {
   const theme = useTheme();
+const recentViolations = [
+  {
+    title: "Hard hat missing",
+    location: "Production Zone A",
+    time: "14:32",
+    Id: "W-4521",
+    severity: "HIGH",
+    status: "ACTIVE",
+    imageUrl: "https://picsum.photos/400/200?random=1",
+  },
+  {
+    title: "Safety vest not worn",
+    location: "Warehouse Zone B",
+    time: "14:18",
+    Id: "W-3847",
+    severity: "MEDIUM",
+    status: "ACKNOWLEDGED",
+    imageUrl: "https://picsum.photos/400/200?random=2",
+  },
+];
 
   const peopleCountKpiData = [
     {
@@ -78,6 +100,29 @@ const PeopleCount: React.FC = () => {
       icon: Warning,
     },
   ];
+const complianceByZone = [
+  {
+    zone: "Production Floor",
+    compliance: 92,
+    violations: 3,
+    cameras: "8/10",
+    status: "Normal",
+  },
+  {
+    zone: "Warehouse",
+    compliance: 75,
+    violations: 2,
+    cameras: "6/6",
+    status: "Normal",
+  },
+  {
+    zone: "Assembly Line",
+    compliance: 84,
+    violations: 5,
+    cameras: "7/8",
+    status: "High",
+  },
+];
 
   const zoneOccupancy = [
     {
@@ -218,296 +263,18 @@ const PeopleCount: React.FC = () => {
 
       {/* Content Grid */}
       <Grid container spacing={3}>
-        {/* Real-time Zone Occupancy */}
-        {/* item xs={12} lg={8} */}
+        {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          <Card>
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 2.5,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Place sx={{ fontSize: 20, color: "#4caf50" }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#1c2025" }}
-                  >
-                    Real-time Zone Occupancy
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Visibility />}
-                  sx={{
-                    color: "#1976d2",
-                    borderColor: "#1976d2",
-                    fontSize: "14px",
-                    textTransform: "none",
-                  }}
-                >
-                  View Live
-                </Button>
-              </Box>
-
-              <Grid container spacing={2}>
-                {zoneOccupancy.map((zone, index) => (
-                  // item xs={12} md={6}
-                  <Grid size={{ xs: 12, md: 6 }} key={index}>
-                    <Card
-                      sx={{
-                        backgroundColor: zone.bgColor,
-                        border: "1px solid #ddd",
-                        borderRadius: 1,
-                        height: "100%", // 👉 ADD THIS (card fills available height)
-                        display: "flex", // 👉 ADD THIS
-                        flexDirection: "column", // 👉 ADD THIS
-                      }}
-                    >
-                      <CardContent sx={{ p: 2, flexGrow: 1 }}>
-                        {/* 👉 flexGrow ensures content expands evenly */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 1.5,
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontSize: "16px",
-                                fontWeight: 600,
-                                color: "#1c2025",
-                                mb: 0.5,
-                              }}
-                            >
-                              {zone.zone}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                                mb: 0.25,
-                              }}
-                            >
-                              {zone.count}/{zone.capacity} people
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                              }}
-                            >
-                              {zone.percentage}% occupancy
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 0.5,
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                backgroundColor: zone.statusColor,
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {zone.status}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Occupancy Progress Bar */}
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: 8,
-                            backgroundColor: "#f0f0f0",
-                            borderRadius: 0.5,
-                            mb: 1.5,
-                            overflow: "hidden",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: `${zone.percentage}%`,
-                              height: "100%",
-                              backgroundColor: zone.statusColor,
-                              borderRadius: 0.5,
-                              transition: "width 0.3s ease",
-                            }}
-                          />
-                        </Box>
-
-                        {/* Zone View Preview */}
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: 80,
-                            backgroundColor: "#e9ecef",
-                            borderRadius: 0.75,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mb: 1.5,
-                            border: "1px solid #dee2e6",
-                          }}
-                        >
-                          <Box sx={{ textAlign: "center", color: "#6c757d" }}>
-                            <CameraAlt sx={{ fontSize: 20, mb: 0.5 }} />
-                            <Typography sx={{ fontSize: "11px" }}>
-                              Zone View
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Action Buttons */}
-                        <Box sx={{ display: "flex", gap: 1, mt: "auto" }}>
-                          {/* 👉 mt:'auto' pushes buttons to bottom */}
-                          <Button
-                            variant="contained"
-                            sx={{
-                              flex: 1,
-                              backgroundColor: "#4caf50",
-                              fontSize: "12px",
-                              textTransform: "none",
-                              py: 0.75,
-                            }}
-                          >
-                            Monitor
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              flex: 1,
-                              color: "#1976d2",
-                              borderColor: "#1976d2",
-                              fontSize: "12px",
-                              textTransform: "none",
-                              py: 0.75,
-                            }}
-                          >
-                            Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
+          <RecentViolations
+            label="Recent PPE Violations"
+            violations={recentViolations}
+            onViewAll={() => console.log("View all clicked")}
+          />
         </Grid>
+        {/* PPE Compliance by Zone */}
 
-        {/* Hourly Count Trend */}
-        {/* item xs={12} lg={4} */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, color: "#1c2025", mb: 2.5 }}
-              >
-                Hourly Count Trend
-              </Typography>
-
-              <Box>
-                {hourlyTrend.map((hour, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      py: 1.5,
-                      borderBottom:
-                        index < hourlyTrend.length - 1
-                          ? "1px solid #f0f0f0"
-                          : "none",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 0.5,
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 500, fontSize: "14px" }}>
-                        {hour.time}
-                      </Typography>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        {getTrendIcon(hour.trend)}
-                        <Typography
-                          sx={{
-                            fontSize: "14px",
-                            fontWeight: 600,
-                            color: getTrendColor(hour.trend),
-                          }}
-                        >
-                          {hour.count}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    {/* Progress Bar */}
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: 4,
-                        backgroundColor: "#f0f0f0",
-                        borderRadius: 0.25,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: `${(hour.count / 324) * 100}%`,
-                          height: "100%",
-                          backgroundColor: getTrendColor(hour.trend),
-                          borderRadius: 0.25,
-                          transition: "width 0.3s ease",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-
-              {/* Emergency Capacity Status */}
-              <Box
-                sx={{
-                  mt: 2,
-                  p: 1.5,
-                  backgroundColor: "#f8f9fa",
-                  borderRadius: 0.75,
-                }}
-              >
-                <Typography sx={{ fontSize: "12px", color: "#666", mb: 0.5 }}>
-                  Emergency Capacity Status
-                </Typography>
-                <Typography
-                  sx={{ fontSize: "14px", fontWeight: 600, color: "#4caf50" }}
-                >
-                  Below evacuation threshold (267/400)
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
+          <ZoneNotification zones={complianceByZone} />
         </Grid>
       </Grid>
 

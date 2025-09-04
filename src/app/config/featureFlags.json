@@ -10,5 +10,5 @@
   "vehicle-speed": true,
   "intrusion-detection": true,
   "employee-presence": true,
-  "people-count": false
+  "people-count": true
 }

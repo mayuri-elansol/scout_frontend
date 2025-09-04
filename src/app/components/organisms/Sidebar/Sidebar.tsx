@@ -31,7 +31,7 @@ interface SidebarProps {
   onPageChange: (page: PageType) => void;
 }
 
-const drawerWidth = 280;
+const drawerWidth = '15vw';
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
