@@ -1,12 +1,12 @@
-import React from 'react';
-import { Paper, Typography } from '@mui/material';
+import React from "react";
+import { Paper, Typography } from "@mui/material";
 
 interface AlertStatsCardProps {
   value: string;
   label: string;
   color: string;
   borderColor: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
 }
 
 const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
@@ -14,16 +14,16 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
   label,
   color,
   borderColor,
-  size = 'medium',
+  size = "medium",
 }) => {
   const getSizeStyles = () => {
     switch (size) {
-      case 'small':
-        return { padding: 1.5, fontSize: '20px' };
-      case 'large':
-        return { padding: 3, fontSize: '32px' };
+      case "small":
+        return { padding: 1.5, fontSize: "20px" };
+      case "large":
+        return { padding: 3, fontSize: "32px" };
       default:
-        return { padding: 2, fontSize: '24px' };
+        return { padding: 2, fontSize: "24px" };
     }
   };
 
@@ -33,25 +33,28 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
     <Paper
       sx={{
         p: sizeStyles.padding,
-        textAlign: 'center',
+        textAlign: "center",
         border: `1px solid ${borderColor}`,
         borderRadius: 1,
-        backgroundColor: 'white',
-        minHeight: size === 'small' ? '60px' : size === 'large' ? '120px' : '80px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        transition: 'all 0.2s ease',
-        '&:hover': {
+        backgroundColor: "white",
+        display: "flex",
+        flex: 1,
+        minHeight:
+          size === "small" ? "60px" : size === "large" ? "120px" : "80px",
+
+        flexDirection: "column",
+        justifyContent: "center",
+        transition: "all 0.2s ease",
+        "&:hover": {
           boxShadow: 2,
-          transform: 'translateY(-1px)',
+          transform: "translateY(-1px)",
         },
       }}
     >
       <Typography
         sx={{
           fontSize: sizeStyles.fontSize,
-          fontWeight: 'bold',
+          fontWeight: "bold",
           color: color,
           mb: 0.5,
           lineHeight: 1,
@@ -59,10 +62,11 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
       >
         {value}
       </Typography>
-      <Typography 
-        sx={{ 
-          fontSize: size === 'small' ? '11px' : size === 'large' ? '14px' : '12px', 
-          color: '#666',
+      <Typography
+        sx={{
+          fontSize:
+            size === "small" ? "11px" : size === "large" ? "14px" : "12px",
+          color: "#666",
           fontWeight: 500,
         }}
       >

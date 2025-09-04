@@ -30,6 +30,7 @@ import {
   InfoOutlined,
   Circle,
 } from "@mui/icons-material";
+import { AlertCard, AlertStatsCard } from "@/app/components";
 
 const SystemAlerts: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -62,6 +63,12 @@ const SystemAlerts: React.FC = () => {
       label: "Workforce Monitoring",
       color: "#4caf50",
       borderColor: "#4caf50",
+    },
+    {
+      value: "3",
+      label: "Oprational Insight",
+      color: "#ffa726",
+      borderColor: "#ffa726",
     },
   ];
 
@@ -176,158 +183,158 @@ const SystemAlerts: React.FC = () => {
     }
   };
 
-  const AlertCard = ({ alert }: { alert: any }) => {
-    const statusColors = getStatusColor(alert.status);
-    const severityColors = getSeverityColor(alert.severity);
+  // const AlertCard = ({ alert }: { alert: any }) => {
+  //   const statusColors = getStatusColor(alert.status);
+  //   const severityColors = getSeverityColor(alert.severity);
 
-    return (
-      <Card
-        sx={{
-          mb: 2,
-          borderLeft: `4px solid ${alert.borderColor}`,
-          "&:hover": {
-            boxShadow: 3,
-          },
-        }}
-      >
-        <CardContent sx={{ p: 3 }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              mb: 2,
-            }}
-          >
-            <Box
-              sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1 }}
-            >
-              <alert.icon sx={{ color: alert.borderColor, fontSize: 20 }} />
-              <Box sx={{ flex: 1 }}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 0.5,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#333", fontSize: "16px" }}
-                  >
-                    {alert.title}
-                  </Typography>
-                  {/* <Chip
-                    label={alert.severity}
-                    size="small"
-                    sx={{
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      color: severityColors.color,
-                      backgroundColor: severityColors.bgColor,
-                      height: 20,
-                    }}
-                  /> */}
-                  {/* <Chip
-                    label={alert.status}
-                    size="small"
-                    sx={{
-                      fontSize: "11px",
-                      fontWeight: 600,
-                      color: statusColors.color,
-                      backgroundColor: statusColors.bgColor,
-                      height: 20,
-                    }}
-                  /> */}
-                </Box>
-                <Typography sx={{ color: "#666", fontSize: "14px", mb: 1.5 }}>
-                  {alert.description}
-                </Typography>
-              </Box>
-            </Box>
+  //   return (
+  //     <Card
+  //       sx={{
+  //         mb: 2,
+  //         borderLeft: `4px solid ${alert.borderColor}`,
+  //         "&:hover": {
+  //           boxShadow: 3,
+  //         },
+  //       }}
+  //     >
+  //       <CardContent sx={{ p: 3 }}>
+  //         <Box
+  //           sx={{
+  //             display: "flex",
+  //             alignItems: "flex-start",
+  //             justifyContent: "space-between",
+  //             mb: 2,
+  //           }}
+  //         >
+  //           <Box
+  //             sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1 }}
+  //           >
+  //             <alert.icon sx={{ color: alert.borderColor, fontSize: 20 }} />
+  //             <Box sx={{ flex: 1 }}>
+  //               <Box
+  //                 sx={{
+  //                   display: "flex",
+  //                   alignItems: "center",
+  //                   gap: 1,
+  //                   mb: 0.5,
+  //                 }}
+  //               >
+  //                 <Typography
+  //                   variant="h6"
+  //                   sx={{ fontWeight: 600, color: "#333", fontSize: "16px" }}
+  //                 >
+  //                   {alert.title}
+  //                 </Typography>
+  //                 {/* <Chip
+  //                   label={alert.severity}
+  //                   size="small"
+  //                   sx={{
+  //                     fontSize: "11px",
+  //                     fontWeight: 600,
+  //                     color: severityColors.color,
+  //                     backgroundColor: severityColors.bgColor,
+  //                     height: 20,
+  //                   }}
+  //                 /> */}
+  //                 {/* <Chip
+  //                   label={alert.status}
+  //                   size="small"
+  //                   sx={{
+  //                     fontSize: "11px",
+  //                     fontWeight: 600,
+  //                     color: statusColors.color,
+  //                     backgroundColor: statusColors.bgColor,
+  //                     height: 20,
+  //                   }}
+  //                 /> */}
+  //               </Box>
+  //               <Typography sx={{ color: "#666", fontSize: "14px", mb: 1.5 }}>
+  //                 {alert.description}
+  //               </Typography>
+  //             </Box>
+  //           </Box>
 
-            {/* <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Typography sx={{ color: "#999", fontSize: "12px" }}>
-                {alert.id}
-              </Typography>
-              <Button
-                variant="contained"
-                size="small"
-                sx={{
-                  backgroundColor: "#1976d2",
-                  fontSize: "11px",
-                  textTransform: "none",
-                  minWidth: "auto",
-                  px: 2,
-                }}
-              >
-                View Details
-              </Button>
-            </Box> */}
-          </Box>
+  //           {/* <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+  //             <Typography sx={{ color: "#999", fontSize: "12px" }}>
+  //               {alert.id}
+  //             </Typography>
+  //             <Button
+  //               variant="contained"
+  //               size="small"
+  //               sx={{
+  //                 backgroundColor: "#1976d2",
+  //                 fontSize: "11px",
+  //                 textTransform: "none",
+  //                 minWidth: "auto",
+  //                 px: 2,
+  //               }}
+  //             >
+  //               View Details
+  //             </Button>
+  //           </Box> */}
+  //         </Box>
 
-          {/* Alert Metadata */}
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 3,
-              mb: 2,
-              fontSize: "12px",
-              color: "#666",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <LocationOn sx={{ fontSize: 14 }} />
-              <span>{alert.location}</span>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <AccessTime sx={{ fontSize: 14 }} />
-              <span>{alert.time}</span>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <Person sx={{ fontSize: 14 }} />
-              <span>Assigned: {alert.assignedTo}</span>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <span>Duration: {alert.duration}</span>
-            </Box>
-          </Box>
+  //         {/* Alert Metadata */}
+  //         <Box
+  //           sx={{
+  //             display: "flex",
+  //             alignItems: "center",
+  //             gap: 3,
+  //             mb: 2,
+  //             fontSize: "12px",
+  //             color: "#666",
+  //           }}
+  //         >
+  //           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+  //             <LocationOn sx={{ fontSize: 14 }} />
+  //             <span>{alert.location}</span>
+  //           </Box>
+  //           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+  //             <AccessTime sx={{ fontSize: 14 }} />
+  //             <span>{alert.time}</span>
+  //           </Box>
+  //           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+  //             <Person sx={{ fontSize: 14 }} />
+  //             <span>Assigned: {alert.assignedTo}</span>
+  //           </Box>
+  //           <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+  //             <span>Duration: {alert.duration}</span>
+  //           </Box>
+  //         </Box>
 
-          {/* Quick Actions */}
-          {/* <Box>
-            <Typography sx={{ fontSize: "12px", color: "#666", mb: 1 }}>
-              Quick Actions:
-            </Typography>
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {alert.actions.map((action: string, index: number) => (
-                <Button
-                  key={index}
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    fontSize: "11px",
-                    textTransform: "none",
-                    borderColor: "#e0e0e0",
-                    color: "#1976d2",
-                    py: 0.5,
-                    px: 1.5,
-                    minHeight: 28,
-                    "&:hover": {
-                      backgroundColor: "#f5f5f5",
-                    },
-                  }}
-                >
-                  {action}
-                </Button>
-              ))}
-            </Box>
-          </Box> */}
-        </CardContent>
-      </Card>
-    );
-  };
+  //         {/* Quick Actions */}
+  //         {/* <Box>
+  //           <Typography sx={{ fontSize: "12px", color: "#666", mb: 1 }}>
+  //             Quick Actions:
+  //           </Typography>
+  //           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+  //             {alert.actions.map((action: string, index: number) => (
+  //               <Button
+  //                 key={index}
+  //                 variant="outlined"
+  //                 size="small"
+  //                 sx={{
+  //                   fontSize: "11px",
+  //                   textTransform: "none",
+  //                   borderColor: "#e0e0e0",
+  //                   color: "#1976d2",
+  //                   py: 0.5,
+  //                   px: 1.5,
+  //                   minHeight: 28,
+  //                   "&:hover": {
+  //                     backgroundColor: "#f5f5f5",
+  //                   },
+  //                 }}
+  //               >
+  //                 {action}
+  //               </Button>
+  //             ))}
+  //           </Box>
+  //         </Box> */}
+  //       </CardContent>
+  //     </Card>
+  //   );
+  // };
 
   return (
     <Box>
@@ -353,37 +360,19 @@ const SystemAlerts: React.FC = () => {
       </Box>
 
       {/* Alert Statistics */}
-      <Grid container spacing={2} sx={{ mb: 4 }} alignItems="stretch">
+      <Grid container spacing={2} sx={{ mb: 4, alignItems: "stretch" }}>
         {alertStats.map((stat, index) => (
-          // item xs={12} sm={6} md={2}
-          <Grid size={{ xs: 12, sm: 6, md: 2 }} key={index}>
-            <Paper
-              sx={{
-                p: 2,
-                textAlign: "center",
-                border: `1px solid ${stat.borderColor}`,
-                borderRadius: 1,
-                backgroundColor: "white",
-                height: "100%", // make each paper fill grid item height
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "24px",
-                  fontWeight: "bold",
-                  color: stat.color,
-                  mb: 0.5,
-                }}
-              >
-                {stat.value}
-              </Typography>
-              <Typography sx={{ fontSize: "12px", color: "#666" }}>
-                {stat.label}
-              </Typography>
-            </Paper>
+          <Grid
+            size={{ xs: 12, sm: 6, md: 2 }}
+            key={index}
+            sx={{ display: "flex", flex: 1 }}
+          >
+            <AlertStatsCard
+              label={stat.label}
+              value={stat.value}
+              color={stat.color || "black"}
+              borderColor={stat.borderColor || "red"}
+            />
           </Grid>
         ))}
       </Grid>
@@ -529,7 +518,25 @@ const SystemAlerts: React.FC = () => {
 
         {/* Alert Cards */}
         {alertsData.map((alert) => (
-          <AlertCard key={alert.id} alert={alert} />
+          <AlertCard
+            id={alert.id}
+            title={alert.title}
+            description={alert.description}
+            severity={alert.severity as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"}
+            status={
+              alert.status as
+                | "ACTIVE"
+                | "ESCALATED"
+                | "ACKNOWLEDGED"
+                | "RESOLVED"
+            }
+            category={alert.category}
+            location={alert.location}
+            time={alert.time}
+            assignedTo={alert.assignedTo}
+            duration={alert.duration}
+            actions={alert.actions}
+          />
         ))}
       </Box>
     </Box>
