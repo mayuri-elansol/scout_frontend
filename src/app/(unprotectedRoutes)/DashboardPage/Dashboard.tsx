@@ -166,18 +166,10 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
         />
       )} */}
       {/* Main Content */}
-      <Box
-        component="main"
-        sx={{
-          // position: "absolute",
-          // left: "65px",
-          left: isTabletOrPhone ? "65px" : "296px",
-          right: "16px",
-          top: "64px",
-          bottom: 0,
-          // overflow: "auto",
-        }}
-      >
+      <Box>
+        {/* Breadcrumb */}
+        {/* <Breadcrumb currentPage={currentPage} onPageChange={handlePageChange} /> */}
+
         {/* Welcome Page */}
 
         {/* Dashboard Content */}

@@ -1,5 +1,5 @@
 import React from "react";
-import  ReportTable  from "../../../components/organisms/ReportTable/ReportTable";
+import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
   Grid,
@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   Button,
+  useTheme,
 } from "@mui/material";
 import {
   Visibility,
@@ -18,9 +19,10 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
-import KpiCard from "../../../components/molecules/KpiCard/KpiCard";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 const IntrusionDetection: React.FC = () => {
+  const theme = useTheme();
 
   const intrusionKpiData = [
     {
@@ -244,8 +246,7 @@ const IntrusionDetection: React.FC = () => {
         {/* First Row - 4 Cards */}
         <Grid container spacing={2.5} sx={{ mb: 2.5 }}>
           {intrusionKpiData.slice(0, 4).map((kpi, index) => (
-            <Grid size={{xs:12,sm:6,md:3}}
-            key={index}>
+            <Grid key={index} size={{ xs: 12, sm: 6, md: 3 }}>
               <KpiCard {...kpi} />
             </Grid>
           ))}
@@ -254,19 +255,19 @@ const IntrusionDetection: React.FC = () => {
         {/* Second Row - 3 Cards */}
         <Grid container spacing={2.5}>
           {intrusionKpiData.slice(4).map((kpi, index) => (
-            <Grid  size={{xs:12,sm:6,md:3}} key={index + 4}>
+            <Grid key={index + 4} size={{ xs: 12, sm: 6, md: 3 }}>
               <KpiCard {...kpi} />
             </Grid>
           ))}
           {/* Empty grid item to maintain alignment */}
-          <Grid size={{xs:12,sm:6,md:3}} />
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} />
         </Grid>
       </Box>
 
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Active Intrusion Alerts */}
-        <Grid size={{xs:12,lg:8}} >
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Box
@@ -307,7 +308,7 @@ const IntrusionDetection: React.FC = () => {
               >
                 {activeIntrusions.map((intrusion, index) => (
                   <Grid
-                    size={{xs:12,md:6}}
+                    size={{ xs: 12, md: 6 }}
                     key={index}
                     sx={{ display: "flex" }} // ⬅️ allows the card to stretch
                   >
@@ -477,7 +478,8 @@ const IntrusionDetection: React.FC = () => {
         </Grid>
 
         {/* Security Zones Status */}
-        <Grid size={{xs:12,lg:4}} >
+        {/* item xs={12} lg={4} */}
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Typography

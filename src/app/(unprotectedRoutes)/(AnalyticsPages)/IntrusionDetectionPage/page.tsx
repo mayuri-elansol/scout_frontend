@@ -1,5 +1,6 @@
+"use client";
 
-import IntrusionDetection from './IntrusionDetection';
+import IntrusionDetection from "./IntrusionDetection";
 
 export default function IntrusionDetectionPage() {
   return <IntrusionDetection />;
