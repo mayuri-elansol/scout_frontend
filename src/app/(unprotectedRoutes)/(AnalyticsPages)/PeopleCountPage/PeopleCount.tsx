@@ -1,5 +1,5 @@
 import React from "react";
-import  ReportTable  from "../../../components/organisms/ReportTable/ReportTable";
+import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
   Grid,
@@ -21,7 +21,7 @@ import {
   Error,
   Circle,
 } from "@mui/icons-material";
-import KpiCard from "../../../components/molecules/KpiCard/KpiCard";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 const PeopleCount: React.FC = () => {
   const theme = useTheme();
@@ -209,7 +209,8 @@ const PeopleCount: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {peopleCountKpiData.map((kpi, index) => (
-          <Grid size={{xs:12,sm :6,md:4,lg:3}} key={index}>
+          // item xs={12} sm={6} md={4} lg={3}
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
           </Grid>
         ))}
@@ -218,7 +219,8 @@ const PeopleCount: React.FC = () => {
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Real-time Zone Occupancy */}
-        <Grid size={{xs:12,lg:8}}>
+        {/* item xs={12} lg={8} */}
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Box
@@ -254,7 +256,8 @@ const PeopleCount: React.FC = () => {
 
               <Grid container spacing={2}>
                 {zoneOccupancy.map((zone, index) => (
-                  <Grid size={{xs:12,md:6}} key={index}>
+                  // item xs={12} md={6}
+                  <Grid size={{ xs: 12, md: 6 }} key={index}>
                     <Card
                       sx={{
                         backgroundColor: zone.bgColor,
@@ -411,7 +414,8 @@ const PeopleCount: React.FC = () => {
         </Grid>
 
         {/* Hourly Count Trend */}
-        <Grid size={{xs:12,lg:4}}>
+        {/* item xs={12} lg={4} */}
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Typography

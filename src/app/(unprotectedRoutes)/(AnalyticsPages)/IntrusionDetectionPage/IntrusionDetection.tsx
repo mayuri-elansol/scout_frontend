@@ -19,6 +19,7 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 const IntrusionDetection: React.FC = () => {

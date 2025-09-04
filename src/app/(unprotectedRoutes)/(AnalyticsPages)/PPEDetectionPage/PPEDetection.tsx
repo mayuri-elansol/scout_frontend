@@ -1,6 +1,6 @@
 import React from "react";
-import  ReportTable  from "../../../components/organisms/ReportTable/ReportTable";
-import  KpiCard  from "../../../components/molecules/KpiCard/KpiCard";
+import { ReportTable } from "@/app/components/organisms";
+import { KpiCard } from "@/app/components/molecules";
 import {
   Box,
   Grid,
@@ -19,6 +19,7 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
+//import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
   const theme = useTheme();
@@ -66,6 +67,28 @@ const PPEDetection: React.FC = () => {
     },
   ];
 
+  // const recentViolations = [
+  //   {
+  //     title: "Hard hat missing",
+  //     location: "Production Zone A",
+  //     time: "14:32",
+  //     workerId: "W-4521",
+  //     severity: "HIGH",
+  //     status: "ACTIVE",
+  //     imageUrl:
+  //       "https://www.google.com/search?sca_esv=8c966bae1d54a914&rlz=1C1CHBD_enIN1164IN1164&udm=2&fbs=AIIjpHxU7SXXniUZfeShr2fp4giZ1Y6MJ25_tmWITc7uy4KIeioyp3OhN11EY0n5qfq-zEMZldv_eRjZ2XLYc5GnVnMEIxC4WQfoNDH7FwchyAayyomVtyMIlwCjX48LT0TrXSNU5mLhW4DIlZIt3-gwG8mMeXC-Y0JFzx5GBuU59za0o5XLXRovSVas40d3y4gTUxobLZ8-C-h3aNfCXmcENPvCZqzMdA&q=image&sa=X&ved=2ahUKEwjkq5eA77uPAxVR3TgGHYInHUAQtKgLegQIFhAB&biw=1920&bih=945&dpr=1#vhid=2brKLR3s5kTpPM&vssid=mosaic",
+  //   },
+  //   {
+  //     title: "Safety vest not worn",
+  //     location: "Warehouse Zone B",
+  //     time: "14:18",
+  //     workerId: "W-3847",
+  //     severity: "MEDIUM",
+  //     status: "ACKNOWLEDGED",
+  //     imageUrl:
+  //       "https://www.vecteezy.com/photo/57068323-single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image",
+  //   },
+  // ];
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -74,6 +97,7 @@ const PPEDetection: React.FC = () => {
       workerId: "W-4521",
       severity: "HIGH",
       status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
@@ -82,9 +106,9 @@ const PPEDetection: React.FC = () => {
       workerId: "W-3847",
       severity: "MEDIUM",
       status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-
   const complianceByZone = [
     {
       zone: "Production Floor",
@@ -121,7 +145,19 @@ const PPEDetection: React.FC = () => {
         return "#9e9e9e";
     }
   };
+  const handleSubmitFilter = async (filters: Record<string, any>) => {
+    console.log("Selected Filters:", filters);
+    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
+  };
 
+  const handleReset = () => {
+    console.log("reset button clickedd");
+  };
+
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested clikcedd:", format);
+    // call API with filters if needed
+  };
   return (
     <Box>
       {/* Page Header */}
@@ -147,7 +183,8 @@ const PPEDetection: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {ppeKpiData.map((kpi, index) => (
-          <Grid size={{xs:12,sm:6,md:6,lg:3}} key={index}>
+          // item xs={12} sm={6} md={6} lg={3}
+          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
           </Grid>
         ))}
@@ -156,206 +193,17 @@ const PPEDetection: React.FC = () => {
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Recent PPE Violations */}
-        <Grid  size={{xs:12,lg:8}}>
-          <Card>
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 2.5,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Warning sx={{ fontSize: 20, color: "#f44336" }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#1c2025" }}
-                  >
-                    Recent PPE Violations
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Visibility />}
-                  sx={{
-                    color: "#1976d2",
-                    borderColor: "#1976d2",
-                    fontSize: "14px",
-                    textTransform: "none",
-                  }}
-                >
-                  View All
-                </Button>
-              </Box>
-
-              <Grid container spacing={2}>
-                {recentViolations.map((violation, index) => (
-                  <Grid
-                    size={{xs:12,md:6}}
-                  
-                    key={index}
-                    sx={{ display: "flex" }}
-                  >
-                    <Card
-                      sx={{
-                        backgroundColor: "#fff8e1",
-                        border: "1px solid #ddd",
-                        borderRadius: 1,
-                        flex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                      }}
-                    >
-                      <CardContent
-                        sx={{
-                          p: 2,
-                          flex: 1,
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        {/* Header Info */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 1.5,
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontSize: "16px",
-                                fontWeight: 600,
-                                color: "#1c2025",
-                                mb: 0.5,
-                              }}
-                            >
-                              {violation.title}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                                mb: 0.25,
-                              }}
-                            >
-                              {violation.location} • {violation.time}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                              }}
-                            >
-                              Worker ID: {violation.workerId}
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 0.5,
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                backgroundColor:
-                                  violation.severity === "HIGH"
-                                    ? "#f44336"
-                                    : "#ff9800",
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {violation.severity}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                backgroundColor:
-                                  violation.status === "ACTIVE"
-                                    ? "#f44336"
-                                    : "#ff9800",
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {violation.status}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Violation Image Placeholder */}
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: 120,
-                            backgroundColor: "#e9ecef",
-                            borderRadius: 0.75,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mb: 1.5,
-                            border: "1px solid #dee2e6",
-                          }}
-                        >
-                          <Box sx={{ textAlign: "center", color: "#6c757d" }}>
-                            <CameraAlt sx={{ fontSize: 24, mb: 0.5 }} />
-                            <Typography sx={{ fontSize: "12px" }}>
-                              Violation Image Preview
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Action Buttons (stick to bottom) */}
-                        <Box sx={{ mt: "auto", display: "flex", gap: 1 }}>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              flex: 1,
-                              backgroundColor: "#1976d2",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            Acknowledge
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              flex: 1,
-                              color: "#1976d2",
-                              borderColor: "#1976d2",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            View Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
+        {/* item xs={12} lg={8} */}
+        <Grid size={{ xs: 12, lg: 8 }}>
+          {/* <RecentViolations
+            violations={recentViolations}
+            onViewAll={() => console.log("View all clicked")}
+          /> */}
         </Grid>
 
         {/* PPE Compliance by Zone */}
-        <Grid size={{xs:12,lg:4}}>
+        {/* item xs={12} lg={4} */}
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Typography
@@ -522,7 +370,22 @@ const PPEDetection: React.FC = () => {
             resolution: "Supervisor notified",
           },
         ]}
-        downloadFileName="ppe-violations-report.csv"
+        // filters={[
+        //   { id: "name", label: "Search Name", type: "text" },
+        //   {
+        //     id: "employeeId",
+        //     label: "Employee",
+        //     type: "select",
+        //     options: ["David Kim", "Missing", "Resolved"],
+        //   },
+        //   { id: "createdAt", label: "Start Date", type: "date" },
+        //   { id: "resolvedAt", label: "End Date", type: "date" },
+        // ]}
+        // onSubmit={handleSubmitFilter}
+        // onReset={handleReset}
+        // onExport={handleExport}
+        //  isSubmitDisabled={loading}
+        downloadFileName="ppe-violations-report"
       />
     </Box>
   );
