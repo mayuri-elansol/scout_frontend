@@ -18,49 +18,31 @@ import {
   Breadcrumb,
   ActivityFeed,
   CameraStatus,
-<<<<<<< HEAD
-} from "../../components/organisms";
-import KpiCard from "../../components/molecules/KpiCard/KpiCard";
-=======
 } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 
 // Import other page components
 import PPEDetection from "../(AnalyticsPages)/PPEDetectionPage/page";
 import IntrusionDetection from "../(AnalyticsPages)/IntrusionDetectionPage/page";
 import EmployeePresence from "../(AnalyticsPages)/EmployeePresencePage/page";
 import PeopleCount from "../(AnalyticsPages)/PeopleCountPage/page";
-<<<<<<< HEAD
-import LiveStreaming from "../LiveStreamingPage/LiveStreaming";
-import SystemAlerts from "../AlertsPage/SystemAlerts";
-import Phonesidebar from "../../components/organisms/PhoneSidebar/Phonesidebar";
-=======
 import LiveStreaming from "../LiveStreamingPage/page";
 import SystemAlerts from "../AlertsPage/SystemAlerts";
 import Phonesidebar from "@/app/components/organisms/PhoneSidebar/Phonesidebar";
 // import WelcomeBanner from "@/components/templates/welcome/WelcomeBanner";
 import { useTranslation } from "react-i18next";
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 
 export interface DashboardPageProps {}
 
 const Dashboard: React.FC<DashboardPageProps> = () => {
-<<<<<<< HEAD
-=======
   const { t } = useTranslation();
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
   const theme = useTheme();
   const isTabletOrPhone = useMediaQuery(theme.breakpoints.down("lg"));
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
   const kpiData: KpiData[] = [
     {
-<<<<<<< HEAD
-      title: "PPE Compliance",
-=======
       title: t("PPE Compliance"),
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
       value: "87.5%",
       subtitle: "3 violations in last hour",
       trend: "-2.3%",
@@ -169,19 +151,6 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
     <Box
       sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f5f7fa" }}
     >
-<<<<<<< HEAD
-    
-
-      {/* Sidebar */}
-      {/* <Sidebar currentPage={currentPage} onPageChange={handlePageChange} /> */}
-      {/* Sidebar (Desktop & Laptop) */}
-      {!isTabletOrPhone && (
-        <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
-      )}
-
-      {/* PhoneSidebar (Tablet & Phone) */}
-      {isTabletOrPhone && (
-=======
       {/* Sidebar */}
       {/* <Sidebar currentPage={currentPage} onPageChange={handlePageChange} /> */}
       {/* Sidebar (Desktop & Laptop) */}
@@ -191,43 +160,25 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
 
       {/* PhoneSidebar (Tablet & Phone) */}
       {/* {isTabletOrPhone && (
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
         <Phonesidebar
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-<<<<<<< HEAD
-      )}
-=======
       )} */}
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
       {/* Main Content */}
       <Box
         component="main"
         sx={{
-<<<<<<< HEAD
-          position: "absolute",
-          // left: "65px",
-          left: isTabletOrPhone ? "65px" : "296px",
-          right: "16px",
-          top: "120px",
-=======
           // position: "absolute",
           // left: "65px",
           left: isTabletOrPhone ? "65px" : "296px",
           right: "16px",
           top: "64px",
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
           bottom: 0,
           // overflow: "auto",
         }}
       >
-<<<<<<< HEAD
-        {/* Breadcrumb */}
-        {/* <Breadcrumb currentPage={currentPage} onPageChange={handlePageChange} /> */}
-=======
         {/* Welcome Page */}
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 
         {/* Dashboard Content */}
         {currentPage === "dashboard" && (
@@ -240,7 +191,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
                 flexWrap: "wrap",
                 gap: 2.5,
                 mb: 4,
-                px: 2,
+                // px: 2,
               }}
             >
               {kpiData.map((kpi, index) => (
@@ -262,7 +213,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
                 display: "flex",
                 gap: 3,
                 flexWrap: "wrap",
-                px: 2,
+                // px: 2,
               }}
             >
               <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
@@ -274,16 +225,12 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
             </Box>
           </>
         )}
-<<<<<<< HEAD
-
-=======
         {/* Welcome Page */}
         {/* {currentPage === "welcome" && (
           <Box sx={{ px: 2, pt: 2 }}>
             <WelcomeBanner />
           </Box>
         )} */}
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
         {/* PPE Detection Page */}
         {currentPage === "ppe-detection" && (
           <Box sx={{ px: 2, pt: 2 }}>

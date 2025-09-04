@@ -22,18 +22,6 @@ import {
   Description,
   Warning,
   BarChart,
-<<<<<<< HEAD
-} from "@mui/icons-material";
-
-interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
-}
-
-interface MenuItem {
-  name: string;
-  page: string;
-=======
   PeopleAlt,
 } from "@mui/icons-material";
 
@@ -61,22 +49,14 @@ interface SidebarProps {
 interface MenuItem {
   name: string;
   page: PageType;
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 }
 
 interface MenuCategory {
   title: string;
   icon: React.ComponentType;
-<<<<<<< HEAD
-  page?: string;
-  items?: MenuItem[];
-}
-
-=======
   page?: PageType;
   items?: MenuItem[];
 }
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 const Phonesidebar: React.FC<SidebarProps> = ({
   currentPage,
   onPageChange,
@@ -143,10 +123,7 @@ const Phonesidebar: React.FC<SidebarProps> = ({
     { title: "Alerts", icon: Warning, page: "alerts" },
     { title: "Settings", icon: Settings, page: "settings" },
     { title: "Live Streaming", icon: VideoCall, page: "live-streaming" },
-<<<<<<< HEAD
-=======
     // { title: "Welcome", icon: PeopleAlt, page: "welcome" },
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
   ];
 
   const handleMouseEnter = (
@@ -191,21 +168,13 @@ const Phonesidebar: React.FC<SidebarProps> = ({
   const handleMenuItemClick = (item: MenuCategory) => {
     if (item.page) {
       onPageChange(item.page);
-<<<<<<< HEAD
-      // Close popover when clicking on direct navigation items
-=======
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
       setPopoverOpen(false);
       setAnchorEl(null);
       setHoverMenu(null);
     }
   };
 
-<<<<<<< HEAD
-  const handleSubMenuClick = (page: string) => {
-=======
   const handleSubMenuClick = (page: PageType) => {
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
     onPageChange(page);
     setPopoverOpen(false);
     setAnchorEl(null);

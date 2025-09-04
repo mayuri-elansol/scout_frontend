@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import ReportTable  from "../../../components/organisms/ReportTable/ReportTable";
-=======
 import { ReportTable } from "@/app/components/organisms";
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 import {
   Box,
   Grid,
@@ -11,10 +7,7 @@ import {
   Card,
   CardContent,
   Button,
-<<<<<<< HEAD
-=======
   useTheme,
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 } from "@mui/material";
 import {
   People,
@@ -29,16 +22,10 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
-<<<<<<< HEAD
-import KpiCard from "../../../components/molecules/KpiCard/KpiCard";
-
-const EmployeePresence: React.FC = () => {
-=======
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 const EmployeePresence: React.FC = () => {
   const theme = useTheme();
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
 
   const employeeKpiData = [
     {
@@ -284,12 +271,8 @@ const EmployeePresence: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {employeeKpiData.map((kpi, index) => (
-<<<<<<< HEAD
-          <Grid size={{xs:12,sm:6,md:4,lg:3}} key={index}>
-=======
           // item xs={12} sm={6} md={4} lg={3}
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
             <KpiCard {...kpi} />
           </Grid>
         ))}
@@ -298,12 +281,8 @@ const EmployeePresence: React.FC = () => {
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Active Critical Zone Personnel */}
-<<<<<<< HEAD
-        <Grid size={{xs:12,lg:8}}>
-=======
         {/* item xs={12} lg={8} */}
         <Grid size={{ xs: 12, lg: 8 }}>
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Box
@@ -339,12 +318,8 @@ const EmployeePresence: React.FC = () => {
 
               <Grid container spacing={2}>
                 {activePersonnel.map((employee, index) => (
-<<<<<<< HEAD
-                  <Grid size={{xs:12,md:6}} key={index}>
-=======
                   // item xs={12} md={6}
                   <Grid size={{ xs: 12, md: 6 }} key={index}>
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
                     <Card
                       sx={{
                         height: "100%",
@@ -477,12 +452,8 @@ const EmployeePresence: React.FC = () => {
         </Grid>
 
         {/* Critical Zones Status */}
-<<<<<<< HEAD
-        <Grid size={{xs:12,lg:4}}>
-=======
         {/* item xs={12} lg={4} */}
         <Grid size={{ xs: 12, lg: 4 }}>
->>>>>>> df7c71f2996b14c41b0cc7b9237b7cf134838c9a
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Typography
