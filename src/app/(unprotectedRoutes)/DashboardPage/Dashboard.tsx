@@ -18,28 +18,31 @@ import {
   Breadcrumb,
   ActivityFeed,
   CameraStatus,
-} from "../../components/organisms";
-import KpiCard from "../../components/molecules/KpiCard/KpiCard";
+} from "@/app/components/organisms";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 // Import other page components
 import PPEDetection from "../(AnalyticsPages)/PPEDetectionPage/page";
 import IntrusionDetection from "../(AnalyticsPages)/IntrusionDetectionPage/page";
 import EmployeePresence from "../(AnalyticsPages)/EmployeePresencePage/page";
 import PeopleCount from "../(AnalyticsPages)/PeopleCountPage/page";
-import LiveStreaming from "../LiveStreamingPage/LiveStreaming";
+import LiveStreaming from "../LiveStreamingPage/page";
 import SystemAlerts from "../AlertsPage/SystemAlerts";
-import Phonesidebar from "../../components/organisms/PhoneSidebar/Phonesidebar";
+import Phonesidebar from "@/app/components/organisms/PhoneSidebar/Phonesidebar";
+// import WelcomeBanner from "@/components/templates/welcome/WelcomeBanner";
+import { useTranslation } from "react-i18next";
 
 export interface DashboardPageProps {}
 
 const Dashboard: React.FC<DashboardPageProps> = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isTabletOrPhone = useMediaQuery(theme.breakpoints.down("lg"));
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
   const kpiData: KpiData[] = [
     {
-      title: "PPE Compliance",
+      title: t("PPE Compliance"),
       value: "87.5%",
       subtitle: "3 violations in last hour",
       trend: "-2.3%",
@@ -148,37 +151,34 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
     <Box
       sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f5f7fa" }}
     >
-    
-
       {/* Sidebar */}
       {/* <Sidebar currentPage={currentPage} onPageChange={handlePageChange} /> */}
       {/* Sidebar (Desktop & Laptop) */}
-      {!isTabletOrPhone && (
+      {/* {!isTabletOrPhone && (
         <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
-      )}
+      )} */}
 
       {/* PhoneSidebar (Tablet & Phone) */}
-      {isTabletOrPhone && (
+      {/* {isTabletOrPhone && (
         <Phonesidebar
           currentPage={currentPage}
           onPageChange={handlePageChange}
         />
-      )}
+      )} */}
       {/* Main Content */}
       <Box
         component="main"
         sx={{
-          position: "absolute",
+          // position: "absolute",
           // left: "65px",
           left: isTabletOrPhone ? "65px" : "296px",
           right: "16px",
-          top: "120px",
+          top: "64px",
           bottom: 0,
           // overflow: "auto",
         }}
       >
-        {/* Breadcrumb */}
-        {/* <Breadcrumb currentPage={currentPage} onPageChange={handlePageChange} /> */}
+        {/* Welcome Page */}
 
         {/* Dashboard Content */}
         {currentPage === "dashboard" && (
@@ -225,7 +225,12 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
             </Box>
           </>
         )}
-
+        {/* Welcome Page */}
+        {/* {currentPage === "welcome" && (
+          <Box sx={{ px: 2, pt: 2 }}>
+            <WelcomeBanner />
+          </Box>
+        )} */}
         {/* PPE Detection Page */}
         {currentPage === "ppe-detection" && (
           <Box sx={{ px: 2, pt: 2 }}>

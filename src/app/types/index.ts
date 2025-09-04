@@ -1,4 +1,4 @@
-import { SvgIconComponent } from '@mui/icons-material';
+import { SvgIconComponent } from "@mui/icons-material";
 
 // Sidebar Menu Types
 export interface MenuItem {
@@ -53,26 +53,26 @@ export interface KpiData {
 }
 
 // Page Navigation Types
-export type PageType = 
-  | 'dashboard' 
-  | 'ppe-detection' 
-  | 'intrusion-detection' 
-  | 'employee-presence' 
-  | 'people-count'
-  | 'object-detection'
-  | 'fire-detection'
-  | 'vehicle-speed'
-  | 'fire-incidents'
-  | 'security-breach'
-  | 'vehicle-tracking'
-  | 'work-hours'
-  | 'zone-occupancy'
-  | 'crowd-management'
-  | 'live-streaming'
-  | 'alerts'
-  | 'reports'
-  | 'settings';
-
+export type PageType =
+  | "dashboard"
+  | "ppe-detection"
+  | "intrusion-detection"
+  | "employee-presence"
+  | "people-count"
+  | "object-detection"
+  | "fire-detection"
+  | "vehicle-speed"
+  | "fire-incidents"
+  | "security-breach"
+  | "vehicle-tracking"
+  | "work-hours"
+  | "zone-occupancy"
+  | "crowd-management"
+  | "live-streaming"
+  | "alerts"
+  | "reports"
+  | "settings"
+  | "welcome";
 
 // Component Props Types
 export interface SidebarProps {
@@ -90,7 +90,7 @@ export interface ActivityItem {
   id: string;
   message: string;
   time: string;
-  severity: 'high' | 'medium' | 'low';
+  severity: "high" | "medium" | "low";
   zone?: string;
 }
 
@@ -100,7 +100,7 @@ export interface ActivityData {
   location: string;
   time: string;
   id: string;
-  priority: 'HIGH' | 'MEDIUM' | 'NORMAL';
+  priority: "HIGH" | "MEDIUM" | "NORMAL";
   color: string;
 }
 
@@ -109,7 +109,7 @@ export interface CameraZone {
   id?: string;
   zone?: string; // Legacy support
   name?: string;
-  status?: 'online' | 'offline' | 'warning';
+  status?: "online" | "offline" | "warning";
   cameras?: number;
   active?: number;
   total?: number;
@@ -126,8 +126,14 @@ export interface PPEViolation {
   violation?: string;
   violationType?: string; // Alternative naming
   timestamp: string;
-  severity: 'high' | 'medium' | 'low' | 'HIGH' | 'MEDIUM' | 'CRITICAL';
-  status?: 'ACTIVE' | 'ACKNOWLEDGED' | 'RESOLVED' | 'active' | 'resolved' | 'investigating';
+  severity: "high" | "medium" | "low" | "HIGH" | "MEDIUM" | "CRITICAL";
+  status?:
+    | "ACTIVE"
+    | "ACKNOWLEDGED"
+    | "RESOLVED"
+    | "active"
+    | "resolved"
+    | "investigating";
   camera?: string;
   resolution?: string;
 }
@@ -137,7 +143,7 @@ export interface IntrusionAlert {
   location: string;
   description: string;
   timestamp: string;
-  status: 'active' | 'resolved' | 'investigating';
+  status: "active" | "resolved" | "investigating";
 }
 
 export interface EmployeePresenceData {
@@ -145,7 +151,7 @@ export interface EmployeePresenceData {
   name: string;
   zone: string;
   entryTime: string;
-  status: 'present' | 'absent' | 'break';
+  status: "present" | "absent" | "break";
 }
 
 export interface PeopleCountData {
@@ -153,7 +159,7 @@ export interface PeopleCountData {
   current: number;
   capacity: number;
   percentage: number;
-  status: 'normal' | 'warning' | 'critical';
+  status: "normal" | "warning" | "critical";
 }
 
 // Zone Data Types

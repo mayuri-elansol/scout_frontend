@@ -22,25 +22,41 @@ import {
   Description,
   Warning,
   BarChart,
+  PeopleAlt,
 } from "@mui/icons-material";
 
-interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
-}
+// interface SidebarProps {
+//   currentPage: string;
+//   onPageChange: (page: string) => void;
+// }
+import { PageType } from "@/app/types";
 
+interface SidebarProps {
+  currentPage: PageType;
+  onPageChange: (page: PageType) => void;
+}
+// interface MenuItem {
+//   name: string;
+//   page: string;
+// }
+
+// interface MenuCategory {
+//   title: string;
+//   icon: React.ComponentType;
+//   page?: string;
+//   items?: MenuItem[];
+// }
 interface MenuItem {
   name: string;
-  page: string;
+  page: PageType;
 }
 
 interface MenuCategory {
   title: string;
   icon: React.ComponentType;
-  page?: string;
+  page?: PageType;
   items?: MenuItem[];
 }
-
 const Phonesidebar: React.FC<SidebarProps> = ({
   currentPage,
   onPageChange,
@@ -107,6 +123,7 @@ const Phonesidebar: React.FC<SidebarProps> = ({
     { title: "Alerts", icon: Warning, page: "alerts" },
     { title: "Settings", icon: Settings, page: "settings" },
     { title: "Live Streaming", icon: VideoCall, page: "live-streaming" },
+    // { title: "Welcome", icon: PeopleAlt, page: "welcome" },
   ];
 
   const handleMouseEnter = (
@@ -151,14 +168,13 @@ const Phonesidebar: React.FC<SidebarProps> = ({
   const handleMenuItemClick = (item: MenuCategory) => {
     if (item.page) {
       onPageChange(item.page);
-      // Close popover when clicking on direct navigation items
       setPopoverOpen(false);
       setAnchorEl(null);
       setHoverMenu(null);
     }
   };
 
-  const handleSubMenuClick = (page: string) => {
+  const handleSubMenuClick = (page: PageType) => {
     onPageChange(page);
     setPopoverOpen(false);
     setAnchorEl(null);

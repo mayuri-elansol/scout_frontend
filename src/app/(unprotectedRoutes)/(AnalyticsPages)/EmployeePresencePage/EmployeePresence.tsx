@@ -1,5 +1,5 @@
 import React from "react";
-import ReportTable  from "../../../components/organisms/ReportTable/ReportTable";
+import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
   Grid,
@@ -7,6 +7,7 @@ import {
   Card,
   CardContent,
   Button,
+  useTheme,
 } from "@mui/material";
 import {
   People,
@@ -21,9 +22,10 @@ import {
   CameraAlt,
   Circle,
 } from "@mui/icons-material";
-import KpiCard from "../../../components/molecules/KpiCard/KpiCard";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 const EmployeePresence: React.FC = () => {
+  const theme = useTheme();
 
   const employeeKpiData = [
     {
@@ -269,7 +271,8 @@ const EmployeePresence: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {employeeKpiData.map((kpi, index) => (
-          <Grid size={{xs:12,sm:6,md:4,lg:3}} key={index}>
+          // item xs={12} sm={6} md={4} lg={3}
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
           </Grid>
         ))}
@@ -278,7 +281,8 @@ const EmployeePresence: React.FC = () => {
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Active Critical Zone Personnel */}
-        <Grid size={{xs:12,lg:8}}>
+        {/* item xs={12} lg={8} */}
+        <Grid size={{ xs: 12, lg: 8 }}>
           <Card>
             <CardContent sx={{ p: 3 }}>
               <Box
@@ -314,7 +318,8 @@ const EmployeePresence: React.FC = () => {
 
               <Grid container spacing={2}>
                 {activePersonnel.map((employee, index) => (
-                  <Grid size={{xs:12,md:6}} key={index}>
+                  // item xs={12} md={6}
+                  <Grid size={{ xs: 12, md: 6 }} key={index}>
                     <Card
                       sx={{
                         height: "100%",
@@ -447,7 +452,8 @@ const EmployeePresence: React.FC = () => {
         </Grid>
 
         {/* Critical Zones Status */}
-        <Grid size={{xs:12,lg:4}}>
+        {/* item xs={12} lg={4} */}
+        <Grid size={{ xs: 12, lg: 4 }}>
           <Card sx={{ height: "100%" }}>
             <CardContent sx={{ p: 3 }}>
               <Typography
