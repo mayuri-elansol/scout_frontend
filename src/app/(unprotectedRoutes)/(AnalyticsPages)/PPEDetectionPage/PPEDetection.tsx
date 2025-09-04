@@ -20,7 +20,6 @@ import {
   Circle,
 } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-//import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
   const theme = useTheme();
