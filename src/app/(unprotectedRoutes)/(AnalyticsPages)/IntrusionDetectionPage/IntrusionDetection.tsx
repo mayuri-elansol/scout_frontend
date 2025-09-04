@@ -21,6 +21,7 @@ import {
 } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 
 const IntrusionDetection: React.FC = () => {
   const theme = useTheme();
@@ -103,37 +104,41 @@ const IntrusionDetection: React.FC = () => {
       title: "Unauthorized person at main gate",
       location: "Main Entrance Perimeter - Camera 1",
       time: "15:42",
-      intruderId: "UNKNOWN-001",
+      Id: "UNKNOWN-001",
       severity: "CRITICAL",
       status: "ACTIVE",
       bgColor: "#ffcdd2",
+      imageUrl: "https://picsum.photos/800/400",
     },
     {
       title: "Fence breach detected",
       location: "East Boundary - Camera 8",
       time: "15:28",
-      intruderId: "UNKNOWN-002",
+      Id: "UNKNOWN-002",
       severity: "HIGH",
       status: "INVESTIGATING",
       bgColor: "#fff8e1",
+      imageUrl: "https://picsum.photos/400/200?random=2",
     },
     {
       title: "Suspicious activity near warehouse",
       location: "Warehouse Perimeter - Camera 12",
       time: "15:15",
-      intruderId: "UNKNOWN-003",
+      Id: "UNKNOWN-003",
       severity: "HIGH",
       status: "RESOLVED",
       bgColor: "#e8f5e9",
+      imageUrl: "https://picsum.photos/400/200?random=3",
     },
     {
       title: "Multiple persons at restricted zone",
       location: "North Security Zone - Camera 15",
       time: "14:58",
-      intruderId: "UNKNOWN-004",
+      Id: "UNKNOWN-004",
       severity: "CRITICAL",
       status: "ESCALATED",
       bgColor: "#f3e5f5",
+      imageUrl: "https://picsum.photos/400/200?random=4",
     },
   ];
 
@@ -269,213 +274,11 @@ const IntrusionDetection: React.FC = () => {
       <Grid container spacing={3}>
         {/* Active Intrusion Alerts */}
         <Grid size={{ xs: 12, lg: 8 }}>
-          <Card>
-            <CardContent sx={{ p: 3 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  mb: 2.5,
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Warning sx={{ fontSize: 20, color: "#f44336" }} />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 600, color: "#1c2025" }}
-                  >
-                    Active Intrusion Alerts
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<Visibility />}
-                  sx={{
-                    color: "#1976d2",
-                    borderColor: "#1976d2",
-                    fontSize: "14px",
-                    textTransform: "none",
-                  }}
-                >
-                  View All
-                </Button>
-              </Box>
-
-              <Grid
-                container
-                spacing={2}
-                alignItems="stretch" // ⬅️ makes all cards in a row equal height
-              >
-                {activeIntrusions.map((intrusion, index) => (
-                  <Grid
-                    size={{ xs: 12, md: 6 }}
-                    key={index}
-                    sx={{ display: "flex" }} // ⬅️ allows the card to stretch
-                  >
-                    <Card
-                      sx={{
-                        backgroundColor: intrusion.bgColor,
-                        border: "1px solid #ddd",
-                        borderRadius: 1,
-                        flex: 1, // ⬅️ card fills available height
-                        display: "flex", // ⬅️ makes card a flex container
-                        flexDirection: "column", // ⬅️ so content stacks vertically
-                      }}
-                    >
-                      <CardContent
-                        sx={{
-                          p: 2,
-                          flex: 1, // ⬅️ card content takes full height
-                          display: "flex",
-                          flexDirection: "column", // ⬅️ so we can push buttons to bottom
-                        }}
-                      >
-                        {/* Top Section */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            mb: 1.5,
-                          }}
-                        >
-                          <Box>
-                            <Typography
-                              sx={{
-                                fontSize: "16px",
-                                fontWeight: 600,
-                                color: "#1c2025",
-                                mb: 0.5,
-                              }}
-                            >
-                              {intrusion.title}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                fontSize: "14px",
-                                color: "#5c6b7d",
-                                mb: 0.25,
-                              }}
-                            >
-                              {intrusion.location} • {intrusion.time}
-                            </Typography>
-                            <Typography
-                              sx={{ fontSize: "14px", color: "#5c6b7d" }}
-                            >
-                              Intruder ID: {intrusion.intruderId}
-                            </Typography>
-                          </Box>
-
-                          {/* Severity + Status */}
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 0.5,
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <Typography
-                              sx={{
-                                backgroundColor:
-                                  intrusion.severity === "CRITICAL"
-                                    ? "#d32f2f"
-                                    : "#f44336",
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {intrusion.severity}
-                            </Typography>
-                            <Typography
-                              sx={{
-                                backgroundColor:
-                                  intrusion.status === "ACTIVE"
-                                    ? "#f44336"
-                                    : intrusion.status === "INVESTIGATING"
-                                    ? "#ff9800"
-                                    : intrusion.status === "RESOLVED"
-                                    ? "#4caf50"
-                                    : "#9c27b0",
-                                color: "white",
-                                px: 1,
-                                py: 0.5,
-                                borderRadius: 0.5,
-                                fontSize: "11px",
-                                fontWeight: 600,
-                              }}
-                            >
-                              {intrusion.status}
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Evidence Placeholder */}
-                        <Box
-                          sx={{
-                            width: "100%",
-                            height: 120,
-                            backgroundColor: "#e9ecef",
-                            borderRadius: 0.75,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mb: 1.5,
-                            border: "1px solid #dee2e6",
-                          }}
-                        >
-                          <Box sx={{ textAlign: "center", color: "#6c757d" }}>
-                            <CameraAlt sx={{ fontSize: 24, mb: 0.5 }} />
-                            <Typography sx={{ fontSize: "12px" }}>
-                              Intrusion Evidence
-                            </Typography>
-                          </Box>
-                        </Box>
-
-                        {/* Action Buttons */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            gap: 1,
-                            mt: "auto", // ⬅️ pushes buttons to the bottom of the card
-                          }}
-                        >
-                          <Button
-                            variant="contained"
-                            sx={{
-                              flex: 1,
-                              backgroundColor: "#f44336",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            Alert Security
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            sx={{
-                              flex: 1,
-                              color: "#1976d2",
-                              borderColor: "#1976d2",
-                              fontSize: "14px",
-                              textTransform: "none",
-                            }}
-                          >
-                            View Details
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </CardContent>
-          </Card>
+          <RecentViolations
+            label=" Intrusion Detection at Premises Perimeter"
+            violations={activeIntrusions}
+            onViewAll={() => console.log("View all clicked")}
+          />
         </Grid>
 
         {/* Security Zones Status */}
@@ -678,7 +481,47 @@ const IntrusionDetection: React.FC = () => {
             resolution: "Access denied, logged",
           },
         ]}
-        downloadFileName="security-intrusion-report.csv"
+        filters={[
+          { id: "intruderId", label: "Intruder ID", type: "text" },
+          {
+            id: "breachType",
+            label: "Breach Type",
+            type: "select",
+            options: [
+              "Unauthorized Entry Attempt",
+              "Fence Climbing",
+              "Suspicious Vehicle",
+              "Multiple Persons Detected",
+              "After Hours Activity",
+              "Invalid Access Card",
+            ],
+          },
+          {
+            id: "severity",
+            label: "Severity",
+            type: "select",
+            options: ["Critical", "High", "Medium"],
+          },
+          {
+            id: "status",
+            label: "Status",
+            type: "select",
+            options: ["BREACH", "INVESTIGATING", "RESOLVED", "PENDING"],
+          },
+          {
+            id: "priority",
+            label: "Priority",
+            type: "select",
+            options: ["Critical", "High", "Medium"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
+        ]}
+        // onSubmit={handleSubmitFilter}
+        // onReset={handleReset}
+        // onExport={handleExport}
+        // isSubmitDisabled={loading}
+        downloadFileName="security-intrusion-report"
       />
     </Box>
   );

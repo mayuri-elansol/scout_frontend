@@ -18,6 +18,7 @@ import {
   Breadcrumb,
   ActivityFeed,
   CameraStatus,
+  ReportTable,
 } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
