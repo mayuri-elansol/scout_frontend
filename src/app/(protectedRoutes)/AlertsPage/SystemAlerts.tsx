@@ -30,7 +30,7 @@ import {
   InfoOutlined,
   Circle,
 } from "@mui/icons-material";
-import { AlertCard, AlertStatsCard } from "@/app/components";
+import { AlertCard, AlertStatsCard } from "../../components/molecules";
 
 const SystemAlerts: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
