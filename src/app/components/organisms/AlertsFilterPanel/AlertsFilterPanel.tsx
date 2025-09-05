@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+"use client";
+
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,8 +14,8 @@ import {
   IconButton,
   InputAdornment,
   Box,
-} from '@mui/material';
-import { Search, Download, Refresh } from '@mui/icons-material';
+} from "@mui/material";
+import { Search, Download, Refresh } from "@mui/icons-material";
 
 interface AlertsFilterPanelProps {
   searchQuery?: string;
@@ -27,9 +29,9 @@ interface AlertsFilterPanelProps {
 }
 
 const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
-  searchQuery = '',
-  severityFilter = '',
-  categoryFilter = '',
+  searchQuery = "",
+  severityFilter = "",
+  categoryFilter = "",
   onSearchChange,
   onSeverityChange,
   onCategoryChange,
@@ -59,7 +61,7 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
     <Card sx={{ mb: 3 }}>
       <CardContent sx={{ p: 3 }}>
         <Grid container spacing={3} alignItems="center">
-          <Grid  size={{xs:12,md:4}} >
+          <Grid size={{ xs: 12, md: 4 }}>
             <TextField
               fullWidth
               placeholder="Search by title, description, or location"
@@ -69,25 +71,25 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search sx={{ fontSize: 20, color: '#666' }} />
+                    <Search sx={{ fontSize: 20, color: "#666" }} />
                   </InputAdornment>
                 ),
               }}
               sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                "& .MuiOutlinedInput-root": {
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
                   },
                 },
               }}
             />
           </Grid>
-          
-          <Grid  size={{xs:12,md:3}}>
+
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Severity Level</InputLabel>
               <Select
@@ -95,12 +97,12 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
                 onChange={(e) => handleSeverityChange(e.target.value)}
                 label="Severity Level"
                 sx={{
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
                   },
                 }}
               >
@@ -112,8 +114,8 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
               </Select>
             </FormControl>
           </Grid>
-          
-          <Grid  size={{xs:12,md:3}}>
+
+          <Grid size={{ xs: 12, md: 3 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Category</InputLabel>
               <Select
@@ -121,12 +123,12 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 label="Category"
                 sx={{
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
                   },
                 }}
               >
@@ -138,21 +140,21 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
               </Select>
             </FormControl>
           </Grid>
-          
-          <Grid  size={{xs:12,md:2}}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
+
+          <Grid size={{ xs: 12, md: 2 }}>
+            <Box sx={{ display: "flex", gap: 1 }}>
               <Button
                 variant="contained"
                 startIcon={<Download />}
                 size="small"
                 onClick={onExport}
                 sx={{
-                  backgroundColor: '#1976d2',
-                  fontSize: '12px',
-                  textTransform: 'none',
+                  backgroundColor: "#1976d2",
+                  fontSize: "12px",
+                  textTransform: "none",
                   px: 2,
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
+                  "&:hover": {
+                    backgroundColor: "#1565c0",
                   },
                 }}
               >
@@ -162,10 +164,10 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
                 size="small"
                 onClick={onRefresh}
                 sx={{
-                  border: '1px solid #e0e0e0',
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                  border: "1px solid #e0e0e0",
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
                 }}
               >

@@ -26,7 +26,9 @@ interface RecentViolationsProps {
 }
 
 //  Reusable component (defined in same file)
-export const ViolationCard: React.FC<{ violation: Violation }> = ({ violation }) => {
+export const ViolationCard: React.FC<{ violation: Violation }> = ({
+  violation,
+}) => {
   return (
     <Card
       sx={{

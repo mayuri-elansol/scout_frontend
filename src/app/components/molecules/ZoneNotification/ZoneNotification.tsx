@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 
 interface Zone {
@@ -32,7 +27,9 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const ZoneNotification: React.FC<PPEComplianceByZoneProps> = ({ zones }) => {
+export const ZoneNotification: React.FC<PPEComplianceByZoneProps> = ({
+  zones,
+}) => {
   return (
     <Card sx={{ height: "100%" }}>
       <CardContent sx={{ p: 3 }}>
