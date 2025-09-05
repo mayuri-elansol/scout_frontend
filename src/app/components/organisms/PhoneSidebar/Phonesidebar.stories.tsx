@@ -3,7 +3,7 @@ import Sidebar from "./Phonesidebar";
 import { useState } from "react";
 
 const meta: Meta<typeof Sidebar> = {
-  title: "Components/PhoneSidebar",
+  title: "Components/Organisms/PhoneSidebar",
   component: Sidebar,
   tags: ["autodocs"],
 };

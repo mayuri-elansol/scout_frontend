@@ -230,13 +230,21 @@ const ReportTable: React.FC<ReportTableProps> = ({
             }}
           >
             {filters.map((filter) => (
-              <Box key={filter.id} sx={{ flex: "0 1 auto", minWidth: 150 }}>
+              <Box key={filter.id} sx={{ flex: "1 1 150px" }}>
                 {renderFilter(filter)}
               </Box>
             ))}
 
             {/* Buttons */}
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 2,
+                alignItems: "center",
+                flexGrow: 1,
+              }}
+            >
               <Button
                 size="small"
                 variant="contained"

@@ -290,6 +290,7 @@ const IntrusionDetection: React.FC = () => {
       </Grid>
 
       {/* Security Intrusion Report */}
+      {/* Security Intrusion Report */}
       <ReportTable
         title="Security Intrusion Report"
         columns={[
@@ -371,7 +372,56 @@ const IntrusionDetection: React.FC = () => {
             resolution: "Access denied, logged",
           },
         ]}
-        downloadFileName="security-intrusion-report.csv"
+        filters={[
+          { id: "intruderId", label: "Intruder ID", type: "text" },
+          {
+            id: "location",
+            label: "Location",
+            type: "select",
+            options: [
+              "Main Gate Perimeter",
+              "East Boundary Fence",
+              "Warehouse Loading Dock",
+              "North Security Zone",
+              "Parking Area",
+              "West Gate Access",
+            ],
+          },
+          {
+            id: "breachType",
+            label: "Breach Type",
+            type: "select",
+            options: [
+              "Unauthorized Entry Attempt",
+              "Fence Climbing",
+              "Suspicious Vehicle",
+              "Multiple Persons Detected",
+              "After Hours Activity",
+              "Invalid Access Card",
+            ],
+          },
+          {
+            id: "severity",
+            label: "Severity",
+            type: "select",
+            options: ["Critical", "High", "Medium"],
+          },
+          {
+            id: "status",
+            label: "Status",
+            type: "select",
+            options: ["BREACH", "INVESTIGATING", "RESOLVED", "PENDING"],
+          },
+          {
+            id: "priority",
+            label: "Priority",
+            type: "select",
+            options: ["Critical", "High", "Medium"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
+        ]}
+        downloadFileName="security-intrusion-report"
       />
     </Box>
   );

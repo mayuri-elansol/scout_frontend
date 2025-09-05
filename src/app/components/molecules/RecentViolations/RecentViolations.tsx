@@ -26,7 +26,6 @@ interface RecentViolationsProps {
   onViewAll?: () => void;
 }
 
-
 export default function RecentViolations({
   label,
   violations,
