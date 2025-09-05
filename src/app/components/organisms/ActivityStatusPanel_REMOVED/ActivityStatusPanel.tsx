@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, Typography, IconButton, Grid } from '@mui/material';
-import { People, Visibility } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-import ActivityCard from '../../molecules/ActivityCard/ActivityCard';
-import ZoneStatusCard from '../../molecules/ZoneStatusCard/ZoneStatusCard';
-import ScoutButton from '../../atoms/Button/Button';
+import React from "react";
+import { Box, Typography, IconButton, Grid } from "@mui/material";
+import { People, Visibility } from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import ActivityCard from "../../molecules/ActivityCard/ActivityCard";
+import ZoneStatusCard from "../../molecules/ZoneStatusCard/ZoneStatusCard";
+import ScoutButton from "../../atoms/Button/Button";
 
 interface PersonnelData {
   employeeId: string;
@@ -12,8 +12,8 @@ interface PersonnelData {
   zone: string;
   shift: string;
   role: string;
-  status: 'active' | 'break' | 'missing' | 'offline';
-  liveFeedStatus?: 'live' | 'offline' | 'loading';
+  status: "active" | "break" | "missing" | "offline";
+  liveFeedStatus?: "live" | "offline" | "loading";
   lastSeen?: string;
 }
 
@@ -22,9 +22,9 @@ interface ZoneData {
   currentPersonnel: number;
   requiredPersonnel: number;
   shift: string;
-  priority: 'Critical' | 'High' | 'Medium' | 'Low';
+  priority: "Critical" | "High" | "Medium" | "Low";
   certificationRequired: string;
-  status?: 'optimal' | 'understaffed' | 'overstaffed' | 'critical';
+  status?: "optimal" | "understaffed" | "overstaffed" | "critical";
 }
 
 interface ActivityStatusPanelProps {
@@ -39,45 +39,45 @@ interface ActivityStatusPanelProps {
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  gap: '24px',
-  width: '100%',
-  minHeight: '600px',
-  [theme.breakpoints.down('lg')]: {
-    flexDirection: 'column',
-    gap: '16px',
+  display: "flex",
+  gap: "24px",
+  width: "100%",
+  minHeight: "600px",
+  [theme.breakpoints.down("lg")]: {
+    flexDirection: "column",
+    gap: "16px",
   },
 }));
 
 const PersonnelSection = styled(Box)(({ theme }) => ({
-  flex: '1 1 70%',
+  flex: "1 1 70%",
   minWidth: 0,
-  [theme.breakpoints.down('lg')]: {
-    flex: 'none',
+  [theme.breakpoints.down("lg")]: {
+    flex: "none",
   },
 }));
 
 const ZoneSection = styled(Box)(({ theme }) => ({
-  flex: '0 0 320px',
-  [theme.breakpoints.down('lg')]: {
-    flex: 'none',
+  flex: "0 0 320px",
+  [theme.breakpoints.down("lg")]: {
+    flex: "none",
   },
 }));
 
 const SectionHeader = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  marginBottom: '16px',
-  padding: '0 4px',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginBottom: "16px",
+  padding: "0 4px",
 }));
 
 const ZoneContainer = styled(Box)(() => ({
-  backgroundColor: '#ffffff',
-  borderRadius: '8px',
-  border: '1px solid #e5e7eb',
-  padding: '16px',
-  height: 'fit-content',
+  backgroundColor: "#ffffff",
+  borderRadius: "8px",
+  border: "1px solid #e5e7eb",
+  padding: "16px",
+  height: "fit-content",
 }));
 
 const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
@@ -93,13 +93,13 @@ const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
   const getGridColumns = () => {
     switch (personnelGridColumns) {
       case 1:
-        return 'repeat(1, 1fr)';
+        return "repeat(1, 1fr)";
       case 3:
-        return 'repeat(auto-fit, minmax(280px, 1fr))';
+        return "repeat(auto-fit, minmax(280px, 1fr))";
       case 4:
-        return 'repeat(auto-fit, minmax(250px, 1fr))';
+        return "repeat(auto-fit, minmax(250px, 1fr))";
       default:
-        return 'repeat(auto-fit, minmax(320px, 1fr))';
+        return "repeat(auto-fit, minmax(320px, 1fr))";
     }
   };
 
@@ -108,14 +108,14 @@ const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
       {/* Personnel Section */}
       <PersonnelSection>
         <SectionHeader>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <People sx={{ color: '#1976d2', fontSize: 24 }} />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <People sx={{ color: "#1976d2", fontSize: 24 }} />
             <Typography
               variant="h6"
               sx={{
-                fontSize: '18px',
+                fontSize: "18px",
                 fontWeight: 600,
-                color: '#1c2025',
+                color: "#1c2025",
               }}
             >
               Active Critical Zone Personnel
@@ -136,10 +136,10 @@ const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
         {/* Personnel Grid */}
         <Box
           sx={{
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: getGridColumns(),
-            gap: '16px',
-            width: '100%',
+            gap: "16px",
+            width: "100%",
           }}
         >
           {personnelData.map((person) => (
@@ -153,7 +153,14 @@ const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
               position={person.role}
               location={person.zone}
               shift={person.shift}
-              status={person.status as 'active' | 'inactive' | 'break' | 'offline' | 'missing'}
+              status={
+                person.status as
+                  | "active"
+                  | "inactive"
+                  | "break"
+                  | "offline"
+                  | "missing"
+              }
               liveFeedStatus={person.liveFeedStatus}
               lastSeen={person.lastSeen}
               showLiveFeed={true}
@@ -170,16 +177,16 @@ const ActivityStatusPanel: React.FC<ActivityStatusPanelProps> = ({
           <Typography
             variant="h6"
             sx={{
-              fontSize: '16px',
+              fontSize: "16px",
               fontWeight: 600,
-              color: '#1c2025',
+              color: "#1c2025",
               mb: 2,
             }}
           >
             Critical Zones Status
           </Typography>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
             {zoneData.map((zone) => (
               <ZoneStatusCard
                 key={zone.zoneName}

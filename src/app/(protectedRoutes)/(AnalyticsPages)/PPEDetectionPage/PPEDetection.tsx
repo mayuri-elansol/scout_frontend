@@ -172,15 +172,16 @@ const PPEDetection: React.FC = () => {
 
       {/* Content Grid */}
       <Grid container spacing={3}>
-        {/* Recent PPE Violations */}      
+        {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
             label="Recent PPE Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
+            loading={true}
           />
         </Grid>
-                {/* PPE Compliance by Zone */}
+        {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
           <ZoneNotification zones={complianceByZone} />

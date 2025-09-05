@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { ViolationCard } from "./ViolationCard"; 
+import { ViolationCard } from "./ViolationCard";
 // Storybook metadata
 const meta: Meta<typeof ViolationCard> = {
-  title: "Components/ViolationCard",
+  title: "Components/Molecules/ViolationCard",
   component: ViolationCard,
   tags: ["autodocs"],
 };
@@ -34,7 +34,7 @@ export const WithImage: Story = {
   args: {
     violation: {
       ...sampleViolation,
-      imageUrl: "https://picsum.photos/400/200", 
+      imageUrl: "https://picsum.photos/400/200",
     },
   },
 };

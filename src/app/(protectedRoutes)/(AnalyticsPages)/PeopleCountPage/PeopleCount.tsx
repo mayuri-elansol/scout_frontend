@@ -27,26 +27,26 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 
 const PeopleCount: React.FC = () => {
   const theme = useTheme();
-const recentViolations = [
-  {
-    title: "Hard hat missing",
-    location: "Production Zone A",
-    time: "14:32",
-    Id: "W-4521",
-    severity: "HIGH",
-    status: "ACTIVE",
-    imageUrl: "https://picsum.photos/400/200?random=1",
-  },
-  {
-    title: "Safety vest not worn",
-    location: "Warehouse Zone B",
-    time: "14:18",
-    Id: "W-3847",
-    severity: "MEDIUM",
-    status: "ACKNOWLEDGED",
-    imageUrl: "https://picsum.photos/400/200?random=2",
-  },
-];
+  const recentViolations = [
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
+  ];
 
   const peopleCountKpiData = [
     {
@@ -100,29 +100,29 @@ const recentViolations = [
       icon: Warning,
     },
   ];
-const complianceByZone = [
-  {
-    zone: "Production Floor",
-    compliance: 92,
-    violations: 3,
-    cameras: "8/10",
-    status: "Normal",
-  },
-  {
-    zone: "Warehouse",
-    compliance: 75,
-    violations: 2,
-    cameras: "6/6",
-    status: "Normal",
-  },
-  {
-    zone: "Assembly Line",
-    compliance: 84,
-    violations: 5,
-    cameras: "7/8",
-    status: "High",
-  },
-];
+  const complianceByZone = [
+    {
+      zone: "Production Floor",
+      compliance: 92,
+      violations: 3,
+      cameras: "8/10",
+      status: "Normal",
+    },
+    {
+      zone: "Warehouse",
+      compliance: 75,
+      violations: 2,
+      cameras: "6/6",
+      status: "Normal",
+    },
+    {
+      zone: "Assembly Line",
+      compliance: 84,
+      violations: 5,
+      cameras: "7/8",
+      status: "High",
+    },
+  ];
 
   const zoneOccupancy = [
     {
@@ -279,6 +279,7 @@ const complianceByZone = [
       </Grid>
 
       {/* People Count Report */}
+      {/* People Count Report */}
       <ReportTable
         title="People Count Report"
         columns={[
@@ -371,7 +372,39 @@ const complianceByZone = [
             resolution: "Adequate parking space",
           },
         ]}
-        downloadFileName="people-count-report.csv"
+        filters={[
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: [
+              "Main Factory Floor",
+              "Cafeteria",
+              "Assembly Line A",
+              "Emergency Exit Area",
+              "Conference Room B",
+              "Loading Dock",
+              "Parking Lot",
+            ],
+          },
+          {
+            id: "status",
+            label: "Status",
+            type: "select",
+            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
+          },
+          {
+            id: "priority",
+            label: "Priority",
+            type: "select",
+            options: ["Critical", "Medium", "Low"],
+          },
+          { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
+          { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
+        ]}
+        downloadFileName="people-count-report"
       />
     </Box>
   );

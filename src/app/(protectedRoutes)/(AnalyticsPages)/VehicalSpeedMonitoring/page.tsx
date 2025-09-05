@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import VehicalSpeedMonitoring from './VehicalSpeedMonitoring';
+import VehicalSpeedMonitoring from "./VehicalSpeedMonitoring";
 
 export default function page() {
   return <VehicalSpeedMonitoring />;
