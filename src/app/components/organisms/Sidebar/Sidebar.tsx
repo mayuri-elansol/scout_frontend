@@ -213,7 +213,7 @@ const analyticsFlags: AnalyticsCategoryConfig[] = analyticsMenu.map(category => 
             </List>
           )}
 
-          {/* Alerts / Other */}
+          {/* Alerts */}
           <List sx={{ p: 0, mt: 1 }}>{renderMenuItems(alertFlags)}</List>
         </Box>
 
