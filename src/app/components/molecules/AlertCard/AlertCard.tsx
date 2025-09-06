@@ -128,28 +128,7 @@ const AlertCard: React.FC<AlertCardProps> = ({
                 >
                   {title}
                 </Typography>
-                {/* <Chip
-                  label={severity}
-                  size="small"
-                  sx={{
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    color: severityColors.color,
-                    backgroundColor: severityColors.bgColor,
-                    height: 20,
-                  }}
-                />
-                <Chip
-                  label={status}
-                  size="small"
-                  sx={{
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    color: statusColors.color,
-                    backgroundColor: statusColors.bgColor,
-                    height: 20,
-                  }}
-                /> */}
+               
               </Box>
               <Typography
                 sx={{

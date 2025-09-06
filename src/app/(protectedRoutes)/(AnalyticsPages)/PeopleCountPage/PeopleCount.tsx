@@ -24,7 +24,29 @@ import {
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-
+export const complianceByZone = [
+    {
+      zone: "Production Floor",
+      compliance: 92,
+      violations: 3,
+      cameras: "8/10",
+      status: "Normal",
+    },
+    {
+      zone: "Warehouse",
+      compliance: 75,
+      violations: 2,
+      cameras: "6/6",
+      status: "Normal",
+    },
+    {
+      zone: "Assembly Line",
+      compliance: 84,
+      violations: 5,
+      cameras: "7/8",
+      status: "High",
+    },
+  ];
 const PeopleCount: React.FC = () => {
   const theme = useTheme();
   const recentViolations = [
@@ -100,29 +122,7 @@ const PeopleCount: React.FC = () => {
       icon: Warning,
     },
   ];
-  const complianceByZone = [
-    {
-      zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "Normal",
-    },
-    {
-      zone: "Warehouse",
-      compliance: 75,
-      violations: 2,
-      cameras: "6/6",
-      status: "Normal",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 84,
-      violations: 5,
-      cameras: "7/8",
-      status: "High",
-    },
-  ];
+
 
   const zoneOccupancy = [
     {

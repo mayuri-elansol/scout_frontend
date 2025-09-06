@@ -1,4 +1,389 @@
+// // export default Phonesidebar;
+// import React, { useState, useRef } from "react";
+// import { useRouter, usePathname } from "next/navigation";
+// import {
+//   Drawer,
+//   Box,
+//   List,
+//   ListItem,
+//   ListItemButton,
+//   ListItemIcon,
+//   ListItemText,
+//   Tooltip,
+//   Popover,
+//   Typography,
+//   useTheme,
+//   Badge,
+// } from "@mui/material";
+// import { useFeatureFlags } from "../../../../customhooks/useFeatureFlag";
+// import {
+//   dashboardMenu,
+//   alertMenu,
+//   analyticsMenu,
+//   MenuItemConfig,
+//   AnalyticsCategoryConfig
+// } from "../../../config/menuConfig";
+
+// const Phonesidebar: React.FC = () => {
+//   const router = useRouter();
+//   const pathname = usePathname();
+//   const theme = useTheme();
+//   const featureFlags = useFeatureFlags();
+//   const drawerWidth = 70;
+
+//   // Hover menu state
+//   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+//   const [hoverMenu, setHoverMenu] = useState<AnalyticsCategoryConfig | null>(null);
+//   const [popoverOpen, setPopoverOpen] = useState(false);
+//   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+//   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+//   // Filter menu items based on feature flags
+//   const filterMenuByFeatureFlags = (menuItems: MenuItemConfig[]): MenuItemConfig[] => {
+//     return menuItems.filter((item) => {
+//       if (!item.page) return true;
+//       const isEnabled = featureFlags[item.page as keyof typeof featureFlags] === true;
+//       console.log(`Feature flag for ${item.page}:`, isEnabled);
+//       return isEnabled;
+//     });
+//   };
+
+//   // Filter analytics categories and their items
+//   const filterAnalyticsByFeatureFlags = (categories: AnalyticsCategoryConfig[]): AnalyticsCategoryConfig[] => {
+//     return categories
+//       .map((category) => ({
+//         ...category,
+//         items: filterMenuByFeatureFlags(category.items),
+//       }))
+//       .filter((category) => category.items.length > 0);
+//   };
+
+//   // Get filtered menus
+//   const filteredDashboardMenu = filterMenuByFeatureFlags(dashboardMenu);
+//   const filteredAlertMenu = filterMenuByFeatureFlags(alertMenu);
+//   const filteredAnalyticsMenu = filterAnalyticsByFeatureFlags(analyticsMenu);
+
+//   // Combine all menu items for rendering
+//   const allMenuItems: (MenuItemConfig | AnalyticsCategoryConfig)[] = [
+//     ...filteredDashboardMenu,
+//     ...filteredAnalyticsMenu,
+//     ...filteredAlertMenu,
+//   ];
+
+//   console.log('All menu items:', allMenuItems);
+
+//   const handleMouseEnter = (
+//     event: React.MouseEvent<HTMLElement>,
+//     item: MenuItemConfig | AnalyticsCategoryConfig
+//   ) => {
+//     if (hoverTimeoutRef.current) {
+//       clearTimeout(hoverTimeoutRef.current);
+//     }
+
+//     const itemTitle = 'title' in item ? item.title : item.name;
+//     setHoveredItem(itemTitle);
+
+//     if ('items' in item && item.items && item.items.length > 0) {
+//       setAnchorEl(event.currentTarget);
+//       setHoverMenu(item as AnalyticsCategoryConfig);
+//       setPopoverOpen(true);
+//     } else {
+//       // Close popover if hovering over item without children
+//       setPopoverOpen(false);
+//       setHoverMenu(null);
+//       setAnchorEl(null);
+//     }
+//   };
+
+//   const handleMouseLeave = () => {
+//     setHoveredItem(null);
+//   };
+
+//   const handlePopoverMouseEnter = () => {
+//     if (hoverTimeoutRef.current) {
+//       clearTimeout(hoverTimeoutRef.current);
+//     }
+//   };
+
+//   const handlePopoverMouseLeave = () => {
+//     setPopoverOpen(false);
+//     setAnchorEl(null);
+//     setHoverMenu(null);
+//   };
+
+//   const handleMenuItemClick = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+//     console.log('Menu item clicked:', item);
+
+//     // For analytics categories (which have 'items' property), don't navigate
+//     // Only navigate for direct menu items
+//     if ('path' in item && item.path && !('items' in item)) {
+//       console.log('Navigating to:', item.path);
+//       router.push(item.path);
+//       setPopoverOpen(false);
+//       setAnchorEl(null);
+//       setHoverMenu(null);
+//     } else {
+//       console.log('Item has no direct path or has sub-items, not navigating');
+//     }
+//   };
+
+//   const handleSubMenuClick = (subItem: MenuItemConfig) => {
+//     console.log('Sub-menu item clicked:', subItem);
+//     if (subItem.path) {
+//       console.log('Navigating to sub-menu path:', subItem.path);
+//       router.push(subItem.path);
+//       setPopoverOpen(false);
+//       setAnchorEl(null);
+//       setHoverMenu(null);
+//     }
+//   };
+
+//   // Check if current route matches item
+//   const isItemSelected = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+//     if ('path' in item && item.path) {
+//       return pathname === item.path;
+//     }
+
+//     // For analytics categories, check if any sub-item is active
+//     if ('items' in item && item.items) {
+//       return item.items.some((subItem) => pathname === subItem.path);
+//     }
+
+//     return false;
+//   };
+
+//   const getButtonStyles = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+//     const isSelected = isItemSelected(item);
+//     const itemTitle = 'title' in item ? item.title : item.name;
+//     const isHovered = hoveredItem === itemTitle;
+
+//     return {
+//       borderRadius: 1,
+//       minHeight: 48,
+//       justifyContent: "center",
+//       mx: 1,
+//       backgroundColor: isSelected
+//         ? theme.palette.primary.main
+//         : isHovered
+//         ? theme.palette.action.hover
+//         : "transparent",
+//       color: isSelected ? "white" : "inherit",
+//       "&:hover": {
+//         backgroundColor: isSelected
+//           ? theme.palette.primary.dark
+//           : theme.palette.action.hover,
+//       },
+//       transition: "background-color 0.2s ease-in-out",
+//     };
+//   };
+
+//   const renderIcon = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+//     const IconComponent = item.icon;
+//     const isSelected = isItemSelected(item);
+
+//     const iconElement = IconComponent ? <IconComponent /> : null;
+
+//     // Add badge if present (for alerts, etc.)
+//     if ('badge' in item && item.badge) {
+//       return (
+//         <Badge
+//           badgeContent={item.badge}
+//           color="error"
+//           sx={{
+//             '& .MuiBadge-badge': {
+//               fontSize: '0.75rem',
+//               minWidth: '16px',
+//               height: '16px',
+//               right: -6,
+//               top: -2,
+//             }
+//           }}
+//         >
+//           {iconElement}
+//         </Badge>
+//       );
+//     }
+
+//     return iconElement;
+//   };
+
+//   const getTooltipTitle = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+//     const title = 'title' in item ? item.title : item.name;
+//     if ('badge' in item && item.badge) {
+//       return `${title} (${item.badge})`;
+//     }
+//     return title;
+//   };
+
+//   return (
+//     <>
+
+//       <Drawer
+//         variant="permanent"
+//         sx={{
+//           width: drawerWidth,
+//           flexShrink: 0,
+//           "& .MuiDrawer-paper": {
+//             width: drawerWidth,
+//             boxSizing: "border-box",
+//             mt: "64px",
+//             height: "calc(100vh - 64px)",
+//             overflowY: "auto",
+//             borderRight: "1px solid #e0e0e0",
+//             backgroundColor: "#fff",
+//           },
+//         }}
+//       >
+//         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+//           {/* Menu Items */}
+//           <List sx={{ flex: 1, pt: 2 }}>
+//             {allMenuItems.map((item, index) => {
+//               const itemKey = 'title' in item ? `${item.title}-${index}` : `${item.name}-${index}`;
+//               const hasSubItems = 'items' in item && item.items && item.items.length > 0;
+
+//               return (
+//                 <ListItem
+//                   key={itemKey}
+//                   disablePadding
+//                   sx={{ mb: 1 }}
+//                   onMouseEnter={(e) => handleMouseEnter(e, item)}
+//                   onMouseLeave={handleMouseLeave}
+//                 >
+//                   <Tooltip
+//                     title={`${getTooltipTitle(item)} ${hasSubItems ? '(hover for submenu)' : ''}`}
+//                     placement="right"
+//                     arrow
+//                     disableHoverListener={
+//                       popoverOpen &&
+//                       hoverMenu?.title === ('title' in item ? item.title : item.name)
+//                     }
+//                   >
+//                     <ListItemButton
+//                       onClick={() => handleMenuItemClick(item)}
+//                       sx={getButtonStyles(item)}
+//                     >
+//                       <ListItemIcon
+//                         sx={{
+//                           minWidth: 0,
+//                           justifyContent: "center",
+//                           color: isItemSelected(item)
+//                             ? "white"
+//                             : theme.palette.action.active,
+//                         }}
+//                       >
+//                         {renderIcon(item)}
+//                       </ListItemIcon>
+//                     </ListItemButton>
+//                   </Tooltip>
+//                 </ListItem>
+//               );
+//             })}
+//           </List>
+//         </Box>
+//       </Drawer>
+
+//       {/* Popover for sub-items */}
+      // <Popover
+      //   open={popoverOpen && Boolean(hoverMenu)}
+      //   anchorEl={anchorEl}
+      //   anchorOrigin={{
+      //     vertical: "top",
+      //     horizontal: "right",
+      //   }}
+      //   transformOrigin={{
+      //     vertical: "top",
+      //     horizontal: "left",
+      //   }}
+      //   disableAutoFocus
+      //   disableEnforceFocus
+      //   disableRestoreFocus
+      //   sx={{
+      //     pointerEvents: "none",
+      //     "& .MuiPopover-paper": {
+      //       pointerEvents: "auto",
+      //       ml: 1,
+      //     },
+      //   }}
+      // >
+//         <Box
+//           onMouseEnter={handlePopoverMouseEnter}
+//           onMouseLeave={handlePopoverMouseLeave}
+//           sx={{
+//             py: 1,
+//             minWidth: 300,
+//             boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+//             border: "1px solid #e0e0e0",
+//             borderRadius: 2,
+//             backgroundColor: "#fff",
+//           }}
+//         >
+//           <Typography
+//             variant="subtitle2"
+//             sx={{
+//               px: 2,
+//               py: 1,
+//               fontWeight: 600,
+//               color: theme.palette.primary.main,
+//               borderBottom: `1px solid ${theme.palette.divider}`,
+//               mb: 1,
+//               fontSize: "0.875rem",
+//             }}
+//           >
+//             {hoverMenu?.title}
+//           </Typography>
+//           <List sx={{ py: 0 }}>
+//             {hoverMenu?.items?.map((subItem, subIndex) => (
+//               <ListItem key={`${subItem.name}-${subIndex}`} disablePadding>
+//                 <ListItemButton
+//                   selected={pathname === subItem.path}
+//                   onClick={() => handleSubMenuClick(subItem)}
+//                   sx={{
+//                     px: 2,
+//                     py: 1.5,
+//                     "&.Mui-selected": {
+//                       backgroundColor: theme.palette.primary.light,
+//                       color: theme.palette.primary.main,
+//                       "&:hover": {
+//                         backgroundColor: theme.palette.primary.light,
+//                       },
+//                     },
+//                     "&:hover": {
+//                       backgroundColor: theme.palette.action.hover,
+//                     },
+//                   }}
+//                 >
+//                   <ListItemText
+//                     primary={subItem.name}
+//                     primaryTypographyProps={{
+//                       fontSize: "0.875rem",
+//                       lineHeight: 1.4,
+//                       fontWeight: pathname === subItem.path ? 500 : 400,
+//                     }}
+//                   />
+//                   {subItem.badge && (
+//                     <Badge
+//                       badgeContent={subItem.badge}
+//                       color="error"
+//                       sx={{ ml: 1 }}
+//                     />
+//                   )}
+//                 </ListItemButton>
+//               </ListItem>
+//             ))}
+//           </List>
+//         </Box>
+//       </Popover>
+//     </>
+//   );
+// };
+
+// export default Phonesidebar;
+
+// src/app/components/organisms/PhoneSidebar/Phonesidebar.tsx
+"use client";
+
 import React, { useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Drawer,
   Box,
@@ -11,137 +396,91 @@ import {
   Popover,
   Typography,
   useTheme,
+  Badge,
 } from "@mui/material";
+import { useFeatureFlags } from "../../../../customhooks/useFeatureFlag";
 import {
-  Home,
-  Shield,
-  Visibility,
-  People,
-  Settings,
-  VideoCall,
-  Description,
-  Warning,
-  BarChart,
-  PeopleAlt,
-} from "@mui/icons-material";
-
-// interface SidebarProps {
-//   currentPage: string;
-//   onPageChange: (page: string) => void;
-// }
+  dashboardMenu,
+  alertMenu,
+  analyticsMenu,
+  MenuItemConfig,
+  AnalyticsCategoryConfig,
+} from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 
-interface SidebarProps {
+interface PhonesidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
-// interface MenuItem {
-//   name: string;
-//   page: string;
-// }
 
-// interface MenuCategory {
-//   title: string;
-//   icon: React.ComponentType;
-//   page?: string;
-//   items?: MenuItem[];
-// }
-interface MenuItem {
-  name: string;
-  page: PageType;
-}
-
-interface MenuCategory {
-  title: string;
-  icon: React.ComponentType;
-  page?: PageType;
-  items?: MenuItem[];
-}
-const Phonesidebar: React.FC<SidebarProps> = ({
+const Phonesidebar: React.FC<PhonesidebarProps> = ({
   currentPage,
   onPageChange,
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const theme = useTheme();
+  const featureFlags = useFeatureFlags();
   const drawerWidth = 70;
 
   // Hover menu state
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [hoverMenu, setHoverMenu] = useState<MenuCategory | null>(null);
+  const [hoverMenu, setHoverMenu] = useState<AnalyticsCategoryConfig | null>(
+    null
+  );
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const analyticsMenuItems: MenuCategory[] = [
-    { title: "Dashboard", icon: Home, page: "dashboard" },
-    {
-      title: "Safety and Compliance",
-      icon: Shield,
-      items: [
-        {
-          name: "Personal Protective Equipment (PPE) Detection",
-          page: "ppe-detection",
-        },
-        { name: "Object Detection in Walking Bays", page: "object-detection" },
-        {
-          name: "Fire, Smoke, Oil and Gas Leak Detection",
-          page: "fire-detection",
-        },
-        {
-          name: "Vehicle Speed Monitoring inside premises",
-          page: "vehicle-speed",
-        },
-      ],
-    },
-    {
-      title: "Security Monitoring",
-      icon: Visibility,
-      items: [
-        {
-          name: "Intrusion Detection at Premises Perimeter",
-          page: "intrusion-detection",
-        },
-      ],
-    },
-    {
-      title: "Workforce Monitoring",
-      icon: People,
-      items: [
-        {
-          name: "Employee presence detection in critical areas",
-          page: "employee-presence",
-        },
-      ],
-    },
-    {
-      title: "Operational Insight",
-      icon: BarChart,
-      items: [
-        { name: "People count in factory Premises", page: "people-count" },
-      ],
-    },
-    { title: "Reports", icon: Description, page: "reports" },
-    { title: "Alerts", icon: Warning, page: "alerts" },
-    { title: "Settings", icon: Settings, page: "settings" },
-    { title: "Live Streaming", icon: VideoCall, page: "live-streaming" },
-    // { title: "Welcome", icon: PeopleAlt, page: "welcome" },
+  // Filter menu items based on feature flags
+  const filterMenuByFeatureFlags = (
+    menuItems: MenuItemConfig[]
+  ): MenuItemConfig[] => {
+    return menuItems.filter((item) => {
+      if (!item.page) return true;
+      const isEnabled =
+        featureFlags[item.page as keyof typeof featureFlags] === true;
+      return isEnabled;
+    });
+  };
+
+  const filterAnalyticsByFeatureFlags = (
+    categories: AnalyticsCategoryConfig[]
+  ): AnalyticsCategoryConfig[] => {
+    return categories
+      .map((category) => ({
+        ...category,
+        items: filterMenuByFeatureFlags(category.items),
+      }))
+      .filter((category) => category.items.length > 0);
+  };
+
+  // Get filtered menus
+  const filteredDashboardMenu = filterMenuByFeatureFlags(dashboardMenu);
+  const filteredAlertMenu = filterMenuByFeatureFlags(alertMenu);
+  const filteredAnalyticsMenu = filterAnalyticsByFeatureFlags(analyticsMenu);
+
+  const allMenuItems: (MenuItemConfig | AnalyticsCategoryConfig)[] = [
+    ...filteredDashboardMenu,
+    ...filteredAnalyticsMenu,
+    ...filteredAlertMenu,
   ];
 
+  // Event Handlers
   const handleMouseEnter = (
     event: React.MouseEvent<HTMLElement>,
-    item: MenuCategory
+    item: MenuItemConfig | AnalyticsCategoryConfig
   ) => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
 
-    setHoveredItem(item.title);
+    const itemTitle = "title" in item ? item.title : item.name;
+    setHoveredItem(itemTitle);
 
-    if (item.items && item.items.length > 0) {
+    if ("items" in item && item.items.length > 0) {
       setAnchorEl(event.currentTarget);
-      setHoverMenu(item);
+      setHoverMenu(item as AnalyticsCategoryConfig);
       setPopoverOpen(true);
     } else {
-      // Close popover if hovering over item without children
       setPopoverOpen(false);
       setHoverMenu(null);
       setAnchorEl(null);
@@ -150,13 +489,10 @@ const Phonesidebar: React.FC<SidebarProps> = ({
 
   const handleMouseLeave = () => {
     setHoveredItem(null);
-    // Don't close popover immediately - let it stay open
   };
 
   const handlePopoverMouseEnter = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
   };
 
   const handlePopoverMouseLeave = () => {
@@ -165,34 +501,47 @@ const Phonesidebar: React.FC<SidebarProps> = ({
     setHoverMenu(null);
   };
 
-  const handleMenuItemClick = (item: MenuCategory) => {
-    if (item.page) {
-      onPageChange(item.page);
+  const handleMenuItemClick = (
+    item: MenuItemConfig | AnalyticsCategoryConfig
+  ) => {
+    if ("path" in item && item.path && !("items" in item)) {
+      router.push(item.path);
+      if (item.page) {
+        onPageChange(item.page); // ✅ update parent state
+      }
       setPopoverOpen(false);
       setAnchorEl(null);
       setHoverMenu(null);
     }
   };
 
-  const handleSubMenuClick = (page: PageType) => {
-    onPageChange(page);
-    setPopoverOpen(false);
-    setAnchorEl(null);
-    setHoverMenu(null);
+  const handleSubMenuClick = (subItem: MenuItemConfig) => {
+    if (subItem.path) {
+      router.push(subItem.path);
+      if (subItem.page) {
+        onPageChange(subItem.page); // ✅ update parent state
+      }
+      setPopoverOpen(false);
+      setAnchorEl(null);
+      setHoverMenu(null);
+    }
   };
 
-  // Check if current page is in any submenu
-  const isParentSelected = (item: MenuCategory) => {
-    if (item.page === currentPage) return true;
-    if (item.items) {
-      return item.items.some((subItem) => subItem.page === currentPage);
+  // Helpers
+  const isItemSelected = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    if ("path" in item && item.path) {
+      return pathname === item.path;
+    }
+    if ("items" in item && item.items) {
+      return item.items.some((subItem) => pathname === subItem.path);
     }
     return false;
   };
 
-  const getButtonStyles = (item: MenuCategory) => {
-    const isSelected = isParentSelected(item);
-    const isHovered = hoveredItem === item.title;
+  const getButtonStyles = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    const isSelected = isItemSelected(item);
+    const itemTitle = "title" in item ? item.title : item.name;
+    const isHovered = hoveredItem === itemTitle;
 
     return {
       borderRadius: 1,
@@ -214,6 +563,41 @@ const Phonesidebar: React.FC<SidebarProps> = ({
     };
   };
 
+  const renderIcon = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    const IconComponent = item.icon;
+    const iconElement = IconComponent ? <IconComponent /> : null;
+
+    if ("badge" in item && item.badge) {
+      return (
+        <Badge
+          badgeContent={item.badge}
+          color="error"
+          sx={{
+            "& .MuiBadge-badge": {
+              fontSize: "0.75rem",
+              minWidth: "16px",
+              height: "16px",
+              right: -6,
+              top: -2,
+            },
+          }}
+        >
+          {iconElement}
+        </Badge>
+      );
+    }
+
+    return iconElement;
+  };
+
+  const getTooltipTitle = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    const title = "title" in item ? item.title : item.name;
+    if ("badge" in item && item.badge) {
+      return `${title} (${item.badge})`;
+    }
+    return title;
+  };
+
   return (
     <>
       <Drawer
@@ -233,39 +617,60 @@ const Phonesidebar: React.FC<SidebarProps> = ({
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          {/* Menu Items */}
           <List sx={{ flex: 1, pt: 2 }}>
-            {analyticsMenuItems.map((item) => (
-              <ListItem
-                disablePadding
-                sx={{ mb: 1 }}
-                onMouseEnter={(e) => handleMouseEnter(e, item)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <ListItemButton
-                  onClick={() => handleMenuItemClick(item)}
-                  sx={getButtonStyles(item)}
+            {allMenuItems.map((item, index) => {
+              const itemKey =
+                "title" in item
+                  ? `${item.title}-${index}`
+                  : `${item.name}-${index}`;
+              const hasSubItems = "items" in item && item.items.length > 0;
+
+              return (
+                <ListItem
+                  key={itemKey}
+                  disablePadding
+                  sx={{ mb: 1 }}
+                  onMouseEnter={(e) => handleMouseEnter(e, item)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      justifyContent: "center",
-                      color: isParentSelected(item)
-                        ? "white"
-                        : theme.palette.action.active,
-                    }}
+                  <Tooltip
+                    title={`${getTooltipTitle(item)} ${
+                      hasSubItems ? "(hover for submenu)" : ""
+                    }`}
+                    placement="right"
+                    arrow
+                    disableHoverListener={
+                      popoverOpen &&
+                      hoverMenu?.title ===
+                        ("title" in item ? item.title : item.name)
+                    }
                   >
-                    <item.icon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-            ))}
+                    <ListItemButton
+                      onClick={() => handleMenuItemClick(item)}
+                      sx={getButtonStyles(item)}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          justifyContent: "center",
+                          color: isItemSelected(item)
+                            ? "white"
+                            : theme.palette.action.active,
+                        }}
+                      >
+                        {renderIcon(item)}
+                      </ListItemIcon>
+                    </ListItemButton>
+                  </Tooltip>
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
       </Drawer>
 
       {/* Popover for sub-items */}
-      <Popover
+           <Popover
         open={popoverOpen && Boolean(hoverMenu)}
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -286,8 +691,7 @@ const Phonesidebar: React.FC<SidebarProps> = ({
             ml: 1,
           },
         }}
-      >
-        <Box
+      > <Box
           onMouseEnter={handlePopoverMouseEnter}
           onMouseLeave={handlePopoverMouseLeave}
           sx={{
@@ -314,17 +718,17 @@ const Phonesidebar: React.FC<SidebarProps> = ({
             {hoverMenu?.title}
           </Typography>
           <List sx={{ py: 0 }}>
-            {hoverMenu?.items?.map((subItem) => (
-              <ListItem key={subItem.name} disablePadding>
+            {hoverMenu?.items?.map((subItem, subIndex) => (
+              <ListItem key={`${subItem.name}-${subIndex}`} disablePadding>
                 <ListItemButton
-                  selected={currentPage === subItem.page}
-                  onClick={() => handleSubMenuClick(subItem.page)}
+                  selected={pathname === subItem.path}
+                  onClick={() => handleSubMenuClick(subItem)}
                   sx={{
                     px: 2,
                     py: 1.5,
                     "&.Mui-selected": {
-                      backgroundColor: theme.palette.primary.light,
-                      color: theme.palette.primary.main,
+                      backgroundColor: theme.palette.action.hover,
+                      color: "inherit",
                       "&:hover": {
                         backgroundColor: theme.palette.primary.light,
                       },
@@ -339,9 +743,16 @@ const Phonesidebar: React.FC<SidebarProps> = ({
                     primaryTypographyProps={{
                       fontSize: "0.875rem",
                       lineHeight: 1.4,
-                      fontWeight: currentPage === subItem.page ? 500 : 400,
+                      fontWeight: pathname === subItem.path ? 500 : 400,
                     }}
                   />
+                  {subItem.badge && (
+                    <Badge
+                      badgeContent={subItem.badge}
+                      color="error"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </ListItemButton>
               </ListItem>
             ))}
@@ -353,253 +764,3 @@ const Phonesidebar: React.FC<SidebarProps> = ({
 };
 
 export default Phonesidebar;
-
-// "use client";
-// import React, { useState, useRef } from "react";
-// import {
-//   Drawer,
-//   Box,
-//   List,
-//   ListItem,
-//   ListItemButton,
-//   ListItemIcon,
-//   ListItemText,
-//   Popover,
-//   Typography,
-//   useTheme,
-// } from "@mui/material";
-// import { usePathname } from "next/navigation";
-// import Link from "next/link";
-// import {
-//   dashboardMenu,
-//   alertMenu,
-//   analyticsMenu,
-//   AnalyticsCategoryConfig,
-//   MenuItemConfig,
-// } from "../../../config/menuConfig";
-
-// const drawerWidth = 70;
-
-// const Phonesidebar: React.FC = () => {
-//   const theme = useTheme();
-//   const pathname = usePathname();
-
-//   // Hover state for analytics categories
-//   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-//   const [hoverMenu, setHoverMenu] = useState<AnalyticsCategoryConfig | null>(
-//     null
-//   );
-//   const [popoverOpen, setPopoverOpen] = useState(false);
-//   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-//   const handleMouseEnter = (
-//     event: React.MouseEvent<HTMLElement>,
-//     category: AnalyticsCategoryConfig
-//   ) => {
-//     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
-
-//     if (category.items && category.items.length > 0) {
-//       setAnchorEl(event.currentTarget);
-//       setHoverMenu(category);
-//       setPopoverOpen(true);
-//     } else {
-//       setPopoverOpen(false);
-//       setHoverMenu(null);
-//       setAnchorEl(null);
-//     }
-//   };
-
-//   const handlePopoverMouseLeave = () => {
-//     setPopoverOpen(false);
-//     setAnchorEl(null);
-//     setHoverMenu(null);
-//   };
-
-//   const getButtonStyles = (isSelected: boolean) => ({
-//     borderRadius: 1,
-//     minHeight: 48,
-//     justifyContent: "center",
-//     mx: 1,
-//     backgroundColor: isSelected
-//       ? theme.palette.primary.main
-//       : "transparent",
-//     color: isSelected ? "white" : "inherit",
-//     "&:hover": {
-//       backgroundColor: isSelected
-//         ? theme.palette.primary.dark
-//         : theme.palette.action.hover,
-//     },
-//     transition: "background-color 0.2s ease-in-out",
-//   });
-
-//   // Helper to check if parent is active (when sub-route is selected)
-//   const isParentSelected = (category: AnalyticsCategoryConfig) => {
-//     return category.items.some((item) => item.path === pathname);
-//   };
-
-//   return (
-//     <>
-//       <Drawer
-//         variant="permanent"
-//         sx={{
-//           width: drawerWidth,
-//           flexShrink: 0,
-//           "& .MuiDrawer-paper": {
-//             width: drawerWidth,
-//             boxSizing: "border-box",
-//             mt: "64px",
-//             height: "calc(100vh - 64px)",
-//             overflowY: "auto",
-//             borderRight: "1px solid #e0e0e0",
-//             backgroundColor: "#fff",
-//           },
-//         }}
-//       >
-//         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-//           <List sx={{ flex: 1, pt: 2 }}>
-//             {/* Dashboard + Alerts */}
-//             {[...dashboardMenu, ...alertMenu].map((item: MenuItemConfig) => (
-//               <ListItem key={item.name} disablePadding sx={{ mb: 1 }}>
-//                 <ListItemButton
-//                   component={Link}
-//                   href={item.path}
-//                   prefetch
-//                   selected={pathname === item.path}
-//                   sx={getButtonStyles(pathname === item.path)}
-//                 >
-//                   <ListItemIcon
-//                     sx={{
-//                       minWidth: 0,
-//                       justifyContent: "center",
-//                       color:
-//                         pathname === item.path
-//                           ? "white"
-//                           : theme.palette.action.active,
-//                     }}
-//                   >
-//                     <item.icon />
-//                   </ListItemIcon>
-//                 </ListItemButton>
-//               </ListItem>
-//             ))}
-
-//             {/* Analytics Categories */}
-//             {analyticsMenu.map((category) => (
-//               <ListItem
-//                 key={category.title}
-//                 disablePadding
-//                 sx={{ mb: 1 }}
-//                 onMouseEnter={(e) => handleMouseEnter(e, category)}
-//                 onMouseLeave={() => setPopoverOpen(false)}
-//               >
-//                 <ListItemButton
-//                   sx={getButtonStyles(isParentSelected(category))}
-//                 >
-//                   <ListItemIcon
-//                     sx={{
-//                       minWidth: 0,
-//                       justifyContent: "center",
-//                       color: isParentSelected(category)
-//                         ? "white"
-//                         : theme.palette.action.active,
-//                     }}
-//                   >
-//                     <category.icon />
-//                   </ListItemIcon>
-//                 </ListItemButton>
-//               </ListItem>
-//             ))}
-//           </List>
-//         </Box>
-//       </Drawer>
-
-//       {/* Popover with sub-items */}
-//       <Popover
-//         open={popoverOpen && Boolean(hoverMenu)}
-//         anchorEl={anchorEl}
-//         anchorOrigin={{
-//           vertical: "top",
-//           horizontal: "right",
-//         }}
-//         transformOrigin={{
-//           vertical: "top",
-//           horizontal: "left",
-//         }}
-//         disableAutoFocus
-//         disableEnforceFocus
-//         disableRestoreFocus
-//         onClose={handlePopoverMouseLeave}
-//         sx={{
-//           "& .MuiPopover-paper": {
-//             ml: 1,
-//             minWidth: 240,
-//             boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-//             border: "1px solid #e0e0e0",
-//             borderRadius: 2,
-//           },
-//         }}
-//       >
-//         <Box
-//           onMouseLeave={handlePopoverMouseLeave}
-//           sx={{
-//             py: 1,
-//             backgroundColor: "#fff",
-//           }}
-//         >
-//           <Typography
-//             variant="subtitle2"
-//             sx={{
-//               px: 2,
-//               py: 1,
-//               fontWeight: 600,
-//               color: theme.palette.primary.main,
-//               borderBottom: `1px solid ${theme.palette.divider}`,
-//               mb: 1,
-//               fontSize: "0.875rem",
-//             }}
-//           >
-//             {hoverMenu?.title}
-//           </Typography>
-//           <List sx={{ py: 0 }}>
-//             {hoverMenu?.items.map((subItem) => (
-//               <ListItem key={subItem.path} disablePadding>
-//                 <ListItemButton
-//                   component={Link}
-//                   href={subItem.path}
-//                   prefetch
-//                   selected={pathname === subItem.path}
-//                   sx={{
-//                     px: 2,
-//                     py: 1.5,
-//                     "&.Mui-selected": {
-//                       backgroundColor: theme.palette.primary.light,
-//                       color: theme.palette.primary.main,
-//                       "&:hover": {
-//                         backgroundColor: theme.palette.primary.light,
-//                       },
-//                     },
-//                     "&:hover": {
-//                       backgroundColor: theme.palette.action.hover,
-//                     },
-//                   }}
-//                 >
-//                   <ListItemText
-//                     primary={subItem.name}
-//                     primaryTypographyProps={{
-//                       fontSize: "0.875rem",
-//                       lineHeight: 1.4,
-//                       fontWeight:
-//                         pathname === subItem.path ? 600 : 400,
-//                     }}
-//                   />
-//                 </ListItemButton>
-//               </ListItem>
-//             ))}
-//           </List>
-//         </Box>
-//       </Popover>
-//     </>
-//   );
-// };
-
-// export default Phonesidebar;

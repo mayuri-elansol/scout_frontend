@@ -24,6 +24,8 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
+import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
+import { complianceByZone } from "../PeopleCountPage/PeopleCount";
 
 const EmployeePresence: React.FC = () => {
   const theme = useTheme();
@@ -293,118 +295,7 @@ const EmployeePresence: React.FC = () => {
         {/* item xs={12} lg={4} */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <Card sx={{ height: "100%" }}>
-            <CardContent sx={{ p: 3 }}>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 600, color: "#1c2025", mb: 2.5 }}
-              >
-                Critical Zones Status
-              </Typography>
-
-              <Box>
-                {criticalZones.map((zone, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      py: 2,
-                      borderBottom:
-                        index < criticalZones.length - 1
-                          ? "1px solid #f0f0f0"
-                          : "none",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        mb: 1,
-                      }}
-                    >
-                      <Typography sx={{ fontWeight: 500, fontSize: "14px" }}>
-                        {zone.zone}
-                      </Typography>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                      >
-                        <Circle
-                          sx={{
-                            fontSize: 8,
-                            color: getStatusColor(zone.status),
-                          }}
-                        />
-                        <Typography
-                          sx={{
-                            fontSize: "12px",
-                            fontWeight: 500,
-                            color: getStatusColor(zone.status),
-                          }}
-                        >
-                          {zone.personnel}
-                        </Typography>
-                      </Box>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        fontSize: "12px",
-                        color: "#5c6b7d",
-                        mb: 0.5,
-                      }}
-                    >
-                      <span>{zone.certificationLevel} required</span>
-                      <span>{zone.shift} shift</span>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        fontSize: "12px",
-                      }}
-                    >
-                      <span style={{ color: "#5c6b7d" }}>Priority:</span>
-                      <span
-                        style={{
-                          color: getPriorityColor(zone.priority),
-                          fontWeight: 500,
-                        }}
-                      >
-                        {zone.priority}
-                      </span>
-                    </Box>
-
-                    {/* Progress Bar */}
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: 4,
-                        backgroundColor: "#f0f0f0",
-                        borderRadius: 0.25,
-                        mt: 1,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          width: getProgressWidth(zone.status),
-                          height: "100%",
-                          backgroundColor: getStatusColor(zone.status),
-                          borderRadius: 0.25,
-                          transition: "width 0.3s ease",
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                ))}
-              </Box>
-            </CardContent>
-          </Card>
+          <ZoneNotification zones={complianceByZone} />
         </Grid>
       </Grid>
 
