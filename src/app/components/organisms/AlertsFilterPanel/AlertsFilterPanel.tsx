@@ -12,6 +12,10 @@ import {
   Box,
 } from "@mui/material";
 import { Refresh, Check } from "@mui/icons-material";
+import {
+  getCategoryOptions,
+  getSubCategoriesForCategory,
+} from "@/app/config/alertsFilterConfig";
 
 interface AlertsFilterPanelProps {
   categoryFilter?: string;
@@ -33,67 +37,8 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
   const [localCategory, setLocalCategory] = useState(categoryFilter);
   const [localSubCategory, setLocalSubCategory] = useState(subCategoryFilter);
 
-  // Define categories and their corresponding sub-categories
-  const categoryOptions = [
-    {
-      value: "safety-compliance",
-      label: "Safety & Compliance",
-      subCategories: [
-        "Personal Protective Equipment (PPE) Detection",
-        "Fire, Smoke, Oil and Gas Leak Detection",
-        "Vehicle Speed Monitoring inside premises",
-        "Fall Detection (Laydown/Sleeping Detection in Work Areas)",
-        "STP/ETP Overflow Detection",
-        "Emergency Exit Blockage Detection",
-        "Crowd Gathering in Hazardous Zones",
-      ],
-    },
-    {
-      value: "security-monitoring",
-      label: "Security Monitoring",
-      subCategories: [
-        "Intrusion Detection at Premises Perimeter",
-        "Camera Tampering or Offline Detection",
-        "People Presence during Shutdown Hours",
-      ],
-    },
-    {
-      value: "workforce-monitoring",
-      label: "Workforce Monitoring",
-      subCategories: [
-        "Employee Presence Detection in Critical Areas",
-        "Employee Idle Time Monitoring (Without face Recognition)",
-        "Mobile Phone Usage in Restricted Areas",
-        "People Count in Factory Premises based on Entry Exit beacon Counting",
-        "Sleeping or Absence of Security Personnel",
-      ],
-    },
-    {
-      value: "vehicle-operational-insights",
-      label: "Vehicle Operational Insights",
-      subCategories: [
-        "Vehicle Count & ANPR at Entry/Exit Gates",
-        "Tracking Vehicle Unloading/Loading Time",
-        "Unauthorized Parking or Equipment Blocking Areas",
-      ],
-    },
-    {
-      value: "facial-recognition-analytics",
-      label: "Facial Recognition Analytics",
-      subCategories: [
-        "Unauthorized Access in Restricted Areas",
-        "Face Recognition for Entry/Exit Logging, (Attendance system Lite)",
-        "Monitoring Canteen Usage & Timings",
-        "Employee Idle Time Monitoring",
-      ],
-    },
-  ];
-
-  // Get sub-categories for selected category
-  const getSubCategoriesForCategory = (categoryValue: string) => {
-    const category = categoryOptions.find((cat) => cat.value === categoryValue);
-    return category ? category.subCategories : [];
-  };
+  // Get categories from config
+  const categoryOptions = getCategoryOptions();
 
   const handleCategoryChange = (value: string) => {
     setLocalCategory(value);
@@ -115,7 +60,7 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
     ) {
       setLocalSubCategory("");
     }
-  }, [localCategory]);
+  }, [localCategory, localSubCategory]);
 
   return (
     <Card sx={{ mb: 3 }}>
