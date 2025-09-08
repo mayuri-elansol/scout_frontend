@@ -30,7 +30,7 @@ import {
   InfoOutlined,
   Circle,
 } from "@mui/icons-material";
-import { AlertCard, AlertStatsCard } from "@/app/components";
+import { AlertCard, AlertsFilterPanel, AlertStatsCard } from "@/app/components";
 
 const SystemAlerts: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -378,100 +378,11 @@ const SystemAlerts: React.FC = () => {
       </Grid>
 
       {/* Search and Filters */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Grid container spacing={3} alignItems="center">
-            {/* Search */}
-            <Grid size={{ xs: 12, lg: 4 }}>
-              <TextField
-                fullWidth
-                placeholder="Search by title, description, or location"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ fontSize: 20, color: "#666" }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "#f8f9fa",
-                  },
-                }}
-              />
-            </Grid>
 
-            {/* Severity */}
-            <Grid size={{ xs: 12, lg: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Severity Level</InputLabel>
-                <Select
-                  value={severityFilter}
-                  onChange={(e) => setSeverityFilter(e.target.value)}
-                  label="Severity Level"
-                >
-                  <MenuItem value="">All Severities</MenuItem>
-                  <MenuItem value="critical">Critical</MenuItem>
-                  <MenuItem value="high">High</MenuItem>
-                  <MenuItem value="medium">Medium</MenuItem>
-                  <MenuItem value="low">Low</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Category */}
-            {/* item xs={12} lg={3} */}
-            <Grid size={{ xs: 12, lg: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  label="Category"
-                >
-                  <MenuItem value="">All Categories</MenuItem>
-                  <MenuItem value="safety">Safety</MenuItem>
-                  <MenuItem value="security">Security</MenuItem>
-                  <MenuItem value="workforce">Workforce</MenuItem>
-                  <MenuItem value="operational">Operational</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Buttons */}
-            {/* item xs={12} lg={2} */}
-            <Grid size={{ xs: 12, lg: 2 }}>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <Button
-                  variant="contained"
-                  startIcon={<Download />}
-                  size="small"
-                  sx={{
-                    backgroundColor: "#1976d2",
-                    fontSize: "12px",
-                    textTransform: "none",
-                    paddingX: "10px",
-                  }}
-                >
-                  Export
-                </Button>
-                <IconButton
-                  size="small"
-                  sx={{
-                    border: "1px solid #e0e0e0",
-                    backgroundColor: "#f8f9fa",
-                  }}
-                >
-                  <Refresh sx={{ fontSize: 18 }} />
-                </IconButton>
-              </Box>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+      <AlertsFilterPanel
+      // onApply={handleApply}
+      // onRefresh={handleRefresh}
+      />
 
       {/* Alert Summary */}
       <Box
