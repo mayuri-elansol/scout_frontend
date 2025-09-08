@@ -108,23 +108,14 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
   };
 
   // Reset sub-category when category changes
-  // useEffect(() => {
-  //   if (
-  //     localCategory &&
-  //     !getSubCategoriesForCategory(localCategory).includes(localSubCategory)
-  //   ) {
-  //     setLocalSubCategory("");
-  //   }
-  // }, [localCategory]);
   useEffect(() => {
-    const subCategories =
-      categoryOptions.find((cat) => cat.value === localCategory)
-        ?.subCategories ?? [];
-
-    if (localCategory && !subCategories.includes(localSubCategory)) {
+    if (
+      localCategory &&
+      !getSubCategoriesForCategory(localCategory).includes(localSubCategory)
+    ) {
       setLocalSubCategory("");
     }
-  }, [localCategory, localSubCategory]);
+  }, [localCategory]);
 
   return (
     <Card sx={{ mb: 3 }}>
