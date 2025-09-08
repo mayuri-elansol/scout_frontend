@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import {
   Dialog,
@@ -119,6 +118,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
                   border: "1px solid #e0e0e0",
                   borderRadius: 2,
                   bgcolor: "#fafafa",
+                  height: "100%",
                 }}
               >
                 <Box
@@ -201,22 +201,6 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
           )}
         </Box>
       </DialogContent>
-
-      {/* Footer */}
-      <DialogActions sx={{ px: 2, pb: 2 }}>
-        <Button
-          onClick={handleClose}
-          variant="contained"
-          sx={{
-            borderRadius: 2,
-            textTransform: "none",
-            fontWeight: 600,
-            px: 3,
-          }}
-        >
-          Close
-        </Button>
-      </DialogActions>
     </Dialog>
   );
 };

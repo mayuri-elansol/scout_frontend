@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
-import { CssBaseline, Box, useMediaQuery } from "@mui/material";
+import { CssBaseline, Box, useMediaQuery, CircularProgress } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
@@ -11,6 +11,7 @@ import Header from "../components/organisms/Header/Header";
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
+import PageLoader from "next/dist/client/page-loader";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -19,26 +20,16 @@ interface ClientLayoutProps {
 export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
 
-  const allMenuItems = [
-    ...dashboardMenu,
-    ...alertMenu,
-    ...analyticsMenu.flatMap((category) => category.items),
-  ];
-
+  const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
-  // useEffect(() => {
-  //   // Find the menu item that matches the current pathname
-  //   const currentItem = allMenuItems.find(
-  //     (item) => item.path.toLowerCase() === pathname.toLowerCase()
-  //   );
+  const sidebartheme = useTheme();
+  const isTabletOrPhone = useMediaQuery(sidebartheme.breakpoints.down("lg"), {
+  });
 
-  //   if (currentItem) {
-  //     setCurrentPage(currentItem.page!);
-  //   } else {
-  //     setCurrentPage("dashboard");
-  //   }
-  // }, [pathname]);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const allMenuItems = [
@@ -58,9 +49,21 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     setCurrentPage(page);
     console.log("Navigating to:", page);
   };
-  const sidebartheme = useTheme();
-  const isTabletOrPhone = useMediaQuery(sidebartheme.breakpoints.down("lg"));
 
+if (!mounted)
+  return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f5f7fa",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -70,13 +73,13 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
           <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
         )}
 
-        {/* PhoneSidebar (Tablet & Phone) */}
         {isTabletOrPhone && (
           <Phonesidebar
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
         )}
+
         <Box
           sx={{
             flex: 1,
