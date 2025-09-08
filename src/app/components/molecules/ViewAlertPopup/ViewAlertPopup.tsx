@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -8,8 +8,17 @@ import {
   Button,
   Box,
   Typography,
+  Divider,
+  Grid,
+  IconButton,
 } from "@mui/material";
-import { LocationOn, AccessTime, Person } from "@mui/icons-material";
+import {
+  LocationOn,
+  AccessTime,
+  Person,
+  Schedule,
+  Close,
+} from "@mui/icons-material";
 
 interface ViewAlertPopupProps {
   open: boolean;
@@ -30,104 +39,181 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
   duration,
   imageUrl,
 }) => {
-  // Track image load error
   const [imageError, setImageError] = useState(false);
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
+  useEffect(() => {
+    setImageError(false); // Reset error when image changes
+  }, [imageUrl]);
 
-  const handleImageLoad = () => {
-    setImageError(true);
-  };
+  const handleImageError = () => setImageError(true);
+
+  const showPlaceholder = !imageUrl || imageUrl.trim() === "" || imageError;
 
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Details</DialogTitle>
-      <DialogContent dividers>
-        {/* Info section - Horizontally aligned */}
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      slotProps={{
+        paper: {
+          sx: { width: { xs: "95%", sm: "80%" } },
+        },
+      }}
+    >
+      {/* Header */}
+      <DialogTitle
+        sx={{
+          py: 1.5,
+          px: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          bgcolor: "primary.main",
+          color: "white",
+          fontWeight: 600,
+        }}
+      >
+        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          Alert Details
+        </Typography>
+        <IconButton onClick={handleClose} sx={{ color: "white" }}>
+          <Close />
+        </IconButton>
+      </DialogTitle>
+
+      <DialogContent sx={{ p: 2 }}>
+        {/* Details Grid */}
+        <Grid container spacing={1.5} sx={{ mb: 2, pt: 2 }}>
+          {[
+            {
+              label: "Location",
+              value: location,
+              icon: <LocationOn sx={{ fontSize: 18, color: "#1976d2" }} />,
+              bg: "#e3f2fd",
+            },
+            {
+              label: "Time",
+              value: time,
+              icon: <AccessTime sx={{ fontSize: 18, color: "#f57c00" }} />,
+              bg: "#fff3e0",
+            },
+            {
+              label: "Assigned To",
+              value: assignedTo,
+              icon: <Person sx={{ fontSize: 18, color: "#4caf50" }} />,
+              bg: "#e8f5e9",
+            },
+            {
+              label: "Duration",
+              value: duration,
+              icon: <Schedule sx={{ fontSize: 18, color: "#e91e63" }} />,
+              bg: "#fce4ec",
+            },
+          ].map((item, i) => (
+            <Grid size={{ xs: 12, sm: 6 }} key={i}>
+              <Box
+                sx={{
+                  p: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.2,
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 2,
+                  bgcolor: "#fafafa",
+                }}
+              >
+                <Box
+                  sx={{
+                    p: 0.8,
+                    borderRadius: "50%",
+                    bgcolor: item.bg,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {item.icon}
+                </Box>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Typography variant="caption" color="textSecondary">
+                    {item.label}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ fontWeight: 500, wordBreak: "break-word" }}
+                  >
+                    {item.value}
+                  </Typography>
+                </Box>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Divider sx={{ my: 1.5 }} />
+
         <Box
           sx={{
+            textAlign: "center",
+            p: 1.5,
+            border: "1px solid #e0e0e0",
+            borderRadius: 2,
+            bgcolor: "#fafafa",
+            height: 300,
             display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: 2,
-            justifyContent: "space-between",
             alignItems: "center",
-            mb: 2,
+            justifyContent: "center",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <LocationOn sx={{ fontSize: 16 }} />
-            <Typography variant="body2">{location}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <AccessTime sx={{ fontSize: 16 }} />
-            <Typography variant="body2">{time}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <Person sx={{ fontSize: 16 }} />
-            <Typography variant="body2">{assignedTo}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
-              Duration: {duration}
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Image section - Below the details */}
-        <Box sx={{ textAlign: "center" }}>
-          {!imageUrl || imageError ? (
-            // Default "No Image Found" box
+          {showPlaceholder ? (
             <Box
               sx={{
                 width: "100%",
-                height: 200,
-                backgroundColor: "#f5f5f5",
+                height: "100%",
+                bgcolor: "#f5f5f5",
                 border: "2px dashed #ccc",
                 borderRadius: 2,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                flexDirection: "column",
                 gap: 1,
               }}
             >
-              <Typography variant="h6" sx={{ color: "#888", fontWeight: 500 }}>
+              <Typography variant="h4" sx={{ color: "#bbb" }}>
                 📷
               </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#888",
-                  textAlign: "center",
-                }}
-              >
-                No Image Found
+              <Typography variant="body2" color="textSecondary">
+                No Image Available
               </Typography>
             </Box>
           ) : (
             <img
               src={imageUrl}
-              alt="Alert Details"
+              alt="Alert"
               onError={handleImageError}
-              onLoad={handleImageLoad}
               style={{
                 maxWidth: "100%",
-                height: "auto",
+                maxHeight: "100%",
                 borderRadius: 8,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                objectFit: "cover",
               }}
             />
           )}
         </Box>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} variant="contained">
+
+      {/* Footer */}
+      <DialogActions sx={{ px: 2, pb: 2 }}>
+        <Button
+          onClick={handleClose}
+          variant="contained"
+          sx={{
+            borderRadius: 2,
+            textTransform: "none",
+            fontWeight: 600,
+            px: 3,
+          }}
+        >
           Close
         </Button>
       </DialogActions>
