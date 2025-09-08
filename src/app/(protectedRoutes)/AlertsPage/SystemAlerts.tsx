@@ -1,46 +1,16 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Chip,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Grid,
-  Paper,
-  Divider,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
+import React from "react";
+import { Box, Typography, Grid } from "@mui/material";
 import {
   Warning,
-  Search,
-  Download,
-  Refresh,
-  AccessTime,
-  LocationOn,
   Person,
-  CheckCircle,
   ErrorOutline,
   InfoOutlined,
   Circle,
 } from "@mui/icons-material";
-<<<<<<< HEAD:src/app/(unprotectedRoutes)/AlertsPage/SystemAlerts.tsx
-import { AlertCard, AlertsFilterPanel, AlertStatsCard } from "@/app/components";
-=======
+
 import { AlertCard, AlertStatsCard } from "../../components/molecules";
->>>>>>> eab2af6b5cc4984b58280c062bf79703d30a62dc:src/app/(protectedRoutes)/AlertsPage/SystemAlerts.tsx
-
+import { AlertsFilterPanel } from "@/app/components/organisms";
 const SystemAlerts: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [severityFilter, setSeverityFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-
   const alertStats = [
     {
       value: "10",
@@ -157,36 +127,6 @@ const SystemAlerts: React.FC = () => {
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "ACTIVE":
-        return { color: "#f44336", bgColor: "#ffebee" };
-      case "ESCALATED":
-        return { color: "#d32f2f", bgColor: "#ffcdd2" };
-      case "ACKNOWLEDGED":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "RESOLVED":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "CRITICAL":
-        return { color: "#d32f2f", bgColor: "#ffcdd2" };
-      case "HIGH":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "MEDIUM":
-        return { color: "#ffa726", bgColor: "#fff3e0" };
-      case "LOW":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
-
   return (
     <Box>
       {/* Page Header */}
@@ -211,16 +151,12 @@ const SystemAlerts: React.FC = () => {
       </Box>
 
       {/* Alert Statistics */}
-
-      <Grid container spacing={2} sx={{ mb: 4, display: "flex" }}>
+      <Grid container spacing={2} sx={{ mb: 4, alignItems: "stretch" }}>
         {alertStats.map((stat, index) => (
           <Grid
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
             key={index}
-            sx={{
-              flex: 1,
-              minWidth: { xs: "100%", sm: 200, md: 150 },
-              display: "flex",
-            }}
+            sx={{ display: "flex" }}
           >
             <AlertStatsCard
               label={stat.label}
@@ -231,6 +167,7 @@ const SystemAlerts: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+
       {/* Search and Filters */}
 
       <AlertsFilterPanel
@@ -284,6 +221,7 @@ const SystemAlerts: React.FC = () => {
         {/* Alert Cards */}
         {alertsData.map((alert) => (
           <AlertCard
+            key={alert.id}
             id={alert.id}
             title={alert.title}
             description={alert.description}

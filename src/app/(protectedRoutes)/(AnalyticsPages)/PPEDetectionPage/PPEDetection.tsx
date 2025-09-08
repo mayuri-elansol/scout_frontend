@@ -1,31 +1,13 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import { KpiCard } from "@/app/components/molecules";
-import {
-  Box,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
-} from "@mui/material";
-import {
-  Shield,
-  Warning,
-  CheckCircle,
-  Schedule,
-  Visibility,
-  CameraAlt,
-  Circle,
-} from "@mui/icons-material";
+import { Box, Grid, Typography } from "@mui/material";
+import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 //import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
-  const theme = useTheme();
-
   const ppeKpiData = [
     {
       title: "PPE Compliance Rate",
@@ -112,20 +94,13 @@ const PPEDetection: React.FC = () => {
       status: "excellent",
     },
   ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "excellent":
-        return "#4caf50";
-      case "good":
-        return "#8bc34a";
-      case "warning":
-        return "#ff9800";
-      default:
-        return "#9e9e9e";
-    }
-  };
-  const handleSubmitFilter = async (filters: Record<string, any>) => {
+  interface FilterParams {
+    status?: string;
+    employeeName?: string;
+    startDate?: string;
+    endDate?: string;
+  }
+  const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
     // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
@@ -156,7 +131,7 @@ const PPEDetection: React.FC = () => {
           sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
         >
           Ensures workers wear helmets, vests, gloves, and masks—because every
-          life matters and safety isn't optional.
+          life matters and safety isn&apos;t optional.
         </Typography>
       </Box>
 

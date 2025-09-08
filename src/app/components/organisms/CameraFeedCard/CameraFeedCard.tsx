@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Chip,
-  IconButton,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, IconButton } from "@mui/material";
 import { VideoCall, Circle, Fullscreen } from "@mui/icons-material";
 import RoiOverlay from "../../molecules/RoiOverlay/RoiOverlay";
 import VideoControlPanel from "../../molecules/VideoControlPanel/VideoControlPanel";

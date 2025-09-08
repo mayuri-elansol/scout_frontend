@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { KpiData, PageType } from "@/app/types";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import {
   Shield,
   Warning,
@@ -12,34 +12,24 @@ import {
 } from "@mui/icons-material";
 
 // Import using new atomic design structure
-import {
-  Header,
-  Sidebar,
-  Breadcrumb,
-  ActivityFeed,
-  CameraStatus,
-  ReportTable,
-} from "@/app/components/organisms";
+import { ActivityFeed, CameraStatus } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
-// Import other page components
 import PPEDetection from "../(AnalyticsPages)/PPEDetectionPage/page";
 import IntrusionDetection from "../(AnalyticsPages)/IntrusionDetectionPage/page";
 import EmployeePresence from "../(AnalyticsPages)/EmployeePresencePage/page";
 import PeopleCount from "../(AnalyticsPages)/PeopleCountPage/page";
 import LiveStreaming from "../LiveStreamingPage/page";
 import SystemAlerts from "../AlertsPage/SystemAlerts";
-import Phonesidebar from "@/app/components/organisms/PhoneSidebar/Phonesidebar";
-// import WelcomeBanner from "@/components/templates/welcome/WelcomeBanner";
+
 import { useTranslation } from "react-i18next";
 
 export interface DashboardPageProps {}
 
 const Dashboard: React.FC<DashboardPageProps> = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const isTabletOrPhone = useMediaQuery(theme.breakpoints.down("lg"));
-  const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
+
+  const [currentPage] = useState<PageType>("dashboard");
 
   const kpiData: KpiData[] = [
     {
@@ -143,10 +133,6 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
       icon: People,
     },
   ];
-
-  const handlePageChange = (page: PageType) => {
-    setCurrentPage(page);
-  };
 
   return (
     <Box

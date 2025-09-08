@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+
 import { Box, Typography } from "@mui/material";
 import { Shield, Visibility, People, Warning } from "@mui/icons-material";
 

@@ -1,11 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import {
-  Box,
-  Grid,
-  Typography
-
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
   CheckCircle,
@@ -15,7 +10,6 @@ import {
   Schedule,
   Error,
   BarChart,
- 
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -23,7 +17,6 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import { complianceByZone } from "../PeopleCountPage/PeopleCount";
 
 const EmployeePresence: React.FC = () => {
-
   const employeeKpiData = [
     {
       title: "Current Critical Area Occupancy",
@@ -149,92 +142,6 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=14",
     },
   ];
-
-  const criticalZones = [
-    {
-      zone: "Reactor Control Room",
-      personnel: "3/3",
-      certificationLevel: "Level 3",
-      status: "FULLY_STAFFED",
-      shift: "Day",
-      priority: "Critical",
-    },
-    {
-      zone: "Chemical Processing Unit",
-      personnel: "2/3",
-      certificationLevel: "Level 2",
-      status: "UNDERSTAFFED",
-      shift: "Day",
-      priority: "Critical",
-    },
-    {
-      zone: "Emergency Response Station",
-      personnel: "4/4",
-      certificationLevel: "Safety Cert",
-      status: "FULLY_STAFFED",
-      shift: "Day",
-      priority: "High",
-    },
-    {
-      zone: "Quality Control Lab",
-      personnel: "2/3",
-      certificationLevel: "Lab Cert",
-      status: "MISSING_PERSONNEL",
-      shift: "Day",
-      priority: "High",
-    },
-    {
-      zone: "Maintenance Workshop",
-      personnel: "5/6",
-      certificationLevel: "Tech Cert",
-      status: "ADEQUATE",
-      shift: "Day",
-      priority: "Medium",
-    },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "FULLY_STAFFED":
-        return "#4caf50";
-      case "ADEQUATE":
-        return "#8bc34a";
-      case "UNDERSTAFFED":
-        return "#ff9800";
-      case "MISSING_PERSONNEL":
-        return "#f44336";
-      default:
-        return "#9e9e9e";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "Critical":
-        return "#d32f2f";
-      case "High":
-        return "#f44336";
-      case "Medium":
-        return "#ff9800";
-      default:
-        return "#9e9e9e";
-    }
-  };
-
-  const getProgressWidth = (status: string) => {
-    switch (status) {
-      case "FULLY_STAFFED":
-        return "100%";
-      case "ADEQUATE":
-        return "85%";
-      case "UNDERSTAFFED":
-        return "67%";
-      case "MISSING_PERSONNEL":
-        return "30%";
-      default:
-        return "50%";
-    }
-  };
 
   return (
     <Box>

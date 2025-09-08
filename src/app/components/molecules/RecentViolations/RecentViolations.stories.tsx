@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
+// import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import RecentViolations from "./RecentViolations";
 
 const meta: Meta<typeof RecentViolations> = {

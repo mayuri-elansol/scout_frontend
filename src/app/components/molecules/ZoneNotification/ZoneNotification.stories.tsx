@@ -72,7 +72,8 @@
 // };
 
 //============================with skeleton
-import type { Meta, StoryObj } from "@storybook/react";
+// import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import ZoneNotification from "./ZoneNotification";
 
 const meta: Meta<typeof ZoneNotification> = {

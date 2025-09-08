@@ -1,26 +1,26 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Box, Grid, Typography } from '@mui/material';
-import KpiCard from './KpiCard';
-import { 
-  Shield, 
-  Visibility, 
-  Security, 
-  People, 
-  TrendingUp, 
-  BarChart,
+// import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box, Grid, Typography } from "@mui/material";
+import KpiCard from "./KpiCard";
+import {
+  Shield,
+  Visibility,
+  Security,
+  People,
+  TrendingUp,
   Warning,
   LocalFireDepartment,
   DirectionsCar,
   Schedule,
   Place,
   CheckCircle,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 const meta: Meta<typeof KpiCard> = {
-  title: 'Components/Molecules/KpiCard',
+  title: "Components/Molecules/KpiCard",
   component: KpiCard,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     docs: {
       description: {
         component: `
@@ -44,64 +44,64 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
-      options: ['default', 'success', 'info', 'critical'],
-      description: 'Card variant for different metric types and alert levels',
+      control: "select",
+      options: ["default", "success", "info", "critical"],
+      description: "Card variant for different metric types and alert levels",
     },
     size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-      description: 'Card size - medium is standard for most dashboards',
+      control: "select",
+      options: ["small", "medium", "large"],
+      description: "Card size - medium is standard for most dashboards",
     },
     title: {
-      control: 'text',
-      description: 'Primary metric title/label',
+      control: "text",
+      description: "Primary metric title/label",
     },
     value: {
-      control: 'text',
-      description: 'Main metric value display',
+      control: "text",
+      description: "Main metric value display",
     },
     subtitle: {
-      control: 'text',
-      description: 'Additional context or description',
+      control: "text",
+      description: "Additional context or description",
     },
     trend: {
-      control: 'text',
-      description: 'Trend indicator (percentage, status, or count)',
+      control: "text",
+      description: "Trend indicator (percentage, status, or count)",
     },
     trendColor: {
-      control: 'color',
-      description: 'Color for trend indicator chip',
+      control: "color",
+      description: "Color for trend indicator chip",
     },
     customWidth: {
-      control: { type: 'range', min: 200, max: 600, step: 10 },
-      description: 'Custom card width (px) - overrides size preset',
+      control: { type: "range", min: 200, max: 600, step: 10 },
+      description: "Custom card width (px) - overrides size preset",
       table: {
-        category: 'Layout Controls',
+        category: "Layout Controls",
       },
     },
     customHeight: {
-      control: { type: 'range', min: 120, max: 400, step: 10 },
-      description: 'Custom card height (px) - overrides size preset',
+      control: { type: "range", min: 120, max: 400, step: 10 },
+      description: "Custom card height (px) - overrides size preset",
       table: {
-        category: 'Layout Controls',
+        category: "Layout Controls",
       },
     },
     containerPadding: {
-      control: { type: 'range', min: 0, max: 40, step: 4 },
-      description: 'Container padding around card (px)',
+      control: { type: "range", min: 0, max: 40, step: 4 },
+      description: "Container padding around card (px)",
       table: {
-        category: 'Layout Controls',
+        category: "Layout Controls",
       },
     },
     showContainer: {
-      control: 'boolean',
-      description: 'Show container background',
+      control: "boolean",
+      description: "Show container background",
       table: {
-        category: 'Layout Controls',
+        category: "Layout Controls",
       },
     },
   },
@@ -113,47 +113,55 @@ type Story = StoryObj<typeof meta>;
 // Interactive Sizing Controls - Main Feature
 export const InteractiveSizing: Story = {
   args: {
-    title: 'PPE Compliance',
-    value: '87.5%',
-    subtitle: '3 violations in last hour',
-    trend: '-2.3%',
-    trendColor: '#f44336',
-    color: '#ff9800',
-    bgColor: '#fff8e1',
+    title: "PPE Compliance",
+    value: "87.5%",
+    subtitle: "3 violations in last hour",
+    trend: "-2.3%",
+    trendColor: "#f44336",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
     icon: Shield,
-    variant: 'default',
-    size: 'medium',
+    variant: "default",
+    size: "medium",
     customWidth: 280,
     customHeight: 160,
     containerPadding: 16,
     showContainer: true,
   },
   render: (args) => {
-    const { customWidth, customHeight, containerPadding, showContainer, ...cardProps } = args;
-    
+    const {
+      customWidth,
+      customHeight,
+      containerPadding,
+      showContainer,
+      ...cardProps
+    } = args;
+
     return (
       <Box
         sx={{
-          width: customWidth ? `${customWidth + (containerPadding * 2)}px` : '320px',
-          backgroundColor: showContainer ? '#f5f7fa' : 'transparent',
+          width: customWidth
+            ? `${customWidth + containerPadding * 2}px`
+            : "320px",
+          backgroundColor: showContainer ? "#f5f7fa" : "transparent",
           padding: `${containerPadding}px`,
           borderRadius: 1,
-          border: showContainer ? '1px dashed #ddd' : 'none',
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-start',
+          border: showContainer ? "1px dashed #ddd" : "none",
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
         }}
       >
         {showContainer && (
           <Typography
             sx={{
-              position: 'absolute',
+              position: "absolute",
               top: 4,
               left: 8,
-              fontSize: '10px',
-              color: '#666',
-              backgroundColor: 'rgba(255,255,255,0.8)',
+              fontSize: "10px",
+              color: "#666",
+              backgroundColor: "rgba(255,255,255,0.8)",
               px: 0.5,
               borderRadius: 0.5,
               zIndex: 10,
@@ -162,8 +170,8 @@ export const InteractiveSizing: Story = {
             {customWidth || 280} x {customHeight || 160}px
           </Typography>
         )}
-        <KpiCard 
-          {...cardProps} 
+        <KpiCard
+          {...cardProps}
           customWidth={customWidth}
           customHeight={customHeight}
         />
@@ -204,20 +212,27 @@ Use the controls panel to dynamically adjust card dimensions:
 // Individual Component Stories
 export const Default: Story = {
   args: {
-    title: 'PPE Compliance',
-    value: '87.5%',
-    subtitle: '3 violations in last hour',
-    trend: '-2.3%',
-    trendColor: '#f44336',
-    color: '#ff9800',
-    bgColor: '#fff8e1',
+    title: "PPE Compliance",
+    value: "87.5%",
+    subtitle: "3 violations in last hour",
+    trend: "-2.3%",
+    trendColor: "#f44336",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
     icon: Shield,
-    variant: 'default',
-    size: 'medium',
+    variant: "default",
+    size: "medium",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '280px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "280px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -225,7 +240,8 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Default KPI card variant used for standard metrics like compliance rates and operational data.',
+        story:
+          "Default KPI card variant used for standard metrics like compliance rates and operational data.",
       },
     },
   },
@@ -233,20 +249,27 @@ export const Default: Story = {
 
 export const Success: Story = {
   args: {
-    title: 'System Health',
-    value: '98.5%',
-    subtitle: 'All systems operational',
-    trend: '+2.3%',
-    trendColor: '#4caf50',
-    color: '#2e7d32',
-    bgColor: '#e8f5e9',
+    title: "System Health",
+    value: "98.5%",
+    subtitle: "All systems operational",
+    trend: "+2.3%",
+    trendColor: "#4caf50",
+    color: "#2e7d32",
+    bgColor: "#e8f5e9",
     icon: TrendingUp,
-    variant: 'success',
-    size: 'medium',
+    variant: "success",
+    size: "medium",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '280px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "280px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -254,7 +277,8 @@ export const Success: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Success variant for positive metrics and achievements, using green color scheme.',
+        story:
+          "Success variant for positive metrics and achievements, using green color scheme.",
       },
     },
   },
@@ -262,20 +286,27 @@ export const Success: Story = {
 
 export const Info: Story = {
   args: {
-    title: 'Camera Uptime',
-    value: '94.2%',
-    subtitle: '2 cameras offline',
-    trend: '-1.2%',
-    trendColor: '#ff9800',
-    color: '#1565c0',
-    bgColor: '#e3f2fd',
+    title: "Camera Uptime",
+    value: "94.2%",
+    subtitle: "2 cameras offline",
+    trend: "-1.2%",
+    trendColor: "#ff9800",
+    color: "#1565c0",
+    bgColor: "#e3f2fd",
     icon: Visibility,
-    variant: 'info',
-    size: 'medium',
+    variant: "info",
+    size: "medium",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '280px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "280px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -283,7 +314,8 @@ export const Info: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Info variant for informational metrics and status updates, using blue color scheme.',
+        story:
+          "Info variant for informational metrics and status updates, using blue color scheme.",
       },
     },
   },
@@ -291,20 +323,27 @@ export const Info: Story = {
 
 export const Critical: Story = {
   args: {
-    title: 'Security Alerts',
-    value: '5',
-    subtitle: 'Immediate attention required',
-    trend: '+150%',
-    trendColor: '#f44336',
-    color: '#c62828',
-    bgColor: '#ffebee',
+    title: "Security Alerts",
+    value: "5",
+    subtitle: "Immediate attention required",
+    trend: "+150%",
+    trendColor: "#f44336",
+    color: "#c62828",
+    bgColor: "#ffebee",
     icon: Security,
-    variant: 'critical',
-    size: 'medium',
+    variant: "critical",
+    size: "medium",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '280px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "280px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -312,7 +351,8 @@ export const Critical: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Critical variant for urgent alerts and high-priority metrics, using red color scheme.',
+        story:
+          "Critical variant for urgent alerts and high-priority metrics, using red color scheme.",
       },
     },
   },
@@ -321,19 +361,26 @@ export const Critical: Story = {
 // Size Variants
 export const SmallSize: Story = {
   args: {
-    title: 'Zone Status',
-    value: '4/5',
-    subtitle: 'Active zones',
-    trend: 'Normal',
-    trendColor: '#4caf50',
-    color: '#1976d2',
-    bgColor: '#e3f2fd',
+    title: "Zone Status",
+    value: "4/5",
+    subtitle: "Active zones",
+    trend: "Normal",
+    trendColor: "#4caf50",
+    color: "#1976d2",
+    bgColor: "#e3f2fd",
     icon: Place,
-    size: 'small',
+    size: "small",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '200px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "200px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -341,7 +388,8 @@ export const SmallSize: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Small size variant for compact layouts, sidebars, or secondary metrics.',
+        story:
+          "Small size variant for compact layouts, sidebars, or secondary metrics.",
       },
     },
   },
@@ -349,19 +397,26 @@ export const SmallSize: Story = {
 
 export const LargeSize: Story = {
   args: {
-    title: 'Total Employees',
-    value: '1,247',
-    subtitle: 'Current facility capacity at 78%',
-    trend: '+5.2%',
-    trendColor: '#4caf50',
-    color: '#1976d2',
-    bgColor: '#e3f2fd',
+    title: "Total Employees",
+    value: "1,247",
+    subtitle: "Current facility capacity at 78%",
+    trend: "+5.2%",
+    trendColor: "#4caf50",
+    color: "#1976d2",
+    bgColor: "#e3f2fd",
     icon: People,
-    size: 'large',
+    size: "large",
   },
   decorators: [
     (Story) => (
-      <Box sx={{ width: '380px', backgroundColor: '#f5f7fa', p: 2, borderRadius: 1 }}>
+      <Box
+        sx={{
+          width: "380px",
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -369,7 +424,8 @@ export const LargeSize: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Large size variant for prominent display of key metrics and executive dashboards.',
+        story:
+          "Large size variant for prominent display of key metrics and executive dashboards.",
       },
     },
   },
@@ -378,23 +434,29 @@ export const LargeSize: Story = {
 // Dashboard Layout
 export const DashboardLayout: Story = {
   render: () => (
-    <Box sx={{ 
-      backgroundColor: '#f5f7fa', 
-      p: 3, 
-      borderRadius: 1,
-    }}>
-      <Typography sx={{ mb: 2, color: '#5c6b7d', fontSize: '14px', fontWeight: 500 }}>
+    <Box
+      sx={{
+        backgroundColor: "#f5f7fa",
+        p: 3,
+        borderRadius: 1,
+      }}
+    >
+      <Typography
+        sx={{ mb: 2, color: "#5c6b7d", fontSize: "14px", fontWeight: 500 }}
+      >
         Main Dashboard Layout - 5 Column Grid (20% width each)
       </Typography>
-      <Box sx={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 2.5,
-        '& > div': {
-          width: 'calc(20% - 16px)',
-          minWidth: '200px',
-        }
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2.5,
+          "& > div": {
+            width: "calc(20% - 16px)",
+            minWidth: "200px",
+          },
+        }}
+      >
         <Box>
           <KpiCard
             title="PPE Compliance"
@@ -529,7 +591,8 @@ export const DashboardLayout: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Complete dashboard layout showing all 10 KPI cards as they appear on the main SCOUT dashboard.',
+        story:
+          "Complete dashboard layout showing all 10 KPI cards as they appear on the main SCOUT dashboard.",
       },
     },
   },
@@ -538,12 +601,14 @@ export const DashboardLayout: Story = {
 // Analytics Page Layout
 export const AnalyticsPageLayout: Story = {
   render: () => (
-    <Box sx={{ backgroundColor: '#f5f7fa', p: 3, borderRadius: 1 }}>
-      <Typography sx={{ mb: 2, color: '#5c6b7d', fontSize: '14px', fontWeight: 500 }}>
+    <Box sx={{ backgroundColor: "#f5f7fa", p: 3, borderRadius: 1 }}>
+      <Typography
+        sx={{ mb: 2, color: "#5c6b7d", fontSize: "14px", fontWeight: 500 }}
+      >
         Analytics Page Layout - 4 Column Responsive Grid
       </Typography>
       <Grid container spacing={2.5}>
-        <Grid size={{xs:12,sm:6,md:3}}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <KpiCard
             title="PPE Compliance Rate"
             value="87.5%"
@@ -555,7 +620,7 @@ export const AnalyticsPageLayout: Story = {
             icon={Shield}
           />
         </Grid>
-        <Grid size={{xs:12,sm:6,md:3}}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <KpiCard
             title="PPE Violations Per Day"
             value="12"
@@ -568,7 +633,7 @@ export const AnalyticsPageLayout: Story = {
             variant="critical"
           />
         </Grid>
-        <Grid  size={{xs:12,sm:6,md:3}}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <KpiCard
             title="PPE Detection Accuracy"
             value="94.2%"
@@ -581,7 +646,7 @@ export const AnalyticsPageLayout: Story = {
             variant="success"
           />
         </Grid>
-        <Grid  size={{xs:12,sm:6,md:3}}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <KpiCard
             title="Time Since Last Violation"
             value="2h 34m"
@@ -600,7 +665,8 @@ export const AnalyticsPageLayout: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Analytics page layout showing PPE Detection KPIs in a responsive 4-column grid.',
+        story:
+          "Analytics page layout showing PPE Detection KPIs in a responsive 4-column grid.",
       },
     },
   },
@@ -609,12 +675,14 @@ export const AnalyticsPageLayout: Story = {
 // Variant Comparison
 export const AllVariantsComparison: Story = {
   render: () => (
-    <Box sx={{ backgroundColor: '#f5f7fa', p: 3, borderRadius: 1 }}>
-      <Typography sx={{ mb: 2, color: '#5c6b7d', fontSize: '14px', fontWeight: 500 }}>
+    <Box sx={{ backgroundColor: "#f5f7fa", p: 3, borderRadius: 1 }}>
+      <Typography
+        sx={{ mb: 2, color: "#5c6b7d", fontSize: "14px", fontWeight: 500 }}
+      >
         All Variants - Complete styling comparison
       </Typography>
       <Grid container spacing={2.5}>
-        <Grid   size={{xs:12,sm:6,lg:3}}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <KpiCard
             title="System Health"
             value="98.5%"
@@ -627,7 +695,7 @@ export const AllVariantsComparison: Story = {
             variant="success"
           />
         </Grid>
-        <Grid  size={{xs:12,sm:6,lg:3}}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <KpiCard
             title="Camera Uptime"
             value="94.2%"
@@ -640,7 +708,7 @@ export const AllVariantsComparison: Story = {
             variant="info"
           />
         </Grid>
-        <Grid  size={{xs:12,sm:6,lg:3}}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <KpiCard
             title="Security Alerts"
             value="5"
@@ -653,7 +721,7 @@ export const AllVariantsComparison: Story = {
             variant="critical"
           />
         </Grid>
-        <Grid  size={{xs:12,sm:6,lg:3}}>
+        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <KpiCard
             title="PPE Compliance"
             value="87.5%"
@@ -672,7 +740,8 @@ export const AllVariantsComparison: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Side-by-side comparison of all KPI card variants with their distinctive color schemes.',
+        story:
+          "Side-by-side comparison of all KPI card variants with their distinctive color schemes.",
       },
     },
   },

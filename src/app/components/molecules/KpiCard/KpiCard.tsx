@@ -1,14 +1,7 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Chip,
-  useTheme,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Chip } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 
 interface KpiCardProps {
@@ -39,10 +32,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
   variant = "default",
   size = "medium",
   customWidth,
-  customHeight,
+  // customHeight,
 }) => {
-  const theme = useTheme();
-
   // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
@@ -119,7 +110,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
 
   // Override with custom dimensions if provided
   const finalWidth = customWidth ? `${customWidth}px` : "auto";
-  const finalHeight = customHeight ? `${customHeight}px` : sizeStyles.minHeight;
+  // const finalHeight = customHeight ? `${customHeight}px` : sizeStyles.minHeight;
 
   return (
     <Card

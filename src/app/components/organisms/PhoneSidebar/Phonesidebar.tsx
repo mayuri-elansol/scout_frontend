@@ -1,4 +1,3 @@
-
 // src/app/components/organisms/PhoneSidebar/Phonesidebar.tsx
 "use client";
 
@@ -34,7 +33,7 @@ interface PhonesidebarProps {
 }
 
 const Phonesidebar: React.FC<PhonesidebarProps> = ({
-  currentPage,
+  // currentPage,
   onPageChange,
 }) => {
   const router = useRouter();
@@ -290,7 +289,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
       </Drawer>
 
       {/* Popover for sub-items */}
-           <Popover
+      <Popover
         open={popoverOpen && Boolean(hoverMenu)}
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -311,7 +310,9 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
             ml: 1,
           },
         }}
-      > <Box
+      >
+        {" "}
+        <Box
           onMouseEnter={handlePopoverMouseEnter}
           onMouseLeave={handlePopoverMouseLeave}
           sx={{
@@ -384,5 +385,3 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
 };
 
 export default Phonesidebar;
-
-

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Box } from '@mui/material';
-import VideoControlButton, { VideoControlType } from '../../atoms/VideoControlButton/VideoControlButton';
+import React from "react";
+import { Box } from "@mui/material";
+import VideoControlButton from "../../atoms/VideoControlButton/VideoControlButton";
 
 export interface VideoControlPanelProps {
   /** Whether video is currently playing */
@@ -16,9 +16,9 @@ export interface VideoControlPanelProps {
   /** Fullscreen toggle handler */
   onFullscreenToggle?: () => void;
   /** Control button size */
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   /** Panel position */
-  position?: 'bottom-left' | 'bottom-center' | 'bottom-right' | 'center';
+  position?: "bottom-left" | "bottom-center" | "bottom-right" | "center";
   /** Custom styling */
   sx?: object;
 }
@@ -30,20 +30,20 @@ const VideoControlPanel: React.FC<VideoControlPanelProps> = ({
   onPlayPause = () => {},
   onMuteToggle = () => {},
   onFullscreenToggle = () => {},
-  size = 'small',
-  position = 'bottom-left',
+  size = "small",
+  position = "bottom-left",
   sx = {},
 }) => {
   const getPositionStyles = () => {
     switch (position) {
-      case 'bottom-left':
+      case "bottom-left":
         return { bottom: 12, left: 12 };
-      case 'bottom-center':
-        return { bottom: 12, left: '50%', transform: 'translateX(-50%)' };
-      case 'bottom-right':
+      case "bottom-center":
+        return { bottom: 12, left: "50%", transform: "translateX(-50%)" };
+      case "bottom-right":
         return { bottom: 12, right: 12 };
-      case 'center':
-        return { top: '50%', left: '50%', transform: 'translate(-50%, -50%)' };
+      case "center":
+        return { top: "50%", left: "50%", transform: "translate(-50%, -50%)" };
       default:
         return { bottom: 12, left: 12 };
     }
@@ -52,33 +52,36 @@ const VideoControlPanel: React.FC<VideoControlPanelProps> = ({
   return (
     <Box
       sx={{
-        position: 'absolute',
-        display: 'flex',
+        position: "absolute",
+        display: "flex",
         gap: 1,
         ...getPositionStyles(),
         ...sx,
       }}
     >
       <VideoControlButton
-        type={isPlaying ? 'pause' : 'play'}
+        type={isPlaying ? "pause" : "play"}
         onClick={onPlayPause}
         size={size}
-        title={isPlaying ? 'Pause video' : 'Play video'}
+        title={isPlaying ? "Pause video" : "Play video"}
       />
-      
+
       <VideoControlButton
-        type={isMuted ? 'volume-off' : 'volume-on'}
+        type={isMuted ? "volume-off" : "volume-on"}
         onClick={onMuteToggle}
         size={size}
-        title={isMuted ? 'Unmute audio' : 'Mute audio'}
+        title={isMuted ? "Unmute audio" : "Mute audio"}
       />
-      
+
       <VideoControlButton
-        type={isFullscreen ? 'fullscreen-exit' : 'fullscreen'}
+        type={isFullscreen ? "fullscreen-exit" : "fullscreen"}
         onClick={onFullscreenToggle}
         size={size}
-        title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-        sx={{ position: 'relative', right: position === 'bottom-right' ? 0 : 'auto' }}
+        title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        sx={{
+          position: "relative",
+          right: position === "bottom-right" ? 0 : "auto",
+        }}
       />
     </Box>
   );
