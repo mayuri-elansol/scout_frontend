@@ -15,6 +15,7 @@ import { theme } from '@/app/theme/theme';
 import LoginHeader from '../../components/molecules/Login/LoginHeader';
 import LoginForm from '../../components/molecules/Login/LoginForm';
 import { Shield } from '@mui/icons-material';
+import users from './user.json';
 
 interface LoginFormData {
   username: string;
@@ -76,19 +77,28 @@ const handleSubmit = async (event: React.FormEvent) => {
 );
 
 
-    if (foundUser) {
-      localStorage.setItem('scout_auth_token', 'demo-token-123');
-      localStorage.setItem(
-        'scout_user',
-        JSON.stringify({
-          ...foundUser,
-          lastLogin: new Date().toISOString(),
-        })
-      );
-      router.push('/DashboardPage');
-    } else {
-      setError('Invalid username or password');
-    }
+if (foundUser) {
+  // Example: generate a mock token
+  const token = `token-${Date.now()}`;
+
+  // Save token
+  localStorage.setItem('scout_auth_token', token);
+
+  // Save user data
+  localStorage.setItem(
+    'scout_user',
+    JSON.stringify({
+      username: foundUser.username,
+    
+      lastLogin: new Date().toISOString(),
+    })
+  );
+
+  router.push('/DashboardPage');
+} else {
+  setError('Invalid username or password');
+}
+
   } catch (err) {
     console.error(err);
     setError('Login failed. Please try again.');

@@ -11,7 +11,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Tooltip,
   Popover,
   Typography,
   useTheme,
@@ -33,7 +32,7 @@ interface PhonesidebarProps {
 }
 
 const Phonesidebar: React.FC<PhonesidebarProps> = ({
-  // currentPage,
+  currentPage,
   onPageChange,
 }) => {
   const router = useRouter();
@@ -97,7 +96,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
 
     if ("items" in item && item.items.length > 0) {
       setAnchorEl(event.currentTarget);
-      setHoverMenu(item as AnalyticsCategoryConfig);
+      setHoverMenu(item);
       setPopoverOpen(true);
     } else {
       setPopoverOpen(false);
@@ -161,17 +160,22 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     const isSelected = isItemSelected(item);
     const itemTitle = "title" in item ? item.title : item.name;
     const isHovered = hoveredItem === itemTitle;
+let backgroundColor: string;
+
+if (isSelected) {
+  backgroundColor = theme.palette.primary.main;
+} else if (isHovered) {
+  backgroundColor = theme.palette.action.hover;
+} else {
+  backgroundColor = "transparent";
+}
 
     return {
       borderRadius: 1,
       minHeight: 48,
       justifyContent: "center",
       mx: 1,
-      backgroundColor: isSelected
-        ? theme.palette.primary.main
-        : isHovered
-        ? theme.palette.action.hover
-        : "transparent",
+      backgroundColor: backgroundColor,
       color: isSelected ? "white" : "inherit",
       "&:hover": {
         backgroundColor: isSelected
@@ -209,13 +213,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     return iconElement;
   };
 
-  const getTooltipTitle = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
-    const title = "title" in item ? item.title : item.name;
-    if ("badge" in item && item.badge) {
-      return `${title} (${item.badge})`;
-    }
-    return title;
-  };
+
 
   return (
     <>
@@ -242,7 +240,6 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
                 "title" in item
                   ? `${item.title}-${index}`
                   : `${item.name}-${index}`;
-              const hasSubItems = "items" in item && item.items.length > 0;
 
               return (
                 <ListItem
@@ -323,7 +320,6 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
               fontSize: "0.875rem",
             }}
           >
-            {/* {hoverMenu?.title} */}
           </Typography>
           <List sx={{ py: 0 }}>
             {hoverMenu?.items?.map((subItem, subIndex) => (
