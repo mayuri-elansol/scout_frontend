@@ -74,6 +74,41 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           { label: "PPE Detection", icon: null, clickable: false }
         );
         break;
+         case "object-detection":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "Object Detection", icon: null, clickable: false }
+        );
+        break;
+         case "fire-smoke-oil-leak-detection":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "Fire smoke oil leak detection", icon: null, clickable: false }
+        );
+        break; case "vehicle-speed":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "vehicle speed Monitoring", icon: null, clickable: false }
+        );
+        break;
       case "intrusion-detection":
         items.push(
           {

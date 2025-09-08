@@ -5,7 +5,9 @@ import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
-import { Breadcrumb, Header } from "../components";
+import  Breadcrumb  from "../components/organisms/Breadcrumb/Breadcrumb";
+import Header  from "../components/organisms/Header/Header";
+
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
@@ -61,7 +63,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             onPageChange={handlePageChange}
           />
         )}
-        <Box sx={{ flex: 1, p:4, pt: 8, backgroundColor: "#f5f7fa" , width:'85vw'}}>
+        <Box sx={{ flex: 1, p:4, pt: 9, backgroundColor: "#f5f7fa" , width:'85vw'}}>
           <Breadcrumb
             currentPage={currentPage}
             onPageChange={handlePageChange}

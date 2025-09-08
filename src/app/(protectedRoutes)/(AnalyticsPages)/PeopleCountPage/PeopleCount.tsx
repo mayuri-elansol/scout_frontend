@@ -1,5 +1,4 @@
-"use client";
-
+import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
@@ -25,8 +24,30 @@ import {
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-
-const FireSmokeOilLeakDetection: React.FC = () => {
+export const complianceByZone = [
+    {
+      zone: "Production Floor",
+      compliance: 92,
+      violations: 3,
+      cameras: "8/10",
+      status: "Normal",
+    },
+    {
+      zone: "Warehouse",
+      compliance: 75,
+      violations: 2,
+      cameras: "6/6",
+      status: "Normal",
+    },
+    {
+      zone: "Assembly Line",
+      compliance: 84,
+      violations: 5,
+      cameras: "7/8",
+      status: "High",
+    },
+  ];
+const PeopleCount: React.FC = () => {
   const theme = useTheme();
   const recentViolations = [
     {
@@ -49,7 +70,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     },
   ];
 
-  const FireSmokeOilKpiData = [
+  const peopleCountKpiData = [
     {
       title: "Total Factory Occupancy",
       value: "267",
@@ -101,29 +122,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       icon: Warning,
     },
   ];
-  const complianceByZone = [
-    {
-      zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "Normal",
-    },
-    {
-      zone: "Warehouse",
-      compliance: 75,
-      violations: 2,
-      cameras: "6/6",
-      status: "Normal",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 84,
-      violations: 5,
-      cameras: "7/8",
-      status: "High",
-    },
-  ];
+
 
   const zoneOccupancy = [
     {
@@ -234,15 +233,15 @@ const FireSmokeOilLeakDetection: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Fire, Smoke, Oil and Gas Leak Detection
+            People count in factory Premises
           </Typography>
         </Box>
         <Typography
           variant="body1"
           sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
         >
-          Instantly detects signs of fire or toxic leaks—because every second
-          counts in averting a disaster.
+          Keeps track of how many people are inside - critical for safety audits
+          and emergency evacuations.
         </Typography>
         <Typography
           variant="body2"
@@ -254,7 +253,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
 
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {FireSmokeOilKpiData.map((kpi, index) => (
+        {peopleCountKpiData.map((kpi, index) => (
           // item xs={12} sm={6} md={4} lg={3}
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
@@ -267,7 +266,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent  Fire, Smoke, Oil and Gas Leak Violations"
+            label="Recent PPE Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -279,10 +278,10 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
-
+      {/* People Count Report */}
+      {/* People Count Report */}
       <ReportTable
-        title=" Fire, Smoke, Oil and Gas Leak  Report"
+        title="People Count Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -411,4 +410,4 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   );
 };
 
-export default FireSmokeOilLeakDetection;
+export default PeopleCount;

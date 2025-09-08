@@ -1,13 +1,10 @@
-import React from "react";
+"use client";
+
 import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
   Grid,
   Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
 } from "@mui/material";
 import {
   People,
@@ -15,8 +12,6 @@ import {
   Place,
   CheckCircle,
   Warning,
-  Visibility,
-  CameraAlt,
   TrendingDown,
   Error,
   Circle,
@@ -25,8 +20,7 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 
-const PeopleCount: React.FC = () => {
-  const theme = useTheme();
+const FireSmokeOilLeakDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -48,7 +42,7 @@ const PeopleCount: React.FC = () => {
     },
   ];
 
-  const peopleCountKpiData = [
+  const FireSmokeOilKpiData = [
     {
       title: "Total Factory Occupancy",
       value: "267",
@@ -233,15 +227,15 @@ const PeopleCount: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            People count in factory Premises
+            Fire, Smoke, Oil and Gas Leak Detection
           </Typography>
         </Box>
         <Typography
           variant="body1"
           sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
         >
-          Keeps track of how many people are inside - critical for safety audits
-          and emergency evacuations.
+          Instantly detects signs of fire or toxic leaks—because every second
+          counts in averting a disaster.
         </Typography>
         <Typography
           variant="body2"
@@ -253,7 +247,7 @@ const PeopleCount: React.FC = () => {
 
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {peopleCountKpiData.map((kpi, index) => (
+        {FireSmokeOilKpiData.map((kpi, index) => (
           // item xs={12} sm={6} md={4} lg={3}
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
@@ -266,7 +260,7 @@ const PeopleCount: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent PPE Violations"
+            label="Recent  Fire, Smoke, Oil and Gas Leak Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -278,10 +272,10 @@ const PeopleCount: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* People Count Report */}
-      {/* People Count Report */}
+      {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
+
       <ReportTable
-        title="People Count Report"
+        title=" Fire, Smoke, Oil and Gas Leak  Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -410,4 +404,4 @@ const PeopleCount: React.FC = () => {
   );
 };
 
-export default PeopleCount;
+export default FireSmokeOilLeakDetection;
