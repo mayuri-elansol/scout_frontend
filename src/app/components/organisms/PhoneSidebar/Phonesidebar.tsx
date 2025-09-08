@@ -253,18 +253,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
                   onMouseEnter={(e) => handleMouseEnter(e, item)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <Tooltip
-                    title={`${getTooltipTitle(item)} ${
-                      hasSubItems ? "(hover for submenu)" : ""
-                    }`}
-                    placement="right"
-                    arrow
-                    disableHoverListener={
-                      popoverOpen &&
-                      hoverMenu?.title ===
-                        ("title" in item ? item.title : item.name)
-                    }
-                  >
+             
                     <ListItemButton
                       onClick={() => handleMenuItemClick(item)}
                       sx={getButtonStyles(item)}
@@ -281,7 +270,6 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
                         {renderIcon(item)}
                       </ListItemIcon>
                     </ListItemButton>
-                  </Tooltip>
                 </ListItem>
               );
             })}
@@ -335,7 +323,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
               fontSize: "0.875rem",
             }}
           >
-            {hoverMenu?.title}
+            {/* {hoverMenu?.title} */}
           </Typography>
           <List sx={{ py: 0 }}>
             {hoverMenu?.items?.map((subItem, subIndex) => (

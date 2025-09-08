@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -32,14 +31,10 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
 }) => {
   // Track image load error
   const [imageError, setImageError] = useState(false);
-
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
-  const handleImageLoad = () => {
-    setImageError(true);
-  };
+  useEffect(() => {
+    setImageError(false);
+  }, [imageUrl]);
+  const handleImageError = () => setImageError(true);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -81,8 +76,8 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
 
         {/* Image section - Below the details */}
         <Box sx={{ textAlign: "center" }}>
-          {!imageUrl || imageError ? (
-            // Default "No Image Found" box
+          {/* {!imageUrl || imageError ? ( */}
+          {!imageUrl?.trim() || imageError ? (
             <Box
               sx={{
                 width: "100%",
@@ -102,10 +97,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
               </Typography>
               <Typography
                 variant="body2"
-                sx={{
-                  color: "#888",
-                  textAlign: "center",
-                }}
+                sx={{ color: "#888", textAlign: "center" }}
               >
                 No Image Found
               </Typography>
@@ -115,7 +107,6 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
               src={imageUrl}
               alt="Alert Details"
               onError={handleImageError}
-              onLoad={handleImageLoad}
               style={{
                 maxWidth: "100%",
                 height: "auto",
