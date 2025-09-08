@@ -184,7 +184,7 @@ const PPEDetection: React.FC = () => {
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <ZoneNotification zones={complianceByZone} loading={true} />
         </Grid>
       </Grid>
 
