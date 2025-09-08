@@ -16,7 +16,6 @@ import {
   TextField,
   MenuItem,
   Menu,
-  Grid,
 } from "@mui/material";
 import { Description } from "@mui/icons-material";
 
@@ -55,7 +54,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   title,
   columns,
   data,
-  downloadFileName,
+
   filters = [],
   onSubmit,
   onReset,

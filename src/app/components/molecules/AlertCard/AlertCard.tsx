@@ -6,17 +6,8 @@ import {
   Typography,
   Chip,
   Button,
-  IconButton,
 } from "@mui/material";
-import {
-  Warning,
-  AccessTime,
-  LocationOn,
-  Person,
-  ErrorOutline,
-  InfoOutlined,
-  CheckCircle,
-} from "@mui/icons-material";
+import { Warning, AccessTime, LocationOn, Person } from "@mui/icons-material";
 import { SvgIconComponent } from "@mui/icons-material";
 import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup";
 
@@ -37,36 +28,34 @@ interface AlertCardProps {
 }
 
 const AlertCard: React.FC<AlertCardProps> = ({
-  id,
   title,
   description,
   severity,
-  status,
+  // status,
   category,
   location,
   time,
   assignedTo,
   duration,
-  actions,
+
   icon: IconComponent = Warning,
-  onActionClick,
 }) => {
   const [open, setOpen] = useState(false);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "ACTIVE":
-        return { color: "#f44336", bgColor: "#ffebee" };
-      case "ESCALATED":
-        return { color: "#d32f2f", bgColor: "#ffcdd2" };
-      case "ACKNOWLEDGED":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "RESOLVED":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
+  // const getStatusColor = (status: string) => {
+  //   switch (status) {
+  //     case "ACTIVE":
+  //       return { color: "#f44336", bgColor: "#ffebee" };
+  //     case "ESCALATED":
+  //       return { color: "#d32f2f", bgColor: "#ffcdd2" };
+  //     case "ACKNOWLEDGED":
+  //       return { color: "#ff9800", bgColor: "#fff8e1" };
+  //     case "RESOLVED":
+  //       return { color: "#4caf50", bgColor: "#e8f5e9" };
+  //     default:
+  //       return { color: "#666", bgColor: "#f5f5f5" };
+  //   }
+  // };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -83,7 +72,6 @@ const AlertCard: React.FC<AlertCardProps> = ({
     }
   };
 
-  const statusColors = getStatusColor(status);
   const severityColors = getSeverityColor(severity);
 
   return (

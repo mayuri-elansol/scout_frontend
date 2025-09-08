@@ -1,17 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Box } from '@mui/material';
-import { VideoCall } from '@mui/icons-material';
-import VideoControlPanel from './VideoControlPanel';
-import VideoControlButton from '../../atoms/VideoControlButton/VideoControlButton';
+// import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box } from "@mui/material";
+import { VideoCall } from "@mui/icons-material";
+import VideoControlPanel from "./VideoControlPanel";
+import VideoControlButton from "../../atoms/VideoControlButton/VideoControlButton";
 
 const meta = {
-  title: 'Components/Molecules/VideoControlPanel',
+  title: "Components/Molecules/VideoControlPanel",
   component: VideoControlPanel,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
-        component: 'Video control panel component that groups video control buttons. Used in Live Streaming camera feeds with various positioning options.',
+        component:
+          "Video control panel component that groups video control buttons. Used in Live Streaming camera feeds with various positioning options.",
       },
     },
   },
@@ -19,57 +21,57 @@ const meta = {
     (Story) => (
       <Box
         sx={{
-          position: 'relative',
+          position: "relative",
           width: 320,
           height: 280,
-          backgroundColor: '#2c2c2c',
+          backgroundColor: "#2c2c2c",
           borderRadius: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
         {/* Mock Video Feed Background */}
-        <VideoCall sx={{ fontSize: 60, color: '#666' }} />
+        <VideoCall sx={{ fontSize: 60, color: "#666" }} />
         <Story />
       </Box>
     ),
   ],
   argTypes: {
-    isPlaying: { 
-      control: 'boolean',
-      description: 'Whether video is currently playing',
+    isPlaying: {
+      control: "boolean",
+      description: "Whether video is currently playing",
     },
-    isMuted: { 
-      control: 'boolean',
-      description: 'Whether audio is muted',
+    isMuted: {
+      control: "boolean",
+      description: "Whether audio is muted",
     },
-    isFullscreen: { 
-      control: 'boolean',
-      description: 'Whether video is in fullscreen mode',
+    isFullscreen: {
+      control: "boolean",
+      description: "Whether video is in fullscreen mode",
     },
-    onPlayPause: { 
-      action: 'play-pause',
-      description: 'Callback for play/pause button',
+    onPlayPause: {
+      action: "play-pause",
+      description: "Callback for play/pause button",
     },
-    onMuteToggle: { 
-      action: 'mute-toggle',
-      description: 'Callback for mute/unmute button',
+    onMuteToggle: {
+      action: "mute-toggle",
+      description: "Callback for mute/unmute button",
     },
-    onFullscreenToggle: { 
-      action: 'fullscreen-toggle',
-      description: 'Callback for fullscreen toggle button',
+    onFullscreenToggle: {
+      action: "fullscreen-toggle",
+      description: "Callback for fullscreen toggle button",
     },
-    size: { 
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-      description: 'Size of the control buttons',
+    size: {
+      control: "select",
+      options: ["small", "medium", "large"],
+      description: "Size of the control buttons",
     },
-    position: { 
-      control: 'select',
-      options: ['bottom-left', 'bottom-center', 'bottom-right', 'center'],
-      description: 'Position of the control panel',
+    position: {
+      control: "select",
+      options: ["bottom-left", "bottom-center", "bottom-right", "center"],
+      description: "Position of the control panel",
     },
   },
   args: {
@@ -79,8 +81,8 @@ const meta = {
     onPlayPause: () => {},
     onMuteToggle: () => {},
     onFullscreenToggle: () => {},
-    size: 'small',
-    position: 'bottom-left',
+    size: "small",
+    position: "bottom-left",
   },
 } satisfies Meta<typeof VideoControlPanel>;
 
@@ -100,34 +102,34 @@ export const Playing: Story = {
 
 export const BottomCenter: Story = {
   args: {
-    position: 'bottom-center',
+    position: "bottom-center",
   },
 };
 
 export const BottomRight: Story = {
   args: {
-    position: 'bottom-right',
+    position: "bottom-right",
   },
 };
 
 export const Center: Story = {
   args: {
-    position: 'center',
-    size: 'medium',
+    position: "center",
+    size: "medium",
   },
 };
 
 export const MediumSize: Story = {
   args: {
-    size: 'medium',
+    size: "medium",
     isPlaying: true,
   },
 };
 
 export const LargeSize: Story = {
   args: {
-    size: 'large',
-    position: 'center',
+    size: "large",
+    position: "center",
   },
 };
 
@@ -143,30 +145,30 @@ export const LiveFeedExample: Story = {
   args: {
     isPlaying: false,
     isMuted: true,
-    position: 'bottom-left',
+    position: "bottom-left",
   },
   decorators: [
     (Story) => (
       <Box
         sx={{
-          position: 'relative',
+          position: "relative",
           width: 320,
           height: 280,
-          backgroundColor: '#2c2c2c',
+          backgroundColor: "#2c2c2c",
           borderRadius: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
         {/* Mock Video Feed Background */}
-        <VideoCall sx={{ fontSize: 60, color: '#666' }} />
-        
+        <VideoCall sx={{ fontSize: 60, color: "#666" }} />
+
         {/* Fullscreen button in bottom right */}
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             bottom: 12,
             right: 12,
           }}
@@ -178,7 +180,7 @@ export const LiveFeedExample: Story = {
             title="Enter fullscreen"
           />
         </Box>
-        
+
         <Story />
       </Box>
     ),
@@ -186,7 +188,8 @@ export const LiveFeedExample: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Video control panel as used in Live Streaming camera feeds, with additional fullscreen button positioned separately.',
+        story:
+          "Video control panel as used in Live Streaming camera feeds, with additional fullscreen button positioned separately.",
       },
     },
   },

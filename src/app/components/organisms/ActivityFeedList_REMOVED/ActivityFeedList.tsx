@@ -1,19 +1,23 @@
-import React from 'react';
-import { Box, Typography, Divider } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import ActivityCard from '../../molecules/ActivityCard/ActivityCard';
+import React from "react";
+import { Box, Typography, Divider } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import ActivityCard from "../../molecules/ActivityCard/ActivityCard";
 
 interface ActivityItem {
   id: string;
-  alertType: 'ppe_violation' | 'security_breach' | 'personnel_tracking' | 'equipment_alert';
+  alertType:
+    | "ppe_violation"
+    | "security_breach"
+    | "personnel_tracking"
+    | "equipment_alert";
   title: string;
   location: string;
   timestamp: string;
   workerId?: string;
   intruderId?: string;
   cameraId?: string;
-  priority: 'critical' | 'high' | 'medium' | 'low';
-  status: 'active' | 'acknowledged' | 'resolved' | 'investigating';
+  priority: "critical" | "high" | "medium" | "low";
+  status: "active" | "acknowledged" | "resolved" | "investigating";
   description?: string;
   imagePreview?: boolean;
 }
@@ -29,34 +33,36 @@ interface ActivityFeedListProps {
   onViewProfile?: (activityId: string) => void;
 }
 
-const StyledContainer = styled(Box)(({ theme }) => ({
-  width: '100%',
-  backgroundColor: '#ffffff',
-  borderRadius: '8px',
-  border: '1px solid #e5e7eb',
-  overflow: 'hidden',
+const StyledContainer = styled(Box)(({}) => ({
+  width: "100%",
+  backgroundColor: "#ffffff",
+  borderRadius: "8px",
+  border: "1px solid #e5e7eb",
+  overflow: "hidden",
 }));
 
-const ScrollableContent = styled(Box)<{ maxheight?: string | number }>(({ maxheight }) => ({
-  maxHeight: maxheight || '600px',
-  overflowY: 'auto',
-  '&::-webkit-scrollbar': {
-    width: '6px',
-  },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: '#f1f5f9',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    backgroundColor: '#cbd5e1',
-    borderRadius: '3px',
-    '&:hover': {
-      backgroundColor: '#94a3b8',
+const ScrollableContent = styled(Box)<{ maxheight?: string | number }>(
+  ({ maxheight }) => ({
+    maxHeight: maxheight || "600px",
+    overflowY: "auto",
+    "&::-webkit-scrollbar": {
+      width: "6px",
     },
-  },
-}));
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "#f1f5f9",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#cbd5e1",
+      borderRadius: "3px",
+      "&:hover": {
+        backgroundColor: "#94a3b8",
+      },
+    },
+  })
+);
 
 const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
-  title = 'Recent Activity',
+  title = "Recent Activity",
   activities,
   maxHeight,
   showDividers = true,
@@ -83,38 +89,44 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
     }
   };
 
-  const handleViewProfile = (activityId: string) => {
-    if (onViewProfile) {
-      onViewProfile(activityId);
-    }
-  };
+  // const handleViewProfile = (activityId: string) => {
+  //   if (onViewProfile) {
+  //     onViewProfile(activityId);
+  //   }
+  // };
 
   // Convert alertType to cardType for ActivityCard
-  const getCardType = (alertType: string): 'employee' | 'ppe_violation' | 'security_breach' | 'personnel_tracking' => {
+  const getCardType = (
+    alertType: string
+  ):
+    | "employee"
+    | "ppe_violation"
+    | "security_breach"
+    | "personnel_tracking" => {
     switch (alertType) {
-      case 'ppe_violation':
-        return 'ppe_violation';
-      case 'security_breach':
-        return 'security_breach';
-      case 'personnel_tracking':
-        return 'personnel_tracking';
-      case 'equipment_alert':
-        return 'security_breach'; // Map equipment alerts to security breach type
+      case "ppe_violation":
+        return "ppe_violation";
+      case "security_breach":
+        return "security_breach";
+      case "personnel_tracking":
+        return "personnel_tracking";
+      case "equipment_alert":
+        return "security_breach"; // Map equipment alerts to security breach type
       default:
-        return 'security_breach';
+        return "security_breach";
     }
   };
 
   if (activities.length === 0) {
     return (
       <StyledContainer>
-        <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Box sx={{ p: 3, textAlign: "center" }}>
           <Typography
             variant="h6"
             sx={{
-              fontSize: '16px',
+              fontSize: "16px",
               fontWeight: 600,
-              color: '#1c2025',
+              color: "#1c2025",
               mb: 1,
             }}
           >
@@ -123,8 +135,8 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
           <Typography
             variant="body2"
             sx={{
-              color: '#6b7280',
-              fontSize: '14px',
+              color: "#6b7280",
+              fontSize: "14px",
             }}
           >
             No recent activity to display
@@ -138,13 +150,13 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
     <StyledContainer>
       {/* Header */}
       {title && (
-        <Box sx={{ p: 2, borderBottom: '1px solid #e5e7eb' }}>
+        <Box sx={{ p: 2, borderBottom: "1px solid #e5e7eb" }}>
           <Typography
             variant="h6"
             sx={{
-              fontSize: '16px',
+              fontSize: "16px",
               fontWeight: 600,
-              color: '#1c2025',
+              color: "#1c2025",
             }}
           >
             {title}
@@ -152,11 +164,11 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: '#6b7280',
-              fontSize: '12px',
+              color: "#6b7280",
+              fontSize: "12px",
             }}
           >
-            {activities.length} {activities.length === 1 ? 'item' : 'items'}
+            {activities.length} {activities.length === 1 ? "item" : "items"}
           </Typography>
         </Box>
       )}
@@ -184,10 +196,10 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
                   onSecondaryAction={() => handleViewDetails(activity.id)}
                 />
               </Box>
-              
+
               {/* Divider between items */}
               {showDividers && index < activities.length - 1 && (
-                <Divider sx={{ mx: 2, backgroundColor: '#f1f5f9' }} />
+                <Divider sx={{ mx: 2, backgroundColor: "#f1f5f9" }} />
               )}
             </Box>
           ))}

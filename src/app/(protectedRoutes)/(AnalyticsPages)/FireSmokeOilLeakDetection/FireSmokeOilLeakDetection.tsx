@@ -1,20 +1,13 @@
 "use client";
 
 import { ReportTable } from "@/app/components/organisms";
-import {
-  Box,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
   TrendingUp,
   Place,
   CheckCircle,
   Warning,
-  TrendingDown,
-  Error,
-  Circle,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -117,105 +110,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       status: "High",
     },
   ];
-
-  const zoneOccupancy = [
-    {
-      zone: "Production Floor",
-      count: 89,
-      capacity: 120,
-      percentage: 74,
-      status: "Normal",
-      bgColor: "#e8f5e9",
-      statusColor: "#4caf50",
-    },
-    {
-      zone: "Warehouse",
-      count: 45,
-      capacity: 60,
-      percentage: 75,
-      status: "Normal",
-      bgColor: "#e8f5e9",
-      statusColor: "#4caf50",
-    },
-    {
-      zone: "Assembly Line",
-      count: 67,
-      capacity: 80,
-      percentage: 84,
-      status: "High",
-      bgColor: "#fff8e1",
-      statusColor: "#ff9800",
-    },
-    {
-      zone: "Office Areas",
-      count: 34,
-      capacity: 50,
-      percentage: 68,
-      status: "Normal",
-      bgColor: "#e8f5e9",
-      statusColor: "#4caf50",
-    },
-    {
-      zone: "Cafeteria",
-      count: 28,
-      capacity: 30,
-      percentage: 93,
-      status: "Critical",
-      bgColor: "#ffebee",
-      statusColor: "#f44336",
-    },
-    {
-      zone: "Parking Area",
-      count: 4,
-      capacity: 20,
-      percentage: 20,
-      status: "Low",
-      bgColor: "#e3f2fd",
-      statusColor: "#2196f3",
-    },
-  ];
-
-  const hourlyTrend = [
-    { time: "08:00", count: 45, trend: "up" },
-    { time: "09:00", count: 89, trend: "up" },
-    { time: "10:00", count: 156, trend: "up" },
-    { time: "11:00", count: 203, trend: "up" },
-    { time: "12:00", count: 267, trend: "up" },
-    { time: "13:00", count: 298, trend: "up" },
-    { time: "14:00", count: 324, trend: "peak" },
-    { time: "15:00", count: 289, trend: "down" },
-    { time: "16:00", count: 267, trend: "current" },
-  ];
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case "up":
-        return <TrendingUp sx={{ fontSize: 12, color: "#4caf50" }} />;
-      case "down":
-        return <TrendingDown sx={{ fontSize: 12, color: "#f44336" }} />;
-      case "peak":
-        return <Error sx={{ fontSize: 12, color: "#ff9800" }} />;
-      case "current":
-        return <Circle sx={{ fontSize: 8, color: "#2196f3" }} />;
-      default:
-        return null;
-    }
-  };
-
-  const getTrendColor = (trend: string) => {
-    switch (trend) {
-      case "current":
-        return "#2196f3";
-      case "peak":
-        return "#ff9800";
-      case "up":
-        return "#4caf50";
-      case "down":
-        return "#8bc34a";
-      default:
-        return "#1c2025";
-    }
-  };
 
   return (
     <Box>

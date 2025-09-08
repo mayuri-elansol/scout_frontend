@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Grid,
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
-import { Warning, Visibility, CameraAlt } from "@mui/icons-material";
+import { Card, CardContent, Box, Typography } from "@mui/material";
+import { CameraAlt } from "@mui/icons-material";
 
 interface Violation {
   title: string;
@@ -19,11 +12,11 @@ interface Violation {
   imageUrl?: string;
 }
 
-interface RecentViolationsProps {
-  label: string;
-  violations: Violation[];
-  onViewAll?: () => void;
-}
+// interface RecentViolationsProps {
+//   label: string;
+//   violations: Violation[];
+//   onViewAll?: () => void;
+// }
 
 //  Reusable component (defined in same file)
 export const ViolationCard: React.FC<{ violation: Violation }> = ({

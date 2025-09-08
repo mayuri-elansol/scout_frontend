@@ -1,14 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import {
-  Box,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   Visibility,
   Warning,
@@ -16,8 +8,6 @@ import {
   People,
   Place,
   Error,
-  CameraAlt,
-  Circle,
 } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -25,8 +15,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import PPEComplianceByZone from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 
 const IntrusionDetection: React.FC = () => {
-  const theme = useTheme();
-
   const intrusionKpiData = [
     {
       title: "Intrusion Attempts",
@@ -182,45 +170,6 @@ const IntrusionDetection: React.FC = () => {
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "SECURE":
-        return "#4caf50";
-      case "BREACHED":
-        return "#f44336";
-      case "COMPROMISED":
-        return "#ff9800";
-      default:
-        return "#9e9e9e";
-    }
-  };
-
-  const getRiskColor = (risk: string) => {
-    switch (risk) {
-      case "Critical":
-        return "#d32f2f";
-      case "High":
-        return "#f44336";
-      case "Low":
-        return "#4caf50";
-      default:
-        return "#9e9e9e";
-    }
-  };
-
-  const getProgressWidth = (status: string) => {
-    switch (status) {
-      case "SECURE":
-        return "100%";
-      case "BREACHED":
-        return "25%";
-      case "COMPROMISED":
-        return "60%";
-      default:
-        return "50%";
-    }
-  };
-
   return (
     <Box>
       {/* Page Header */}
@@ -250,27 +199,14 @@ const IntrusionDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Box sx={{ mb: 4 }}>
-        {/* First Row - 4 Cards */}
-        <Grid container spacing={2.5} sx={{ mb: 2.5 }}>
-          {intrusionKpiData.slice(0, 4).map((kpi, index) => (
-            <Grid key={index} size={{ xs: 12, sm: 12, md: 3 }}>
-              <KpiCard {...kpi} />
-            </Grid>
-          ))}
-        </Grid>
 
-        {/* Second Row - 3 Cards */}
-        <Grid container spacing={2.5}>
-          {intrusionKpiData.slice(4).map((kpi, index) => (
-            <Grid key={index + 4} size={{ xs: 12, sm: 6, md: 3 }}>
-              <KpiCard {...kpi} />
-            </Grid>
-          ))}
-          {/* Empty grid item to maintain alignment */}
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} />
-        </Grid>
-      </Box>
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {intrusionKpiData.map((kpi, index) => (
+          <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 3 }}>
+            <KpiCard {...kpi} />
+          </Grid>
+        ))}
+      </Grid>
 
       {/* Content Grid */}
       <Grid container spacing={3}>
@@ -289,7 +225,6 @@ const IntrusionDetection: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* Security Intrusion Report */}
       {/* Security Intrusion Report */}
       <ReportTable
         title="Security Intrusion Report"

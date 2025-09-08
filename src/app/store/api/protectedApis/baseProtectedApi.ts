@@ -12,8 +12,8 @@ export interface Alert {
   id: string;
   title: string;
   description: string;
-  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
-  status: 'ACTIVE' | 'ESCALATED' | 'ACKNOWLEDGED' | 'RESOLVED';
+  severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
+  status: "ACTIVE" | "ESCALATED" | "ACKNOWLEDGED" | "RESOLVED";
   category: string;
   location: string;
   timestamp: string;
@@ -31,16 +31,16 @@ export interface Report {
 
 // Mock API functions for development
 export const mockApi = {
-  getAnalyticsData: async (type: string): Promise<AnalyticsData[]> => {
+  getAnalyticsData: async (): Promise<AnalyticsData[]> => {
     // Return mock data
     return [];
   },
-  
-  getAlerts: async (filters?: any): Promise<Alert[]> => {
+
+  getAlerts: async (): Promise<Alert[]> => {
     // Return mock data
     return [];
   },
-  
+
   getReports: async (): Promise<Report[]> => {
     // Return mock data
     return [];

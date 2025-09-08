@@ -2,26 +2,13 @@
 
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import {
-  Box,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
-} from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
   TrendingUp,
   Place,
   CheckCircle,
   Warning,
-  Visibility,
-  CameraAlt,
-  TrendingDown,
-  Error,
-  Circle,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -107,21 +94,21 @@ const ObjectDetection: React.FC = () => {
       compliance: 92,
       violations: 3,
       cameras: "8/10",
-      status: "Normal",
+      status: "excellent",
     },
     {
       zone: "Warehouse",
       compliance: 75,
       violations: 2,
       cameras: "6/6",
-      status: "Normal",
+      status: "good",
     },
     {
       zone: "Assembly Line",
       compliance: 84,
       violations: 5,
       cameras: "7/8",
-      status: "High",
+      status: "warning",
     },
   ];
 

@@ -33,7 +33,7 @@ interface PhonesidebarProps {
 }
 
 const Phonesidebar: React.FC<PhonesidebarProps> = ({
-  currentPage,
+  // currentPage,
   onPageChange,
 }) => {
   const router = useRouter();

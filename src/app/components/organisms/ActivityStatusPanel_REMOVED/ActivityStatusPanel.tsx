@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, IconButton, Grid } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { People, Visibility } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import ActivityCard from "../../molecules/ActivityCard/ActivityCard";

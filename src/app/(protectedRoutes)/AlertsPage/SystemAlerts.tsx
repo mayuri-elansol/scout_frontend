@@ -1,42 +1,16 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  CardContent,
-  Chip,
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Grid,
-  Paper,
-  Divider,
-  IconButton,
-  InputAdornment,
-} from "@mui/material";
+import React from "react";
+import { Box, Typography, Grid } from "@mui/material";
 import {
   Warning,
-  Search,
-  Download,
-  Refresh,
-  AccessTime,
-  LocationOn,
   Person,
-  CheckCircle,
   ErrorOutline,
   InfoOutlined,
   Circle,
 } from "@mui/icons-material";
+
 import { AlertCard, AlertStatsCard } from "../../components/molecules";
-
+import { AlertsFilterPanel } from "@/app/components/organisms";
 const SystemAlerts: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [severityFilter, setSeverityFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-
   const alertStats = [
     {
       value: "10",
@@ -153,36 +127,6 @@ const SystemAlerts: React.FC = () => {
     },
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "ACTIVE":
-        return { color: "#f44336", bgColor: "#ffebee" };
-      case "ESCALATED":
-        return { color: "#d32f2f", bgColor: "#ffcdd2" };
-      case "ACKNOWLEDGED":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "RESOLVED":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case "CRITICAL":
-        return { color: "#d32f2f", bgColor: "#ffcdd2" };
-      case "HIGH":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "MEDIUM":
-        return { color: "#ffa726", bgColor: "#fff3e0" };
-      case "LOW":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
-
   return (
     <Box>
       {/* Page Header */}
@@ -207,16 +151,12 @@ const SystemAlerts: React.FC = () => {
       </Box>
 
       {/* Alert Statistics */}
-
-      <Grid container spacing={2} sx={{ mb: 4, display: "flex" }}>
+      <Grid container spacing={2} sx={{ mb: 4, alignItems: "stretch" }}>
         {alertStats.map((stat, index) => (
           <Grid
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
             key={index}
-            sx={{
-              flex: 1,
-              minWidth: { xs: "100%", sm: 200, md: 150 },
-              display: "flex",
-            }}
+            sx={{ display: "flex" }}
           >
             <AlertStatsCard
               label={stat.label}
@@ -227,101 +167,13 @@ const SystemAlerts: React.FC = () => {
           </Grid>
         ))}
       </Grid>
+
       {/* Search and Filters */}
-      <Card sx={{ mb: 3 }}>
-        <CardContent sx={{ p: 3 }}>
-          <Grid container spacing={3} alignItems="center">
-            {/* Search */}
-            <Grid size={{ xs: 12, lg: 4 }}>
-              <TextField
-                fullWidth
-                placeholder="Search by title, description, or location"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search sx={{ fontSize: 20, color: "#666" }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "#f8f9fa",
-                  },
-                }}
-              />
-            </Grid>
 
-            {/* Severity */}
-            <Grid size={{ xs: 12, lg: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Severity Level</InputLabel>
-                <Select
-                  value={severityFilter}
-                  onChange={(e) => setSeverityFilter(e.target.value)}
-                  label="Severity Level"
-                >
-                  <MenuItem value="">All Severities</MenuItem>
-                  <MenuItem value="critical">Critical</MenuItem>
-                  <MenuItem value="high">High</MenuItem>
-                  <MenuItem value="medium">Medium</MenuItem>
-                  <MenuItem value="low">Low</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Category */}
-            {/* item xs={12} lg={3} */}
-            <Grid size={{ xs: 12, lg: 3 }}>
-              <FormControl fullWidth size="small">
-                <InputLabel>Category</InputLabel>
-                <Select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  label="Category"
-                >
-                  <MenuItem value="">All Categories</MenuItem>
-                  <MenuItem value="safety">Safety</MenuItem>
-                  <MenuItem value="security">Security</MenuItem>
-                  <MenuItem value="workforce">Workforce</MenuItem>
-                  <MenuItem value="operational">Operational</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            {/* Buttons */}
-            {/* item xs={12} lg={2} */}
-            <Grid size={{ xs: 12, lg: 2 }}>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <Button
-                  variant="contained"
-                  startIcon={<Download />}
-                  size="small"
-                  sx={{
-                    backgroundColor: "#1976d2",
-                    fontSize: "12px",
-                    textTransform: "none",
-                    paddingX: "10px",
-                  }}
-                >
-                  Export
-                </Button>
-                <IconButton
-                  size="small"
-                  sx={{
-                    border: "1px solid #e0e0e0",
-                    backgroundColor: "#f8f9fa",
-                  }}
-                >
-                  <Refresh sx={{ fontSize: 18 }} />
-                </IconButton>
-              </Box>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+      <AlertsFilterPanel
+      // onApply={handleApply}
+      // onRefresh={handleRefresh}
+      />
 
       {/* Alert Summary */}
       <Box
@@ -369,6 +221,7 @@ const SystemAlerts: React.FC = () => {
         {/* Alert Cards */}
         {alertsData.map((alert) => (
           <AlertCard
+            key={alert.id}
             id={alert.id}
             title={alert.title}
             description={alert.description}

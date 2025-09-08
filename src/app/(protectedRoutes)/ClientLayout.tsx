@@ -5,8 +5,8 @@ import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
-import  Breadcrumb  from "../components/organisms/Breadcrumb/Breadcrumb";
-import Header  from "../components/organisms/Header/Header";
+import Breadcrumb from "../components/organisms/Breadcrumb/Breadcrumb";
+import Header from "../components/organisms/Header/Header";
 
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
@@ -27,17 +27,31 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
+  // useEffect(() => {
+  //   // Find the menu item that matches the current pathname
+  //   const currentItem = allMenuItems.find(
+  //     (item) => item.path.toLowerCase() === pathname.toLowerCase()
+  //   );
+
+  //   if (currentItem) {
+  //     setCurrentPage(currentItem.page!);
+  //   } else {
+  //     setCurrentPage("dashboard");
+  //   }
+  // }, [pathname]);
+
   useEffect(() => {
-    // Find the menu item that matches the current pathname
+    const allMenuItems = [
+      ...dashboardMenu,
+      ...alertMenu,
+      ...analyticsMenu.flatMap((category) => category.items),
+    ];
+
     const currentItem = allMenuItems.find(
       (item) => item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    if (currentItem) {
-      setCurrentPage(currentItem.page!);
-    } else {
-      setCurrentPage("dashboard");
-    }
+    setCurrentPage(currentItem ? currentItem.page! : "dashboard");
   }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
@@ -63,7 +77,15 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             onPageChange={handlePageChange}
           />
         )}
-        <Box sx={{ flex: 1, p:4, pt: 9, backgroundColor: "#f5f7fa" , width:'85vw'}}>
+        <Box
+          sx={{
+            flex: 1,
+            p: 4,
+            pt: 9,
+            backgroundColor: "#f5f7fa",
+            width: "85vw",
+          }}
+        >
           <Breadcrumb
             currentPage={currentPage}
             onPageChange={handlePageChange}
