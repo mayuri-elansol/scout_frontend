@@ -1,4 +1,3 @@
-
 // src/app/components/organisms/PhoneSidebar/Phonesidebar.tsx
 "use client";
 
@@ -139,7 +138,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     if (subItem.path) {
       router.push(subItem.path);
       if (subItem.page) {
-        onPageChange(subItem.page); // ✅ update parent state
+        onPageChange(subItem.page); 
       }
       setPopoverOpen(false);
       setAnchorEl(null);
@@ -253,23 +252,22 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
                   onMouseEnter={(e) => handleMouseEnter(e, item)}
                   onMouseLeave={handleMouseLeave}
                 >
-             
-                    <ListItemButton
-                      onClick={() => handleMenuItemClick(item)}
-                      sx={getButtonStyles(item)}
+                  <ListItemButton
+                    onClick={() => handleMenuItemClick(item)}
+                    sx={getButtonStyles(item)}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        justifyContent: "center",
+                        color: isItemSelected(item)
+                          ? "white"
+                          : theme.palette.action.active,
+                      }}
                     >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          justifyContent: "center",
-                          color: isItemSelected(item)
-                            ? "white"
-                            : theme.palette.action.active,
-                        }}
-                      >
-                        {renderIcon(item)}
-                      </ListItemIcon>
-                    </ListItemButton>
+                      {renderIcon(item)}
+                    </ListItemIcon>
+                  </ListItemButton>
                 </ListItem>
               );
             })}
@@ -278,7 +276,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
       </Drawer>
 
       {/* Popover for sub-items */}
-           <Popover
+      <Popover
         open={popoverOpen && Boolean(hoverMenu)}
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -299,7 +297,9 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
             ml: 1,
           },
         }}
-      > <Box
+      >
+        {" "}
+        <Box
           onMouseEnter={handlePopoverMouseEnter}
           onMouseLeave={handlePopoverMouseLeave}
           sx={{
@@ -348,10 +348,14 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
                 >
                   <ListItemText
                     primary={subItem.name}
-                    primaryTypographyProps={{
-                      fontSize: "0.875rem",
-                      lineHeight: 1.4,
-                      fontWeight: pathname === subItem.path ? 500 : 400,
+                    slotProps={{
+                      primary: {
+                        sx: {
+                          fontSize: "0.875rem",
+                          lineHeight: 1.4,
+                          fontWeight: pathname === subItem.path ? 500 : 400,
+                        },
+                      },
                     }}
                   />
                   {subItem.badge && (
@@ -372,5 +376,3 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
 };
 
 export default Phonesidebar;
-
-

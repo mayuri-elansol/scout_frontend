@@ -171,7 +171,7 @@ const AlertCard: React.FC<AlertCardProps> = ({
             <ViewAlertPopup
               open={open}
               handleClose={() => setOpen(false)}
-              location="Nagpur"
+              location="Reactor Control Room - Camera 3"
               time="10:30 AM"
               assignedTo="Safety Officer"
               duration="2 hours"
