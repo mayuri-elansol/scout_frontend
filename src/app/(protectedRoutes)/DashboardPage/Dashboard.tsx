@@ -43,7 +43,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
       icon: Shield,
     },
     {
-      title: "Fire Incidents",
+      title: t("Fire Incidents"),
       value: "0",
       subtitle: "All systems operational",
       trend: "Clear",

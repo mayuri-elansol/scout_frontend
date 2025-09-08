@@ -5,6 +5,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 //import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
 
 const PPEDetection: React.FC = () => {
@@ -113,6 +114,7 @@ const PPEDetection: React.FC = () => {
     console.log("Export requested clikcedd:", format);
     // call API with filters if needed
   };
+  const KpiCardLoading = true;
   return (
     <Box>
       {/* Page Header */}
@@ -136,13 +138,27 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      {/* <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {ppeKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={6} lg={3}
           <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
             <KpiCard {...kpi} />
           </Grid>
         ))}
+      </Grid> */}
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            Array.from({ length: 4 }).map((_, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            ppeKpiData.map((kpi, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -245,11 +261,12 @@ const PPEDetection: React.FC = () => {
           { id: "createdAt", label: "Start Date", type: "date" },
           { id: "resolvedAt", label: "End Date", type: "date" },
         ]}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
+        // onSubmit={handleSubmitFilter}
+        // onReset={handleReset}
+        //onExport={handleExport}
         // isSubmitDisabled={loading}
         downloadFileName="ppe-violations-report"
+        loading={true}
       />
     </Box>
   );
