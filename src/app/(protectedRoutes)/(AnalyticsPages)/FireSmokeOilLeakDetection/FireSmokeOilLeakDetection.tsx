@@ -5,10 +5,6 @@ import {
   Box,
   Grid,
   Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
 } from "@mui/material";
 import {
   People,
@@ -16,8 +12,6 @@ import {
   Place,
   CheckCircle,
   Warning,
-  Visibility,
-  CameraAlt,
   TrendingDown,
   Error,
   Circle,
@@ -27,7 +21,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 
 const FireSmokeOilLeakDetection: React.FC = () => {
-  const theme = useTheme();
   const recentViolations = [
     {
       title: "Hard hat missing",

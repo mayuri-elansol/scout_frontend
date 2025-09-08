@@ -3,11 +3,8 @@ import { ReportTable } from "@/app/components/organisms";
 import {
   Box,
   Grid,
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  useTheme,
+  Typography
+
 } from "@mui/material";
 import {
   People,
@@ -18,9 +15,7 @@ import {
   Schedule,
   Error,
   BarChart,
-  Visibility,
-  CameraAlt,
-  Circle,
+ 
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -28,7 +23,6 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import { complianceByZone } from "../PeopleCountPage/PeopleCount";
 
 const EmployeePresence: React.FC = () => {
-  const theme = useTheme();
 
   const employeeKpiData = [
     {

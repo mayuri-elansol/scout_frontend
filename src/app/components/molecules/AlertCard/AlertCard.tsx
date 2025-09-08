@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,6 +18,7 @@ import {
   CheckCircle,
 } from "@mui/icons-material";
 import { SvgIconComponent } from "@mui/icons-material";
+import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup";
 
 interface AlertCardProps {
   id: string;
@@ -32,7 +33,6 @@ interface AlertCardProps {
   duration: string;
   actions: string[];
   icon?: SvgIconComponent;
-  onViewDetails?: () => void;
   onActionClick?: (action: string) => void;
 }
 
@@ -49,9 +49,10 @@ const AlertCard: React.FC<AlertCardProps> = ({
   duration,
   actions,
   icon: IconComponent = Warning,
-  onViewDetails,
   onActionClick,
 }) => {
+  const [open, setOpen] = useState(false);
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "ACTIVE":
@@ -128,7 +129,6 @@ const AlertCard: React.FC<AlertCardProps> = ({
                 >
                   {title}
                 </Typography>
-               
               </Box>
               <Typography
                 sx={{
@@ -152,7 +152,7 @@ const AlertCard: React.FC<AlertCardProps> = ({
             <Button
               variant="contained"
               size="small"
-              onClick={onViewDetails}
+              onClick={() => setOpen(true)}
               sx={{
                 backgroundColor: "#1976d2",
                 fontSize: "11px",
@@ -167,6 +167,16 @@ const AlertCard: React.FC<AlertCardProps> = ({
             >
               View Details
             </Button>
+
+            <ViewAlertPopup
+              open={open}
+              handleClose={() => setOpen(false)}
+              location="Nagpur"
+              time="10:30 AM"
+              assignedTo="Safety Officer"
+              duration="2 hours"
+              imageUrl="https://via.placeholder.com/400"
+            />
           </Box>
         </Box>
 
