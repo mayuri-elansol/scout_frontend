@@ -107,21 +107,21 @@ const ObjectDetection: React.FC = () => {
       compliance: 92,
       violations: 3,
       cameras: "8/10",
-      status: "Normal",
+      status: "excellent",
     },
     {
       zone: "Warehouse",
       compliance: 75,
       violations: 2,
       cameras: "6/6",
-      status: "Normal",
+      status: "good",
     },
     {
       zone: "Assembly Line",
       compliance: 84,
       violations: 5,
       cameras: "7/8",
-      status: "High",
+      status: "warning",
     },
   ];
 
