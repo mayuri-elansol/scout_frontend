@@ -15,7 +15,7 @@ import { Refresh, Check } from "@mui/icons-material";
 import {
   getCategoryOptions,
   getSubCategoriesForCategory,
-} from "@/app/config/menuConfig";
+} from "@/app/config/alertsFilterConfig";
 
 interface AlertsFilterPanelProps {
   categoryFilter?: string;
