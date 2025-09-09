@@ -5,9 +5,11 @@ import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-//import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { v4 as uuidv4 } from "uuid";
 
 const PPEDetection: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const ppeKpiData = [
     {
       title: "PPE Compliance Rate",
@@ -111,8 +113,8 @@ const PPEDetection: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
-    // call API with filters if needed
   };
+  const KpiCardLoading = true;
   return (
     <Box>
       {/* Page Header */}
@@ -136,13 +138,21 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {ppeKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={6} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((key) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={key}>
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            ppeKpiData.map((kpi, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -248,8 +258,8 @@ const PPEDetection: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        // isSubmitDisabled={loading}
         downloadFileName="ppe-violations-report"
+        loading={true}
       />
     </Box>
   );

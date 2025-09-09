@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import GlobalFeatureflagProvider from "@/Providers/globalFeatureflagProvider";
+import LanguageInitializer from "@/LanguageInitializer";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,9 +26,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-      <GlobalFeatureflagProvider>
+        <GlobalFeatureflagProvider>
+          <LanguageInitializer />
           {children}
-      </GlobalFeatureflagProvider>
+        </GlobalFeatureflagProvider>
       </body>
     </html>
   );
