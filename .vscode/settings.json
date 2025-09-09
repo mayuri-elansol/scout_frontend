@@ -1,6 +1,6 @@
 {
     "sonarlint.connectedMode.project": {
-        "connectionId": "https://cicd.sargen.elansoltech.in",
+        "connectionId": "http-38-242-142-88-9001-sonar",
         "projectKey": "scout_frontend"
     }
 }
