@@ -139,20 +139,6 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
     <Box
       sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f5f7fa" }}
     >
-      {/* Sidebar */}
-      {/* <Sidebar currentPage={currentPage} onPageChange={handlePageChange} /> */}
-      {/* Sidebar (Desktop & Laptop) */}
-      {/* {!isTabletOrPhone && (
-        <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
-      )} */}
-
-      {/* PhoneSidebar (Tablet & Phone) */}
-      {/* {isTabletOrPhone && (
-        <Phonesidebar
-          currentPage={currentPage}
-          onPageChange={handlePageChange}
-        />
-      )} */}
       {/* Main Content */}
       <Box>
         {/* Breadcrumb */}
