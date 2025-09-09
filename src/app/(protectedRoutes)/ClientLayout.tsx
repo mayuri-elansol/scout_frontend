@@ -1,7 +1,12 @@
 "use client";
 import { ReactNode, useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
-import { CssBaseline, Box, useMediaQuery, CircularProgress } from "@mui/material";
+import {
+  CssBaseline,
+  Box,
+  useMediaQuery,
+  CircularProgress,
+} from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
@@ -24,8 +29,10 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
   const sidebartheme = useTheme();
-  const isTabletOrPhone = useMediaQuery(sidebartheme.breakpoints.down("lg"), {
-  });
+  const isTabletOrPhone = useMediaQuery(
+    sidebartheme.breakpoints.down("lg"),
+    {}
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -50,10 +57,10 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     console.log("Navigating to:", page);
   };
 
-if (!mounted)
-  return (
-    <Loader/>
-  );
+  if (!mounted) {
+    return <Loader />;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -83,6 +90,7 @@ if (!mounted)
             currentPage={currentPage}
             onPageChange={handlePageChange}
           />
+
           {children}
         </Box>
       </Box>
