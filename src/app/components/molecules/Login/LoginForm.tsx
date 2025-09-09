@@ -1,6 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
+
+import { useRouter } from "next/navigation";
 import {
   CardContent,
   TextField,
@@ -13,13 +15,13 @@ import {
   Box,
   Button,
   Paper,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Visibility,
   VisibilityOff,
   Lock,
   AccountCircle,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 interface LoginFormData {
   username: string;
@@ -32,7 +34,9 @@ interface LoginFormProps {
   showPassword: boolean;
   isLoading: boolean;
   error: string;
-  onInputChange: (field: keyof LoginFormData) => (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: (
+    field: keyof LoginFormData
+  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   onTogglePassword: () => void;
   onSubmit: (event: React.FormEvent) => void;
   setError: (error: string) => void;
@@ -48,31 +52,32 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onSubmit,
   setError,
 }) => {
+  const router = useRouter();
   return (
     <CardContent sx={{ padding: 4 }}>
       <form onSubmit={onSubmit}>
         {error && (
           <Paper
             elevation={1}
-            sx={{ 
+            sx={{
               mb: 3,
               p: 2,
-              backgroundColor: '#fff5f5',
-              border: '1px solid #fecaca',
+              backgroundColor: "#fff5f5",
+              border: "1px solid #fecaca",
               borderRadius: 2,
             }}
           >
-            <Alert 
-              severity="error" 
-              sx={{ 
-                backgroundColor: 'transparent',
-                '& .MuiAlert-message': {
-                  color: '#dc2626',
-                  fontSize: '14px',
+            <Alert
+              severity="error"
+              sx={{
+                backgroundColor: "transparent",
+                "& .MuiAlert-message": {
+                  color: "#dc2626",
+                  fontSize: "14px",
                   fontWeight: 500,
                 },
               }}
-              onClose={() => setError('')}
+              onClose={() => setError("")}
             >
               {error}
             </Alert>
@@ -80,15 +85,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
         )}
 
         <Box sx={{ mb: 3 }}>
-          <Typography 
+          <Typography
             component="label"
-            variant="body2" 
-            sx={{ 
-              color: '#1c2025',
+            variant="body2"
+            sx={{
+              color: "#1c2025",
               fontWeight: 600,
               mb: 1.5,
-              fontSize: '15px',
-              display: 'block',
+              fontSize: "15px",
+              display: "block",
             }}
           >
             Username
@@ -97,35 +102,35 @@ const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
             variant="outlined"
             value={formData.username}
-            onChange={onInputChange('username')}
+            onChange={onInputChange("username")}
             placeholder="Enter your username"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <AccountCircle sx={{ color: '#6b7280' }} />
+                  <AccountCircle sx={{ color: "#6b7280" }} />
                 </InputAdornment>
               ),
             }}
             sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#fafafa',
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#fafafa",
                 borderRadius: 2,
-                transition: 'all 0.2s ease-in-out',
-                '& fieldset': {
-                  borderColor: '#e5e7eb',
-                  borderWidth: '2px',
+                transition: "all 0.2s ease-in-out",
+                "& fieldset": {
+                  borderColor: "#e5e7eb",
+                  borderWidth: "2px",
                 },
-                '&:hover': {
-                  backgroundColor: '#ffffff',
-                  '& fieldset': {
-                    borderColor: '#1976d2',
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  "& fieldset": {
+                    borderColor: "#1976d2",
                   },
                 },
-                '&.Mui-focused': {
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
-                  '& fieldset': {
-                    borderColor: '#1976d2',
+                "&.Mui-focused": {
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
+                  "& fieldset": {
+                    borderColor: "#1976d2",
                   },
                 },
               },
@@ -135,15 +140,15 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </Box>
 
         <Box sx={{ mb: 4 }}>
-          <Typography 
+          <Typography
             component="label"
-            variant="body2" 
-            sx={{ 
-              color: '#1c2025',
+            variant="body2"
+            sx={{
+              color: "#1c2025",
               fontWeight: 600,
               mb: 1.5,
-              fontSize: '15px',
-              display: 'block',
+              fontSize: "15px",
+              display: "block",
             }}
           >
             Password
@@ -151,14 +156,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <TextField
             fullWidth
             variant="outlined"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             value={formData.password}
-            onChange={onInputChange('password')}
+            onChange={onInputChange("password")}
             placeholder="Enter your password"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <Lock sx={{ color: '#6b7280' }} />
+                  <Lock sx={{ color: "#6b7280" }} />
                 </InputAdornment>
               ),
               endAdornment: (
@@ -167,10 +172,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     onClick={onTogglePassword}
                     edge="end"
                     disabled={isLoading}
-                    sx={{ 
-                      color: '#6b7280',
-                      '&:hover': {
-                        backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                    sx={{
+                      color: "#6b7280",
+                      "&:hover": {
+                        backgroundColor: "rgba(25, 118, 210, 0.04)",
                       },
                     }}
                   >
@@ -180,25 +185,25 @@ const LoginForm: React.FC<LoginFormProps> = ({
               ),
             }}
             sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#fafafa',
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#fafafa",
                 borderRadius: 2,
-                transition: 'all 0.2s ease-in-out',
-                '& fieldset': {
-                  borderColor: '#e5e7eb',
-                  borderWidth: '2px',
+                transition: "all 0.2s ease-in-out",
+                "& fieldset": {
+                  borderColor: "#e5e7eb",
+                  borderWidth: "2px",
                 },
-                '&:hover': {
-                  backgroundColor: '#ffffff',
-                  '& fieldset': {
-                    borderColor: '#1976d2',
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  "& fieldset": {
+                    borderColor: "#1976d2",
                   },
                 },
-                '&.Mui-focused': {
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 0 0 3px rgba(25, 118, 210, 0.1)',
-                  '& fieldset': {
-                    borderColor: '#1976d2',
+                "&.Mui-focused": {
+                  backgroundColor: "#ffffff",
+                  boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
+                  "& fieldset": {
+                    borderColor: "#1976d2",
                   },
                 },
               },
@@ -207,41 +212,29 @@ const LoginForm: React.FC<LoginFormProps> = ({
           />
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formData.rememberMe}
-                onChange={onInputChange('rememberMe')}
-                disabled={isLoading}
-                sx={{
-                  color: '#6b7280',
-                  '&.Mui-checked': {
-                    color: '#1976d2',
-                  },
-                }}
-              />
-            }
-            label={
-              <Typography variant="body2" sx={{ color: '#5c6b7d', fontSize: '15px', fontWeight: 500 }}>
-                Remember me
-              </Typography>
-            }
-          />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mb: 4,
+          }}
+        >
           <Button
             variant="text"
             size="small"
             disabled={isLoading}
-            sx={{ 
-              textTransform: 'none', 
-              fontSize: '15px',
-              color: '#1976d2',
+            sx={{
+              textTransform: "none",
+              fontSize: "15px",
+              color: "#1976d2",
               fontWeight: 600,
-              '&:hover': {
-                backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                textDecoration: 'none',
+              "&:hover": {
+                backgroundColor: "rgba(25, 118, 210, 0.04)",
+                textDecoration: "none",
               },
             }}
+            onClick={() => router.push("/ForgotPassword")}
           >
             Forgot Password?
           </Button>
@@ -251,41 +244,52 @@ const LoginForm: React.FC<LoginFormProps> = ({
           type="submit"
           disabled={isLoading || !formData.username || !formData.password}
           style={{
-            width: '100%',
-            padding: '14px 16px',
-            fontSize: '16px',
+            width: "100%",
+            padding: "14px 16px",
+            fontSize: "16px",
             fontWeight: 600,
-            textTransform: 'none',
-            backgroundColor: (isLoading || !formData.username || !formData.password) ? '#e5e7eb' : '#1976d2',
-            color: (isLoading || !formData.username || !formData.password) ? '#9ca3af' : '#ffffff',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: (isLoading || !formData.username || !formData.password) ? 'not-allowed' : 'pointer',
-            boxShadow: '0 2px 8px rgba(25, 118, 210, 0.2)',
-            transition: 'all 0.2s ease-in-out',
-            fontFamily: 'inherit',
+            textTransform: "none",
+            backgroundColor:
+              isLoading || !formData.username || !formData.password
+                ? "#e5e7eb"
+                : "#1976d2",
+            color:
+              isLoading || !formData.username || !formData.password
+                ? "#9ca3af"
+                : "#ffffff",
+            border: "none",
+            borderRadius: "8px",
+            cursor:
+              isLoading || !formData.username || !formData.password
+                ? "not-allowed"
+                : "pointer",
+            boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
+            transition: "all 0.2s ease-in-out",
+            fontFamily: "inherit",
           }}
           onMouseEnter={(e) => {
             if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.backgroundColor = '#1565c0';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(25, 118, 210, 0.3)';
-              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.backgroundColor = "#1565c0";
+              e.currentTarget.style.boxShadow =
+                "0 4px 12px rgba(25, 118, 210, 0.3)";
+              e.currentTarget.style.transform = "translateY(-1px)";
             }
           }}
           onMouseLeave={(e) => {
             if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.backgroundColor = '#1976d2';
-              e.currentTarget.style.boxShadow = '0 2px 8px rgba(25, 118, 210, 0.2)';
-              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.backgroundColor = "#1976d2";
+              e.currentTarget.style.boxShadow =
+                "0 2px 8px rgba(25, 118, 210, 0.2)";
+              e.currentTarget.style.transform = "translateY(0)";
             }
           }}
           onMouseDown={(e) => {
             if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.transform = "translateY(0)";
             }
           }}
         >
-          {isLoading ? 'Signing In...' : 'Sign In'}
+          {isLoading ? "Signing In..." : "Sign In"}
         </button>
       </form>
     </CardContent>
