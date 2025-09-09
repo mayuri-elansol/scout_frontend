@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { PageType, BreadcrumbItem } from '@/app/types';
+"use client";
+
+import React, { useState } from "react";
+import { PageType, BreadcrumbItem } from "@/app/types";
 import {
   Box,
   Typography,
@@ -7,35 +9,33 @@ import {
   Menu,
   MenuItem,
   useTheme,
-} from '@mui/material';
-import {
-  Home,
-  ChevronRight,
-  Schedule,
-  ExpandMore,
-} from '@mui/icons-material';
+} from "@mui/material";
+import { Home, ChevronRight, Schedule, ExpandMore } from "@mui/icons-material";
 
 interface BreadcrumbProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
+  currentPage,
+  onPageChange,
+}) => {
   const theme = useTheme();
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState('Last 15 minutes');
+  const [selectedTimeRange, setSelectedTimeRange] = useState("Last 15 minutes");
 
   const timeRanges = [
-    'Last 5 minutes',
-    'Last 15 minutes',
-    'Last 30 minutes',
-    'Last 1 hour',
-    'Last 3 hours',
-    'Last 6 hours',
-    'Last 12 hours',
-    'Last 24 hours',
-    'Last 2 days',
+    "Last 5 minutes",
+    "Last 15 minutes",
+    "Last 30 minutes",
+    "Last 1 hour",
+    "Last 3 hours",
+    "Last 6 hours",
+    "Last 12 hours",
+    "Last 24 hours",
+    "Last 2 days",
   ];
 
   const handleTimePickerClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -54,48 +54,105 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
   };
 
   const getBreadcrumbItems = (): BreadcrumbItem[] => {
-    const items: BreadcrumbItem[] = [{ label: 'Home', icon: Home, clickable: false }];
+    const items: BreadcrumbItem[] = [
+      { label: "Home", icon: Home, clickable: false },
+    ];
 
     switch (currentPage) {
-      case 'dashboard':
-        items.push({ label: 'Dashboard', icon: null, clickable: false });
+      case "dashboard":
+        items.push({ label: "Dashboard", icon: null, clickable: false });
         break;
-      case 'ppe-detection':
+      case "ppe-detection":
         items.push(
-          { label: 'Analytics', icon: null, clickable: true, onClick: () => onPageChange('dashboard') },
-          { label: 'Safety and Compliance', icon: null, clickable: false },
-          { label: 'PPE Detection', icon: null, clickable: false }
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "PPE Detection", icon: null, clickable: false }
         );
         break;
-      case 'intrusion-detection':
+         case "object-detection":
         items.push(
-          { label: 'Analytics', icon: null, clickable: true, onClick: () => onPageChange('dashboard') },
-          { label: 'Security Monitoring', icon: null, clickable: false },
-          { label: 'Intrusion Detection', icon: null, clickable: false }
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "Object Detection", icon: null, clickable: false }
         );
         break;
-      case 'employee-presence':
+         case "fire-smoke-oil-leak-detection":
         items.push(
-          { label: 'Analytics', icon: null, clickable: true, onClick: () => onPageChange('dashboard') },
-          { label: 'Workforce Monitoring', icon: null, clickable: false },
-          { label: 'Employee Presence', icon: null, clickable: false }
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "Fire smoke oil leak detection", icon: null, clickable: false }
+        );
+        break; case "vehicle-speed":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Safety and Compliance", icon: null, clickable: false },
+          { label: "vehicle speed Monitoring", icon: null, clickable: false }
         );
         break;
-      case 'people-count':
+      case "intrusion-detection":
         items.push(
-          { label: 'Analytics', icon: null, clickable: true, onClick: () => onPageChange('dashboard') },
-          { label: 'Operational Insight', icon: null, clickable: false },
-          { label: 'People Count', icon: null, clickable: false }
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Security Monitoring", icon: null, clickable: false },
+          { label: "Intrusion Detection", icon: null, clickable: false }
         );
         break;
-         case 'live-streaming':
-        items.push({ label: 'Live streaming', icon: null, clickable: false });
+      case "employee-presence":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Workforce Monitoring", icon: null, clickable: false },
+          { label: "Employee Presence", icon: null, clickable: false }
+        );
         break;
-        case 'alerts':
-        items.push({ label: 'Alerts', icon: null, clickable: false });
+      case "people-count":
+        items.push(
+          {
+            label: "Analytics",
+            icon: null,
+            clickable: true,
+            onClick: () => onPageChange("dashboard"),
+          },
+          { label: "Operational Insight", icon: null, clickable: false },
+          { label: "People Count", icon: null, clickable: false }
+        );
+        break;
+      case "live-streaming":
+        items.push({ label: "Live streaming", icon: null, clickable: false });
+        break;
+      case "alerts":
+        items.push({ label: "Alerts", icon: null, clickable: false });
         break;
       default:
-        items.push({ label: 'Dashboard', icon: null, clickable: false });
+        items.push({ label: "Dashboard", icon: null, clickable: false });
     }
 
     return items;
@@ -108,29 +165,31 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
       sx={{
         height: 45,
         mb: 2,
-        borderBottom: '1px solid #f0f0f0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        borderBottom: "1px solid #f0f0f0",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
       }}
     >
       {/* Breadcrumb */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: '#5c6b7d',  }}>
+      <Box
+        sx={{ display: "flex", alignItems: "center", gap: 1, color: "#5c6b7d" }}
+      >
         {breadcrumbItems.map((item, index) => (
           <React.Fragment key={index}>
             {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
-            
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               {item.icon && <item.icon sx={{ fontSize: 16 }} />}
-              
+
               {item.clickable && item.onClick ? (
                 <Typography
                   sx={{
                     color: theme.palette.primary.main,
-                    cursor: 'pointer',
-                    fontSize: '14px',
-                    '&:hover': {
-                      textDecoration: 'underline',
+                    cursor: "pointer",
+                    fontSize: "14px",
+                    "&:hover": {
+                      textDecoration: "underline",
                     },
                   }}
                   onClick={item.onClick}
@@ -140,9 +199,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
               ) : (
                 <Typography
                   sx={{
-                    fontWeight: index === breadcrumbItems.length - 1 ? 500 : 'normal',
-                    color: index === breadcrumbItems.length - 1 ? '#1c2025' : '#5c6b7d',
-                    fontSize: '14px',
+                    fontWeight:
+                      index === breadcrumbItems.length - 1 ? 500 : "normal",
+                    color:
+                      index === breadcrumbItems.length - 1
+                        ? "#1c2025"
+                        : "#5c6b7d",
+                    fontSize: "14px",
                   }}
                 >
                   {item.label}
@@ -161,14 +224,14 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
           endIcon={<ExpandMore />}
           onClick={handleTimePickerClick}
           sx={{
-            color: '#374151',
-            borderColor: '#d1d5db',
-            backgroundColor: 'white',
-            fontSize: '14px',
-            textTransform: 'none',
-            '&:hover': {
-              borderColor: '#9ca3af',
-              backgroundColor: '#f9fafb',
+            color: "#374151",
+            borderColor: "#d1d5db",
+            backgroundColor: "white",
+            fontSize: "14px",
+            textTransform: "none",
+            "&:hover": {
+              borderColor: "#9ca3af",
+              backgroundColor: "#f9fafb",
             },
           }}
         >
@@ -180,12 +243,12 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
           open={timePickerOpen}
           onClose={handleTimePickerClose}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
+            vertical: "bottom",
+            horizontal: "right",
           }}
           transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
+            vertical: "top",
+            horizontal: "right",
           }}
           PaperProps={{
             sx: {
@@ -201,9 +264,9 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
               selected={selectedTimeRange === range}
               onClick={() => handleTimeRangeSelect(range)}
               sx={{
-                fontSize: '14px',
-                '&.Mui-selected': {
-                  backgroundColor: '#f3f4f6',
+                fontSize: "14px",
+                "&.Mui-selected": {
+                  backgroundColor: "#f3f4f6",
                   color: theme.palette.primary.main,
                 },
               }}

@@ -1,11 +1,7 @@
+"use client";
+
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Chip,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Chip } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 
 interface KpiCardProps {
@@ -21,7 +17,6 @@ interface KpiCardProps {
   size?: "small" | "medium" | "large";
   // Custom sizing props for Storybook and flexible layouts
   customWidth?: number;
-  customHeight?: number;
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
@@ -36,9 +31,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
   variant = "default",
   size = "medium",
   customWidth,
-  customHeight,
+  // customHeight,
 }) => {
-
   // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
@@ -115,7 +109,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
 
   // Override with custom dimensions if provided
   const finalWidth = customWidth ? `${customWidth}px` : "auto";
-  const finalHeight = customHeight ? `${customHeight}px` : sizeStyles.minHeight;
 
   return (
     <Card

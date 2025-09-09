@@ -1,119 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
   Grid,
-  TextField,
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   Button,
   IconButton,
-  InputAdornment,
   Box,
-} from '@mui/material';
-import { Search, Download, Refresh } from '@mui/icons-material';
+} from "@mui/material";
+import { Refresh, Check } from "@mui/icons-material";
+import {
+  getCategoryOptions,
+  getSubCategoriesForCategory,
+} from "@/app/config/alertsFilterConfig";
 
 interface AlertsFilterPanelProps {
-  searchQuery?: string;
-  severityFilter?: string;
   categoryFilter?: string;
-  onSearchChange?: (query: string) => void;
-  onSeverityChange?: (severity: string) => void;
+  subCategoryFilter?: string;
   onCategoryChange?: (category: string) => void;
-  onExport?: () => void;
+  onSubCategoryChange?: (subCategory: string) => void;
+  onApply?: () => void;
   onRefresh?: () => void;
 }
 
 const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
-  searchQuery = '',
-  severityFilter = '',
-  categoryFilter = '',
-  onSearchChange,
-  onSeverityChange,
+  categoryFilter = "",
+  subCategoryFilter = "",
   onCategoryChange,
-  onExport,
+  onSubCategoryChange,
+  onApply,
   onRefresh,
 }) => {
-  const [localSearch, setLocalSearch] = useState(searchQuery);
-  const [localSeverity, setLocalSeverity] = useState(severityFilter);
   const [localCategory, setLocalCategory] = useState(categoryFilter);
+  const [localSubCategory, setLocalSubCategory] = useState(subCategoryFilter);
 
-  const handleSearchChange = (value: string) => {
-    setLocalSearch(value);
-    onSearchChange?.(value);
-  };
-
-  const handleSeverityChange = (value: string) => {
-    setLocalSeverity(value);
-    onSeverityChange?.(value);
-  };
+  // Get categories from config
+  const categoryOptions = getCategoryOptions();
 
   const handleCategoryChange = (value: string) => {
     setLocalCategory(value);
+    setLocalSubCategory(""); // Reset sub-category when category changes
     onCategoryChange?.(value);
+    onSubCategoryChange?.("");
   };
+
+  const handleSubCategoryChange = (value: string) => {
+    setLocalSubCategory(value);
+    onSubCategoryChange?.(value);
+  };
+
+  // Reset sub-category when category changes
+  useEffect(() => {
+    if (
+      localCategory &&
+      !getSubCategoriesForCategory(localCategory).includes(localSubCategory)
+    ) {
+      setLocalSubCategory("");
+    }
+  }, [localCategory, localSubCategory]);
 
   return (
     <Card sx={{ mb: 3 }}>
       <CardContent sx={{ p: 3 }}>
         <Grid container spacing={3} alignItems="center">
-          <Grid  size={{xs:12,md:4}} >
-            <TextField
-              fullWidth
-              placeholder="Search by title, description, or location"
-              value={localSearch}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              size="small"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search sx={{ fontSize: 20, color: '#666' }} />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
-                  },
-                },
-              }}
-            />
-          </Grid>
-          
-          <Grid  size={{xs:12,md:3}}>
-            <FormControl fullWidth size="small">
-              <InputLabel>Severity Level</InputLabel>
-              <Select
-                value={localSeverity}
-                onChange={(e) => handleSeverityChange(e.target.value)}
-                label="Severity Level"
-                sx={{
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
-                  },
-                }}
-              >
-                <MenuItem value="">All Severities</MenuItem>
-                <MenuItem value="critical">Critical</MenuItem>
-                <MenuItem value="high">High</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
-                <MenuItem value="low">Low</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          
-          <Grid  size={{xs:12,md:3}}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <FormControl fullWidth size="small">
               <InputLabel>Category</InputLabel>
               <Select
@@ -121,51 +74,83 @@ const AlertsFilterPanel: React.FC<AlertsFilterPanelProps> = ({
                 onChange={(e) => handleCategoryChange(e.target.value)}
                 label="Category"
                 sx={{
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
-                  '&.Mui-focused': {
-                    backgroundColor: 'white',
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
                   },
                 }}
               >
                 <MenuItem value="">All Categories</MenuItem>
-                <MenuItem value="safety">Safety</MenuItem>
-                <MenuItem value="security">Security</MenuItem>
-                <MenuItem value="workforce">Workforce</MenuItem>
-                <MenuItem value="operational">Operational</MenuItem>
+                {categoryOptions.map((category) => (
+                  <MenuItem key={category.value} value={category.value}>
+                    {category.label}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
-          
-          <Grid  size={{xs:12,md:2}}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button
-                variant="contained"
-                startIcon={<Download />}
-                size="small"
-                onClick={onExport}
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Sub-Category</InputLabel>
+              <Select
+                value={localSubCategory}
+                onChange={(e) => handleSubCategoryChange(e.target.value)}
+                label="Sub-Category"
+                disabled={!localCategory}
                 sx={{
-                  backgroundColor: '#1976d2',
-                  fontSize: '12px',
-                  textTransform: 'none',
-                  px: 2,
-                  '&:hover': {
-                    backgroundColor: '#1565c0',
+                  backgroundColor: localCategory ? "#f8f9fa" : "#f5f5f5",
+                  "&:hover": {
+                    backgroundColor: localCategory ? "#f0f0f0" : "#f5f5f5",
+                  },
+                  "&.Mui-focused": {
+                    backgroundColor: "white",
                   },
                 }}
               >
-                Export
+                <MenuItem value="">All Sub-Categories</MenuItem>
+                {localCategory &&
+                  getSubCategoriesForCategory(localCategory).map(
+                    (subCategory) => (
+                      <MenuItem key={subCategory} value={subCategory}>
+                        {subCategory}
+                      </MenuItem>
+                    )
+                  )}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 4 }}>
+            <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}>
+              <Button
+                variant="contained"
+                startIcon={<Check />}
+                size="small"
+                onClick={onApply}
+                sx={{
+                  backgroundColor: "#1976d2",
+                  fontSize: "12px",
+                  textTransform: "none",
+                  px: 3,
+                  "&:hover": {
+                    backgroundColor: "#1565c0",
+                  },
+                }}
+              >
+                Apply
               </Button>
               <IconButton
                 size="small"
                 onClick={onRefresh}
                 sx={{
-                  border: '1px solid #e0e0e0',
-                  backgroundColor: '#f8f9fa',
-                  '&:hover': {
-                    backgroundColor: '#f0f0f0',
+                  border: "1px solid #e0e0e0",
+                  backgroundColor: "#f8f9fa",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
                   },
                 }}
               >

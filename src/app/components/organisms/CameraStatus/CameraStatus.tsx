@@ -10,8 +10,6 @@ interface CameraZone {
 }
 
 const CameraStatus: React.FC = () => {
-  const theme = useTheme();
-
   const cameraZones: CameraZone[] = [
     { zone: "Production Floor", active: 8, total: 10, status: "good" },
     { zone: "Warehouse", active: 6, total: 6, status: "excellent" },

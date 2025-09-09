@@ -1,9 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
+// import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import Sidebar from "./Phonesidebar";
 import { useState } from "react";
 
 const meta: Meta<typeof Sidebar> = {
-  title: "Components/PhoneSidebar",
+  title: "Components/Organisms/PhoneSidebar",
   component: Sidebar,
   tags: ["autodocs"],
 };
@@ -37,12 +38,12 @@ export const DashboardSelected: Story = {
   },
 };
 
-export const AnalyticsExpanded: Story = {
-  render: (args) => <SidebarWrapper {...args} />,
-  args: {
-    currentPage: "analytics",
-  },
-};
+// export const AnalyticsExpanded: Story = {
+//   render: (args) => <SidebarWrapper {...args} />,
+//   args: {
+//     currentPage: "analytics",
+//   },
+// };
 
 export const SubTaskSelected: Story = {
   render: (args) => <SidebarWrapper {...args} />,

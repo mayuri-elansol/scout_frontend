@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
 import { Box, Typography, Card, CardContent, Grid, Chip } from "@mui/material";
 import {
@@ -332,8 +332,11 @@ const Introduction = () => {
               >
                 <li>Use the sidebar to browse components by category</li>
                 <li>Each story includes interactive controls and variants</li>
-                <li>View source code using the "Show code" button</li>
-                <li>Check the "Component Showcase" for integration examples</li>
+                <li>View source code using the &quot;Show code&quot; button</li>
+                <li>
+                  Check the &quot;Component Showcase&quot; for integration
+                  examples
+                </li>
               </Box>
             </Grid>
           </Grid>
