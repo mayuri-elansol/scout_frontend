@@ -25,6 +25,7 @@ import LiveStreaming from "../LiveStreamingPage/page";
 import SystemAlerts from "../AlertsPage/SystemAlerts";
 
 import { useTranslation } from "react-i18next";
+import { Grid } from "@mui/system";
 
 export interface DashboardPageProps {}
 
@@ -165,28 +166,13 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
         {currentPage === "dashboard" && (
           <>
             {/* KPI Cards Grid */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-                flexWrap: "wrap",
-                gap: 2.5,
-                mb: 4,
-                // px: 2,
-              }}
-            >
-              {kpiData.map((kpi, index) => (
-                <Box
-                  key={index}
-                  sx={{
-                    width: "calc(20% - 16px)",
-                    minWidth: "200px",
-                  }}
-                >
+            <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+              {kpiData.map((kpi) => (
+                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                   <KpiCard {...kpi} />
-                </Box>
+                </Grid>
               ))}
-            </Box>
+            </Grid>
 
             {/* Activity Feed and Camera Status */}
             <Box
@@ -206,12 +192,7 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
             </Box>
           </>
         )}
-        {/* Welcome Page */}
-        {/* {currentPage === "welcome" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <WelcomeBanner />
-          </Box>
-        )} */}
+
         {/* PPE Detection Page */}
         {currentPage === "ppe-detection" && (
           <Box sx={{ px: 2, pt: 2 }}>
