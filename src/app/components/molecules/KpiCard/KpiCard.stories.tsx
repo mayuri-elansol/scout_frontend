@@ -1,7 +1,7 @@
 // import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box, Grid, Typography } from "@mui/material";
-import KpiCard, { KpiCardProps } from "./KpiCard";
+import KpiCard from "./KpiCard";
 import {
   Shield,
   Visibility,
@@ -95,12 +95,6 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// Interactive Sizing Controls - Main Feature
-type InteractiveSizingArgs = KpiCardProps & {
-  containerPadding?: number;
-  showContainer?: boolean;
-};;
 
 export const InteractiveSizing: StoryObj<typeof meta> = {
   args: {

@@ -32,9 +32,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   variant = "default",
   size = "medium",
   customWidth,
-  customHeight,
 }) => {
-  // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
       case "success":

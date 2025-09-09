@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography, SxProps, Theme } from '@mui/material';
 
 export interface LoaderProps {
   /** Size of the loading spinner */
@@ -17,7 +17,7 @@ export interface LoaderProps {
   /** Progress value (0-100) for determinate variant */
   value?: number;
   /** Custom styling */
-  sx?: any;
+  sx?: SxProps<Theme>;
 }
 
 const Loader: React.FC<LoaderProps> = ({
@@ -32,11 +32,13 @@ const Loader: React.FC<LoaderProps> = ({
   return (
     <Box
       sx={{
-         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",   
-        width: "100vw",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        width: '100vw',
+        gap: 1.5,
         ...sx,
       }}
     >

@@ -1,6 +1,6 @@
 // ViewAlertPopup.stories.tsx
 import React, { useState } from "react";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite"; 
 import ViewAlertPopup from "./ViewAlertPopup";
 
 const meta: Meta<typeof ViewAlertPopup> = {
