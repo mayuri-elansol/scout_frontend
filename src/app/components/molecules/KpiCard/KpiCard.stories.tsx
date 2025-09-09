@@ -1,7 +1,7 @@
 // import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box, Grid, Typography } from "@mui/material";
-import KpiCard from "./KpiCard";
+import KpiCard, { KpiCardProps } from "./KpiCard";
 import {
   Shield,
   Visibility,
@@ -89,21 +89,7 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
       table: {
         category: "Layout Controls",
       },
-    },
-    containerPadding: {
-      control: { type: "range", min: 0, max: 40, step: 4 },
-      description: "Container padding around card (px)",
-      table: {
-        category: "Layout Controls",
-      },
-    },
-    showContainer: {
-      control: "boolean",
-      description: "Show container background",
-      table: {
-        category: "Layout Controls",
-      },
-    },
+    }
   },
 };
 
@@ -111,7 +97,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Interactive Sizing Controls - Main Feature
-export const InteractiveSizing: Story = {
+type InteractiveSizingArgs = KpiCardProps & {
+  containerPadding?: number;
+  showContainer?: boolean;
+};;
+
+export const InteractiveSizing: StoryObj<typeof meta> = {
   args: {
     title: "PPE Compliance",
     value: "87.5%",
@@ -125,23 +116,17 @@ export const InteractiveSizing: Story = {
     size: "medium",
     customWidth: 280,
     customHeight: 160,
-    containerPadding: 16,
-    showContainer: true,
   },
   render: (args) => {
-    const {
-      customWidth,
-      customHeight,
-      containerPadding,
-      showContainer,
-      ...cardProps
-    } = args;
+    // Storybook-only props
+    const containerPadding = 16;
+    const showContainer = true;
 
     return (
       <Box
         sx={{
-          width: customWidth
-            ? `${customWidth + containerPadding * 2}px`
+          width: args.customWidth
+            ? `${args.customWidth + containerPadding * 2}px`
             : "320px",
           backgroundColor: showContainer ? "#f5f7fa" : "transparent",
           padding: `${containerPadding}px`,
@@ -167,47 +152,18 @@ export const InteractiveSizing: Story = {
               zIndex: 10,
             }}
           >
-            {customWidth || 280} x {customHeight || 160}px
+            {args.customWidth || 280} x {args.customHeight || 160}px
           </Typography>
         )}
+
         <KpiCard
-          {...cardProps}
-          customWidth={customWidth}
-          customHeight={customHeight}
+          {...args}
         />
       </Box>
     );
   },
-  parameters: {
-    docs: {
-      description: {
-        story: `
-**Interactive Sizing Controls**
-
-Use the controls panel to dynamically adjust card dimensions:
-
-**Layout Controls:**
-- Custom Width: 200-600px range to test container widths
-- Custom Height: 120-400px range to test height constraints  
-- Container Padding: 0-40px spacing around the card
-- Show Container: Toggle container background and dimension display
-
-**Real-time Testing:**
-- See live dimension display in top-left corner
-- Test responsive behavior at different sizes
-- Understand content overflow and layout constraints
-- Perfect for testing integration scenarios
-
-**Common Use Cases:**
-- Dashboard grid sizing (280 x 160px)
-- Mobile responsive layouts (240 x 140px)
-- Executive dashboards (400 x 200px)
-- Sidebar widgets (200 x 120px)
-        `,
-      },
-    },
-  },
 };
+
 
 // Individual Component Stories
 export const Default: Story = {

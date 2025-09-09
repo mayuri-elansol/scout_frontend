@@ -3,7 +3,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Loader from "./app/components/atoms/Loader/Loader";
+import Loader from "../app/components/atoms/Loader/Loader";
 
 export default function RouteLoader({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export default function RouteLoader({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => setLoading(false), 800000); 
+    const timer = setTimeout(() => setLoading(false), 800); 
     return () => clearTimeout(timer);
   }, [pathname]);
 
