@@ -11,7 +11,7 @@ import Header from "../components/organisms/Header/Header";
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
-import PageLoader from "next/dist/client/page-loader";
+import Loader from "../components/atoms/Loader/Loader";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -52,17 +52,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
 if (!mounted)
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f5f7fa",
-      }}
-    >
-      <CircularProgress />
-    </Box>
+    <Loader/>
   );
   return (
     <ThemeProvider theme={theme}>
