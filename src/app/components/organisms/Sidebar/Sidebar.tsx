@@ -1,8 +1,7 @@
-
-'use client';
-import React, { useState, useMemo, useCallback } from 'react';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+"use client";
+import React, { useState, useMemo, useCallback } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import {
   Drawer,
   Box,
@@ -15,24 +14,24 @@ import {
   Typography,
   Chip,
   useTheme,
-} from '@mui/material';
-import { BarChart, ExpandLess, ExpandMore } from '@mui/icons-material';
+} from "@mui/material";
+import { BarChart, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
   dashboardMenu,
   alertMenu,
   analyticsMenu,
   MenuItemConfig,
   AnalyticsCategoryConfig,
-} from '../../../config/menuConfig';
-import { PageType } from '@/app/types';
-import { useFeatureFlags } from '@/customhooks/useFeatureFlag';
+} from "../../../config/menuConfig";
+import { PageType } from "@/app/types";
+import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
 
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
 
-const drawerWidth = '15vw';
+const drawerWidth = "15vw";
 
 // Memoized menu item component for better performance
 const MenuItem = React.memo<{
@@ -48,16 +47,19 @@ const MenuItem = React.memo<{
       selected={pathname === item.path}
       sx={{
         borderRadius: 1,
-        '&.Mui-selected': {
+        "&.Mui-selected": {
           backgroundColor: theme.palette.primary.main,
-          color: 'white',
-          '&:hover': { backgroundColor: theme.palette.primary.dark },
+          color: "white",
+          "&:hover": { backgroundColor: theme.palette.primary.dark },
         },
       }}
     >
       {item.icon && (
         <ListItemIcon
-          sx={{ minWidth: 36, color: pathname === item.path ? 'white' : 'inherit' }}
+          sx={{
+            minWidth: 36,
+            color: pathname === item.path ? "white" : "inherit",
+          }}
         >
           <item.icon />
         </ListItemIcon>
@@ -68,14 +70,14 @@ const MenuItem = React.memo<{
           label={item.badge}
           size="small"
           color="error"
-          sx={{ height: 20, fontSize: '12px' }}
+          sx={{ height: 20, fontSize: "12px" }}
         />
       )}
     </ListItemButton>
   </ListItem>
 ));
 
-MenuItem.displayName = 'MenuItem';
+MenuItem.displayName = "MenuItem";
 
 // Memoized sub-menu item component
 const SubMenuItem = React.memo<{
@@ -92,34 +94,40 @@ const SubMenuItem = React.memo<{
       sx={{
         borderRadius: 1,
         py: 0.75,
-        '&.Mui-selected': {
+        "&.Mui-selected": {
           backgroundColor: theme.palette.primary.main,
-          color: 'white',
-          '&:hover': { backgroundColor: theme.palette.primary.dark },
+          color: "white",
+          "&:hover": { backgroundColor: theme.palette.primary.dark },
         },
-        '&:hover': {
-          backgroundColor: 'rgba(25,118,210,0.08)',
+        "&:hover": {
+          backgroundColor: "rgba(25,118,210,0.08)",
         },
       }}
     >
       <ListItemText
         primary={`• ${item.name}`}
-        primaryTypographyProps={{
-          fontSize: '12px',
-          color: pathname === item.path ? 'white' : '#6b7280',
-          fontWeight: pathname === item.path ? 500 : 'normal',
-          lineHeight: 1.3,
+        slotProps={{
+          primary: {
+            sx: {
+              fontSize: "12px",
+              color: pathname === item.path ? "white" : "#6b7280",
+              fontWeight: pathname === item.path ? 500 : "normal",
+              lineHeight: 1.3,
+            },
+          },
         }}
       />
     </ListItemButton>
   </ListItem>
 ));
 
-SubMenuItem.displayName = 'SubMenuItem';
+SubMenuItem.displayName = "SubMenuItem";
 
 // Memoized category component
 const CategorySection = React.memo<{
-  category: AnalyticsCategoryConfig & { items: (MenuItemConfig & { featureFlag: boolean })[] };
+  category: AnalyticsCategoryConfig & {
+    items: (MenuItemConfig & { featureFlag: boolean })[];
+  };
   openCategories: Record<string, boolean>;
   onToggle: (title: string) => void;
   pathname: string;
@@ -139,10 +147,7 @@ const CategorySection = React.memo<{
   return (
     <Box>
       <ListItem disablePadding>
-        <ListItemButton
-          onClick={handleToggle}
-          sx={{ borderRadius: 1, py: 1 }}
-        >
+        <ListItemButton onClick={handleToggle} sx={{ borderRadius: 1, py: 1 }}>
           {category.icon && (
             <ListItemIcon sx={{ minWidth: 28 }}>
               <category.icon sx={{ fontSize: 16 }} />
@@ -150,7 +155,14 @@ const CategorySection = React.memo<{
           )}
           <ListItemText
             primary={category.title}
-            primaryTypographyProps={{ fontSize: '14px', color: '#5c6b7d' }}
+            slotProps={{
+              primary: {
+                sx: {
+                  fontSize: "14px",
+                  color: "#5c6b7d",
+                },
+              },
+            }}
           />
           {openCategories[category.title] ? (
             <ExpandLess sx={{ fontSize: 12 }} />
@@ -160,7 +172,11 @@ const CategorySection = React.memo<{
         </ListItemButton>
       </ListItem>
 
-      <Collapse in={openCategories[category.title]} timeout="auto" unmountOnExit>
+      <Collapse
+        in={openCategories[category.title]}
+        timeout="auto"
+        unmountOnExit
+      >
         <List sx={{ pl: 3 }}>
           {filteredItems.map((item) => (
             <SubMenuItem
@@ -176,15 +192,17 @@ const CategorySection = React.memo<{
   );
 });
 
-CategorySection.displayName = 'CategorySection';
+CategorySection.displayName = "CategorySection";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
-  
+
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
-  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
+    {}
+  );
 
   // Memoize category toggle handler
   const handleCategoryToggle = useCallback((title: string) => {
@@ -199,24 +217,24 @@ const Sidebar: React.FC<SidebarProps> = () => {
   // Memoize filtered menus to prevent recalculation on every render
   const filteredMenus = useMemo(() => {
     const dashboardFlags: MenuItemConfig[] = dashboardMenu
-      .map(item => ({
+      .map((item) => ({
         ...item,
         featureFlag: featureFlag[item.page!] ?? false,
       }))
-      .filter(item => item.featureFlag);
+      .filter((item) => item.featureFlag);
 
     const alertFlags: MenuItemConfig[] = alertMenu
-      .map(item => ({
+      .map((item) => ({
         ...item,
         featureFlag: featureFlag[item.page!] ?? false,
       }))
-      .filter(item => item.featureFlag);
+      .filter((item) => item.featureFlag);
 
     const analyticsFlags: (AnalyticsCategoryConfig & {
       items: (MenuItemConfig & { featureFlag: boolean })[];
-    })[] = analyticsMenu.map(category => ({
+    })[] = analyticsMenu.map((category) => ({
       ...category,
-      items: category.items.map(item => ({
+      items: category.items.map((item) => ({
         ...item,
         featureFlag: featureFlag[item.page!] ?? false,
       })),
@@ -226,64 +244,77 @@ const Sidebar: React.FC<SidebarProps> = () => {
   }, [featureFlag]);
 
   // Memoize the entire menu structure
-  const menuContent = useMemo(() => (
-    <>
-      {/* Dashboard */}
-      <List sx={{ p: 0 }}>
-        {filteredMenus.dashboardFlags.map((item) => (
-          <MenuItem key={item.name} item={item} pathname={pathname} theme={theme} />
-        ))}
-      </List>
-
-      {/* Analytics */}
-      {filteredMenus.analyticsFlags.length > 0 && (
-        <List sx={{ p: 0, mt: 1 }}>
-          <ListItem disablePadding>
-            <ListItemButton
-              onClick={handleAnalyticsToggle}
-              sx={{ borderRadius: 1, color: theme.palette.primary.main }}
-            >
-              <ListItemIcon sx={{ minWidth: 36 }}>
-                <BarChart />
-              </ListItemIcon>
-              <ListItemText primary="Analytics" />
-              {analyticsOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-          </ListItem>
-
-          <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
-            <List sx={{ pl: 2 }}>
-              {filteredMenus.analyticsFlags.map((category) => (
-                <CategorySection
-                  key={category.title}
-                  category={category}
-                  openCategories={openCategories}
-                  onToggle={handleCategoryToggle}
-                  pathname={pathname}
-                  theme={theme}
-                />
-              ))}
-            </List>
-          </Collapse>
+  const menuContent = useMemo(
+    () => (
+      <>
+        {/* Dashboard */}
+        <List sx={{ p: 0 }}>
+          {filteredMenus.dashboardFlags.map((item) => (
+            <MenuItem
+              key={item.name}
+              item={item}
+              pathname={pathname}
+              theme={theme}
+            />
+          ))}
         </List>
-      )}
 
-      {/* Alerts */}
-      <List sx={{ p: 0, mt: 1 }}>
-        {filteredMenus.alertFlags.map((item) => (
-          <MenuItem key={item.name} item={item} pathname={pathname} theme={theme} />
-        ))}
-      </List>
-    </>
-  ), [
-    filteredMenus,
-    pathname,
-    theme,
-    analyticsOpen,
-    openCategories,
-    handleAnalyticsToggle,
-    handleCategoryToggle,
-  ]);
+        {/* Analytics */}
+        {filteredMenus.analyticsFlags.length > 0 && (
+          <List sx={{ p: 0, mt: 1 }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={handleAnalyticsToggle}
+                sx={{ borderRadius: 1, color: theme.palette.primary.main }}
+              >
+                <ListItemIcon sx={{ minWidth: 36 }}>
+                  <BarChart />
+                </ListItemIcon>
+                <ListItemText primary="Analytics" />
+                {analyticsOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+
+            <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
+              <List sx={{ pl: 2 }}>
+                {filteredMenus.analyticsFlags.map((category) => (
+                  <CategorySection
+                    key={category.title}
+                    category={category}
+                    openCategories={openCategories}
+                    onToggle={handleCategoryToggle}
+                    pathname={pathname}
+                    theme={theme}
+                  />
+                ))}
+              </List>
+            </Collapse>
+          </List>
+        )}
+
+        {/* Alerts */}
+        <List sx={{ p: 0, mt: 1 }}>
+          {filteredMenus.alertFlags.map((item) => (
+            <MenuItem
+              key={item.name}
+              item={item}
+              pathname={pathname}
+              theme={theme}
+            />
+          ))}
+        </List>
+      </>
+    ),
+    [
+      filteredMenus,
+      pathname,
+      theme,
+      analyticsOpen,
+      openCategories,
+      handleAnalyticsToggle,
+      handleCategoryToggle,
+    ]
+  );
 
   return (
     <Drawer
@@ -291,38 +322,40 @@ const Sidebar: React.FC<SidebarProps> = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        '& .MuiDrawer-paper': {
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
-          boxSizing: 'border-box',
-          mt: '64px',
-          height: 'calc(100vh - 64px)',
-          overflowY: 'auto',
-          borderRight: 'none',
+          boxSizing: "border-box",
+          mt: "64px",
+          height: "calc(100vh - 64px)",
+          overflowY: "auto",
+          borderRight: "none",
         },
       }}
     >
-      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <Box sx={{ flex: 1 }}>
-          {menuContent}
-        </Box>
+      <Box
+        sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
+      >
+        <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
         {/* Powered by Elansol - Memoized */}
-        <Box sx={{ borderTop: '1px solid #e0e0e0', pt: 1 }}>
+        <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1 }}>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Typography sx={{ fontSize: '13px', color: '#666' }}>Powered by</Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Typography sx={{ fontSize: "13px", color: "#666" }}>
+                Powered by
+              </Typography>
               <Box
                 component="img"
                 src="/elansol_technologies_logo.jpg"
                 alt="Elansol Technologies Logo"
-                sx={{ height: 50, width: 'auto' }}
+                sx={{ height: 50, width: "auto" }}
                 loading="lazy" // Lazy load the image
               />
             </Box>

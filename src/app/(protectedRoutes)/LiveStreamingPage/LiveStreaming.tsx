@@ -1,3 +1,4 @@
+"use client"
 import React, { ReactNode, useState } from "react";
 import {
   Box,
@@ -465,7 +466,7 @@ const CameraFeed = ({ zone }: { zone: {
       <Grid container spacing={3}>
         {cameraZones.map((zone) => (
           <Grid  size={{xs:12,lg:6,xl:6}} key={zone.id}>
-            <CameraFeed zone={zone} />
+            {/* <CameraFeed zone={zone} /> */}
           </Grid>
         ))}
       </Grid>

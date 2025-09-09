@@ -1,4 +1,3 @@
-'use client';
 
 import PPEDetection from './PPEDetection';
 
