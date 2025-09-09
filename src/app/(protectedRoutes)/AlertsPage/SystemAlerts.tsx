@@ -152,10 +152,10 @@ const SystemAlerts: React.FC = () => {
 
       {/* Alert Statistics */}
       <Grid container spacing={2} sx={{ mb: 4, alignItems: "stretch" }}>
-        {alertStats.map((stat, index) => (
+        {alertStats.map((stat) => (
           <Grid
             size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-            key={index}
+            key={stat.label}
             sx={{ display: "flex" }}
           >
             <AlertStatsCard
@@ -170,10 +170,7 @@ const SystemAlerts: React.FC = () => {
 
       {/* Search and Filters */}
 
-      <AlertsFilterPanel
-      // onApply={handleApply}
-      // onRefresh={handleRefresh}
-      />
+      <AlertsFilterPanel />
 
       {/* Alert Summary */}
       <Box

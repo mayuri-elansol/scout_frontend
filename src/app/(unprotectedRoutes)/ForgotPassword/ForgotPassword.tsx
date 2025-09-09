@@ -193,7 +193,7 @@ const ForgotPassword: React.FC = () => {
                     We've sent password reset instructions to{" "}
                     <Box
                       component="span"
-                      sx={{ fontWeight: 600, color: "#4caf50" }}
+                      sx={{ fontWeight: 600, color: "#1976d2" }}
                     >
                       {email}
                     </Box>
@@ -229,7 +229,7 @@ const ForgotPassword: React.FC = () => {
                         borderColor: "#e5e7eb",
                         color: "#6b7280",
                         "&:hover": {
-                          borderColor: "#4caf50",
+                          borderColor: "#1976d2",
                           backgroundColor: "rgba(76, 175, 80, 0.04)",
                         },
                       }}
@@ -244,9 +244,9 @@ const ForgotPassword: React.FC = () => {
                         flex: 1,
                         textTransform: "none",
                         fontWeight: 600,
-                        backgroundColor: "#4caf50",
+                        backgroundColor: "#1976d2",
                         "&:hover": {
-                          backgroundColor: "#45a049",
+                          backgroundColor: "#1976d2",
                         },
                       }}
                     >
@@ -361,14 +361,14 @@ const ForgotPassword: React.FC = () => {
                             "&:hover": {
                               backgroundColor: "#ffffff",
                               "& fieldset": {
-                                borderColor: "#4caf50",
+                                borderColor: "#1976d2",
                               },
                             },
                             "&.Mui-focused": {
                               backgroundColor: "#ffffff",
                               boxShadow: "0 0 0 3px rgba(76, 175, 80, 0.1)",
                               "& fieldset": {
-                                borderColor: "#4caf50",
+                                borderColor: "#1976d2",
                               },
                             },
                             // 🔥 SPECIFIC AUTOFILL OVERRIDE STYLES
@@ -418,7 +418,7 @@ const ForgotPassword: React.FC = () => {
                         backgroundColor:
                           isLoading || !email || !isValidEmail(email)
                             ? "#e5e7eb"
-                            : "#4caf50",
+                            : "#1976d2",
                         color:
                           isLoading || !email || !isValidEmail(email)
                             ? "#9ca3af"
@@ -429,21 +429,21 @@ const ForgotPassword: React.FC = () => {
                           isLoading || !email || !isValidEmail(email)
                             ? "not-allowed"
                             : "pointer",
-                        boxShadow: "0 2px 8px rgba(76, 175, 80, 0.2)",
+                        boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
                         transition: "all 0.2s ease-in-out",
                         fontFamily: "inherit",
                       }}
                       onMouseEnter={(e) => {
                         if (!isLoading && email && isValidEmail(email)) {
-                          e.currentTarget.style.backgroundColor = "#45a049";
+                          e.currentTarget.style.backgroundColor = "#1565c0";
                           e.currentTarget.style.boxShadow =
-                            "0 4px 12px rgba(76, 175, 80, 0.3)";
+                            "0 4px 12px rgba(25, 118, 210, 0.2)";
                           e.currentTarget.style.transform = "translateY(-1px)";
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!isLoading && email && isValidEmail(email)) {
-                          e.currentTarget.style.backgroundColor = "#4caf50";
+                          e.currentTarget.style.backgroundColor = "#1976d2";
                           e.currentTarget.style.boxShadow =
                             "0 2px 8px rgba(76, 175, 80, 0.2)";
                           e.currentTarget.style.transform = "translateY(0)";
