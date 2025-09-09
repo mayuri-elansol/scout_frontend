@@ -17,7 +17,6 @@ interface KpiCardProps {
   size?: "small" | "medium" | "large";
   // Custom sizing props for Storybook and flexible layouts
   customWidth?: number;
-  customHeight?: number;
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
@@ -110,7 +109,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
 
   // Override with custom dimensions if provided
   const finalWidth = customWidth ? `${customWidth}px` : "auto";
-  // const finalHeight = customHeight ? `${customHeight}px` : sizeStyles.minHeight;
 
   return (
     <Card

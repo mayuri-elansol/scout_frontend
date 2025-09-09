@@ -6,9 +6,10 @@ import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-//import RecentViolations from "@/components/molecules/RecentViolations/RecentViolations";
+import { v4 as uuidv4 } from "uuid";
 
 const PPEDetection: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const ppeKpiData = [
     {
       title: "PPE Compliance Rate",
@@ -112,7 +113,6 @@ const PPEDetection: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
-    // call API with filters if needed
   };
   const KpiCardLoading = true;
   return (
@@ -138,24 +138,18 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      {/* <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {ppeKpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
-      </Grid> */}
+
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            Array.from({ length: 4 }).map((_, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
+            skeletonKeys.map((key) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={key}>
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
             ppeKpiData.map((kpi, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -261,10 +255,9 @@ const PPEDetection: React.FC = () => {
           { id: "createdAt", label: "Start Date", type: "date" },
           { id: "resolvedAt", label: "End Date", type: "date" },
         ]}
-        // onSubmit={handleSubmitFilter}
-        // onReset={handleReset}
-        //onExport={handleExport}
-        // isSubmitDisabled={loading}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={true}
       />
