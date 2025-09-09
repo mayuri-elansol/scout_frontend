@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import { KpiData, PageType } from "@/app/types";
 import { Box, Typography } from "@mui/material";

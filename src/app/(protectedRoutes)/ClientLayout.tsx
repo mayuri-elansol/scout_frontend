@@ -17,6 +17,7 @@ import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
 import Loader from "../components/atoms/Loader/Loader";
+import RouteLoader from "../../RouteLoader";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -86,12 +87,14 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             width: "85vw",
           }}
         >
-          <Breadcrumb
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          <RouteLoader>
+            <Breadcrumb
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
 
-          {children}
+            {children}
+          </RouteLoader>
         </Box>
       </Box>
     </ThemeProvider>
