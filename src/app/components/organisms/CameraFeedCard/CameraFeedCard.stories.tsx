@@ -205,7 +205,7 @@ export const LiveStreamingGrid: Story = {
   decorators: [
     () => (
       <Grid container spacing={3} sx={{ maxWidth: "1200px", p: 2 }}>
-        <Grid size={{xs:12, lg:6}} >
+        <Grid size={{ xs:12, lg:6 }}>
           <CameraFeedCard
             zone={{
               id: "zone-a",
@@ -222,7 +222,7 @@ export const LiveStreamingGrid: Story = {
             aiProcessingEnabled={true}
           />
         </Grid>
-        <Grid size={{xs:12, lg:6}}>
+        <Grid size={{ xs:12, lg:6 }}>
           <CameraFeedCard
             zone={{
               id: "zone-b",
