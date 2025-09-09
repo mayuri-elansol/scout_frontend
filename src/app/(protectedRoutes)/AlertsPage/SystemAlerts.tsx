@@ -154,7 +154,7 @@ const SystemAlerts: React.FC = () => {
       <Grid container spacing={2} sx={{ mb: 4, alignItems: "stretch" }}>
         {alertStats.map((stat) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={stat.label}
             sx={{ display: "flex" }}
           >
