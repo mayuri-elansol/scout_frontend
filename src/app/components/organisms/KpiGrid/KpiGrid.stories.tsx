@@ -1,13 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Box } from '@mui/material';
-import { Shield, Warning, Visibility, People, DirectionsCar, Schedule, Place } from '@mui/icons-material';
-import KpiGrid from './KpiGrid';
+// import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box } from "@mui/material";
+import {
+  Shield,
+  Warning,
+  Visibility,
+  People,
+  DirectionsCar,
+  Schedule,
+  Place,
+} from "@mui/icons-material";
+import KpiGrid from "./KpiGrid";
 
 const meta: Meta<typeof KpiGrid> = {
-  title: 'Components/Organisms/KpiGrid',
+  title: "Components/Organisms/KpiGrid",
   component: KpiGrid,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
     docs: {
       description: {
         component: `
@@ -24,19 +33,19 @@ Grid layout component for organizing KPI cards in the dashboard. This component 
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     columns: {
-      control: 'object',
-      description: 'Responsive column configuration',
+      control: "object",
+      description: "Responsive column configuration",
     },
     spacing: {
-      control: 'number',
-      description: 'Grid spacing',
+      control: "number",
+      description: "Grid spacing",
     },
     maxWidth: {
-      control: 'text',
-      description: 'Maximum width of grid container',
+      control: "text",
+      description: "Maximum width of grid container",
     },
   },
 };
@@ -46,103 +55,103 @@ type Story = StoryObj<typeof meta>;
 
 const dashboardKpiData = [
   {
-    title: 'PPE Compliance',
-    value: '87.5%',
-    subtitle: '3 violations in last hour',
-    trend: '-2.3%',
-    trendColor: '#f44336',
-    color: '#ff9800',
-    bgColor: '#fff8e1',
+    title: "PPE Compliance",
+    value: "87.5%",
+    subtitle: "3 violations in last hour",
+    trend: "-2.3%",
+    trendColor: "#f44336",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
     icon: Shield,
   },
   {
-    title: 'Fire Incidents',
-    value: '0',
-    subtitle: 'All systems operational',
-    trend: 'Clear',
-    trendColor: '#4caf50',
-    color: '#4caf50',
-    bgColor: '#e8f5e9',
+    title: "Fire Incidents",
+    value: "0",
+    subtitle: "All systems operational",
+    trend: "Clear",
+    trendColor: "#4caf50",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
     icon: Warning,
   },
   {
-    title: 'Security Breach',
-    value: '1',
-    subtitle: 'Gate 3 unauthorized access',
-    trend: 'Active',
-    trendColor: '#f44336',
-    color: '#f44336',
-    bgColor: '#ffebee',
+    title: "Security Breach",
+    value: "1",
+    subtitle: "Gate 3 unauthorized access",
+    trend: "Active",
+    trendColor: "#f44336",
+    color: "#f44336",
+    bgColor: "#ffebee",
     icon: Visibility,
   },
   {
-    title: 'Employees Present',
-    value: '234',
-    subtitle: '98.3% attendance rate',
-    trend: '+5.2%',
-    trendColor: '#4caf50',
-    color: '#4caf50',
-    bgColor: '#e8f5e9',
+    title: "Employees Present",
+    value: "234",
+    subtitle: "98.3% attendance rate",
+    trend: "+5.2%",
+    trendColor: "#4caf50",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
     icon: People,
   },
   {
-    title: 'Total People',
-    value: '267',
-    subtitle: 'Including 33 visitors',
-    trend: '+12',
-    trendColor: '#2196f3',
-    color: '#2196f3',
-    bgColor: '#e3f2fd',
+    title: "Total People",
+    value: "267",
+    subtitle: "Including 33 visitors",
+    trend: "+12",
+    trendColor: "#2196f3",
+    color: "#2196f3",
+    bgColor: "#e3f2fd",
     icon: People,
   },
   {
-    title: 'Avg Speed (km/h)',
-    value: '15',
-    subtitle: '2 speed violations',
-    trend: '2 alerts',
-    trendColor: '#ff9800',
-    color: '#ff9800',
-    bgColor: '#fff8e1',
+    title: "Avg Speed (km/h)",
+    value: "15",
+    subtitle: "2 speed violations",
+    trend: "2 alerts",
+    trendColor: "#ff9800",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
     icon: DirectionsCar,
   },
   {
-    title: 'Vehicles Tracked',
-    value: '45',
-    subtitle: 'License plates recognized',
-    trend: '99.1%',
-    trendColor: '#4caf50',
-    color: '#4caf50',
-    bgColor: '#e8f5e9',
+    title: "Vehicles Tracked",
+    value: "45",
+    subtitle: "License plates recognized",
+    trend: "99.1%",
+    trendColor: "#4caf50",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
     icon: DirectionsCar,
   },
   {
-    title: 'Avg Work Hours',
-    value: '7.2',
-    subtitle: '89% efficiency rate',
-    trend: '+1.8%',
-    trendColor: '#2196f3',
-    color: '#2196f3',
-    bgColor: '#e3f2fd',
+    title: "Avg Work Hours",
+    value: "7.2",
+    subtitle: "89% efficiency rate",
+    trend: "+1.8%",
+    trendColor: "#2196f3",
+    color: "#2196f3",
+    bgColor: "#e3f2fd",
     icon: Schedule,
   },
   {
-    title: 'Zone Occupancy',
-    value: '85%',
-    subtitle: 'Within safe limits',
-    trend: 'Normal',
-    trendColor: '#4caf50',
-    color: '#4caf50',
-    bgColor: '#e8f5e9',
+    title: "Zone Occupancy",
+    value: "85%",
+    subtitle: "Within safe limits",
+    trend: "Normal",
+    trendColor: "#4caf50",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
     icon: Place,
   },
   {
-    title: 'Crowd Alert',
-    value: '1',
-    subtitle: 'Cafeteria overcrowding',
-    trend: '1 alert',
-    trendColor: '#f44336',
-    color: '#f44336',
-    bgColor: '#ffebee',
+    title: "Crowd Alert",
+    value: "1",
+    subtitle: "Cafeteria overcrowding",
+    trend: "1 alert",
+    trendColor: "#f44336",
+    color: "#f44336",
+    bgColor: "#ffebee",
     icon: People,
   },
 ];
@@ -161,12 +170,14 @@ export const DashboardLayout: Story = {
   },
   decorators: [
     (Story) => (
-      <Box sx={{ 
-        backgroundColor: '#f5f7fa', 
-        p: 3, 
-        borderRadius: 1,
-        width: '100%',
-      }}>
+      <Box
+        sx={{
+          backgroundColor: "#f5f7fa",
+          p: 3,
+          borderRadius: 1,
+          width: "100%",
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -174,7 +185,8 @@ export const DashboardLayout: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Complete dashboard KPI grid with all 10 cards as they appear in the SCOUT dashboard (5 cards per row).',
+        story:
+          "Complete dashboard KPI grid with all 10 cards as they appear in the SCOUT dashboard (5 cards per row).",
       },
     },
   },
@@ -194,12 +206,14 @@ export const CompactGrid: Story = {
   },
   decorators: [
     (Story) => (
-      <Box sx={{ 
-        backgroundColor: '#f5f7fa', 
-        p: 2, 
-        borderRadius: 1,
-        maxWidth: '1200px',
-      }}>
+      <Box
+        sx={{
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+          maxWidth: "1200px",
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -207,7 +221,7 @@ export const CompactGrid: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Compact grid layout with 6 KPI cards arranged in 3 columns.',
+        story: "Compact grid layout with 6 KPI cards arranged in 3 columns.",
       },
     },
   },
@@ -227,12 +241,14 @@ export const HighDensity: Story = {
   },
   decorators: [
     (Story) => (
-      <Box sx={{ 
-        backgroundColor: '#f5f7fa', 
-        p: 2, 
-        borderRadius: 1,
-        width: '100%',
-      }}>
+      <Box
+        sx={{
+          backgroundColor: "#f5f7fa",
+          p: 2,
+          borderRadius: 1,
+          width: "100%",
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -240,7 +256,8 @@ export const HighDensity: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'High-density grid layout with smaller spacing and more columns for compact displays.',
+        story:
+          "High-density grid layout with smaller spacing and more columns for compact displays.",
       },
     },
   },
@@ -250,43 +267,43 @@ export const CriticalMetrics: Story = {
   args: {
     kpis: [
       {
-        title: 'PPE Compliance',
-        value: '72.1%',
-        subtitle: '8 violations in last hour',
-        trend: '-15.4%',
-        trendColor: '#f44336',
-        color: '#f44336',
-        bgColor: '#ffebee',
+        title: "PPE Compliance",
+        value: "72.1%",
+        subtitle: "8 violations in last hour",
+        trend: "-15.4%",
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
         icon: Shield,
       },
       {
-        title: 'Security Breach',
-        value: '3',
-        subtitle: 'Multiple access attempts',
-        trend: '+200%',
-        trendColor: '#f44336',
-        color: '#f44336',
-        bgColor: '#ffebee',
+        title: "Security Breach",
+        value: "3",
+        subtitle: "Multiple access attempts",
+        trend: "+200%",
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
         icon: Visibility,
       },
       {
-        title: 'Fire Incidents',
-        value: '1',
-        subtitle: 'Smoke detected Zone C',
-        trend: 'Active',
-        trendColor: '#f44336',
-        color: '#f44336',
-        bgColor: '#ffebee',
+        title: "Fire Incidents",
+        value: "1",
+        subtitle: "Smoke detected Zone C",
+        trend: "Active",
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
         icon: Warning,
       },
       {
-        title: 'Crowd Alert',
-        value: '4',
-        subtitle: 'Emergency exits blocked',
-        trend: '+300%',
-        trendColor: '#f44336',
-        color: '#f44336',
-        bgColor: '#ffebee',
+        title: "Crowd Alert",
+        value: "4",
+        subtitle: "Emergency exits blocked",
+        trend: "+300%",
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
         icon: People,
       },
     ],
@@ -301,12 +318,14 @@ export const CriticalMetrics: Story = {
   },
   decorators: [
     (Story) => (
-      <Box sx={{ 
-        backgroundColor: '#f5f7fa', 
-        p: 3, 
-        borderRadius: 1,
-        maxWidth: '1000px',
-      }}>
+      <Box
+        sx={{
+          backgroundColor: "#f5f7fa",
+          p: 3,
+          borderRadius: 1,
+          maxWidth: "1000px",
+        }}
+      >
         <Story />
       </Box>
     ),
@@ -314,7 +333,8 @@ export const CriticalMetrics: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Critical metrics view showing emergency situations with high-priority alerts.',
+        story:
+          "Critical metrics view showing emergency situations with high-priority alerts.",
       },
     },
   },

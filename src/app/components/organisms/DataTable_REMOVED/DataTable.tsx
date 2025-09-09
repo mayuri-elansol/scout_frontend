@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -17,25 +17,24 @@ import {
   Chip,
   IconButton,
   Tooltip,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Description,
   Download as DownloadIcon,
   Search as SearchIcon,
-  FilterList,
   Refresh,
   MoreVert,
-} from '@mui/icons-material';
-import ScoutSelect from '../../atoms/Select/Select';
-import ScoutBadge from '../../atoms/Badge/Badge';
+} from "@mui/icons-material";
+import ScoutSelect from "../../atoms/Select/Select";
+import ScoutBadge from "../../atoms/Badge/Badge";
 
 interface DataColumn {
   id: string;
   label: string;
   minWidth?: number;
-  align?: 'left' | 'right' | 'center';
+  align?: "left" | "right" | "center";
   sortable?: boolean;
-  type?: 'text' | 'status' | 'priority' | 'date' | 'number' | 'action';
+  type?: "text" | "status" | "priority" | "date" | "number" | "action";
 }
 
 interface DataRow {
@@ -69,7 +68,7 @@ const DataTable: React.FC<DataTableProps> = ({
   title,
   columns,
   data,
-  downloadFileName = 'scout_data.csv',
+  // downloadFileName = 'scout_data.csv',
   searchable = true,
   filterable = true,
   sortable = true,
@@ -80,9 +79,9 @@ const DataTable: React.FC<DataTableProps> = ({
   onDownload,
   onRefresh,
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(pageSize);
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
@@ -99,7 +98,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
     // Apply column filters
     for (const [key, value] of Object.entries(filters)) {
-      if (value && value !== 'all' && row[key] !== value) {
+      if (value && value !== "all" && row[key] !== value) {
         return false;
       }
     }
@@ -112,9 +111,9 @@ const DataTable: React.FC<DataTableProps> = ({
     ? [...filteredData].sort((a, b) => {
         const aValue = a[sortBy];
         const bValue = b[sortBy];
-        
-        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+
+        if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+        if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
         return 0;
       })
     : filteredData;
@@ -126,12 +125,12 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const handleSort = (columnId: string) => {
     if (!sortable) return;
-    
+
     if (sortBy === columnId) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortBy(columnId);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
@@ -142,7 +141,7 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const renderCellContent = (column: DataColumn, value: any, row: DataRow) => {
     switch (column.type) {
-      case 'status':
+      case "status":
         return (
           <ScoutBadge
             variant="status"
@@ -151,7 +150,7 @@ const DataTable: React.FC<DataTableProps> = ({
             size="small"
           />
         );
-      case 'priority':
+      case "priority":
         return (
           <ScoutBadge
             variant="priority"
@@ -160,33 +159,33 @@ const DataTable: React.FC<DataTableProps> = ({
             size="small"
           />
         );
-      case 'action':
+      case "action":
         return (
           <IconButton size="small" onClick={(e) => e.stopPropagation()}>
             <MoreVert fontSize="small" />
           </IconButton>
         );
-      case 'date':
+      case "date":
         return (
           <Typography variant="body2">
             {new Date(value).toLocaleDateString()}
           </Typography>
         );
-      case 'number':
+      case "number":
         return (
-          <Typography variant="body2" align={column.align || 'right'}>
-            {typeof value === 'number' ? value.toLocaleString() : value}
+          <Typography variant="body2" align={column.align || "right"}>
+            {typeof value === "number" ? value.toLocaleString() : value}
           </Typography>
         );
       default:
-        if (column.id.includes('id') || column.id.includes('Id')) {
+        if (column.id.includes("id") || column.id.includes("Id")) {
           return (
             <Typography
               variant="body2"
               sx={{
-                color: '#1976d2',
-                cursor: 'pointer',
-                '&:hover': { textDecoration: 'underline' },
+                color: "#1976d2",
+                cursor: "pointer",
+                "&:hover": { textDecoration: "underline" },
               }}
             >
               {value}
@@ -198,22 +197,22 @@ const DataTable: React.FC<DataTableProps> = ({
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ borderRadius: 2, overflow: 'hidden' }}>
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ borderRadius: 2, overflow: "hidden" }}>
         {/* Header */}
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
             p: 3,
-            backgroundColor: '#f8f9fa',
-            borderBottom: '1px solid #e0e0e0',
+            backgroundColor: "#f8f9fa",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-            <Description sx={{ color: '#1976d2', fontSize: 24 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#1c2025' }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <Description sx={{ color: "#1976d2", fontSize: 24 }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
               {title}
             </Typography>
             <Chip
@@ -223,7 +222,7 @@ const DataTable: React.FC<DataTableProps> = ({
             />
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             {onRefresh && (
               <Tooltip title="Refresh data">
                 <IconButton onClick={onRefresh}>
@@ -236,8 +235,8 @@ const DataTable: React.FC<DataTableProps> = ({
               startIcon={<DownloadIcon />}
               onClick={onDownload}
               sx={{
-                backgroundColor: '#1976d2',
-                '&:hover': { backgroundColor: '#1565c0' },
+                backgroundColor: "#1976d2",
+                "&:hover": { backgroundColor: "#1565c0" },
               }}
             >
               Download
@@ -249,13 +248,13 @@ const DataTable: React.FC<DataTableProps> = ({
         {(searchable || filterable) && (
           <Box
             sx={{
-              display: 'flex',
+              display: "flex",
               gap: 2,
               p: 2,
-              backgroundColor: '#fafafa',
-              borderBottom: '1px solid #e0e0e0',
-              flexWrap: 'wrap',
-              alignItems: 'center',
+              backgroundColor: "#fafafa",
+              borderBottom: "1px solid #e0e0e0",
+              flexWrap: "wrap",
+              alignItems: "center",
             }}
           >
             {searchable && (
@@ -275,17 +274,22 @@ const DataTable: React.FC<DataTableProps> = ({
               />
             )}
 
-            {filterable && Object.entries(filterOptions).map(([columnId, options]) => (
-              <ScoutSelect
-                key={columnId}
-                id={`filter-${columnId}`}
-                label={`Filter by ${columns.find(c => c.id === columnId)?.label}`}
-                options={[{ value: 'all', label: 'All' }, ...options]}
-                value={filters[columnId] || 'all'}
-                onChange={(value) => handleFilterChange(columnId, value as string)}
-                width="180px"
-              />
-            ))}
+            {filterable &&
+              Object.entries(filterOptions).map(([columnId, options]) => (
+                <ScoutSelect
+                  key={columnId}
+                  id={`filter-${columnId}`}
+                  label={`Filter by ${
+                    columns.find((c) => c.id === columnId)?.label
+                  }`}
+                  options={[{ value: "all", label: "All" }, ...options]}
+                  value={filters[columnId] || "all"}
+                  onChange={(value) =>
+                    handleFilterChange(columnId, value as string)
+                  }
+                  width="180px"
+                />
+              ))}
           </Box>
         )}
 
@@ -297,20 +301,20 @@ const DataTable: React.FC<DataTableProps> = ({
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
-                    align={column.align || 'left'}
+                    align={column.align || "left"}
                     sx={{
                       minWidth: column.minWidth,
                       fontWeight: 600,
-                      fontSize: '14px',
-                      backgroundColor: '#f5f5f5',
-                      color: '#333',
+                      fontSize: "14px",
+                      backgroundColor: "#f5f5f5",
+                      color: "#333",
                       py: 2,
                     }}
                   >
                     {sortable && column.sortable !== false ? (
                       <TableSortLabel
                         active={sortBy === column.id}
-                        direction={sortBy === column.id ? sortDirection : 'asc'}
+                        direction={sortBy === column.id ? sortDirection : "asc"}
                         onClick={() => handleSort(column.id)}
                       >
                         {column.label}
@@ -328,19 +332,19 @@ const DataTable: React.FC<DataTableProps> = ({
                   key={index}
                   onClick={() => onRowClick?.(row)}
                   sx={{
-                    cursor: onRowClick ? 'pointer' : 'default',
-                    '&:hover': {
-                      backgroundColor: onRowClick ? '#f9f9f9' : 'transparent',
+                    cursor: onRowClick ? "pointer" : "default",
+                    "&:hover": {
+                      backgroundColor: onRowClick ? "#f9f9f9" : "transparent",
                     },
                   }}
                 >
                   {columns.map((column) => (
                     <TableCell
                       key={column.id}
-                      align={column.align || 'left'}
+                      align={column.align || "left"}
                       sx={{
                         py: 1.5,
-                        borderBottom: '1px solid #f0f0f0',
+                        borderBottom: "1px solid #f0f0f0",
                       }}
                     >
                       {renderCellContent(column, row[column.id], row)}

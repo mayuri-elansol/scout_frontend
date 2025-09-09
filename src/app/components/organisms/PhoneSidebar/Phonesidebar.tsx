@@ -1,4 +1,8 @@
+// src/app/components/organisms/PhoneSidebar/Phonesidebar.tsx
+"use client";
+
 import React, { useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import {
   Drawer,
   Box,
@@ -7,124 +11,94 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Tooltip,
   Popover,
   Typography,
   useTheme,
+  Badge,
 } from "@mui/material";
+import { useFeatureFlags } from "../../../../customhooks/useFeatureFlag";
 import {
-  Home,
-  Shield,
-  Visibility,
-  People,
-  Settings,
-  VideoCall,
-  Description,
-  Warning,
-  BarChart,
-} from "@mui/icons-material";
+  dashboardMenu,
+  alertMenu,
+  analyticsMenu,
+  MenuItemConfig,
+  AnalyticsCategoryConfig,
+} from "../../../config/menuConfig";
+import { PageType } from "@/app/types";
 
-interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
+interface PhonesidebarProps {
+  currentPage: PageType;
+  onPageChange: (page: PageType) => void;
 }
 
-interface MenuItem {
-  name: string;
-  page: string;
-}
-
-interface MenuCategory {
-  title: string;
-  icon: React.ComponentType;
-  page?: string;
-  items?: MenuItem[];
-}
-
-const Phonesidebar: React.FC<SidebarProps> = ({
+const Phonesidebar: React.FC<PhonesidebarProps> = ({
   currentPage,
   onPageChange,
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const theme = useTheme();
+  const featureFlags = useFeatureFlags();
   const drawerWidth = 70;
 
   // Hover menu state
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [hoverMenu, setHoverMenu] = useState<MenuCategory | null>(null);
+  const [hoverMenu, setHoverMenu] = useState<AnalyticsCategoryConfig | null>(
+    null
+  );
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const analyticsMenuItems: MenuCategory[] = [
-    { title: "Dashboard", icon: Home, page: "dashboard" },
-    {
-      title: "Safety and Compliance",
-      icon: Shield,
-      items: [
-        {
-          name: "Personal Protective Equipment (PPE) Detection",
-          page: "ppe-detection",
-        },
-        { name: "Object Detection in Walking Bays", page: "object-detection" },
-        {
-          name: "Fire, Smoke, Oil and Gas Leak Detection",
-          page: "fire-detection",
-        },
-        {
-          name: "Vehicle Speed Monitoring inside premises",
-          page: "vehicle-speed",
-        },
-      ],
-    },
-    {
-      title: "Security Monitoring",
-      icon: Visibility,
-      items: [
-        {
-          name: "Intrusion Detection at Premises Perimeter",
-          page: "intrusion-detection",
-        },
-      ],
-    },
-    {
-      title: "Workforce Monitoring",
-      icon: People,
-      items: [
-        {
-          name: "Employee presence detection in critical areas",
-          page: "employee-presence",
-        },
-      ],
-    },
-    {
-      title: "Operational Insight",
-      icon: BarChart,
-      items: [
-        { name: "People count in factory Premises", page: "people-count" },
-      ],
-    },
-    { title: "Reports", icon: Description, page: "reports" },
-    { title: "Alerts", icon: Warning, page: "alerts" },
-    { title: "Settings", icon: Settings, page: "settings" },
-    { title: "Live Streaming", icon: VideoCall, page: "live-streaming" },
+  // Filter menu items based on feature flags
+  const filterMenuByFeatureFlags = (
+    menuItems: MenuItemConfig[]
+  ): MenuItemConfig[] => {
+    return menuItems.filter((item) => {
+      if (!item.page) return true;
+      const isEnabled =
+        featureFlags[item.page as keyof typeof featureFlags] === true;
+      return isEnabled;
+    });
+  };
+
+  const filterAnalyticsByFeatureFlags = (
+    categories: AnalyticsCategoryConfig[]
+  ): AnalyticsCategoryConfig[] => {
+    return categories
+      .map((category) => ({
+        ...category,
+        items: filterMenuByFeatureFlags(category.items),
+      }))
+      .filter((category) => category.items.length > 0);
+  };
+
+  // Get filtered menus
+  const filteredDashboardMenu = filterMenuByFeatureFlags(dashboardMenu);
+  const filteredAlertMenu = filterMenuByFeatureFlags(alertMenu);
+  const filteredAnalyticsMenu = filterAnalyticsByFeatureFlags(analyticsMenu);
+
+  const allMenuItems: (MenuItemConfig | AnalyticsCategoryConfig)[] = [
+    ...filteredDashboardMenu,
+    ...filteredAnalyticsMenu,
+    ...filteredAlertMenu,
   ];
 
+  // Event Handlers
   const handleMouseEnter = (
     event: React.MouseEvent<HTMLElement>,
-    item: MenuCategory
+    item: MenuItemConfig | AnalyticsCategoryConfig
   ) => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
 
-    setHoveredItem(item.title);
+    const itemTitle = "title" in item ? item.title : item.name;
+    setHoveredItem(itemTitle);
 
-    if (item.items && item.items.length > 0) {
+    if ("items" in item && item.items.length > 0) {
       setAnchorEl(event.currentTarget);
       setHoverMenu(item);
       setPopoverOpen(true);
     } else {
-      // Close popover if hovering over item without children
       setPopoverOpen(false);
       setHoverMenu(null);
       setAnchorEl(null);
@@ -133,13 +107,10 @@ const Phonesidebar: React.FC<SidebarProps> = ({
 
   const handleMouseLeave = () => {
     setHoveredItem(null);
-    // Don't close popover immediately - let it stay open
   };
 
   const handlePopoverMouseEnter = () => {
-    if (hoverTimeoutRef.current) {
-      clearTimeout(hoverTimeoutRef.current);
-    }
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
   };
 
   const handlePopoverMouseLeave = () => {
@@ -148,46 +119,63 @@ const Phonesidebar: React.FC<SidebarProps> = ({
     setHoverMenu(null);
   };
 
-  const handleMenuItemClick = (item: MenuCategory) => {
-    if (item.page) {
-      onPageChange(item.page);
-      // Close popover when clicking on direct navigation items
+  const handleMenuItemClick = (
+    item: MenuItemConfig | AnalyticsCategoryConfig
+  ) => {
+    if ("path" in item && item.path && !("items" in item)) {
+      router.push(item.path);
+      if (item.page) {
+        onPageChange(item.page); // ✅ update parent state
+      }
       setPopoverOpen(false);
       setAnchorEl(null);
       setHoverMenu(null);
     }
   };
 
-  const handleSubMenuClick = (page: string) => {
-    onPageChange(page);
-    setPopoverOpen(false);
-    setAnchorEl(null);
-    setHoverMenu(null);
+  const handleSubMenuClick = (subItem: MenuItemConfig) => {
+    if (subItem.path) {
+      router.push(subItem.path);
+      if (subItem.page) {
+        onPageChange(subItem.page); 
+      }
+      setPopoverOpen(false);
+      setAnchorEl(null);
+      setHoverMenu(null);
+    }
   };
 
-  // Check if current page is in any submenu
-  const isParentSelected = (item: MenuCategory) => {
-    if (item.page === currentPage) return true;
-    if (item.items) {
-      return item.items.some((subItem) => subItem.page === currentPage);
+  // Helpers
+  const isItemSelected = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    if ("path" in item && item.path) {
+      return pathname === item.path;
+    }
+    if ("items" in item && item.items) {
+      return item.items.some((subItem) => pathname === subItem.path);
     }
     return false;
   };
 
-  const getButtonStyles = (item: MenuCategory) => {
-    const isSelected = isParentSelected(item);
-    const isHovered = hoveredItem === item.title;
+  const getButtonStyles = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    const isSelected = isItemSelected(item);
+    const itemTitle = "title" in item ? item.title : item.name;
+    const isHovered = hoveredItem === itemTitle;
+let backgroundColor: string;
+
+if (isSelected) {
+  backgroundColor = theme.palette.primary.main;
+} else if (isHovered) {
+  backgroundColor = theme.palette.action.hover;
+} else {
+  backgroundColor = "transparent";
+}
 
     return {
       borderRadius: 1,
       minHeight: 48,
       justifyContent: "center",
       mx: 1,
-      backgroundColor: isSelected
-        ? theme.palette.primary.main
-        : isHovered
-        ? theme.palette.action.hover
-        : "transparent",
+      backgroundColor: backgroundColor,
       color: isSelected ? "white" : "inherit",
       "&:hover": {
         backgroundColor: isSelected
@@ -197,6 +185,35 @@ const Phonesidebar: React.FC<SidebarProps> = ({
       transition: "background-color 0.2s ease-in-out",
     };
   };
+
+  const renderIcon = (item: MenuItemConfig | AnalyticsCategoryConfig) => {
+    const IconComponent = item.icon;
+    const iconElement = IconComponent ? <IconComponent /> : null;
+
+    if ("badge" in item && item.badge) {
+      return (
+        <Badge
+          badgeContent={item.badge}
+          color="error"
+          sx={{
+            "& .MuiBadge-badge": {
+              fontSize: "0.75rem",
+              minWidth: "16px",
+              height: "16px",
+              right: -6,
+              top: -2,
+            },
+          }}
+        >
+          {iconElement}
+        </Badge>
+      );
+    }
+
+    return iconElement;
+  };
+
+
 
   return (
     <>
@@ -217,33 +234,40 @@ const Phonesidebar: React.FC<SidebarProps> = ({
         }}
       >
         <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-          {/* Menu Items */}
           <List sx={{ flex: 1, pt: 2 }}>
-            {analyticsMenuItems.map((item) => (
-              <ListItem
-                disablePadding
-                sx={{ mb: 1 }}
-                onMouseEnter={(e) => handleMouseEnter(e, item)}
-                onMouseLeave={handleMouseLeave}
-              >
-                <ListItemButton
-                  onClick={() => handleMenuItemClick(item)}
-                  sx={getButtonStyles(item)}
+            {allMenuItems.map((item, index) => {
+              const itemKey =
+                "title" in item
+                  ? `${item.title}-${index}`
+                  : `${item.name}-${index}`;
+
+              return (
+                <ListItem
+                  key={itemKey}
+                  disablePadding
+                  sx={{ mb: 1 }}
+                  onMouseEnter={(e) => handleMouseEnter(e, item)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  <ListItemIcon
-                    sx={{
-                      minWidth: 0,
-                      justifyContent: "center",
-                      color: isParentSelected(item)
-                        ? "white"
-                        : theme.palette.action.active,
-                    }}
+                  <ListItemButton
+                    onClick={() => handleMenuItemClick(item)}
+                    sx={getButtonStyles(item)}
                   >
-                    <item.icon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-            ))}
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        justifyContent: "center",
+                        color: isItemSelected(item)
+                          ? "white"
+                          : theme.palette.action.active,
+                      }}
+                    >
+                      {renderIcon(item)}
+                    </ListItemIcon>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
           </List>
         </Box>
       </Drawer>
@@ -271,6 +295,7 @@ const Phonesidebar: React.FC<SidebarProps> = ({
           },
         }}
       >
+        {" "}
         <Box
           onMouseEnter={handlePopoverMouseEnter}
           onMouseLeave={handlePopoverMouseLeave}
@@ -295,20 +320,19 @@ const Phonesidebar: React.FC<SidebarProps> = ({
               fontSize: "0.875rem",
             }}
           >
-            {hoverMenu?.title}
           </Typography>
           <List sx={{ py: 0 }}>
-            {hoverMenu?.items?.map((subItem) => (
-              <ListItem key={subItem.name} disablePadding>
+            {hoverMenu?.items?.map((subItem, subIndex) => (
+              <ListItem key={`${subItem.name}-${subIndex}`} disablePadding>
                 <ListItemButton
-                  selected={currentPage === subItem.page}
-                  onClick={() => handleSubMenuClick(subItem.page)}
+                  selected={pathname === subItem.path}
+                  onClick={() => handleSubMenuClick(subItem)}
                   sx={{
                     px: 2,
                     py: 1.5,
                     "&.Mui-selected": {
-                      backgroundColor: theme.palette.primary.light,
-                      color: theme.palette.primary.main,
+                      backgroundColor: theme.palette.action.hover,
+                      color: "inherit",
                       "&:hover": {
                         backgroundColor: theme.palette.primary.light,
                       },
@@ -320,12 +344,23 @@ const Phonesidebar: React.FC<SidebarProps> = ({
                 >
                   <ListItemText
                     primary={subItem.name}
-                    primaryTypographyProps={{
-                      fontSize: "0.875rem",
-                      lineHeight: 1.4,
-                      fontWeight: currentPage === subItem.page ? 500 : 400,
+                    slotProps={{
+                      primary: {
+                        sx: {
+                          fontSize: "0.875rem",
+                          lineHeight: 1.4,
+                          fontWeight: pathname === subItem.path ? 500 : 400,
+                        },
+                      },
                     }}
                   />
+                  {subItem.badge && (
+                    <Badge
+                      badgeContent={subItem.badge}
+                      color="error"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </ListItemButton>
               </ListItem>
             ))}

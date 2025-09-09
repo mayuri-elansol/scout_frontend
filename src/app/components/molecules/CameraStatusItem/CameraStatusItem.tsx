@@ -1,34 +1,29 @@
-import React from 'react';
-import {
-  Box,
-  Typography,
-  Paper,
-  IconButton,
-  Tooltip,
-} from '@mui/material';
+'use client';
+
+import React from "react";
+import { Box, Typography, Paper, IconButton, Tooltip } from "@mui/material";
 import {
   Videocam,
   VideocamOff,
   Settings,
-  Warning,
   CheckCircle,
   Error,
   PlayArrow,
   MoreVert,
-} from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
-import ScoutBadge from '../../atoms/Badge/Badge';
-import ScoutProgressBar from '../../atoms/ProgressBar/ProgressBar';
+} from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+import ScoutBadge from "../../atoms/Badge/Badge";
+import ScoutProgressBar from "../../atoms/ProgressBar/ProgressBar";
 
 interface CameraStatusItemProps {
   cameraId: string;
   cameraName: string;
   zone: string;
-  status: 'online' | 'offline' | 'maintenance' | 'error';
+  status: "online" | "offline" | "maintenance" | "error";
   quality: number; // 0-100
   uptime: number; // 0-100
   lastSeen?: string;
-  recordingStatus?: 'recording' | 'paused' | 'stopped';
+  recordingStatus?: "recording" | "paused" | "stopped";
   alertCount?: number;
   resolution?: string;
   frameRate?: number;
@@ -38,33 +33,35 @@ interface CameraStatusItemProps {
   onClick?: () => void;
 }
 
-const StyledPaper = styled(Paper)<{ camerastatus?: string }>(({ theme, camerastatus }) => {
-  const getStatusBorder = () => {
-    switch (camerastatus) {
-      case 'online':
-        return '#4caf50';
-      case 'offline':
-        return '#9e9e9e';
-      case 'maintenance':
-        return '#ff9800';
-      case 'error':
-        return '#f44336';
-      default:
-        return '#e0e0e0';
-    }
-  };
+const StyledPaper = styled(Paper)<{ camerastatus?: string }>(
+  ({ camerastatus }) => {
+    const getStatusBorder = () => {
+      switch (camerastatus) {
+        case "online":
+          return "#4caf50";
+        case "offline":
+          return "#9e9e9e";
+        case "maintenance":
+          return "#ff9800";
+        case "error":
+          return "#f44336";
+        default:
+          return "#e0e0e0";
+      }
+    };
 
-  return {
-    borderRadius: '8px',
-    border: `2px solid ${getStatusBorder()}`,
-    transition: 'all 0.2s ease',
-    cursor: 'pointer',
-    '&:hover': {
-      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-      transform: 'translateY(-2px)',
-    },
-  };
-});
+    return {
+      borderRadius: "8px",
+      border: `2px solid ${getStatusBorder()}`,
+      transition: "all 0.2s ease",
+      cursor: "pointer",
+      "&:hover": {
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+        transform: "translateY(-2px)",
+      },
+    };
+  }
+);
 
 const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
   cameraId,
@@ -74,9 +71,9 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
   quality,
   uptime,
   lastSeen,
-  recordingStatus = 'recording',
+  recordingStatus = "recording",
   alertCount = 0,
-  resolution = '1920x1080',
+  resolution = "1920x1080",
   frameRate = 30,
   onPlay,
   onSettings,
@@ -85,41 +82,28 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
 }) => {
   const getStatusIcon = () => {
     switch (status) {
-      case 'online':
-        return <CheckCircle sx={{ color: '#4caf50', fontSize: 20 }} />;
-      case 'offline':
-        return <VideocamOff sx={{ color: '#9e9e9e', fontSize: 20 }} />;
-      case 'maintenance':
-        return <Settings sx={{ color: '#ff9800', fontSize: 20 }} />;
-      case 'error':
-        return <Error sx={{ color: '#f44336', fontSize: 20 }} />;
+      case "online":
+        return <CheckCircle sx={{ color: "#4caf50", fontSize: 20 }} />;
+      case "offline":
+        return <VideocamOff sx={{ color: "#9e9e9e", fontSize: 20 }} />;
+      case "maintenance":
+        return <Settings sx={{ color: "#ff9800", fontSize: 20 }} />;
+      case "error":
+        return <Error sx={{ color: "#f44336", fontSize: 20 }} />;
       default:
-        return <Videocam sx={{ color: '#2196f3', fontSize: 20 }} />;
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (status) {
-      case 'online':
-        return 'success';
-      case 'offline':
-        return 'disabled';
-      case 'maintenance':
-        return 'warning';
-      case 'error':
-        return 'error';
-      default:
-        return 'info';
+        return <Videocam sx={{ color: "#2196f3", fontSize: 20 }} />;
     }
   };
 
   const formatLastSeen = (timestamp?: string) => {
-    if (!timestamp) return 'Unknown';
+    if (!timestamp) return "Unknown";
     const date = new Date(timestamp);
     const now = new Date();
-    const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
-    if (diffMinutes < 1) return 'Just now';
+    const diffMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
+    if (diffMinutes < 1) return "Just now";
     if (diffMinutes < 60) return `${diffMinutes}m ago`;
     if (diffMinutes < 1440) return `${Math.floor(diffMinutes / 60)}h ago`;
     return date.toLocaleDateString();
@@ -144,16 +128,23 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
     <StyledPaper camerastatus={status} onClick={onClick}>
       <Box sx={{ p: 2 }}>
         {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            mb: 1.5,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {getStatusIcon()}
             <Box>
               <Typography
                 variant="subtitle2"
                 sx={{
                   fontWeight: 600,
-                  fontSize: '14px',
-                  color: '#1c2025',
+                  fontSize: "14px",
+                  color: "#1c2025",
                   lineHeight: 1.2,
                 }}
               >
@@ -162,8 +153,8 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#6b7280',
-                  fontSize: '12px',
+                  color: "#6b7280",
+                  fontSize: "12px",
                 }}
               >
                 {cameraId}
@@ -171,8 +162,8 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 0.5 }}>
-            {status === 'online' && onPlay && (
+          <Box sx={{ display: "flex", gap: 0.5 }}>
+            {status === "online" && onPlay && (
               <Tooltip title="View Live Feed">
                 <IconButton size="small" onClick={handlePlayClick}>
                   <PlayArrow fontSize="small" />
@@ -195,10 +186,16 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
         </Box>
 
         {/* Status and Zone */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
           <ScoutBadge
             variant="status"
-            status={status === 'maintenance' ? 'pending' : status === 'online' ? 'active' : 'inactive'}
+            status={
+              status === "maintenance"
+                ? "pending"
+                : status === "online"
+                ? "active"
+                : "inactive"
+            }
             label={status.charAt(0).toUpperCase() + status.slice(1)}
             size="small"
           />
@@ -208,7 +205,7 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
               label={alertCount.toString()}
               size="small"
               onClick={handleAlertsClick}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: "pointer" }}
             />
           )}
         </Box>
@@ -216,8 +213,8 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
         <Typography
           variant="body2"
           sx={{
-            color: '#6b7280',
-            fontSize: '12px',
+            color: "#6b7280",
+            fontSize: "12px",
             mb: 1.5,
           }}
         >
@@ -225,7 +222,7 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
         </Typography>
 
         {/* Quality and Uptime Progress */}
-        {status === 'online' && (
+        {status === "online" && (
           <Box sx={{ mb: 1.5 }}>
             <ScoutProgressBar
               value={quality}
@@ -247,41 +244,52 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
         )}
 
         {/* Technical Details */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 1,
+          }}
+        >
           <Box>
             <Typography
               variant="caption"
               sx={{
-                color: '#9ca3af',
-                fontSize: '11px',
-                display: 'block',
+                color: "#9ca3af",
+                fontSize: "11px",
+                display: "block",
               }}
             >
               {resolution} • {frameRate}fps
             </Typography>
-            {recordingStatus && status === 'online' && (
+            {recordingStatus && status === "online" && (
               <Typography
                 variant="caption"
                 sx={{
-                  color: recordingStatus === 'recording' ? '#f44336' : '#9ca3af',
-                  fontSize: '11px',
-                  display: 'flex',
-                  alignItems: 'center',
+                  color:
+                    recordingStatus === "recording" ? "#f44336" : "#9ca3af",
+                  fontSize: "11px",
+                  display: "flex",
+                  alignItems: "center",
                   gap: 0.5,
                 }}
               >
-                {recordingStatus === 'recording' && (
+                {recordingStatus === "recording" && (
                   <Box
                     sx={{
                       width: 6,
                       height: 6,
-                      borderRadius: '50%',
-                      backgroundColor: '#f44336',
-                      animation: recordingStatus === 'recording' ? 'pulse 1.5s infinite' : 'none',
-                      '@keyframes pulse': {
-                        '0%': { opacity: 1 },
-                        '50%': { opacity: 0.5 },
-                        '100%': { opacity: 1 },
+                      borderRadius: "50%",
+                      backgroundColor: "#f44336",
+                      animation:
+                        recordingStatus === "recording"
+                          ? "pulse 1.5s infinite"
+                          : "none",
+                      "@keyframes pulse": {
+                        "0%": { opacity: 1 },
+                        "50%": { opacity: 0.5 },
+                        "100%": { opacity: 1 },
                       },
                     }}
                   />
@@ -294,11 +302,13 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
           <Typography
             variant="caption"
             sx={{
-              color: '#9ca3af',
-              fontSize: '11px',
+              color: "#9ca3af",
+              fontSize: "11px",
             }}
           >
-            {status === 'online' ? 'Live' : `Last seen: ${formatLastSeen(lastSeen)}`}
+            {status === "online"
+              ? "Live"
+              : `Last seen: ${formatLastSeen(lastSeen)}`}
           </Typography>
         </Box>
       </Box>

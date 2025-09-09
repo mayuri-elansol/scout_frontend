@@ -6,9 +6,10 @@
   "live-streaming": true,
   "ppe-detection": true,
   "object-detection": true,
-  "fire-detection": true,
+  "fire-smoke-oil-leak-detection": true,
   "vehicle-speed": true,
   "intrusion-detection": true,
   "employee-presence": true,
-  "people-count": false
+  "people-count": true
+
 }

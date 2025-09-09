@@ -1,56 +1,58 @@
-import React from 'react';
-import { Card, CardContent, Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Circle } from '@mui/icons-material';
-import ScoutProgressBar from '../../atoms/ProgressBar/ProgressBar';
+'use client';
+
+import React from "react";
+import { Card, CardContent, Box, Typography } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Circle } from "@mui/icons-material";
+import ScoutProgressBar from "../../atoms/ProgressBar/ProgressBar";
 
 interface ZoneStatusCardProps {
   zoneName: string;
   currentPersonnel: number;
   requiredPersonnel: number;
   shift: string;
-  priority: 'Critical' | 'High' | 'Medium' | 'Low';
+  priority: "Critical" | "High" | "Medium" | "Low";
   certificationRequired: string;
-  status?: 'optimal' | 'understaffed' | 'overstaffed' | 'critical';
+  status?: "optimal" | "understaffed" | "overstaffed" | "critical";
   onClick?: () => void;
 }
 
-const StyledCard = styled(Card)<{ priority?: string }>(({ theme, priority }) => {
+const StyledCard = styled(Card)<{ priority?: string }>(({ priority }) => {
   const getPriorityColor = () => {
     switch (priority?.toLowerCase()) {
-      case 'critical':
-        return '#ef4444';
-      case 'high':
-        return '#f97316';
-      case 'medium':
-        return '#eab308';
-      case 'low':
-        return '#22c55e';
+      case "critical":
+        return "#ef4444";
+      case "high":
+        return "#f97316";
+      case "medium":
+        return "#eab308";
+      case "low":
+        return "#22c55e";
       default:
-        return '#6b7280';
+        return "#6b7280";
     }
   };
 
   return {
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    transition: 'all 0.2s ease',
-    cursor: 'pointer',
-    position: 'relative',
-    '&::before': {
+    borderRadius: "8px",
+    border: "1px solid #e5e7eb",
+    transition: "all 0.2s ease",
+    cursor: "pointer",
+    position: "relative",
+    "&::before": {
       content: '""',
-      position: 'absolute',
+      position: "absolute",
       left: 0,
       top: 0,
       bottom: 0,
-      width: '4px',
+      width: "4px",
       backgroundColor: getPriorityColor(),
-      borderTopLeftRadius: '8px',
-      borderBottomLeftRadius: '8px',
+      borderTopLeftRadius: "8px",
+      borderBottomLeftRadius: "8px",
     },
-    '&:hover': {
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-      transform: 'translateY(-1px)',
+    "&:hover": {
+      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+      transform: "translateY(-1px)",
     },
   };
 });
@@ -67,61 +69,71 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
 }) => {
   const getPersonnelStatus = () => {
     const percentage = (currentPersonnel / requiredPersonnel) * 100;
-    if (percentage >= 100) return 'optimal';
-    if (percentage >= 75) return 'understaffed';
-    return 'critical';
+    if (percentage >= 100) return "optimal";
+    if (percentage >= 75) return "understaffed";
+    return "critical";
   };
 
   const getStatusColor = () => {
     const statusValue = status || getPersonnelStatus();
     switch (statusValue) {
-      case 'optimal':
-        return '#22c55e';
-      case 'understaffed':
-        return '#f97316';
-      case 'overstaffed':
-        return '#3b82f6';
-      case 'critical':
-        return '#ef4444';
+      case "optimal":
+        return "#22c55e";
+      case "understaffed":
+        return "#f97316";
+      case "overstaffed":
+        return "#3b82f6";
+      case "critical":
+        return "#ef4444";
       default:
-        return '#6b7280';
+        return "#6b7280";
     }
   };
 
   const getPriorityColor = () => {
     switch (priority.toLowerCase()) {
-      case 'critical':
-        return '#ef4444';
-      case 'high':
-        return '#f97316';
-      case 'medium':
-        return '#eab308';
-      case 'low':
-        return '#22c55e';
+      case "critical":
+        return "#ef4444";
+      case "high":
+        return "#f97316";
+      case "medium":
+        return "#eab308";
+      case "low":
+        return "#22c55e";
       default:
-        return '#6b7280';
+        return "#6b7280";
     }
   };
 
-  const personnelPercentage = Math.min((currentPersonnel / requiredPersonnel) * 100, 100);
+  const personnelPercentage = Math.min(
+    (currentPersonnel / requiredPersonnel) * 100,
+    100
+  );
 
   return (
     <StyledCard priority={priority} onClick={onClick}>
       <CardContent sx={{ p: 2 }}>
         {/* Zone Name and Personnel Count */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            mb: 1,
+          }}
+        >
           <Typography
             variant="subtitle1"
             sx={{
               fontWeight: 600,
-              fontSize: '14px',
-              color: '#1c2025',
+              fontSize: "14px",
+              color: "#1c2025",
               lineHeight: 1.2,
             }}
           >
             {zoneName}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
             <Circle
               sx={{
                 fontSize: 8,
@@ -132,7 +144,7 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
               variant="body2"
               sx={{
                 fontWeight: 600,
-                fontSize: '14px',
+                fontSize: "14px",
                 color: getStatusColor(),
               }}
             >
@@ -145,8 +157,8 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
         <Typography
           variant="body2"
           sx={{
-            color: '#6b7280',
-            fontSize: '12px',
+            color: "#6b7280",
+            fontSize: "12px",
             mb: 0.5,
           }}
         >
@@ -156,8 +168,8 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
         <Typography
           variant="body2"
           sx={{
-            color: '#6b7280',
-            fontSize: '12px',
+            color: "#6b7280",
+            fontSize: "12px",
             mb: 1.5,
           }}
         >
@@ -165,12 +177,19 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
         </Typography>
 
         {/* Priority */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 1,
+          }}
+        >
           <Typography
             variant="caption"
             sx={{
-              color: '#6b7280',
-              fontSize: '11px',
+              color: "#6b7280",
+              fontSize: "11px",
             }}
           >
             Priority:
@@ -179,7 +198,7 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
             variant="caption"
             sx={{
               color: getPriorityColor(),
-              fontSize: '11px',
+              fontSize: "11px",
               fontWeight: 600,
             }}
           >
@@ -194,7 +213,13 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
           size="small"
           showLabel={false}
           showPercentage={false}
-          color={personnelPercentage >= 100 ? 'success' : personnelPercentage >= 75 ? 'warning' : 'error'}
+          color={
+            personnelPercentage >= 100
+              ? "success"
+              : personnelPercentage >= 75
+              ? "warning"
+              : "error"
+          }
         />
       </CardContent>
     </StyledCard>

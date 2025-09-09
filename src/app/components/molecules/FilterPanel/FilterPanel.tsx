@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+'use client';
+
+import React, { useState } from "react";
 import {
   Box,
   Paper,
@@ -6,25 +8,24 @@ import {
   Collapse,
   IconButton,
   Divider,
-  Button,
   Grid,
-} from '@mui/material';
+} from "@mui/material";
 import {
   FilterList,
   ExpandMore,
   ExpandLess,
   Clear as ClearIcon,
   Search as SearchIcon,
-} from '@mui/icons-material';
-import ScoutInput from '../../atoms/Input/Input';
-import ScoutSelect from '../../atoms/Select/Select';
-import ScoutButton from '../../atoms/Button/Button';
+} from "@mui/icons-material";
+import ScoutInput from "../../atoms/Input/Input";
+import ScoutSelect from "../../atoms/Select/Select";
+import ScoutButton from "../../atoms/Button/Button";
 
 interface FilterConfig {
   id: string;
   label: string;
-  type: 'select' | 'search' | 'dateRange';
-  options?: { value: string; label: string; }[];
+  type: "select" | "search" | "dateRange";
+  options?: { value: string; label: string }[];
   placeholder?: string;
   value?: string;
 }
@@ -42,7 +43,7 @@ interface FilterPanelProps {
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
-  title = 'Filters',
+  title = "Filters",
   filters,
   collapsible = true,
   defaultExpanded = true,
@@ -53,22 +54,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   showClearButton = true,
 }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const [filterValues, setFilterValues] = useState<Record<string, string>>(() => {
-    const initial: Record<string, string> = {};
-    filters.forEach(filter => {
-      initial[filter.id] = filter.value || '';
-    });
-    return initial;
-  });
+  const [filterValues, setFilterValues] = useState<Record<string, string>>(
+    () => {
+      const initial: Record<string, string> = {};
+      filters.forEach((filter) => {
+        initial[filter.id] = filter.value || "";
+      });
+      return initial;
+    }
+  );
 
   const handleFilterChange = (filterId: string, value: string) => {
     const newValues = { ...filterValues, [filterId]: value };
     setFilterValues(newValues);
-    
+
     if (onFilterChange) {
       onFilterChange(filterId, value);
     }
-    
+
     if (onApply && !showApplyButton) {
       // Auto-apply if no apply button
       onApply(newValues);
@@ -77,15 +80,15 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
   const handleClearAll = () => {
     const clearedValues: Record<string, string> = {};
-    filters.forEach(filter => {
-      clearedValues[filter.id] = '';
+    filters.forEach((filter) => {
+      clearedValues[filter.id] = "";
     });
     setFilterValues(clearedValues);
-    
+
     if (onClearAll) {
       onClearAll();
     }
-    
+
     if (onApply) {
       onApply(clearedValues);
     }
@@ -97,13 +100,15 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     }
   };
 
-  const hasActiveFilters = Object.values(filterValues).some(value => value && value !== '');
+  const hasActiveFilters = Object.values(filterValues).some(
+    (value) => value && value !== ""
+  );
 
   const renderFilter = (filter: FilterConfig) => {
-    const value = filterValues[filter.id] || '';
+    const value = filterValues[filter.id] || "";
 
     switch (filter.type) {
-      case 'select':
+      case "select":
         return (
           <ScoutSelect
             key={filter.id}
@@ -111,24 +116,28 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             label={filter.label}
             options={filter.options || []}
             value={value}
-            onChange={(newValue) => handleFilterChange(filter.id, newValue as string)}
+            onChange={(newValue) =>
+              handleFilterChange(filter.id, newValue as string)
+            }
             width="100%"
           />
         );
-      
-      case 'search':
+
+      case "search":
         return (
           <ScoutInput
             key={filter.id}
             variant="search"
-            placeholder={filter.placeholder || `Search ${filter.label.toLowerCase()}...`}
+            placeholder={
+              filter.placeholder || `Search ${filter.label.toLowerCase()}...`
+            }
             value={value}
             onChange={(e) => handleFilterChange(filter.id, e.target.value)}
             width="100%"
           />
         );
-      
-      case 'dateRange':
+
+      case "dateRange":
         return (
           <ScoutInput
             key={filter.id}
@@ -139,7 +148,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
             width="100%"
           />
         );
-      
+
       default:
         return (
           <ScoutInput
@@ -158,26 +167,26 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
     <Paper
       sx={{
         borderRadius: 2,
-        border: '1px solid #e0e0e0',
-        overflow: 'hidden',
+        border: "1px solid #e0e0e0",
+        overflow: "hidden",
       }}
     >
       {/* Header */}
       <Box
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
           p: 2,
-          backgroundColor: '#f8f9fa',
-          borderBottom: expanded ? '1px solid #e0e0e0' : 'none',
-          cursor: collapsible ? 'pointer' : 'default',
+          backgroundColor: "#f8f9fa",
+          borderBottom: expanded ? "1px solid #e0e0e0" : "none",
+          cursor: collapsible ? "pointer" : "default",
         }}
         onClick={collapsible ? () => setExpanded(!expanded) : undefined}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <FilterList sx={{ color: '#1976d2', fontSize: 20 }} />
-          <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '16px' }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <FilterList sx={{ color: "#1976d2", fontSize: 20 }} />
+          <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "16px" }}>
             {title}
           </Typography>
           {hasActiveFilters && (
@@ -185,8 +194,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               sx={{
                 width: 8,
                 height: 8,
-                borderRadius: '50%',
-                backgroundColor: '#1976d2',
+                borderRadius: "50%",
+                backgroundColor: "#1976d2",
                 ml: 0.5,
               }}
             />
@@ -204,12 +213,13 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       <Collapse in={expanded}>
         <Box sx={{ p: 3 }}>
           <Grid container spacing={2}>
-            {filters.map((filter, index) => (
-              <Grid 
-                item 
-                xs={12} 
-                sm={filters.length > 2 ? 6 : 12} 
-                md={filters.length > 3 ? 4 : filters.length > 2 ? 6 : 12}
+            {filters.map((filter) => (
+              <Grid
+              size={{xs:12, sm:filters.length > 2 ? 6:12,md:filters.length>3?4:filters.length>2?6:12 }}
+                // item
+                // xs={12}
+                // sm={filters.length > 2 ? 6 : 12}
+                // md={filters.length > 3 ? 4 : filters.length > 2 ? 6 : 12}
                 key={filter.id}
               >
                 {renderFilter(filter)}
@@ -221,7 +231,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           {(showApplyButton || showClearButton) && (
             <>
               <Divider sx={{ my: 2 }} />
-              <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
+              <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-end" }}>
                 {showClearButton && (
                   <ScoutButton
                     variant="clear"
