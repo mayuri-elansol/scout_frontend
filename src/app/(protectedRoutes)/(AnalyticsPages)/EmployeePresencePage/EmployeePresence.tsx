@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";

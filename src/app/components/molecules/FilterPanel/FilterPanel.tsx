@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from "react";
 import {
   Box,
@@ -213,10 +215,11 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
           <Grid container spacing={2}>
             {filters.map((filter) => (
               <Grid
-                item
-                xs={12}
-                sm={filters.length > 2 ? 6 : 12}
-                md={filters.length > 3 ? 4 : filters.length > 2 ? 6 : 12}
+              size={{xs:12, sm:filters.length > 2 ? 6:12,md:filters.length>3?4:filters.length>2?6:12 }}
+                // item
+                // xs={12}
+                // sm={filters.length > 2 ? 6 : 12}
+                // md={filters.length > 3 ? 4 : filters.length > 2 ? 6 : 12}
                 key={filter.id}
               >
                 {renderFilter(filter)}

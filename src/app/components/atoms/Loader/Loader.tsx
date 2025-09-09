@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
@@ -30,11 +32,11 @@ const Loader: React.FC<LoaderProps> = ({
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 2,
+         display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",   
+        width: "100vw",
         ...sx,
       }}
     >

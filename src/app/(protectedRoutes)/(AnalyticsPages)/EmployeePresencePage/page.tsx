@@ -1,4 +1,3 @@
-"use client";
 import EmployeePresence from './EmployeePresence';
 
 

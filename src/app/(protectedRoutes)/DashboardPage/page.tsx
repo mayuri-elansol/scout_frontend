@@ -1,5 +1,4 @@
 
-"use client";
 
 import Dashboard from "./Dashboard";
 
