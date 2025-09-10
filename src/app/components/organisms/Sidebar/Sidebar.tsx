@@ -32,7 +32,6 @@ interface SidebarProps {
   onPageChange: (page: PageType) => void;
 }
 
-
 // Memoized menu item component for better performance
 const MenuItem = React.memo<{
   item: MenuItemConfig;
@@ -113,6 +112,7 @@ const SubMenuItem = React.memo<{
               color: pathname === item.path ? "white" : "#6b7280",
               fontWeight: pathname === item.path ? 500 : "normal",
               lineHeight: 1.3,
+              
             },
           },
         }}
@@ -149,7 +149,7 @@ const CategorySection = React.memo<{
       <ListItem disablePadding>
         <ListItemButton onClick={handleToggle} sx={{ borderRadius: 1, py: 1 }}>
           {category.icon && (
-            <ListItemIcon sx={{ minWidth: 28 }}>
+            <ListItemIcon sx={{ minWidth: 28, }}>
               <category.icon sx={{ fontSize: 16 }} />
             </ListItemIcon>
           )}
@@ -160,6 +160,8 @@ const CategorySection = React.memo<{
                 sx: {
                   fontSize: "14px",
                   color: "#5c6b7d",
+                  
+                  
                 },
               },
             }}
@@ -210,7 +212,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     "(min-width:1520px) and (max-width:1699px)"
   );
 
-let drawerWidth: string = "16vw"; 
+  let drawerWidth: string = "16vw";
   if (is1200_1250) {
     drawerWidth = "24vw";
   } else if (is1250_1400) {
@@ -219,7 +221,7 @@ let drawerWidth: string = "16vw";
     drawerWidth = "20vw";
   } else if (is1520_1700) {
     drawerWidth = "18vw";
-  } 
+  }
   // else if (is1700plus) {
   //   drawerWidth = "16vw";
   // }
@@ -232,17 +234,14 @@ let drawerWidth: string = "16vw";
     {}
   );
 
-  // Memoize category toggle handler
   const handleCategoryToggle = useCallback((title: string) => {
     setOpenCategories((prev) => ({ ...prev, [title]: !prev[title] }));
   }, []);
 
-  // Memoize analytics toggle handler
   const handleAnalyticsToggle = useCallback(() => {
     setAnalyticsOpen((prev) => !prev);
   }, []);
 
-  // Memoize filtered menus to prevent recalculation on every render
   const filteredMenus = useMemo(() => {
     const dashboardFlags: MenuItemConfig[] = dashboardMenu
       .map((item) => ({
@@ -270,8 +269,12 @@ let drawerWidth: string = "16vw";
 
     return { dashboardFlags, alertFlags, analyticsFlags };
   }, [featureFlag]);
+  const isAnalyticsActive = useMemo(() => {
+    return filteredMenus.analyticsFlags.some((category) =>
+      category.items.some((item) => pathname === item.path)
+    );
+  }, [pathname, filteredMenus.analyticsFlags]);
 
-  // Memoize the entire menu structure
   const menuContent = useMemo(
     () => (
       <>
@@ -293,9 +296,30 @@ let drawerWidth: string = "16vw";
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleAnalyticsToggle}
-                sx={{ borderRadius: 1, color: theme.palette.primary.main }}
+                selected={
+                  isAnalyticsActive &&
+                  !Object.values(openCategories).some(Boolean)
+                }
+                sx={{
+                  borderRadius: 1,
+                  "&.Mui-selected": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    "&:hover": { backgroundColor: theme.palette.primary.dark },
+                  },
+                  color: isAnalyticsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
+                }}
               >
-                <ListItemIcon sx={{ minWidth: 36 }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 36,
+                    color: isAnalyticsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
+                >
                   <BarChart />
                 </ListItemIcon>
                 <ListItemText primary="Analytics" />
@@ -365,7 +389,6 @@ let drawerWidth: string = "16vw";
       >
         <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
-        {/* Powered by Elansol - Memoized */}
         <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1 }}>
           <Box
             sx={{
@@ -384,7 +407,7 @@ let drawerWidth: string = "16vw";
                 src="/elansol_technologies_logo.jpg"
                 alt="Elansol Technologies Logo"
                 sx={{ height: 50, width: "auto" }}
-                loading="lazy" // Lazy load the image
+                loading="lazy"
               />
             </Box>
           </Box>

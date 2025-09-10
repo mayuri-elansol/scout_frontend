@@ -8,7 +8,9 @@ import {
   Circle,
 } from "@mui/icons-material";
 
-import { AlertCard, AlertStatsCard } from "../../components/molecules";
+import AlertCard from "../../components/molecules/AlertCard/AlertCard";
+import  AlertStatsCard  from "../../components/molecules/AlertStatsCard/AlertStatsCard";
+
 import { AlertsFilterPanel } from "@/app/components/organisms";
 const SystemAlerts: React.FC = () => {
   const alertStats = [
