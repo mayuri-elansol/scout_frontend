@@ -14,6 +14,7 @@ import {
   Typography,
   Chip,
   useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { BarChart, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
@@ -31,7 +32,7 @@ interface SidebarProps {
   onPageChange: (page: PageType) => void;
 }
 
-const drawerWidth = "15vw";
+// const drawerWidth = "16vw";
 
 // Memoized menu item component for better performance
 const MenuItem = React.memo<{
@@ -39,6 +40,8 @@ const MenuItem = React.memo<{
   pathname: string;
   theme: any;
 }>(({ item, pathname, theme }) => (
+
+  
   <ListItem disablePadding sx={{ mb: 0.5 }}>
     <ListItemButton
       component={Link}
@@ -196,6 +199,24 @@ CategorySection.displayName = "CategorySection";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
+    const is1200_1250 = useMediaQuery("(min-width:1200px) and (max-width:1249px)");
+  const is1250_1400 = useMediaQuery("(min-width:1250px) and (max-width:1399px)");
+  const is1400_1520 = useMediaQuery("(min-width:1400px) and (max-width:1519px)");
+  const is1520_1700 = useMediaQuery("(min-width:1520px) and (max-width:1699px)");
+  const is1700plus = useMediaQuery("(min-width:1700px)");
+
+  const drawerWidth = is1200_1250
+    ? "24vw"
+    : is1250_1400
+    ? "22vw"
+    : is1400_1520
+    ? "20vw"
+    : is1520_1700
+    ? "18vw"
+    : is1700plus
+    ? "16vw"
+    : "24vw"; 
+
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
 

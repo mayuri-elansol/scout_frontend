@@ -31,9 +31,7 @@ interface PhonesidebarProps {
   onPageChange: (page: PageType) => void;
 }
 
-const Phonesidebar: React.FC<PhonesidebarProps> = ({
-  onPageChange,
-}) => {
+const Phonesidebar: React.FC<PhonesidebarProps> = ({ onPageChange }) => {
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
@@ -136,7 +134,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     if (subItem.path) {
       router.push(subItem.path);
       if (subItem.page) {
-        onPageChange(subItem.page); 
+        onPageChange(subItem.page);
       }
       setPopoverOpen(false);
       setAnchorEl(null);
@@ -159,15 +157,15 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     const isSelected = isItemSelected(item);
     const itemTitle = "title" in item ? item.title : item.name;
     const isHovered = hoveredItem === itemTitle;
-let backgroundColor: string;
+    let backgroundColor: string;
 
-if (isSelected) {
-  backgroundColor = theme.palette.primary.main;
-} else if (isHovered) {
-  backgroundColor = theme.palette.action.hover;
-} else {
-  backgroundColor = "transparent";
-}
+    if (isSelected) {
+      backgroundColor = theme.palette.primary.main;
+    } else if (isHovered) {
+      backgroundColor = theme.palette.action.hover;
+    } else {
+      backgroundColor = "transparent";
+    }
 
     return {
       borderRadius: 1,
@@ -211,8 +209,6 @@ if (isSelected) {
 
     return iconElement;
   };
-
-
 
   return (
     <>
@@ -318,8 +314,7 @@ if (isSelected) {
               mb: 1,
               fontSize: "0.875rem",
             }}
-          >
-          </Typography>
+          ></Typography>
           <List sx={{ py: 0 }}>
             {hoverMenu?.items?.map((subItem, subIndex) => (
               <ListItem key={`${subItem.name}-${subIndex}`} disablePadding>
