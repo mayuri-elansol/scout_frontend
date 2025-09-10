@@ -69,7 +69,6 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
   onActivityClick,
   onAcknowledge,
   onViewDetails,
-  onViewProfile,
 }) => {
   const handleActivityClick = (activity: ActivityItem) => {
     if (onActivityClick) {
@@ -88,12 +87,6 @@ const ActivityFeedList: React.FC<ActivityFeedListProps> = ({
       onViewDetails(activityId);
     }
   };
-
-  // const handleViewProfile = (activityId: string) => {
-  //   if (onViewProfile) {
-  //     onViewProfile(activityId);
-  //   }
-  // };
 
   // Convert alertType to cardType for ActivityCard
   const getCardType = (

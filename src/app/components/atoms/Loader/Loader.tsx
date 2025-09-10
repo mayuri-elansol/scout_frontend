@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
-
+import React from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { SxProps, Theme } from "@mui/system";
 export interface LoaderProps {
   /** Size of the loading spinner */
   size?: number;
@@ -11,31 +11,38 @@ export interface LoaderProps {
   /** Whether to show the message */
   showMessage?: boolean;
   /** Color of the spinner */
-  color?: 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit';
+  color?:
+    | "primary"
+    | "secondary"
+    | "error"
+    | "info"
+    | "success"
+    | "warning"
+    | "inherit";
   /** Variant of the progress indicator */
-  variant?: 'determinate' | 'indeterminate';
+  variant?: "determinate" | "indeterminate";
   /** Progress value (0-100) for determinate variant */
   value?: number;
   /** Custom styling */
-  sx?: any;
+  sx?: SxProps<Theme>;
 }
 
 const Loader: React.FC<LoaderProps> = ({
   size = 40,
-  message = 'Loading...',
+  message = "Loading...",
   showMessage = true,
-  color = 'primary',
-  variant = 'indeterminate',
+  color = "primary",
+  variant = "indeterminate",
   value,
   sx,
 }) => {
   return (
     <Box
       sx={{
-         display: "flex",
+        display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",   
+        height: "100vh",
         width: "100vw",
         ...sx,
       }}
@@ -50,8 +57,8 @@ const Loader: React.FC<LoaderProps> = ({
         <Typography
           variant="body2"
           sx={{
-            color: 'text.secondary',
-            fontSize: '14px',
+            color: "text.secondary",
+            fontSize: "14px",
           }}
         >
           {message}

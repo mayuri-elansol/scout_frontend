@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { Box } from '@mui/material';
-import Loader from './Loader';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box } from "@mui/material";
+import Loader from "./Loader";
 
 const meta: Meta<typeof Loader> = {
-  title: 'Components/Atoms/Loader',
+  title: "Components/Atoms/Loader",
   component: Loader,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
         component: `
@@ -24,33 +24,41 @@ A flexible loading spinner component for the SCOUT application. Features:
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     size: {
-      control: { type: 'number', min: 20, max: 100, step: 10 },
-      description: 'Size of the loading spinner in pixels',
+      control: { type: "number", min: 20, max: 100, step: 10 },
+      description: "Size of the loading spinner in pixels",
     },
     message: {
-      control: 'text',
-      description: 'Loading message to display below spinner',
+      control: "text",
+      description: "Loading message to display below spinner",
     },
     showMessage: {
-      control: 'boolean',
-      description: 'Whether to show the loading message',
+      control: "boolean",
+      description: "Whether to show the loading message",
     },
     color: {
-      control: 'select',
-      options: ['primary', 'secondary', 'error', 'info', 'success', 'warning', 'inherit'],
-      description: 'Color theme of the spinner',
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "error",
+        "info",
+        "success",
+        "warning",
+        "inherit",
+      ],
+      description: "Color theme of the spinner",
     },
     variant: {
-      control: 'select',
-      options: ['indeterminate', 'determinate'],
-      description: 'Progress indicator variant',
+      control: "select",
+      options: ["indeterminate", "determinate"],
+      description: "Progress indicator variant",
     },
     value: {
-      control: { type: 'number', min: 0, max: 100, step: 5 },
-      description: 'Progress value (0-100) for determinate variant',
+      control: { type: "number", min: 0, max: 100, step: 5 },
+      description: "Progress value (0-100) for determinate variant",
     },
   },
 };
@@ -62,7 +70,7 @@ export const Default: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Default loading spinner with standard size and primary color.',
+        story: "Default loading spinner with standard size and primary color.",
       },
     },
   },
@@ -75,7 +83,7 @@ export const WithoutMessage: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Loading spinner without text message.',
+        story: "Loading spinner without text message.",
       },
     },
   },
@@ -83,12 +91,12 @@ export const WithoutMessage: Story = {
 
 export const CustomMessage: Story = {
   args: {
-    message: 'Processing SCOUT data...',
+    message: "Processing SCOUT data...",
   },
   parameters: {
     docs: {
       description: {
-        story: 'Loading spinner with custom message.',
+        story: "Loading spinner with custom message.",
       },
     },
   },
@@ -97,12 +105,12 @@ export const CustomMessage: Story = {
 export const SmallSize: Story = {
   args: {
     size: 24,
-    message: 'Loading',
+    message: "Loading",
   },
   parameters: {
     docs: {
       description: {
-        story: 'Small loading spinner for inline use.',
+        story: "Small loading spinner for inline use.",
       },
     },
   },
@@ -111,12 +119,12 @@ export const SmallSize: Story = {
 export const LargeSize: Story = {
   args: {
     size: 60,
-    message: 'Initializing SCOUT system...',
+    message: "Initializing SCOUT system...",
   },
   parameters: {
     docs: {
       description: {
-        story: 'Large loading spinner for full-page loading states.',
+        story: "Large loading spinner for full-page loading states.",
       },
     },
   },
@@ -124,7 +132,14 @@ export const LargeSize: Story = {
 
 export const DifferentColors: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', gap: 4, flexWrap: 'wrap', justifyContent: 'center' }}>
+    <Box
+      sx={{
+        display: "flex",
+        gap: 4,
+        flexWrap: "wrap",
+        justifyContent: "center",
+      }}
+    >
       <Loader color="primary" message="Primary" size={32} />
       <Loader color="secondary" message="Secondary" size={32} />
       <Loader color="success" message="Success" size={32} />
@@ -136,7 +151,7 @@ export const DifferentColors: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Loading spinners in different color themes.',
+        story: "Loading spinners in different color themes.",
       },
     },
   },
@@ -144,14 +159,14 @@ export const DifferentColors: Story = {
 
 export const DeterminateProgress: Story = {
   args: {
-    variant: 'determinate',
+    variant: "determinate",
     value: 65,
-    message: 'Processing... 65%',
+    message: "Processing... 65%",
   },
   parameters: {
     docs: {
       description: {
-        story: 'Progress indicator with specific completion percentage.',
+        story: "Progress indicator with specific completion percentage.",
       },
     },
   },
@@ -161,27 +176,24 @@ export const FullPageLoader: Story = {
   render: () => (
     <Box
       sx={{
-        width: '100%',
-        height: '300px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f7fa',
+        width: "100%",
+        height: "300px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f5f7fa",
         borderRadius: 2,
-        border: '1px solid #e0e0e0',
+        border: "1px solid #e0e0e0",
       }}
     >
-      <Loader
-        size={50}
-        message="Loading SCOUT Dashboard..."
-        color="primary"
-      />
+      <Loader size={50} message="Loading SCOUT Dashboard..." color="primary" />
     </Box>
   ),
   parameters: {
     docs: {
       description: {
-        story: 'Example of full-page loading state as used in SCOUT application.',
+        story:
+          "Example of full-page loading state as used in SCOUT application.",
       },
     },
   },
@@ -189,7 +201,7 @@ export const FullPageLoader: Story = {
 
 export const InlineLoader: Story = {
   render: () => (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2 }}>
+    <Box sx={{ display: "flex", alignItems: "center", gap: 2, p: 2 }}>
       <span>Fetching alerts</span>
       <Loader size={20} showMessage={false} />
     </Box>
@@ -197,7 +209,7 @@ export const InlineLoader: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Small inline loader for use within other components.',
+        story: "Small inline loader for use within other components.",
       },
     },
   },

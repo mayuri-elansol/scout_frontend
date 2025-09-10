@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from "@storybook/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Sidebar from "./Phonesidebar";
 import { useState } from "react";
@@ -37,14 +36,6 @@ export const DashboardSelected: Story = {
     currentPage: "dashboard",
   },
 };
-
-// export const AnalyticsExpanded: Story = {
-//   render: (args) => <SidebarWrapper {...args} />,
-//   args: {
-//     currentPage: "analytics",
-//   },
-// };
-
 export const SubTaskSelected: Story = {
   render: (args) => <SidebarWrapper {...args} />,
   args: {
