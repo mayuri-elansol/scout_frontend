@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
@@ -150,7 +150,7 @@ const PPEDetection: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            ppeKpiData.map((kpi, index) => (
+            ppeKpiData.map((kpi) => (
               <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                 <KpiCard {...kpi} />
               </Grid>

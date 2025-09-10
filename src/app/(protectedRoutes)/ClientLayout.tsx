@@ -1,12 +1,7 @@
 "use client";
 import { ReactNode, useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
-import {
-  CssBaseline,
-  Box,
-  useMediaQuery,
-  CircularProgress,
-} from "@mui/material";
+import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
