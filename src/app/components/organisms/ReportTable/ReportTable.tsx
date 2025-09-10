@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -61,7 +61,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   onReset,
   onExport,
   loading = false,
-  isSubmitDisabled, // 👈 NEW
+  isSubmitDisabled,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -193,7 +193,9 @@ const ReportTable: React.FC<ReportTableProps> = ({
         <TextField
           {...commonProps}
           type="date"
-          InputLabelProps={{ shrink: true }}
+          slotProps={{
+            inputLabel: { shrink: true },
+          }}
         />
       );
     }
@@ -251,7 +253,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
                 size="small"
                 variant="contained"
                 onClick={() => onSubmit?.(filterValues)}
-                disabled={isSubmitDisabled} // 👈 will work now
+                disabled={isSubmitDisabled}
               >
                 Submit
               </Button>
@@ -267,12 +269,14 @@ const ReportTable: React.FC<ReportTableProps> = ({
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                PaperProps={{
-                  sx: {
-                    backgroundColor: "#fff",
-                    borderRadius: 1,
-                    boxShadow: 3,
-                    minWidth: 150,
+                slotProps={{
+                  paper: {
+                    sx: {
+                      backgroundColor: "#fff",
+                      borderRadius: 1,
+                      boxShadow: 3,
+                      minWidth: 150,
+                    },
                   },
                 }}
               >
