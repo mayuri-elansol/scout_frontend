@@ -173,7 +173,7 @@ const ForgotPassword: React.FC = () => {
                   }}
                 >
                   {isSubmitted
-                    ? "We've sent you a password reset link"
+                    ? "We&apos;ve sent you a password reset link"
                     : "Enter your email to reset your password"}
                 </Typography>
               </Box>
@@ -190,7 +190,7 @@ const ForgotPassword: React.FC = () => {
                       lineHeight: 1.6,
                     }}
                   >
-                    We've sent password reset instructions to{" "}
+                    We&apos;ve sent password reset instructions to{" "}
                     <Box
                       component="span"
                       sx={{ fontWeight: 600, color: "#1976d2" }}
@@ -207,7 +207,7 @@ const ForgotPassword: React.FC = () => {
                       fontSize: "14px",
                     }}
                   >
-                    Didn't receive the email? Check your spam folder or try
+                    Didn&apos;t receive the email? Check your spam folder or try
                     again.
                   </Typography>
 
@@ -283,7 +283,7 @@ const ForgotPassword: React.FC = () => {
                         mb: 3,
                       }}
                     >
-                      Enter your email address and we'll send you a link to
+                      Enter your email address and we&apos;ll send you a link to
                       reset your password.
                     </Typography>
                   </Box>

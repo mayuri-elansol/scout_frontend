@@ -15,14 +15,16 @@ import { theme } from "@/app/theme/theme";
 import LoginHeader from "../../components/molecules/Login/LoginHeader";
 import LoginForm from "../../components/molecules/Login/LoginForm";
 import { Shield } from "@mui/icons-material";
-import users from "./user.json";
 
 interface LoginFormData {
   username: string;
   password: string;
   rememberMe: boolean;
 }
-
+interface User {
+  username: string;
+  password: string;
+}
 const Login: React.FC = () => {
   const router = useRouter();
   const [cardHovered, setCardHovered] = useState(false);
@@ -70,10 +72,10 @@ const Login: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await fetch("/data/user.json");
-      const users = await response.json();
+      const users: User[] = await response.json();
 
       const foundUser = users.find(
-        (u: any) =>
+        (u) =>
           u.username === formData.username && u.password === formData.password
       );
 

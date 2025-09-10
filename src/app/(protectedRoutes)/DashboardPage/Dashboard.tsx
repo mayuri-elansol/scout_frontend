@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { KpiData, PageType } from "@/app/types";
@@ -27,9 +27,7 @@ import SystemAlerts from "../AlertsPage/SystemAlerts";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/system";
 
-export interface DashboardPageProps {}
-
-const Dashboard: React.FC<DashboardPageProps> = () => {
+const Dashboard: React.FC = () => {
   const { t } = useTranslation();
 
   const [currentPage] = useState<PageType>("dashboard");
