@@ -27,9 +27,8 @@ interface ReportColumn {
 }
 
 interface ReportData {
-  [key: string]: any;
+  [key: string]: string | number | boolean; // 👈 more specific than 'any'
 }
-
 type FilterType = "text" | "select" | "date";
 
 interface ReportFilter {
@@ -49,7 +48,7 @@ interface ReportTableProps {
   onReset?: () => void;
   onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
   loading?: boolean;
-  isSubmitDisabled?: boolean; // 👈 NEW
+  isSubmitDisabled?: boolean;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -105,9 +104,12 @@ const ReportTable: React.FC<ReportTableProps> = ({
   };
 
   /** Render Cell Values */
-  const renderCellValue = (column: ReportColumn, value: any) => {
+  const renderCellValue = (
+    column: ReportColumn,
+    value: string | number | boolean
+  ) => {
     if (column.id === "status") {
-      const colors = getStatusColor(value);
+      const colors = getStatusColor(String(value));
       return (
         <Chip
           label={value}
