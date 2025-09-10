@@ -21,20 +21,20 @@ interface LoginFormData {
   password: string;
   rememberMe: boolean;
 }
+
 interface User {
   username: string;
   password: string;
 }
+
 const Login: React.FC = () => {
   const router = useRouter();
   const [cardHovered, setCardHovered] = useState(false);
-
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
     password: "",
     rememberMe: false,
   });
-
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
@@ -56,21 +56,17 @@ const Login: React.FC = () => {
         event.target.type === "checkbox"
           ? event.target.checked
           : event.target.value;
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
       if (error) setError("");
     };
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // prevent page refresh
+    event.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       const response = await fetch("/data/user.json");
       const users: User[] = await response.json();
 
@@ -80,22 +76,15 @@ const Login: React.FC = () => {
       );
 
       if (foundUser) {
-        // Example: generate a mock token
         const token = `token-${Date.now()}`;
-
-        // Save token
         localStorage.setItem("scout_auth_token", token);
-
-        // Save user data
         localStorage.setItem(
           "scout_user",
           JSON.stringify({
             username: foundUser.username,
-
             lastLogin: new Date().toISOString(),
           })
         );
-
         router.push("/DashboardPage");
       } else {
         setError("Invalid username or password");
@@ -108,18 +97,13 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
+  const handleTogglePassword = () => setShowPassword((prev) => !prev);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
-        {/* Header */}
         <LoginHeader currentDateTime={currentDateTime} />
-
-        {/* Login Content */}
         <Box
           sx={{
             display: "flex",
@@ -140,7 +124,7 @@ const Login: React.FC = () => {
                 margin: "0 auto",
                 backgroundColor: "#ffffff",
                 border: "1px solid rgba(255, 255, 255, 0.8)",
-                transform: cardHovered ? "translateY(0px) " : "translateY(0) ",
+                transform: cardHovered ? "translateY(0px)" : "translateY(0)",
                 boxShadow: cardHovered
                   ? "0 8px 16px rgba(0,0,0,0.12), 0 0 0 1px rgba(25, 118, 210, 0.1)"
                   : "0 2px 8px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.06)",
@@ -157,7 +141,6 @@ const Login: React.FC = () => {
                 },
               }}
             >
-              {/* Card Header */}
               <Box
                 sx={{
                   padding: 4,
@@ -182,7 +165,6 @@ const Login: React.FC = () => {
                 >
                   <Shield sx={{ fontSize: 28 }} />
                 </Box>
-
                 <Typography
                   variant="h4"
                   sx={{
@@ -196,16 +178,12 @@ const Login: React.FC = () => {
                 </Typography>
                 <Typography
                   variant="body1"
-                  sx={{
-                    color: "#5c6b7d",
-                    fontSize: "16px",
-                  }}
+                  sx={{ color: "#5c6b7d", fontSize: "16px" }}
                 >
                   Sign in to access your SCOUT dashboard
                 </Typography>
               </Box>
 
-              {/* Login Form */}
               <LoginForm
                 formData={formData}
                 showPassword={showPassword}
@@ -217,9 +195,7 @@ const Login: React.FC = () => {
                 setError={setError}
               />
 
-              {/* Footer */}
               <Paper
-                elevation={0}
                 sx={{
                   textAlign: "center",
                   py: 3,
@@ -227,6 +203,7 @@ const Login: React.FC = () => {
                   borderTop: "1px solid #f0f0f0",
                   borderRadius: "0 0 8px 8px",
                 }}
+                elevation={0}
               >
                 <Typography
                   variant="body2"

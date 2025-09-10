@@ -44,12 +44,11 @@ const KpiGrid: React.FC<KpiGridProps> = ({
       <Grid container spacing={spacing}>
         {kpis.map((kpi, index) => (
           <Grid 
-            item 
-            xs={columns.xs} 
-            sm={columns.sm} 
-            md={columns.md} 
-            lg={columns.lg} 
-            xl={columns.xl}
+          size={{  xs:columns.xs,
+            sm:columns.sm,
+            md:columns.md,
+            lg:columns.lg,
+            xl:columns.xl}}
             key={index}
           >
             <KpiCard

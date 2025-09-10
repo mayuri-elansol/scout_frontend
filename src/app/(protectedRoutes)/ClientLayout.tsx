@@ -12,7 +12,7 @@ import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
 import Loader from "../components/atoms/Loader/Loader";
-import RouteLoader from "../../RouteLoader";
+import RouteLoader from "../../utils/RouteLoader";
 
 interface ClientLayoutProps {
   children: ReactNode;

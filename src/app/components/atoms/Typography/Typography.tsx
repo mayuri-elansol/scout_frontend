@@ -2,25 +2,16 @@ import React from "react";
 import { Typography, TypographyProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+// Accept all valid MUI variants + custom design variants
+type CustomVariant =
+  | "pageTitle"
+  | "sectionTitle"
+  | "cardTitle"
+  | "label"
+  | "helperText";
+
 interface ScoutTypographyProps extends Omit<TypographyProps, "variant"> {
-  variant?:
-    | "h1"
-    | "h2"
-    | "h3"
-    | "h4"
-    | "h5"
-    | "h6"
-    | "subtitle1"
-    | "subtitle2"
-    | "body1"
-    | "body2"
-    | "caption"
-    | "overline"
-    | "pageTitle"
-    | "sectionTitle"
-    | "cardTitle"
-    | "label"
-    | "helperText";
+  variant?: TypographyProps["variant"] | CustomVariant;
   weight?: "light" | "regular" | "medium" | "semibold" | "bold";
   color?:
     | "primary"
@@ -36,7 +27,6 @@ interface ScoutTypographyProps extends Omit<TypographyProps, "variant"> {
 
 const StyledTypography = styled(Typography)<ScoutTypographyProps>(
   ({ theme, weight, color: textColor }) => ({
-    // Font weight mapping
     fontWeight: {
       light: 300,
       regular: 400,
@@ -44,8 +34,6 @@ const StyledTypography = styled(Typography)<ScoutTypographyProps>(
       semibold: 600,
       bold: 700,
     }[weight || "regular"],
-
-    // Color mapping
     color: {
       primary: theme.palette.primary.main,
       secondary: theme.palette.secondary.main,
@@ -67,9 +55,11 @@ const ScoutTypography: React.FC<ScoutTypographyProps> = ({
   children,
   ...props
 }) => {
-  // Map custom variants to Material UI variants
-  const getMuiVariant = (customVariant: string): any => {
-    switch (customVariant) {
+  // Map custom variants to valid MUI variants
+  const getMuiVariant = (
+    v: ScoutTypographyProps["variant"]
+  ): TypographyProps["variant"] => {
+    switch (v) {
       case "pageTitle":
         return "h3";
       case "sectionTitle":
@@ -81,7 +71,7 @@ const ScoutTypography: React.FC<ScoutTypographyProps> = ({
       case "helperText":
         return "caption";
       default:
-        return customVariant;
+        return v as TypographyProps["variant"]; // now safe
     }
   };
 

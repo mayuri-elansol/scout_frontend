@@ -15,9 +15,10 @@ interface KpiCardProps {
   icon: SvgIconComponent;
   variant?: "default" | "success" | "info" | "critical";
   size?: "small" | "medium" | "large";
-  // Custom sizing props for Storybook and flexible layouts
   customWidth?: number;
+  customHeight?: number;   // ✅ add this
 }
+
 
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
@@ -31,9 +32,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   variant = "default",
   size = "medium",
   customWidth,
-  // customHeight,
 }) => {
-  // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
       case "success":

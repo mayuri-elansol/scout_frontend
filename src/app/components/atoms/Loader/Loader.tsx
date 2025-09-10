@@ -1,8 +1,14 @@
 "use client";
 
 import React from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { SxProps, Theme } from "@mui/system";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  SxProps,
+  Theme,
+} from "@mui/material";
+
 export interface LoaderProps {
   /** Size of the loading spinner */
   size?: number;
@@ -40,10 +46,12 @@ const Loader: React.FC<LoaderProps> = ({
     <Box
       sx={{
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         height: "100vh",
         width: "100vw",
+        gap: 1.5,
         ...sx,
       }}
     >

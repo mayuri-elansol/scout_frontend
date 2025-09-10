@@ -62,10 +62,10 @@ Individual alert card component used in the System Alerts page. Features:
       control: "text",
       description: "Alert category",
     },
-    onViewDetails: {
-      action: "view-details-clicked",
-      description: "View details button handler",
-    },
+    // onViewDetails: {
+    //   action: "view-details-clicked",
+    //   description: "View details button handler",
+    // },
     onActionClick: {
       action: "action-clicked",
       description: "Quick action button handler",
