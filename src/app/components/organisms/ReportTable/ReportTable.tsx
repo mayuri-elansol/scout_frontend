@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -61,7 +61,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   onReset,
   onExport,
   loading = false,
-  isSubmitDisabled, // 👈 NEW
+  isSubmitDisabled,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});

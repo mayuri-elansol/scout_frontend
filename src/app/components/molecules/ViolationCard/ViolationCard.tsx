@@ -12,12 +12,6 @@ interface Violation {
   imageUrl?: string;
 }
 
-// interface RecentViolationsProps {
-//   label: string;
-//   violations: Violation[];
-//   onViewAll?: () => void;
-// }
-
 //  Reusable component (defined in same file)
 export const ViolationCard: React.FC<{ violation: Violation }> = ({
   violation,
