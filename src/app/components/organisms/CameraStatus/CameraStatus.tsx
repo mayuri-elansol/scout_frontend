@@ -30,7 +30,6 @@ const CameraStatus: React.FC = () => {
         return "#9e9e9e";
     }
   };
-
   return (
     <Card sx={{ height: "100%" }}>
       <CardContent sx={{ p: 3 }}>

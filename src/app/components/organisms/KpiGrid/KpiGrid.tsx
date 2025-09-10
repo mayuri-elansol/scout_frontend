@@ -49,7 +49,6 @@ const KpiGrid: React.FC<KpiGridProps> = ({
             md:columns.md,
             lg:columns.lg,
             xl:columns.xl}}
-          
             key={index}
           >
             <KpiCard
