@@ -1,12 +1,7 @@
 "use client";
 import { ReactNode, useState, useEffect } from "react";
 import { ThemeProvider, useTheme } from "@mui/material/styles";
-import {
-  CssBaseline,
-  Box,
-  useMediaQuery,
-  CircularProgress,
-} from "@mui/material";
+import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
@@ -17,7 +12,7 @@ import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
 import Loader from "../components/atoms/Loader/Loader";
-import RouteLoader from "../../RouteLoader";
+import RouteLoader from "../../utils/RouteLoader";
 
 interface ClientLayoutProps {
   children: ReactNode;

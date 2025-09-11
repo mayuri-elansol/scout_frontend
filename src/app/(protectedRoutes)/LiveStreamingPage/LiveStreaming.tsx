@@ -70,51 +70,52 @@ const [videoStates, setVideoStates] = useState<Record<ZoneId, VideoState>>({
   ];
 
   const cameraZones = [
-    {
-      id: "zone-a",
-      name: "Production Zone A",
-      status: "LIVE",
-      roiDetection: "ROI DETECTION",
-      worker: "Worker #2",
-      compliance: "87.5%",
-      people: 234,
-      violations: 3,
-      noHelmet: 12,
-    },
-    {
-      id: "zone-b",
-      name: "Warehouse Zone B",
-      status: "LIVE",
-      roiDetection: "ROI DETECTION",
-      worker: "Worker #4",
-      compliance: "92.3%",
-      people: 45,
-      violations: 1,
-      noHelmet: 2,
-    },
-    {
-      id: "zone-c",
-      name: "Assembly Zone C",
-      status: "LIVE",
-      roiDetection: "ROI DETECTION",
-      worker: "",
-      compliance: "95.1%",
-      people: 67,
-      violations: 0,
-      noHelmet: 1,
-    },
-    {
-      id: "zone-d",
-      name: "Loading Dock Zone D",
-      status: "LIVE",
-      roiDetection: "ROI DETECTION",
-      worker: "",
-      compliance: "",
-      people: 0,
-      violations: 0,
-      noHelmet: 0,
-    },
-  ];
+  {
+    id: "zone-a" as ZoneId,
+    name: "Production Zone A",
+    status: <>LIVE</>,
+    roiDetection: <>ROI DETECTION</>,
+    worker: <>{'Worker #2'}</>, // wrap as React element
+    compliance: <>87.5%</>,
+    people: <>234</>,
+    violations: <>3</>,
+    noHelmet: <>12</>,
+  },
+  {
+    id: "zone-b" as ZoneId,
+    name: "Warehouse Zone B",
+    status: <>LIVE</>,
+    roiDetection: <>ROI DETECTION</>,
+    worker: <>{'Worker #4'}</>,
+    compliance: <>92.3%</>,
+    people: <>45</>,
+    violations: <>1</>,
+    noHelmet: <>2</>,
+  },
+  {
+    id: "zone-c" as ZoneId,
+    name: "Assembly Zone C",
+    status: <>LIVE</>,
+    roiDetection: <>ROI DETECTION</>,
+    worker: <></>, // empty element
+    compliance: <>95.1%</>,
+    people: <>67</>,
+    violations: <>0</>,
+    noHelmet: <>1</>,
+  },
+  {
+    id: "zone-d" as ZoneId,
+    name: "Loading Dock Zone D",
+    status: <>LIVE</>,
+    roiDetection: <>ROI DETECTION</>,
+    worker: <></>,
+    compliance: <></>,
+    people: <>0</>,
+    violations: <>0</>,
+    noHelmet: <>0</>,
+  },
+];
+
 
 const toggleVideo = (zoneId: ZoneId) => {
   setVideoStates((prev) => ({
@@ -466,7 +467,7 @@ const CameraFeed = ({ zone }: { zone: {
       <Grid container spacing={3}>
         {cameraZones.map((zone) => (
           <Grid  size={{xs:12,lg:6,xl:6}} key={zone.id}>
-            {/* <CameraFeed zone={zone} /> */}
+            <CameraFeed zone={zone} />
           </Grid>
         ))}
       </Grid>

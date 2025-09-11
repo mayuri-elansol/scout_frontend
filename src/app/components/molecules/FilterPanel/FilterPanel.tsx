@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import {
@@ -213,18 +213,18 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
       <Collapse in={expanded}>
         <Box sx={{ p: 3 }}>
           <Grid container spacing={2}>
-            {filters.map((filter) => (
-              <Grid
-              size={{xs:12, sm:filters.length > 2 ? 6:12,md:filters.length>3?4:filters.length>2?6:12 }}
-                // item
-                // xs={12}
-                // sm={filters.length > 2 ? 6 : 12}
-                // md={filters.length > 3 ? 4 : filters.length > 2 ? 6 : 12}
-                key={filter.id}
-              >
-                {renderFilter(filter)}
-              </Grid>
-            ))}
+            {filters.map((filter) => {
+              let sm = filters.length > 2 ? 6 : 12;
+              let md = 12;
+              if (filters.length > 3) md = 4;
+              else if (filters.length > 2) md = 6;
+
+              return (
+                <Grid size={{ xs: 12, sm: sm, md: md }} key={filter.id}>
+                  {renderFilter(filter)}
+                </Grid>
+              );
+            })}
           </Grid>
 
           {/* Action Buttons */}

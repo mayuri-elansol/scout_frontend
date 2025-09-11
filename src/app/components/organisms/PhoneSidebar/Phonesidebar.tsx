@@ -27,14 +27,11 @@ import {
 import { PageType } from "@/app/types";
 
 interface PhonesidebarProps {
-  currentPage: PageType;
+  // currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
 
-const Phonesidebar: React.FC<PhonesidebarProps> = ({
-  currentPage,
-  onPageChange,
-}) => {
+const Phonesidebar: React.FC<PhonesidebarProps> = ({ onPageChange }) => {
   const router = useRouter();
   const pathname = usePathname();
   const theme = useTheme();
@@ -125,7 +122,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     if ("path" in item && item.path && !("items" in item)) {
       router.push(item.path);
       if (item.page) {
-        onPageChange(item.page); // ✅ update parent state
+        onPageChange(item.page); 
       }
       setPopoverOpen(false);
       setAnchorEl(null);
@@ -137,7 +134,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     if (subItem.path) {
       router.push(subItem.path);
       if (subItem.page) {
-        onPageChange(subItem.page); 
+        onPageChange(subItem.page);
       }
       setPopoverOpen(false);
       setAnchorEl(null);
@@ -160,15 +157,15 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({
     const isSelected = isItemSelected(item);
     const itemTitle = "title" in item ? item.title : item.name;
     const isHovered = hoveredItem === itemTitle;
-let backgroundColor: string;
+    let backgroundColor: string;
 
-if (isSelected) {
-  backgroundColor = theme.palette.primary.main;
-} else if (isHovered) {
-  backgroundColor = theme.palette.action.hover;
-} else {
-  backgroundColor = "transparent";
-}
+    if (isSelected) {
+      backgroundColor = theme.palette.primary.main;
+    } else if (isHovered) {
+      backgroundColor = theme.palette.action.hover;
+    } else {
+      backgroundColor = "transparent";
+    }
 
     return {
       borderRadius: 1,
@@ -212,8 +209,6 @@ if (isSelected) {
 
     return iconElement;
   };
-
-
 
   return (
     <>
@@ -320,6 +315,8 @@ if (isSelected) {
               fontSize: "0.875rem",
             }}
           >
+              {"title" in (hoverMenu ?? {}) ? hoverMenu?.title : ""}
+
           </Typography>
           <List sx={{ py: 0 }}>
             {hoverMenu?.items?.map((subItem, subIndex) => (

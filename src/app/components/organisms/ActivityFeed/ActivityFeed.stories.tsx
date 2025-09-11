@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import ActivityFeed from "./ActivityFeed";
@@ -172,7 +171,7 @@ export const HighActivity: Story = {
               },
             ].map((activity, index) => (
               <Box
-                key={index}
+                key={index + 1}
                 sx={{
                   display: "flex",
                   alignItems: "flex-start",

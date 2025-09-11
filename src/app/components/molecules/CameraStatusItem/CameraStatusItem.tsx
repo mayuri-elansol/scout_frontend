@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { Box, Typography, Paper, IconButton, Tooltip } from "@mui/material";
@@ -124,6 +124,18 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
     if (onViewAlerts) onViewAlerts();
   };
 
+  // ✅ Helper to map status to badge
+  const mapStatusToBadge = (status: CameraStatusItemProps["status"]) => {
+    switch (status) {
+      case "maintenance":
+        return "pending";
+      case "online":
+        return "active";
+      default:
+        return "inactive";
+    }
+  };
+
   return (
     <StyledPaper camerastatus={status} onClick={onClick}>
       <Box sx={{ p: 2 }}>
@@ -189,13 +201,7 @@ const CameraStatusItem: React.FC<CameraStatusItemProps> = ({
         <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
           <ScoutBadge
             variant="status"
-            status={
-              status === "maintenance"
-                ? "pending"
-                : status === "online"
-                ? "active"
-                : "inactive"
-            }
+            status={mapStatusToBadge(status)}
             label={status.charAt(0).toUpperCase() + status.slice(1)}
             size="small"
           />

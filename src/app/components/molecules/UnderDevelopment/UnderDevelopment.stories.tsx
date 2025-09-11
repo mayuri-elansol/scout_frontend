@@ -1,5 +1,3 @@
-// src/stories/UnderDevelopment.stories.tsx
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import UnderDevelopment from "./UnderDevelopment";
 

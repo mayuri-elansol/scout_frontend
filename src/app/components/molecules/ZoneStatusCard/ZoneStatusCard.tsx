@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
@@ -105,10 +105,21 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
     }
   };
 
+  // Calculate personnel percentage
   const personnelPercentage = Math.min(
     (currentPersonnel / requiredPersonnel) * 100,
     100
   );
+
+  // Extract nested ternary into a separate variable
+  let personnelColor: "success" | "warning" | "error";
+  if (personnelPercentage >= 100) {
+    personnelColor = "success";
+  } else if (personnelPercentage >= 75) {
+    personnelColor = "warning";
+  } else {
+    personnelColor = "error";
+  }
 
   return (
     <StyledCard priority={priority} onClick={onClick}>
@@ -213,13 +224,7 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
           size="small"
           showLabel={false}
           showPercentage={false}
-          color={
-            personnelPercentage >= 100
-              ? "success"
-              : personnelPercentage >= 75
-              ? "warning"
-              : "error"
-          }
+          color={personnelColor}
         />
       </CardContent>
     </StyledCard>

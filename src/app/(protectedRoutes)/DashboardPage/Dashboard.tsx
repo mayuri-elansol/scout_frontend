@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from "react";
-import { KpiData, PageType } from "@/app/types";
-import { Box, Typography } from "@mui/material";
+import React from "react";
+import { KpiData } from "@/app/types";
+import { Box, Grid } from "@mui/material";
 import {
   Shield,
   Warning,
@@ -13,26 +13,13 @@ import {
   Place,
 } from "@mui/icons-material";
 
-// Import using new atomic design structure
 import { ActivityFeed, CameraStatus } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
-import PPEDetection from "../(AnalyticsPages)/PPEDetectionPage/page";
-import IntrusionDetection from "../(AnalyticsPages)/IntrusionDetectionPage/page";
-import EmployeePresence from "../(AnalyticsPages)/EmployeePresencePage/page";
-import PeopleCount from "../(AnalyticsPages)/PeopleCountPage/page";
-import LiveStreaming from "../LiveStreamingPage/page";
-import SystemAlerts from "../AlertsPage/SystemAlerts";
-
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/system";
 
-export interface DashboardPageProps {}
-
-const Dashboard: React.FC<DashboardPageProps> = () => {
+const Dashboard: React.FC = () => {
   const { t } = useTranslation();
-
-  const [currentPage] = useState<PageType>("dashboard");
 
   const kpiData: KpiData[] = [
     {
@@ -139,119 +126,31 @@ const Dashboard: React.FC<DashboardPageProps> = () => {
 
   return (
     <Box
-      sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f5f7fa" }}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#f5f7fa",
+        p: 2,
+      }}
     >
-      {/* Main Content */}
-      <Box>
-        {/* Breadcrumb */}
-        {/* <Breadcrumb currentPage={currentPage} onPageChange={handlePageChange} /> */}
+      {/* KPI Cards Grid */}
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {kpiData.map((kpi) => (
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={kpi.title}>
+            <KpiCard {...kpi} />
+          </Grid>
+        ))}
+      </Grid>
 
-        {/* Welcome Page */}
-
-        {/* Dashboard Content */}
-        {currentPage === "dashboard" && (
-          <>
-            {/* KPI Cards Grid */}
-            <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-              {kpiData.map((kpi) => (
-                <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
-            </Grid>
-
-            {/* Activity Feed and Camera Status */}
-            <Box
-              sx={{
-                display: "flex",
-                gap: 3,
-                flexWrap: "wrap",
-                // px: 2,
-              }}
-            >
-              <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
-                <ActivityFeed />
-              </Box>
-              <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
-                <CameraStatus />
-              </Box>
-            </Box>
-          </>
-        )}
-
-        {/* PPE Detection Page */}
-        {currentPage === "ppe-detection" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <PPEDetection />
-          </Box>
-        )}
-
-        {/* Intrusion Detection Page */}
-        {currentPage === "intrusion-detection" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <IntrusionDetection />
-          </Box>
-        )}
-
-        {/* Employee Presence Page */}
-        {currentPage === "employee-presence" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <EmployeePresence />
-          </Box>
-        )}
-
-        {/* People Count Page */}
-        {currentPage === "people-count" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <PeopleCount />
-          </Box>
-        )}
-
-        {/* Live Streaming Page */}
-        {currentPage === "live-streaming" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <LiveStreaming />
-          </Box>
-        )}
-
-        {/* System Alerts Page */}
-        {currentPage === "alerts" && (
-          <Box sx={{ px: 2, pt: 2 }}>
-            <SystemAlerts />
-          </Box>
-        )}
-
-        {/* Other pages content would go here */}
-        {currentPage !== "dashboard" &&
-          currentPage !== "ppe-detection" &&
-          currentPage !== "intrusion-detection" &&
-          currentPage !== "employee-presence" &&
-          currentPage !== "people-count" &&
-          currentPage !== "live-streaming" &&
-          currentPage !== "alerts" && (
-            <Box sx={{ px: 2, pt: 2 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: "60vh",
-                  backgroundColor: "white",
-                  borderRadius: 1.5,
-                  border: "1px solid #e0e0e0",
-                }}
-              >
-                <Box sx={{ textAlign: "center" }}>
-                  <Typography variant="h5" sx={{ color: "#5c6b7d", mb: 1 }}>
-                    {currentPage.replace("-", " ").toUpperCase()} Page
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: "#9aa0a6" }}>
-                    This page is under development
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
-          )}
+      {/* Activity Feed and Camera Status */}
+      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+        <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
+          <ActivityFeed />
+        </Box>
+        <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
+          <CameraStatus />
+        </Box>
       </Box>
     </Box>
   );

@@ -1,11 +1,5 @@
-import React from 'react';
-import {
-  Switch,
-  FormControlLabel,
-  Typography,
-  Chip,
-  Box,
-} from '@mui/material';
+import React from "react";
+import { Switch, FormControlLabel, Typography, Chip, Box } from "@mui/material";
 
 export interface AiToggleSwitchProps {
   /** Whether AI processing is enabled */
@@ -15,7 +9,7 @@ export interface AiToggleSwitchProps {
   /** Label text for the toggle */
   label?: string;
   /** Size variant */
-  size?: 'small' | 'medium';
+  size?: "small" | "medium";
   /** Show status chip */
   showChip?: boolean;
   /** Custom styling */
@@ -25,8 +19,8 @@ export interface AiToggleSwitchProps {
 const AiToggleSwitch: React.FC<AiToggleSwitchProps> = ({
   enabled,
   onChange,
-  label = 'AI Processing',
-  size = 'medium',
+  label = "AI Processing",
+  size = "medium",
   showChip = true,
   sx = {},
 }) => {
@@ -38,29 +32,29 @@ const AiToggleSwitch: React.FC<AiToggleSwitchProps> = ({
           onChange={(e) => onChange(e.target.checked)}
           size={size}
           sx={{
-            '& .MuiSwitch-switchBase.Mui-checked': {
-              color: '#4caf50',
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: "#4caf50",
             },
-            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-              backgroundColor: '#4caf50',
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+              backgroundColor: "#4caf50",
             },
           }}
         />
       }
       label={
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography sx={{ fontWeight: 600, color: '#333' }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Typography sx={{ fontWeight: 600, color: "#333" }}>
             {label}
           </Typography>
           {showChip && (
             <Chip
-              label={enabled ? 'Enabled' : 'Disabled'}
+              label={enabled ? "Enabled" : "Disabled"}
               size="small"
               sx={{
-                backgroundColor: enabled ? '#e8f5e9' : '#ffebee',
-                color: enabled ? '#4caf50' : '#f44336',
+                backgroundColor: enabled ? "#e8f5e9" : "#ffebee",
+                color: enabled ? "#4caf50" : "#f44336",
                 fontWeight: 600,
-                fontSize: '12px',
+                fontSize: "12px",
               }}
             />
           )}

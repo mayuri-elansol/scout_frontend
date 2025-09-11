@@ -1,64 +1,77 @@
-import React from 'react';
-import { Typography, TypographyProps } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import React from "react";
+import { Typography, TypographyProps } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
-interface ScoutTypographyProps extends Omit<TypographyProps, 'variant'> {
-  variant?: 
-    | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-    | 'subtitle1' | 'subtitle2'
-    | 'body1' | 'body2'
-    | 'caption' | 'overline'
-    | 'pageTitle' | 'sectionTitle' | 'cardTitle' | 'label' | 'helperText';
-  weight?: 'light' | 'regular' | 'medium' | 'semibold' | 'bold';
-  color?: 'primary' | 'secondary' | 'success' | 'error' | 'warning' | 'info' | 'text' | 'muted' | 'disabled';
+// Accept all valid MUI variants + custom design variants
+type CustomVariant =
+  | "pageTitle"
+  | "sectionTitle"
+  | "cardTitle"
+  | "label"
+  | "helperText";
+
+interface ScoutTypographyProps extends Omit<TypographyProps, "variant"> {
+  variant?: TypographyProps["variant"] | CustomVariant;
+  weight?: "light" | "regular" | "medium" | "semibold" | "bold";
+  color?:
+    | "primary"
+    | "secondary"
+    | "success"
+    | "error"
+    | "warning"
+    | "info"
+    | "text"
+    | "muted"
+    | "disabled";
 }
 
-const StyledTypography = styled(Typography)<ScoutTypographyProps>(({ theme, weight, color: textColor }) => ({
-  // Font weight mapping
-  fontWeight: {
-    light: 300,
-    regular: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
-  }[weight || 'regular'],
+const StyledTypography = styled(Typography)<ScoutTypographyProps>(
+  ({ theme, weight, color: textColor }) => ({
+    fontWeight: {
+      light: 300,
+      regular: 400,
+      medium: 500,
+      semibold: 600,
+      bold: 700,
+    }[weight || "regular"],
+    color: {
+      primary: theme.palette.primary.main,
+      secondary: theme.palette.secondary.main,
+      success: theme.palette.success.main,
+      error: theme.palette.error.main,
+      warning: theme.palette.warning.main,
+      info: theme.palette.info.main,
+      text: theme.palette.text.primary,
+      muted: theme.palette.text.secondary,
+      disabled: theme.palette.text.disabled,
+    }[textColor || "text"],
+  })
+);
 
-  // Color mapping
-  color: {
-    primary: theme.palette.primary.main,
-    secondary: theme.palette.secondary.main,
-    success: theme.palette.success.main,
-    error: theme.palette.error.main,
-    warning: theme.palette.warning.main,
-    info: theme.palette.info.main,
-    text: theme.palette.text.primary,
-    muted: theme.palette.text.secondary,
-    disabled: theme.palette.text.disabled,
-  }[textColor || 'text'],
-}));
-
-const ScoutTypography: React.FC<ScoutTypographyProps> = ({ 
-  variant = 'body1', 
-  weight = 'regular',
-  color = 'text',
+const ScoutTypography: React.FC<ScoutTypographyProps> = ({
+  variant = "body1",
+  weight = "regular",
+  color = "text",
   children,
-  ...props 
+  ...props
 }) => {
-  // Map custom variants to Material UI variants
-  const getMuiVariant = (customVariant: string): any => {
-    switch (customVariant) {
-      case 'pageTitle':
-        return 'h3';
-      case 'sectionTitle':
-        return 'h5';
-      case 'cardTitle':
-        return 'h6';
-      case 'label':
-        return 'body2';
-      case 'helperText':
-        return 'caption';
+  // Map custom variants to valid MUI variants
+  const getMuiVariant = (
+    v: ScoutTypographyProps["variant"]
+  ): TypographyProps["variant"] => {
+    switch (v) {
+      case "pageTitle":
+        return "h3";
+      case "sectionTitle":
+        return "h5";
+      case "cardTitle":
+        return "h6";
+      case "label":
+        return "body2";
+      case "helperText":
+        return "caption";
       default:
-        return customVariant;
+        return v as TypographyProps["variant"]; // now safe
     }
   };
 

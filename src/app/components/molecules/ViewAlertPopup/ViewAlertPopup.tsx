@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  Button,
   Box,
   Typography,
   Divider,
@@ -107,8 +106,8 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
               icon: <Schedule sx={{ fontSize: 18, color: "#e91e63" }} />,
               bg: "#fce4ec",
             },
-          ].map((item, i) => (
-            <Grid size={{ xs: 12, sm: 6 }} key={i}>
+          ].map((item) => (
+            <Grid size={{ xs: 12, sm: 6 }} key={item.label}>
               <Box
                 sx={{
                   p: 1.5,
@@ -148,7 +147,6 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
             </Grid>
           ))}
         </Grid>
-
         <Divider sx={{ my: 1.5 }} />
 
         <Box
@@ -187,17 +185,16 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
               </Typography>
             </Box>
           ) : (
-            <img
-              src={imageUrl}
-              alt="Alert"
-              onError={handleImageError}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                borderRadius: 8,
-                objectFit: "cover",
-              }}
-            />
+            <Box sx={{ width: "100%", height: "100%", position: "relative" }}>
+              <Image
+                src={imageUrl}
+                alt="Alert"
+                fill
+                style={{ objectFit: "cover", borderRadius: 8 }}
+                unoptimized
+                onError={handleImageError}
+              />
+            </Box>
           )}
         </Box>
       </DialogContent>

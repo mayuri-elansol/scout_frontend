@@ -7,7 +7,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 interface KpiCardProps {
   title: string;
   value: string;
-  subtitle: string;
+  //subtitle: string;
   trend: string;
   trendColor: string;
   color: string;
@@ -15,14 +15,14 @@ interface KpiCardProps {
   icon: SvgIconComponent;
   variant?: "default" | "success" | "info" | "critical";
   size?: "small" | "medium" | "large";
-  // Custom sizing props for Storybook and flexible layouts
   customWidth?: number;
+  // customHeight?: number;
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
-  subtitle,
+  //  subtitle,
   trend,
   trendColor,
   color,
@@ -31,9 +31,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   variant = "default",
   size = "medium",
   customWidth,
-  // customHeight,
 }) => {
-  // Get variant-specific styling
   const getVariantStyles = () => {
     switch (variant) {
       case "success":
@@ -199,18 +197,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
           }}
         >
           {title}
-        </Typography>
-
-        {/* Subtitle */}
-        <Typography
-          sx={{
-            fontSize: sizeStyles.subtitleSize,
-            color: "#6b7280",
-            lineHeight: 1.3,
-            mt: "auto",
-          }}
-        >
-          {subtitle}
         </Typography>
       </CardContent>
     </Card>

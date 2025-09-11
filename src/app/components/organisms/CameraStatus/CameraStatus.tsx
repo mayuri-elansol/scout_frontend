@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardContent, Box, Typography, useTheme } from "@mui/material";
+import { Card, CardContent, Box, Typography } from "@mui/material";
 import { Circle } from "@mui/icons-material";
 
 interface CameraZone {
@@ -30,7 +30,6 @@ const CameraStatus: React.FC = () => {
         return "#9e9e9e";
     }
   };
-
   return (
     <Card sx={{ height: "100%" }}>
       <CardContent sx={{ p: 3 }}>
@@ -48,7 +47,7 @@ const CameraStatus: React.FC = () => {
         <Box>
           {cameraZones.map((zone, index) => (
             <Box
-              key={index}
+              key={index + 1}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",

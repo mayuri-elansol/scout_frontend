@@ -19,11 +19,26 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
   const getSizeStyles = () => {
     switch (size) {
       case "small":
-        return { padding: 1.5, fontSize: "20px" };
+        return {
+          padding: 1.5,
+          fontSize: "20px",
+          minHeight: "60px",
+          labelSize: "11px",
+        };
       case "large":
-        return { padding: 3, fontSize: "32px" };
+        return {
+          padding: 3,
+          fontSize: "32px",
+          minHeight: "120px",
+          labelSize: "14px",
+        };
       default:
-        return { padding: 2, fontSize: "24px" };
+        return {
+          padding: 2,
+          fontSize: "24px",
+          minHeight: "80px",
+          labelSize: "12px",
+        };
     }
   };
 
@@ -39,9 +54,7 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
         backgroundColor: "white",
         display: "flex",
         flex: 1,
-        minHeight:
-          size === "small" ? "60px" : size === "large" ? "120px" : "80px",
-
+        minHeight: sizeStyles.minHeight,
         flexDirection: "column",
         justifyContent: "center",
         transition: "all 0.2s ease",
@@ -64,8 +77,7 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
       </Typography>
       <Typography
         sx={{
-          fontSize:
-            size === "small" ? "11px" : size === "large" ? "14px" : "12px",
+          fontSize: sizeStyles.labelSize,
           color: "#666",
           fontWeight: 500,
         }}

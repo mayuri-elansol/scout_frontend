@@ -67,46 +67,51 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
           { label: "PPE Detection", icon: null, clickable: false }
         );
         break;
-         case "object-detection":
+      case "object-detection":
         items.push(
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
           { label: "Object Detection", icon: null, clickable: false }
         );
         break;
-         case "fire-smoke-oil-leak-detection":
+      case "fire-smoke-oil-leak-detection":
         items.push(
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
-          { label: "Fire smoke oil leak detection", icon: null, clickable: false }
+          {
+            label: "Fire smoke oil leak detection",
+            icon: null,
+            clickable: false,
+          }
         );
-        break; case "vehicle-speed":
+        break;
+      case "vehicle-speed":
         items.push(
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
-          { label: "vehicle speed Monitoring", icon: null, clickable: false }
+          { label: "Vehicle Speed Monitoring", icon: null, clickable: false }
         );
         break;
       case "intrusion-detection":
@@ -114,7 +119,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Security Monitoring", icon: null, clickable: false },
@@ -126,7 +131,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Workforce Monitoring", icon: null, clickable: false },
@@ -138,7 +143,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           {
             label: "Analytics",
             icon: null,
-            clickable: true,
+            clickable: false,
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Operational Insight", icon: null, clickable: false },
@@ -146,7 +151,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         );
         break;
       case "live-streaming":
-        items.push({ label: "Live streaming", icon: null, clickable: false });
+        items.push({ label: "Live Streaming", icon: null, clickable: false });
         break;
       case "alerts":
         items.push({ label: "Alerts", icon: null, clickable: false });
@@ -163,34 +168,41 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   return (
     <Box
       sx={{
-        height: 45,
         mb: 2,
         borderBottom: "1px solid #f0f0f0",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: 1,
+        height: "auto",
       }}
     >
       {/* Breadcrumb */}
       <Box
-        sx={{ display: "flex", alignItems: "center", gap: 1, color: "#5c6b7d" }}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          color: "#5c6b7d",
+          flexWrap: "wrap",
+          "@media (max-width:798px)": {
+            display: "none",
+          },
+        }}
       >
         {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={index + 1}>
             {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
-
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               {item.icon && <item.icon sx={{ fontSize: 16 }} />}
-
               {item.clickable && item.onClick ? (
                 <Typography
                   sx={{
                     color: theme.palette.primary.main,
                     cursor: "pointer",
                     fontSize: "14px",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
+                    "&:hover": { textDecoration: "underline" },
                   }}
                   onClick={item.onClick}
                 >
@@ -217,7 +229,20 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
       </Box>
 
       {/* Time Picker */}
-      <Box sx={{ pr: 2 }}>
+
+      <Box
+        sx={{
+          //  pr: { xs: 0, sm: 2 }, mt: { xs: 1, sm: 0 }
+          pr: { xs: 0, sm: 2 },
+          mt: { xs: 1, sm: 0 },
+          width: "100%",
+          display: "flex",
+          justifyContent: { xs: "flex-end", sm: "flex-end" },
+          "@media (min-width:798px)": {
+            width: "auto",
+          },
+        }}
+      >
         <Button
           variant="outlined"
           startIcon={<Schedule />}
@@ -227,8 +252,9 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             color: "#374151",
             borderColor: "#d1d5db",
             backgroundColor: "white",
-            fontSize: "14px",
-            textTransform: "none",
+
+            fontSize: { xs: "12px", sm: "14px" },
+            px: { xs: 1, sm: 2 },
             "&:hover": {
               borderColor: "#9ca3af",
               backgroundColor: "#f9fafb",
@@ -250,11 +276,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             vertical: "top",
             horizontal: "right",
           }}
-          PaperProps={{
-            sx: {
-              width: 280,
-              maxHeight: 200,
-              mt: 0.5,
+          slotProps={{
+            paper: {
+              sx: {
+                width: 150,
+                maxHeight: 200,
+                mt: 0.5,
+              },
             },
           }}
         >

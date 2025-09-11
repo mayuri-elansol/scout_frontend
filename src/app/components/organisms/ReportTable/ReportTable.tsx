@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -27,7 +27,7 @@ interface ReportColumn {
 }
 
 interface ReportData {
-  [key: string]: any;
+  [key: string]: string | number | boolean;
 }
 
 type FilterType = "text" | "select" | "date";
@@ -49,7 +49,7 @@ interface ReportTableProps {
   onReset?: () => void;
   onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
   loading?: boolean;
-  isSubmitDisabled?: boolean; // 👈 NEW
+  isSubmitDisabled?: boolean;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -61,7 +61,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   onReset,
   onExport,
   loading = false,
-  isSubmitDisabled, // 👈 NEW
+  isSubmitDisabled,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -72,12 +72,12 @@ const ReportTable: React.FC<ReportTableProps> = ({
   };
 
   /** Filter Logic */
-  const applyFilters = (row: ReportData) => {
-    return Object.entries(filterValues).every(([key, value]) => {
-      if (!value) return true;
-      return row[key]?.toString().toLowerCase().includes(value.toLowerCase());
-    });
-  };
+  const applyFilters = (row: ReportData) =>
+    Object.entries(filterValues).every(([key, value]) =>
+      !value
+        ? true
+        : row[key]?.toString().toLowerCase().includes(value.toLowerCase())
+    );
 
   const filteredData = data.filter(applyFilters);
 
@@ -105,9 +105,12 @@ const ReportTable: React.FC<ReportTableProps> = ({
   };
 
   /** Render Cell Values */
-  const renderCellValue = (column: ReportColumn, value: any) => {
+  const renderCellValue = (
+    column: ReportColumn,
+    value: string | number | boolean
+  ) => {
     if (column.id === "status") {
-      const colors = getStatusColor(value);
+      const colors = getStatusColor(String(value));
       return (
         <Chip
           label={value}
@@ -149,11 +152,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   const handleDownloadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
+  const handleClose = () => setAnchorEl(null);
   const handleExportClick = (format: "csv" | "pdf") => {
     onExport?.(format, filterValues);
     handleClose();
@@ -171,11 +170,8 @@ const ReportTable: React.FC<ReportTableProps> = ({
       sx: { minWidth: 150 },
     };
 
-    if (filter.type === "text") {
-      return <TextField {...commonProps} />;
-    }
-
-    if (filter.type === "select") {
+    if (filter.type === "text") return <TextField {...commonProps} />;
+    if (filter.type === "select")
       return (
         <TextField {...commonProps} select>
           <MenuItem value="">All</MenuItem>
@@ -186,20 +182,56 @@ const ReportTable: React.FC<ReportTableProps> = ({
           ))}
         </TextField>
       );
-    }
-
-    if (filter.type === "date") {
+    if (filter.type === "date")
       return (
         <TextField
           {...commonProps}
           type="date"
-          InputLabelProps={{ shrink: true }}
+          slotProps={{ inputLabel: { shrink: true } }}
         />
       );
-    }
 
     return null;
   };
+
+  /** Table Rows (avoids nested ternary) */
+  let tableRows;
+  if (loading) {
+    tableRows = [...Array(5)].map((_, rowIndex) => (
+      <TableRow key={rowIndex + 1}>
+        {columns.map((col) => (
+          <TableCell key={col.id}>
+            <Skeleton variant="text" width="80%" />
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  } else if (filteredData.length > 0) {
+    tableRows = filteredData.map((row, index) => (
+      <TableRow
+        key={index + 1}
+        sx={{ "&:hover": { backgroundColor: "#f9f9f9" } }}
+      >
+        {columns.map((column) => (
+          <TableCell
+            key={column.id}
+            align={column.align || "left"}
+            sx={{ py: 1.5, borderBottom: "1px solid #f0f0f0" }}
+          >
+            {renderCellValue(column, row[column.id])}
+          </TableCell>
+        ))}
+      </TableRow>
+    ));
+  } else {
+    tableRows = (
+      <TableRow>
+        <TableCell colSpan={columns.length} align="center" sx={{ py: 4 }}>
+          <Typography>No matching records found</Typography>
+        </TableCell>
+      </TableRow>
+    );
+  }
 
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
@@ -215,7 +247,6 @@ const ReportTable: React.FC<ReportTableProps> = ({
             borderBottom: "1px solid #e0e0e0",
           }}
         >
-          {/* Title */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Description sx={{ color: "#1976d2", fontSize: 24 }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
@@ -251,7 +282,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
                 size="small"
                 variant="contained"
                 onClick={() => onSubmit?.(filterValues)}
-                disabled={isSubmitDisabled} // 👈 will work now
+                disabled={isSubmitDisabled}
               >
                 Submit
               </Button>
@@ -263,16 +294,19 @@ const ReportTable: React.FC<ReportTableProps> = ({
               >
                 Download
               </Button>
+
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                PaperProps={{
-                  sx: {
-                    backgroundColor: "#fff",
-                    borderRadius: 1,
-                    boxShadow: 3,
-                    minWidth: 150,
+                slotProps={{
+                  paper: {
+                    sx: {
+                      backgroundColor: "#fff",
+                      borderRadius: 1,
+                      boxShadow: 3,
+                      minWidth: 150,
+                    },
                   },
                 }}
               >
@@ -321,46 +355,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
                 ))}
               </TableRow>
             </TableHead>
-            <TableBody>
-              {loading ? (
-                [...Array(5)].map((_, rowIndex) => (
-                  <TableRow key={rowIndex}>
-                    {columns.map((col) => (
-                      <TableCell key={col.id}>
-                        <Skeleton variant="text" width="80%" />
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : filteredData.length > 0 ? (
-                filteredData.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{ "&:hover": { backgroundColor: "#f9f9f9" } }}
-                  >
-                    {columns.map((column) => (
-                      <TableCell
-                        key={column.id}
-                        align={column.align || "left"}
-                        sx={{ py: 1.5, borderBottom: "1px solid #f0f0f0" }}
-                      >
-                        {renderCellValue(column, row[column.id])}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    align="center"
-                    sx={{ py: 4 }}
-                  >
-                    <Typography>No matching records found</Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
+            <TableBody>{tableRows}</TableBody>
           </Table>
         </TableContainer>
       </Paper>

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import React from "react";
 import { Box, LinearProgress, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -15,35 +15,48 @@ interface ScoutProgressBarProps {
   animated?: boolean;
 }
 
+const heights = {
+  small: "6px",
+  medium: "8px",
+  large: "12px",
+};
+
+const colors = {
+  primary: "#1976d2",
+  success: "#4caf50",
+  warning: "#ff9800",
+  error: "#f44336",
+  info: "#2196f3",
+};
+
+const getAutoColor = (percent: number): keyof typeof colors => {
+  if (percent >= 80) return "success";
+  if (percent >= 60) return "primary";
+  if (percent >= 40) return "warning";
+  return "error";
+};
+
+const getStatusText = (percent: number): string => {
+  if (percent >= 90) return "Excellent";
+  if (percent >= 75) return "Good";
+  if (percent >= 50) return "Fair";
+  if (percent >= 25) return "Poor";
+  return "Critical";
+};
+
+const getPercentageColor = (finalColor: keyof typeof colors): string => {
+  return colors[finalColor] || colors.primary;
+};
+
 const StyledLinearProgress = styled(LinearProgress)<{
   progressvariant?: string;
   progresssize?: string;
   progresscolor?: string;
 }>(({ progressvariant, progresssize, progresscolor }) => {
-  const heights = {
-    small: "6px",
-    medium: "8px",
-    large: "12px",
-  };
-
-  const colors = {
-    primary: "#1976d2",
-    success: "#4caf50",
-    warning: "#ff9800",
-    error: "#f44336",
-    info: "#2196f3",
-  };
-
-  const getColorByValue = (value: number) => {
-    if (value >= 80) return colors.success;
-    if (value >= 60) return colors.warning;
-    if (value >= 40) return colors.warning;
-    return colors.error;
-  };
-
-  const progressColor = progresscolor
-    ? colors[progresscolor as keyof typeof colors]
-    : getColorByValue(50);
+  const progressColor =
+    progresscolor && colors[progresscolor as keyof typeof colors]
+      ? colors[progresscolor as keyof typeof colors]
+      : colors.primary;
 
   return {
     height: heights[progresssize as keyof typeof heights] || heights.medium,
@@ -74,23 +87,8 @@ const ScoutProgressBar: React.FC<ScoutProgressBarProps> = ({
   animated = false,
 }) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
-
-  const getAutoColor = (percent: number) => {
-    if (percent >= 80) return "success";
-    if (percent >= 60) return "primary";
-    if (percent >= 40) return "warning";
-    return "error";
-  };
-
   const finalColor = color || getAutoColor(percentage);
-
-  const getStatusText = (percent: number) => {
-    if (percent >= 90) return "Excellent";
-    if (percent >= 75) return "Good";
-    if (percent >= 50) return "Fair";
-    if (percent >= 25) return "Poor";
-    return "Critical";
-  };
+  const displayColor = getPercentageColor(finalColor);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -103,35 +101,25 @@ const ScoutProgressBar: React.FC<ScoutProgressBarProps> = ({
             mb: 1,
           }}
         >
-          {(label || showLabel) && (
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: size === "small" ? "12px" : "14px",
-                fontWeight: 500,
-                color: "#374151",
-              }}
-            >
-              {label ||
-                (variant === "status" ? getStatusText(percentage) : "Progress")}
-            </Typography>
-          )}
+          <Typography
+            variant="body2"
+            sx={{
+              fontSize: size === "small" ? "12px" : "14px",
+              fontWeight: 500,
+              color: "#374151",
+            }}
+          >
+            {label ||
+              (variant === "status" ? getStatusText(percentage) : "Progress")}
+          </Typography>
+
           {showPercentage && (
             <Typography
               variant="body2"
               sx={{
                 fontSize: size === "small" ? "12px" : "14px",
                 fontWeight: 600,
-                color:
-                  finalColor === "success"
-                    ? "#4caf50"
-                    : finalColor === "warning"
-                    ? "#ff9800"
-                    : finalColor === "error"
-                    ? "#f44336"
-                    : finalColor === "info"
-                    ? "#2196f3"
-                    : "#1976d2",
+                color: displayColor,
               }}
             >
               {variant === "capacity" || variant === "performance"

@@ -1,15 +1,15 @@
-import React from 'react';
-import { 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  FormHelperText, 
+import React from "react";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
   SelectChangeEvent,
-  SelectProps 
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { ExpandMore } from '@mui/icons-material';
+  SelectProps,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { ExpandMore } from "@mui/icons-material";
 
 interface SelectOption {
   value: string | number;
@@ -17,7 +17,7 @@ interface SelectOption {
   disabled?: boolean;
 }
 
-interface ScoutSelectProps extends Omit<SelectProps, 'onChange' | 'variant'> {
+interface ScoutSelectProps extends Omit<SelectProps, "onChange" | "variant"> {
   id: string;
   label?: string;
   helperText?: string;
@@ -25,43 +25,45 @@ interface ScoutSelectProps extends Omit<SelectProps, 'onChange' | 'variant'> {
   error?: boolean;
   required?: boolean;
   fullWidth?: boolean;
-  size?: 'small' | 'medium';
-  variant?: 'outlined' | 'filled' | 'standard';
+  size?: "small" | "medium";
+  variant?: "outlined" | "filled" | "standard";
   placeholder?: string;
   width?: string;
   onChange: (value: string | number) => void;
 }
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
-  '& .MuiOutlinedInput-root': {
+  "& .MuiOutlinedInput-root": {
     borderRadius: 8,
     backgroundColor: theme.palette.background.paper,
-    '&:hover .MuiOutlinedInput-notchedOutline': {
+    "&:hover .MuiOutlinedInput-notchedOutline": {
       borderColor: theme.palette.primary.main,
     },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
       borderColor: theme.palette.primary.main,
       borderWidth: 2,
     },
   },
-  '& .MuiInputLabel-root': {
+  "& .MuiInputLabel-root": {
     color: theme.palette.text.secondary,
-    '&.Mui-focused': {
+    "&.Mui-focused": {
       color: theme.palette.primary.main,
     },
   },
-  '& .MuiFormHelperText-root': {
+  "& .MuiFormHelperText-root": {
     marginLeft: 0,
     marginTop: 4,
   },
 }));
 
-const StyledSelect = styled(Select)<{ variant: 'outlined' | 'filled' | 'standard' }>(({ theme, variant }) => ({
-  '& .MuiSelect-icon': {
+const StyledSelect = styled(Select)<{
+  variant: "outlined" | "filled" | "standard";
+}>(({ theme, variant }) => ({
+  "& .MuiSelect-icon": {
     color: theme.palette.text.secondary,
   },
-  ...(variant === 'outlined' && {
-    '& .MuiOutlinedInput-notchedOutline': {
+  ...(variant === "outlined" && {
+    "& .MuiOutlinedInput-notchedOutline": {
       borderColor: theme.palette.divider,
     },
   }),
@@ -75,8 +77,8 @@ const ScoutSelect: React.FC<ScoutSelectProps> = ({
   error = false,
   required = false,
   fullWidth = false,
-  size = 'medium',
-  variant = 'outlined',
+  size = "medium",
+  variant = "outlined",
   placeholder,
   width,
   value,
@@ -89,24 +91,20 @@ const ScoutSelect: React.FC<ScoutSelectProps> = ({
   };
 
   return (
-    <StyledFormControl 
-      fullWidth={fullWidth} 
-      error={error} 
+    <StyledFormControl
+      fullWidth={fullWidth}
+      error={error}
       required={required}
       size={size}
       variant={variant}
-      sx={{ width: width || 'auto' }}
+      sx={{ width: width || "auto" }}
     >
-      {label && (
-        <InputLabel id={`${id}-label`}>
-          {label}
-        </InputLabel>
-      )}
-      
+      {label && <InputLabel id={`${id}-label`}>{label}</InputLabel>}
+
       <StyledSelect
         labelId={`${id}-label`}
         id={id}
-        value={value || ''}
+        value={value || ""}
         label={label}
         onChange={handleChange}
         disabled={disabled}
@@ -120,10 +118,10 @@ const ScoutSelect: React.FC<ScoutSelectProps> = ({
             <em>{placeholder}</em>
           </MenuItem>
         )}
-        
+
         {options.map((option) => (
-          <MenuItem 
-            key={option.value} 
+          <MenuItem
+            key={option.value}
             value={option.value}
             disabled={option.disabled}
           >
@@ -131,10 +129,8 @@ const ScoutSelect: React.FC<ScoutSelectProps> = ({
           </MenuItem>
         ))}
       </StyledSelect>
-      
-      {helperText && (
-        <FormHelperText>{helperText}</FormHelperText>
-      )}
+
+      {helperText && <FormHelperText>{helperText}</FormHelperText>}
     </StyledFormControl>
   );
 };

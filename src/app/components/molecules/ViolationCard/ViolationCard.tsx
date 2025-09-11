@@ -1,22 +1,16 @@
 import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
-
+import Image from "next/image";
 interface Violation {
   title: string;
   location: string;
   time: string;
   Id: string;
-  severity?: "HIGH" | "MEDIUM" | "LOW" | string;
-  status?: "ACTIVE" | "RESOLVED" | string;
+  severity?: string;
+  status?: string;
   imageUrl?: string;
 }
-
-// interface RecentViolationsProps {
-//   label: string;
-//   violations: Violation[];
-//   onViewAll?: () => void;
-// }
 
 //  Reusable component (defined in same file)
 export const ViolationCard: React.FC<{ violation: Violation }> = ({
@@ -75,6 +69,7 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             </Typography>
           </Box>
         </Box>
+        {/* Image Preview */}
 
         {/* Image Preview */}
         <Box
@@ -88,18 +83,17 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             justifyContent: "center",
             mb: 0.5,
             border: "1px solid #dee2e6",
+            position: "relative", // needed for next/image layout="fill"
           }}
         >
           {violation.imageUrl ? (
-            <img
+            <Image
               src={violation.imageUrl}
               alt="Violation"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                borderRadius: 6,
-              }}
+              fill
+              style={{ objectFit: "cover", borderRadius: 6 }}
+              unoptimized
+              priority={true}
             />
           ) : (
             <Box sx={{ textAlign: "center", color: "#6c757d" }}>
