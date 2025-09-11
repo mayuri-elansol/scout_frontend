@@ -404,7 +404,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <Box
               component="img"
               src="/elansol_technologies_logo.jpg"
-              alt="Elansol Technologies Logo"
+              alt="Elansol Logo"
               sx={{ height: 50, width: "auto" }}
               loading="lazy"
             />
