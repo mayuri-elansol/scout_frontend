@@ -76,6 +76,26 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
         page: "vehicle-speed",
         path: "/VehicalSpeedMonitoring",
       },
+      {
+        name: "Fall Detection /Laydown/Sleeping Detection in Work Area",
+        page: "fall-detection",
+        path: "/FallDetection",
+      },
+      {
+        name: "STP/ETP Overflow Detection",
+        page: "STPOverflowDetection-detection",
+        path: "/STPOverflowDetection",
+      },
+      {
+        name: "Emergency Exit Blockage Detection",
+        page: "emergency-exit-blockage-detection",
+        path: "/EmergencyExitBlockage",
+      },
+      {
+        name: "Crowd Gathering in Hazardous Zones",
+        page: "crowd-gathering-in-hazardous-zones-detection",
+        path: "/CrowdGathering",
+      },
     ],
   },
   {

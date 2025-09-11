@@ -62,6 +62,7 @@ export type PageType =
   | "object-detection"
   | "fire-smoke-oil-leak-detection"
   | "vehicle-speed"
+  | "fall-detection"
   | "fire-detection"
   | "security-breach"
   | "vehicle-tracking"
@@ -72,7 +73,9 @@ export type PageType =
   | "alerts"
   | "reports"
   | "settings"
-  | "welcome";
+  |"STPOverflowDetection-detection"
+  |"emergency-exit-blockage-detection"
+  |"crowd-gathering-in-hazardous-zones-detection";
 
 // Component Props Types
 export interface SidebarProps {

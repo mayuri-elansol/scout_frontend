@@ -42,7 +42,7 @@ const MenuItem = React.memo<{
     <ListItemButton
       component={Link}
       href={item.path}
-      prefetch={false} // Disable prefetch for better initial load
+      prefetch={false}
       selected={pathname === item.path}
       sx={{
         borderRadius: 1,
@@ -112,7 +112,6 @@ const SubMenuItem = React.memo<{
               color: pathname === item.path ? "white" : "#6b7280",
               fontWeight: pathname === item.path ? 500 : "normal",
               lineHeight: 1.3,
-              
             },
           },
         }}
@@ -149,7 +148,7 @@ const CategorySection = React.memo<{
       <ListItem disablePadding>
         <ListItemButton onClick={handleToggle} sx={{ borderRadius: 1, py: 1 }}>
           {category.icon && (
-            <ListItemIcon sx={{ minWidth: 28, }}>
+            <ListItemIcon sx={{ minWidth: 28 }}>
               <category.icon sx={{ fontSize: 16 }} />
             </ListItemIcon>
           )}
@@ -160,8 +159,6 @@ const CategorySection = React.memo<{
                 sx: {
                   fontSize: "14px",
                   color: "#5c6b7d",
-                  
-                  
                 },
               },
             }}
