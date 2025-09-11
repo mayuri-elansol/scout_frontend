@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const EmergencyExitBlockage: React.FC = () => {
+const CrowdGathering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const ExitKpiData = [
+  const CrowdKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const EmergencyExitBlockage: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Emergency Exit Blockage Detection
+            Crowd Gathering in Hazardous Zones
           </Typography>
         </Box>
       </Box>
@@ -141,7 +141,7 @@ const EmergencyExitBlockage: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            ExitKpiData.map((kpi) => (
+            CrowdKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={kpi.title}
@@ -156,7 +156,7 @@ const EmergencyExitBlockage: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Emergency Exit Blockage Detection"
+            label="Recent Crowd Gathering in Hazardous Zones"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +171,7 @@ const EmergencyExitBlockage: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Emergency Exit Blockage Detection Report"
+        title="Crowd Gathering in Hazardous Zones Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -261,4 +261,4 @@ const EmergencyExitBlockage: React.FC = () => {
   );
 };
 
-export default EmergencyExitBlockage;
+export default CrowdGathering;

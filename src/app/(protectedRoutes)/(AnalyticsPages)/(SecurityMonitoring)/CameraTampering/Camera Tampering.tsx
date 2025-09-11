@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const CrowdGathering: React.FC = () => {
+const CameraTampering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const CrowdKpiData = [
+  const CameraTamperingKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const CrowdGathering: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Crowd Gathering in Hazardous Zones
+            Camera Tampering or Offline Detection
           </Typography>
         </Box>
       </Box>
@@ -135,17 +135,14 @@ const CrowdGathering: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+            skeletonKeys.map((key, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index + 1}>
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
-            CrowdKpiData.map((kpi) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
-              >
+            CameraTamperingKpiData.map((kpi) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -156,7 +153,7 @@ const CrowdGathering: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Crowd Gathering in Hazardous Zones"
+            label="Recent Camera Tampering or Offline Detection"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +168,7 @@ const CrowdGathering: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Crowd Gathering in Hazardous Zones Report"
+        title="Camera Tampering or Offline Detection Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -261,4 +258,4 @@ const CrowdGathering: React.FC = () => {
   );
 };
 
-export default CrowdGathering;
+export default CameraTampering;

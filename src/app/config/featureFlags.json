@@ -10,6 +10,16 @@
   "vehicle-speed": true,
   "intrusion-detection": true,
   "employee-presence": true,
-  "people-count": true
-
+  "people-count": true,
+  "fall-detection": false,
+  "STPOverflowDetection-detection":false,
+  "emergency-exit-blockage-detection":true,
+  "crowd-gathering-in-hazardous-zones-detection":true,
+  "camera-tampering":true,
+  "people-presence":true,
+  "employee-idle":true,
+  "mobile-phone-usage":true,
+  "sleeping-absence-security-personnel":true,
+  "vehicle-count":true,
+  "tracking-vehicle":true
 }

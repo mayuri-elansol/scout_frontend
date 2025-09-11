@@ -122,7 +122,7 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({ onPageChange }) => {
     if ("path" in item && item.path && !("items" in item)) {
       router.push(item.path);
       if (item.page) {
-        onPageChange(item.page); // ✅ update parent state
+        onPageChange(item.page); 
       }
       setPopoverOpen(false);
       setAnchorEl(null);
@@ -314,7 +314,10 @@ const Phonesidebar: React.FC<PhonesidebarProps> = ({ onPageChange }) => {
               mb: 1,
               fontSize: "0.875rem",
             }}
-          ></Typography>
+          >
+              {"title" in (hoverMenu ?? {}) ? hoverMenu?.title : ""}
+
+          </Typography>
           <List sx={{ py: 0 }}>
             {hoverMenu?.items?.map((subItem, subIndex) => (
               <ListItem key={`${subItem.name}-${subIndex}`} disablePadding>

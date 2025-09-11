@@ -34,7 +34,7 @@ const Header: React.FC = () => {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-          hour12: true,
+          hour12: false,
         })
       );
     };
@@ -129,7 +129,7 @@ const Header: React.FC = () => {
               variant="body2"
               sx={{ color: "#5c6b7d", fontSize: "14px" }}
             >
-              System Online
+              System Health
             </Typography>
           </Box>
 

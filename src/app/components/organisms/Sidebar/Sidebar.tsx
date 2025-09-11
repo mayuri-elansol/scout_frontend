@@ -42,7 +42,7 @@ const MenuItem = React.memo<{
     <ListItemButton
       component={Link}
       href={item.path}
-      prefetch={false} // Disable prefetch for better initial load
+      prefetch={false}
       selected={pathname === item.path}
       sx={{
         borderRadius: 1,
@@ -231,17 +231,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
     {}
   );
 
-  // Memoize category toggle handler
   const handleCategoryToggle = useCallback((title: string) => {
     setOpenCategories((prev) => ({ ...prev, [title]: !prev[title] }));
   }, []);
 
-  // Memoize analytics toggle handler
   const handleAnalyticsToggle = useCallback(() => {
     setAnalyticsOpen((prev) => !prev);
   }, []);
 
-  // Memoize filtered menus to prevent recalculation on every render
   const filteredMenus = useMemo(() => {
     const dashboardFlags: MenuItemConfig[] = dashboardMenu
       .map((item) => ({
@@ -269,8 +266,12 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
     return { dashboardFlags, alertFlags, analyticsFlags };
   }, [featureFlag]);
+  const isAnalyticsActive = useMemo(() => {
+    return filteredMenus.analyticsFlags.some((category) =>
+      category.items.some((item) => pathname === item.path)
+    );
+  }, [pathname, filteredMenus.analyticsFlags]);
 
-  // Memoize the entire menu structure
   const menuContent = useMemo(
     () => (
       <>
@@ -292,9 +293,30 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleAnalyticsToggle}
-                sx={{ borderRadius: 1, color: theme.palette.primary.main }}
+                selected={
+                  isAnalyticsActive &&
+                  !Object.values(openCategories).some(Boolean)
+                }
+                sx={{
+                  borderRadius: 1,
+                  "&.Mui-selected": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    "&:hover": { backgroundColor: theme.palette.primary.dark },
+                  },
+                  color: isAnalyticsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
+                }}
               >
-                <ListItemIcon sx={{ minWidth: 36 }}>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 36,
+                    color: isAnalyticsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
+                >
                   <BarChart />
                 </ListItemIcon>
                 <ListItemText primary="Analytics" />
@@ -356,39 +378,40 @@ const Sidebar: React.FC<SidebarProps> = () => {
           height: "calc(100vh - 64px)",
           overflowY: "auto",
           borderRight: "none",
+          boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
+          p: 2,
         },
       }}
     >
-      <Box
+      {/* <Box
         sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
-      >
-        <Box sx={{ flex: 1 }}>{menuContent}</Box>
+      > */}
+      <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
-        {/* Powered by Elansol - Memoized */}
-        <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1 }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Typography sx={{ fontSize: "13px", color: "#666" }}>
-                Powered by
-              </Typography>
-              <Box
-                component="img"
-                src="/elansol_technologies_logo.jpg"
-                alt="Elansol Technologies Logo"
-                sx={{ height: 50, width: "auto" }}
-                loading="lazy" // Lazy load the image
-              />
-            </Box>
+      <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1, mx: -2, px: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography sx={{ fontSize: "13px", color: "#666" }}>
+              Powered by
+            </Typography>
+            <Box
+              component="img"
+              src="/elansol_technologies_logo.jpg"
+              alt="Elansol Logo"
+              sx={{ height: 50, width: "auto" }}
+              loading="lazy"
+            />
           </Box>
         </Box>
       </Box>
+      {/* </Box> */}
     </Drawer>
   );
 };

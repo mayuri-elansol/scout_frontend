@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const FallDetection: React.FC = () => {
+const STPOverflowDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const fallKpiData = [
+  const StpKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -104,6 +104,7 @@ const FallDetection: React.FC = () => {
   }
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
+    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
 
   const handleReset = () => {
@@ -124,7 +125,7 @@ const FallDetection: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Fall Detection /Laydown/Sleeping Detection in Work Areas
+            STP/ETP Overflow Detection
           </Typography>
         </Box>
       </Box>
@@ -140,7 +141,7 @@ const FallDetection: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            fallKpiData.map((kpi) => (
+            StpKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={kpi.title}
@@ -155,7 +156,7 @@ const FallDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Fall Detection"
+            label="Recent STP/ETP Overflow Detection"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -170,7 +171,7 @@ const FallDetection: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Fall Detection Report"
+        title="STP/ETP Overflow Detection Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -260,4 +261,4 @@ const FallDetection: React.FC = () => {
   );
 };
 
-export default FallDetection;
+export default STPOverflowDetection;

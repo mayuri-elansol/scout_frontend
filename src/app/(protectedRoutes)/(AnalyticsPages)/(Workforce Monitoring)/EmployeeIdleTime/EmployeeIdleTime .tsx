@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const PeoplePresence: React.FC = () => {
+const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const PeoplePresenceKpiData = [
+  const EmployeeIdleTimeKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const PeoplePresence: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            People Presence during Shutdown Hours
+            Employee Idle Time Monitoring
           </Typography>
         </Box>
       </Box>
@@ -141,8 +141,11 @@ const PeoplePresence: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            PeoplePresenceKpiData.map((kpi) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+            EmployeeIdleTimeKpiData.map((kpi) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={kpi.title}
+              >
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -153,7 +156,7 @@ const PeoplePresence: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent People Presence during Shutdown Hours"
+            label="Recent Employee Idle Time Monitoring"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -168,7 +171,7 @@ const PeoplePresence: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="People Presence during Shutdown Hours Report"
+        title="Employee Idle Time Monitoring Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -258,4 +261,4 @@ const PeoplePresence: React.FC = () => {
   );
 };
 
-export default PeoplePresence;
+export default EmployeeIdleTime;

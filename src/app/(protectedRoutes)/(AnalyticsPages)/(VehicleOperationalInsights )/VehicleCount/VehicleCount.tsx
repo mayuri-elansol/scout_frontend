@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const CameraTampering: React.FC = () => {
+const VehicleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const CameraTamperingKpiData = [
+  const VehicleCountKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const CameraTampering: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Camera Tampering or Offline Detection
+            Vehicle Count & ANPR at Entry/Exit Gates
           </Typography>
         </Box>
       </Box>
@@ -135,14 +135,17 @@ const CameraTampering: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index + 1}>
+            skeletonKeys.map((key) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
-            CameraTamperingKpiData.map((kpi) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+            VehicleCountKpiData.map((kpi) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={kpi.title}
+              >
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -153,7 +156,7 @@ const CameraTampering: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Camera Tampering or Offline Detection"
+            label="Recent Vehicle Count & ANPR at Entry/Exit Gates"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -168,7 +171,7 @@ const CameraTampering: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Camera Tampering or Offline Detection Report"
+        title="Vehicle Count & ANPR at Entry/Exit Gates Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -258,4 +261,4 @@ const CameraTampering: React.FC = () => {
   );
 };
 
-export default CameraTampering;
+export default VehicleCount;

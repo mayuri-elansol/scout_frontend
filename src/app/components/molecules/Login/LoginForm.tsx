@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import { useRouter } from "next/navigation";
 import {
   CardContent,
@@ -24,7 +23,6 @@ import {
 interface LoginFormData {
   username: string;
   password: string;
-  rememberMe: boolean;
 }
 
 interface LoginFormProps {
@@ -51,9 +49,14 @@ const LoginForm: React.FC<LoginFormProps> = ({
   setError,
 }) => {
   const router = useRouter();
+
+  const handleForgotPassword = () => {
+    router.push("/ForgotPassword");
+  };
+
   return (
     <CardContent sx={{ padding: 4 }}>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} autoComplete="off">
         {error && (
           <Paper
             elevation={1}
@@ -102,6 +105,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
             value={formData.username}
             onChange={onInputChange("username")}
             placeholder="Enter your username"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
             slotProps={{
               input: {
                 startAdornment: (
@@ -116,15 +123,35 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 backgroundColor: "#fafafa",
                 borderRadius: 2,
                 transition: "all 0.2s ease-in-out",
-                "& fieldset": { borderColor: "#e5e7eb", borderWidth: "2px" },
+                "& fieldset": {
+                  borderColor: "#e5e7eb",
+                  borderWidth: "2px",
+                },
                 "&:hover": {
                   backgroundColor: "#ffffff",
-                  "& fieldset": { borderColor: "#1976d2" },
+                  "& fieldset": {
+                    borderColor: "#1976d2",
+                  },
                 },
                 "&.Mui-focused": {
                   backgroundColor: "#ffffff",
                   boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
-                  "& fieldset": { borderColor: "#1976d2" },
+                  "& fieldset": {
+                    borderColor: "#1976d2",
+                  },
+                },
+                "& input": {
+                  "&:-webkit-autofill": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                    WebkitTextFillColor: "#1c2025 !important",
+                    transition: "background-color 5000s ease-in-out 0s",
+                  },
+                  "&:-webkit-autofill:hover": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                  },
+                  "&:-webkit-autofill:focus": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                  },
                 },
               },
             }}
@@ -132,7 +159,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           />
         </Box>
 
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 3 }}>
           <Typography
             component="label"
             variant="body2"
@@ -195,35 +222,43 @@ const LoginForm: React.FC<LoginFormProps> = ({
                     borderColor: "#1976d2",
                   },
                 },
+                "& input": {
+                  "&:-webkit-autofill": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                    WebkitTextFillColor: "#1c2025 !important",
+                    transition: "background-color 5000s ease-in-out 0s",
+                  },
+                  "&:-webkit-autofill:hover": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                  },
+                  "&:-webkit-autofill:focus": {
+                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
+                  },
+                },
               },
             }}
             disabled={isLoading}
           />
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            mb: 4,
-          }}
-        >
+        {/* Forgot Password Link */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 4 }}>
           <Button
             variant="text"
             size="small"
+            onClick={handleForgotPassword}
             disabled={isLoading}
             sx={{
               textTransform: "none",
               fontSize: "15px",
               color: "#1976d2",
               fontWeight: 600,
+              padding: "4px 8px",
               "&:hover": {
                 backgroundColor: "rgba(25, 118, 210, 0.04)",
                 textDecoration: "none",
               },
             }}
-            onClick={() => router.push("/ForgotPassword")}
           >
             Forgot Password?
           </Button>

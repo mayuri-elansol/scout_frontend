@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const VehicleCount: React.FC = () => {
+const EmergencyExitBlockage: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const VehicleCountKpiData = [
+  const ExitKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const VehicleCount: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Vehicle Count & ANPR at Entry/Exit Gates
+            Emergency Exit Blockage Detection
           </Typography>
         </Box>
       </Box>
@@ -141,7 +141,7 @@ const VehicleCount: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            VehicleCountKpiData.map((kpi) => (
+            ExitKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={kpi.title}
@@ -156,7 +156,7 @@ const VehicleCount: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Vehicle Count & ANPR at Entry/Exit Gates"
+            label="Recent Emergency Exit Blockage Detection"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +171,7 @@ const VehicleCount: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Vehicle Count & ANPR at Entry/Exit Gates Report"
+        title="Emergency Exit Blockage Detection Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -261,4 +261,4 @@ const VehicleCount: React.FC = () => {
   );
 };
 
-export default VehicleCount;
+export default EmergencyExitBlockage;

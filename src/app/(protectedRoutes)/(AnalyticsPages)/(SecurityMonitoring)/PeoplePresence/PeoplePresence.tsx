@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const STPOverflowDetection: React.FC = () => {
+const PeoplePresence: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const StpKpiData = [
+  const PeoplePresenceKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const STPOverflowDetection: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            STP/ETP Overflow Detection
+            People Presence during Shutdown Hours
           </Typography>
         </Box>
       </Box>
@@ -141,11 +141,8 @@ const STPOverflowDetection: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            StpKpiData.map((kpi) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
-              >
+            PeoplePresenceKpiData.map((kpi) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -156,7 +153,7 @@ const STPOverflowDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent STP/ETP Overflow Detection"
+            label="Recent People Presence during Shutdown Hours"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +168,7 @@ const STPOverflowDetection: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="STP/ETP Overflow Detection Report"
+        title="People Presence during Shutdown Hours Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -261,4 +258,4 @@ const STPOverflowDetection: React.FC = () => {
   );
 };
 
-export default STPOverflowDetection;
+export default PeoplePresence;
