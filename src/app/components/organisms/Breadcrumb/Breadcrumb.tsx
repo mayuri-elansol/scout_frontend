@@ -74,7 +74,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           { label: "PPE Detection", icon: null, clickable: false }
         );
         break;
-         case "object-detection":
+      case "object-detection":
         items.push(
           {
             label: "Analytics",
@@ -86,7 +86,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           { label: "Object Detection", icon: null, clickable: false }
         );
         break;
-         case "fire-smoke-oil-leak-detection":
+      case "fire-smoke-oil-leak-detection":
         items.push(
           {
             label: "Analytics",
@@ -95,9 +95,14 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
-          { label: "Fire smoke oil leak detection", icon: null, clickable: false }
+          {
+            label: "Fire smoke oil leak detection",
+            icon: null,
+            clickable: false,
+          }
         );
-        break; case "vehicle-speed":
+        break;
+      case "vehicle-speed":
         items.push(
           {
             label: "Analytics",
@@ -106,7 +111,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             onClick: () => onPageChange("dashboard"),
           },
           { label: "Safety and Compliance", icon: null, clickable: false },
-          { label: "vehicle speed Monitoring", icon: null, clickable: false }
+          { label: "Vehicle Speed Monitoring", icon: null, clickable: false }
         );
         break;
       case "intrusion-detection":
@@ -146,7 +151,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         );
         break;
       case "live-streaming":
-        items.push({ label: "Live streaming", icon: null, clickable: false });
+        items.push({ label: "Live Streaming", icon: null, clickable: false });
         break;
       case "alerts":
         items.push({ label: "Alerts", icon: null, clickable: false });
@@ -176,21 +181,17 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         sx={{ display: "flex", alignItems: "center", gap: 1, color: "#5c6b7d" }}
       >
         {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={index + 1}>
             {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
-
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               {item.icon && <item.icon sx={{ fontSize: 16 }} />}
-
               {item.clickable && item.onClick ? (
                 <Typography
                   sx={{
                     color: theme.palette.primary.main,
                     cursor: "pointer",
                     fontSize: "14px",
-                    "&:hover": {
-                      textDecoration: "underline",
-                    },
+                    "&:hover": { textDecoration: "underline" },
                   }}
                   onClick={item.onClick}
                 >
@@ -229,10 +230,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             backgroundColor: "white",
             fontSize: "14px",
             textTransform: "none",
-            "&:hover": {
-              borderColor: "#9ca3af",
-              backgroundColor: "#f9fafb",
-            },
+            "&:hover": { borderColor: "#9ca3af", backgroundColor: "#f9fafb" },
           }}
         >
           {selectedTimeRange}
@@ -242,19 +240,15 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
           anchorEl={anchorEl}
           open={timePickerOpen}
           onClose={handleTimePickerClose}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          PaperProps={{
-            sx: {
-              width: 280,
-              maxHeight: 200,
-              mt: 0.5,
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          slotProps={{
+            paper: {
+              sx: {
+                width: 280,
+                maxHeight: 200,
+                mt: 0.5,
+              },
             },
           }}
         >

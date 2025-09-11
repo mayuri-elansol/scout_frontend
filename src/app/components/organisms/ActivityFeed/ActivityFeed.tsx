@@ -99,7 +99,7 @@ const ActivityFeed: React.FC = () => {
 
             return (
               <Box
-                key={index}
+                key={index + 1}
                 sx={{
                   display: "flex",
                   alignItems: "flex-start",

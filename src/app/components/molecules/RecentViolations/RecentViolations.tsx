@@ -18,16 +18,16 @@ interface Violation {
   location: string;
   time: string;
   Id: string;
-  severity?: "HIGH" | "MEDIUM" | "LOW" | string;
-  status?: "ACTIVE" | "RESOLVED" | string;
+  severity?: string;
+  status?: string;
   imageUrl?: string;
 }
 
 interface RecentViolationsProps {
-  label: string;
-  violations: Violation[];
-  onViewAll?: () => void;
-  loading?: boolean; // 👈 new prop
+  readonly label: string;
+  readonly violations: readonly Violation[];
+  readonly onViewAll?: () => void;
+  readonly loading?: boolean;
 }
 
 export default function RecentViolations({
@@ -75,7 +75,7 @@ export default function RecentViolations({
         {loading ? (
           <Grid container spacing={2}>
             {Array.from(new Array(2)).map((_, index) => (
-              <Grid size={{ xs: 12, md: 6 }} key={index}>
+              <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
                 <Card sx={{ p: 2 }}>
                   <Skeleton variant="rectangular" height={200} sx={{ mb: 1 }} />
                   <Skeleton width="60%" />
@@ -89,7 +89,7 @@ export default function RecentViolations({
             {violations.map((violation, index) => (
               <Grid
                 size={{ xs: 12, md: 6 }}
-                key={index}
+                key={index + 1}
                 sx={{ display: "flex" }}
               >
                 <ViolationCard violation={violation} />

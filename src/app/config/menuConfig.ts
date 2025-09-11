@@ -11,18 +11,21 @@ import {
   Warning,
 } from "@mui/icons-material";
 
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import { SvgIconTypeMap } from "@mui/material/SvgIcon";
+
 export interface MenuItemConfig {
   path: string;
   name: string;
   page?: PageType;
-  icon?: any;
+  icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   badge?: string;
   featureFlag?: boolean;
 }
 
 export interface AnalyticsCategoryConfig {
   title: string;
-  icon?: any;
+  icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   items: MenuItemConfig[];
 }
 

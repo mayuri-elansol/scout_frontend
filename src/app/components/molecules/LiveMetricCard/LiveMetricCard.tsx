@@ -1,5 +1,5 @@
-import React from 'react';
-import { Paper, Typography } from '@mui/material';
+import React from "react";
+import { Paper, Typography } from "@mui/material";
 
 export interface LiveMetricCardProps {
   /** Metric value to display */
@@ -25,26 +25,24 @@ const LiveMetricCard: React.FC<LiveMetricCardProps> = ({
     <Paper
       sx={{
         p: 3,
-        textAlign: 'center',
+        textAlign: "center",
         border: `2px solid ${borderColor || color}`,
         borderRadius: 2,
-        backgroundColor: 'white',
+        backgroundColor: "white",
         ...sx,
       }}
     >
       <Typography
         sx={{
-          fontSize: '32px',
-          fontWeight: 'bold',
+          fontSize: "32px",
+          fontWeight: "bold",
           color: color,
           mb: 1,
         }}
       >
         {value}
       </Typography>
-      <Typography sx={{ fontSize: '14px', color: '#666' }}>
-        {label}
-      </Typography>
+      <Typography sx={{ fontSize: "14px", color: "#666" }}>{label}</Typography>
     </Paper>
   );
 };

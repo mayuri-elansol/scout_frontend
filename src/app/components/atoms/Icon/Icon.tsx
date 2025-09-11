@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import * as MuiIcons from "@mui/icons-material";
 
 export type ScoutIconName = keyof typeof MuiIcons;
+
 interface ScoutIconProps extends Omit<SvgIconProps, "color"> {
   name: keyof typeof MuiIcons;
   size?: "small" | "medium" | "large" | "xlarge";
@@ -19,35 +20,35 @@ interface ScoutIconProps extends Omit<SvgIconProps, "color"> {
     | "inherit";
 }
 
+const sizeMap: Record<NonNullable<ScoutIconProps["size"]>, string> = {
+  small: "16px",
+  medium: "20px",
+  large: "24px",
+  xlarge: "32px",
+};
+
+const colorMap: Record<NonNullable<ScoutIconProps["color"]>, string> = {
+  primary: "#1976d2",
+  secondary: "#5c6b7d",
+  success: "#4caf50",
+  error: "#f44336",
+  warning: "#ff9800",
+  info: "#2196f3",
+  disabled: "#9e9e9e",
+  action: "#6b7280",
+  inherit: "inherit",
+};
+
 const StyledSvgIcon = styled(SvgIcon)<{
   iconsize?: string;
   iconcolor?: string;
-}>(({ iconsize, iconcolor }) => {
-  const sizes = {
-    small: "16px",
-    medium: "20px",
-    large: "24px",
-    xlarge: "32px",
-  };
-
-  const colors = {
-    primary: "#1976d2",
-    secondary: "#5c6b7d",
-    success: "#4caf50",
-    error: "#f44336",
-    warning: "#ff9800",
-    info: "#2196f3",
-    disabled: "#9e9e9e",
-    action: "#6b7280",
-    inherit: "inherit",
-  };
-
-  return {
-    fontSize: iconsize ? sizes[iconsize as keyof typeof sizes] : "20px",
-    color: iconcolor ? colors[iconcolor as keyof typeof colors] : "inherit",
-    transition: "all 0.2s ease",
-  };
-});
+}>(({ iconsize, iconcolor }) => ({
+  fontSize: iconsize
+    ? sizeMap[iconsize as keyof typeof sizeMap]
+    : sizeMap.medium,
+  color: iconcolor ? colorMap[iconcolor as keyof typeof colorMap] : "inherit",
+  transition: "all 0.2s ease",
+}));
 
 const ScoutIcon: React.FC<ScoutIconProps> = ({
   name,
@@ -55,7 +56,6 @@ const ScoutIcon: React.FC<ScoutIconProps> = ({
   color = "inherit",
   ...props
 }) => {
-  // Get the icon component from Material-UI icons
   const IconComponent = MuiIcons[name] as React.ComponentType<SvgIconProps>;
 
   if (!IconComponent) {
@@ -70,32 +70,8 @@ const ScoutIcon: React.FC<ScoutIconProps> = ({
   return (
     <IconComponent
       sx={{
-        fontSize:
-          size === "small"
-            ? "16px"
-            : size === "medium"
-            ? "20px"
-            : size === "large"
-            ? "24px"
-            : "32px",
-        color:
-          color === "primary"
-            ? "#1976d2"
-            : color === "secondary"
-            ? "#5c6b7d"
-            : color === "success"
-            ? "#4caf50"
-            : color === "error"
-            ? "#f44336"
-            : color === "warning"
-            ? "#ff9800"
-            : color === "info"
-            ? "#2196f3"
-            : color === "disabled"
-            ? "#9e9e9e"
-            : color === "action"
-            ? "#6b7280"
-            : "inherit",
+        fontSize: sizeMap[size],
+        color: colorMap[color],
         transition: "all 0.2s ease",
       }}
       {...props}

@@ -106,11 +106,11 @@ const KpiCardSkeleton: React.FC<KpiCardSkeletonProps> = ({
         />
 
         {/* Subtitle */}
-        <Skeleton
+        {/* <Skeleton
           variant="text"
           width="50%"
           height={sizeStyles.subtitleHeight}
-        />
+        /> */}
       </CardContent>
     </Card>
   );

@@ -125,26 +125,13 @@ const ObjectDetection: React.FC = () => {
             Object Detection in Walking Bays
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
-        >
-          Detects obstacles or items left in walkways, preventing trips,
-          injuries, and keeping the path clear for everyone.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: "14px", color: "#666", fontStyle: "italic" }}
-        >
-          Model/Technique used: Person detection model fine tuning
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {ObjectDetectionKpiData.map((kpi, index) => (
           // item xs={12} sm={6} md={4} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
             <KpiCard {...kpi} />
           </Grid>
         ))}

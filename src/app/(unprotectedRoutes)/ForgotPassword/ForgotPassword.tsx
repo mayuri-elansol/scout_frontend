@@ -14,6 +14,7 @@ import {
   InputAdornment,
   Alert,
   Button,
+  OutlinedInput,
 } from "@mui/material";
 import { Email, ArrowBack, CheckCircle, LockReset } from "@mui/icons-material";
 import { theme } from "@/app/theme/theme";
@@ -331,6 +332,7 @@ const ForgotPassword: React.FC = () => {
                       >
                         Email Address
                       </Typography>
+
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -342,12 +344,15 @@ const ForgotPassword: React.FC = () => {
                         autoCorrect="off"
                         autoCapitalize="off"
                         spellCheck="false"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Email sx={{ color: "#6b7280" }} />
-                            </InputAdornment>
-                          ),
+                        slots={{ input: OutlinedInput }} // 👈 force OutlinedInput
+                        slotProps={{
+                          input: {
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Email />
+                              </InputAdornment>
+                            ),
+                          },
                         }}
                         sx={{
                           "& .MuiOutlinedInput-root": {
@@ -371,7 +376,6 @@ const ForgotPassword: React.FC = () => {
                                 borderColor: "#1976d2",
                               },
                             },
-                            // 🔥 SPECIFIC AUTOFILL OVERRIDE STYLES
                             "& input": {
                               "&:-webkit-autofill": {
                                 WebkitBoxShadow:
@@ -379,24 +383,6 @@ const ForgotPassword: React.FC = () => {
                                 WebkitTextFillColor: "#1c2025 !important",
                                 transition:
                                   "background-color 5000s ease-in-out 0s !important",
-                                backgroundColor: "transparent !important",
-                              },
-                              "&:-webkit-autofill:hover": {
-                                WebkitBoxShadow:
-                                  "0 0 0 1000px #ffffff inset !important",
-                                WebkitTextFillColor: "#1c2025 !important",
-                                backgroundColor: "transparent !important",
-                              },
-                              "&:-webkit-autofill:focus": {
-                                WebkitBoxShadow:
-                                  "0 0 0 1000px #ffffff inset !important",
-                                WebkitTextFillColor: "#1c2025 !important",
-                                backgroundColor: "transparent !important",
-                              },
-                              "&:-webkit-autofill:active": {
-                                WebkitBoxShadow:
-                                  "0 0 0 1000px #ffffff inset !important",
-                                WebkitTextFillColor: "#1c2025 !important",
                                 backgroundColor: "transparent !important",
                               },
                             },

@@ -7,7 +7,7 @@ import { SvgIconComponent } from "@mui/icons-material";
 interface KpiCardProps {
   title: string;
   value: string;
-  subtitle: string;
+  //subtitle: string;
   trend: string;
   trendColor: string;
   color: string;
@@ -16,14 +16,13 @@ interface KpiCardProps {
   variant?: "default" | "success" | "info" | "critical";
   size?: "small" | "medium" | "large";
   customWidth?: number;
-  customHeight?: number;   // ✅ add this
+  // customHeight?: number;
 }
-
 
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
-  subtitle,
+  //  subtitle,
   trend,
   trendColor,
   color,
@@ -198,18 +197,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
           }}
         >
           {title}
-        </Typography>
-
-        {/* Subtitle */}
-        <Typography
-          sx={{
-            fontSize: sizeStyles.subtitleSize,
-            color: "#6b7280",
-            lineHeight: 1.3,
-            mt: "auto",
-          }}
-        >
-          {subtitle}
         </Typography>
       </CardContent>
     </Card>

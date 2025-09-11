@@ -128,13 +128,6 @@ const VehicleUnloadingLoading: React.FC = () => {
             Tracking Vehicle Unloading/Loading Time
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
-        >
-          Optimizes logistics efficiency by monitoring time taken for
-          loading/unloading operations.
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
@@ -143,13 +136,16 @@ const VehicleUnloadingLoading: React.FC = () => {
         {KpiCardLoading
           ? // Show skeletons while loading
             skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={key}>
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
             VehicleUnloadingLoadingKpiData.map((kpi) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={kpi.title}
+              >
                 <KpiCard {...kpi} />
               </Grid>
             ))}

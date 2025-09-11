@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import ActivityCard from "./ActivityCard";
@@ -97,7 +96,7 @@ type Story = StoryObj<typeof meta>;
 // Employee Cards (First Image)
 export const EmployeeActive: Story = {
   args: {
-    id: "emp-001",
+    //  id: "emp-001",
     cardType: "employee",
     title: "John Mitchell",
     employeeName: "John Mitchell",
@@ -120,7 +119,7 @@ export const EmployeeActive: Story = {
 
 export const EmployeeOnBreak: Story = {
   args: {
-    id: "emp-002",
+    //  id: "emp-002",
     cardType: "employee",
     title: "Sarah Chen",
     employeeName: "Sarah Chen",
@@ -142,7 +141,7 @@ export const EmployeeOnBreak: Story = {
 
 export const EmployeeMissing: Story = {
   args: {
-    id: "emp-004",
+    // id: "emp-004",
     cardType: "employee",
     title: "Lisa Anderson",
     employeeName: "Lisa Anderson",
@@ -167,7 +166,7 @@ export const EmployeeMissing: Story = {
 
 export const EmployeeLoadingFeed: Story = {
   args: {
-    id: "emp-005",
+    //  id: "emp-005",
     cardType: "employee",
     title: "Michael Torres",
     employeeName: "Michael Torres",
@@ -192,7 +191,7 @@ export const EmployeeLoadingFeed: Story = {
 // PPE Violation Cards (Second Image)
 export const PPEViolationHigh: Story = {
   args: {
-    id: "ppe-001",
+    //  id: "ppe-001",
     cardType: "ppe_violation",
     title: "Hard hat missing",
     location: "Production Zone A",
@@ -214,7 +213,7 @@ export const PPEViolationHigh: Story = {
 
 export const PPEViolationMedium: Story = {
   args: {
-    id: "ppe-002",
+    //  id: "ppe-002",
     cardType: "ppe_violation",
     title: "Safety vest not worn",
     location: "Warehouse Zone B",
@@ -238,7 +237,7 @@ export const PPEViolationMedium: Story = {
 // Security Breach Cards (Third Image)
 export const SecurityBreachCritical: Story = {
   args: {
-    id: "sec-001",
+    //  id: "sec-001",
     cardType: "security_breach",
     title: "Unauthorized person at main gate",
     location: "Main Entrance Perimeter - Camera 1",
@@ -261,7 +260,7 @@ export const SecurityBreachCritical: Story = {
 
 export const SecurityBreachResolved: Story = {
   args: {
-    id: "sec-003",
+    //  id: "sec-003",
     cardType: "security_breach",
     title: "Suspicious activity near warehouse",
     location: "Warehouse Perimeter - Camera 12",
@@ -283,7 +282,7 @@ export const SecurityBreachResolved: Story = {
 
 export const SecurityBreachEscalated: Story = {
   args: {
-    id: "sec-004",
+    //  id: "sec-004",
     cardType: "security_breach",
     title: "Multiple persons at restricted zone",
     location: "North Security Zone - Camera 15",
@@ -326,7 +325,7 @@ export const EmployeeGrid: Story = {
         }}
       >
         <ActivityCard
-          id="emp-001"
+          //  id="emp-001"
           cardType="employee"
           title="John Mitchell"
           employeeName="John Mitchell"
@@ -338,7 +337,7 @@ export const EmployeeGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="emp-002"
+          //  id="emp-002"
           cardType="employee"
           title="Sarah Chen"
           employeeName="Sarah Chen"
@@ -350,7 +349,7 @@ export const EmployeeGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="emp-003"
+          //  id="emp-003"
           cardType="employee"
           title="Michael Torres"
           employeeName="Michael Torres"
@@ -362,7 +361,7 @@ export const EmployeeGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="emp-004"
+          //  id="emp-004"
           cardType="employee"
           title="Lisa Anderson"
           employeeName="Lisa Anderson"
@@ -407,7 +406,7 @@ export const PPEViolationGrid: Story = {
         }}
       >
         <ActivityCard
-          id="ppe-001"
+          //   id="ppe-001"
           cardType="ppe_violation"
           title="Hard hat missing"
           location="Production Zone A"
@@ -418,7 +417,7 @@ export const PPEViolationGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="ppe-002"
+          //   id="ppe-002"
           cardType="ppe_violation"
           title="Safety vest not worn"
           location="Warehouse Zone B"
@@ -461,7 +460,7 @@ export const SecurityBreachGrid: Story = {
         }}
       >
         <ActivityCard
-          id="sec-001"
+          //  id="sec-001"
           cardType="security_breach"
           title="Unauthorized person at main gate"
           location="Main Entrance Perimeter - Camera 1"
@@ -472,7 +471,7 @@ export const SecurityBreachGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="sec-002"
+          // id="sec-002"
           cardType="security_breach"
           title="Fence breach detected"
           location="East Boundary - Camera 8"
@@ -483,7 +482,7 @@ export const SecurityBreachGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="sec-003"
+          //  id="sec-003"
           cardType="security_breach"
           title="Suspicious activity near warehouse"
           location="Warehouse Perimeter - Camera 12"
@@ -494,7 +493,7 @@ export const SecurityBreachGrid: Story = {
           showLiveFeed={true}
         />
         <ActivityCard
-          id="sec-004"
+          //  id="sec-004"
           cardType="security_breach"
           title="Multiple persons at restricted zone"
           location="North Security Zone - Camera 15"

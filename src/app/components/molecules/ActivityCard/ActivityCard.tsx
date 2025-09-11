@@ -16,20 +16,18 @@ import {
 } from "@mui/icons-material";
 
 interface ActivityCardProps {
-  // Common props
-  id: string;
+  //  id?: string;
   title: string;
   location: string;
   timestamp?: string;
 
-  // Card type and variants
   cardType:
     | "employee"
     | "ppe_violation"
     | "security_breach"
     | "personnel_tracking";
 
-  // Employee-specific props
+  // Employee-specific
   employeeName?: string;
   employeeId?: string;
   position?: string;
@@ -37,10 +35,9 @@ interface ActivityCardProps {
   status?: "active" | "inactive" | "break" | "offline" | "missing";
   level?: string;
 
-  // Alert-specific props
+  // Alert-specific
   workerId?: string;
   intruderId?: string;
-  violationType?: string;
   priority?: "critical" | "high" | "medium" | "low";
   alertStatus?:
     | "active"
@@ -49,12 +46,11 @@ interface ActivityCardProps {
     | "investigating"
     | "escalated";
 
-  // Enhanced live feed props (merged from PersonnelCard)
+  // Live feed props
   liveFeedStatus?: "live" | "offline" | "loading";
-  lastSeen?: string; // ISO timestamp for missing/offline employees
+  lastSeen?: string;
 
-  // Common options
-  avatar?: string;
+  // Options
   showLiveFeed?: boolean;
   previewText?: string;
 
@@ -336,15 +332,22 @@ const ActivityCard: React.FC<ActivityCardProps> = ({
     return `${location} • ${timestamp || "14:32"}`;
   };
 
+  // Employee details line
   const getDetailsLine = () => {
     if (cardType === "employee") {
-      return `ID: ${employeeId}${level ? ` • ${level}` : ""}${
-        position ? ` • ${position}` : ""
-      }`;
+      const details = [
+        employeeId ? `ID: ${employeeId}` : null,
+        level,
+        position,
+      ].filter(Boolean);
+      return details.join(" • ");
     }
-    return `${workerId ? `Worker ID: ${workerId}` : ""}${
-      intruderId ? `Intruder ID: ${intruderId}` : ""
-    }`;
+
+    const details = [
+      workerId ? `Worker ID: ${workerId}` : null,
+      intruderId ? `Intruder ID: ${intruderId}` : null,
+    ].filter(Boolean);
+    return details.join(" • ");
   };
 
   const getStatusBadge = () => {

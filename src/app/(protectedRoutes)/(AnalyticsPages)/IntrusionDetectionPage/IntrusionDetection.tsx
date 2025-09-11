@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
@@ -132,7 +132,7 @@ const IntrusionDetection: React.FC = () => {
     compliance: number;
     violations: number;
     cameras: string;
-    status: "excellent" | "good" | "warning" | string;
+    status: string;
   }
   const securityZones: Zone[] = [
     {
@@ -185,26 +185,13 @@ const IntrusionDetection: React.FC = () => {
             Intrusion Detection at Premises Perimeter
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
-        >
-          Flags unauthorized access attempts at boundaries, helping protect the
-          premises from theft or harm.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: "14px", color: "#666", fontStyle: "italic" }}
-        >
-          Model/Technique used: Person detection model fine tuning
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
 
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {intrusionKpiData.map((kpi, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 3 }}>
+          <Grid key={index + 1} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
             <KpiCard {...kpi} />
           </Grid>
         ))}

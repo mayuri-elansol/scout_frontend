@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box, Grid, Typography } from "@mui/material";
 import KpiCard from "./KpiCard";
@@ -89,7 +88,7 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
       table: {
         category: "Layout Controls",
       },
-    }
+    },
   },
 };
 
@@ -150,14 +149,11 @@ export const InteractiveSizing: StoryObj<typeof meta> = {
           </Typography>
         )}
 
-        <KpiCard
-          {...args}
-        />
+        <KpiCard {...args} />
       </Box>
     );
   },
 };
-
 
 // Individual Component Stories
 export const Default: Story = {

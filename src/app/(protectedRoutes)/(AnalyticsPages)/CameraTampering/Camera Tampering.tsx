@@ -128,13 +128,6 @@ const CameraTampering: React.FC = () => {
             Camera Tampering or Offline Detection
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
-        >
-          Alerts when cameras are covered, turned off, or tampered with—because
-          eyes off the ground can lead to blind risks.
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
@@ -142,8 +135,8 @@ const CameraTampering: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={key}>
+            skeletonKeys.map((key, index) => (
+              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index + 1}>
                 <KpiCardSkeleton />
               </Grid>
             ))

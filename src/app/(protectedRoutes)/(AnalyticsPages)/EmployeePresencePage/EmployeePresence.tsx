@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
@@ -158,13 +158,7 @@ const EmployeePresence: React.FC = () => {
             Employee presence detection in critical areas
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
-        >
-          Confirms if trained personnel are present in vital zones during
-          operations - no room for compromise.
-        </Typography>
+
         <Typography
           variant="body2"
           sx={{ fontSize: "14px", color: "#666", fontStyle: "italic" }}
@@ -177,8 +171,7 @@ const EmployeePresence: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {employeeKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={4} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
             <KpiCard {...kpi} />
           </Grid>
         ))}
@@ -349,10 +342,6 @@ const EmployeePresence: React.FC = () => {
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        // onSubmit={handleSubmitFilter}
-        // onReset={handleReset}
-        // onExport={handleExport}
-        // isSubmitDisabled={loading}
         downloadFileName="employee-presence-report"
       />
     </Box>

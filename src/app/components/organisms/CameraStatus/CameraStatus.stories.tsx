@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import CameraStatus from "./CameraStatus";

@@ -102,34 +102,29 @@ const LoginForm: React.FC<LoginFormProps> = ({
             value={formData.username}
             onChange={onInputChange("username")}
             placeholder="Enter your username"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+              },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 backgroundColor: "#fafafa",
                 borderRadius: 2,
                 transition: "all 0.2s ease-in-out",
-                "& fieldset": {
-                  borderColor: "#e5e7eb",
-                  borderWidth: "2px",
-                },
+                "& fieldset": { borderColor: "#e5e7eb", borderWidth: "2px" },
                 "&:hover": {
                   backgroundColor: "#ffffff",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
+                  "& fieldset": { borderColor: "#1976d2" },
                 },
                 "&.Mui-focused": {
                   backgroundColor: "#ffffff",
                   boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
+                  "& fieldset": { borderColor: "#1976d2" },
                 },
               },
             }}
@@ -158,29 +153,25 @@ const LoginForm: React.FC<LoginFormProps> = ({
             value={formData.password}
             onChange={onInputChange("password")}
             placeholder="Enter your password"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onTogglePassword}
-                    edge="end"
-                    disabled={isLoading}
-                    sx={{
-                      color: "#6b7280",
-                      "&:hover": {
-                        backgroundColor: "rgba(25, 118, 210, 0.04)",
-                      },
-                    }}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onTogglePassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
             sx={{
               "& .MuiOutlinedInput-root": {

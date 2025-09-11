@@ -47,7 +47,7 @@ const CameraStatus: React.FC = () => {
         <Box>
           {cameraZones.map((zone, index) => (
             <Box
-              key={index}
+              key={index + 1}
               sx={{
                 display: "flex",
                 justifyContent: "space-between",

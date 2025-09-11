@@ -140,14 +140,6 @@ const SystemAlerts: React.FC = () => {
             System Alerts & Notifications
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
-        >
-          Real-time monitoring of all SCOUT system alerts, incidents, and
-          notifications across safety, security, workforce, and operational
-          categories
-        </Typography>
       </Box>
 
       {/* Alert Statistics */}
@@ -222,20 +214,12 @@ const SystemAlerts: React.FC = () => {
             id={alert.id}
             title={alert.title}
             description={alert.description}
-            severity={alert.severity as "CRITICAL" | "HIGH" | "MEDIUM" | "LOW"}
-            status={
-              alert.status as
-                | "ACTIVE"
-                | "ESCALATED"
-                | "ACKNOWLEDGED"
-                | "RESOLVED"
-            }
+            severity={alert.severity}
             category={alert.category}
             location={alert.location}
             time={alert.time}
             assignedTo={alert.assignedTo}
             duration={alert.duration}
-            actions={alert.actions}
           />
         ))}
       </Box>

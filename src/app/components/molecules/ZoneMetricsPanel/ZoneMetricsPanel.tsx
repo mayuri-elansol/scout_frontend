@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Typography } from '@mui/material';
+import React from "react";
+import { Box, Typography } from "@mui/material";
 
 export interface ZoneMetric {
   value: string | number;
@@ -11,7 +11,7 @@ export interface ZoneMetricsPanelProps {
   /** Array of metrics to display */
   metrics: ZoneMetric[];
   /** Layout direction */
-  direction?: 'row' | 'column';
+  direction?: "row" | "column";
   /** Custom spacing between metrics */
   spacing?: number;
   /** Custom styling */
@@ -20,25 +20,25 @@ export interface ZoneMetricsPanelProps {
 
 const ZoneMetricsPanel: React.FC<ZoneMetricsPanelProps> = ({
   metrics,
-  direction = 'row',
+  direction = "row",
   spacing = 2,
   sx = {},
 }) => {
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: "flex",
         flexDirection: direction,
-        justifyContent: direction === 'row' ? 'space-between' : 'flex-start',
+        justifyContent: direction === "row" ? "space-between" : "flex-start",
         gap: spacing,
         ...sx,
       }}
     >
       {metrics.map((metric, index) => (
-        <Box key={index} sx={{ textAlign: 'center' }}>
+        <Box key={index + 1} sx={{ textAlign: "center" }}>
           <Typography
             sx={{
-              fontSize: '18px',
+              fontSize: "18px",
               fontWeight: 600,
               color: metric.color,
             }}
@@ -47,8 +47,8 @@ const ZoneMetricsPanel: React.FC<ZoneMetricsPanelProps> = ({
           </Typography>
           <Typography
             sx={{
-              fontSize: '12px',
-              color: '#666',
+              fontSize: "12px",
+              color: "#666",
               lineHeight: 1.2,
             }}
           >

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Sidebar from "./Phonesidebar";
 import { useState } from "react";
-import { PageType } from "@/app/types"; // ✅ Import PageType
+import { PageType } from "@/app/types";
 
 const meta: Meta<typeof Sidebar> = {
   title: "Components/Organisms/PhoneSidebar",

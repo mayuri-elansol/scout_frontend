@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
@@ -124,26 +124,12 @@ const PeopleCount: React.FC = () => {
             People count in factory Premises
           </Typography>
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5, mb: 1 }}
-        >
-          Keeps track of how many people are inside - critical for safety audits
-          and emergency evacuations.
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ fontSize: "14px", color: "#666", fontStyle: "italic" }}
-        >
-          Model/Technique used: Person detection model fine tuning
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {peopleCountKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={4} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
             <KpiCard {...kpi} />
           </Grid>
         ))}

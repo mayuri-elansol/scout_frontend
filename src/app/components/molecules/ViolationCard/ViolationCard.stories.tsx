@@ -1,4 +1,3 @@
-
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ViolationCard } from "./ViolationCard";
@@ -13,14 +12,22 @@ export default meta;
 type Story = StoryObj<typeof ViolationCard>;
 
 // Default sample data
-const sampleViolation = {
+const sampleViolation: {
+  title: string;
+  location: string;
+  time: string;
+  Id: string;
+  severity?: "HIGH" | "MEDIUM" | "LOW";
+  status?: "ACTIVE" | "RESOLVED";
+  imageUrl?: string;
+} = {
   title: "Unauthorized Entry",
   location: "Main Gate",
   time: "10:30 AM",
   Id: "VIO-00123",
   severity: "HIGH",
   status: "ACTIVE",
-  imageUrl: "", // leave empty to test placeholder
+  imageUrl: "",
 };
 
 // Default Story

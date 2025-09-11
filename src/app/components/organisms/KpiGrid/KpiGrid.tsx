@@ -1,7 +1,7 @@
-import React from 'react';
-import { Grid, Box } from '@mui/material';
-import { SvgIconComponent } from '@mui/icons-material';
-import KpiCard from '../../molecules/KpiCard/KpiCard';
+import React from "react";
+import { Grid, Box } from "@mui/material";
+import { SvgIconComponent } from "@mui/icons-material";
+import KpiCard from "../../molecules/KpiCard/KpiCard";
 
 interface KpiData {
   title: string;
@@ -40,16 +40,18 @@ const KpiGrid: React.FC<KpiGridProps> = ({
   maxWidth,
 }) => {
   return (
-    <Box sx={{ width: '100%', maxWidth: maxWidth }}>
+    <Box sx={{ width: "100%", maxWidth: maxWidth }}>
       <Grid container spacing={spacing}>
         {kpis.map((kpi, index) => (
-          <Grid 
-          size={{  xs:columns.xs,
-            sm:columns.sm,
-            md:columns.md,
-            lg:columns.lg,
-            xl:columns.xl}}
-            key={index}
+          <Grid
+            size={{
+              xs: columns.xs,
+              sm: columns.sm,
+              md: columns.md,
+              lg: columns.lg,
+              xl: columns.xl,
+            }}
+            key={index + 1}
           >
             <KpiCard
               title={kpi.title}

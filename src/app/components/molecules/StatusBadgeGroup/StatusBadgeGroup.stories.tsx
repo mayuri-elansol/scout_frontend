@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import StatusBadgeGroup from "./StatusBadgeGroup";
 
@@ -155,7 +154,7 @@ const categoryItems = [
 export const AlertStatusOverview: Story = {
   args: {
     title: "Alert Status Overview",
-    items: alertStatusItems,
+    // items: alertStatusItems,
     layout: "horizontal",
     spacing: "normal",
     showCounts: true,
@@ -175,7 +174,7 @@ export const AlertStatusOverview: Story = {
 export const PriorityDistribution: Story = {
   args: {
     title: "Priority Distribution",
-    items: priorityItems,
+    //  items: priorityItems,
     layout: "horizontal",
     spacing: "normal",
     showCounts: true,
@@ -195,7 +194,7 @@ export const PriorityDistribution: Story = {
 export const CategoryBreakdown: Story = {
   args: {
     title: "Incident Categories",
-    items: categoryItems,
+    //  items: categoryItems,
     layout: "grid",
     spacing: "comfortable",
     showCounts: true,
@@ -214,7 +213,7 @@ export const CategoryBreakdown: Story = {
 export const VerticalLayout: Story = {
   args: {
     title: "System Status",
-    items: alertStatusItems,
+    // items: alertStatusItems,
     layout: "vertical",
     spacing: "normal",
     showCounts: true,
@@ -232,7 +231,7 @@ export const VerticalLayout: Story = {
 export const CompactSpacing: Story = {
   args: {
     title: "Quick Status",
-    items: priorityItems.slice(0, 3),
+    //  items: priorityItems.slice(0, 3),
     layout: "horizontal",
     spacing: "compact",
     showCounts: true,
@@ -250,7 +249,7 @@ export const CompactSpacing: Story = {
 export const WithoutCounts: Story = {
   args: {
     title: "Available Statuses",
-    items: alertStatusItems,
+    //  items: alertStatusItems,
     layout: "horizontal",
     spacing: "normal",
     showCounts: false,
@@ -267,7 +266,7 @@ export const WithoutCounts: Story = {
 
 export const WithoutTitle: Story = {
   args: {
-    items: priorityItems,
+    //  items: priorityItems,
     layout: "horizontal",
     spacing: "normal",
     showCounts: true,
@@ -292,7 +291,7 @@ export const SecurityDashboard: Story = {
         label: "Critical",
         count: 1,
         variant: "priority" as const,
-        value: "critical",
+        value: "high",
       },
       {
         id: "2",
@@ -347,7 +346,7 @@ export const EmptyStates: Story = {
         label: "Resolved",
         count: 0,
         variant: "status" as const,
-        value: "resolved",
+        value: "pending",
       },
     ],
     layout: "horizontal",

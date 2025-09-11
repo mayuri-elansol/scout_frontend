@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import {
@@ -9,31 +9,37 @@ import {
   Chip,
   Button,
 } from "@mui/material";
-import { Warning, AccessTime, LocationOn, Person } from "@mui/icons-material";
-import { SvgIconComponent } from "@mui/icons-material";
+import {
+  Warning,
+  AccessTime,
+  LocationOn,
+  Person,
+  SvgIconComponent,
+} from "@mui/icons-material";
 import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup";
 
+// AlertCard.tsx
 interface AlertCardProps {
   id: string;
   title: string;
   description: string;
-  severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
-  status: "ACTIVE" | "ESCALATED" | "ACKNOWLEDGED" | "RESOLVED";
+  severity: string;
+  //status?: "ACTIVE" | "ESCALATED" | "ACKNOWLEDGED" | "RESOLVED";
   category: string;
   location: string;
   time: string;
   assignedTo: string;
   duration: string;
-  actions: string[];
   icon?: SvgIconComponent;
-  onActionClick?: (action: string) => void;
+  //  actions?: string[];
+  //onActionClick?: (action: string) => void;
 }
 
 const AlertCard: React.FC<AlertCardProps> = ({
+  id,
   title,
   description,
   severity,
-  // status,
   category,
   location,
   time,
@@ -43,21 +49,6 @@ const AlertCard: React.FC<AlertCardProps> = ({
   icon: IconComponent = Warning,
 }) => {
   const [open, setOpen] = useState(false);
-
-  // const getStatusColor = (status: string) => {
-  //   switch (status) {
-  //     case "ACTIVE":
-  //       return { color: "#f44336", bgColor: "#ffebee" };
-  //     case "ESCALATED":
-  //       return { color: "#d32f2f", bgColor: "#ffcdd2" };
-  //     case "ACKNOWLEDGED":
-  //       return { color: "#ff9800", bgColor: "#fff8e1" };
-  //     case "RESOLVED":
-  //       return { color: "#4caf50", bgColor: "#e8f5e9" };
-  //     default:
-  //       return { color: "#666", bgColor: "#f5f5f5" };
-  //   }
-  // };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -78,6 +69,7 @@ const AlertCard: React.FC<AlertCardProps> = ({
 
   return (
     <Card
+      data-id={id}
       sx={{
         mb: 2,
         borderLeft: `4px solid ${severityColors.borderColor}`,
@@ -104,22 +96,17 @@ const AlertCard: React.FC<AlertCardProps> = ({
               sx={{ color: severityColors.borderColor, fontSize: 20 }}
             />
             <Box sx={{ flex: 1 }}>
-              <Box
+              <Typography
+                variant="h6"
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
+                  fontWeight: 600,
+                  color: "#333",
+                  fontSize: "16px",
                   mb: 0.5,
-                  flexWrap: "wrap",
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: 600, color: "#333", fontSize: "16px" }}
-                >
-                  {title}
-                </Typography>
-              </Box>
+                {title}
+              </Typography>
               <Typography
                 sx={{
                   color: "#666",
@@ -134,11 +121,6 @@ const AlertCard: React.FC<AlertCardProps> = ({
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, ml: 2 }}>
-            {/* <Typography
-              sx={{ color: "#999", fontSize: "12px", fontFamily: "monospace" }}
-            >
-              {id}
-            </Typography> */}
             <Button
               variant="contained"
               size="small"
@@ -161,10 +143,10 @@ const AlertCard: React.FC<AlertCardProps> = ({
             <ViewAlertPopup
               open={open}
               handleClose={() => setOpen(false)}
-              location="Reactor Control Room - Camera 3"
-              time="10:30 AM"
-              assignedTo="Safety Officer"
-              duration="2 hours"
+              location={location}
+              time={time}
+              assignedTo={assignedTo}
+              duration={duration}
               imageUrl="https://via.placeholder.com/400"
             />
           </Box>
@@ -208,40 +190,6 @@ const AlertCard: React.FC<AlertCardProps> = ({
             }}
           />
         </Box>
-
-        {/* Quick Actions */}
-        {/* <Box>
-          <Typography
-            sx={{ fontSize: "12px", color: "#666", mb: 1, fontWeight: 500 }}
-          >
-            Quick Actions:
-          </Typography>
-          <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-            {actions.map((action: string, index: number) => (
-              <Button
-                key={index}
-                variant="outlined"
-                size="small"
-                onClick={() => onActionClick?.(action)}
-                sx={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  borderColor: "#e0e0e0",
-                  color: "#1976d2",
-                  py: 0.5,
-                  px: 1.5,
-                  minHeight: 28,
-                  "&:hover": {
-                    backgroundColor: "#f5f5f5",
-                    borderColor: "#1976d2",
-                  },
-                }}
-              >
-                {action}
-              </Button>
-            ))}
-          </Box>
-        </Box> */}
       </CardContent>
     </Card>
   );

@@ -9,10 +9,20 @@ const meta: Meta<typeof ViewAlertPopup> = {
 };
 
 export default meta;
-
 type Story = StoryObj<typeof ViewAlertPopup>;
 
+// ---------- Wrapper Component to use hooks ----------
+const Template = (args: any) => {
+  const [open, setOpen] = useState(args.open);
+
+  const handleClose = () => setOpen(false);
+
+  return <ViewAlertPopup {...args} open={open} handleClose={handleClose} />;
+};
+
+// ---------- Stories ----------
 export const Default: Story = {
+  render: (args) => <Template {...args} />,
   args: {
     open: true,
     location: "Nagpur, India",
@@ -21,16 +31,10 @@ export const Default: Story = {
     duration: "2h 15m",
     imageUrl: "https://via.placeholder.com/300",
   },
-  render: (args) => {
-    const [open, setOpen] = useState(args.open);
-
-    const handleClose = () => setOpen(false);
-
-    return <ViewAlertPopup {...args} open={open} handleClose={handleClose} />;
-  },
 };
 
 export const NoImage: Story = {
+  render: (args) => <Template {...args} />,
   args: {
     open: true,
     location: "Mumbai, India",
@@ -39,14 +43,10 @@ export const NoImage: Story = {
     duration: "1h 45m",
     imageUrl: "",
   },
-  render: (args) => {
-    const [open, setOpen] = useState(args.open);
-    const handleClose = () => setOpen(false);
-    return <ViewAlertPopup {...args} open={open} handleClose={handleClose} />;
-  },
 };
 
 export const ImageError: Story = {
+  render: (args) => <Template {...args} />,
   args: {
     open: true,
     location: "Delhi, India",
@@ -54,10 +54,5 @@ export const ImageError: Story = {
     assignedTo: "Alice Smith",
     duration: "3h",
     imageUrl: "https://invalid-url.com/image.png",
-  },
-  render: (args) => {
-    const [open, setOpen] = useState(args.open);
-    const handleClose = () => setOpen(false);
-    return <ViewAlertPopup {...args} open={open} handleClose={handleClose} />;
   },
 };

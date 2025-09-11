@@ -1,4 +1,3 @@
-// import type { Meta, StoryObj } from '@storybook/react';
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import {
@@ -53,11 +52,11 @@ Individual alert card component used in the System Alerts page. Features:
       options: ["CRITICAL", "HIGH", "MEDIUM", "LOW"],
       description: "Alert severity level",
     },
-    status: {
-      control: "select",
-      options: ["ACTIVE", "ESCALATED", "ACKNOWLEDGED", "RESOLVED"],
-      description: "Alert status",
-    },
+    // status: {
+    //   control: "select",
+    //   options: ["ACTIVE", "ESCALATED", "ACKNOWLEDGED", "RESOLVED"],
+    //   description: "Alert status",
+    // },
     category: {
       control: "text",
       description: "Alert category",
@@ -66,10 +65,10 @@ Individual alert card component used in the System Alerts page. Features:
     //   action: "view-details-clicked",
     //   description: "View details button handler",
     // },
-    onActionClick: {
-      action: "action-clicked",
-      description: "Quick action button handler",
-    },
+    // onActionClick: {
+    //   action: "action-clicked",
+    //   description: "Quick action button handler",
+    // },
   },
 };
 
@@ -83,14 +82,14 @@ export const CriticalSafetyAlert: Story = {
     description:
       "Worker W-4521 detected without hard hat in critical reactor control area",
     severity: "CRITICAL",
-    status: "ACTIVE",
+    //  status: "ACTIVE",
     category: "Safety",
     location: "Reactor Control Room - Camera 3",
     time: "16:45",
     assignedTo: "Safety Officer",
     duration: "8m",
     icon: ErrorOutline,
-    actions: ["Notify Worker", "Send Safety Alert", "Log Incident"],
+    //actions: ["Notify Worker", "Send Safety Alert", "Log Incident"],
   },
   parameters: {
     docs: {
@@ -108,14 +107,14 @@ export const CriticalSecurityAlert: Story = {
     description:
       "Unknown individual attempting unauthorized access at main entrance perimeter",
     severity: "CRITICAL",
-    status: "ESCALATED",
+    // status: "ESCALATED",
     category: "Security",
     location: "Main Entrance - Camera 1",
     time: "16:32",
     assignedTo: "Security Team",
     duration: "15m",
     icon: ErrorOutline,
-    actions: ["Alert Security", "Lock Down", "Call Authorities"],
+    // actions: ["Alert Security", "Lock Down", "Call Authorities"],
   },
   parameters: {
     docs: {
@@ -132,14 +131,14 @@ export const HighPriorityAlert: Story = {
     title: "Equipment blocking emergency exit",
     description: "Large machinery cart left blocking Emergency Route B",
     severity: "HIGH",
-    status: "ACTIVE",
+    // status: "ACTIVE",
     category: "Safety",
     location: "Emergency Route B - Camera 9",
     time: "16:18",
     assignedTo: "Maintenance",
     duration: "23m",
     icon: Warning,
-    actions: ["Clear Path", "Relocate Equipment", "Update Logs"],
+    // actions: ["Clear Path", "Relocate Equipment", "Update Logs"],
   },
   parameters: {
     docs: {
@@ -157,14 +156,14 @@ export const AcknowledgedAlert: Story = {
     description:
       "Required Level 3 operator not present in chemical processing unit",
     severity: "HIGH",
-    status: "ACKNOWLEDGED",
+    // status: "ACKNOWLEDGED",
     category: "Workforce",
     location: "Chemical Processing Unit",
     time: "16:05",
     assignedTo: "Shift Supervisor",
     duration: "35m",
     icon: Person,
-    actions: ["Assign Replacement", "Notify HR", "Log Absence"],
+    // actions: ["Assign Replacement", "Notify HR", "Log Absence"],
   },
   parameters: {
     docs: {
@@ -181,14 +180,14 @@ export const MediumPriorityAlert: Story = {
     title: "High occupancy in break room",
     description: "Break room exceeding maximum capacity during shift change",
     severity: "MEDIUM",
-    status: "ACTIVE",
+    //  status: "ACTIVE",
     category: "Operational",
     location: "Break Room A - Camera 12",
     time: "15:52",
     assignedTo: "Facility Manager",
     duration: "48m",
     icon: InfoOutlined,
-    actions: ["Manage Crowd", "Open Additional Area", "Update Schedule"],
+    //actions: ["Manage Crowd", "Open Additional Area", "Update Schedule"],
   },
   parameters: {
     docs: {
@@ -207,14 +206,14 @@ export const AlertsList: Story = {
         title="Hard hat missing in reactor zone"
         description="Worker W-4521 detected without hard hat in critical reactor control area"
         severity="CRITICAL"
-        status="ACTIVE"
+        //status="ACTIVE"
         category="Safety"
         location="Reactor Control Room - Camera 3"
         time="16:45"
         assignedTo="Safety Officer"
         duration="8m"
         icon={ErrorOutline}
-        actions={["Notify Worker", "Send Safety Alert", "Log Incident"]}
+        //  actions={["Notify Worker", "Send Safety Alert", "Log Incident"]}
       />
 
       <AlertCard
@@ -222,14 +221,14 @@ export const AlertsList: Story = {
         title="Unauthorized person at main gate"
         description="Unknown individual attempting unauthorized access at main entrance perimeter"
         severity="CRITICAL"
-        status="ESCALATED"
+        // status="ESCALATED"
         category="Security"
         location="Main Entrance - Camera 1"
         time="16:32"
         assignedTo="Security Team"
         duration="15m"
         icon={ErrorOutline}
-        actions={["Alert Security", "Lock Down", "Call Authorities"]}
+        //  actions={["Alert Security", "Lock Down", "Call Authorities"]}
       />
 
       <AlertCard
@@ -237,14 +236,14 @@ export const AlertsList: Story = {
         title="Equipment blocking emergency exit"
         description="Large machinery cart left blocking Emergency Route B"
         severity="HIGH"
-        status="ACTIVE"
+        // status="ACTIVE"
         category="Safety"
         location="Emergency Route B - Camera 9"
         time="16:18"
         assignedTo="Maintenance"
         duration="23m"
         icon={Warning}
-        actions={["Clear Path", "Relocate Equipment", "Update Logs"]}
+        //  actions={["Clear Path", "Relocate Equipment", "Update Logs"]}
       />
     </Box>
   ),
