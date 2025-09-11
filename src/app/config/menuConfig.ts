@@ -107,6 +107,16 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
         page: "intrusion-detection",
         path: "/IntrusionDetectionPage",
       },
+      {
+        name: "Camera Tampering or Offline Detection,",
+        page: "camera-tampering",
+        path: "/CameraTampering",
+      },
+      {
+        name: "People Presence during Shutdown Hours",
+        page: "people-presence",
+        path: "/PeoplePresence",
+      },
     ],
   },
   {
@@ -114,21 +124,43 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     icon: People,
     items: [
       {
+        name: "Employee Idle Time Monitoring",
+        page: "employee-idle",
+        path: "/EmployeeIdleTime",
+      },
+         {
         name: "Employee presence detection in critical areas",
         page: "employee-presence",
         path: "/EmployeePresencePage",
+      },   {
+        name: "Mobile Phone Usage in Restricted Areas",
+        page: "mobile-phone-usage",
+        path: "/MobilePhoneUsage",
+      },   {
+        name: "People Count in Factory Premises based on Entry Exit person Counting",
+        page: "people-count",
+        path: "/PeopleCountPage",
+      },   {
+        name: "Sleeping or Absence of Security Personnel",
+        page: "sleeping-absence-security-personnel",
+        path: "/SleepingSecurityPersonnel",
       },
     ],
   },
   {
-    title: "Operational Insight",
+    title: "Vehicle Operational Insight",
     icon: BarChart,
     items: [
       {
-        name: "People count in factory Premises",
-        page: "people-count",
-        path: "/PeopleCountPage",
+        name: "Vehicle Count & ANPR at Entry/Exit Gates",
+        page: "vehicle-count",
+        path: "/VehicleCount",
       },
+       {
+        name: "Tracking Vehicle Unloading/Loading Time",
+        page: "tracking-vehicle",
+        path: "/VehicleUnloadingLoading",
+      }
     ],
   },
 ];

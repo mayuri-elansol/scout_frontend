@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import {
@@ -14,11 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import {
-  Circle,
-  ExitToApp,
-  Shield,
-} from "@mui/icons-material";
+import { Circle, ExitToApp, Shield } from "@mui/icons-material";
 import { useAuth } from "../../../../customhooks/useAuth";
 
 const Header: React.FC = () => {
@@ -39,7 +34,7 @@ const Header: React.FC = () => {
           hour: "2-digit",
           minute: "2-digit",
           second: "2-digit",
-          hour12: true,
+          hour12: false,
         })
       );
     };
@@ -142,7 +137,7 @@ const Header: React.FC = () => {
                 fontSize: "14px",
               }}
             >
-              System Online
+              System Health
             </Typography>
           </Box>
 
@@ -159,9 +154,7 @@ const Header: React.FC = () => {
                     fontWeight: 600,
                   }}
                 >
-                  {user?.username
-                    ? user.username.charAt(0).toUpperCase()
-                    : "?"}
+                  {user?.username ? user.username.charAt(0).toUpperCase() : "?"}
                 </Avatar>
               </IconButton>
 
@@ -170,24 +163,26 @@ const Header: React.FC = () => {
                 open={open}
                 onClose={handleClose}
                 onClick={handleClose}
-                PaperProps={{
-                  elevation: 4,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.1))",
-                    mt: 1.5,
-                    minWidth: 150,
-                    "&:before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
+                slotProps={{
+                  paper: {
+                    elevation: 4,
+                    sx: {
+                      overflow: "visible",
+                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.1))",
+                      mt: 1.5,
+                      minWidth: 150,
+                      "&:before": {
+                        content: '""',
+                        display: "block",
+                        position: "absolute",
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: "background.paper",
+                        transform: "translateY(-50%) rotate(45deg)",
+                        zIndex: 0,
+                      },
                     },
                   },
                 }}

@@ -75,7 +75,14 @@ export type PageType =
   | "settings"
   |"STPOverflowDetection-detection"
   |"emergency-exit-blockage-detection"
-  |"crowd-gathering-in-hazardous-zones-detection";
+  |"crowd-gathering-in-hazardous-zones-detection"
+  |"camera-tampering"
+  |"people-presence"
+  |"employee-idle"
+  |"mobile-phone-usage"
+  |"sleeping-absence-security-personnel"
+  |"vehicle-count"
+  |"tracking-vehicle"
 
 // Component Props Types
 export interface SidebarProps {

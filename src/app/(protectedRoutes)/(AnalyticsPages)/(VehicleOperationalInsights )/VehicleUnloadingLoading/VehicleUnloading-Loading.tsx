@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import { KpiCard } from "@/app/components/molecules";
+import  KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const MobilePhoneUsage: React.FC = () => {
+const VehicleUnloadingLoading: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const MobilePhoneUsageKpiData = [
+  const VehicleUnloadingLoadingKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,15 +125,15 @@ const MobilePhoneUsage: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Mobile Phone Usage in Restricted Areas
+            Tracking Vehicle Unloading/Loading Time
           </Typography>
         </Box>
         <Typography
           variant="body1"
           sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
         >
-          Flags phone usage in danger-prone zones where distraction can be
-          deadly.
+          Optimizes logistics efficiency by monitoring time taken for
+          loading/unloading operations.
         </Typography>
       </Box>
 
@@ -148,7 +148,7 @@ const MobilePhoneUsage: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            MobilePhoneUsageKpiData.map((kpi) => (
+            VehicleUnloadingLoadingKpiData.map((kpi) => (
               <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
                 <KpiCard {...kpi} />
               </Grid>
@@ -160,7 +160,7 @@ const MobilePhoneUsage: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Mobile Phone Usage in Restricted Areas"
+            label="Recent Tracking Vehicle Unloading/Loading Time"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -175,7 +175,7 @@ const MobilePhoneUsage: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Mobile Phone Usage in Restricted Areas Report"
+        title="Tracking Vehicle Unloading/Loading Time Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -265,4 +265,4 @@ const MobilePhoneUsage: React.FC = () => {
   );
 };
 
-export default MobilePhoneUsage;
+export default VehicleUnloadingLoading;
