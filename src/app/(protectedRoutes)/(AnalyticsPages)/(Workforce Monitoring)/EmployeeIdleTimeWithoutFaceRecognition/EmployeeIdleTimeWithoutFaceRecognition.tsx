@@ -8,9 +8,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const VehicleUnloadingLoading: React.FC = () => {
+const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const VehicleUnloadingLoadingKpiData = [
+  const EmployeeIdleTimeKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +125,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Tracking Vehicle Unloading/Loading Time
+            Employee Idle Time Monitoring
           </Typography>
         </Box>
       </Box>
@@ -141,7 +141,7 @@ const VehicleUnloadingLoading: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            VehicleUnloadingLoadingKpiData.map((kpi) => (
+            EmployeeIdleTimeKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={kpi.title}
@@ -261,4 +261,4 @@ const VehicleUnloadingLoading: React.FC = () => {
   );
 };
 
-export default VehicleUnloadingLoading;
+export default EmployeeIdleTime;

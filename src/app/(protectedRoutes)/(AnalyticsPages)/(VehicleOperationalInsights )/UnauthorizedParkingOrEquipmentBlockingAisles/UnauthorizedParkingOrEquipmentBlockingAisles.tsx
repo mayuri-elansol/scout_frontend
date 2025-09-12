@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -8,9 +10,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const VehicleUnloadingLoading: React.FC = () => {
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const VehicleUnloadingLoadingKpiData = [
+const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+  const KpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -114,7 +116,7 @@ const VehicleUnloadingLoading: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const KpiCardLoading = false;
+  const KpiCardLoading = true;
   return (
     <Box>
       {/* Page Header */}
@@ -125,7 +127,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Tracking Vehicle Unloading/Loading Time
+            Unauthorized Parking or Equipment Blocking Aisles
           </Typography>
         </Box>
       </Box>
@@ -141,7 +143,7 @@ const VehicleUnloadingLoading: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            VehicleUnloadingLoadingKpiData.map((kpi) => (
+            KpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={kpi.title}
@@ -159,13 +161,13 @@ const VehicleUnloadingLoading: React.FC = () => {
             label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
-            loading={false}
+            loading={true}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} loading={false} />
+          <ZoneNotification zones={complianceByZone} loading={true} />
         </Grid>
       </Grid>
 
@@ -255,10 +257,10 @@ const VehicleUnloadingLoading: React.FC = () => {
         onReset={handleReset}
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
-        loading={false}
+        loading={true}
       />
     </Box>
   );
 };
 
-export default VehicleUnloadingLoading;
+export default UnauthorizedParkingOrEquipmentBlockingAisles;

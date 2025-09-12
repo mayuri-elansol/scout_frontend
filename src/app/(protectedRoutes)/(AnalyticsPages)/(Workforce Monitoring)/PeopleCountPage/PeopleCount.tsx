@@ -140,7 +140,7 @@ const PeopleCount: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent PPE Violations"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -153,9 +153,8 @@ const PeopleCount: React.FC = () => {
       </Grid>
 
       {/* People Count Report */}
-      {/* People Count Report */}
       <ReportTable
-        title="People Count Report"
+        title="Report Table"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

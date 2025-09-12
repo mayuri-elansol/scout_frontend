@@ -140,7 +140,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent  Fire, Smoke, Oil and Gas Leak Violations"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -155,7 +155,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
 
       <ReportTable
-        title=" Fire, Smoke, Oil and Gas Leak  Report"
+        title="Report Table"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

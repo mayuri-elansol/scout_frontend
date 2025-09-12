@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -142,7 +142,10 @@ const PeoplePresence: React.FC = () => {
             ))
           : // Show actual KPI cards
             PeoplePresenceKpiData.map((kpi) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={kpi.title}
+              >
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -153,7 +156,7 @@ const PeoplePresence: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent People Presence during Shutdown Hours"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -168,7 +171,7 @@ const PeoplePresence: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="People Presence during Shutdown Hours Report"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

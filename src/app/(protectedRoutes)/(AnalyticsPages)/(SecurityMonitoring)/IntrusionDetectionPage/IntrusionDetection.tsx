@@ -202,7 +202,7 @@ const IntrusionDetection: React.FC = () => {
         {/* Active Intrusion Alerts */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent PPE Violations"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -216,7 +216,7 @@ const IntrusionDetection: React.FC = () => {
 
       {/* Security Intrusion Report */}
       <ReportTable
-        title="Security Intrusion Report"
+        title="Report Table"
         columns={[
           { id: "incidentId", label: "Incident ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

@@ -182,7 +182,7 @@ const EmployeePresence: React.FC = () => {
         {/* Active Critical Zone Personnel */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label=" Active Critical Zone Personnel"
+            label="Recent Violations"
             violations={activePersonnel}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -197,7 +197,7 @@ const EmployeePresence: React.FC = () => {
 
       {/* Employee Presence Report */}
       <ReportTable
-        title="Employee Presence Report"
+        title="Report Table"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
