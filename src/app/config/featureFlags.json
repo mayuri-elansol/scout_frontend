@@ -21,5 +21,10 @@
   "mobile-phone-usage":true,
   "sleeping-absence-security-personnel":true,
   "vehicle-count":true,
-  "tracking-vehicle":true
+  "tracking-vehicle":true,
+  "unauthorized-parking":true,
+  "unauthorized-access":true,
+  "face-recognition":true,
+  "monitoring-canteen-usage":true,
+  "employee-idle-without-face-recognition":true
 }

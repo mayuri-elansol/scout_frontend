@@ -9,7 +9,9 @@ import {
   Settings,
   VideoCall,
   Warning,
+  
 } from "@mui/icons-material";
+import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
@@ -128,7 +130,7 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     items: [
       {
         name: "Employee Idle Time Monitoring",
-        page: "employee-idle",
+        page: "employee-idle-without-face-recognition",
         path: "/EmployeeIdleTime",
       },
          {
@@ -163,6 +165,37 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
         name: "Tracking Vehicle Unloading/Loading Time",
         page: "tracking-vehicle",
         path: "/VehicleUnloadingLoading",
+      },
+       {
+        name: "Unauthorized Parking or Equipment Blocking Aisles",
+        page: "unauthorized-parking",
+        path: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+      }
+    ],
+  },
+    {
+    title: "Facial Recognition Analytics",
+    icon: FaceRecognitionIcon,
+    items: [
+      {
+        name: "Unauthorized Access in Restricted Areas",
+        page: "unauthorized-access",
+        path: "/UnauthorizedAccessInRestrictedAreas",
+      },
+       {
+        name: "Face Recognition for Entry/Exit Logging",
+        page: "face-recognition",
+        path: "/FaceRecognition",
+      },
+       {
+        name: "Monitoring Canteen Usage & Timings",
+        page: "monitoring-canteen-usage",
+        path: "/MonitoringCanteenUsage&Timings",
+      },
+      {
+        name: "Employee Idle Time Monitoring",
+        page: "employee-idle",
+        path: "/EmployeeIdleTimeMonitoring", 
       }
     ],
   },

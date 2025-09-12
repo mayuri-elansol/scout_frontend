@@ -83,6 +83,11 @@ export type PageType =
   |"sleeping-absence-security-personnel"
   |"vehicle-count"
   |"tracking-vehicle"
+  |"unauthorized-parking"
+  |"employee-idle-without-face-recognition"
+  |"face-recognition"
+  |"unauthorized-access"
+  |"monitoring-canteen-usage"
 
 // Component Props Types
 export interface SidebarProps {
