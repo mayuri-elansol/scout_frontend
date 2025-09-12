@@ -1,6 +1,6 @@
 "use client";
 
-import EmployeeIdleTime from "./EmployeeIdleTime ";
+import EmployeeIdleTime from "./EmployeeIdleTimeWithoutFaceRecognition";
 
 export default function PPEDetectionPage() {
   return <EmployeeIdleTime />;

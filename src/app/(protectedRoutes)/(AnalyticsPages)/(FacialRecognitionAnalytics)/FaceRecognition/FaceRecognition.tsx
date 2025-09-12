@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -8,9 +10,9 @@ import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNo
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 
-const MobilePhoneUsage: React.FC = () => {
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const MobilePhoneUsageKpiData = [
+const FaceRecognition: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+  const FaceRecognitionKpiData = [
     {
       title: "PPE Compliance Rate",
       value: "87.5%",
@@ -125,7 +127,7 @@ const MobilePhoneUsage: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Mobile Phone Usage in Restricted Areas
+            Face Recognition for Entry/Exit Logging
           </Typography>
         </Box>
       </Box>
@@ -135,16 +137,19 @@ const MobilePhoneUsage: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
-            MobilePhoneUsageKpiData.map((kpi) => (
+            FaceRecognitionKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
+                key={index + 1}
               >
                 <KpiCard {...kpi} />
               </Grid>
@@ -156,7 +161,7 @@ const MobilePhoneUsage: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Mobile Phone Usage in Restricted Areas"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +176,7 @@ const MobilePhoneUsage: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Mobile Phone Usage in Restricted Areas Report"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -261,4 +266,4 @@ const MobilePhoneUsage: React.FC = () => {
   );
 };
 
-export default MobilePhoneUsage;
+export default FaceRecognition;

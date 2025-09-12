@@ -1,5 +1,5 @@
-"use client";
+import UnauthorizedParkingOrEquipmentBlockingAisles from "./UnauthorizedParkingOrEquipmentBlockingAisles";
 
-export default function UnauthorizedParkingOrEquipmentBlockingAisles() {
-  return "UnauthorizedParkingOrEquipmentBlockingAisles";
+export default function PPEDetectionPage() {
+  return <UnauthorizedParkingOrEquipmentBlockingAisles />;
 }
