@@ -226,7 +226,6 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
               );
             })}
           </Grid>
-
           {/* Action Buttons */}
           {(showApplyButton || showClearButton) && (
             <>
