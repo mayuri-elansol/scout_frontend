@@ -130,7 +130,7 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
       {
         name: "Employee Idle Time Monitoring",
         page: "employee-idle-without-face-recognition",
-        path: "/EmployeeIdleTime",
+        path: "/EmployeeIdleTimeWithoutFaceRecognition",
       },
       {
         name: "Employee presence detection in critical areas",

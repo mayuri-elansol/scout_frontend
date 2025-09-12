@@ -156,7 +156,7 @@ const MobilePhoneUsage: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Mobile Phone Usage in Restricted Areas"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -171,7 +171,7 @@ const MobilePhoneUsage: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Mobile Phone Usage in Restricted Areas Report"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

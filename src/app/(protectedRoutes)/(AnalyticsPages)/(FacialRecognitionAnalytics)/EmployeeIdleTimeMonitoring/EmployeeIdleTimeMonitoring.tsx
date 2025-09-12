@@ -173,7 +173,7 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="ReportcTable"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

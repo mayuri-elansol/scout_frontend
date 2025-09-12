@@ -142,7 +142,7 @@ const ObjectDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Object Violations"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -157,7 +157,7 @@ const ObjectDetection: React.FC = () => {
       {/* Object detection Report */}
 
       <ReportTable
-        title="People Count Report"
+        title="Report Table"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

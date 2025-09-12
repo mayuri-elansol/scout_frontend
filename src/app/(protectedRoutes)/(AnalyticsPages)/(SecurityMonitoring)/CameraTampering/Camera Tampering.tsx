@@ -1,6 +1,6 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
-import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -136,13 +136,19 @@ const CameraTampering: React.FC = () => {
         {KpiCardLoading
           ? // Show skeletons while loading
             skeletonKeys.map((key, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={index + 1}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
             CameraTamperingKpiData.map((kpi) => (
-              <Grid size={{ xs: 12, sm: 6, md: 6, lg: 3 }} key={kpi.title}>
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={kpi.title}
+              >
                 <KpiCard {...kpi} />
               </Grid>
             ))}
@@ -153,7 +159,7 @@ const CameraTampering: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Camera Tampering or Offline Detection"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
             loading={false}
@@ -168,7 +174,7 @@ const CameraTampering: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Camera Tampering or Offline Detection Report"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

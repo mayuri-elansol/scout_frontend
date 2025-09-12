@@ -141,7 +141,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Vehicle Speed Monitoring Violations"
+            label="Recent Violations"
             violations={recentViolations}
             onViewAll={() => console.log("View all clicked")}
           />
@@ -154,9 +154,8 @@ const VehicalSpeedMonitoring: React.FC = () => {
       </Grid>
 
       {/* People Count Report */}
-      {/* People Count Report */}
       <ReportTable
-        title=" Vehicle Speed Monitoring Report"
+        title="Report Table"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
