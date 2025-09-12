@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi) => (
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={kpi.title}>
-            <KpiCard {...kpi} />
+            <KpiCard {...kpi} route="/PPEDetectionPage" />
           </Grid>
         ))}
       </Grid>

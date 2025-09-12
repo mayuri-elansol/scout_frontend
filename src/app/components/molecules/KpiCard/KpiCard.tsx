@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, Box, Typography, Chip } from "@mui/material";
+import { Card, CardContent, Box, Typography, Button } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
-
+import { useRouter } from "next/navigation";
 interface KpiCardProps {
   title: string;
   value: string;
-  //subtitle: string;
+  route?: string;
   trend: string;
   trendColor: string;
   color: string;
@@ -22,7 +22,7 @@ interface KpiCardProps {
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
-  //  subtitle,
+  route,
   trend,
   trendColor,
   color,
@@ -104,7 +104,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
 
   const variantStyles = getVariantStyles();
   const sizeStyles = getSizeStyles();
-
+  const router = useRouter();
   // Override with custom dimensions if provided
   const finalWidth = customWidth ? `${customWidth}px` : "auto";
 
@@ -159,8 +159,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
 
-          <Chip
-            label={trend}
+          <Button
+            variant="outlined"
             size="small"
             sx={{
               fontSize: "11px",
@@ -168,9 +168,20 @@ const KpiCard: React.FC<KpiCardProps> = ({
               color: trendColor,
               backgroundColor: "rgba(255,255,255,0.9)",
               border: `1px solid ${trendColor}40`,
-              height: size === "small" ? 20 : 24,
+              height: "20px",
+              textTransform: "none",
+              lineHeight: 1.2,
+              minWidth: "unset",
+              padding: "0 6px",
             }}
-          />
+            onClick={() => {
+              if (route) {
+                router.push(route);
+              }
+            }}
+          >
+            View
+          </Button>
         </Box>
 
         {/* Value */}
