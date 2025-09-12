@@ -21,13 +21,18 @@ const reportColumns = [
   { id: "zone", label: "Zone", minWidth: 120 },
   { id: "employeeId", label: "Employee ID", minWidth: 120 },
   { id: "violationType", label: "Violation Type", minWidth: 150 },
-  { id: "severity", label: "Severity", minWidth: 100 },
-  { id: "status", label: "Status", minWidth: 100 },
-  { id: "priority", label: "Priority", minWidth: 80 },
-  { id: "resolution", label: "Action Taken", minWidth: 150 },
+  
 ];
+type FilterType = "text" | "select" | "date";
 
-const reportFilters = [
+interface ReportFilter {
+  id: string;
+  label: string;
+  type: FilterType;
+  options?: string[];
+}
+
+const reportFilters :ReportFilter[]= [
   { id: "name", label: "Search Name", type: "text" },
   {
     id: "employeeId",
@@ -47,10 +52,7 @@ const sampleData = [
     zone: "Production Floor A",
     employeeId: "John Mitchell",
     violationType: "Missing Hard Hat",
-    severity: "Critical",
-    status: "VIOLATION",
-    priority: "Critical",
-    resolution: "Employee notified, PPE provided",
+   
   },
   {
     violationId: "PPE-7891",
@@ -58,10 +60,7 @@ const sampleData = [
     zone: "Welding Station",
     employeeId: "Lisa Anderson",
     violationType: "Improper Safety Glasses",
-    severity: "High",
-    status: "RESOLVED",
-    priority: "High",
-    resolution: "Correct eyewear issued",
+    
   },
   {
     violationId: "PPE-7890",
@@ -69,10 +68,7 @@ const sampleData = [
     zone: "Chemical Storage",
     employeeId: "Sarah Chen",
     violationType: "Missing Safety Gloves",
-    severity: "Critical",
-    status: "PENDING",
-    priority: "Critical",
-    resolution: "Under investigation",
+    
   },
 ];
 
@@ -130,38 +126,45 @@ const SystemAlerts: React.FC = () => {
         ))}
       </Grid>
 
-      {/* Alert Details Section */}
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 600, color: "#333", mb: 2 }}>
-          Safety and Compliances Alerts
-        </Typography>
-        <ReportTable
-          title="Report Table"
-          columns={reportColumns}
-          data={sampleData}
-          filters={reportFilters}
-          onSubmit={handleSubmitFilter}
-          onReset={handleReset}
-          onExport={handleExport}
-          downloadFileName="safety-alerts"
-          loading={true}
-        />
 
-        <Typography variant="h6" sx={{ fontWeight: 600, color: "#333", mt: 4, mb: 2 }}>
-          Security Monitoring Alerts
-        </Typography>
-        <ReportTable
-          title="Report Table"
-          columns={reportColumns}
-          data={sampleData}
-          filters={reportFilters}
-          onSubmit={handleSubmitFilter}
-          onReset={handleReset}
-          onExport={handleExport}
-          downloadFileName="security-alerts"
-          loading={true}
-        />
-      </Box>
+      {/* Alert Details Section */}
+      {/* Alert Details Section */}
+<Box sx={{ mb: 3 }}>
+  <Grid container spacing={3}>
+    {/* Left table */}
+    <Grid size={{xs:12,md:6}} >
+     
+      <ReportTable
+        title="Safety and Compliances Alerts"
+        columns={reportColumns}
+        data={sampleData}
+        filters={reportFilters}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        downloadFileName="safety-alerts"
+        loading={true}
+      />
+    </Grid>
+
+    {/* Right table */}
+    <Grid size={{xs:12,md:6}} >
+     
+      <ReportTable
+        title="Security Monitoring Alerts"
+        columns={reportColumns}
+        data={sampleData}
+        filters={reportFilters}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        downloadFileName="security-alerts"
+        loading={true}
+      />
+    </Grid>
+  </Grid>
+</Box>
+
     </Box>
   );
 };
