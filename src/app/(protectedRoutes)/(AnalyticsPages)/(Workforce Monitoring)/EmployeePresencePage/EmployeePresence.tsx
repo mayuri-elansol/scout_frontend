@@ -10,8 +10,6 @@ import {
   Shield,
   Place,
   Schedule,
-  Error,
-  BarChart,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -80,37 +78,17 @@ const EmployeePresence: React.FC = () => {
       bgColor: "#e8f5e9",
       icon: Schedule,
     },
-    {
-      title: "Emergency Readiness",
-      value: "HIGH",
-      subtitle: "8 certified responders active",
-      trend: "Ready",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Error,
-    },
-    {
-      title: "Zone Utilization Analysis",
-      value: "78%",
-      subtitle: "Average zone utilization",
-      trend: "+3%",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: BarChart,
-    },
   ];
 
   const activePersonnel = [
     {
-      title: "John Mitchell - Level 3 Operator", // name + certification
-      location: "Reactor Control Room", // zone
-      time: "Day Shift", // shift
-      Id: "EMP-4521", // employeeId
-      severity: "N/A", // no severity in personnel data
-      status: "ACTIVE", // status
-      bgColor: "#e8f5e9", // from personnel
+      title: "John Mitchell - Level 3 Operator",
+      location: "Reactor Control Room",
+      time: "Day Shift",
+      Id: "EMP-4521",
+      severity: "N/A",
+      status: "ACTIVE",
+      bgColor: "#e8f5e9",
       imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {

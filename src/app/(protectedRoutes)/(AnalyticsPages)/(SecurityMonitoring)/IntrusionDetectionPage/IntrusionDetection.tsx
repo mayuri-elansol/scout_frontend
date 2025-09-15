@@ -3,14 +3,7 @@
 import React from "react";
 import { ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";
-import {
-  Visibility,
-  Warning,
-  Shield,
-  People,
-  Place,
-  Error,
-} from "@mui/icons-material";
+import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -28,16 +21,7 @@ const IntrusionDetection: React.FC = () => {
       bgColor: "#ffebee",
       icon: Warning,
     },
-    {
-      title: "Zones Breached",
-      value: "3",
-      subtitle: "High-security areas compromised",
-      trend: "+1",
-      trendColor: "#d32f2f",
-      color: "#d32f2f",
-      bgColor: "#ffcdd2",
-      icon: Shield,
-    },
+
     {
       title: "Active Intruders",
       value: "2",
