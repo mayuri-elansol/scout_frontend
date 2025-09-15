@@ -111,7 +111,33 @@ const ObjectDetection: React.FC = () => {
       status: "warning",
     },
   ];
+  interface FilterParams {
+    zone?: string;
+    status?: string;
+    priority?: string;
+    minOccupancy?: string;
+    maxOccupancy?: string;
+    startDate?: string;
+    endDate?: string;
+  }
 
+  const handleSubmitFilter = async (filters: FilterParams) => {
+    console.log("Selected Filters:", filters);
+  };
+
+  const handleReset = () => {
+    console.log("reset button clickedd");
+  };
+
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested clikcedd:", format);
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = () => {
+    console.log("view single row");
+  };
   return (
     <Box>
       {/* Page Header */}
@@ -280,6 +306,11 @@ const ObjectDetection: React.FC = () => {
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="people-count-report"
       />
     </Box>

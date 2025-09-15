@@ -16,8 +16,9 @@ import {
   MenuItem,
   Menu,
   Skeleton,
+  IconButton,
 } from "@mui/material";
-import { Description } from "@mui/icons-material";
+import { Description, Visibility, Download } from "@mui/icons-material";
 
 interface ReportColumn {
   id: string;
@@ -50,6 +51,8 @@ interface ReportTableProps {
   onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
   loading?: boolean;
   isSubmitDisabled?: boolean;
+  onView?: (row: ReportData) => void;
+  onDownload?: (row: ReportData) => void;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -62,6 +65,8 @@ const ReportTable: React.FC<ReportTableProps> = ({
   onExport,
   loading = false,
   isSubmitDisabled,
+  onView,
+  onDownload,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -194,7 +199,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
     return null;
   };
 
-  /** Table Rows (avoids nested ternary) */
+  /** Table Rows */
   let tableRows;
   if (loading) {
     tableRows = [...Array(5)].map((_, rowIndex) => (
@@ -204,6 +209,10 @@ const ReportTable: React.FC<ReportTableProps> = ({
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
+        {/* Actions column skeleton */}
+        <TableCell>
+          <Skeleton variant="circular" width={24} height={24} />
+        </TableCell>
       </TableRow>
     ));
   } else if (filteredData.length > 0) {
@@ -221,12 +230,29 @@ const ReportTable: React.FC<ReportTableProps> = ({
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
+        {/* ACTIONS column */}
+        <TableCell align="center" sx={{ py: 1.5 }}>
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => onView?.(row)}
+          >
+            <Visibility fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => onDownload?.(row)}
+          >
+            <Download fontSize="small" />
+          </IconButton>
+        </TableCell>
       </TableRow>
     ));
   } else {
     tableRows = (
       <TableRow>
-        <TableCell colSpan={columns.length} align="center" sx={{ py: 4 }}>
+        <TableCell colSpan={columns.length + 1} align="center" sx={{ py: 4 }}>
           <Typography>No matching records found</Typography>
         </TableCell>
       </TableRow>
@@ -353,6 +379,19 @@ const ReportTable: React.FC<ReportTableProps> = ({
                     {column.label}
                   </TableCell>
                 ))}
+                {/* Always add ACTIONS col */}
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    color: "#333",
+                    py: 2,
+                    minWidth: 100,
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{tableRows}</TableBody>

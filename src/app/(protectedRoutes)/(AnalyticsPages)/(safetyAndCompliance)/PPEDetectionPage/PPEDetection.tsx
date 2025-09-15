@@ -116,6 +116,12 @@ const PPEDetection: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = () => {
+    console.log("view single row");
+  };
   const KpiCardLoading = true;
   return (
     <Box>
@@ -259,6 +265,8 @@ const PPEDetection: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
         loading={true}
       />
