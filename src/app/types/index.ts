@@ -117,15 +117,11 @@ export interface ActivityData {
 
 // Camera Status Types
 export interface CameraZone {
-  id?: string;
-  zone?: string; // Legacy support
-  name?: string;
-  status?: "online" | "offline" | "warning";
-  cameras?: number;
-  active?: number;
-  total?: number;
-  priority?: string;
-  shift?: string;
+  zone: string;
+  active: number;
+  offline: number;
+  tempred: number;
+  total: number;
 }
 
 // Analytics Data Types

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { KpiData } from "@/app/types";
+import { CameraZone, KpiData } from "@/app/types";
 import { Box, Grid } from "@mui/material";
 import {
   Shield,
@@ -68,6 +68,19 @@ const Dashboard: React.FC = () => {
     },
   ];
 
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
   return (
     <Box
       sx={{
@@ -93,7 +106,7 @@ const Dashboard: React.FC = () => {
           <ActivityFeed />
         </Box>
         <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
-          <CameraStatus />
+          <CameraStatus cameraZones={cameraZones} />
         </Box>
       </Box>
     </Box>

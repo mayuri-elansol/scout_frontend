@@ -1,35 +1,18 @@
 import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
-import { Circle } from "@mui/icons-material";
 
-interface CameraZone {
+export interface CameraZone {
   zone: string;
   active: number;
+  offline: number;
+  tempred: number;
   total: number;
-  status: "excellent" | "good" | "warning";
 }
 
-const CameraStatus: React.FC = () => {
-  const cameraZones: CameraZone[] = [
-    { zone: "Production Floor", active: 8, total: 10, status: "good" },
-    { zone: "Warehouse", active: 6, total: 6, status: "excellent" },
-    { zone: "Parking Area", active: 4, total: 5, status: "warning" },
-    { zone: "Main Entrance", active: 3, total: 3, status: "excellent" },
-    { zone: "Assembly Line", active: 3, total: 4, status: "warning" },
-  ];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "excellent":
-        return "#4caf50";
-      case "good":
-        return "#8bc34a";
-      case "warning":
-        return "#ff9800";
-      default:
-        return "#9e9e9e";
-    }
-  };
+interface CameraStatusProps {
+  cameraZones: CameraZone[];
+}
+const CameraStatus: React.FC<CameraStatusProps> = ({ cameraZones }) => {
   return (
     <Card sx={{ height: "100%" }}>
       <CardContent sx={{ p: 3 }}>
@@ -57,7 +40,7 @@ const CameraStatus: React.FC = () => {
                   index < cameraZones.length - 1 ? "1px solid #f0f0f0" : "none",
               }}
             >
-              <Box>
+              <Box sx={{ width: "100%" }}>
                 <Typography
                   sx={{
                     fontWeight: 500,
@@ -67,17 +50,35 @@ const CameraStatus: React.FC = () => {
                 >
                   {zone.zone}
                 </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    color: "#5c6b7d",
-                  }}
-                >
-                  {zone.active}/{zone.total} cameras active
+                <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+                  <Box
+                    component="span"
+                    sx={{ color: "#4caf50", fontWeight: 600 }}
+                  >
+                    {zone.active}/{zone.total}
+                  </Box>
+                  {"  "}
+                  active •{"  "}
+                  <Box
+                    component="span"
+                    sx={{ color: "#f44336", fontWeight: 600 }}
+                  >
+                    {zone.offline}/{zone.total}
+                  </Box>
+                  {"  "}
+                  offline •{"  "}
+                  <Box
+                    component="span"
+                    sx={{ color: "#ff9800", fontWeight: 600 }}
+                  >
+                    {zone.tempred}/{zone.total}
+                  </Box>
+                  {"  "}
+                  tampered
                 </Typography>
               </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Circle
                   sx={{
                     fontSize: 8,
@@ -94,7 +95,7 @@ const CameraStatus: React.FC = () => {
                 >
                   {zone.status}
                 </Typography>
-              </Box>
+              </Box> */}
             </Box>
           ))}
         </Box>
