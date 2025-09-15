@@ -9,7 +9,6 @@ import {
   Visibility,
   People,
   DirectionsCar,
-  Schedule,
 } from "@mui/icons-material";
 
 import { ActivityFeed, CameraStatus } from "@/app/components/organisms";

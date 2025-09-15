@@ -37,8 +37,16 @@ export default function RecentViolations({
   loading = false,
 }: RecentViolationsProps) {
   return (
-    <Card>
-      <CardContent sx={{ p: 3 }}>
+    // sx={{ maxHeight: 420, overflowY: "auto" }}
+    <Card
+      sx={{
+        height: "100%",
+        maxHeight: 420,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
         {/* Header */}
         <Box
           sx={{
@@ -70,7 +78,7 @@ export default function RecentViolations({
             </Button>
           )}
         </Box>
-        <Box sx={{ maxHeight: 450, overflowY: "auto" }}>
+        <Box>
           {" "}
           {/* adjust height as needed */}
           {/* Content */}
