@@ -21,7 +21,6 @@ const reportColumns = [
   { id: "zone", label: "Zone", minWidth: 120 },
   { id: "employeeId", label: "Employee ID", minWidth: 120 },
   { id: "violationType", label: "Violation Type", minWidth: 150 },
-  
 ];
 type FilterType = "text" | "select" | "date";
 
@@ -32,7 +31,7 @@ interface ReportFilter {
   options?: string[];
 }
 
-const reportFilters :ReportFilter[]= [
+const reportFilters: ReportFilter[] = [
   { id: "name", label: "Search Name", type: "text" },
   {
     id: "employeeId",
@@ -52,7 +51,6 @@ const sampleData = [
     zone: "Production Floor A",
     employeeId: "John Mitchell",
     violationType: "Missing Hard Hat",
-   
   },
   {
     violationId: "PPE-7891",
@@ -60,7 +58,6 @@ const sampleData = [
     zone: "Welding Station",
     employeeId: "Lisa Anderson",
     violationType: "Improper Safety Glasses",
-    
   },
   {
     violationId: "PPE-7890",
@@ -68,19 +65,36 @@ const sampleData = [
     zone: "Chemical Storage",
     employeeId: "Sarah Chen",
     violationType: "Missing Safety Gloves",
-    
   },
 ];
 
 const SystemAlerts: React.FC = () => {
   // 🔹 Alert stats
   const alertStats = [
-    { value: "10", label: "Total Alerts", color: "#666", borderColor: "#e0e0e0" },
-    { value: "2", label: "Safety and Compliances", color: "#f44336", borderColor: "#f44336" },
-    { value: "3", label: "Security Monitoring", color: "#ff9800", borderColor: "#ff9800" },
-    { value: "2", label: "Workforce Monitoring", color: "#4caf50", borderColor: "#4caf50" },
-    { value: "3", label: "Operational Insight", color: "#ffa726", borderColor: "#ffa726" },
-    { value: "3", label: "Facial Recognition", color: "#ffa726", borderColor: "#ffa726" },
+    {
+      value: "0",
+      label: "Total Alerts",
+    },
+    {
+      value: "2",
+      label: "Safety and Compliances",
+    },
+    {
+      value: "3",
+      label: "Security Monitoring",
+    },
+    {
+      value: "2",
+      label: "Workforce Monitoring",
+    },
+    {
+      value: "3",
+      label: "Operational Insight",
+    },
+    {
+      value: "3",
+      label: "Facial Recognition",
+    },
   ];
 
   // 🔹 Handlers
@@ -102,7 +116,10 @@ const SystemAlerts: React.FC = () => {
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Warning sx={{ fontSize: 28, color: "#f44336" }} />
-          <Typography variant="h4" sx={{ fontWeight: "bold", color: "#1c2025" }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: "bold", color: "#1c2025" }}
+          >
             System Alerts & Notifications
           </Typography>
         </Box>
@@ -120,51 +137,51 @@ const SystemAlerts: React.FC = () => {
       {/* Alert Statistics */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
         {alertStats.map((stat) => (
-          <Grid key={stat.label} size={{xs:12, sm:6,md:2}}  sx={{ display: "flex" }}>
+          <Grid
+            key={stat.label}
+            size={{ xs: 12, sm: 6, md: 2 }}
+            sx={{ display: "flex" }}
+          >
             <AlertStatsCard {...stat} />
           </Grid>
         ))}
       </Grid>
 
-
       {/* Alert Details Section */}
       {/* Alert Details Section */}
-<Box sx={{ mb: 3 }}>
-  <Grid container spacing={3}>
-    {/* Left table */}
-    <Grid size={{xs:12,md:6}} >
-     
-      <ReportTable
-        title="Safety and Compliances Alerts"
-        columns={reportColumns}
-        data={sampleData}
-        filters={reportFilters}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName="safety-alerts"
-        loading={true}
-      />
-    </Grid>
+      <Box sx={{ mb: 3 }}>
+        <Grid container spacing={3}>
+          {/* Left table */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <ReportTable
+              title="Safety and Compliances Alerts"
+              columns={reportColumns}
+              data={sampleData}
+              filters={reportFilters}
+              onSubmit={handleSubmitFilter}
+              onReset={handleReset}
+              onExport={handleExport}
+              downloadFileName="safety-alerts"
+              loading={true}
+            />
+          </Grid>
 
-    {/* Right table */}
-    <Grid size={{xs:12,md:6}} >
-     
-      <ReportTable
-        title="Security Monitoring Alerts"
-        columns={reportColumns}
-        data={sampleData}
-        filters={reportFilters}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName="security-alerts"
-        loading={true}
-      />
-    </Grid>
-  </Grid>
-</Box>
-
+          {/* Right table */}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <ReportTable
+              title="Security Monitoring Alerts"
+              columns={reportColumns}
+              data={sampleData}
+              filters={reportFilters}
+              onSubmit={handleSubmitFilter}
+              onReset={handleReset}
+              onExport={handleExport}
+              downloadFileName="security-alerts"
+              loading={true}
+            />
+          </Grid>
+        </Grid>
+      </Box>
     </Box>
   );
 };

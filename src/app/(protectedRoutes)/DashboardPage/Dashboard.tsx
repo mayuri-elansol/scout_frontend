@@ -56,11 +56,7 @@ const Dashboard: React.FC = () => {
       value: "45",
       icon: DirectionsCar,
     },
-    {
-      title: "Avg Work Hours",
-      value: "7.2",
-      icon: Schedule,
-    },
+
     {
       title: "Crowd Alert",
       value: "1",

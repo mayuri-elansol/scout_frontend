@@ -70,33 +70,40 @@ export default function RecentViolations({
             </Button>
           )}
         </Box>
-
-        {/* Content */}
-        {loading ? (
-          <Grid container spacing={2}>
-            {Array.from(new Array(2)).map((_, index) => (
-              <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
-                <Card sx={{ p: 2 }}>
-                  <Skeleton variant="rectangular" height={200} sx={{ mb: 1 }} />
-                  <Skeleton width="60%" />
-                  <Skeleton width="40%" />
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container spacing={2}>
-            {violations.map((violation, index) => (
-              <Grid
-                size={{ xs: 12, md: 6 }}
-                key={index + 1}
-                sx={{ display: "flex" }}
-              >
-                <ViolationCard violation={violation} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
+        <Box sx={{ maxHeight: 450, overflowY: "auto" }}>
+          {" "}
+          {/* adjust height as needed */}
+          {/* Content */}
+          {loading ? (
+            <Grid container spacing={2}>
+              {Array.from(new Array(2)).map((_, index) => (
+                <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
+                  <Card sx={{ p: 2 }}>
+                    <Skeleton
+                      variant="rectangular"
+                      height={200}
+                      sx={{ mb: 1 }}
+                    />
+                    <Skeleton width="60%" />
+                    <Skeleton width="40%" />
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Grid container spacing={2}>
+              {violations.map((violation, index) => (
+                <Grid
+                  size={{ xs: 12, md: 3 }}
+                  key={index + 1}
+                  sx={{ display: "flex" }}
+                >
+                  <ViolationCard violation={violation} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Box>
       </CardContent>
     </Card>
   );

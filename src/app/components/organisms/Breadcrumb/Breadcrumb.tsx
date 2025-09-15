@@ -24,12 +24,9 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   const theme = useTheme();
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState("Last 15 minutes");
+  const [selectedTimeRange, setSelectedTimeRange] = useState("Last 1 hour");
 
   const timeRanges = [
-    "Last 5 minutes",
-    "Last 15 minutes",
-    "Last 30 minutes",
     "Last 1 hour",
     "Last 3 hours",
     "Last 6 hours",
@@ -232,7 +229,6 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
 
       <Box
         sx={{
-          //  pr: { xs: 0, sm: 2 }, mt: { xs: 1, sm: 0 }
           pr: { xs: 0, sm: 2 },
           mt: { xs: 1, sm: 0 },
           width: "100%",
