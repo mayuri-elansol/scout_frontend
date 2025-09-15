@@ -366,53 +366,102 @@ const Sidebar: React.FC<SidebarProps> = () => {
   );
 
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-          mt: "64px",
-          height: "calc(100vh - 64px)",
-          overflowY: "auto",
-          borderRight: "none",
-          boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
-          p: 2,
-        },
-      }}
-    >
-      {/* <Box
-        sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
-      > */}
-      <Box sx={{ flex: 1 }}>{menuContent}</Box>
+    // <Drawer
+    //   variant="permanent"
+    //   sx={{
+    //     width: drawerWidth,
+    //     flexShrink: 0,
+    //     "& .MuiDrawer-paper": {
+    //       width: drawerWidth,
+    //       boxSizing: "border-box",
+    //       mt: "64px",
+    //       height: "calc(100vh - 64px)",
+    //       overflowY: "auto",
+    //       borderRight: "none",
+    //       boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
+    //       p: 2,
+    //     },
+    //   }}
+    // >
+    //   {/* <Box
+    //     sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
+    //   > */}
+    //   <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
-      <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1, mx: -2, px: 2 }}>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontSize: "13px", color: "#666" }}>
-              Powered by
-            </Typography>
-            <Box
-              component="img"
-              src="/elansol_technologies_logo.jpg"
-              alt="Elansol Logo"
-              sx={{ height: 50, width: "auto" }}
-              loading="lazy"
-            />
-          </Box>
-        </Box>
-      </Box>
-      {/* </Box> */}
-    </Drawer>
+    //   <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1, mx: -2, px: 2 }}>
+    //     <Box
+    //       sx={{
+    //         display: "flex",
+    //         flexDirection: "column",
+    //         alignItems: "center",
+    //         justifyContent: "center",
+    //       }}
+    //     >
+    //       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    //         <Typography sx={{ fontSize: "13px", color: "#666" }}>
+    //           Powered by
+    //         </Typography>
+    //         <Box
+    //           component="img"
+    //           src="/elansol_technologies_logo.jpg"
+    //           alt="Elansol Logo"
+    //           sx={{ height: 50, width: "auto" }}
+    //           loading="lazy"
+    //         />
+    //       </Box>
+    //     </Box>
+    //   </Box>
+    //   {/* </Box> */}
+    // </Drawer>
+  <Drawer
+  variant="permanent"
+  sx={{
+    width: drawerWidth,
+    flexShrink: 0,
+    "& .MuiDrawer-paper": {
+      width: drawerWidth,
+      boxSizing: "border-box",
+      mt: "64px",
+      height: "calc(100vh - 64px)",
+      overflowY: "auto",
+      borderRight: "none",
+      boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
+      p: 2,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between", 
+    },
+  }}
+>
+  {/* Menu Content */}
+  <Box sx={{ flex: 1 }}>{menuContent}</Box>
+
+  {/* Footer */}
+  <Box
+    sx={{
+      // borderTop: "1px solid #e0e0e0",
+      pt: 2,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      textAlign: "center",
+      gap: 1,
+    }}
+  >
+    <Box
+      component="img"
+      src="/elansol_technologies_logo.jpg"
+      alt="Elansol Logo"
+      sx={{ height: 50, width: "auto" }}
+      loading="lazy"
+    />
+    <Typography sx={{ fontSize: "13px", color: "#666" }}>
+      &copy; 2025 Elansol Technologies. <br />
+      All rights reserved.
+    </Typography>
+  </Box>
+</Drawer>
+
   );
 };
 

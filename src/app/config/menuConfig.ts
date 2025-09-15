@@ -2,14 +2,15 @@
 import { PageType } from "../types/index";
 import {
   Home,
-  BarChart,
   Shield,
   Visibility,
   People,
   Settings,
   VideoCall,
   Warning,
-} from "@mui/icons-material";
+  
+  
+ DirectionsCar } from "@mui/icons-material";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -156,7 +157,7 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
   },
   {
     title: "Vehicle Operational Insight",
-    icon: BarChart,
+    icon: DirectionsCar,
     items: [
       {
         name: "Vehicle Count & ANPR at Entry/Exit Gates",
