@@ -17,9 +17,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
   route,
-
   icon: IconComponent,
-
   size = "medium",
   customWidth,
 }) => {
@@ -145,29 +143,31 @@ const KpiCard: React.FC<KpiCardProps> = ({
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
 
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: variantStyles.trendColor,
-              backgroundColor: "rgba(255,255,255,0.9)",
-              border: `1px solid ${variantStyles.trendColor}40`,
-              height: "20px",
-              textTransform: "none",
-              lineHeight: 1.2,
-              minWidth: "unset",
-              padding: "0 6px",
-            }}
-            onClick={() => {
-              if (route) {
-                router.push(route);
-              }
-            }}
-          >
-            View
-          </Button>
+          {route && (
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: variantStyles.trendColor,
+                backgroundColor: "rgba(255,255,255,0.9)",
+                border: `1px solid ${variantStyles.trendColor}40`,
+                height: "20px",
+                textTransform: "none",
+                lineHeight: 1.2,
+                minWidth: "unset",
+                padding: "0 6px",
+              }}
+              onClick={() => {
+                if (route) {
+                  router.push(route);
+                }
+              }}
+            >
+              View
+            </Button>
+          )}
         </Box>
 
         {/* Value */}
