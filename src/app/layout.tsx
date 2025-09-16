@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import GlobalFeatureflagProvider from "@/Providers/globalFeatureflagProvider";
 import LanguageInitializer from "@/LanguageInitializer";
+import Toaster from "./components/organisms/toaster/Toaster";
+import GlobalReduxProvider from "@/Providers/GlobalReduxProvider";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -27,8 +29,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <GlobalFeatureflagProvider>
-          <LanguageInitializer />
-          {children}
+          <GlobalReduxProvider>
+            <Toaster />
+            <LanguageInitializer />
+
+            {children}
+          </GlobalReduxProvider>
         </GlobalFeatureflagProvider>
       </body>
     </html>

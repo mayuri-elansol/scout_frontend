@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CameraZone, KpiData } from "@/app/types";
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import {
   Shield,
   Warning,
@@ -15,6 +15,7 @@ import { ActivityFeed, CameraStatus } from "@/app/components/organisms";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
+import { triggerToast } from "@/utils/toast";
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
