@@ -1,20 +1,13 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import { CameraStatus, ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";
-import {
-  Visibility,
-  Warning,
-  Shield,
-  People,
-  Place,
-  Error,
-} from "@mui/icons-material";
+import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import PPEComplianceByZone from "@/app/components/molecules/ZoneNotification/ZoneNotification";
+import { CameraZone } from "@/app/types";
 
 const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
@@ -28,16 +21,7 @@ const IntrusionDetection: React.FC = () => {
       bgColor: "#ffebee",
       icon: Warning,
     },
-    {
-      title: "Zones Breached",
-      value: "3",
-      subtitle: "High-security areas compromised",
-      trend: "+1",
-      trendColor: "#d32f2f",
-      color: "#d32f2f",
-      bgColor: "#ffcdd2",
-      icon: Shield,
-    },
+
     {
       title: "Active Intruders",
       value: "2",
@@ -126,50 +110,93 @@ const IntrusionDetection: React.FC = () => {
       status: "ACKNOWLEDGED",
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
+
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
   ];
-  interface Zone {
-    zone: string;
-    compliance: number;
-    violations: number;
-    cameras: string;
-    status: string;
-  }
-  const securityZones: Zone[] = [
+
+  const cameraZones: CameraZone[] = [
     {
-      zone: "Main Entrance",
-      compliance: 25,
-      violations: 5,
-      cameras: "4/4",
-      status: "warning",
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
     },
-    {
-      zone: "East Boundary",
-      compliance: 50,
-      violations: 2,
-      cameras: "6/8",
-      status: "good",
-    },
-    {
-      zone: "Warehouse Perimeter",
-      compliance: 100,
-      violations: 0,
-      cameras: "8/8",
-      status: "excellent",
-    },
-    {
-      zone: "North Security Zone",
-      compliance: 60,
-      violations: 3,
-      cameras: "3/4",
-      status: "warning",
-    },
-    {
-      zone: "South Boundary",
-      compliance: 100,
-      violations: 0,
-      cameras: "5/5",
-      status: "excellent",
-    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
 
   return (
@@ -210,7 +237,7 @@ const IntrusionDetection: React.FC = () => {
         {/* Security Zones Status */}
         {/* item xs={12} lg={4} */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <PPEComplianceByZone zones={securityZones} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 

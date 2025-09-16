@@ -7,10 +7,9 @@ import {
   CardContent,
   Box,
   Typography,
-  Button,
   Skeleton,
 } from "@mui/material";
-import { Warning, Visibility } from "@mui/icons-material";
+import { Warning } from "@mui/icons-material";
 import { ViolationCard } from "../ViolationCard/ViolationCard";
 
 interface Violation {
@@ -37,8 +36,16 @@ export default function RecentViolations({
   loading = false,
 }: RecentViolationsProps) {
   return (
-    <Card>
-      <CardContent sx={{ p: 3 }}>
+    // sx={{ maxHeight: 420, overflowY: "auto" }}
+    <Card
+      sx={{
+        height: "100%",
+        maxHeight: 420,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
         {/* Header */}
         <Box
           sx={{
@@ -54,49 +61,48 @@ export default function RecentViolations({
               {label}
             </Typography>
           </Box>
-          {!loading && (
-            <Button
-              variant="outlined"
-              startIcon={<Visibility />}
-              onClick={onViewAll}
-              sx={{
-                color: "#1976d2",
-                borderColor: "#1976d2",
-                fontSize: "14px",
-                textTransform: "none",
-              }}
-            >
-              View All
-            </Button>
+        </Box>
+        <Box>
+          {" "}
+          {/* adjust height as needed */}
+          {/* Content */}
+          {loading ? (
+            <Grid container spacing={2}>
+              {Array.from(new Array(2)).map((_, index) => (
+                <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
+                  <Card sx={{ p: 2 }}>
+                    <Skeleton
+                      variant="rectangular"
+                      height={200}
+                      sx={{ mb: 1 }}
+                    />
+                    <Skeleton width="60%" />
+                    <Skeleton width="40%" />
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Grid container spacing={2}>
+              {violations.map((violation, index) => (
+                <Grid
+                  // size={{ xs: 6, md: 3 }}
+                  size={{
+                    xs: 12, // mobile: 1 per row
+                    sm: 6, // small tablets: 2 per row
+                    md: 4, // medium screens (~900px+): 3 per row
+                    lg: 4, // large (>=1200px / Mac 1440px): 3 per row
+                    xl: 3, // extra large (>=1536px): 4 per row
+                  }}
+                  key={index + 1}
+                  sx={{ display: "flex" }}
+                >
+                  <ViolationCard violation={violation} />
+                </Grid>
+              ))}
+            </Grid>
           )}
         </Box>
-
-        {/* Content */}
-        {loading ? (
-          <Grid container spacing={2}>
-            {Array.from(new Array(2)).map((_, index) => (
-              <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
-                <Card sx={{ p: 2 }}>
-                  <Skeleton variant="rectangular" height={200} sx={{ mb: 1 }} />
-                  <Skeleton width="60%" />
-                  <Skeleton width="40%" />
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <Grid container spacing={2}>
-            {violations.map((violation, index) => (
-              <Grid
-                size={{ xs: 12, md: 6 }}
-                key={index + 1}
-                sx={{ display: "flex" }}
-              >
-                <ViolationCard violation={violation} />
-              </Grid>
-            ))}
-          </Grid>
-        )}
       </CardContent>
     </Card>
   );

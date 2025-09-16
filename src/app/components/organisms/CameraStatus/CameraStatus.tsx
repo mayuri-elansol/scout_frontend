@@ -1,38 +1,36 @@
 import React from "react";
-import { Card, CardContent, Box, Typography } from "@mui/material";
-import { Circle } from "@mui/icons-material";
+import { Card, CardContent, Box, Typography, Skeleton } from "@mui/material";
 
-interface CameraZone {
+export interface CameraZone {
   zone: string;
   active: number;
+  offline: number;
+  tempred: number;
   total: number;
-  status: "excellent" | "good" | "warning";
 }
 
-const CameraStatus: React.FC = () => {
-  const cameraZones: CameraZone[] = [
-    { zone: "Production Floor", active: 8, total: 10, status: "good" },
-    { zone: "Warehouse", active: 6, total: 6, status: "excellent" },
-    { zone: "Parking Area", active: 4, total: 5, status: "warning" },
-    { zone: "Main Entrance", active: 3, total: 3, status: "excellent" },
-    { zone: "Assembly Line", active: 3, total: 4, status: "warning" },
-  ];
+interface CameraStatusProps {
+  cameraZones: CameraZone[];
+  loading?: boolean;
+  maxheight?: number;
+}
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "excellent":
-        return "#4caf50";
-      case "good":
-        return "#8bc34a";
-      case "warning":
-        return "#ff9800";
-      default:
-        return "#9e9e9e";
-    }
-  };
+const CameraStatus: React.FC<CameraStatusProps> = ({
+  cameraZones,
+  loading = true,
+  maxheight,
+}) => {
   return (
-    <Card sx={{ height: "100%" }}>
-      <CardContent sx={{ p: 3 }}>
+    // sx={{ maxHeight: 420, overflowY: "auto" }}
+    <Card
+      sx={{
+        height: "100%",
+        maxHeight: maxheight ?? 420,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
         <Typography
           variant="h6"
           sx={{
@@ -41,62 +39,74 @@ const CameraStatus: React.FC = () => {
             mb: 2.5,
           }}
         >
-          Camera Status by Zone
+          {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
         </Typography>
 
         <Box>
-          {cameraZones.map((zone, index) => (
-            <Box
-              key={index + 1}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                py: 2,
-                borderBottom:
-                  index < cameraZones.length - 1 ? "1px solid #f0f0f0" : "none",
-              }}
-            >
-              <Box>
-                <Typography
-                  sx={{
-                    fontWeight: 500,
-                    fontSize: "14px",
-                    mb: 0.5,
-                  }}
-                >
-                  {zone.zone}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    color: "#5c6b7d",
-                  }}
-                >
-                  {zone.active}/{zone.total} cameras active
-                </Typography>
+          {(loading ? Array.from(new Array(4)) : cameraZones).map(
+            (zone, index) => (
+              <Box
+                key={index + 1}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  py: 2,
+                  borderBottom:
+                    index < (loading ? 4 : cameraZones.length) - 1
+                      ? "1px solid #f0f0f0"
+                      : "none",
+                }}
+              >
+                <Box sx={{ width: "100%" }}>
+                  {loading ? (
+                    <>
+                      <Skeleton width="40%" height={18} sx={{ mb: 0.5 }} />
+                      <Skeleton width="70%" height={14} />
+                    </>
+                  ) : (
+                    <>
+                      <Typography
+                        sx={{
+                          fontWeight: 500,
+                          fontSize: "14px",
+                          mb: 0.5,
+                        }}
+                      >
+                        {zone.zone}
+                      </Typography>
+                      <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+                        <Box
+                          component="span"
+                          sx={{ color: "#4caf50", fontWeight: 600 }}
+                        >
+                          {zone.active}/{zone.total}
+                        </Box>
+                        {"  "}
+                        active •{"  "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#f44336", fontWeight: 600 }}
+                        >
+                          {zone.offline}/{zone.total}
+                        </Box>
+                        {"  "}
+                        offline •{"  "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#ff9800", fontWeight: 600 }}
+                        >
+                          {zone.tempred}/{zone.total}
+                        </Box>
+                        {"  "}
+                        tampered
+                      </Typography>
+                    </>
+                  )}
+                </Box>
               </Box>
-
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Circle
-                  sx={{
-                    fontSize: 8,
-                    color: getStatusColor(zone.status),
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontSize: "12px",
-                    fontWeight: 500,
-                    color: getStatusColor(zone.status),
-                    textTransform: "capitalize",
-                  }}
-                >
-                  {zone.status}
-                </Typography>
-              </Box>
-            </Box>
-          ))}
+            )
+          )}
         </Box>
       </CardContent>
     </Card>

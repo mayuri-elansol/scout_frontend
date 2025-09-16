@@ -79,9 +79,6 @@ const zoneOptions = [
 ];
 
 const timeRangeOptions = [
-  { value: "5min", label: "Last 5 minutes" },
-  { value: "15min", label: "Last 15 minutes" },
-  { value: "30min", label: "Last 30 minutes" },
   { value: "1hour", label: "Last 1 hour" },
   { value: "3hours", label: "Last 3 hours" },
   { value: "6hours", label: "Last 6 hours" },

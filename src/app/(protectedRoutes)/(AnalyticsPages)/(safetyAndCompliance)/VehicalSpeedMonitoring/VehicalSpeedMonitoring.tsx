@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import { CameraStatus, ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -11,7 +11,7 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
+import { CameraZone } from "@/app/types";
 
 const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
@@ -87,28 +87,18 @@ const VehicalSpeedMonitoring: React.FC = () => {
       icon: Warning,
     },
   ];
-  const complianceByZone = [
+  const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "Normal",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
     },
-    {
-      zone: "Warehouse",
-      compliance: 75,
-      violations: 2,
-      cameras: "6/6",
-      status: "Normal",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 84,
-      violations: 5,
-      cameras: "7/8",
-      status: "High",
-    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
 
   return (
@@ -129,7 +119,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
       {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {VehicalSpeedMonitoringKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={4} lg={3}
           <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
             <KpiCard {...kpi} />
           </Grid>
@@ -149,7 +138,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 

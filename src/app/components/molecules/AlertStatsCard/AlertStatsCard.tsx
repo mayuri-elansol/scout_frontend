@@ -4,42 +4,53 @@ import { Paper, Typography } from "@mui/material";
 interface AlertStatsCardProps {
   value: string;
   label: string;
-  color: string;
-  borderColor: string;
+
   size?: "small" | "medium" | "large";
 }
 
 const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
   value,
   label,
-  color,
-  borderColor,
+
   size = "medium",
 }) => {
   const getSizeStyles = () => {
-    switch (size) {
-      case "small":
-        return {
-          padding: 1.5,
-          fontSize: "20px",
-          minHeight: "60px",
-          labelSize: "11px",
-        };
-      case "large":
-        return {
-          padding: 3,
-          fontSize: "32px",
-          minHeight: "120px",
-          labelSize: "14px",
-        };
-      default:
-        return {
-          padding: 2,
-          fontSize: "24px",
-          minHeight: "80px",
-          labelSize: "12px",
-        };
+    const numbericvalue = Number(value);
+
+    if (numbericvalue === 0) {
+      return {
+        trendColor: "#4caf50",
+        color: "#4caf50",
+        bgColor: "#e8f5e9",
+        borderColor: "#4caf50",
+        padding: 1.5,
+        fontSize: "32px",
+        minHeight: "120px",
+        labelSize: "14px",
+      };
+    } else if (numbericvalue > 0) {
+      return {
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
+        borderColor: "#f44336",
+        padding: 1.5,
+        fontSize: "32px",
+        minHeight: "120px",
+        labelSize: "14px",
+      };
     }
+
+    return {
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      padding: 2,
+      fontSize: "24px",
+      minHeight: "80px",
+      labelSize: "12px",
+    };
   };
 
   const sizeStyles = getSizeStyles();
@@ -49,26 +60,29 @@ const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
       sx={{
         p: sizeStyles.padding,
         textAlign: "center",
-        border: `1px solid ${borderColor}`,
-        borderRadius: 1,
-        backgroundColor: "white",
+        border: `1px solid ${sizeStyles.borderColor}40`,
+        borderRadius: 2,
+        backgroundColor: sizeStyles.bgColor,
         display: "flex",
         flex: 1,
         minHeight: sizeStyles.minHeight,
         flexDirection: "column",
         justifyContent: "center",
-        transition: "all 0.2s ease",
+        transition: "all 0.3s ease",
         "&:hover": {
-          boxShadow: 2,
+          boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+
+          borderColor: sizeStyles.borderColor,
           transform: "translateY(-1px)",
         },
       }}
     >
       <Typography
         sx={{
+          bgcolor: sizeStyles.bgColor,
           fontSize: sizeStyles.fontSize,
           fontWeight: "bold",
-          color: color,
+          color: sizeStyles.color,
           mb: 0.5,
           lineHeight: 1,
         }}

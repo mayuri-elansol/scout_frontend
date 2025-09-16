@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import { CameraStatus, ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -10,13 +10,11 @@ import {
   Shield,
   Place,
   Schedule,
-  Error,
-  BarChart,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-import { complianceByZone } from "../PeopleCountPage/PeopleCount";
+import { CameraZone } from "@/app/types";
 
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
@@ -80,37 +78,17 @@ const EmployeePresence: React.FC = () => {
       bgColor: "#e8f5e9",
       icon: Schedule,
     },
-    {
-      title: "Emergency Readiness",
-      value: "HIGH",
-      subtitle: "8 certified responders active",
-      trend: "Ready",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Error,
-    },
-    {
-      title: "Zone Utilization Analysis",
-      value: "78%",
-      subtitle: "Average zone utilization",
-      trend: "+3%",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: BarChart,
-    },
   ];
 
   const activePersonnel = [
     {
-      title: "John Mitchell - Level 3 Operator", // name + certification
-      location: "Reactor Control Room", // zone
-      time: "Day Shift", // shift
-      Id: "EMP-4521", // employeeId
-      severity: "N/A", // no severity in personnel data
-      status: "ACTIVE", // status
-      bgColor: "#e8f5e9", // from personnel
+      title: "John Mitchell - Level 3 Operator",
+      location: "Reactor Control Room",
+      time: "Day Shift",
+      Id: "EMP-4521",
+      severity: "N/A",
+      status: "ACTIVE",
+      bgColor: "#e8f5e9",
       imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
@@ -144,7 +122,19 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=14",
     },
   ];
-
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
   return (
     <Box>
       {/* Page Header */}
@@ -191,7 +181,7 @@ const EmployeePresence: React.FC = () => {
         {/* item xs={12} lg={4} */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 

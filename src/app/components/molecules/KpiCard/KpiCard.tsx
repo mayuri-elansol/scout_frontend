@@ -8,61 +8,45 @@ interface KpiCardProps {
   title: string;
   value: string;
   route?: string;
-  trend: string;
-  trendColor: string;
-  color: string;
-  bgColor: string;
   icon: SvgIconComponent;
-  variant?: "default" | "success" | "info" | "critical";
   size?: "small" | "medium" | "large";
   customWidth?: number;
-  // customHeight?: number;
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
   route,
-  trend,
-  trendColor,
-  color,
-  bgColor,
   icon: IconComponent,
-  variant = "default",
   size = "medium",
   customWidth,
 }) => {
   const getVariantStyles = () => {
-    switch (variant) {
-      case "success":
-        return {
-          color: "#2e7d32",
-          bgColor: "#e8f5e9",
-          borderColor: "#4caf50",
-          iconBg: "rgba(76, 175, 80, 0.1)",
-        };
-      case "info":
-        return {
-          color: "#1565c0",
-          bgColor: "#e3f2fd",
-          borderColor: "#2196f3",
-          iconBg: "rgba(33, 150, 243, 0.1)",
-        };
-      case "critical":
-        return {
-          color: "#c62828",
-          bgColor: "#ffebee",
-          borderColor: "#f44336",
-          iconBg: "rgba(244, 67, 54, 0.1)",
-        };
-      default:
-        return {
-          color: color,
-          bgColor: bgColor,
-          borderColor: color,
-          iconBg: "rgba(255, 255, 255, 0.8)",
-        };
+    const numbericvalue = Number(value);
+    if (numbericvalue === 0) {
+      return {
+        trendColor: "#4caf50",
+        color: "#4caf50",
+        bgColor: "#e8f5e9",
+        borderColor: "#4caf50",
+        iconBg: "rgba(76, 175, 80, 0.1)",
+      };
+    } else if (numbericvalue > 0) {
+      return {
+        trendColor: "#f44336",
+        color: "#f44336",
+        bgColor: "#ffebee",
+        borderColor: "#f44336",
+        iconBg: "rgba(244, 67, 54, 0.1)",
+      };
     }
+    return {
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+    };
   };
 
   // Get size-specific styling
@@ -159,29 +143,31 @@ const KpiCard: React.FC<KpiCardProps> = ({
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
 
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{
-              fontSize: "11px",
-              fontWeight: 600,
-              color: trendColor,
-              backgroundColor: "rgba(255,255,255,0.9)",
-              border: `1px solid ${trendColor}40`,
-              height: "20px",
-              textTransform: "none",
-              lineHeight: 1.2,
-              minWidth: "unset",
-              padding: "0 6px",
-            }}
-            onClick={() => {
-              if (route) {
-                router.push(route);
-              }
-            }}
-          >
-            View
-          </Button>
+          {route && (
+            <Button
+              variant="outlined"
+              size="small"
+              sx={{
+                fontSize: "11px",
+                fontWeight: 600,
+                color: variantStyles.trendColor,
+                backgroundColor: "rgba(255,255,255,0.9)",
+                border: `1px solid ${variantStyles.trendColor}40`,
+                height: "20px",
+                textTransform: "none",
+                lineHeight: 1.2,
+                minWidth: "unset",
+                padding: "0 6px",
+              }}
+              onClick={() => {
+                if (route) {
+                  router.push(route);
+                }
+              }}
+            >
+              View
+            </Button>
+          )}
         </Box>
 
         {/* Value */}

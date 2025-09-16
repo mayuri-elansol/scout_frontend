@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import { CameraStatus, ReportTable } from "@/app/components/organisms";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -12,10 +12,28 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
+import { CameraZone } from "@/app/types";
 
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
     {
       title: "Hard hat missing",
       location: "Production Zone A",
@@ -88,30 +106,46 @@ const ObjectDetection: React.FC = () => {
       icon: Warning,
     },
   ];
-  const complianceByZone = [
+  const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "excellent",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
     },
-    {
-      zone: "Warehouse",
-      compliance: 75,
-      violations: 2,
-      cameras: "6/6",
-      status: "good",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 84,
-      violations: 5,
-      cameras: "7/8",
-      status: "warning",
-    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
+  interface FilterParams {
+    zone?: string;
+    status?: string;
+    priority?: string;
+    minOccupancy?: string;
+    maxOccupancy?: string;
+    startDate?: string;
+    endDate?: string;
+  }
 
+  const handleSubmitFilter = async (filters: FilterParams) => {
+    console.log("Selected Filters:", filters);
+  };
+
+  const handleReset = () => {
+    console.log("reset button clickedd");
+  };
+
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested clikcedd:", format);
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = () => {
+    console.log("view single row");
+  };
   return (
     <Box>
       {/* Page Header */}
@@ -150,14 +184,14 @@ const ObjectDetection: React.FC = () => {
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
       {/* Object detection Report */}
 
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -280,6 +314,11 @@ const ObjectDetection: React.FC = () => {
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="people-count-report"
       />
     </Box>

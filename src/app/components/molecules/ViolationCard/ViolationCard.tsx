@@ -64,13 +64,11 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             >
               {violation.location} • {violation.time}
             </Typography>
-            <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+            {/* <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
               ID: {violation.Id}
-            </Typography>
+            </Typography> */}
           </Box>
         </Box>
-        {/* Image Preview */}
-
         {/* Image Preview */}
         <Box
           sx={{
@@ -84,6 +82,7 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             mb: 0.5,
             border: "1px solid #dee2e6",
             position: "relative", // needed for next/image layout="fill"
+            cursor: "pointer",
           }}
         >
           {violation.imageUrl ? (
