@@ -7,10 +7,9 @@ import {
   CardContent,
   Box,
   Typography,
-  Button,
   Skeleton,
 } from "@mui/material";
-import { Warning, Visibility } from "@mui/icons-material";
+import { Warning } from "@mui/icons-material";
 import { ViolationCard } from "../ViolationCard/ViolationCard";
 
 interface Violation {
@@ -62,21 +61,6 @@ export default function RecentViolations({
               {label}
             </Typography>
           </Box>
-          {!loading && (
-            <Button
-              variant="outlined"
-              startIcon={<Visibility />}
-              onClick={onViewAll}
-              sx={{
-                color: "#1976d2",
-                borderColor: "#1976d2",
-                fontSize: "14px",
-                textTransform: "none",
-              }}
-            >
-              View All
-            </Button>
-          )}
         </Box>
         <Box>
           {" "}
@@ -102,7 +86,14 @@ export default function RecentViolations({
             <Grid container spacing={2}>
               {violations.map((violation, index) => (
                 <Grid
-                  size={{ xs: 12, md: 3 }}
+                  // size={{ xs: 6, md: 3 }}
+                  size={{
+                    xs: 12, // mobile: 1 per row
+                    sm: 6, // small tablets: 2 per row
+                    md: 4, // medium screens (~900px+): 3 per row
+                    lg: 4, // large (>=1200px / Mac 1440px): 3 per row
+                    xl: 3, // extra large (>=1536px): 4 per row
+                  }}
                   key={index + 1}
                   sx={{ display: "flex" }}
                 >
