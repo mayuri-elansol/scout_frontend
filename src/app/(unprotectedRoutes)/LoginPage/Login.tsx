@@ -446,20 +446,36 @@ const Login: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
+        // sx={{
+        //   minHeight: "100vh",
+        //   background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1976d2 100%)',
+        //   position: 'relative',
+        //   '&::before': {
+        //     content: '""',
+        //     position: 'absolute',
+        //     top: 0,
+        //     left: 0,
+        //     right: 0,
+        //     bottom: 0,
+        //     background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat',
+        //     opacity: 0.5,
+        //   }
+        // }}
         sx={{
           minHeight: "100vh",
           background: 'linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1976d2 100%)',
-          position: 'relative',
-          '&::before': {
+          position: "relative",
+          "&::before": {
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat',
-            opacity: 0.5,
-          }
+            background:
+              'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%236b7280" fill-opacity="0.04"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat',
+            opacity: 0.2,
+          },
         }}
       >
         {/* <LoginHeader currentDateTime={currentDateTime} /> */}
@@ -468,7 +484,9 @@ const Login: React.FC = () => {
           <Grid container spacing={4} sx={{ minHeight: "calc(100vh - 150px)", alignItems: 'center' }}>
             {/* Left Section - Features */}
             <Grid size={{ xs: 12, lg: 7 }}>
-              <Box sx={{ pr: { lg: 4 }, color: 'white' }}>
+              <Box sx={{
+                pr: { lg: 4 }, color: 'white', ml: "40px"}}>
+
                 <Box sx={{ mb: 4, textAlign: { xs: 'center', lg: 'left' } }}>
                   <Typography
                     variant="h2"
@@ -546,6 +564,7 @@ const Login: React.FC = () => {
                         border: '1px solid rgba(255, 255, 255, 0.2)'
                       }}
                     />
+
                     <Chip
                       icon={<Security />}
                       label="Enterprise Security"
