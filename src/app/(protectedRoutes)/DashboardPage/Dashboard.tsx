@@ -101,7 +101,11 @@ const Dashboard: React.FC = () => {
           <ActivityFeed />
         </Box>
         <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
-          <CameraStatus cameraZones={cameraZones} />
+          <CameraStatus
+            cameraZones={cameraZones}
+            loading={false}
+            maxheight={600}
+          />
         </Box>
       </Box>
     </Box>

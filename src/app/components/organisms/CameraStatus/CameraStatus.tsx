@@ -12,18 +12,20 @@ export interface CameraZone {
 interface CameraStatusProps {
   cameraZones: CameraZone[];
   loading?: boolean;
+  maxheight?: number;
 }
 
 const CameraStatus: React.FC<CameraStatusProps> = ({
   cameraZones,
   loading = true,
+  maxheight,
 }) => {
   return (
     // sx={{ maxHeight: 420, overflowY: "auto" }}
     <Card
       sx={{
         height: "100%",
-        maxHeight: 420,
+        maxHeight: maxheight ?? 420,
         display: "flex",
         flexDirection: "column",
       }}
