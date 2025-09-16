@@ -25,14 +25,14 @@ interface Violation {
 interface RecentViolationsProps {
   readonly label: string;
   readonly violations: readonly Violation[];
-  readonly onViewAll?: () => void;
+
   readonly loading?: boolean;
 }
 
 export default function RecentViolations({
   label,
   violations,
-  onViewAll,
+
   loading = false,
 }: RecentViolationsProps) {
   return (

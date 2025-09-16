@@ -31,7 +31,7 @@ const Header: React.FC = () => {
   const open = Boolean(anchorEl);
 
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
-  const [systemHealth, setSystemHealth] = useState<SystemHealthData>({
+  const [systemHealth] = useState<SystemHealthData>({
     message: [
       "All systems operational",
       "Database running smoothly",
@@ -91,7 +91,7 @@ const Header: React.FC = () => {
       <Box sx={{ px: 2.5, py: 2 }}>
         {systemHealth.message.map((msg, idx) => (
           <Typography
-            key={idx}
+            key={idx + 1}
             variant="body2"
             sx={{
               color: "#374151",

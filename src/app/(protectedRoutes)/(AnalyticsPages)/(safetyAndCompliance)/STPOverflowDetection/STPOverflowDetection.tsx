@@ -148,7 +148,6 @@ const STPOverflowDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
             loading={false}
           />
         </Grid>

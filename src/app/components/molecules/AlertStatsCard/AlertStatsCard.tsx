@@ -4,16 +4,9 @@ import { Paper, Typography } from "@mui/material";
 interface AlertStatsCardProps {
   value: string;
   label: string;
-
-  size?: "small" | "medium" | "large";
 }
 
-const AlertStatsCard: React.FC<AlertStatsCardProps> = ({
-  value,
-  label,
-
-  size = "medium",
-}) => {
+const AlertStatsCard: React.FC<AlertStatsCardProps> = ({ value, label }) => {
   const getSizeStyles = () => {
     const numbericvalue = Number(value);
 

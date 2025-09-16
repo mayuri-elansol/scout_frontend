@@ -132,7 +132,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
         {/* PPE Compliance by Zone */}

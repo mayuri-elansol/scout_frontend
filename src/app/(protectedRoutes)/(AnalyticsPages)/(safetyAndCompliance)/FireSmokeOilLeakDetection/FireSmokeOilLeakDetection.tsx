@@ -11,7 +11,6 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import { CameraZone } from "@/app/types";
 
 const FireSmokeOilLeakDetection: React.FC = () => {
@@ -133,7 +132,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
         {/* PPE Compliance by Zone */}

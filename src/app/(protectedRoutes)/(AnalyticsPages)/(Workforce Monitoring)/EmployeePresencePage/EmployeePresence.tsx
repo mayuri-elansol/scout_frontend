@@ -13,7 +13,6 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import { CameraZone } from "@/app/types";
 
 const EmployeePresence: React.FC = () => {
@@ -174,7 +173,6 @@ const EmployeePresence: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={activePersonnel}
-            onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
         {/* Critical Zones Status */}
