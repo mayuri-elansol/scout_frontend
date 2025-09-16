@@ -94,7 +94,6 @@ const CrowdGathering: React.FC = () => {
   }
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
-    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
 
   const handleReset = () => {
