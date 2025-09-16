@@ -33,7 +33,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setFeatureFlags } from '../app/store/fetureFlag';
+import { setFeatureFlags } from '../app/store/fetureFlagSlice';
 import localFlags from "../app/config/featureFlags.json"; 
 
 export const useInitFeatureFlags = () => {

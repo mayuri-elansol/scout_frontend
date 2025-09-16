@@ -132,7 +132,7 @@ const SystemAlerts: React.FC = () => {
 <Box sx={{ mb: 3 }}>
   <Grid container spacing={3}>
     {/* Left table */}
-    <Grid size={{xs:12,md:6}} >
+    <Grid size={{xs:12,md:12}} >
      
       <ReportTable
         title="Safety and Compliances Alerts"
@@ -148,7 +148,7 @@ const SystemAlerts: React.FC = () => {
     </Grid>
 
     {/* Right table */}
-    <Grid size={{xs:12,md:6}} >
+    <Grid size={{xs:12,md:12}} >
      
       <ReportTable
         title="Security Monitoring Alerts"

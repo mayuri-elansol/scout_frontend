@@ -60,38 +60,32 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <Header />
+
+        {/* Desktop Sidebar */}
         {!isTabletOrPhone && (
           <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
         )}
 
-        {isTabletOrPhone && (
-          <Phonesidebar
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        )}
-
+        {/* Main Content */}
         <Box
           sx={{
             flex: 1,
             p: 4,
             pt: 9,
             backgroundColor: "#f5f7fa",
-            width: "85vw",
+            width: "100%",
           }}
         >
           <RouteLoader>
-            <Breadcrumb
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-
+            <Breadcrumb currentPage={currentPage} onPageChange={handlePageChange} />
             {children}
           </RouteLoader>
         </Box>
       </Box>
+
     </ThemeProvider>
   );
 }

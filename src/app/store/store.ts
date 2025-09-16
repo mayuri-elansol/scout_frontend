@@ -1,6 +1,6 @@
 // src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import featureFlagsReducer from "./fetureFlag";
+import featureFlagsReducer from "./fetureFlagSlice";
 import languageReducer from "./languageSlice";
 
 export const store = configureStore({
