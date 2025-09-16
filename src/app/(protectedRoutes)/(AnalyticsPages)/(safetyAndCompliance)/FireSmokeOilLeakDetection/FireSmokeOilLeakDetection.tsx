@@ -146,7 +146,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
 
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

@@ -243,7 +243,7 @@ const IntrusionDetection: React.FC = () => {
 
       {/* Security Intrusion Report */}
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "incidentId", label: "Incident ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

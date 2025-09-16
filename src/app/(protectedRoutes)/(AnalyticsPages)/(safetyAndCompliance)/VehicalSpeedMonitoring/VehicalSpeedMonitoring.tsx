@@ -144,7 +144,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
 
       {/* People Count Report */}
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

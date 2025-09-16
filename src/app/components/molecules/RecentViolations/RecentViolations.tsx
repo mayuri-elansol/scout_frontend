@@ -88,11 +88,11 @@ export default function RecentViolations({
                 <Grid
                   // size={{ xs: 6, md: 3 }}
                   size={{
-                    xs: 12, // mobile: 1 per row
-                    sm: 6, // small tablets: 2 per row
-                    md: 4, // medium screens (~900px+): 3 per row
-                    lg: 4, // large (>=1200px / Mac 1440px): 3 per row
-                    xl: 3, // extra large (>=1536px): 4 per row
+                    xs: 12,
+                    sm: 6,
+                    md: 4,
+                    lg: 4,
+                    xl: 3,
                   }}
                   key={index + 1}
                   sx={{ display: "flex" }}

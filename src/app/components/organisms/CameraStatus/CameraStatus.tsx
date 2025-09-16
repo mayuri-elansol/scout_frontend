@@ -36,7 +36,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           sx={{
             fontWeight: 600,
             color: "#1c2025",
-            mb: 2.5,
+            mb: 0.5,
           }}
         >
           {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
@@ -51,7 +51,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  py: 2,
+                  py: 1.5,
                   borderBottom:
                     index < (loading ? 4 : cameraZones.length) - 1
                       ? "1px solid #f0f0f0"

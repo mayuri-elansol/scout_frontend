@@ -160,7 +160,7 @@ const FallDetection: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
