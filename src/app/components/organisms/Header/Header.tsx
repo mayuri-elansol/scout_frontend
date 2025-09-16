@@ -12,7 +12,6 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
-  Tooltip,
   Paper,
   Drawer,
   useMediaQuery,
@@ -42,6 +41,55 @@ interface SystemHealthData {
   lastChecked: string;
 }
 
+// Tooltip component moved outside Header
+const SystemHealthTooltipContent: React.FC<{
+  systemHealth: SystemHealthData;
+}> = ({ systemHealth }) => (
+  <Paper
+    elevation={0}
+    sx={{
+      minWidth: 260,
+      maxWidth: 300,
+      p: 0,
+      backgroundColor: "#ffffff",
+      boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+    }}
+  >
+    <Box sx={{ px: 2.5, py: 2, maxHeight: 200, overflowY: "auto", pr: 1 }}>
+      {systemHealth.message.map((msg, idx) => (
+        <Typography
+          key={idx + 1}
+          variant="body2"
+          sx={{
+            color: "#374151",
+            fontSize: "13px",
+            lineHeight: 1.6,
+            fontWeight: 400,
+          }}
+        >
+          - {msg}
+        </Typography>
+      ))}
+    </Box>
+    <Box sx={{ px: 2.5, py: 1.5, backgroundColor: "rgba(0, 0, 0, 0.015)" }}>
+      <Typography
+        variant="caption"
+        sx={{
+          color: "#6b7280",
+          fontSize: "11px",
+          fontWeight: 500,
+          display: "flex",
+          alignItems: "center",
+          gap: 0.5,
+        }}
+      >
+        <InfoOutlined sx={{ fontSize: 11 }} />
+        Last updated: {systemHealth.lastChecked}
+      </Typography>
+    </Box>
+  </Paper>
+);
+
 const Header: React.FC = () => {
   const theme = useTheme();
   const { user, logout } = useAuth();
@@ -52,21 +100,14 @@ const Header: React.FC = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
-
-
-
-
-
-
-
-
   // Styled Popper for system health
   const Popup = styled(Popper)({
     zIndex: 1500,
   });
 
-
-  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(null);
+  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(
+    null
+  );
   const [openHealth, setOpenHealth] = useState(false);
 
   const handleHealthEnter = (event: React.MouseEvent<HTMLElement>) => {
@@ -74,17 +115,8 @@ const Header: React.FC = () => {
     setOpenHealth(true);
   };
 
-  const handleHealthLeave = () => {
-    setOpenHealth(false);
-  };
-
-const handleClickAway = (event: MouseEvent | TouchEvent) => {
-  if (anchorElHealth && anchorElHealth.contains(event.target as Node)) {
-    return; // ignore clicks on the trigger itself
-  }
-  setOpenHealth(false);
-};
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
+
   const [systemHealth, setSystemHealth] = useState<SystemHealthData>({
     message: [
       "All systems operational",
@@ -102,6 +134,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
     ],
     lastChecked: new Date().toLocaleTimeString(),
   });
+
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
   useEffect(() => {
@@ -125,9 +158,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const handleClose = () => setAnchorEl(null);
   const handleLogout = () => {
     logout();
     handleClose();
@@ -147,7 +178,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
           hour12: false,
         })
       );
-      setSystemHealth((prev) => ({
+      setSystemHealth((prev: SystemHealthData) => ({
         ...prev,
         lastChecked: new Date().toLocaleTimeString(),
       }));
@@ -156,67 +187,6 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
-
-  // Tooltip content
-  const SystemHealthTooltipContent = () => (
-    <Paper
-      elevation={0}
-      sx={{
-        minWidth: 260,
-        maxWidth: 300,
-        p: 0,
-        backgroundColor: "#ffffff",
-        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
-      }}
-    >
-      <Box sx={{
-        px: 2.5, py: 2,
-
-
-        maxHeight: 200,
-        overflowY: "auto",
-        pr: 1,
-
-      }}>
-        {systemHealth.message.map((msg, idx) => (
-          <Typography
-            key={idx}
-            variant="body2"
-            sx={{
-              color: "#374151",
-              fontSize: "13px",
-              lineHeight: 1.6,
-              fontWeight: 400,
-            }}
-          >
-            - {msg}
-          </Typography>
-        ))}
-      </Box>
-      <Box
-        sx={{
-          px: 2.5,
-          py: 1.5,
-          backgroundColor: "rgba(0, 0, 0, 0.015)",
-        }}
-      >
-        <Typography
-          variant="caption"
-          sx={{
-            color: "#6b7280",
-            fontSize: "11px",
-            fontWeight: 500,
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-          }}
-        >
-          <InfoOutlined sx={{ fontSize: 11 }} />
-          Last updated: {systemHealth.lastChecked}
-        </Typography>
-      </Box>
-    </Paper>
-  );
 
   return (
     <>
@@ -293,7 +263,6 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
 
             <Box
               onMouseEnter={handleHealthEnter}
-              // onMouseLeave={handleHealthLeave}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -302,12 +271,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
                 px: 1.5,
                 py: 1,
                 transition: "all 0.2s ease",
-                border: "none",
-                borderRadius: 0,
-                boxShadow: "none",
-                "&:hover": {
-                  backgroundColor: "rgba(25, 118, 210, 0.04)",
-                },
+                "&:hover": { backgroundColor: "rgba(25, 118, 210, 0.04)" },
               }}
             >
               <Circle
@@ -319,11 +283,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
               />
               <Typography
                 variant="body2"
-                sx={{
-                  color: "#5c6b7d",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                }}
+                sx={{ color: "#5c6b7d", fontSize: "14px", fontWeight: 500 }}
               >
                 System Health
               </Typography>
@@ -334,18 +294,11 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
               open={openHealth}
               anchorEl={anchorElHealth}
               disablePortal
-              modifiers={[
-                {
-                  name: "offset",
-                  options: {
-                    offset: [-10, 18],
-                  },
-                },
-              ]}
+              modifiers={[{ name: "offset", options: { offset: [-10, 18] } }]}
             >
               <ClickAwayListener onClickAway={() => setOpenHealth(false)}>
                 <Box>
-                  <SystemHealthTooltipContent />
+                  <SystemHealthTooltipContent systemHealth={systemHealth} />
                 </Box>
               </ClickAwayListener>
             </Popup>
@@ -362,9 +315,7 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
                       fontWeight: 600,
                     }}
                   >
-                    {user?.username
-                      ? user.username.charAt(0).toUpperCase()
-                      : "?"}
+                    {user?.username?.charAt(0).toUpperCase() ?? "?"}
                   </Avatar>
                 </IconButton>
 
@@ -374,7 +325,6 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
                   onClose={handleClose}
                   onClick={handleClose}
                   sx={{ mt: "15px" }}
-
                 >
                   <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
@@ -398,14 +348,12 @@ const handleClickAway = (event: MouseEvent | TouchEvent) => {
         sx={{
           display: { xs: "block", lg: "none" },
           "& .MuiDrawer-paper": { boxSizing: "border-box" },
-
         }}
       >
         <Box
           sx={{
             pt: 1,
             pb: 2,
-
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

@@ -12,7 +12,6 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import { CameraZone } from "@/app/types";
 export const cameraZones: CameraZone[] = [
   {
@@ -133,7 +132,6 @@ const PeopleCount: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -145,7 +143,7 @@ const PeopleCount: React.FC = () => {
 
       {/* People Count Report */}
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },

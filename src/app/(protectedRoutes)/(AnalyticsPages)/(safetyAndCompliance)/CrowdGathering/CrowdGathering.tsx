@@ -4,7 +4,6 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
@@ -95,7 +94,6 @@ const CrowdGathering: React.FC = () => {
   }
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
-    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
 
   const handleReset = () => {
@@ -149,7 +147,6 @@ const CrowdGathering: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
             loading={false}
           />
         </Grid>

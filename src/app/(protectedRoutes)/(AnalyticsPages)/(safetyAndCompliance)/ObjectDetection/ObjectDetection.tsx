@@ -178,7 +178,6 @@ const ObjectDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -199,9 +198,6 @@ const ObjectDetection: React.FC = () => {
           { id: "currentCount", label: "Current Count", minWidth: 100 },
           { id: "capacity", label: "Capacity", minWidth: 80 },
           { id: "occupancy", label: "Occupancy %", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action", minWidth: 150 },
         ]}
         data={[
           {
@@ -211,9 +207,6 @@ const ObjectDetection: React.FC = () => {
             currentCount: "245",
             capacity: "300",
             occupancy: "82%",
-            status: "ACTIVE",
-            priority: "Medium",
-            resolution: "Normal operations",
           },
           {
             recordId: "PC-7891",
@@ -222,9 +215,6 @@ const ObjectDetection: React.FC = () => {
             currentCount: "180",
             capacity: "150",
             occupancy: "120%",
-            status: "OVERCROWDED",
-            priority: "Critical",
-            resolution: "Crowd dispersal initiated",
           },
           {
             recordId: "PC-7890",

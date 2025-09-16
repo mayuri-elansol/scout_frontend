@@ -208,11 +208,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const is1520_1700 = useMediaQuery(
     "(min-width:1520px) and (max-width:1699px)"
   );
- 
-const is1200Down = useMediaQuery(
-    "(min-width:254px) and (max-width:1200px)"
-  );
- 
+
+  const is1200Down = useMediaQuery("(min-width:254px) and (max-width:1200px)");
+
   let drawerWidth: string = "16vw";
   if (is1200_1250) {
     drawerWidth = "24vw";
@@ -222,8 +220,7 @@ const is1200Down = useMediaQuery(
     drawerWidth = "20vw";
   } else if (is1520_1700) {
     drawerWidth = "18vw";
-  }
-  else if (is1200Down) {
+  } else if (is1200Down) {
     drawerWidth = "26vw";
   }
 
@@ -370,56 +367,53 @@ const is1200Down = useMediaQuery(
   );
 
   return (
-   
-  <Drawer
-  variant="permanent"
-  sx={{
-    width: drawerWidth,
-    flexShrink: 0,
-    "& .MuiDrawer-paper": {
-      width: drawerWidth,
-      boxSizing: "border-box",
-      mt: "64px",
-      height: "calc(100vh - 64px)",
-      overflowY: "auto",
-      borderRight: "none",
-      boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
-      p: 2,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between", 
-    },
-  }}
->
-  
-  {/* Menu Content */}
-  <Box sx={{ flex: 1 }}>{menuContent}</Box>
+    <Drawer
+      variant="permanent"
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
+          width: drawerWidth,
+          boxSizing: "border-box",
+          mt: "64px",
+          height: "calc(100vh - 64px)",
+          overflowY: "auto",
+          borderRight: "none",
+          boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
+          p: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        },
+      }}
+    >
+      {/* Menu Content */}
+      <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
-  {/* Footer */}
-  <Box
-    sx={{
-      pt: 2,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      textAlign: "center",
-      gap: 1,
-    }}
-  >
-    <Box
-      component="img"
-      src="/scoutLogo.png"
-      alt="Elansol Logo"
-      sx={{ height: 50, width: "auto" }}
-      loading="lazy"
-    />
-    <Typography sx={{ fontSize: "13px", color: "#666" }}>
-      &copy; 2025 Elansol Technologies. <br />
-      All rights reserved.
-    </Typography>
-  </Box>
-</Drawer>
-
+      {/* Footer */}
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 1,
+        }}
+      >
+        <Box
+          component="img"
+          src="/scoutLogo.png"
+          alt="Elansol Logo"
+          sx={{ height: 50, width: "auto" }}
+          loading="lazy"
+        />
+        <Typography sx={{ fontSize: "13px", color: "#666" }}>
+          &copy; 2025 Elansol Technologies. <br />
+          All rights reserved.
+        </Typography>
+      </Box>
+    </Drawer>
   );
 };
 

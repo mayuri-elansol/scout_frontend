@@ -148,7 +148,6 @@ const VehicleUnloadingLoading: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
             loading={false}
           />
         </Grid>
@@ -161,7 +160,7 @@ const VehicleUnloadingLoading: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Report Table"
+        title="Detailed Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
