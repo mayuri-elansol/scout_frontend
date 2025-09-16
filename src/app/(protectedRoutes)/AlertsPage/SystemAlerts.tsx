@@ -2,7 +2,6 @@
 import React from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import { Warning, Circle } from "@mui/icons-material";
-
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
 import { ReportTable } from "@/app/components/organisms";
 
@@ -118,8 +117,7 @@ const SystemAlerts: React.FC = () => {
           <Warning sx={{ fontSize: 28, color: "#f44336" }} />
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
+            sx={{ fontWeight: "bold", color: "#1c2025" }}>
             System Alerts & Notifications
           </Typography>
         </Box>
@@ -135,7 +133,7 @@ const SystemAlerts: React.FC = () => {
       </Box>
 
       {/* Alert Statistics */}
-      <Grid container spacing={2} sx={{ mb: 4 }}>
+      <Grid container spacing={2} sx={{ mb: 1 }}>
         {alertStats.map((stat) => (
           <Grid
             key={stat.label}
@@ -148,42 +146,42 @@ const SystemAlerts: React.FC = () => {
       </Grid>
 
       {/* Alert Details Section */}
-      {/* Alert Details Section */}
-<Box sx={{ mb: 3 }}>
-  <Grid container spacing={3}>
-    {/* Left table */}
-    <Grid size={{xs:12,md:12}} >
-     
-      <ReportTable
-        title="Safety and Compliances Alerts"
-        columns={reportColumns}
-        data={sampleData}
-        filters={reportFilters}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName="safety-alerts"
-        loading={true}
-      />
-    </Grid>
+      <Box sx={{ mb: "-91px" }}>
+        <Grid container spacing={0}>
+          {/* Left table */}
+          <Grid size={{ xs: 12, md: 12 }} sx={{ mb: "-12px" }}>
+            <ReportTable
+              title="Safety and Compliances Alerts"
+              columns={reportColumns}
+              data={sampleData}
+              filters={reportFilters}
+              onSubmit={handleSubmitFilter}
+              onReset={handleReset}
+              onExport={handleExport}
+              downloadFileName="safety-alerts"
+              loading={true}
+              isDownload={false}
 
-    {/* Right table */}
-    <Grid size={{xs:12,md:12}} >
-     
-      <ReportTable
-        title="Security Monitoring Alerts"
-        columns={reportColumns}
-        data={sampleData}
-        filters={reportFilters}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName="security-alerts"
-        loading={true}
-      />
-    </Grid>
-  </Grid>
-</Box>
+            />
+          </Grid>
+
+          {/* Right table */}
+          <Grid size={{ xs: 12, md: 12 }} >
+            <ReportTable
+              title="Security Monitoring Alerts"
+              columns={reportColumns}
+              data={sampleData}
+              filters={reportFilters}
+              onSubmit={handleSubmitFilter}
+              onReset={handleReset}
+              onExport={handleExport}
+              downloadFileName="security-alerts"
+              loading={true}
+              isDownload={false}
+            />
+          </Grid>
+        </Grid>
+      </Box>
 
     </Box>
   );

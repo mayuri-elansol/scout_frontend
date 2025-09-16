@@ -269,6 +269,8 @@ const PeopleCount: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="people-count-report"
+          isDownload ={true}
+
       />
     </Box>
   );

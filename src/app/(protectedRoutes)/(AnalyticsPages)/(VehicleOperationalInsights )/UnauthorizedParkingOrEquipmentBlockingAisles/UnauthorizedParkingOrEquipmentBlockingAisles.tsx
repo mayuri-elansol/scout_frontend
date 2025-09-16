@@ -248,6 +248,8 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={true}
+          isDownload ={true}
+
       />
     </Box>
   );

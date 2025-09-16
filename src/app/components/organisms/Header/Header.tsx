@@ -16,6 +16,9 @@ import {
   Paper,
   Drawer,
   useMediaQuery,
+  Popper,
+  styled,
+  ClickAwayListener,
 } from "@mui/material";
 import {
   Circle,
@@ -49,9 +52,49 @@ const Header: React.FC = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
+
+
+
+
+
+
+
+
+  // Styled Popper for system health
+  const Popup = styled(Popper)({
+    zIndex: 1500,
+  });
+
+
+  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(null);
+  const [openHealth, setOpenHealth] = useState(false);
+
+  const handleHealthEnter = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElHealth(event.currentTarget);
+    setOpenHealth(true);
+  };
+
+  const handleHealthLeave = () => {
+    setOpenHealth(false);
+  };
+
+const handleClickAway = (event: MouseEvent | TouchEvent) => {
+  if (anchorElHealth && anchorElHealth.contains(event.target as Node)) {
+    return; // ignore clicks on the trigger itself
+  }
+  setOpenHealth(false);
+};
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [systemHealth, setSystemHealth] = useState<SystemHealthData>({
     message: [
+      "All systems operational",
+      "Database running smoothly",
+      "API response time normal",
+      "No critical alerts",
+      "All systems operational",
+      "Database running smoothly",
+      "API response time normal",
+      "No critical alerts",
       "All systems operational",
       "Database running smoothly",
       "API response time normal",
@@ -126,7 +169,15 @@ const Header: React.FC = () => {
         boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
       }}
     >
-      <Box sx={{ px: 2.5, py: 2 }}>
+      <Box sx={{
+        px: 2.5, py: 2,
+
+
+        maxHeight: 200,
+        overflowY: "auto",
+        pr: 1,
+
+      }}>
         {systemHealth.message.map((msg, idx) => (
           <Typography
             key={idx}
@@ -240,47 +291,64 @@ const Header: React.FC = () => {
               </Typography>
             )}
 
-            <Tooltip
-              title={<SystemHealthTooltipContent />}
-              placement="bottom-end"
-              arrow={false}
+            <Box
+              onMouseEnter={handleHealthEnter}
+              // onMouseLeave={handleHealthLeave}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                cursor: "pointer",
+                px: 1.5,
+                py: 1,
+                transition: "all 0.2s ease",
+                border: "none",
+                borderRadius: 0,
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "rgba(25, 118, 210, 0.04)",
+                },
+              }}
             >
-              <Box
+              <Circle
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  cursor: "pointer",
-                  px: 1.5,
-                  py: 1,
-                  transition: "all 0.2s ease",
-                  border: "none",         
-                  borderRadius: 0,        
-                  boxShadow: "none",      
-                  "&:hover": {
-                    backgroundColor: "rgba(25, 118, 210, 0.04)",
-                  },
+                  fontSize: 10,
+                  color: theme.palette.success.main,
+                  filter: "drop-shadow(0 0 2px rgba(76, 175, 80, 0.3))",
+                }}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#5c6b7d",
+                  fontSize: "14px",
+                  fontWeight: 500,
                 }}
               >
-                <Circle
-                  sx={{
-                    fontSize: 10,
-                    color: theme.palette.success.main,
-                    filter: "drop-shadow(0 0 2px rgba(76, 175, 80, 0.3))",
-                  }}
-                />
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#5c6b7d",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                  }}
-                >
-                  System Health
-                </Typography>
-              </Box>
-            </Tooltip>
+                System Health
+              </Typography>
+            </Box>
+
+            <Popup
+              id="system-health-popper"
+              open={openHealth}
+              anchorEl={anchorElHealth}
+              disablePortal
+              modifiers={[
+                {
+                  name: "offset",
+                  options: {
+                    offset: [-10, 18],
+                  },
+                },
+              ]}
+            >
+              <ClickAwayListener onClickAway={() => setOpenHealth(false)}>
+                <Box>
+                  <SystemHealthTooltipContent />
+                </Box>
+              </ClickAwayListener>
+            </Popup>
 
             {user && (
               <>
@@ -305,6 +373,8 @@ const Header: React.FC = () => {
                   open={open}
                   onClose={handleClose}
                   onClick={handleClose}
+                  sx={{ mt: "15px" }}
+
                 >
                   <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
