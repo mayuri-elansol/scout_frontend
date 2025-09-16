@@ -310,6 +310,8 @@ const ObjectDetection: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="people-count-report"
+          isDownload ={true}
+
       />
     </Box>
   );

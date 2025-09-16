@@ -331,6 +331,8 @@ const EmployeePresence: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-report"
+          isDownload ={true}
+
       />
     </Box>
   );

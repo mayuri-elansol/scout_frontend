@@ -259,6 +259,8 @@ const PPEDetection: React.FC = () => {
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
         loading={true}
+          isDownload ={true}
+
       />
     </Box>
   );

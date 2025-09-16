@@ -10,7 +10,6 @@ import Header from "../components/organisms/Header/Header";
 
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
-import Phonesidebar from "../components/organisms/PhoneSidebar/Phonesidebar";
 import Loader from "../components/atoms/Loader/Loader";
 import RouteLoader from "../../utils/RouteLoader";
 
@@ -60,26 +59,23 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <Header />
+
+        {/* Desktop Sidebar */}
         {!isTabletOrPhone && (
           <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
         )}
 
-        {isTabletOrPhone && (
-          <Phonesidebar
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        )}
-
+        {/* Main Content */}
         <Box
           sx={{
             flex: 1,
             p: 4,
             pt: 9,
             backgroundColor: "#f5f7fa",
-            width: "85vw",
+            width: "100%",
           }}
         >
           <RouteLoader>
@@ -87,7 +83,6 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
-
             {children}
           </RouteLoader>
         </Box>

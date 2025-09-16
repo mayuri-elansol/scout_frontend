@@ -1,5 +1,5 @@
 // Toaster.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import Toaster from "./Toaster";
 import { Provider } from "react-redux";
 import { store } from "../../../store/store";

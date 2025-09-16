@@ -53,6 +53,7 @@ interface ReportTableProps {
   isSubmitDisabled?: boolean;
   onView?: (row: ReportData) => void;
   onDownload?: (row: ReportData) => void;
+  isDownload: boolean
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -67,6 +68,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   isSubmitDisabled,
   onView,
   onDownload,
+  isDownload
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -312,15 +314,15 @@ const ReportTable: React.FC<ReportTableProps> = ({
               >
                 Submit
               </Button>
-
-              <Button
-                size="small"
-                variant="outlined"
-                onClick={handleDownloadClick}
-              >
-                Download
-              </Button>
-
+              {isDownload && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={handleDownloadClick}
+                >
+                  Download
+                </Button>
+              )}
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
 import Alert from "@mui/material/Alert";
 import { hideToast } from "./toasterSlice";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useEffect } from "react";
 
 export default function Toaster() {
@@ -22,6 +22,21 @@ export default function Toaster() {
     }
   }, [toasts, dispatch]);
 
+  // ✅ Extract background color logic into a function
+  const getBgColor = (severity: string) => {
+    switch (severity) {
+      case "success":
+        return "#4caf50";
+      case "error":
+        return "#e71d36";
+      case "warning":
+        return "#fcca46";
+      case "info":
+      default:
+        return "#0353a4";
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -34,7 +49,7 @@ export default function Toaster() {
         zIndex: 1400,
       }}
     >
-      {toasts.map((toast, index) => (
+      {toasts.map((toast) => (
         <Alert
           key={toast.id}
           severity={toast.severity}
@@ -46,14 +61,7 @@ export default function Toaster() {
             alignItems: "center",
             color: "#fff !important",
             "& .MuiAlert-icon": { color: "#fff !important" },
-            backgroundColor:
-              toast.severity === "success"
-                ? "#4caf50"
-                : toast.severity === "error"
-                ? "#e71d36"
-                : toast.severity === "warning"
-                ? "#fcca46"
-                : "#0353a4",
+            backgroundColor: getBgColor(toast.severity), // ✅ cleaner
           }}
         >
           {toast.message}

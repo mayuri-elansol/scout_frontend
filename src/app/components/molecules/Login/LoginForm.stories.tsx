@@ -10,7 +10,21 @@ interface LoginFormData {
   password: string;
 }
 
-const LoginFormWrapper = (args: any) => {
+interface LoginFormProps {
+  formData: LoginFormData;
+  showPassword: boolean;
+  isLoading: boolean;
+  error: string;
+  onInputChange: (
+    field: keyof LoginFormData
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onTogglePassword: () => void;
+  onSubmit: (e: React.FormEvent) => void;
+  onForgotPassword: () => void;
+  setError: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
     password: "",
@@ -23,10 +37,7 @@ const LoginFormWrapper = (args: any) => {
     (field: keyof LoginFormData) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [field]: value }));
       if (error) setError("");
     };
 
@@ -45,13 +56,8 @@ const LoginFormWrapper = (args: any) => {
     }, 1500);
   };
 
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleForgotPassword = () => {
-    console.log("Forgot password clicked");
-  };
+  const handleTogglePassword = () => setShowPassword((prev) => !prev);
+  const handleForgotPassword = () => console.log("Forgot password clicked");
 
   return (
     <LoginForm

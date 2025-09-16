@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import toasterReducer from "../../../src/app/components/organisms/toaster/toasterSlice";
-import featureFlagsReducer from "./fetureFlag";
+import featureFlagsReducer from "./fetureFlagSlice";
 import languageReducer from "./languageSlice";
 
 export const store = configureStore({

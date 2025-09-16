@@ -1,7 +1,16 @@
-// ViewAlertPopup.stories.tsx
 import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import ViewAlertPopup from "./ViewAlertPopup";
+
+interface ViewAlertPopupProps {
+  open: boolean;
+  location: string;
+  time: string;
+  assignedTo: string;
+  duration: string;
+  imageUrl: string;
+  handleClose: () => void;
+}
 
 const meta: Meta<typeof ViewAlertPopup> = {
   title: "Components/ViewAlertPopup",
@@ -12,12 +21,22 @@ export default meta;
 type Story = StoryObj<typeof ViewAlertPopup>;
 
 // ---------- Wrapper Component to use hooks ----------
-const Template = (args: any) => {
-  const [open, setOpen] = useState(args.open);
+const Template = (args: Partial<ViewAlertPopupProps>) => {
+  const [open, setOpen] = useState(args.open ?? false);
 
   const handleClose = () => setOpen(false);
 
-  return <ViewAlertPopup {...args} open={open} handleClose={handleClose} />;
+  return (
+    <ViewAlertPopup
+      open={open}
+      handleClose={handleClose}
+      location={args.location ?? ""}
+      time={args.time ?? ""}
+      assignedTo={args.assignedTo ?? ""}
+      duration={args.duration ?? ""}
+      imageUrl={args.imageUrl ?? ""}
+    />
+  );
 };
 
 // ---------- Stories ----------

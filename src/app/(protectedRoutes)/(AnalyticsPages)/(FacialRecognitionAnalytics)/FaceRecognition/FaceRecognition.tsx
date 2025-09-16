@@ -127,23 +127,23 @@ const FaceRecognition: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+          skeletonKeys.map((index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : // Show actual KPI cards
-            FaceRecognitionKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+          FaceRecognitionKpiData.map((kpi, index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Content Grid */}
@@ -250,6 +250,8 @@ const FaceRecognition: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
+        isDownload={true}
+
       />
     </Box>
   );
