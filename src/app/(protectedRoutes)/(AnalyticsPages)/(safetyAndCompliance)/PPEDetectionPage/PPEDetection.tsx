@@ -166,7 +166,7 @@ const PPEDetection: React.FC = () => {
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+          <CameraStatus cameraZones={cameraZones} loading={true} />
         </Grid>
       </Grid>
 
@@ -179,10 +179,6 @@ const PPEDetection: React.FC = () => {
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "employeeId", label: "Employee ID", minWidth: 120 },
           { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
         ]}
         data={[
           {
@@ -259,8 +255,7 @@ const PPEDetection: React.FC = () => {
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
         loading={true}
-          isDownload ={true}
-
+        isDownload={true}
       />
     </Box>
   );

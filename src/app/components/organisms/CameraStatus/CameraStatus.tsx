@@ -20,8 +20,11 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
   loading = true,
   maxheight,
 }) => {
+  // Decide how many rows to render
+  const rows = loading ? Array.from(new Array(4)) : cameraZones;
+  const lastIndex = rows.length - 1;
+
   return (
-    // sx={{ maxHeight: 420, overflowY: "auto" }}
     <Card
       sx={{
         height: "100%",
@@ -43,8 +46,9 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
         </Typography>
 
         <Box>
-          {(loading ? Array.from(new Array(4)) : cameraZones).map(
-            (zone, index) => (
+          {rows.map((zone, index) => {
+            const hasBorder = index < lastIndex;
+            return (
               <Box
                 key={index + 1}
                 sx={{
@@ -52,17 +56,14 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                   justifyContent: "space-between",
                   alignItems: "center",
                   py: 1.5,
-                  borderBottom:
-                    index < (loading ? 4 : cameraZones.length) - 1
-                      ? "1px solid #f0f0f0"
-                      : "none",
+                  borderBottom: hasBorder ? "1px solid #f0f0f0" : "none",
                 }}
               >
                 <Box sx={{ width: "100%" }}>
                   {loading ? (
                     <>
                       <Skeleton width="40%" height={18} sx={{ mb: 0.5 }} />
-                      <Skeleton width="70%" height={14} />
+                      <Skeleton width="60%" height={14} />
                     </>
                   ) : (
                     <>
@@ -82,31 +83,28 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                         >
                           {zone.active}/{zone.total}
                         </Box>
-                        {"  "}
-                        active •{"  "}
+                        {"  "} active •{"  "}
                         <Box
                           component="span"
                           sx={{ color: "#f44336", fontWeight: 600 }}
                         >
                           {zone.offline}/{zone.total}
                         </Box>
-                        {"  "}
-                        offline •{"  "}
+                        {"  "} offline •{"  "}
                         <Box
                           component="span"
                           sx={{ color: "#ff9800", fontWeight: 600 }}
                         >
                           {zone.tempred}/{zone.total}
                         </Box>
-                        {"  "}
-                        tampered
+                        {"  "} tampered
                       </Typography>
                     </>
                   )}
                 </Box>
               </Box>
-            )
-          )}
+            );
+          })}
         </Box>
       </CardContent>
     </Card>

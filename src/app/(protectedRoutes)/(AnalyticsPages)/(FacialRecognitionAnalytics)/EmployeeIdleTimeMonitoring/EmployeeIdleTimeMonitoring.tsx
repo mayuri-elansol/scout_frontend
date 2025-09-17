@@ -249,6 +249,7 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
         loading={false}
                       isDownload={true}
 
+        isDownload={true}
       />
     </Box>
   );

@@ -12,7 +12,8 @@ import {
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
-
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
     {
@@ -101,6 +102,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
 
+  const KpiCardLoading = false;
+
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
       {/* Page Header */}
@@ -117,14 +121,27 @@ const VehicalSpeedMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {VehicalSpeedMonitoringKpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            VehicalSpeedMonitoringKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
-
       {/* Content Grid */}
       <Grid container spacing={3}>
         {/* Recent PPE Violations */}
@@ -132,6 +149,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
+            loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -267,8 +285,8 @@ const VehicalSpeedMonitoring: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="people-count-report"
-          isDownload ={true}
-
+        isDownload={true}
+        loading={false}
       />
     </Box>
   );

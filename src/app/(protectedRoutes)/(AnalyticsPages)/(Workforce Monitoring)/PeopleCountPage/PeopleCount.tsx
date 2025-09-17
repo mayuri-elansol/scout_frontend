@@ -13,6 +13,8 @@ import {
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 export const cameraZones: CameraZone[] = [
   {
     zone: "Production Floor",
@@ -100,7 +102,9 @@ const PeopleCount: React.FC = () => {
       icon: Warning,
     },
   ];
+  const KpiCardLoading = false;
 
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
       {/* Page Header */}
@@ -117,12 +121,26 @@ const PeopleCount: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {peopleCountKpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            peopleCountKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -132,6 +150,7 @@ const PeopleCount: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
+            loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -151,9 +170,6 @@ const PeopleCount: React.FC = () => {
           { id: "currentCount", label: "Current Count", minWidth: 100 },
           { id: "capacity", label: "Capacity", minWidth: 80 },
           { id: "occupancy", label: "Occupancy %", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action", minWidth: 150 },
         ]}
         data={[
           {
@@ -267,8 +283,7 @@ const PeopleCount: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="people-count-report"
-          isDownload ={true}
-
+        isDownload={true}
       />
     </Box>
   );

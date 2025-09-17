@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Card,
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Warning } from "@mui/icons-material";
 import { ViolationCard } from "../ViolationCard/ViolationCard";
+import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup"; // import popup
 
 interface Violation {
   title: string;
@@ -25,18 +26,32 @@ interface Violation {
 interface RecentViolationsProps {
   readonly label: string;
   readonly violations: readonly Violation[];
-
   readonly loading?: boolean;
 }
 
 export default function RecentViolations({
   label,
   violations,
-
   loading = false,
 }: RecentViolationsProps) {
+  // state for popup
+  const [selectedViolation, setSelectedViolation] = useState<Violation | null>(
+    null
+  );
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = (violation: Violation) => {
+    console.log("image click", violation);
+    setSelectedViolation(violation);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedViolation(null);
+  };
+
   return (
-    // sx={{ maxHeight: 420, overflowY: "auto" }}
     <Card
       sx={{
         height: "100%",
@@ -62,22 +77,19 @@ export default function RecentViolations({
             </Typography>
           </Box>
         </Box>
+
         <Box>
-          {" "}
-          {/* adjust height as needed */}
-          {/* Content */}
           {loading ? (
             <Grid container spacing={2}>
-              {Array.from(new Array(2)).map((_, index) => (
-                <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
+              {Array.from(new Array(4)).map((_, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
+                  key={index + 1}
+                >
                   <Card sx={{ p: 2 }}>
-                    <Skeleton
-                      variant="rectangular"
-                      height={200}
-                      sx={{ mb: 1 }}
-                    />
-                    <Skeleton width="60%" />
-                    <Skeleton width="40%" />
+                    <Skeleton width="70%" />
+                    <Skeleton width="50%" sx={{ mb: 1 }} />
+                    <Skeleton variant="rectangular" height={150} />
                   </Card>
                 </Grid>
               ))}
@@ -86,24 +98,38 @@ export default function RecentViolations({
             <Grid container spacing={2}>
               {violations.map((violation, index) => (
                 <Grid
-                  // size={{ xs: 6, md: 3 }}
-                  size={{
-                    xs: 12,
-                    sm: 6,
-                    md: 4,
-                    lg: 4,
-                    xl: 3,
-                  }}
+                  size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
                   key={index + 1}
                   sx={{ display: "flex" }}
                 >
-                  <ViolationCard violation={violation} />
+                  {/* Pass click handler */}
+                  <ViolationCard
+                    violation={violation}
+                    onClick={() => handleOpen(violation)}
+                  />
                 </Grid>
               ))}
             </Grid>
           )}
         </Box>
       </CardContent>
+
+      {/* Popup */}
+      {selectedViolation && (
+        <ViewAlertPopup
+          open={open}
+          handleClose={handleClose}
+          title={selectedViolation.title}
+          location={selectedViolation.location}
+          time={selectedViolation.time}
+          assignedTo={"Unassigned"}
+          duration={"N/A"}
+          imageUrl={selectedViolation.imageUrl ?? ""}
+          onDownload={(url) => {
+            console.log("Downloading image from:", url);
+          }}
+        />
+      )}
     </Card>
   );
 }
