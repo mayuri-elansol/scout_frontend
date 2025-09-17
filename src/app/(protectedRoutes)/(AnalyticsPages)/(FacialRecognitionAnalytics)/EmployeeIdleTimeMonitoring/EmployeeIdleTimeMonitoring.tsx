@@ -162,7 +162,7 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="Detailed Report"
+        title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -247,6 +247,8 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
+                      isDownload={true}
+
       />
     </Box>
   );
