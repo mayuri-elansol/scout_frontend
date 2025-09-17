@@ -18,11 +18,10 @@ interface ViewAlertPopupProps {
   title: string;
   location: string;
   time: string;
-  assignedTo: string;
-  duration: string;
+
   imageUrl: string;
 
-  onDownload?: (imageUrl: string) => void; // 👈 new
+  onDownload?: (imageUrl: string) => void;
 }
 
 const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
@@ -31,15 +30,14 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
   title,
   location,
   time,
-  assignedTo,
-  duration,
+
   imageUrl,
   onDownload,
 }) => {
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    setImageError(false); // Reset error when image changes
+    setImageError(false);
   }, [imageUrl]);
 
   const handleImageError = () => setImageError(true);
@@ -104,7 +102,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
           <IconButton
             onClick={() => {
               if (onDownload) {
-                onDownload(imageUrl); // send the image URL to parent handler
+                onDownload(imageUrl);
               } else {
                 console.log("Download clicked", imageUrl);
               }
@@ -124,7 +122,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
             border: "1px solid #e0e0e0",
             borderRadius: 2,
             bgcolor: "#fafafa",
-            height: 650, // 👈 bigger height
+            height: 650,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

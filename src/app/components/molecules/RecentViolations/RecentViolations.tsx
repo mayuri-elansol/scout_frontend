@@ -122,8 +122,6 @@ export default function RecentViolations({
           title={selectedViolation.title}
           location={selectedViolation.location}
           time={selectedViolation.time}
-          assignedTo={"Unassigned"}
-          duration={"N/A"}
           imageUrl={selectedViolation.imageUrl ?? ""}
           onDownload={(url) => {
             console.log("Downloading image from:", url);

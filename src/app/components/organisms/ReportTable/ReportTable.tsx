@@ -420,7 +420,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]} // hides dropdown
+          rowsPerPageOptions={[]}
         />
       </Card>
     </Box>
