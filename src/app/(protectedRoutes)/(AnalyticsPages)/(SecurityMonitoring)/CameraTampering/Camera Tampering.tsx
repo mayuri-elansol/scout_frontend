@@ -171,9 +171,6 @@ const CameraTampering: React.FC = () => {
           { id: "employeeId", label: "Employee ID", minWidth: 120 },
           { id: "violationType", label: "Violation Type", minWidth: 150 },
           { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
         ]}
         data={[
           {
@@ -248,8 +245,7 @@ const CameraTampering: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
-          isDownload ={true}
-
+        isDownload={true}
       />
     </Box>
   );

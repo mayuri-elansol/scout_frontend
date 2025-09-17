@@ -13,7 +13,8 @@ import {
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
-
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
@@ -146,6 +147,8 @@ const ObjectDetection: React.FC = () => {
   const handleViewSingle = () => {
     console.log("view single row");
   };
+  const KpiCardLoading = true;
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
       {/* Page Header */}
@@ -162,13 +165,27 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {ObjectDetectionKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={4} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            ObjectDetectionKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -178,6 +195,7 @@ const ObjectDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
+            loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -271,6 +289,38 @@ const ObjectDetection: React.FC = () => {
             priority: "Low",
             resolution: "Adequate parking space",
           },
+          {
+            recordId: "PC-7892",
+            timestamp: "15:42",
+            zone: "Main Factory Floor",
+            currentCount: "245",
+            capacity: "300",
+            occupancy: "82%",
+          },
+          {
+            recordId: "PC-7891",
+            timestamp: "15:28",
+            zone: "Cafeteria",
+            currentCount: "180",
+            capacity: "150",
+            occupancy: "120%",
+          },
+          {
+            recordId: "PC-7892",
+            timestamp: "15:42",
+            zone: "Main Factory Floor",
+            currentCount: "245",
+            capacity: "300",
+            occupancy: "82%",
+          },
+          {
+            recordId: "PC-7891",
+            timestamp: "15:28",
+            zone: "Cafeteria",
+            currentCount: "180",
+            capacity: "150",
+            occupancy: "120%",
+          },
         ]}
         filters={[
           {
@@ -287,17 +337,12 @@ const ObjectDetection: React.FC = () => {
               "Parking Lot",
             ],
           },
+
           {
-            id: "status",
-            label: "Status",
-            type: "select",
-            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
-          },
-          {
-            id: "priority",
-            label: "Priority",
-            type: "select",
-            options: ["Critical", "Medium", "Low"],
+            id: "recordId",
+            label: "Record Id",
+            type: "text",
+            //   options: ["Critical", "Medium", "Low"],
           },
           { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
           { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
@@ -310,8 +355,8 @@ const ObjectDetection: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="people-count-report"
-          isDownload ={true}
-
+        isDownload={true}
+        loading={false}
       />
     </Box>
   );

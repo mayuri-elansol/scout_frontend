@@ -117,7 +117,8 @@ const SystemAlerts: React.FC = () => {
           <Warning sx={{ fontSize: 28, color: "#f44336" }} />
           <Typography
             variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}>
+            sx={{ fontWeight: "bold", color: "#1c2025" }}
+          >
             System Alerts & Notifications
           </Typography>
         </Box>
@@ -159,14 +160,13 @@ const SystemAlerts: React.FC = () => {
               onReset={handleReset}
               onExport={handleExport}
               downloadFileName="safety-alerts"
-              loading={true}
+              loading={false}
               isDownload={false}
-
             />
           </Grid>
 
           {/* Right table */}
-          <Grid size={{ xs: 12, md: 12 }} >
+          <Grid size={{ xs: 12, md: 12 }}>
             <ReportTable
               title="Security Monitoring Alerts"
               columns={reportColumns}
@@ -182,7 +182,6 @@ const SystemAlerts: React.FC = () => {
           </Grid>
         </Grid>
       </Box>
-
     </Box>
   );
 };

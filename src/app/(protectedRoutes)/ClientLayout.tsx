@@ -75,7 +75,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             p: 4,
             pt: 9,
             backgroundColor: "#f5f7fa",
-            width: "100%",
+            width: "78vw",
           }}
         >
           <RouteLoader>

@@ -8,7 +8,8 @@ import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
-
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
@@ -198,7 +199,9 @@ const IntrusionDetection: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
+  const KpiCardLoading = false;
 
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
       {/* Page Header */}
@@ -217,11 +220,25 @@ const IntrusionDetection: React.FC = () => {
       {/* KPI Cards */}
 
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {intrusionKpiData.map((kpi, index) => (
-          <Grid key={index + 1} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            intrusionKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -231,6 +248,7 @@ const IntrusionDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
+            loading={false}
           />
         </Grid>
         {/* Security Zones Status */}
@@ -250,9 +268,6 @@ const IntrusionDetection: React.FC = () => {
           { id: "intruderId", label: "Intruder ID", minWidth: 120 },
           { id: "breachType", label: "Breach Type", minWidth: 150 },
           { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Response Action", minWidth: 150 },
         ]}
         data={[
           {
@@ -372,8 +387,8 @@ const IntrusionDetection: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="security-intrusion-report"
-          isDownload ={true}
-
+        isDownload={true}
+        loading={true}
       />
     </Box>
   );

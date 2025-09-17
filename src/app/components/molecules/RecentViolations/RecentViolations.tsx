@@ -68,16 +68,21 @@ export default function RecentViolations({
           {/* Content */}
           {loading ? (
             <Grid container spacing={2}>
-              {Array.from(new Array(2)).map((_, index) => (
-                <Grid size={{ xs: 12, md: 6 }} key={index + 1}>
+              {Array.from(new Array(4)).map((_, index) => (
+                <Grid
+                  size={{
+                    xs: 12,
+                    sm: 6,
+                    md: 4,
+                    lg: 4,
+                    xl: 3,
+                  }}
+                  key={index + 1}
+                >
                   <Card sx={{ p: 2 }}>
-                    <Skeleton
-                      variant="rectangular"
-                      height={200}
-                      sx={{ mb: 1 }}
-                    />
-                    <Skeleton width="60%" />
-                    <Skeleton width="40%" />
+                    <Skeleton width="70%" />
+                    <Skeleton width="50%" sx={{ mb: 1 }} />
+                    <Skeleton variant="rectangular" height={150} />
                   </Card>
                 </Grid>
               ))}

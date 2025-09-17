@@ -17,6 +17,7 @@ import {
   Skeleton,
   IconButton,
   Card,
+  TablePagination,
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 
@@ -53,7 +54,7 @@ interface ReportTableProps {
   isSubmitDisabled?: boolean;
   onView?: (row: ReportData) => void;
   onDownload?: (row: ReportData) => void;
-  isDownload: boolean
+  isDownload: boolean;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -68,10 +69,12 @@ const ReportTable: React.FC<ReportTableProps> = ({
   isSubmitDisabled,
   onView,
   onDownload,
-  isDownload
+  isDownload,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 6;
 
   /** Filter Change Handler */
   const handleFilterChange = (id: string, value: string) => {
@@ -202,7 +205,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
   };
 
   /** Table Rows */
-  let tableRows;
+  let tableRows: React.ReactElement[] = [];
   if (loading) {
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
@@ -211,8 +214,15 @@ const ReportTable: React.FC<ReportTableProps> = ({
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
-        {/* Actions column skeleton */}
-        <TableCell>
+        <TableCell
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <Skeleton variant="circular" width={24} height={24} />
           <Skeleton variant="circular" width={24} height={24} />
         </TableCell>
       </TableRow>
@@ -232,7 +242,6 @@ const ReportTable: React.FC<ReportTableProps> = ({
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
-        {/* ACTIONS column */}
         <TableCell align="center" sx={{ py: 1.5 }}>
           <IconButton
             size="small"
@@ -252,13 +261,13 @@ const ReportTable: React.FC<ReportTableProps> = ({
       </TableRow>
     ));
   } else {
-    tableRows = (
-      <TableRow>
+    tableRows = [
+      <TableRow key="no-data">
         <TableCell colSpan={columns.length + 1} align="center" sx={{ py: 4 }}>
           <Typography>No matching records found</Typography>
         </TableCell>
-      </TableRow>
-    );
+      </TableRow>,
+    ];
   }
 
   return (
@@ -308,7 +317,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
             >
               <Button
                 size="small"
-                variant="contained"
+                variant="outlined"
                 onClick={() => onSubmit?.(filterValues)}
                 disabled={isSubmitDisabled}
               >
@@ -349,7 +358,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
               <Button
                 size="small"
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 onClick={() => {
                   setFilterValues({});
                   onReset?.();
@@ -381,7 +390,6 @@ const ReportTable: React.FC<ReportTableProps> = ({
                     {column.label}
                   </TableCell>
                 ))}
-                {/* Always add ACTIONS col */}
                 <TableCell
                   align="center"
                   sx={{
@@ -396,9 +404,24 @@ const ReportTable: React.FC<ReportTableProps> = ({
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>{tableRows}</TableBody>
+            <TableBody>
+              {tableRows.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )}
+            </TableBody>
           </Table>
         </TableContainer>
+
+        {/* Pagination */}
+        <TablePagination
+          component="div"
+          count={tableRows.length}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]} // hides dropdown
+        />
       </Card>
     </Box>
   );
