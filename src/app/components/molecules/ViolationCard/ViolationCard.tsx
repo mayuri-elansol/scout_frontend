@@ -12,9 +12,14 @@ interface Violation {
   imageUrl?: string;
 }
 
-//  Reusable component (defined in same file)
-export const ViolationCard: React.FC<{ violation: Violation }> = ({
+interface ViolationCardProps {
+  violation: Violation;
+  onClick?: () => void; // add this
+}
+
+export const ViolationCard: React.FC<ViolationCardProps> = ({
   violation,
+  onClick,
 }) => {
   return (
     <Card
@@ -25,7 +30,9 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
         flex: 1,
         display: "flex",
         flexDirection: "column",
+        cursor: "pointer",
       }}
+      onClick={onClick}
     >
       <CardContent
         sx={{
@@ -55,21 +62,13 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             >
               {violation.title}
             </Typography>
-            <Typography
-              sx={{
-                fontSize: "14px",
-                color: "#5c6b7d",
-                mb: 0.25,
-              }}
-            >
+            <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
               {violation.location} • {violation.time}
             </Typography>
-            {/* <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
-              ID: {violation.Id}
-            </Typography> */}
           </Box>
         </Box>
-        {/* Image Preview */}
+
+        {/* Image */}
         <Box
           sx={{
             width: "100%",
@@ -81,8 +80,7 @@ export const ViolationCard: React.FC<{ violation: Violation }> = ({
             justifyContent: "center",
             mb: 0.5,
             border: "1px solid #dee2e6",
-            position: "relative", // needed for next/image layout="fill"
-            cursor: "pointer",
+            position: "relative",
           }}
         >
           {violation.imageUrl ? (

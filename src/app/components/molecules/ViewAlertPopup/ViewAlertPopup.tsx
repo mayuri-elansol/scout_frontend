@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -6,36 +8,33 @@ import {
   DialogContent,
   Box,
   Typography,
-  Divider,
-  Grid,
   IconButton,
 } from "@mui/material";
-import {
-  LocationOn,
-  AccessTime,
-  Person,
-  Schedule,
-  Close,
-} from "@mui/icons-material";
-
+import { Close } from "@mui/icons-material";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 interface ViewAlertPopupProps {
   open: boolean;
   handleClose: () => void;
+  title: string;
   location: string;
   time: string;
   assignedTo: string;
   duration: string;
   imageUrl: string;
+
+  onDownload?: (imageUrl: string) => void; // 👈 new
 }
 
 const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
   open,
   handleClose,
+  title,
   location,
   time,
   assignedTo,
   duration,
   imageUrl,
+  onDownload,
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -53,14 +52,14 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
       onClose={handleClose}
       slotProps={{
         paper: {
-          sx: { width: { xs: "95%", sm: "80%" } },
+          sx: { width: { xs: "95%", sm: "70%" }, maxWidth: 1200 },
         },
       }}
     >
       {/* Header */}
       <DialogTitle
         sx={{
-          py: 1.5,
+          py: 1,
           px: 2,
           display: "flex",
           justifyContent: "space-between",
@@ -70,8 +69,12 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
           fontWeight: 600,
         }}
       >
-        <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-          Alert Details
+        <Typography
+          variant="subtitle1"
+          component="span"
+          sx={{ fontWeight: 600 }}
+        >
+          Voilation Details
         </Typography>
         <IconButton onClick={handleClose} sx={{ color: "white" }}>
           <Close />
@@ -79,84 +82,49 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ p: 2 }}>
-        {/* Details Grid */}
-        <Grid container spacing={1.5} sx={{ mb: 2, pt: 2 }}>
-          {[
-            {
-              label: "Location",
-              value: location,
-              icon: <LocationOn sx={{ fontSize: 18, color: "#1976d2" }} />,
-              bg: "#e3f2fd",
-            },
-            {
-              label: "Time",
-              value: time,
-              icon: <AccessTime sx={{ fontSize: 18, color: "#f57c00" }} />,
-              bg: "#fff3e0",
-            },
-            {
-              label: "Assigned To",
-              value: assignedTo,
-              icon: <Person sx={{ fontSize: 18, color: "#4caf50" }} />,
-              bg: "#e8f5e9",
-            },
-            {
-              label: "Duration",
-              value: duration,
-              icon: <Schedule sx={{ fontSize: 18, color: "#e91e63" }} />,
-              bg: "#fce4ec",
-            },
-          ].map((item) => (
-            <Grid size={{ xs: 12, sm: 6 }} key={item.label}>
-              <Box
-                sx={{
-                  p: 1.5,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1.2,
-                  border: "1px solid #e0e0e0",
-                  borderRadius: 2,
-                  bgcolor: "#fafafa",
-                  height: "100%",
-                }}
-              >
-                <Box
-                  sx={{
-                    p: 0.8,
-                    borderRadius: "50%",
-                    bgcolor: item.bg,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {item.icon}
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <Typography variant="caption" color="textSecondary">
-                    {item.label}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ fontWeight: 500, wordBreak: "break-word" }}
-                  >
-                    {item.value}
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-        <Divider sx={{ my: 1.5 }} />
+        {/* Violation Info */}
+        <Box
+          sx={{
+            py: 1,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="body2" sx={{ mb: 0.5 }}>
+            <strong>Title:</strong>
+            {title}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>
+            <strong>Location:</strong> {location}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>
+            <strong>Time:</strong> {time}
+          </Typography>
+          <IconButton
+            onClick={() => {
+              if (onDownload) {
+                onDownload(imageUrl); // send the image URL to parent handler
+              } else {
+                console.log("Download clicked", imageUrl);
+              }
+            }}
+            color="primary"
+          >
+            <ArrowDownwardIcon />
+          </IconButton>
+        </Box>
+        {/* 
+        <Divider sx={{ mb: 1.5 }} /> */}
 
+        {/* Image Preview */}
         <Box
           sx={{
             textAlign: "center",
-            p: 1.5,
             border: "1px solid #e0e0e0",
             borderRadius: 2,
             bgcolor: "#fafafa",
-            height: 300,
+            height: 650, // 👈 bigger height
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -180,7 +148,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
               <Typography variant="h4" sx={{ color: "#bbb" }}>
                 📷
               </Typography>
-              <Typography variant="body2" color="textSecondary">
+              <Typography variant="body2" color="text.secondary">
                 No Image Available
               </Typography>
             </Box>

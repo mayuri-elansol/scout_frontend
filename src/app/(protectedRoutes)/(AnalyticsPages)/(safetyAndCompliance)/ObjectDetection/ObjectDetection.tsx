@@ -165,7 +165,6 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
@@ -198,15 +197,14 @@ const ObjectDetection: React.FC = () => {
             loading={false}
           />
         </Grid>
-        {/* PPE Compliance by Zone */}
 
+        {/* PPE Compliance by Zone */}
         <Grid size={{ xs: 12, lg: 4 }}>
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
       {/* Object detection Report */}
-
       <ReportTable
         title="Detailed Report"
         columns={[
@@ -342,7 +340,6 @@ const ObjectDetection: React.FC = () => {
             id: "recordId",
             label: "Record Id",
             type: "text",
-            //   options: ["Critical", "Medium", "Low"],
           },
           { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
           { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
