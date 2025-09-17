@@ -209,7 +209,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     "(min-width:1520px) and (max-width:1699px)"
   );
 
-  const is1200Down = useMediaQuery("(min-width:254px) and (max-width:1200px)");
+  const is1200Down = useMediaQuery("(min-width:100px) and (max-width:1200px)");
 
   let drawerWidth: string = "16vw";
   if (is1200_1250) {
