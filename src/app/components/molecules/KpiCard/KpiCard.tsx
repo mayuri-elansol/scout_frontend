@@ -158,6 +158,13 @@ const KpiCard: React.FC<KpiCardProps> = ({
                 lineHeight: 1.2,
                 minWidth: "unset",
                 padding: "0 6px",
+                "&:hover": {
+                  border: `1px solid ${variantStyles.trendColor}`, // keep your custom border
+                  backgroundColor: "rgba(255,255,255,0.95)", // optional hover bg
+                },
+                "&:focus": {
+                  border: `1px solid ${variantStyles.trendColor}`, // fix focus blue border
+                },
               }}
               onClick={() => {
                 if (route) {

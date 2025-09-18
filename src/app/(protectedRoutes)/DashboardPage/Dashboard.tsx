@@ -97,10 +97,49 @@ const Dashboard: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
-          <ActivityFeed />
+        <Box sx={{ flex: "1 1 50%", minWidth: "300px", mb: 2 }}>
+          <ActivityFeed
+            loading={false}
+            activities={[
+              {
+                time: "11:12 AM",
+                event: "PPE Violation Detected",
+                zone: "Production Floor - Camera 3",
+                severity: "high",
+                icon: Shield,
+              },
+              {
+                time: "11:08 AM",
+                event: "Vehicle Speed Limit Exceeded",
+                zone: "Parking Lot - Camera 7",
+                severity: "medium",
+                icon: DirectionsCar,
+              },
+              {
+                time: "11:05 AM",
+                event: "Unauthorized Access Attempt",
+                zone: "Gate 2 - Camera 12",
+                severity: "high",
+                icon: Visibility,
+              },
+              {
+                time: "11:02 AM",
+                event: "Employee Check-in",
+                zone: "Main Entrance - Camera 1",
+                severity: "low",
+                icon: People,
+              },
+              {
+                time: "10:58 AM",
+                event: "Fire Safety Equipment Check",
+                zone: "Assembly Line - Camera 5",
+                severity: "low",
+                icon: Shield,
+              },
+            ]}
+          />
         </Box>
-        <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
+        <Box sx={{ flex: "1 1 45%", minWidth: "300px", mb: 2 }}>
           <CameraStatus
             cameraZones={cameraZones}
             loading={false}
