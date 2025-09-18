@@ -2,7 +2,7 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
@@ -248,8 +248,7 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
-                      isDownload={true}
-
+        isDownload={true}
       />
     </Box>
   );

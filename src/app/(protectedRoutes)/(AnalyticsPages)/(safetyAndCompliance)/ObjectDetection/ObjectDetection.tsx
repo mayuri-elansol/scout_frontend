@@ -2,7 +2,7 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -148,7 +148,7 @@ const ObjectDetection: React.FC = () => {
   const handleViewSingle = () => {
     console.log("view single row");
   };
-  const KpiCardLoading = true;
+  const KpiCardLoading = false;
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>

@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import { Warning, Circle } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 // 🔹 Types
 interface FilterParams {
   status?: string;
@@ -175,7 +175,7 @@ const SystemAlerts: React.FC = () => {
               onReset={handleReset}
               onExport={handleExport}
               downloadFileName="security-alerts"
-              loading={true}
+              loading={false}
               isDownload={false}
             />
           </Grid>

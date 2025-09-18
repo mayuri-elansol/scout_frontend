@@ -2,7 +2,7 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
 
@@ -389,7 +389,7 @@ const IntrusionDetection: React.FC = () => {
         ]}
         downloadFileName="security-intrusion-report"
         isDownload={true}
-        loading={true}
+        loading={false}
       />
     </Box>
   );

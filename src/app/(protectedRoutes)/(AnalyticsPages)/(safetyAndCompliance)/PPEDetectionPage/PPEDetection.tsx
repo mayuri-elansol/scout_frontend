@@ -2,7 +2,7 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
@@ -114,7 +114,7 @@ const PPEDetection: React.FC = () => {
   const handleViewSingle = () => {
     console.log("view single row");
   };
-  const KpiCardLoading = true;
+  const KpiCardLoading = false;
   return (
     <Box>
       {/* Page Header */}
@@ -161,13 +161,13 @@ const PPEDetection: React.FC = () => {
           <RecentViolations
             label="Recent Violations"
             violations={recentViolations}
-            loading={true}
+            loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={true} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
@@ -255,7 +255,7 @@ const PPEDetection: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
-        loading={true}
+        loading={false}
         isDownload={true}
       />
     </Box>
