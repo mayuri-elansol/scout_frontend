@@ -40,10 +40,10 @@ const getSeverityStyle = (severity: string) => {
 const ActivityFeed: React.FC<ActivityFeedProps> = ({
   loading = false,
   activities = [],
-  maxHeight,
+  // maxHeight,
 }) => {
   return (
-    <Card sx={{ maxHeight: maxHeight ?? 600 }}>
+    <Card>
       <CardContent sx={{ p: 3 }}>
         {/* Header */}
         <Box
@@ -63,7 +63,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
         {/* Content */}
         <Box
           sx={{
-            maxHeight,
+            //  maxHeight,
             overflowY: "auto",
           }}
         >

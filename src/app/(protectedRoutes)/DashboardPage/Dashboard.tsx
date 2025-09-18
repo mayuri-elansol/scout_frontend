@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "300px", mb: 2 }}>
+        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
           <ActivityFeed
             loading={false}
             activities={[
@@ -141,7 +141,7 @@ const Dashboard: React.FC = () => {
             ]}
           />
         </Box>
-        <Box sx={{ flex: "1 1 45%", minWidth: "300px", mb: 2 }}>
+        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
           <CameraStatus
             cameraZones={cameraZones}
             loading={false}

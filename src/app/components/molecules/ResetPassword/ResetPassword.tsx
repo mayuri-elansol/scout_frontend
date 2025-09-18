@@ -9,11 +9,14 @@ import {
   InputAdornment,
   Alert,
   Button,
+  Typography,
+  Paper,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 import { useRouter } from "next/navigation"; // ✅ correct import
 
 import { ResetPasswordFormData } from "./ResetPassword.type";
+import { Box } from "@mui/system";
 
 export interface ResetPasswordFormProps {
   formData: ResetPasswordFormData;
