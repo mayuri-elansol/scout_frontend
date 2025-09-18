@@ -3,8 +3,7 @@ import React from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import { Warning, Circle } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import { ReportTable } from "@/app/components/organisms";
-
+import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
 // 🔹 Types
 interface FilterParams {
   status?: string;

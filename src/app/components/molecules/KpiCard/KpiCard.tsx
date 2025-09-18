@@ -12,7 +12,6 @@ interface KpiCardProps {
   size?: "small" | "medium" | "large";
   customWidth?: number;
 }
-
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,

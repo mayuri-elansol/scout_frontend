@@ -153,6 +153,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
       case "alerts":
         items.push({ label: "Alerts", icon: null, clickable: false });
         break;
+        
       default:
         items.push({ label: "Dashboard", icon: null, clickable: false });
     }

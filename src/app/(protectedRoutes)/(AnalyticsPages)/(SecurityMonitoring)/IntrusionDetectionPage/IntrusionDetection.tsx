@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { CameraStatus, ReportTable } from "@/app/components/organisms";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
 
