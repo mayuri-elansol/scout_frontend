@@ -11,7 +11,9 @@ import {
   DirectionsCar,
 } from "@mui/icons-material";
 
-import { ActivityFeed, CameraStatus } from "@/app/components/organisms";
+import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
+
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";

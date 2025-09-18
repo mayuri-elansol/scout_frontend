@@ -164,7 +164,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                 {/* Header */}
                 <Box
                     sx={{
-                        
+
                         pl: 6,
                         pr: 6,
                         pt: 0.8,
@@ -174,7 +174,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                         alignItems: "center",
                         // borderBottom: "1px solid #e0e0e0",
                         backgroundColor: "#ffffff",
-                            position: "relative", // Add this
+                        position: "relative", // Add this
                         boxShadow: "0 1px 2.8px rgba(0, 0, 0, 0.1)",
                     }}
                 >
@@ -198,9 +198,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                             // px: { xs: 2, sm: 4 },
                             // py: 1,
                             // backgroundColor: "#1976d2",
-                                                        backgroundColor: "#336590",
+                            backgroundColor: "#336590",
 
-                        
+
                             fontSize: { xs: "0.875rem", sm: "0.9rem" },
                             "&:hover": {
                                 backgroundColor: "#1565c0",
@@ -244,7 +244,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                                         <Typography
                                             variant="h2"
                                             sx={{
-                                                fontWeight: 800,
+                                                fontWeight: 600,
                                                 fontSize: "2.6rem",
                                                 mb: { xs: 2, md: 4 },
                                                 background:
@@ -383,17 +383,16 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                     </Container>
                 </Box>
 
+
                 {/* Footer */}
                 <Box
                     sx={{
-
                         textAlign: "center",
                         borderTop: "1px solid #e0e0e0",
                         backgroundColor: "#ffffff",
                         lineHeight: 2,
-                        py: 1.8,
-                        // boxShadow: "0 -1px 2.8px rgba(0, 0, 0, 0.1)", 
-
+                        py: 2,
+                        // boxShadow: "0 -1px 2.8px rgba(0, 0, 0, 0.1)",
                     }}
                 >
                     <Box
@@ -409,7 +408,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                             href="#"
                             sx={{
                                 color: "#666666",
-                                fontSize: "14px",
+                                fontSize: "15px",
                                 textDecoration: "none",
                                 "&:hover": {
                                     color: "#1976d2",
@@ -436,16 +435,19 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                         >
                             Terms of Use
                         </Link>
+                        <Typography sx={{ color: "#9aa0a6", fontSize: "14px" }}>
+                            |
+                        </Typography>
+                        <Typography
+                            sx={{
+                                color: "#666666",
+                                fontSize: "15px",
+                                fontWeight: 500,
+                            }}
+                        >
+                            © 2025 Elansol Technologies Private Limited.
+                        </Typography>
                     </Box>
-                    <Typography
-                        sx={{
-                            color: "#666666",
-                            fontSize: "13px",
-                            fontWeight: 500,
-                        }}
-                    >
-                        © 2025 Elansol Technologies Private Limited. All rights reserved.
-                    </Typography>
                 </Box>
             </Box>
         </ThemeProvider>
