@@ -20,7 +20,6 @@ export interface ForgotPasswordFormData {
 
 export interface ForgotPasswordFormProps {
   formData: ForgotPasswordFormData;
-
   showPassword: boolean;
   showConfirmPassword: boolean;
   isLoading: boolean;
@@ -41,7 +40,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   isLoading,
   error,
   onInputChange,
-
   onTogglePassword,
   onToggleConfirmPassword,
   onSubmit,
@@ -114,23 +112,25 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             onChange={onInputChange("password")}
             placeholder="Enter your new password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onTogglePassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onTogglePassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -158,23 +158,25 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             onChange={onInputChange("confirmPassword")}
             placeholder="Enter your confirm password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onToggleConfirmPassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onToggleConfirmPassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>

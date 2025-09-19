@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import styles from "./ResetPassword.module.css"; // ✅ reuse the same CSS
 import {
   CardContent,
   TextField,
@@ -118,23 +117,25 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             onChange={onInputChange("currentPassword")}
             placeholder="Enter your current password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onToggleCurrentPassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onToggleCurrentPassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -162,23 +163,25 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             onChange={onInputChange("password")}
             placeholder="Enter your new password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onTogglePassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onTogglePassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -206,23 +209,25 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             onChange={onInputChange("confirmPassword")}
             placeholder="Enter your confirm password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onToggleConfirmPassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onToggleConfirmPassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -270,7 +275,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             !formData.confirmPassword
           }
         >
-          {isLoading ? "Updating..." : "Update Password"}
+          {isLoading ? "Reseing..." : "Reset Password"}
         </button>
       </form>
     </CardContent>

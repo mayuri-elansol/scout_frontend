@@ -29,7 +29,7 @@ const ForgotPasswordPage: React.FC = () => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsSubmitted(true);
-
+      console.log("formdata", formData);
       // Navigate after success (optional)
       // router.push("/login");
     } catch (err) {
