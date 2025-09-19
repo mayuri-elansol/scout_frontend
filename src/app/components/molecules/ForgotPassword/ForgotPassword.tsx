@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import styles from "./ResetPassword.module.css"; // ✅ reuse the same CSS
 import {
   CardContent,
   TextField,
@@ -14,38 +13,35 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
 
-export interface ResetPasswordFormData {
-  currentPassword: string;
+export interface ForgotPasswordFormData {
   password: string;
   confirmPassword: string;
 }
 
-export interface ResetPasswordFormProps {
-  formData: ResetPasswordFormData;
-  showCurrentPassword: boolean;
+export interface ForgotPasswordFormProps {
+  formData: ForgotPasswordFormData;
+
   showPassword: boolean;
   showConfirmPassword: boolean;
   isLoading: boolean;
   error: string;
   onInputChange: (
-    field: keyof ResetPasswordFormData
+    field: keyof ForgotPasswordFormData
   ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onToggleCurrentPassword: () => void;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
   onSubmit: (event: React.FormEvent) => void;
   setError: (error: string) => void;
 }
 
-const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
+const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   formData,
-  showCurrentPassword,
   showPassword,
   showConfirmPassword,
   isLoading,
   error,
   onInputChange,
-  onToggleCurrentPassword,
+
   onTogglePassword,
   onToggleConfirmPassword,
   onSubmit,
@@ -57,7 +53,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         variant="h4"
         sx={{ fontWeight: 700, mb: 1, color: "#336590", fontSize: "28px" }}
       >
-        Reset Password
+        Forgot Password
       </Typography>
       <Typography
         variant="body1"
@@ -94,50 +90,6 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             </Alert>
           </Paper>
         )}
-
-        {/* Current Password */}
-        <Box sx={{ mb: 3.2 }}>
-          <Typography
-            component="label"
-            variant="body2"
-            sx={{
-              color: "#1c2025",
-              fontWeight: 600,
-              mb: 1.5,
-              fontSize: "15px",
-              display: "block",
-            }}
-          >
-            Current Password
-          </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            type={showCurrentPassword ? "text" : "password"}
-            value={formData.currentPassword}
-            onChange={onInputChange("currentPassword")}
-            placeholder="Enter your current password"
-            disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onToggleCurrentPassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
 
         {/* New Password */}
         <Box sx={{ mb: 3 }}>
@@ -237,26 +189,17 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fontWeight: 600,
             textTransform: "none",
             backgroundColor:
-              isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              isLoading || !formData.confirmPassword || !formData.password
                 ? "#e5e7eb"
                 : "#1976d2",
             color:
-              isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              isLoading || !formData.confirmPassword || !formData.password
                 ? "#9ca3af"
                 : "#ffffff",
             border: "none",
             borderRadius: "8px",
             cursor:
-              isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              isLoading || !formData.confirmPassword || !formData.password
                 ? "not-allowed"
                 : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
@@ -264,10 +207,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fontFamily: "inherit",
           }}
           disabled={
-            isLoading ||
-            !formData.currentPassword ||
-            !formData.password ||
-            !formData.confirmPassword
+            isLoading || !formData.password || !formData.confirmPassword
           }
         >
           {isLoading ? "Updating..." : "Update Password"}
@@ -277,4 +217,4 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   );
 };
 
-export default ResetPasswordForm;
+export default ForgotPasswordForm;
