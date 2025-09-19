@@ -83,6 +83,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
+            
             {children}
           </RouteLoader>
         </Box>

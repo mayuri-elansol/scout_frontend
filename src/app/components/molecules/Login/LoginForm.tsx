@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   CardContent,
   TextField,
@@ -17,7 +18,6 @@ import {
   Lock,
   AccountCircle,
 } from "@mui/icons-material";
-import styles from "./LoginForm.module.css";
 
 interface LoginFormData {
   username: string;
@@ -48,36 +48,61 @@ const LoginForm: React.FC<LoginFormProps> = ({
   setError,
 }) => {
   return (
-    <CardContent className={styles.cardContent}>
-      <Typography variant="h4" className={styles.title}>
+    <CardContent sx={{ padding: 4 }}>
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: 700, mb: 1, color: "#336590", fontSize: "28px" }}
+      >
         Welcome
       </Typography>
-      <Typography variant="body1" className={styles.subtitle}>
+      <Typography
+        variant="body1"
+        sx={{ color: "#5c6b7d", fontSize: "16px", marginBottom: "25px" }}
+      >
         Sign in to access your surveillance analytics portal
       </Typography>
 
       <form onSubmit={onSubmit} autoComplete="off">
         {error && (
-          <Paper elevation={1} className={styles.errorBox}>
+          <Paper
+            elevation={1}
+            sx={{
+              mb: 3,
+              p: 2,
+              backgroundColor: "#fff5f5",
+              border: "1px solid #fecaca",
+              borderRadius: 2,
+            }}
+          >
             <Alert
               severity="error"
               sx={{
                 backgroundColor: "transparent",
-                "& .MuiAlert-message": { padding: 0 }, // keep padding controlled
+                "& .MuiAlert-message": {
+                  color: "#dc2626",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                },
               }}
               onClose={() => setError("")}
             >
-              <span className={styles.errorMessage}>{error}</span>
+              {error}
             </Alert>
           </Paper>
         )}
 
         {/* Username */}
-        <Box className={styles.fieldWrapper}>
+        <Box sx={{ mb: 3.2 }}>
           <Typography
             component="label"
             variant="body2"
-            className={styles.label}
+            sx={{
+              color: "#1c2025",
+              fontWeight: 600,
+              mb: 1.5,
+              fontSize: "15px",
+              display: "block",
+            }}
           >
             Username
           </Typography>
@@ -99,11 +124,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </Box>
 
         {/* Password */}
-        <Box className={styles.passwordWrapper}>
+        <Box sx={{ mb: 3 }}>
           <Typography
             component="label"
             variant="body2"
-            className={styles.label}
+            sx={{
+              color: "#1c2025",
+              fontWeight: 600,
+              mb: 1.5,
+              fontSize: "15px",
+              display: "block",
+            }}
           >
             Password
           </Typography>
@@ -139,8 +170,31 @@ const LoginForm: React.FC<LoginFormProps> = ({
         {/* Button */}
         <button
           type="submit"
-          className={styles.submitButton}
           disabled={isLoading || !formData.username || !formData.password}
+          style={{
+            width: "100%",
+            padding: "14px 16px",
+            fontSize: "16px",
+            fontWeight: 600,
+            textTransform: "none",
+            backgroundColor:
+              isLoading || !formData.username || !formData.password
+                ? "#e5e7eb"
+                : "#1976d2",
+            color:
+              isLoading || !formData.username || !formData.password
+                ? "#9ca3af"
+                : "#ffffff",
+            border: "none",
+            borderRadius: "8px",
+            cursor:
+              isLoading || !formData.username || !formData.password
+                ? "not-allowed"
+                : "pointer",
+            boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
+            transition: "all 0.2s ease-in-out",
+            fontFamily: "inherit",
+          }}
         >
           {isLoading ? "Signing In..." : "Sign In"}
         </button>
