@@ -1,13 +1,7 @@
-
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-
-  ThemeProvider,
-  CssBaseline,
- 
-} from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import LoginForm from "../../components/molecules/Login/LoginForm";
 
@@ -22,8 +16,6 @@ interface User {
   password: string;
 }
 
-
-
 const Login: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>({
@@ -35,18 +27,16 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-
-
   const handleInputChange =
     (field: keyof LoginFormData) =>
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value =
-          event.target.type === "checkbox"
-            ? event.target.checked
-            : event.target.value;
-        setFormData((prev) => ({ ...prev, [field]: value }));
-        if (error) setError("");
-      };
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value =
+        event.target.type === "checkbox"
+          ? event.target.checked
+          : event.target.value;
+      setFormData((prev) => ({ ...prev, [field]: value }));
+      if (error) setError("");
+    };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -91,7 +81,6 @@ const Login: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-
       <LoginForm
         formData={formData}
         showPassword={showPassword}
@@ -102,7 +91,6 @@ const Login: React.FC = () => {
         onSubmit={handleSubmit}
         setError={setError}
       />
-
     </ThemeProvider>
   );
 };

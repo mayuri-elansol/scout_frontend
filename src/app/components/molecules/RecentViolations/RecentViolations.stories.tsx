@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import RecentViolations from "./RecentViolations";
 
 const meta: Meta<typeof RecentViolations> = {
-  title: "Molecules/RecentViolations",
+  title: "Components/Molecules/RecentViolations",
   component: RecentViolations,
   tags: ["autodocs"],
 };

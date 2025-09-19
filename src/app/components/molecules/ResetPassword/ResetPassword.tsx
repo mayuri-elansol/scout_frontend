@@ -1,25 +1,28 @@
 "use client";
 
 import React from "react";
-import styles from "./ResetPassword.module.css";
+import styles from "./ResetPassword.module.css"; // ✅ reuse the same CSS
 import {
   CardContent,
   TextField,
   IconButton,
   InputAdornment,
   Alert,
-  Button,
   Typography,
+  Box,
   Paper,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
-import { useRouter } from "next/navigation"; // ✅ correct import
 
-import { ResetPasswordFormData } from "./ResetPassword.type";
-import { Box } from "@mui/system";
+export interface ResetPasswordFormData {
+  currentPassword: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export interface ResetPasswordFormProps {
   formData: ResetPasswordFormData;
+  showCurrentPassword: boolean;
   showPassword: boolean;
   showConfirmPassword: boolean;
   isLoading: boolean;
@@ -27,58 +30,98 @@ export interface ResetPasswordFormProps {
   onInputChange: (
     field: keyof ResetPasswordFormData
   ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleCurrentPassword: () => void;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
-  onSubmit: (event: React.FormEvent) => Promise<void> | void;
+  onSubmit: (event: React.FormEvent) => void;
   setError: (error: string) => void;
 }
 
 const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   formData,
+  showCurrentPassword,
   showPassword,
   showConfirmPassword,
   isLoading,
   error,
   onInputChange,
+  onToggleCurrentPassword,
   onTogglePassword,
   onToggleConfirmPassword,
   onSubmit,
   setError,
 }) => {
-  const router = useRouter();
-
-  const isDisabled =
-    isLoading ||
-    !formData.password ||
-    !formData.confirmPassword ||
-    formData.password !== formData.confirmPassword;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmit(e);
-    router.push("/LoginPage");
-  };
-
   return (
     <CardContent className={styles.cardContent}>
-      <Typography className={styles.title}>Reset Password</Typography>
-      <Typography className={styles.subtitle}>
+      <Typography variant="h4" className={styles.title}>
+        Reset Password
+      </Typography>
+      <Typography variant="body1" className={styles.subtitle}>
         Enter your new password below
       </Typography>
 
-      {error && (
-        <Paper elevation={1} className={styles.errorPaper}>
-          <Alert severity="error" onClose={() => setError("")}>
-            {error}
-          </Alert>
-        </Paper>
-      )}
+      <form onSubmit={onSubmit} autoComplete="off">
+        {error && (
+          <Paper elevation={1} className={styles.errorBox}>
+            <Alert
+              severity="error"
+              sx={{
+                backgroundColor: "transparent",
+                "& .MuiAlert-message": { padding: 0 },
+              }}
+              onClose={() => setError("")}
+            >
+              <span className={styles.errorMessage}>{error}</span>
+            </Alert>
+          </Paper>
+        )}
 
-      <form onSubmit={handleSubmit} autoComplete="off">
-        {/* Password Field */}
-        <Box sx={{ mb: 3 }}>
-          <Typography component="label" className={styles.inputLabel}>
-            Password
+        {/* Current Password */}
+        <Box className={styles.fieldWrapper}>
+          <Typography
+            component="label"
+            variant="body2"
+            className={styles.label}
+          >
+            Current Password
+          </Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            type={showCurrentPassword ? "text" : "password"}
+            value={formData.currentPassword}
+            onChange={onInputChange("currentPassword")}
+            placeholder="Enter your current password"
+            disabled={isLoading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock sx={{ color: "#6b7280" }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={onToggleCurrentPassword}
+                    edge="end"
+                    disabled={isLoading}
+                  >
+                    {showCurrentPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+
+        {/* New Password */}
+        <Box className={styles.passwordWrapper}>
+          <Typography
+            component="label"
+            variant="body2"
+            className={styles.label}
+          >
+            New Password
           </Typography>
           <TextField
             fullWidth
@@ -86,71 +129,80 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             type={showPassword ? "text" : "password"}
             value={formData.password}
             onChange={onInputChange("password")}
-            placeholder="Enter new password"
-            className={styles.textField}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock sx={{ color: "#6b7280" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={onTogglePassword} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
+            placeholder="Enter your new password"
             disabled={isLoading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock sx={{ color: "#6b7280" }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={onTogglePassword}
+                    edge="end"
+                    disabled={isLoading}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Box>
 
-        {/* Confirm Password Field */}
-        <Box sx={{ mb: 3 }}>
-          <Typography component="label" className={styles.inputLabel}>
+        {/* Confirm Password */}
+        <Box className={styles.passwordWrapper}>
+          <Typography
+            component="label"
+            variant="body2"
+            className={styles.label}
+          >
             Confirm Password
           </Typography>
           <TextField
             fullWidth
             variant="outlined"
-            type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={onInputChange("password")}
-            placeholder="Enter new password"
-            className={styles.textField}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock sx={{ color: "#6b7280" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={onTogglePassword} edge="end">
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-            }}
+            type={showConfirmPassword ? "text" : "password"}
+            value={formData.confirmPassword}
+            onChange={onInputChange("confirmPassword")}
+            placeholder="Enter your confirm password"
             disabled={isLoading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Lock sx={{ color: "#6b7280" }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={onToggleConfirmPassword}
+                    edge="end"
+                    disabled={isLoading}
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
           />
         </Box>
 
         {/* Submit Button */}
-        <Button
+        <button
           type="submit"
-          className={`${styles.submitButton} ${
-            isDisabled ? styles.disabled : styles.enabled
-          }`}
-          disabled={isDisabled}
+          className={styles.submitButton}
+          disabled={
+            isLoading ||
+            !formData.currentPassword ||
+            !formData.password ||
+            !formData.confirmPassword
+          }
         >
-          {isLoading ? "Updating..." : "Reset Password"}
-        </Button>
+          {isLoading ? "Updating..." : "Update Password"}
+        </button>
       </form>
     </CardContent>
   );

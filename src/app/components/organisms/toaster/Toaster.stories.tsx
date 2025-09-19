@@ -6,7 +6,7 @@ import { store } from "../../../store/store";
 import { showToast } from "./toasterSlice";
 
 const meta: Meta<typeof Toaster> = {
-  title: "Components/Toaster",
+  title: "Components/Organisms/Toaster",
   component: Toaster,
   decorators: [
     (Story) => (

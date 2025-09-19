@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import LiveStreamingPage from "./LiveStreamingPage";
 
 const meta = {
-  title: "Components/Templates/LiveStreamingPage",
+  title: "Components/Molecules/LiveStreamingPage",
   component: LiveStreamingPage,
   parameters: {
     layout: "padded",

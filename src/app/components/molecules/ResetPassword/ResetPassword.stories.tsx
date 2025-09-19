@@ -1,16 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ResetPasswordForm from "./ResetPasswordForm";
+import ResetPasswordForm from "./ResetPassword";
 
 const meta: Meta<typeof ResetPasswordForm> = {
-  title: "Forms/ResetPasswordForm",
+  title: "Components/Molecules/ResetPasswordForm",
   component: ResetPasswordForm,
   tags: ["autodocs"],
 };
-
 export default meta;
+
 type Story = StoryObj<typeof ResetPasswordForm>;
 
-// Default mock props
 const defaultProps = {
   formData: {
     password: "",
@@ -35,34 +34,23 @@ const defaultProps = {
   setError: (err: string) => console.log("Set error:", err),
 };
 
-// ✅ Default (empty state)
 export const Default: Story = {
-  args: {
-    ...defaultProps,
-  },
+  args: { ...defaultProps },
 };
 
-// ✅ With Error
 export const WithError: Story = {
-  args: {
-    ...defaultProps,
-    error: "Passwords do not match",
-  },
+  args: { ...defaultProps, error: "Passwords do not match" },
 };
 
-// ✅ Loading state
 export const Loading: Story = {
-  args: {
-    ...defaultProps,
-    isLoading: true,
-  },
+  args: { ...defaultProps, isLoading: true },
 };
 
-// ✅ Filled in
 export const Filled: Story = {
   args: {
     ...defaultProps,
     formData: {
+      currentPassword: "SEcreate123!",
       password: "Secret123!",
       confirmPassword: "Secret123!",
     },

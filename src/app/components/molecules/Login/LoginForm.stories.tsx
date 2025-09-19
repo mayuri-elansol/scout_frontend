@@ -76,7 +76,7 @@ const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
 };
 
 const meta: Meta<typeof LoginForm> = {
-  title: "Molecules/Login/LoginForm",
+  title: "Components/Molecules/LoginForm",
   component: LoginForm,
   parameters: {
     layout: "fullscreen",
