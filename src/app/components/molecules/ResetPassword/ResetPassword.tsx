@@ -14,7 +14,7 @@ import {
     Button,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
-import { useRouter } from "next/navigation"; // ✅ correct import
+import { useRouter } from "next/navigation"; 
 
 import { ResetPasswordFormData } from "./ResetPassword.type";
 

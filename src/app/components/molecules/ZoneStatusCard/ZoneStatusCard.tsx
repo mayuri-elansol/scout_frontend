@@ -4,8 +4,6 @@ import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Circle } from "@mui/icons-material";
-import ScoutProgressBar from "../../atoms/ProgressBar/ProgressBar";
-
 interface ZoneStatusCardProps {
   zoneName: string;
   currentPersonnel: number;
@@ -105,13 +103,11 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
     }
   };
 
-  // Calculate personnel percentage
   const personnelPercentage = Math.min(
     (currentPersonnel / requiredPersonnel) * 100,
     100
   );
 
-  // Extract nested ternary into a separate variable
   let personnelColor: "success" | "warning" | "error";
   if (personnelPercentage >= 100) {
     personnelColor = "success";
@@ -218,14 +214,14 @@ const ZoneStatusCard: React.FC<ZoneStatusCardProps> = ({
         </Box>
 
         {/* Personnel Progress Bar */}
-        <ScoutProgressBar
+        {/* <ScoutProgressBar
           value={personnelPercentage}
           variant="capacity"
           size="small"
           showLabel={false}
           showPercentage={false}
           color={personnelColor}
-        />
+        /> */}
       </CardContent>
     </StyledCard>
   );
