@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "@/app/theme/theme";
-import ForgotPasswordForm, {
-  ForgotPasswordFormData,
-} from "@/app/components/molecules/ForgotPassword/ForgotPassword";
+import ForgotPasswordForm from "@/app/components/molecules/ForgotPassword/ForgotPassword";
+import { ForgotPasswordFormData } from "@/app/components/molecules/ForgotPassword/ForgotPassword.types";
+
 const ForgotPasswordPage: React.FC = () => {
   const [formData, setFormData] = useState<ForgotPasswordFormData>({
     password: "",

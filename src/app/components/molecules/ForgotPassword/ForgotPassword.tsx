@@ -4,47 +4,38 @@ import React from "react";
 import {
   CardContent,
   TextField,
-  IconButton,
   InputAdornment,
-  Alert,
   Typography,
   Box,
-  Paper,
+  IconButton,
 } from "@mui/material";
-import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
-
-export interface ForgotPasswordFormData {
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ForgotPasswordFormProps {
-  formData: ForgotPasswordFormData;
-  showPassword: boolean;
-  showConfirmPassword: boolean;
-  isLoading: boolean;
-  error: string;
-  onInputChange: (
-    field: keyof ForgotPasswordFormData
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onTogglePassword: () => void;
-  onToggleConfirmPassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
-  setError: (error: string) => void;
-}
+import { Lock, Visibility, VisibilityOff } from "@mui/icons-material";
+import { useForm } from "react-hook-form";
+import {
+  ForgotPasswordFormData,
+  ForgotPasswordFormProps,
+} from "./ForgotPassword.types";
 
 const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
-  formData,
+  onTogglePassword,
   showPassword,
+  onToggleConfirmPassword,
   showConfirmPassword,
   isLoading,
-  error,
-  onInputChange,
-  onTogglePassword,
-  onToggleConfirmPassword,
-  onSubmit,
-  setError,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ForgotPasswordFormData>({
+    mode: "onChange",
+  });
+
+  const onSubmit = (data: ForgotPasswordFormData) => {
+    console.log("Form submitted:", data);
+  };
+
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -60,35 +51,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
         Enter your new password below
       </Typography>
 
-      <form onSubmit={onSubmit} autoComplete="off">
-        {error && (
-          <Paper
-            elevation={1}
-            sx={{
-              mb: 3,
-              p: 2,
-              backgroundColor: "#fff5f5",
-              border: "1px solid #fecaca",
-              borderRadius: 2,
-            }}
-          >
-            <Alert
-              severity="error"
-              sx={{
-                backgroundColor: "transparent",
-                "& .MuiAlert-message": {
-                  color: "#dc2626",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                },
-              }}
-              onClose={() => setError("")}
-            >
-              {error}
-            </Alert>
-          </Paper>
-        )}
-
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* New Password */}
         <Box sx={{ mb: 3 }}>
           <Typography
@@ -108,10 +71,27 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             fullWidth
             variant="outlined"
             type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={onInputChange("password")}
             placeholder="Enter your new password"
             disabled={isLoading}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+              pattern: { value: /^\d+$/, message: "Only digits allowed" },
+            })}
+            // slotProps={{
+            //   input: {
+            //     startAdornment: (
+            //       <InputAdornment position="start">
+            //         <Lock sx={{ color: "#6b7280" }} />
+            //       </InputAdornment>
+            //     ),
+            //   },
+            // }}
             slotProps={{
               input: {
                 startAdornment: (
@@ -154,10 +134,25 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             fullWidth
             variant="outlined"
             type={showConfirmPassword ? "text" : "password"}
-            value={formData.confirmPassword}
-            onChange={onInputChange("confirmPassword")}
             placeholder="Enter your confirm password"
             disabled={isLoading}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
+            {...register("confirmPassword", {
+              required: "Confirm password is required",
+              validate: (value) =>
+                value === watch("password") || "Passwords do not match",
+            })}
+            // slotProps={{
+            //   input: {
+            //     startAdornment: (
+            //       <InputAdornment position="start">
+            //         <Lock sx={{ color: "#6b7280" }} />
+            //       </InputAdornment>
+            //     ),
+            //   },
+            // }}
+
             slotProps={{
               input: {
                 startAdornment: (
@@ -191,17 +186,17 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             fontWeight: 600,
             textTransform: "none",
             backgroundColor:
-              isLoading || !formData.confirmPassword || !formData.password
+              isLoading || !watch("password") || !watch("confirmPassword")
                 ? "#e5e7eb"
                 : "#1976d2",
             color:
-              isLoading || !formData.confirmPassword || !formData.password
+              isLoading || !watch("password") || !watch("confirmPassword")
                 ? "#9ca3af"
                 : "#ffffff",
             border: "none",
             borderRadius: "8px",
             cursor:
-              isLoading || !formData.confirmPassword || !formData.password
+              isLoading || !watch("password") || !watch("confirmPassword")
                 ? "not-allowed"
                 : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
@@ -209,7 +204,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
             fontFamily: "inherit",
           }}
           disabled={
-            isLoading || !formData.password || !formData.confirmPassword
+            isLoading || !watch("password") || !watch("confirmPassword")
           }
         >
           {isLoading ? "Updating..." : "Update Password"}

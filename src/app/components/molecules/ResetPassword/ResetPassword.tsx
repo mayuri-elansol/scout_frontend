@@ -6,50 +6,37 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  Alert,
   Typography,
   Box,
-  Paper,
 } from "@mui/material";
 import { Visibility, VisibilityOff, Lock } from "@mui/icons-material";
-
-export interface ResetPasswordFormData {
-  currentPassword: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ResetPasswordFormProps {
-  formData: ResetPasswordFormData;
-  showCurrentPassword: boolean;
-  showPassword: boolean;
-  showConfirmPassword: boolean;
-  isLoading: boolean;
-  error: string;
-  onInputChange: (
-    field: keyof ResetPasswordFormData
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onToggleCurrentPassword: () => void;
-  onTogglePassword: () => void;
-  onToggleConfirmPassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
-  setError: (error: string) => void;
-}
+import { useForm } from "react-hook-form";
+import {
+  ResetPasswordFormData,
+  ResetPasswordFormProps,
+} from "@/app/components/molecules/ResetPassword/ResetPassword.type";
 
 const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
-  formData,
+  isLoading,
   showCurrentPassword,
   showPassword,
   showConfirmPassword,
-  isLoading,
-  error,
-  onInputChange,
+  onToggleConfirmPassword,
   onToggleCurrentPassword,
   onTogglePassword,
-  onToggleConfirmPassword,
-  onSubmit,
-  setError,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<ResetPasswordFormData>({
+    mode: "onChange",
+  });
+  const onSubmit = (data: ResetPasswordFormData) => {
+    console.log("Form submitted reset password:", data);
+  };
+
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -62,38 +49,10 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
         variant="body1"
         sx={{ color: "#5c6b7d", fontSize: "16px", marginBottom: "25px" }}
       >
-        Enter your new password below
+        Reset your new password below
       </Typography>
 
-      <form onSubmit={onSubmit} autoComplete="off">
-        {error && (
-          <Paper
-            elevation={1}
-            sx={{
-              mb: 3,
-              p: 2,
-              backgroundColor: "#fff5f5",
-              border: "1px solid #fecaca",
-              borderRadius: 2,
-            }}
-          >
-            <Alert
-              severity="error"
-              sx={{
-                backgroundColor: "transparent",
-                "& .MuiAlert-message": {
-                  color: "#dc2626",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                },
-              }}
-              onClose={() => setError("")}
-            >
-              {error}
-            </Alert>
-          </Paper>
-        )}
-
+      <form onSubmit={handleSubmit(onSubmit)}>
         {/* Current Password */}
         <Box sx={{ mb: 3.2 }}>
           <Typography
@@ -113,10 +72,13 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fullWidth
             variant="outlined"
             type={showCurrentPassword ? "text" : "password"}
-            value={formData.currentPassword}
-            onChange={onInputChange("currentPassword")}
             placeholder="Enter your current password"
             disabled={isLoading}
+            error={!!errors.currentPassword}
+            helperText={errors.currentPassword?.message}
+            {...register("currentPassword", {
+              required: "Current password is required",
+            })}
             slotProps={{
               input: {
                 startAdornment: (
@@ -159,10 +121,18 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fullWidth
             variant="outlined"
             type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={onInputChange("password")}
             placeholder="Enter your new password"
             disabled={isLoading}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            {...register("password", {
+              required: "New password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+              pattern: { value: /^\d+$/, message: "Only digits allowed" },
+            })}
             slotProps={{
               input: {
                 startAdornment: (
@@ -205,10 +175,15 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fullWidth
             variant="outlined"
             type={showConfirmPassword ? "text" : "password"}
-            value={formData.confirmPassword}
-            onChange={onInputChange("confirmPassword")}
             placeholder="Enter your confirm password"
             disabled={isLoading}
+            error={!!errors.confirmPassword}
+            helperText={errors.confirmPassword?.message}
+            {...register("confirmPassword", {
+              required: "Confirm password is required",
+              validate: (value) =>
+                value === watch("password") || "Passwords do not match",
+            })}
             slotProps={{
               input: {
                 startAdornment: (
@@ -243,25 +218,25 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             textTransform: "none",
             backgroundColor:
               isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              !watch("currentPassword") ||
+              !watch("password") ||
+              !watch("confirmPassword")
                 ? "#e5e7eb"
                 : "#1976d2",
             color:
               isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              !watch("currentPassword") ||
+              !watch("password") ||
+              !watch("confirmPassword")
                 ? "#9ca3af"
                 : "#ffffff",
             border: "none",
             borderRadius: "8px",
             cursor:
               isLoading ||
-              !formData.confirmPassword ||
-              !formData.password ||
-              !formData.currentPassword
+              !watch("currentPassword") ||
+              !watch("password") ||
+              !watch("confirmPassword")
                 ? "not-allowed"
                 : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
@@ -270,12 +245,12 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           }}
           disabled={
             isLoading ||
-            !formData.currentPassword ||
-            !formData.password ||
-            !formData.confirmPassword
+            !watch("currentPassword") ||
+            !watch("password") ||
+            !watch("confirmPassword")
           }
         >
-          {isLoading ? "Reseing..." : "Reset Password"}
+          {isLoading ? "Resetting..." : "Reset Password"}
         </button>
       </form>
     </CardContent>

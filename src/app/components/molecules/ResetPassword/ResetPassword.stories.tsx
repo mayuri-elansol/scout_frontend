@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import ResetPasswordForm from "./ResetPassword";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import React from "react";
+import ResetPasswordForm, { ResetPasswordFormData } from "./ResetPassword";
 
 const meta: Meta<typeof ResetPasswordForm> = {
   title: "Components/Molecules/ResetPasswordForm",
@@ -12,18 +13,22 @@ type Story = StoryObj<typeof ResetPasswordForm>;
 
 const defaultProps = {
   formData: {
+    currentPassword: "",
     password: "",
     confirmPassword: "",
-  },
+  } as ResetPasswordFormData,
+  showCurrentPassword: false,
   showPassword: false,
   showConfirmPassword: false,
   isLoading: false,
   error: "",
   onInputChange:
-    (field: "password" | "confirmPassword") =>
+    (field: keyof ResetPasswordFormData) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
       console.log(`Changed ${field}:`, e.target.value);
     },
+  onToggleCurrentPassword: () =>
+    console.log("Toggle current password visibility"),
   onTogglePassword: () => console.log("Toggle password visibility"),
   onToggleConfirmPassword: () =>
     console.log("Toggle confirm password visibility"),
@@ -50,7 +55,7 @@ export const Filled: Story = {
   args: {
     ...defaultProps,
     formData: {
-      currentPassword: "SEcreate123!",
+      currentPassword: "Current123!",
       password: "Secret123!",
       confirmPassword: "Secret123!",
     },

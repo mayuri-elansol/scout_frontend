@@ -8,7 +8,6 @@ import LoginForm from "../../components/molecules/Login/LoginForm";
 interface LoginFormData {
   username: string;
   password: string;
-  rememberMe: boolean;
 }
 
 interface User {
@@ -18,28 +17,11 @@ interface User {
 
 const Login: React.FC = () => {
   const router = useRouter();
-  const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
-    password: "",
-    rememberMe: false,
-  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const handleInputChange =
-    (field: keyof LoginFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value =
-        event.target.type === "checkbox"
-          ? event.target.checked
-          : event.target.value;
-      setFormData((prev) => ({ ...prev, [field]: value }));
-      if (error) setError("");
-    };
-
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (data: LoginFormData) => {
     setError("");
     setIsLoading(true);
 
@@ -49,8 +31,7 @@ const Login: React.FC = () => {
       const users: User[] = await response.json();
 
       const foundUser = users.find(
-        (u) =>
-          u.username === formData.username && u.password === formData.password
+        (u) => u.username === data.username && u.password === data.password
       );
 
       if (foundUser) {
@@ -80,16 +61,12 @@ const Login: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
       <LoginForm
-        formData={formData}
         showPassword={showPassword}
         isLoading={isLoading}
         error={error}
-        onInputChange={handleInputChange}
         onTogglePassword={handleTogglePassword}
         onSubmit={handleSubmit}
-        setError={setError}
       />
     </ThemeProvider>
   );

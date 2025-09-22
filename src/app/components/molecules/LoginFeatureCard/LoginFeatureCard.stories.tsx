@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import LoginFeatureCard from "./LoginFeatureCard";
 import { Lock, Security, Analytics } from "@mui/icons-material";
 

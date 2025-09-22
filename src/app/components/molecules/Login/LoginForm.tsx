@@ -1,16 +1,13 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import {
   CardContent,
   TextField,
   IconButton,
   InputAdornment,
-  Alert,
   Typography,
   Box,
-  Paper,
 } from "@mui/material";
 import {
   Visibility,
@@ -18,35 +15,29 @@ import {
   Lock,
   AccountCircle,
 } from "@mui/icons-material";
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
-
-interface LoginFormProps {
-  formData: LoginFormData;
-  showPassword: boolean;
-  isLoading: boolean;
-  error: string;
-  onInputChange: (
-    field: keyof LoginFormData
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onTogglePassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
-  setError: (error: string) => void;
-}
+import { useForm } from "react-hook-form";
+import {
+  LoginFormData,
+  LoginFormProps,
+} from "@/app/components/molecules/Login/Login.types";
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  formData,
   showPassword,
   isLoading,
   error,
-  onInputChange,
   onTogglePassword,
-  onSubmit,
-  setError,
+  // onSubmit,
 }) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    mode: "onChange",
+  });
+  const onSubmit = (data: LoginFormData) => {
+    console.log("Form submitted login data:", data);
+  };
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -62,35 +53,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         Sign in to access your surveillance analytics portal
       </Typography>
 
-      <form onSubmit={onSubmit} autoComplete="off">
-        {error && (
-          <Paper
-            elevation={1}
-            sx={{
-              mb: 3,
-              p: 2,
-              backgroundColor: "#fff5f5",
-              border: "1px solid #fecaca",
-              borderRadius: 2,
-            }}
-          >
-            <Alert
-              severity="error"
-              sx={{
-                backgroundColor: "transparent",
-                "& .MuiAlert-message": {
-                  color: "#dc2626",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                },
-              }}
-              onClose={() => setError("")}
-            >
-              {error}
-            </Alert>
-          </Paper>
-        )}
-
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {/* Username */}
         <Box sx={{ mb: 3.2 }}>
           <Typography
@@ -109,16 +72,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <TextField
             fullWidth
             variant="outlined"
-            value={formData.username}
-            onChange={onInputChange("username")}
             placeholder="Enter your username"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
+            error={!!errors.username}
+            helperText={errors.username?.message}
+            {...register("username", {
+              required: "Username is required",
+            })}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <AccountCircle sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -142,27 +110,32 @@ const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
             variant="outlined"
             type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={onInputChange("password")}
             placeholder="Enter your password"
             disabled={isLoading}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Lock sx={{ color: "#6b7280" }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onTogglePassword}
-                    edge="end"
-                    disabled={isLoading}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+            })}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Lock sx={{ color: "#6b7280" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={onTogglePassword}
+                      edge="end"
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Box>
@@ -170,27 +143,18 @@ const LoginForm: React.FC<LoginFormProps> = ({
         {/* Button */}
         <button
           type="submit"
-          disabled={isLoading || !formData.username || !formData.password}
+          disabled={isLoading}
           style={{
             width: "100%",
             padding: "14px 16px",
             fontSize: "16px",
             fontWeight: 600,
             textTransform: "none",
-            backgroundColor:
-              isLoading || !formData.username || !formData.password
-                ? "#e5e7eb"
-                : "#1976d2",
-            color:
-              isLoading || !formData.username || !formData.password
-                ? "#9ca3af"
-                : "#ffffff",
+            backgroundColor: isLoading ? "#e5e7eb" : "#1976d2",
+            color: isLoading ? "#9ca3af" : "#ffffff",
             border: "none",
             borderRadius: "8px",
-            cursor:
-              isLoading || !formData.username || !formData.password
-                ? "not-allowed"
-                : "pointer",
+            cursor: isLoading ? "not-allowed" : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
             transition: "all 0.2s ease-in-out",
             fontFamily: "inherit",
