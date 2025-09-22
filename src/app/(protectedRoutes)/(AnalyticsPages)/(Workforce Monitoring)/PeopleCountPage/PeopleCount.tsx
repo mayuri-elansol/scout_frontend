@@ -116,7 +116,7 @@ const PeopleCount: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            People count in factory Premises
+            People Count in Factory Premises based on Entry Exit Counting
           </Typography>
         </Box>
       </Box>

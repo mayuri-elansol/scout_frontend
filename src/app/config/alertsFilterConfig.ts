@@ -65,7 +65,7 @@ export const alertsFilterConfig: AlertsFilterConfig = {
         "Unauthorized Access in Restricted Areas",
         "Face Recognition for Entry/Exit Logging, (Attendance system Lite)",
         "Monitoring Canteen Usage & Timings",
-        "Employee Idle Time Monitoring",
+        "Employee Idle Time Monitoring ",
       ],
     },
   ],

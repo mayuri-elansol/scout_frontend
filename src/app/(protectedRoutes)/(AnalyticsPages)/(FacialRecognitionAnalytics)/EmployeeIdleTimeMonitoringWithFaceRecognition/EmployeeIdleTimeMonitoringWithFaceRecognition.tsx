@@ -11,7 +11,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 
-const EmployeeIdleTimeMonitoring: React.FC = () => {
+const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   const EmpIdleTimeKpiData = [
     {
@@ -118,7 +118,7 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Employee Idle Time Monitoring
+            Employee Idle Time Monitoring With Face Recognition
           </Typography>
         </Box>
       </Box>
@@ -255,4 +255,4 @@ const EmployeeIdleTimeMonitoring: React.FC = () => {
   );
 };
 
-export default EmployeeIdleTimeMonitoring;
+export default EmployeeIdleTimeMonitoringWithFaceRecognition;

@@ -26,5 +26,6 @@
   "unauthorized-access":true,
   "face-recognition":true,
   "monitoring-canteen-usage":true,
-  "employee-idle-without-face-recognition":true
+  "employee-idle-time":true,
+  "employee-idle-with-face-recognition":true
 }
