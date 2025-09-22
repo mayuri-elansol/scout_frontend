@@ -85,7 +85,7 @@ const Dashboard: React.FC = () => {
         flexDirection: "column",
         minHeight: "100vh",
         backgroundColor: "#f5f7fa",
-        p: 2,
+        // p: 2,
       }}
     >
       {/* KPI Cards Grid */}

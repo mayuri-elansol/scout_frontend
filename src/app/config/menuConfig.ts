@@ -129,9 +129,9 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     icon: People,
     items: [
       {
-        name: "Employee Idle Time Monitoring",
-        page: "employee-idle-without-face-recognition",
-        path: "/EmployeeIdleTimeWithoutFaceRecognition",
+        name: "Employee Idle Time Monitoring ",
+        page: "employee-idle-time",
+        path: "/EmployeeIdleTime",
       },
       {
         name: "Employee presence detection in critical areas",
@@ -196,9 +196,9 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
         path: "/MonitoringCanteenUsage&Timings",
       },
       {
-        name: "Employee Idle Time Monitoring",
-        page: "employee-idle",
-        path: "/EmployeeIdleTimeMonitoring",
+        name: "Employee Idle Time Monitoring with Face Recognition",
+        page: "employee-idle-with-face-recognition",
+        path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
       },
     ],
   },
