@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { ReactNode, useState } from "react";
 import {
   Box,
@@ -21,26 +21,21 @@ import {
   Circle,
 } from "@mui/icons-material";
 
-
-
-
-
 const LiveStreaming: React.FC = () => {
   const [aiProcessingEnabled, setAiProcessingEnabled] = useState(true);
-type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
+  type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
 
-interface VideoState {
-  playing: boolean;
-  muted: boolean;
-}
+  interface VideoState {
+    playing: boolean;
+    muted: boolean;
+  }
 
-const [videoStates, setVideoStates] = useState<Record<ZoneId, VideoState>>({
-  "zone-a": { playing: false, muted: true },
-  "zone-b": { playing: false, muted: true },
-  "zone-c": { playing: false, muted: true },
-  "zone-d": { playing: false, muted: true },
-});
-
+  const [videoStates, setVideoStates] = useState<Record<ZoneId, VideoState>>({
+    "zone-a": { playing: false, muted: true },
+    "zone-b": { playing: false, muted: true },
+    "zone-c": { playing: false, muted: true },
+    "zone-d": { playing: false, muted: true },
+  });
 
   const topMetrics = [
     {
@@ -70,83 +65,88 @@ const [videoStates, setVideoStates] = useState<Record<ZoneId, VideoState>>({
   ];
 
   const cameraZones = [
-  {
-    id: "zone-a" as ZoneId,
-    name: "Production Zone A",
-    status: <>LIVE</>,
-    roiDetection: <>ROI DETECTION</>,
-    worker: <>{'Worker #2'}</>, // wrap as React element
-    compliance: <>87.5%</>,
-    people: <>234</>,
-    violations: <>3</>,
-    noHelmet: <>12</>,
-  },
-  {
-    id: "zone-b" as ZoneId,
-    name: "Warehouse Zone B",
-    status: <>LIVE</>,
-    roiDetection: <>ROI DETECTION</>,
-    worker: <>{'Worker #4'}</>,
-    compliance: <>92.3%</>,
-    people: <>45</>,
-    violations: <>1</>,
-    noHelmet: <>2</>,
-  },
-  {
-    id: "zone-c" as ZoneId,
-    name: "Assembly Zone C",
-    status: <>LIVE</>,
-    roiDetection: <>ROI DETECTION</>,
-    worker: <></>, // empty element
-    compliance: <>95.1%</>,
-    people: <>67</>,
-    violations: <>0</>,
-    noHelmet: <>1</>,
-  },
-  {
-    id: "zone-d" as ZoneId,
-    name: "Loading Dock Zone D",
-    status: <>LIVE</>,
-    roiDetection: <>ROI DETECTION</>,
-    worker: <></>,
-    compliance: <></>,
-    people: <>0</>,
-    violations: <>0</>,
-    noHelmet: <>0</>,
-  },
-];
-
-
-const toggleVideo = (zoneId: ZoneId) => {
-  setVideoStates((prev) => ({
-    ...prev,
-    [zoneId]: {
-      ...prev[zoneId],
-      playing: !prev[zoneId].playing,
+    {
+      id: "zone-a" as ZoneId,
+      name: "Production Zone A",
+      status: <>LIVE</>,
+      roiDetection: <>ROI DETECTION</>,
+      worker: <>{"Worker #2"}</>, // wrap as React element
+      compliance: <>87.5%</>,
+      people: <>234</>,
+      violations: <>3</>,
+      noHelmet: <>12</>,
     },
-  }));
-};
-
-const toggleMute = (zoneId: ZoneId) => {
-  setVideoStates((prev) => ({
-    ...prev,
-    [zoneId]: {
-      ...prev[zoneId],
-      muted: !prev[zoneId].muted,
+    {
+      id: "zone-b" as ZoneId,
+      name: "Warehouse Zone B",
+      status: <>LIVE</>,
+      roiDetection: <>ROI DETECTION</>,
+      worker: <>{"Worker #4"}</>,
+      compliance: <>92.3%</>,
+      people: <>45</>,
+      violations: <>1</>,
+      noHelmet: <>2</>,
     },
-  }));
-};
+    {
+      id: "zone-c" as ZoneId,
+      name: "Assembly Zone C",
+      status: <>LIVE</>,
+      roiDetection: <>ROI DETECTION</>,
+      worker: <></>, // empty element
+      compliance: <>95.1%</>,
+      people: <>67</>,
+      violations: <>0</>,
+      noHelmet: <>1</>,
+    },
+    {
+      id: "zone-d" as ZoneId,
+      name: "Loading Dock Zone D",
+      status: <>LIVE</>,
+      roiDetection: <>ROI DETECTION</>,
+      worker: <></>,
+      compliance: <></>,
+      people: <>0</>,
+      violations: <>0</>,
+      noHelmet: <>0</>,
+    },
+  ];
 
-const CameraFeed = ({ zone }: { zone: {
-  noHelmet: ReactNode;
-  people: ReactNode;
-  violations: ReactNode;
-  compliance: ReactNode;
-  status: ReactNode;
-  roiDetection: ReactNode;
-  worker: React.JSX.Element; id: ZoneId; name: string 
-} }) => {
-  const videoState = videoStates[zone.id];
+  const toggleVideo = (zoneId: ZoneId) => {
+    setVideoStates((prev) => ({
+      ...prev,
+      [zoneId]: {
+        ...prev[zoneId],
+        playing: !prev[zoneId].playing,
+      },
+    }));
+  };
+
+  const toggleMute = (zoneId: ZoneId) => {
+    setVideoStates((prev) => ({
+      ...prev,
+      [zoneId]: {
+        ...prev[zoneId],
+        muted: !prev[zoneId].muted,
+      },
+    }));
+  };
+
+  const CameraFeed = ({
+    zone,
+  }: {
+    zone: {
+      noHelmet: ReactNode;
+      people: ReactNode;
+      violations: ReactNode;
+      compliance: ReactNode;
+      status: ReactNode;
+      roiDetection: ReactNode;
+      worker: React.JSX.Element;
+      id: ZoneId;
+      name: string;
+    };
+  }) => {
+    const videoState = videoStates[zone.id];
     return (
       <Card sx={{ height: "100%" }}>
         <Box sx={{ position: "relative", p: 2, pb: 1 }}>
@@ -435,7 +435,7 @@ const CameraFeed = ({ zone }: { zone: {
       {/* Top Metrics */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {topMetrics.map((metric, index) => (
-          <Grid size={{xs:12,sm:6,md:3}} key={index}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index + 1}>
             <Paper
               sx={{
                 p: 3,
@@ -466,7 +466,7 @@ const CameraFeed = ({ zone }: { zone: {
       {/* Camera Feeds Grid */}
       <Grid container spacing={3}>
         {cameraZones.map((zone) => (
-          <Grid  size={{xs:12,lg:6,xl:6}} key={zone.id}>
+          <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={zone.id}>
             <CameraFeed zone={zone} />
           </Grid>
         ))}

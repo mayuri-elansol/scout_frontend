@@ -1,17 +1,13 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
 import {
   CardContent,
   TextField,
   IconButton,
   InputAdornment,
-  Alert,
   Typography,
   Box,
-  Button,
-  Paper,
 } from "@mui/material";
 import {
   Visibility,
@@ -19,73 +15,47 @@ import {
   Lock,
   AccountCircle,
 } from "@mui/icons-material";
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
-
-interface LoginFormProps {
-  formData: LoginFormData;
-  showPassword: boolean;
-  isLoading: boolean;
-  error: string;
-  onInputChange: (
-    field: keyof LoginFormData
-  ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onTogglePassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
-  setError: (error: string) => void;
-}
+import { useForm } from "react-hook-form";
+import {
+  LoginFormData,
+  LoginFormProps,
+} from "@/app/components/molecules/Login/Login.types";
 
 const LoginForm: React.FC<LoginFormProps> = ({
-  formData,
   showPassword,
   isLoading,
   error,
-  onInputChange,
   onTogglePassword,
-  onSubmit,
-  setError,
+  // onSubmit,
 }) => {
-  const router = useRouter();
-
-  const handleForgotPassword = () => {
-    router.push("/ForgotPassword");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    mode: "onChange",
+  });
+  const onSubmit = (data: LoginFormData) => {
+    console.log("Form submitted login data:", data);
   };
-
   return (
     <CardContent sx={{ padding: 4 }}>
-      <form onSubmit={onSubmit} autoComplete="off">
-        {error && (
-          <Paper
-            elevation={1}
-            sx={{
-              mb: 3,
-              p: 2,
-              backgroundColor: "#fff5f5",
-              border: "1px solid #fecaca",
-              borderRadius: 2,
-            }}
-          >
-            <Alert
-              severity="error"
-              sx={{
-                backgroundColor: "transparent",
-                "& .MuiAlert-message": {
-                  color: "#dc2626",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                },
-              }}
-              onClose={() => setError("")}
-            >
-              {error}
-            </Alert>
-          </Paper>
-        )}
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: 700, mb: 1, color: "#336590", fontSize: "28px" }}
+      >
+        Welcome
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{ color: "#5c6b7d", fontSize: "16px", marginBottom: "25px" }}
+      >
+        Sign in to access your surveillance analytics portal
+      </Typography>
 
-        <Box sx={{ mb: 3 }}>
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
+        {/* Username */}
+        <Box sx={{ mb: 3.2 }}>
           <Typography
             component="label"
             variant="body2"
@@ -102,13 +72,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <TextField
             fullWidth
             variant="outlined"
-            value={formData.username}
-            onChange={onInputChange("username")}
             placeholder="Enter your username"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
+            disabled={isLoading}
+            error={!!errors.username}
+            helperText={errors.username?.message}
+            {...register("username", {
+              required: "Username is required",
+            })}
             slotProps={{
               input: {
                 startAdornment: (
@@ -118,47 +88,10 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 ),
               },
             }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#fafafa",
-                borderRadius: 2,
-                transition: "all 0.2s ease-in-out",
-                "& fieldset": {
-                  borderColor: "#e5e7eb",
-                  borderWidth: "2px",
-                },
-                "&:hover": {
-                  backgroundColor: "#ffffff",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                },
-                "&.Mui-focused": {
-                  backgroundColor: "#ffffff",
-                  boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                },
-                "& input": {
-                  "&:-webkit-autofill": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                    WebkitTextFillColor: "#1c2025 !important",
-                    transition: "background-color 5000s ease-in-out 0s",
-                  },
-                  "&:-webkit-autofill:hover": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                  },
-                  "&:-webkit-autofill:focus": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                  },
-                },
-              },
-            }}
-            disabled={isLoading}
           />
         </Box>
 
+        {/* Password */}
         <Box sx={{ mb: 3 }}>
           <Typography
             component="label"
@@ -177,9 +110,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
             fullWidth
             variant="outlined"
             type={showPassword ? "text" : "password"}
-            value={formData.password}
-            onChange={onInputChange("password")}
             placeholder="Enter your password"
+            disabled={isLoading}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            {...register("password", {
+              required: "Password is required",
+            })}
             slotProps={{
               input: {
                 startAdornment: (
@@ -200,117 +137,27 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 ),
               },
             }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: "#fafafa",
-                borderRadius: 2,
-                transition: "all 0.2s ease-in-out",
-                "& fieldset": {
-                  borderColor: "#e5e7eb",
-                  borderWidth: "2px",
-                },
-                "&:hover": {
-                  backgroundColor: "#ffffff",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                },
-                "&.Mui-focused": {
-                  backgroundColor: "#ffffff",
-                  boxShadow: "0 0 0 3px rgba(25, 118, 210, 0.1)",
-                  "& fieldset": {
-                    borderColor: "#1976d2",
-                  },
-                },
-                "& input": {
-                  "&:-webkit-autofill": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                    WebkitTextFillColor: "#1c2025 !important",
-                    transition: "background-color 5000s ease-in-out 0s",
-                  },
-                  "&:-webkit-autofill:hover": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                  },
-                  "&:-webkit-autofill:focus": {
-                    WebkitBoxShadow: "0 0 0 1000px #ffffff inset !important",
-                  },
-                },
-              },
-            }}
-            disabled={isLoading}
           />
         </Box>
 
-        {/* Forgot Password Link */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 4 }}>
-          <Button
-            variant="text"
-            size="small"
-            onClick={handleForgotPassword}
-            disabled={isLoading}
-            sx={{
-              textTransform: "none",
-              fontSize: "15px",
-              color: "#1976d2",
-              fontWeight: 600,
-              padding: "4px 8px",
-              "&:hover": {
-                backgroundColor: "rgba(25, 118, 210, 0.04)",
-                textDecoration: "none",
-              },
-            }}
-          >
-            Forgot Password?
-          </Button>
-        </Box>
-
+        {/* Button */}
         <button
           type="submit"
-          disabled={isLoading || !formData.username || !formData.password}
+          disabled={isLoading}
           style={{
             width: "100%",
             padding: "14px 16px",
             fontSize: "16px",
             fontWeight: 600,
             textTransform: "none",
-            backgroundColor:
-              isLoading || !formData.username || !formData.password
-                ? "#e5e7eb"
-                : "#1976d2",
-            color:
-              isLoading || !formData.username || !formData.password
-                ? "#9ca3af"
-                : "#ffffff",
+            backgroundColor: isLoading ? "#e5e7eb" : "#1976d2",
+            color: isLoading ? "#9ca3af" : "#ffffff",
             border: "none",
             borderRadius: "8px",
-            cursor:
-              isLoading || !formData.username || !formData.password
-                ? "not-allowed"
-                : "pointer",
+            cursor: isLoading ? "not-allowed" : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",
             transition: "all 0.2s ease-in-out",
             fontFamily: "inherit",
-          }}
-          onMouseEnter={(e) => {
-            if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.backgroundColor = "#1565c0";
-              e.currentTarget.style.boxShadow =
-                "0 4px 12px rgba(25, 118, 210, 0.3)";
-              e.currentTarget.style.transform = "translateY(-1px)";
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.backgroundColor = "#1976d2";
-              e.currentTarget.style.boxShadow =
-                "0 2px 8px rgba(25, 118, 210, 0.2)";
-              e.currentTarget.style.transform = "translateY(0)";
-            }
-          }}
-          onMouseDown={(e) => {
-            if (!isLoading && formData.username && formData.password) {
-              e.currentTarget.style.transform = "translateY(0)";
-            }
           }}
         >
           {isLoading ? "Signing In..." : "Sign In"}

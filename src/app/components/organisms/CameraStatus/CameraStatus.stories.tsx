@@ -96,7 +96,7 @@ export const DashboardLayout: Story = {
 
         {/* Camera Status - 35% width as in dashboard */}
         <Box sx={{ flex: "1 1 35%", minWidth: "300px" }}>
-          <CameraStatus />
+          <CameraStatus cameraZones={[]} />
         </Box>
       </Box>
     </Box>

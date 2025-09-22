@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -10,14 +11,12 @@ import {
   Shield,
   Place,
   Schedule,
-  Error,
-  BarChart,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-import { complianceByZone } from "../PeopleCountPage/PeopleCount";
-
+import { CameraZone } from "@/app/types";
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
@@ -80,37 +79,17 @@ const EmployeePresence: React.FC = () => {
       bgColor: "#e8f5e9",
       icon: Schedule,
     },
-    {
-      title: "Emergency Readiness",
-      value: "HIGH",
-      subtitle: "8 certified responders active",
-      trend: "Ready",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Error,
-    },
-    {
-      title: "Zone Utilization Analysis",
-      value: "78%",
-      subtitle: "Average zone utilization",
-      trend: "+3%",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: BarChart,
-    },
   ];
 
   const activePersonnel = [
     {
-      title: "John Mitchell - Level 3 Operator", // name + certification
-      location: "Reactor Control Room", // zone
-      time: "Day Shift", // shift
-      Id: "EMP-4521", // employeeId
-      severity: "N/A", // no severity in personnel data
-      status: "ACTIVE", // status
-      bgColor: "#e8f5e9", // from personnel
+      title: "John Mitchell - Level 3 Operator",
+      location: "Reactor Control Room",
+      time: "Day Shift",
+      Id: "EMP-4521",
+      severity: "N/A",
+      status: "ACTIVE",
+      bgColor: "#e8f5e9",
       imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
@@ -144,6 +123,22 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=14",
     },
   ];
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
+  const KpiCardLoading = false;
+
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
   return (
     <Box>
@@ -158,23 +153,30 @@ const EmployeePresence: React.FC = () => {
             Employee presence detection in critical areas
           </Typography>
         </Box>
-
-        <Typography
-          variant="body2"
-          sx={{ fontSize: "14px", color: "#666", fontStyle: "italic" }}
-        >
-          Model/Technique used: Person detection model + face detection + face
-          recognition fine tuning + custom training
-        </Typography>
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {employeeKpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            employeeKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -182,22 +184,22 @@ const EmployeePresence: React.FC = () => {
         {/* Active Critical Zone Personnel */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label=" Active Critical Zone Personnel"
+            label="Recent Violations"
             violations={activePersonnel}
-            onViewAll={() => console.log("View all clicked")}
+            loading={false}
           />
         </Grid>
         {/* Critical Zones Status */}
         {/* item xs={12} lg={4} */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
       {/* Employee Presence Report */}
       <ReportTable
-        title="Employee Presence Report"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -205,9 +207,6 @@ const EmployeePresence: React.FC = () => {
           { id: "employeeId", label: "Employee ID", minWidth: 120 },
           { id: "certification", label: "Certification", minWidth: 120 },
           { id: "shift", label: "Shift", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Resolution", minWidth: 150 },
         ]}
         data={[
           {
@@ -343,6 +342,8 @@ const EmployeePresence: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-report"
+        isDownload={true}
+        loading={false}
       />
     </Box>
   );

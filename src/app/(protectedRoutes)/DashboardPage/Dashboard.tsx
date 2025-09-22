@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { KpiData } from "@/app/types";
+import { CameraZone, KpiData } from "@/app/types";
 import { Box, Grid } from "@mui/material";
 import {
   Shield,
@@ -9,11 +9,11 @@ import {
   Visibility,
   People,
   DirectionsCar,
-  Schedule,
-  Place,
 } from "@mui/icons-material";
 
-import { ActivityFeed, CameraStatus } from "@/app/components/organisms";
+import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
+
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
@@ -24,106 +24,60 @@ const Dashboard: React.FC = () => {
   const kpiData: KpiData[] = [
     {
       title: t("PPE Compliance"),
-      value: "87.5%",
-      subtitle: "3 violations in last hour",
-      trend: "-2.3%",
-      trendColor: "#f44336",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
+      value: "10",
       icon: Shield,
     },
     {
-      title: t("Fire Incidents"),
+      title: t("Fire & Smoke Voilations"),
       value: "0",
-      subtitle: "All systems operational",
-      trend: "Clear",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
       icon: Warning,
     },
     {
       title: "Security Breach",
       value: "1",
-      subtitle: "Gate 3 unauthorized access",
-      trend: "Active",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
       icon: Visibility,
     },
     {
       title: "Employees Present",
       value: "234",
-      subtitle: "98.3% attendance rate",
-      trend: "+5.2%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
       icon: People,
     },
     {
-      title: "Total People",
+      title: "Total People Inside",
       value: "267",
-      subtitle: "Including 33 visitors",
-      trend: "+12",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
       icon: People,
     },
     {
-      title: "Avg Speed (km/h)",
+      title: "Speed Voilations",
       value: "15",
-      subtitle: "2 speed violations",
-      trend: "2 alerts",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
       icon: DirectionsCar,
     },
     {
-      title: "Vehicles Tracked",
+      title: "Vehicles Count",
       value: "45",
-      subtitle: "License plates recognized",
-      trend: "99.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
       icon: DirectionsCar,
     },
-    {
-      title: "Avg Work Hours",
-      value: "7.2",
-      subtitle: "89% efficiency rate",
-      trend: "+1.8%",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-    },
-    {
-      title: "Zone Occupancy",
-      value: "85%",
-      subtitle: "Within safe limits",
-      trend: "Normal",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Place,
-    },
+
     {
       title: "Crowd Alert",
       value: "1",
-      subtitle: "Cafeteria overcrowding",
-      trend: "1 alert",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
       icon: People,
     },
   ];
 
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
   return (
     <Box
       sx={{
@@ -131,25 +85,68 @@ const Dashboard: React.FC = () => {
         flexDirection: "column",
         minHeight: "100vh",
         backgroundColor: "#f5f7fa",
-        p: 2,
+        // p: 2,
       }}
     >
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {kpiData.map((kpi) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={kpi.title}>
-            <KpiCard {...kpi} />
+        {kpiData.map((kpi, index) => (
+          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
+            <KpiCard {...kpi} route="/PPEDetectionPage" />
           </Grid>
         ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 60%", minWidth: "400px", mb: 2 }}>
-          <ActivityFeed />
+        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
+          <ActivityFeed
+            loading={false}
+            activities={[
+              {
+                time: "11:12 AM",
+                event: "PPE Violation Detected",
+                zone: "Production Floor - Camera 3",
+                severity: "high",
+                icon: Shield,
+              },
+              {
+                time: "11:08 AM",
+                event: "Vehicle Speed Limit Exceeded",
+                zone: "Parking Lot - Camera 7",
+                severity: "medium",
+                icon: DirectionsCar,
+              },
+              {
+                time: "11:05 AM",
+                event: "Unauthorized Access Attempt",
+                zone: "Gate 2 - Camera 12",
+                severity: "high",
+                icon: Visibility,
+              },
+              {
+                time: "11:02 AM",
+                event: "Employee Check-in",
+                zone: "Main Entrance - Camera 1",
+                severity: "low",
+                icon: People,
+              },
+              {
+                time: "10:58 AM",
+                event: "Fire Safety Equipment Check",
+                zone: "Assembly Line - Camera 5",
+                severity: "low",
+                icon: Shield,
+              },
+            ]}
+          />
         </Box>
-        <Box sx={{ flex: "1 1 35%", minWidth: "300px", mb: 2 }}>
-          <CameraStatus />
+        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
+          <CameraStatus
+            cameraZones={cameraZones}
+            loading={false}
+            maxheight={600}
+          />
         </Box>
       </Box>
     </Box>

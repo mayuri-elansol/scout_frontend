@@ -10,14 +10,16 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Chip,
   TextField,
   MenuItem,
   Menu,
   Skeleton,
+  IconButton,
+  Card,
+  TablePagination,
 } from "@mui/material";
-import { Description } from "@mui/icons-material";
+import { Description, Visibility, Download } from "@mui/icons-material";
 
 interface ReportColumn {
   id: string;
@@ -50,6 +52,9 @@ interface ReportTableProps {
   onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
   loading?: boolean;
   isSubmitDisabled?: boolean;
+  onView?: (row: ReportData) => void;
+  onDownload?: (row: ReportData) => void;
+  isDownload: boolean;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -62,9 +67,14 @@ const ReportTable: React.FC<ReportTableProps> = ({
   onExport,
   loading = false,
   isSubmitDisabled,
+  onView,
+  onDownload,
+  isDownload,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [page, setPage] = useState(0);
+  const rowsPerPage = 6;
 
   /** Filter Change Handler */
   const handleFilterChange = (id: string, value: string) => {
@@ -194,8 +204,8 @@ const ReportTable: React.FC<ReportTableProps> = ({
     return null;
   };
 
-  /** Table Rows (avoids nested ternary) */
-  let tableRows;
+  /** Table Rows */
+  let tableRows: React.ReactElement[] = [];
   if (loading) {
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
@@ -204,13 +214,24 @@ const ReportTable: React.FC<ReportTableProps> = ({
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
+        <TableCell
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <Skeleton variant="circular" width={24} height={24} />
+          <Skeleton variant="circular" width={24} height={24} />
+        </TableCell>
       </TableRow>
     ));
   } else if (filteredData.length > 0) {
     tableRows = filteredData.map((row, index) => (
       <TableRow
         key={index + 1}
-        sx={{ "&:hover": { backgroundColor: "#f9f9f9" } }}
+        sx={{ "&:hover": { backgroundColor: "#ffffff" } }}
       >
         {columns.map((column) => (
           <TableCell
@@ -221,21 +242,37 @@ const ReportTable: React.FC<ReportTableProps> = ({
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
+        <TableCell align="center" sx={{ py: 1.5 }}>
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => onView?.(row)}
+          >
+            <Visibility fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => onDownload?.(row)}
+          >
+            <Download fontSize="small" />
+          </IconButton>
+        </TableCell>
       </TableRow>
     ));
   } else {
-    tableRows = (
-      <TableRow>
-        <TableCell colSpan={columns.length} align="center" sx={{ py: 4 }}>
+    tableRows = [
+      <TableRow key="no-data">
+        <TableCell colSpan={columns.length + 1} align="center" sx={{ py: 4 }}>
           <Typography>No matching records found</Typography>
         </TableCell>
-      </TableRow>
-    );
+      </TableRow>,
+    ];
   }
 
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ borderRadius: 2, overflow: "hidden" }}>
+      <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
         {/* Header */}
         <Box
           sx={{
@@ -243,7 +280,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
             flexDirection: "column",
             gap: 2,
             p: 3,
-            backgroundColor: "#f8f9fa",
+            backgroundColor: "#ffffff",
             borderBottom: "1px solid #e0e0e0",
           }}
         >
@@ -280,21 +317,21 @@ const ReportTable: React.FC<ReportTableProps> = ({
             >
               <Button
                 size="small"
-                variant="contained"
+                variant="outlined"
                 onClick={() => onSubmit?.(filterValues)}
                 disabled={isSubmitDisabled}
               >
                 Submit
               </Button>
-
-              <Button
-                size="small"
-                variant="outlined"
-                onClick={handleDownloadClick}
-              >
-                Download
-              </Button>
-
+              {isDownload && (
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={handleDownloadClick}
+                >
+                  Download
+                </Button>
+              )}
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -321,7 +358,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
               <Button
                 size="small"
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 onClick={() => {
                   setFilterValues({});
                   onReset?.();
@@ -337,7 +374,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
         <TableContainer>
           <Table>
             <TableHead>
-              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+              <TableRow sx={{ backgroundColor: "#ffffff" }}>
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
@@ -353,12 +390,39 @@ const ReportTable: React.FC<ReportTableProps> = ({
                     {column.label}
                   </TableCell>
                 ))}
+                <TableCell
+                  align="center"
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "14px",
+                    color: "#333",
+                    py: 2,
+                    minWidth: 100,
+                  }}
+                >
+                  Actions
+                </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>{tableRows}</TableBody>
+            <TableBody>
+              {tableRows.slice(
+                page * rowsPerPage,
+                page * rowsPerPage + rowsPerPage
+              )}
+            </TableBody>
           </Table>
         </TableContainer>
-      </Paper>
+
+        {/* Pagination */}
+        <TablePagination
+          component="div"
+          count={tableRows.length}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[]}
+        />
+      </Card>
     </Box>
   );
 };

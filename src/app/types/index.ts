@@ -44,11 +44,7 @@ export interface Breadcrumb {
 export interface KpiData {
   title: string;
   value: string;
-  subtitle: string;
-  trend: string;
-  trendColor: string;
-  color: string;
-  bgColor: string;
+
   icon: SvgIconComponent;
 }
 
@@ -73,16 +69,21 @@ export type PageType =
   | "alerts"
   | "reports"
   | "settings"
-  |"STPOverflowDetection-detection"
-  |"emergency-exit-blockage-detection"
-  |"crowd-gathering-in-hazardous-zones-detection"
-  |"camera-tampering"
-  |"people-presence"
-  |"employee-idle"
-  |"mobile-phone-usage"
-  |"sleeping-absence-security-personnel"
-  |"vehicle-count"
-  |"tracking-vehicle"
+  | "STPOverflowDetection-detection"
+  | "emergency-exit-blockage-detection"
+  | "crowd-gathering-in-hazardous-zones-detection"
+  | "camera-tampering"
+  | "people-presence"
+  | "employee-idle-with-face-recognition"
+  | "mobile-phone-usage"
+  | "sleeping-absence-security-personnel"
+  | "vehicle-count"
+  | "tracking-vehicle"
+  | "unauthorized-parking"
+  | "employee-idle-time"
+  | "face-recognition"
+  | "unauthorized-access"
+  | "monitoring-canteen-usage";
 
 // Component Props Types
 export interface SidebarProps {
@@ -116,15 +117,11 @@ export interface ActivityData {
 
 // Camera Status Types
 export interface CameraZone {
-  id?: string;
-  zone?: string; // Legacy support
-  name?: string;
-  status?: "online" | "offline" | "warning";
-  cameras?: number;
-  active?: number;
-  total?: number;
-  priority?: string;
-  shift?: string;
+  zone: string;
+  active: number;
+  offline: number;
+  tempred: number;
+  total: number;
 }
 
 // Analytics Data Types

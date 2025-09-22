@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
+import { CameraZone } from "@/app/types";
 
 const PPEDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -75,35 +76,26 @@ const PPEDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-  const complianceByZone = [
-    {
-      zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "good",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 88,
-      violations: 5,
-      cameras: "6/6",
-      status: "warning",
-    },
-    {
-      zone: "Welding Area",
-      compliance: 95,
-      violations: 1,
-      cameras: "4/4",
-      status: "excellent",
-    },
-  ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
     startDate?: string;
     endDate?: string;
   }
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
     // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
@@ -116,7 +108,13 @@ const PPEDetection: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const KpiCardLoading = true;
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = () => {
+    console.log("view single row");
+  };
+  const KpiCardLoading = false;
   return (
     <Box>
       {/* Page Header */}
@@ -137,16 +135,19 @@ const PPEDetection: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
-            ppeKpiData.map((kpi) => (
+            ppeKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
+                key={index + 1}
               >
                 <KpiCard {...kpi} />
               </Grid>
@@ -158,32 +159,27 @@ const PPEDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent PPE Violations"
+            label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
-            loading={true}
+            loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} loading={true} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
       {/* PPE Violations Report */}
       <ReportTable
-        title="PPE Violations Report"
+        title="Detailed Report"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "employeeId", label: "Employee ID", minWidth: 120 },
           { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
         ]}
         data={[
           {
@@ -256,8 +252,11 @@ const PPEDetection: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
-        loading={true}
+        loading={false}
+        isDownload={true}
       />
     </Box>
   );

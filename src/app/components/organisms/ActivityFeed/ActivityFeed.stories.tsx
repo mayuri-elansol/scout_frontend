@@ -75,7 +75,7 @@ export const DashboardLayout: Story = {
       >
         {/* Activity Feed - 60% width as in dashboard */}
         <Box sx={{ flex: "1 1 60%", minWidth: "400px" }}>
-          <ActivityFeed />
+          <ActivityFeed activities={[]} loading={false} />
         </Box>
 
         {/* Placeholder for Camera Status - 35% width */}

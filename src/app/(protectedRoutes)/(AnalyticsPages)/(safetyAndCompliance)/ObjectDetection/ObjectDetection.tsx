@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -12,10 +13,29 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
-
+import { CameraZone } from "@/app/types";
+import { v4 as uuidv4 } from "uuid";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
+    {
+      title: "Hard hat missing",
+      location: "Production Zone A",
+      time: "14:32",
+      Id: "W-4521",
+      severity: "HIGH",
+      status: "ACTIVE",
+      imageUrl: "https://picsum.photos/400/200?random=1",
+    },
+    {
+      title: "Safety vest not worn",
+      location: "Warehouse Zone B",
+      time: "14:18",
+      Id: "W-3847",
+      severity: "MEDIUM",
+      status: "ACKNOWLEDGED",
+      imageUrl: "https://picsum.photos/400/200?random=2",
+    },
     {
       title: "Hard hat missing",
       location: "Production Zone A",
@@ -88,30 +108,48 @@ const ObjectDetection: React.FC = () => {
       icon: Warning,
     },
   ];
-  const complianceByZone = [
+  const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "excellent",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
     },
-    {
-      zone: "Warehouse",
-      compliance: 75,
-      violations: 2,
-      cameras: "6/6",
-      status: "good",
-    },
-    {
-      zone: "Assembly Line",
-      compliance: 84,
-      violations: 5,
-      cameras: "7/8",
-      status: "warning",
-    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
+  interface FilterParams {
+    zone?: string;
+    status?: string;
+    priority?: string;
+    minOccupancy?: string;
+    maxOccupancy?: string;
+    startDate?: string;
+    endDate?: string;
+  }
 
+  const handleSubmitFilter = async (filters: FilterParams) => {
+    console.log("Selected Filters:", filters);
+  };
+
+  const handleReset = () => {
+    console.log("reset button clickedd");
+  };
+
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested clikcedd:", format);
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = () => {
+    console.log("view single row");
+  };
+  const KpiCardLoading = false;
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
       {/* Page Header */}
@@ -128,13 +166,26 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {ObjectDetectionKpiData.map((kpi, index) => (
-          // item xs={12} sm={6} md={4} lg={3}
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
-            <KpiCard {...kpi} />
-          </Grid>
-        ))}
+      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+        {KpiCardLoading
+          ? // Show skeletons while loading
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : // Show actual KPI cards
+            ObjectDetectionKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -142,22 +193,21 @@ const ObjectDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Object Violations"
+            label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
+            loading={false}
           />
         </Grid>
-        {/* PPE Compliance by Zone */}
 
+        {/* PPE Compliance by Zone */}
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
       {/* Object detection Report */}
-
       <ReportTable
-        title="People Count Report"
+        title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
           { id: "timestamp", label: "Timestamp", minWidth: 80 },
@@ -165,9 +215,6 @@ const ObjectDetection: React.FC = () => {
           { id: "currentCount", label: "Current Count", minWidth: 100 },
           { id: "capacity", label: "Capacity", minWidth: 80 },
           { id: "occupancy", label: "Occupancy %", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action", minWidth: 150 },
         ]}
         data={[
           {
@@ -177,9 +224,6 @@ const ObjectDetection: React.FC = () => {
             currentCount: "245",
             capacity: "300",
             occupancy: "82%",
-            status: "ACTIVE",
-            priority: "Medium",
-            resolution: "Normal operations",
           },
           {
             recordId: "PC-7891",
@@ -188,9 +232,6 @@ const ObjectDetection: React.FC = () => {
             currentCount: "180",
             capacity: "150",
             occupancy: "120%",
-            status: "OVERCROWDED",
-            priority: "Critical",
-            resolution: "Crowd dispersal initiated",
           },
           {
             recordId: "PC-7890",
@@ -247,6 +288,38 @@ const ObjectDetection: React.FC = () => {
             priority: "Low",
             resolution: "Adequate parking space",
           },
+          {
+            recordId: "PC-7892",
+            timestamp: "15:42",
+            zone: "Main Factory Floor",
+            currentCount: "245",
+            capacity: "300",
+            occupancy: "82%",
+          },
+          {
+            recordId: "PC-7891",
+            timestamp: "15:28",
+            zone: "Cafeteria",
+            currentCount: "180",
+            capacity: "150",
+            occupancy: "120%",
+          },
+          {
+            recordId: "PC-7892",
+            timestamp: "15:42",
+            zone: "Main Factory Floor",
+            currentCount: "245",
+            capacity: "300",
+            occupancy: "82%",
+          },
+          {
+            recordId: "PC-7891",
+            timestamp: "15:28",
+            zone: "Cafeteria",
+            currentCount: "180",
+            capacity: "150",
+            occupancy: "120%",
+          },
         ]}
         filters={[
           {
@@ -263,24 +336,25 @@ const ObjectDetection: React.FC = () => {
               "Parking Lot",
             ],
           },
+
           {
-            id: "status",
-            label: "Status",
-            type: "select",
-            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
-          },
-          {
-            id: "priority",
-            label: "Priority",
-            type: "select",
-            options: ["Critical", "Medium", "Low"],
+            id: "recordId",
+            label: "Record Id",
+            type: "text",
           },
           { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
           { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="people-count-report"
+        isDownload={true}
+        loading={false}
       />
     </Box>
   );

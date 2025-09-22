@@ -1,12 +1,13 @@
 import React from "react";
-import { ReportTable } from "@/app/components/organisms";
-import KpiCard  from "@/app/components/molecules/KpiCard/KpiCard";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneNotification from "@/app/components/molecules/ZoneNotification/ZoneNotification";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
+import { CameraZone } from "@/app/types";
 
 const CrowdGathering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
@@ -73,28 +74,18 @@ const CrowdGathering: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-  const complianceByZone = [
+  const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
-      compliance: 92,
-      violations: 3,
-      cameras: "8/10",
-      status: "good",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
     },
-    {
-      zone: "Assembly Line",
-      compliance: 88,
-      violations: 5,
-      cameras: "6/6",
-      status: "warning",
-    },
-    {
-      zone: "Welding Area",
-      compliance: 95,
-      violations: 1,
-      cameras: "4/4",
-      status: "excellent",
-    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
   interface FilterParams {
     status?: string;
@@ -104,7 +95,6 @@ const CrowdGathering: React.FC = () => {
   }
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
-    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
 
   const handleReset = () => {
@@ -156,16 +146,15 @@ const CrowdGathering: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
-            label="Recent Crowd Gathering in Hazardous Zones"
+            label="Recent Violations"
             violations={recentViolations}
-            onViewAll={() => console.log("View all clicked")}
             loading={false}
           />
         </Grid>
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneNotification zones={complianceByZone} loading={false} />
+          <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
@@ -256,6 +245,7 @@ const CrowdGathering: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
+        isDownload={true}
       />
     </Box>
   );

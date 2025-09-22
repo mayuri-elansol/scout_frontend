@@ -1,10 +1,11 @@
-// src/store/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import featureFlagsReducer from "./fetureFlag";
+import toasterReducer from "../../../src/app/components/organisms/toaster/toasterSlice";
+import featureFlagsReducer from "./fetureFlagSlice";
 import languageReducer from "./languageSlice";
 
 export const store = configureStore({
   reducer: {
+    toasterGlobal: toasterReducer, // ✅ correct key
     featureFlags: featureFlagsReducer,
     language: languageReducer,
   },

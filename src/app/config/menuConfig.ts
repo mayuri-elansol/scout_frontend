@@ -2,14 +2,16 @@
 import { PageType } from "../types/index";
 import {
   Home,
-  BarChart,
   Shield,
   Visibility,
   People,
   Settings,
   VideoCall,
   Warning,
-} from "@mui/icons-material";
+  
+  
+ DirectionsCar } from "@mui/icons-material";
+import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
@@ -127,23 +129,26 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     icon: People,
     items: [
       {
-        name: "Employee Idle Time Monitoring",
-        page: "employee-idle",
+        name: "Employee Idle Time Monitoring ",
+        page: "employee-idle-time",
         path: "/EmployeeIdleTime",
       },
-         {
+      {
         name: "Employee presence detection in critical areas",
         page: "employee-presence",
         path: "/EmployeePresencePage",
-      },   {
+      },
+      {
         name: "Mobile Phone Usage in Restricted Areas",
         page: "mobile-phone-usage",
         path: "/MobilePhoneUsage",
-      },   {
+      },
+      {
         name: "People Count in Factory Premises based on Entry Exit person Counting",
         page: "people-count",
         path: "/PeopleCountPage",
-      },   {
+      },
+      {
         name: "Sleeping or Absence of Security Personnel",
         page: "sleeping-absence-security-personnel",
         path: "/SleepingSecurityPersonnel",
@@ -152,18 +157,49 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
   },
   {
     title: "Vehicle Operational Insight",
-    icon: BarChart,
+    icon: DirectionsCar,
     items: [
       {
         name: "Vehicle Count & ANPR at Entry/Exit Gates",
         page: "vehicle-count",
         path: "/VehicleCount",
       },
-       {
+      {
         name: "Tracking Vehicle Unloading/Loading Time",
         page: "tracking-vehicle",
         path: "/VehicleUnloadingLoading",
-      }
+      },
+      {
+        name: "Unauthorized Parking or Equipment Blocking Aisles",
+        page: "unauthorized-parking",
+        path: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+      },
+    ],
+  },
+  {
+    title: "Facial Recognition Analytics",
+    icon: FaceRecognitionIcon,
+    items: [
+      {
+        name: "Unauthorized Access in Restricted Areas",
+        page: "unauthorized-access",
+        path: "/UnauthorizedAccessInRestrictedAreas",
+      },
+      {
+        name: "Face Recognition for Entry/Exit Logging",
+        page: "face-recognition",
+        path: "/FaceRecognition",
+      },
+      {
+        name: "Monitoring Canteen Usage & Timings",
+        page: "monitoring-canteen-usage",
+        path: "/MonitoringCanteenUsage&Timings",
+      },
+      {
+        name: "Employee Idle Time Monitoring with Face Recognition",
+        page: "employee-idle-with-face-recognition",
+        path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
+      },
     ],
   },
 ];

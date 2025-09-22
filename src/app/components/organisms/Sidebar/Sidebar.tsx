@@ -196,31 +196,32 @@ CategorySection.displayName = "CategorySection";
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
 
-  const is1200_1250 = useMediaQuery(
-    "(min-width:1200px) and (max-width:1249px)"
-  );
-  const is1250_1400 = useMediaQuery(
-    "(min-width:1250px) and (max-width:1399px)"
-  );
-  const is1400_1520 = useMediaQuery(
-    "(min-width:1400px) and (max-width:1519px)"
-  );
-  const is1520_1700 = useMediaQuery(
-    "(min-width:1520px) and (max-width:1699px)"
-  );
+  // const is1200_1250 = useMediaQuery(
+  //   "(min-width:1200px) and (max-width:1249px)"
+  // );
+  // const is1250_1400 = useMediaQuery(
+  //   "(min-width:1250px) and (max-width:1399px)"
+  // );
+  // const is1400_1520 = useMediaQuery(
+  //   "(min-width:1400px) and (max-width:1519px)"
+  // );
+  // const is1520_1700 = useMediaQuery(
+  //   "(min-width:1520px) and (max-width:1699px)"
+  // );
 
-  let drawerWidth: string = "16vw";
-  if (is1200_1250) {
-    drawerWidth = "24vw";
-  } else if (is1250_1400) {
-    drawerWidth = "22vw";
-  } else if (is1400_1520) {
-    drawerWidth = "20vw";
-  } else if (is1520_1700) {
-    drawerWidth = "18vw";
-  }
-  // else if (is1700plus) {
-  //   drawerWidth = "16vw";
+  // const is1200Down = useMediaQuery("(min-width:100px) and (max-width:1200px)");
+//16vw
+  let drawerWidth: string = "315px";
+  // if (is1200_1250) {
+  //   drawerWidth = "24vw";
+  // } else if (is1250_1400) {
+  //   drawerWidth = "22vw";
+  // } else if (is1400_1520) {
+  //   drawerWidth = "20vw";
+  // } else if (is1520_1700) {
+  //   drawerWidth = "18vw";
+  // } else if (is1200Down) {
+  //   drawerWidth = "260px !important";
   // }
 
   const pathname = usePathname();
@@ -380,38 +381,38 @@ const Sidebar: React.FC<SidebarProps> = () => {
           borderRight: "none",
           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
           p: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
         },
       }}
     >
-      {/* <Box
-        sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
-      > */}
+      {/* Menu Content */}
       <Box sx={{ flex: 1 }}>{menuContent}</Box>
 
-      <Box sx={{ borderTop: "1px solid #e0e0e0", pt: 1, mx: -2, px: 2 }}>
+      {/* Footer */}
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 1,
+        }}
+      >
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontSize: "13px", color: "#666" }}>
-              Powered by
-            </Typography>
-            <Box
-              component="img"
-              src="/elansol_technologies_logo.jpg"
-              alt="Elansol Logo"
-              sx={{ height: 50, width: "auto" }}
-              loading="lazy"
-            />
-          </Box>
-        </Box>
+          component="img"
+          src="/scoutLogo.png"
+          alt="Elansol Logo"
+          sx={{ height: 50, width: "auto" }}
+          loading="lazy"
+        />
+        <Typography sx={{ fontSize: "13px", color: "#666" }}>
+          &copy; 2025 Elansol Technologies. <br />
+          All rights reserved.
+        </Typography>
       </Box>
-      {/* </Box> */}
     </Drawer>
   );
 };
