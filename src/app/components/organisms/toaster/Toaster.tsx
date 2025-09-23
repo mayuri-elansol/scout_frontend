@@ -43,6 +43,7 @@ export default function Toaster() {
         position: "fixed",
         top: "65px",
         right: "10px",
+
         display: "flex",
         flexDirection: "column",
         gap: 1,

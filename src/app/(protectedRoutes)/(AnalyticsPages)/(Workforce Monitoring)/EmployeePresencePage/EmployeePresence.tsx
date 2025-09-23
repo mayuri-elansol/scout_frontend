@@ -2,7 +2,7 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
@@ -17,6 +17,7 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import LockPersonIcon from "@mui/icons-material/LockPerson";
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
@@ -145,7 +146,7 @@ const EmployeePresence: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <People sx={{ fontSize: 28, color: "#2196f3" }} />
+          <LockPersonIcon sx={{ fontSize: 28, color: "#2196f3" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
