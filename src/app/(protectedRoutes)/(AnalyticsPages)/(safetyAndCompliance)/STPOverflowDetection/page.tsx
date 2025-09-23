@@ -1,5 +1,3 @@
-"use client";
-
 import STPOverflowDetection from "./STPOverflowDetection";
 
 export default function PPEDetectionPage() {

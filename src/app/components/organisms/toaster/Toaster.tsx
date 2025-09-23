@@ -61,7 +61,7 @@ export default function Toaster() {
             alignItems: "center",
             color: "#fff !important",
             "& .MuiAlert-icon": { color: "#fff !important" },
-            backgroundColor: getBgColor(toast.severity), // ✅ cleaner
+            backgroundColor: getBgColor(toast.severity),
           }}
         >
           {toast.message}

@@ -47,19 +47,6 @@ Displays alert statistics with color-coded indicators used in the System Alerts 
       control: "text",
       description: "The label describing the statistic",
     },
-    color: {
-      control: "color",
-      description: "Color for the value text",
-    },
-    borderColor: {
-      control: "color",
-      description: "Color for the card border",
-    },
-    size: {
-      control: "select",
-      options: ["small", "medium", "large"],
-      description: "Size variant of the card",
-    },
   },
 };
 
@@ -70,8 +57,6 @@ export const TotalAlerts: Story = {
   args: {
     value: "10",
     label: "Total Alerts",
-    color: "#666",
-    borderColor: "#e0e0e0",
   },
   parameters: {
     docs: {
@@ -86,8 +71,8 @@ export const ActiveAlerts: Story = {
   args: {
     value: "2",
     label: "Active Alerts",
-    color: "#f44336",
-    borderColor: "#f44336",
+    //   color: "#f44336",
+    //  borderColor: "#f44336",
   },
   parameters: {
     docs: {
@@ -102,8 +87,6 @@ export const CriticalAlerts: Story = {
   args: {
     value: "2",
     label: "Critical",
-    color: "#d32f2f",
-    borderColor: "#d32f2f",
   },
   parameters: {
     docs: {
@@ -118,8 +101,6 @@ export const HighPriorityAlerts: Story = {
   args: {
     value: "3",
     label: "High Priority",
-    color: "#ff9800",
-    borderColor: "#ff9800",
   },
   parameters: {
     docs: {
@@ -144,52 +125,22 @@ export const AlertsGrid: Story = {
       {/* Match exact project implementation - single row layout */}
       <Grid container spacing={2} sx={{ mb: 4 }}>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="10"
-            label="Total Alerts"
-            color="#666"
-            borderColor="#e0e0e0"
-          />
+          <AlertStatsCard value="10" label="Total Alerts" />
         </Grid>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="2"
-            label="Active Alerts"
-            color="#f44336"
-            borderColor="#f44336"
-          />
+          <AlertStatsCard value="2" label="Active Alerts" />
         </Grid>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="2"
-            label="Critical"
-            color="#d32f2f"
-            borderColor="#d32f2f"
-          />
+          <AlertStatsCard value="2" label="Critical" />
         </Grid>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="3"
-            label="High Priority"
-            color="#ff9800"
-            borderColor="#ff9800"
-          />
+          <AlertStatsCard value="3" label="High Priority" />
         </Grid>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="3"
-            label="Medium"
-            color="#ffa726"
-            borderColor="#ffa726"
-          />
+          <AlertStatsCard value="3" label="Medium" />
         </Grid>
         <Grid size={{ xs: 2 }}>
-          <AlertStatsCard
-            value="2"
-            label="Low Priority"
-            color="#4caf50"
-            borderColor="#4caf50"
-          />
+          <AlertStatsCard value="2" label="Low Priority" />
         </Grid>
       </Grid>
     </Box>
@@ -218,31 +169,13 @@ export const SizeVariants: Story = {
     >
       <Grid container spacing={2}>
         <Grid size={{ xs: 4 }}>
-          <AlertStatsCard
-            value="5"
-            label="Small"
-            color="#666"
-            borderColor="#e0e0e0"
-            size="small"
-          />
+          <AlertStatsCard value="5" label="Small" />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <AlertStatsCard
-            value="10"
-            label="Medium"
-            color="#666"
-            borderColor="#e0e0e0"
-            size="medium"
-          />
+          <AlertStatsCard value="10" label="Medium" />
         </Grid>
         <Grid size={{ xs: 4 }}>
-          <AlertStatsCard
-            value="15"
-            label="Large"
-            color="#666"
-            borderColor="#e0e0e0"
-            size="large"
-          />
+          <AlertStatsCard value="15" label="Large" />
         </Grid>
       </Grid>
     </Box>

@@ -14,7 +14,6 @@ import {
   Typography,
   Chip,
   useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import { BarChart, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {
@@ -210,8 +209,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
   // );
 
   // const is1200Down = useMediaQuery("(min-width:100px) and (max-width:1200px)");
-//16vw
-  let drawerWidth: string = "315px";
+  //16vw
+  const drawerWidth: string = "315px";
   // if (is1200_1250) {
   //   drawerWidth = "24vw";
   // } else if (is1250_1400) {
