@@ -3,61 +3,48 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
+import { Shield,NotificationsActive, CheckCircle, Schedule, ReportProblem,Whatshot } from "@mui/icons-material";
 
 const FallDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const fallKpiData = [
-    {
-      title: "PPE Compliance Rate",
-      value: "87.5%",
-      subtitle: "Current compliance level",
-      trend: "-2.3%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Shield,
-    },
-    {
-      title: "PPE Violations Per Day",
-      value: "12",
-      subtitle: "Today's violations",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
-    {
-      title: "PPE Detection Accuracy",
-      value: "94.2%",
-      subtitle: "System accuracy rate",
-      trend: "+1.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Time Since Last Violation",
-      value: "2h 34m",
-      subtitle: "Last incident recorded",
-      trend: "Recent",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-    },
-  ];
 
+
+
+const fallKpiData = [
+  {
+    title: "Total Fall/Laydown/Sleeping Incidents",
+    value: "24", // Count of all records in incident table
+    icon: ReportProblem, // Represents problem/incidents
+  },
+  {
+    title: "Active Alarms",
+    value: "6", // Count of incidents where alarmTriggered = True
+    icon: NotificationsActive, // Represents an active warning/alarm
+  },
+  {
+    title: "Incident-free Zones",
+    value: "3 / 5", // Number of zones with 0 incidents / total zones from settings
+    icon: CheckCircle, // Represents safe/compliant zones
+  },
+  {
+    title: "Time Since Last Incident",
+    value: "1h 42m", // Current timestamp - latest incident createdAt
+    icon: Schedule, // Represents time-related KPI
+  },
+  {
+    title: "Most Incident-Prone Zone",
+    value: "Zone B", // Zone with highest number of incidents
+    icon: Whatshot, // Represents hotspot or high-incident zone
+  },
+];
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -66,7 +53,7 @@ const FallDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",

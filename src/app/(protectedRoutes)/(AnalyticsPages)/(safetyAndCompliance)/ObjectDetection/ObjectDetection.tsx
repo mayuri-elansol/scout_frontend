@@ -20,7 +20,7 @@ const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -29,7 +29,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -38,7 +38,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -47,7 +47,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -57,56 +57,42 @@ const ObjectDetection: React.FC = () => {
   ];
 
   const ObjectDetectionKpiData = [
-    {
-      title: "Total Factory Occupancy",
-      value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
-    },
-    {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
-    },
-    {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
+  {
+    title: "Total Object Detections",
+    value: "1,452",
+ 
+    icon: TrendingUp,
+  },
+  {
+    title: "Unique Objects",
+    value: "12",
+
+    icon: People,
+  },
+  {
+    title: "Active Alarms",
+    value: "5",
+ 
+    icon: Warning,
+  },
+  {
+    title: "Most Detected Object",
+    value: "Helmet",
+ 
+    icon: CheckCircle,
+  },
+  {
+    title: "Most Triggered Zone",
+    value: "warehouse",
+  
+    icon: Place,
+  },
+  {
+    title: "Most Alerting Camera",
+    value: "Cam-04",
+
+    icon: Warning,
+  },
   ];
   const cameraZones: CameraZone[] = [
     {

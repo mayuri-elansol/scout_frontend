@@ -3,61 +3,83 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
+import { Shield, Warning, CheckCircle, CameraAlt, Place, Schedule } from "@mui/icons-material";
 
 const SleepingSecurityPersonnel: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const SleepingSecurityPersonnelKpiData = [
-    {
-      title: "PPE Compliance Rate",
-      value: "87.5%",
-      subtitle: "Current compliance level",
-      trend: "-2.3%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Shield,
-    },
-    {
-      title: "PPE Violations Per Day",
-      value: "12",
-      subtitle: "Today's violations",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
-    {
-      title: "PPE Detection Accuracy",
-      value: "94.2%",
-      subtitle: "System accuracy rate",
-      trend: "+1.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Time Since Last Violation",
-      value: "2h 34m",
-      subtitle: "Last incident recorded",
-      trend: "Recent",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-    },
-  ];
+
+const SleepingSecurityPersonnelKpiData = [
+  {
+    title: "Sleeping Incidents",
+    value: "12", // replace with actual count of sleeping incidents
+    subtitle: "Personnel caught sleeping",
+    trend: "+2",
+    trendColor: "#f44336",
+    color: "#f44336",
+    bgColor: "#ffebee",
+    icon: Warning,
+  },
+  {
+    title: "Absence Incidents",
+    value: "5", // replace with actual count of absence incidents
+    subtitle: "Personnel absent from post",
+    trend: "+1",
+    trendColor: "#ff9800",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
+    icon: Shield,
+  },
+  {
+    title: "Total Incidents",
+    value: "17", // sum of sleeping + absence, without double counting
+    subtitle: "Total incidents recorded",
+    trend: "+3",
+    trendColor: "#f44336",
+    color: "#f44336",
+    bgColor: "#ffebee",
+    icon: CheckCircle,
+  },
+  {
+    title: "Active Cameras with Incidents",
+    value: "4", // unique cameras where incidents occurred
+    subtitle: "Cameras detecting incidents",
+    trend: "Stable",
+    trendColor: "#2196f3",
+    color: "#2196f3",
+    bgColor: "#e3f2fd",
+    icon: CameraAlt,
+  },
+  {
+    title: "Most Incident Zone",
+    value: "Main Gate", // zone with highest incidents
+    subtitle: "Zone with most issues",
+    trend: "Recent",
+    trendColor: "#ff9800",
+    color: "#ff9800",
+    bgColor: "#fff8e1",
+    icon: Place,
+  },
+  {
+    title: "Peak Hour of Incidents",
+    value: "14:00", // hour with maximum incidents
+    subtitle: "Hour with highest incident count",
+    trend: "Today",
+    trendColor: "#4caf50",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
+    icon: Schedule,
+  },
+];
+
 
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -66,7 +88,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
