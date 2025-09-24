@@ -42,51 +42,31 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       title: "Total Factory Occupancy",
       value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+
       icon: People,
     },
     {
       title: "Peak Count Today",
       value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
+
       icon: TrendingUp,
     },
     {
       title: "Most Occupied Zone",
       value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
+
       icon: Place,
     },
     {
       title: "System Performance",
       value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+
       icon: CheckCircle,
     },
     {
       title: "Active Alerts",
       value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
+
       icon: Warning,
     },
   ];
