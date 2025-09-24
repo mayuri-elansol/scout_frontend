@@ -4,8 +4,15 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-import { Visibility, Warning, People, Place, Error } from "@mui/icons-material";
-
+import { Visibility } from "@mui/icons-material";
+import {
+  Security,
+  ReportProblem,
+  ErrorOutline,
+  Login,
+  Dangerous,
+  LocationOn,
+} from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -14,71 +21,40 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
-      title: "Intrusion Attempts",
-      value: "7",
-      subtitle: "Unauthorized access attempts today",
-      trend: "+2",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
-
-    {
-      title: "Active Intruders",
-      value: "2",
-      subtitle: "Currently inside premises",
-      trend: "Active",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: People,
-    },
-    {
-      title: "Security Threat Level",
-      value: "HIGH",
-      subtitle: "Current threat assessment",
-      trend: "Critical",
-      trendColor: "#d32f2f",
-      color: "#d32f2f",
-      bgColor: "#ffcdd2",
-      icon: Error,
-    },
-    {
-      title: "Recent Entries",
-      value: "5",
-      subtitle: "Last 24 hours",
-      trend: "+1",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: People,
-    },
-    {
-      title: "Perimeter Breaches",
-      value: "3",
-      subtitle: "Last hour detections",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Visibility,
-    },
-    {
-      title: "Secure Zones Status",
-      value: "2/5",
-      subtitle: "Compromised zones",
-      trend: "Alert",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
+    title: "Intrusion Attempts",
+    value: "7",
+    icon: Security,
+  },
+  {
+    title: "Active Intruders",
+    value: "2",
+    icon: ReportProblem,
+  },
+  {
+    title: "Security Threat Level",
+    value: "HIGH",
+    icon: ErrorOutline,
+  },
+  {
+    title: "Recent Entries",
+    value: "5",
+    icon: Login,
+  },
+  {
+    title: "Perimeter Breaches",
+    value: "3",
+    icon: Dangerous,
+  },
+  {
+    title: "Compromised Zones Status",
+    value: "2/5",
+    icon: LocationOn,
+  },
   ];
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -87,7 +63,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -96,7 +72,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -105,7 +81,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -115,7 +91,7 @@ const IntrusionDetection: React.FC = () => {
 
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -124,7 +100,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -133,7 +109,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -142,7 +118,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -151,7 +127,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -160,7 +136,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -169,7 +145,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -178,7 +154,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",

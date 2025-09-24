@@ -15,79 +15,62 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { LocalFireDepartment, SmokeFree, Science, OilBarrel } from "@mui/icons-material";
+
+const FireSmokeOilKpiData = [
+  {
+    title: "Fire Incident",
+    value: "267",
+    icon: LocalFireDepartment,
+  },
+  {
+    title: "Smoke Incident",
+    value: "324",
+    icon: SmokeFree,
+  },
+  {
+    title: "Gas Leak",
+    value: "98.7%",
+  }]
 const FireSmokeOilLeakDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+   
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+   
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
 
   const FireSmokeOilKpiData = [
-    {
-      title: "Total Factory Occupancy",
-      value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
-    },
-    {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
-    },
-    {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
+   {
+    title: "Fire Incident",
+    value: "267",
+    icon: LocalFireDepartment,
+  },
+  {
+    title: "Smoke Incident",
+    value: "324",
+    icon: SmokeFree,
+  },
+  {
+    title: "Gas Leak",
+    value: "98.7%",
+    icon: Science,
+  },
+  {
+    title: "Oil Spill",
+    value: "2",
+    icon: OilBarrel,
+  },
   ];
   const cameraZones: CameraZone[] = [
     {

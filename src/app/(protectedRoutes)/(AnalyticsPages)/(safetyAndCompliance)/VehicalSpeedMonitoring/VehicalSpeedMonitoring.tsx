@@ -1,15 +1,14 @@
 "use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
-  People,
-  TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
+  People
+
 } from "@mui/icons-material";
+import { Speed, TrendingUp, DirectionsCar, LocationOn } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -19,75 +18,41 @@ const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+   
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+  
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
 
   const VehicalSpeedMonitoringKpiData = [
-    {
-      title: "Total Factory Occupancy",
-      value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
-    },
-    {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
-    },
-    {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
+ {
+    title: "Speed Violation",
+    value: "267",
+    icon: Speed,
+  },
+  {
+    title: "Highest Speed",
+    value: "324",
+    icon: TrendingUp,
+  },
+  {
+    title: "Total Vehicles Inside",
+    value: "12",
+    icon: DirectionsCar,
+  },
+  {
+    title: "Highest Speed Violation Zones",
+    value: "98.7%",
+    icon: LocationOn,
+  }
   ];
   const cameraZones: CameraZone[] = [
     {
@@ -125,23 +90,23 @@ const VehicalSpeedMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+          skeletonKeys.map((index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : // Show actual KPI cards
-            VehicalSpeedMonitoringKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+          VehicalSpeedMonitoringKpiData.map((kpi, index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
       {/* Content Grid */}
       <Grid container spacing={3}>

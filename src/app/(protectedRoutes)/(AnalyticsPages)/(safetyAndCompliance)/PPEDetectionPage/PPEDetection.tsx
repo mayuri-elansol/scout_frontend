@@ -10,69 +10,47 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
+import { Visibility, LocationOn, Error } from "@mui/icons-material";
 
 const PPEDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   const ppeKpiData = [
     {
-      title: "PPE Compliance Rate",
-      value: "87.5%",
-      subtitle: "Current compliance level",
-      trend: "-2.3%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
+      title: "Total Detection",
+      value: "87",
       icon: Shield,
     },
     {
-      title: "PPE Violations Per Day",
+      title: "Missing Vest",
       value: "12",
-      subtitle: "Today's violations",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      icon: Error,
     },
     {
-      title: "PPE Detection Accuracy",
-      value: "94.2%",
-      subtitle: "System accuracy rate",
-      trend: "+1.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
+      title: "Missing Glasses",
+      value: "9",
+      icon: Visibility, // Glasses / eye protection → Visibility icon fits
     },
     {
-      title: "Time Since Last Violation",
-      value: "2h 34m",
-      subtitle: "Last incident recorded",
-      trend: "Recent",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
+      title: "Unsafe Zone",
+      value: "2",
+      icon: LocationOn,
     },
+
   ];
 
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
@@ -135,23 +113,23 @@ const PPEDetection: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+          skeletonKeys.map((index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : // Show actual KPI cards
-            ppeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+          ppeKpiData.map((kpi, index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Content Grid */}
@@ -175,80 +153,32 @@ const PPEDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "helmet", label: "Helmet", minWidth: 120 },
+          { id: "vest", label: "Vest", minWidth: 80 },
+          { id: "glasses", label: "Glasses", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
+          { id: "createdAt", label: "Created At", minWidth: 120 },
+
         ]}
         data={[
-          {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
-          },
-          {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
-          },
-          {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
-          },
-          {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
-          },
+          { helmet: "YES", vest: "YES", glasses: "NO", zone: "Production Floor A", createdAt: "2025-09-23 15:42" },
+          { helmet: "YES", vest: "YES", glasses: "NO", zone: "Welding Station", createdAt: "2025-09-23 15:28" },
+          { helmet: "YES", vest: "YES", glasses: "NO", zone: "Chemical Storage", createdAt: "2025-09-23 15:15" },
+          { helmet: "YES", vest: "YES", glasses: "NO", zone: "Assembly Line B", createdAt: "2025-09-23 14:58" },
+          { helmet: "NO", vest: "NO", glasses: "YES", zone: "Maintenance Area", createdAt: "2025-09-23 14:32" },
         ]}
-        filters={[
-          { id: "name", label: "Search Name", type: "text" },
-          {
-            id: "employeeId",
-            label: "Employee",
-            type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
-          },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
-        ]}
+
+filters={[
+  { id: "helmet", label: "Helmet", type: "select", options: ["YES", "NO"] },
+  { id: "vest", label: "Vest", type: "select", options: ["YES", "NO"] },
+  { id: "glasses", label: "Glasses", type: "select", options: ["YES", "NO"] },
+  { id: "zone", label: "Zone", type: "text" },
+  { id: "startdate", label: "Start Date", type: "date" }, // will now be datetime
+  { id: "enddate", label: "End Date", type: "date" }, // will now be datetime
+]}
+
+
+
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
