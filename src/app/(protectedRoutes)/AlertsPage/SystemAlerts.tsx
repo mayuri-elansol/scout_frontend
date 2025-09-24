@@ -14,11 +14,12 @@ interface FilterParams {
 
 // 🔹 Common column + filter configs (avoid repetition)
 const reportColumns = [
-  { id: "violationId", label: "Violation ID", minWidth: 120 },
-  { id: "timestamp", label: "Timestamp", minWidth: 80 },
-  { id: "zone", label: "Zone", minWidth: 120 },
-  { id: "employeeId", label: "Employee ID", minWidth: 120 },
-  { id: "violationType", label: "Violation Type", minWidth: 150 },
+  { id: "id", label: "ID", minWidth: 100 },
+  { id: "useCaseType", label: "Use Case Type", minWidth: 200 },
+
+  { id: "zone", label: "Zone", minWidth: 150 },
+  { id: "camera", label: "Camera", minWidth: 150 },
+  { id: "detectionTime", label: "Detection Time", minWidth: 180 },
 ];
 type FilterType = "text" | "select" | "date";
 
@@ -30,39 +31,137 @@ interface ReportFilter {
 }
 
 const reportFilters: ReportFilter[] = [
-  { id: "name", label: "Search Name", type: "text" },
   {
-    id: "employeeId",
-    label: "Employee",
+    id: "useCaseType",
+    label: "Use Case Type",
     type: "select",
-    options: ["David Kim", "Missing", "Resolved"],
+    options: [
+      "PPE Detection",
+      "Object Detection",
+      "Fire/Smoke/Oil/Gas",
+      "Vehicle Speed Monitoring",
+      "Fall Detection",
+      "STP/ETP Overflow Detection",
+      "Emergency Exit Blockage",
+      "Crowd Gathering",
+    ],
   },
-  { id: "createdAt", label: "Start Date", type: "date" },
-  { id: "resolvedAt", label: "End Date", type: "date" },
+
+  {
+    id: "zone",
+    label: "Zone",
+    type: "select",
+    options: [
+      "Zone A",
+      "Walking Bay 3",
+      "Zone B",
+      "Zone C",
+      "Entry Gate 2",
+      "STP Area",
+      "Exit Zone 1",
+      "Hazard Zone 4",
+    ],
+  },
+  {
+    id: "camera",
+    label: "Camera",
+    type: "select",
+    options: [
+      "Camera-01",
+      "Camera-02",
+      "Camera-03",
+      "Camera-04",
+      "Camera-05",
+      "Camera-07",
+      "Camera-08",
+      "Camera-09",
+    ],
+  },
+  { id: "startDate", label: "Start Date", type: "date" },
+  { id: "endDate", label: "End Date", type: "date" },
 ];
 
 // 🔹 Dummy data
 const sampleData = [
   {
-    violationId: "PPE-7892",
-    timestamp: "15:42",
-    zone: "Production Floor A",
-    employeeId: "John Mitchell",
-    violationType: "Missing Hard Hat",
+    id: "SC-001",
+    useCaseType: "PPE Detection",
+    detectionTime: "2025-09-24 08:15",
+    severity: "High",
+    status: "Pending",
+    zone: "Zone A",
+    camera: "Camera-01",
+    snapshot: "https://example.com/snapshot1.jpg",
   },
   {
-    violationId: "PPE-7891",
-    timestamp: "15:28",
-    zone: "Welding Station",
-    employeeId: "Lisa Anderson",
-    violationType: "Improper Safety Glasses",
+    id: "SC-002",
+    useCaseType: "Object Detection",
+    detectionTime: "2025-09-24 09:20",
+    severity: "Medium",
+    status: "Resolved",
+    zone: "Walking Bay 3",
+    camera: "Camera-04",
+    snapshot: "https://example.com/snapshot2.jpg",
   },
   {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
+    id: "SC-003",
+    useCaseType: "Fire/Smoke/Oil/Gas",
+    detectionTime: "2025-09-24 10:05",
+    severity: "High",
+    status: "Pending",
+    zone: "Zone C",
+    camera: "Camera-02",
+    snapshot: "https://example.com/snapshot3.jpg",
+  },
+  {
+    id: "SC-004",
+    useCaseType: "Vehicle Speed Monitoring",
+    detectionTime: "2025-09-24 10:45",
+    severity: "Low",
+    status: "Resolved",
+    zone: "Entry Gate 2",
+    camera: "Camera-07",
+    snapshot: "https://example.com/snapshot4.jpg",
+  },
+  {
+    id: "SC-005",
+    useCaseType: "Fall Detection",
+    detectionTime: "2025-09-24 11:30",
+    severity: "High",
+    status: "Pending",
+    zone: "Zone B",
+    camera: "Camera-05",
+    snapshot: "https://example.com/snapshot5.jpg",
+  },
+  {
+    id: "SC-006",
+    useCaseType: "STP/ETP Overflow Detection",
+    detectionTime: "2025-09-24 12:15",
+    severity: "Medium",
+    status: "In Progress",
+    zone: "STP Area",
+    camera: "Camera-08",
+    snapshot: "https://example.com/snapshot6.jpg",
+  },
+  {
+    id: "SC-007",
+    useCaseType: "Emergency Exit Blockage",
+    detectionTime: "2025-09-24 12:50",
+    severity: "High",
+    status: "Pending",
+    zone: "Exit Zone 1",
+    camera: "Camera-03",
+    snapshot: "https://example.com/snapshot7.jpg",
+  },
+  {
+    id: "SC-008",
+    useCaseType: "Crowd Gathering",
+    detectionTime: "2025-09-24 13:20",
+    severity: "High",
+    status: "In Progress",
+    zone: "Hazard Zone 4",
+    camera: "Camera-09",
+    snapshot: "https://example.com/snapshot8.jpg",
   },
 ];
 
@@ -168,9 +267,107 @@ const SystemAlerts: React.FC = () => {
           <Grid size={{ xs: 12, md: 12 }}>
             <ReportTable
               title="Security Monitoring Alerts"
-              columns={reportColumns}
-              data={sampleData}
-              filters={reportFilters}
+              columns={[
+                { id: "id", label: "ID", minWidth: 100 },
+                { id: "useCaseType", label: "Use Case Type", minWidth: 200 },
+                { id: "detectionTime", label: "Detection Time", minWidth: 180 },
+
+                { id: "zone", label: "Zone", minWidth: 150 },
+                { id: "camera", label: "Camera", minWidth: 150 },
+              ]}
+              data={[
+                {
+                  id: "SM-001",
+                  useCaseType: "Intrusion Detection",
+                  detectionTime: "2025-09-24 07:10",
+                  severity: "High",
+                  status: "Pending",
+                  zone: "Main Gate",
+                  camera: "Camera-11",
+                  snapshot: "https://example.com/intrusion1.jpg",
+                },
+                {
+                  id: "SM-002",
+                  useCaseType: "Camera Tampering",
+                  detectionTime: "2025-09-24 08:45",
+                  severity: "High",
+                  status: "Resolved",
+                  zone: "Zone A",
+                  camera: "Camera-21",
+                  snapshot: "https://example.com/tampering1.jpg",
+                },
+                {
+                  id: "SM-003",
+                  useCaseType: "Camera Offline",
+                  detectionTime: "2025-09-24 09:30",
+                  severity: "Medium",
+                  status: "In Progress",
+                  zone: "Zone B",
+                  camera: "Camera-14",
+                  snapshot: "https://example.com/offline1.jpg",
+                },
+                {
+                  id: "SM-004",
+                  useCaseType: "Camera Online",
+                  detectionTime: "2025-09-24 09:50",
+                  severity: "Low",
+                  status: "Resolved",
+                  zone: "Zone C",
+                  camera: "Camera-18",
+                  snapshot: "https://example.com/online1.jpg",
+                },
+                {
+                  id: "SM-005",
+                  useCaseType: "People Presence During Shutdown",
+                  detectionTime: "2025-09-24 22:10",
+                  severity: "High",
+                  status: "Pending",
+                  zone: "Zone D",
+                  camera: "Camera-25",
+                  snapshot: "https://example.com/presence1.jpg",
+                },
+              ]}
+              filters={[
+                {
+                  id: "useCaseType",
+                  label: "Use Case Type",
+                  type: "select",
+                  options: [
+                    "Intrusion Detection",
+                    "Camera Tampering",
+                    "Camera Offline",
+                    "Camera Online",
+                    "People Presence During Shutdown",
+                  ],
+                },
+
+                {
+                  id: "zone",
+                  label: "Zone",
+                  type: "select",
+                  options: [
+                    "Main Gate",
+                    "Zone A",
+                    "Zone B",
+                    "Zone C",
+                    "Zone D",
+                  ],
+                },
+                {
+                  id: "camera",
+                  label: "Camera",
+                  type: "select",
+                  options: [
+                    "Camera-11",
+                    "Camera-14",
+                    "Camera-18",
+                    "Camera-21",
+                    "Camera-25",
+                  ],
+                },
+                { id: "startDate", label: "Start Date", type: "date" },
+                { id: "endDate", label: "End Date", type: "date" },
+              ]}
               onSubmit={handleSubmitFilter}
               onReset={handleReset}
               onExport={handleExport}
