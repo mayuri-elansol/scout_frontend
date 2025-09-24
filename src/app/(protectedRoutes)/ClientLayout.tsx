@@ -13,8 +13,6 @@ import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/Loader/Loader";
 import RouteLoader from "../../utils/RouteLoader";
 
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface ClientLayoutProps {
   children: ReactNode;
 }
@@ -85,9 +83,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              {children}
-            </LocalizationProvider>
+
+            {children}
           </RouteLoader>
         </Box>
       </Box>
