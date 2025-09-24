@@ -552,21 +552,11 @@ const ReportTable: React.FC<ReportTableProps> = ({
     column: ReportColumn,
     value: string | number | boolean
   ) => {
-    if (column.id === "status") {
-      const colors = getStatusColor(String(value));
+    if (typeof value === "boolean") {
       return (
-        <Chip
-          label={value}
-          size="small"
-          sx={{
-            fontSize: "12px",
-            fontWeight: 500,
-            color: colors.color,
-            backgroundColor: colors.bgColor,
-            height: 24,
-            textTransform: "uppercase",
-          }}
-        />
+        <Typography sx={{ fontSize: "14px", color: "#333" }}>
+          {value ? "True" : "False"}
+        </Typography>
       );
     }
 
