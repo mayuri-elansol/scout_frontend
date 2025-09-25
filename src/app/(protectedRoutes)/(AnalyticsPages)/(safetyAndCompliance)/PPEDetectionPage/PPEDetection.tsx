@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -17,64 +17,170 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import { FilterParams } from "./PPEDetection.types";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const PPEDetection: React.FC = () => {
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<any>(null);
+
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
+  // const ppeKpiData = [
+  //   {
+  //     title: "Total Violations",
+  //     value: "87",
+  //     icon: Shield,
+  //     tooltipMessage: "total voitions ",
+  //   },
+
+  //   {
+  //     title: "Current Unsafe Zone",
+  //     value: "2",
+  //     icon: LocationOn,
+  //   },
+  //   {
+  //     title: "Last Detection Time",
+  //     value: "10:35 AM",
+  //     icon: AccessTime,
+  //   },
+  //   {
+  //     title: "Missing Helmet",
+  //     value: "12",
+  //     icon: EngineeringIcon,
+  //   },
+  //   {
+  //     title: "Missing Vest",
+  //     value: "12",
+  //     icon: Checkroom,
+  //   },
+  //   {
+  //     title: "Missing Glasses",
+  //     value: "9",
+  //     icon: Visibility,
+  //   },
+  // ];
   const ppeKpiData = [
     {
       title: "Total Violations",
       value: "87",
       icon: Shield,
+      tooltipMessage:
+        "Total number of PPE violations detected across all monitored zones.",
     },
-
     {
       title: "Current Unsafe Zone",
       value: "2",
       icon: LocationOn,
+      tooltipMessage:
+        "Number of zones where unsafe PPE compliance was detected.",
     },
     {
       title: "Last Detection Time",
       value: "10:35 AM",
       icon: AccessTime,
+      tooltipMessage: "The time when the last PPE violation was detected.",
     },
     {
       title: "Missing Helmet",
       value: "12",
       icon: EngineeringIcon,
+      tooltipMessage:
+        "Number of detected instances where workers were missing helmets.",
     },
     {
       title: "Missing Vest",
       value: "12",
       icon: Checkroom,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety vests.",
     },
     {
       title: "Missing Glasses",
       value: "9",
       icon: Visibility,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety glasses.",
     },
   ];
 
-  const recentViolations = [
+  const backendData = [
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 101,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Production Floor A",
+      snapshot: "https://picsum.photos/400/200?random=1",
+      cameraid: "CAM-01",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:42",
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 102,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=2",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:28",
+    },
+    {
+      id: 103,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=3",
+      cameraid: "CAM-03",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:15",
+    },
+    {
+      id: 104,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=4",
+      cameraid: "CAM-04",
+      alarmTriggered: false,
+      createdAt: "2025-09-23 14:58",
+    },
+    {
+      id: 105,
+      helmet: false,
+      vest: false,
+      glasses: true,
+      zone: "Maintenance Area",
+      snapshot: "https://picsum.photos/400/200?random=5",
+      cameraid: "CAM-05",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 14:32",
     },
   ];
 
-  interface FilterParams {
-    status?: string;
-    employeeName?: string;
-    startDate?: string;
-    endDate?: string;
-  }
+  // Map backend data to recentViolations format
+  const recentViolations = backendData.map((item) => {
+    let titleParts = [];
+
+    if (item.helmet === false) titleParts.push("Hard hat missing");
+    if (item.vest === false) titleParts.push("Safety vest not worn");
+    if (item.glasses === false) titleParts.push("Safety glasses missing");
+
+    return {
+      Voilation: titleParts.join(", ") || "No violation",
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.cameraid,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  console.log("RELCENTVOLATION DATAA", recentViolations);
+
   const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
@@ -102,8 +208,10 @@ const PPEDetection: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = () => {
-    console.log("view single row");
+  const handleViewSingle = (row: any) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   return (
@@ -150,6 +258,7 @@ const PPEDetection: React.FC = () => {
         {/* Recent PPE Violations */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
+            tooltipMessage="Latest 20 detected PPE violations with details."
             label="Recent Violations"
             violations={recentViolations}
             loading={false}
@@ -158,7 +267,11 @@ const PPEDetection: React.FC = () => {
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+          <CameraStatus
+            cameraZones={cameraZones}
+            loading={false}
+            tooltipMessage="Shows online, offline, and tampered camera counts per zone."
+          />
         </Grid>
       </Grid>
 
@@ -166,66 +279,48 @@ const PPEDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "helmet", label: "Helmet", minWidth: 120 },
-          { id: "vest", label: "Vest", minWidth: 80 },
-          { id: "glasses", label: "Glasses", minWidth: 120 },
+          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "createdAt", label: "Created At", minWidth: 120 },
+          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
-        data={[
-          {
-            helmet: "YES",
-            vest: "YES",
-            glasses: "NO",
-            zone: "Production Floor A",
-            createdAt: "2025-09-23 15:42",
-          },
-          {
-            helmet: "YES",
-            vest: "YES",
-            glasses: "NO",
-            zone: "Welding Station",
-            createdAt: "2025-09-23 15:28",
-          },
-          {
-            helmet: "YES",
-            vest: "YES",
-            glasses: "NO",
-            zone: "Chemical Storage",
-            createdAt: "2025-09-23 15:15",
-          },
-          {
-            helmet: "YES",
-            vest: "YES",
-            glasses: "NO",
-            zone: "Assembly Line B",
-            createdAt: "2025-09-23 14:58",
-          },
-          {
-            helmet: "NO",
-            vest: "NO",
-            glasses: "YES",
-            zone: "Maintenance Area",
-            createdAt: "2025-09-23 14:32",
-          },
-        ]}
+        data={recentViolations}
         filters={[
           {
-            id: "helmet",
-            label: "Helmet",
+            id: "Voilation",
+            label: "Violation",
             type: "select",
-            options: ["YES", "NO"],
+            // options: Array.from(
+            //   new Set(recentViolations.map((v) => v.Voilation))
+            // ),
+            options: [
+              "Hard hat missing",
+              "Safety vest not worn",
+              "Safety glasses missing",
+            ],
           },
-          { id: "vest", label: "Vest", type: "select", options: ["YES", "NO"] },
+
           {
-            id: "glasses",
-            label: "Glasses",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["YES", "NO"],
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
           },
-          { id: "zone", label: "Zone", type: "text" },
-          { id: "startdate", label: "Start Date", type: "date" }, // will now be datetime
-          { id: "enddate", label: "End Date", type: "date" }, // will now be datetime
+          {
+            id: "cameraId",
+            label: "Camera ID",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.cameraId))
+            ),
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
         ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
@@ -236,6 +331,21 @@ const PPEDetection: React.FC = () => {
         loading={false}
         isDownload={true}
       />
+
+      {/* View Alert Popup */}
+      {viewPopupData && (
+        <ViewAlertPopup
+          open={viewPopupOpen}
+          handleClose={() => setViewPopupOpen(false)}
+          title={viewPopupData.Voilation}
+          location={viewPopupData.zone}
+          time={viewPopupData.time}
+          cameraId={viewPopupData.cameraId}
+          imageUrl={viewPopupData.imageUrl}
+          alarmTriggered={viewPopupData.alarmTriggered}
+          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        />
+      )}
     </Box>
   );
 };

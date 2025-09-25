@@ -1,6 +1,13 @@
 import React from "react";
-import { Card, CardContent, Box, Typography, Skeleton } from "@mui/material";
-
+import {
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  Skeleton,
+  Tooltip,
+} from "@mui/material";
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 export interface CameraZone {
   zone: string;
   active: number;
@@ -13,12 +20,14 @@ interface CameraStatusProps {
   cameraZones: CameraZone[];
   loading?: boolean;
   maxheight?: number;
+  tooltipMessage?: string;
 }
 
 const CameraStatus: React.FC<CameraStatusProps> = ({
   cameraZones,
   loading = true,
   maxheight,
+  tooltipMessage,
 }) => {
   // Decide how many rows to render
   const rows = loading ? Array.from(new Array(4)) : cameraZones;
@@ -34,7 +43,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
       }}
     >
       <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
-        <Typography
+        {/* <Typography
           variant="h6"
           sx={{
             fontWeight: 600,
@@ -43,7 +52,45 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           }}
         >
           {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
-        </Typography>
+        </Typography> */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 1,
+          }}
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              fontWeight: 600,
+              color: "#1c2025",
+            }}
+          >
+            {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
+          </Typography>
+
+          {/* Info Icon with Tooltip */}
+          {!loading && tooltipMessage && (
+            <Tooltip title={tooltipMessage} arrow>
+              {/* <IconButton size="small">
+                <InfoOutlineIcon fontSize="small" />
+              </IconButton> */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#f44336",
+                }}
+              >
+                <InfoOutlineIcon />
+              </Box>
+            </Tooltip>
+          )}
+        </Box>
 
         <Box>
           {rows.map((zone, index) => {

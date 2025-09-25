@@ -3,7 +3,7 @@ import { Card, CardContent, Box, Typography } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
 interface Violation {
-  title: string;
+  Voilation: string;
   zone: string;
   time: string;
   severity?: string;
@@ -59,10 +59,13 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
                 mb: 0.5,
               }}
             >
-              {violation.title}
+              {violation.Voilation}
             </Typography>
             <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
-              {violation.zone} • {violation.time}
+              {violation.zone}
+            </Typography>
+            <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
+              {violation.time}
             </Typography>
           </Box>
         </Box>
@@ -71,7 +74,7 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
         <Box
           sx={{
             width: "100%",
-            height: 150,
+            height: 120,
             backgroundColor: "#e9ecef",
             borderRadius: 0.75,
             display: "flex",
