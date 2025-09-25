@@ -4,17 +4,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import {
-  Shield,
-  Warning,
-  CheckCircle,
-  Schedule,
-  Groups,
-  Place,
-  Assessment,
-  LocationOn,
-  AccessTime,
-} from "@mui/icons-material";
+import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
@@ -22,43 +12,22 @@ import { CameraZone } from "@/app/types";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 const PeoplePresence: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  // const PeoplePresenceKpiData = [
-  //   {
-  //     title: "Total People",
-  //     value: "87.5%",
-  //     icon: Groups,
-  //   },
-  //   {
-  //     title: "Zone Occupancy",
-  //     value: "12",
-  //     icon: Place,
-  //   },
-  //   {
-  //     title: "Utilization",
-  //     value: "94",
-  //     icon: Assessment,
-  //   },
-  //   {
-  //     title: "Overcapacity",
-  //     value: "2h 34m",
-  //     icon: Warning,
-  //   },
-  // ];
+
   const PeoplePresenceKpiData = [
     {
       title: "Total People Count",
       value: "87", // Current number of people detected
-      icon: Groups, // 👥 Crowd/people
+      icon: Groups,
     },
     {
       title: "Detected Zones",
       value: "Zone A, Zone B", // Zones where people are detected
-      icon: LocationOn, // 📍 Location/zone
+      icon: LocationOn,
     },
     {
       title: "Last Incidence",
       value: "10:25 AM", // Last detection timestamp
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
     },
   ];
 

@@ -4,53 +4,20 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-import { AccessTime, Shield, Visibility } from "@mui/icons-material";
 import {
+  AccessTime,
+  Shield,
+  Visibility,
   Security,
-  ReportProblem,
-  ErrorOutline,
-  Login,
-  Dangerous,
   LocationOn,
 } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 const IntrusionDetection: React.FC = () => {
-  // const intrusionKpiData = [
-  //   {
-  //     title: "Intrusion Attempts",
-  //     value: "7",
-  //     icon: Security,
-  //   },
-  //   {
-  //     title: "Active Intruders",
-  //     value: "2",
-  //     icon: ReportProblem,
-  //   },
-  //   {
-  //     title: "Security Threat Level",
-  //     value: "HIGH",
-  //     icon: ErrorOutline,
-  //   },
-  //   {
-  //     title: "Recent Entries",
-  //     value: "5",
-  //     icon: Login,
-  //   },
-  //   {
-  //     title: "Perimeter Breaches",
-  //     value: "3",
-  //     icon: Dangerous,
-  //   },
-  //   {
-  //     title: "Compromised Zones Status",
-  //     value: "2/5",
-  //     icon: LocationOn,
-  //   },
-  // ];
   const intrusionKpiData = [
     {
       title: "Intrusion Detected",

@@ -7,14 +7,10 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   Shield,
-  ErrorOutline,
-  VisibilityOff,
   Visibility,
   LocationOn,
   AccessTime,
-  Error,
   Checkroom,
-  EmojiPeople,
 } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";

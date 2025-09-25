@@ -5,10 +5,6 @@ import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import {
-  Shield,
-  Warning,
-  CheckCircle,
-  Schedule,
   Groups,
   ReportProblem,
   LocationOn,
@@ -21,50 +17,27 @@ import { CameraZone } from "@/app/types";
 import GroupsIcon from "@mui/icons-material/Groups";
 const CrowdGathering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  // const CrowdKpiData = [
-  //   {
-  //     title: "PPE Compliance Rate",
-  //     value: "87.5%",
-  //     icon: Shield,
-  //   },
-  //   {
-  //     title: "PPE Violations Per Day",
-  //     value: "12",
-  //     icon: Warning,
-  //   },
-  //   {
-  //     title: "PPE Detection Accuracy",
-  //     value: "94.2%",
 
-  //     icon: CheckCircle,
-  //   },
-  //   {
-  //     title: "Time Since Last Violation",
-  //     value: "2h 34m",
-
-  //     icon: Schedule,
-  //   },
-  // ];
   const CrowdKpiData = [
     {
       title: "Crowded Zone",
       value: "Zone B", // Zone currently most crowded
-      icon: Groups, // 👥 Represents a crowd/group of people
+      icon: Groups,
     },
     {
       title: "Total Incidents Detected",
       value: "56", // Total crowd-related incidents
-      icon: ReportProblem, // ⚠️ Safety/incident indicator
+      icon: ReportProblem,
     },
     {
       title: "Peak Crowd Density ",
       value: "50 (Zone B)", // Zone with highest density
-      icon: LocationOn, // 📍 Zone/location
+      icon: LocationOn,
     },
     {
       title: "Last Incidence",
       value: "09:45 AM", // Timestamp of last detected crowd incident
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
     },
   ];
   const recentViolations = [

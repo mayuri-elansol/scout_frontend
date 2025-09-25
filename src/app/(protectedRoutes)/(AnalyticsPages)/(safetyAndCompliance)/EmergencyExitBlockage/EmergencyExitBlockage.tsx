@@ -4,15 +4,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import {
-  Shield,
-  Schedule,
-  Block,
-  CheckCircle,
-  LocationOn,
-  Warning,
-  ReportProblem,
-} from "@mui/icons-material";
+import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
@@ -20,28 +12,7 @@ import { CameraZone } from "@/app/types";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 const EmergencyExitBlockage: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  // const ExitKpiData = [
-  //   {
-  //     title: "Blocked Exit",
-  //     value: "87",
-  //     icon: Block,
-  //   },
-  //   {
-  //     title: "Clear Exit Routes",
-  //     value: "12",
-  //     icon: CheckCircle,
-  //   },
-  //   {
-  //     title: "Most Affected Zone",
-  //     value: "Zone A",
-  //     icon: LocationOn,
-  //   },
-  //   {
-  //     title: "Total Emergency Exit Blockage",
-  //     value: "14",
-  //     icon: Warning,
-  //   },
-  // ];
+
   const ExitKpiData = [
     {
       title: "Blocked Emergency Exit",

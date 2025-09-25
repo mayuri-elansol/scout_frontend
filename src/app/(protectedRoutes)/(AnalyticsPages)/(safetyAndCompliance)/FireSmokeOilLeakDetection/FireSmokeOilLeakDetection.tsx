@@ -4,15 +4,8 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
-  People,
-  TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
   LocalFireDepartment,
   SmokeFree,
-  Science,
-  OilBarrel,
   LocationOn,
   AccessTime,
 } from "@mui/icons-material";
@@ -22,7 +15,7 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import { timeStamp } from "console";
+
 const FireSmokeOilLeakDetection: React.FC = () => {
   const recentViolations = [
     {

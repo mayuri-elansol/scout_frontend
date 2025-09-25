@@ -6,7 +6,6 @@ import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import {
-  Shield,
   CheckCircle,
   AccessTime,
   Cancel,

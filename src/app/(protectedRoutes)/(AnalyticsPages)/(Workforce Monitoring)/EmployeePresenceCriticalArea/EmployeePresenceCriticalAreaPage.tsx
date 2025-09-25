@@ -4,14 +4,7 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-import {
-  People,
-  Warning,
-  Shield,
-  Groups,
-  LocationOn,
-  AccessTime,
-} from "@mui/icons-material";
+import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";

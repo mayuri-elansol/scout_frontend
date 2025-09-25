@@ -5,16 +5,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 
-import {
-  People,
-  TrendingUp,
-  CheckCircle,
-  Place,
-  Schedule,
-  Videocam,
-  Login,
-  Logout,
-} from "@mui/icons-material";
+import { People, Login, Logout } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -56,69 +47,6 @@ const PeopleCount: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-
-  //  const peopleCountKpiData = [
-  //   {
-  //     title: "Current People Inside",
-  //     value: "267",
-  //     subtitle: "People currently inside",
-  //     trend: "+12 vs previous",
-  //     trendColor: "#4caf50",
-  //     color: "#4caf50",
-  //     bgColor: "#e8f5e9",
-  //     icon: People,
-  //   },
-  //   {
-  //     title: "Total Entries Today",
-  //     value: "512",
-  //     subtitle: "People entered",
-  //     trend: "+25",
-  //     trendColor: "#2196f3",
-  //     color: "#2196f3",
-  //     bgColor: "#e3f2fd",
-  //     icon: TrendingUp,
-  //   },
-  //   {
-  //     title: "Total Exits Today",
-  //     value: "245",
-  //     subtitle: "People exited",
-  //     trend: "-8",
-  //     trendColor: "#ff9800",
-  //     color: "#ff9800",
-  //     bgColor: "#fff8e1",
-  //     icon: CheckCircle,
-  //   },
-  //   {
-  //     title: "Most Crowded Zone",
-  //     value: "Production Floor",
-  //     subtitle: "Zone with highest people inside",
-  //     trend: "Active",
-  //     trendColor: "#f44336",
-  //     color: "#f44336",
-  //     bgColor: "#ffebee",
-  //     icon: Place,
-  //   },
-  //   {
-  //     title: "Peak Hour",
-  //     value: "2 PM - 3 PM",
-  //     subtitle: "Max people inside",
-  //     trend: "High activity",
-  //     trendColor: "#9c27b0",
-  //     color: "#9c27b0",
-  //     bgColor: "#f3e5f5",
-  //     icon: Schedule,
-  //   },
-  //   {
-  //     title: "Camera with Most Activity",
-  //     value: "Camera 07",
-  //     subtitle: "Most movements detected",
-  //     trend: "25 entries/exits",
-  //     trendColor: "#ff5722",
-  //     color: "#ff5722",
-  //     bgColor: "#fbe9e7",
-  //     icon: Videocam,
-  //   },
-  // ];
 
   const peopleCountKpiData = [
     {

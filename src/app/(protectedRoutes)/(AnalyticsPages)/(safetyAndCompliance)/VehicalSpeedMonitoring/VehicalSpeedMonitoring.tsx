@@ -3,13 +3,8 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-import { AccessTime, People } from "@mui/icons-material";
-import {
-  Speed,
-  TrendingUp,
-  DirectionsCar,
-  LocationOn,
-} from "@mui/icons-material";
+
+import { Speed, TrendingUp, LocationOn, AccessTime } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";

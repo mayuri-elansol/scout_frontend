@@ -4,7 +4,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, DirectionsCar, SwapHoriz, Place,Timeline } from "@mui/icons-material";
+import { DirectionsCar, SwapHoriz, Place, Timeline } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
@@ -13,26 +13,26 @@ import NoCrashIcon from "@mui/icons-material/NoCrash";
 const VehicleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
- {
-    title: "Total Vehicles",
-    value: "87",
-    icon: DirectionsCar, 
-  },
-  {
-    title: "Entry vs Exit",
-    value: "12 In / 8 Out", 
-    icon: SwapHoriz, 
-  },
-  {
-    title: "Busiest Zone",
-    value: "Zone A",
-    icon: Place, 
-  },
-  {
-    title: "Current Vehicle Occupancy",
-    value: "28",
-    icon: Timeline, 
-  },
+    {
+      title: "Total Vehicles",
+      value: "87",
+      icon: DirectionsCar,
+    },
+    {
+      title: "Entry vs Exit",
+      value: "12 In / 8 Out",
+      icon: SwapHoriz,
+    },
+    {
+      title: "Busiest Zone",
+      value: "Zone A",
+      icon: Place,
+    },
+    {
+      title: "Current Vehicle Occupancy",
+      value: "28",
+      icon: Timeline,
+    },
   ];
 
   const recentViolations = [
@@ -40,14 +40,14 @@ const VehicleCount: React.FC = () => {
       title: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
-     
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
-     
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
