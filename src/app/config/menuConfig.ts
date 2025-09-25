@@ -8,9 +8,8 @@ import {
   Settings,
   VideoCall,
   Warning,
-  
-  
- DirectionsCar } from "@mui/icons-material";
+  DirectionsCar,
+} from "@mui/icons-material";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
@@ -135,9 +134,15 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
       },
       {
         name: "Employee presence detection in critical areas",
-        page: "employee-presence",
-        path: "/EmployeePresencePage",
+        page: "employee-presence-critical-area",
+        path: "/EmployeePresenceCriticalArea",
       },
+      {
+        name: "Employee presence detection in Restricted areas",
+        page: "employee-presence-restricted-area",
+        path: "/EmployeePresenceRestrictedArea",
+      },
+
       {
         name: "Mobile Phone Usage in Restricted Areas",
         page: "mobile-phone-usage",

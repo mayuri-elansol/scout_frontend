@@ -54,17 +54,17 @@ const MobilePhoneUsage: React.FC = () => {
     {
       title: "Total Violations",
       value: "18", // Total mobile phone usage violations
-      icon: PhoneIphone, // 📱 Mobile phone
+      icon: PhoneIphone,
     },
     {
       title: "Latest Incidence",
       value: "10:30 AM", // Time of last violation detected
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
     },
     {
       title: "Zone Detection",
       value: "Assembly Line", // Zone where latest violation detected
-      icon: LocationOn, // 📍 Location/zone
+      icon: LocationOn,
     },
   ];
   const recentViolations = [

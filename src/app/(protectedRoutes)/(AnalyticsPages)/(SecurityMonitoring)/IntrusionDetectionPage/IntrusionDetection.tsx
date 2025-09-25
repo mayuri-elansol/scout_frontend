@@ -60,7 +60,7 @@ const IntrusionDetection: React.FC = () => {
     {
       title: "Security Level (Safe/Unsafe)",
       value: "Unsafe", // Current security status
-      icon: Shield, // 🛡️ Represents overall security state
+      icon: Shield,
     },
     {
       title: "Recent Intrusion Time",

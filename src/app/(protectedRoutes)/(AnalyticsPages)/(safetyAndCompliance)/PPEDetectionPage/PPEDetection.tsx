@@ -30,6 +30,7 @@ const PPEDetection: React.FC = () => {
       value: "87",
       icon: Shield,
     },
+
     {
       title: "Current Unsafe Zone",
       value: "2",

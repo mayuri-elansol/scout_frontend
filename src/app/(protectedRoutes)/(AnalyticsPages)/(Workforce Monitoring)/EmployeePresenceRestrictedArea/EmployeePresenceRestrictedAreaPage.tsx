@@ -8,7 +8,9 @@ import {
   People,
   Warning,
   Shield,
- 
+  Groups,
+  LocationOn,
+  AccessTime,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -16,25 +18,24 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
-const EmployeePresence: React.FC = () => {
-  const employeeKpiData = [
+const EmployeePresenceRestrictedAreaPage: React.FC = () => {
+  const employeeRestrictedPresenceKpiData = [
     {
-      title: "Employees in Critical Areas",
-      value: "0",
-      icon: People,
+      title: "Employees in Critical Area",
+      value: "12", // Number of employees detected in critical areas
+      icon: Groups, // 👥 Represents group of people
     },
     {
-      title: "Critical Zone Violations",
-      value: "127",
-      icon: Warning,
+      title: "Zone Violations",
+      value: "3 (Zone A, Zone B, Zone C)", // Number of violations and zones
+      icon: LocationOn, // 📍 Zone/location indicator
     },
     {
-      title: "Zones Monitored",
-      value: "3",
-      icon: Shield,
+      title: "Last Incidence",
+      value: "10:45 AM", // Time of last detected violation
+      icon: AccessTime, // ⏰ Time
     },
   ];
-
   const activePersonnel = [
     {
       title: "John Mitchell - Level 3 Operator",
@@ -104,7 +105,7 @@ const EmployeePresence: React.FC = () => {
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Employee presence detection in critical areas
+            Employee presence detection in Restricted areas
           </Typography>
         </Box>
       </Box>
@@ -114,23 +115,23 @@ const EmployeePresence: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-          skeletonKeys.map((index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              key={index + 1}
-            >
-              <KpiCardSkeleton />
-            </Grid>
-          ))
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
           : // Show actual KPI cards
-          employeeKpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              key={index + 1}
-            >
-              <KpiCard {...kpi} />
-            </Grid>
-          ))}
+            employeeRestrictedPresenceKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -212,7 +213,7 @@ const EmployeePresence: React.FC = () => {
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        downloadFileName="employee-presence-report"
+        downloadFileName="employee-presence-restricted-report"
         isDownload={true}
         loading={false}
       />
@@ -220,4 +221,4 @@ const EmployeePresence: React.FC = () => {
   );
 };
 
-export default EmployeePresence;
+export default EmployeePresenceRestrictedAreaPage;
