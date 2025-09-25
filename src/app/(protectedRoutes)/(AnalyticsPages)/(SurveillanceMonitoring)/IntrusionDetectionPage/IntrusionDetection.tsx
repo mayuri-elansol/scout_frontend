@@ -307,7 +307,6 @@ const IntrusionDetection: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="intrusion-detection-report"
-        isDownload={true}
         loading={false}
       />
     </Box>

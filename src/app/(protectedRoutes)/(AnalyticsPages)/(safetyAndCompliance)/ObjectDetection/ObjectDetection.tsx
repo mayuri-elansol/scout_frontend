@@ -291,7 +291,6 @@ const ObjectDetection: React.FC = () => {
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        isDownload={true}
         loading={false}
       />
     </Box>

@@ -103,7 +103,7 @@ export const analyticsMenu: AnalyticsCategoryConfig[] = [
     ],
   },
   {
-    title: "Security Monitoring",
+    title: "Surveillance Monitoring",
     icon: Visibility,
     items: [
       {

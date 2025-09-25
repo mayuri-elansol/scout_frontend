@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   Shield,
   Visibility,
@@ -17,6 +17,10 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import ShowChartIcon from '@mui/icons-material/QueryStats';
+
 import { FilterParams } from "./PPEDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const PPEDetection: React.FC = () => {
@@ -230,10 +234,30 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+      <Paper sx={{ p: 3, mb: 4 ,backgroundColor: "#ffffff"}} >
+     
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 2,
+  }}
+>
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+{/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+    <Typography variant="h6" sx={{ fontWeight: "bold",fontSize:18 }}>
+       <Box component="span" sx={{ mr: 2 }}>📊</Box>
+       
+ Real Time Performance Overview
+    </Typography>
+  </Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+  <TimeFilter />
+</Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -242,7 +266,7 @@ const PPEDetection: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             ppeKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -251,7 +275,7 @@ const PPEDetection: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
+        </Grid>
 
       {/* Content Grid */}
       <Grid container spacing={3}>

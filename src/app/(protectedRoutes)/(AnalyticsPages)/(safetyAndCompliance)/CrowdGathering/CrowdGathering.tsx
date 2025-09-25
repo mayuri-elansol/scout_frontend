@@ -226,7 +226,6 @@ const CrowdGathering: React.FC = () => {
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
-        isDownload={true}
       />
     </Box>
   );

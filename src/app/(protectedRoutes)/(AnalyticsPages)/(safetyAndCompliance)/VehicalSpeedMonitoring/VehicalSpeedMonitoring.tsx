@@ -214,7 +214,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="vehicle-detection-report"
-        isDownload={true}
         loading={false}
       />
     </Box>

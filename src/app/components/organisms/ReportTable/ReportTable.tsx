@@ -427,7 +427,8 @@ import {
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { SxProps, Theme } from "@mui/material/styles";
 
 /** Column definition */
 export interface ReportColumn<T> {
@@ -461,7 +462,7 @@ export interface ReportTableProps<T extends Record<string, any>> {
   isSubmitDisabled?: boolean;
   onView?: (row: T) => void;
   onDownload?: (row: T) => void;
-  isDownload: boolean;
+  sx?: SxProps<Theme>;
 }
 
 /** ReportTable component */
@@ -477,7 +478,7 @@ function ReportTable<T extends Record<string, any>>({
   isSubmitDisabled,
   onView,
   onDownload,
-  isDownload,
+  sx,
 }: ReportTableProps<T>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
@@ -576,11 +577,12 @@ function ReportTable<T extends Record<string, any>>({
           value={
             filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
           }
-          onChange={(newValue: Dayjs | null) => {
-            handleFilterChange(
-              filter.id,
-              newValue ? newValue.format("YYYY-MM-DD") : ""
-            );
+          onChange={(newValue) => {
+            // newValue could be Date | null
+            const formatted = newValue
+              ? dayjs(newValue).format("YYYY-MM-DD")
+              : "";
+            handleFilterChange(filter.id, formatted);
           }}
           slotProps={{ textField: { size: "small", fullWidth: true } }}
         />
@@ -657,7 +659,7 @@ function ReportTable<T extends Record<string, any>>({
 
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
-      <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
+      <Card sx={{ borderRadius: 2, overflow: "hidden", ...sx }}>
         {/* Header */}
         <Box
           sx={{
@@ -671,7 +673,10 @@ function ReportTable<T extends Record<string, any>>({
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Description sx={{ color: "#1976d2", fontSize: 24 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, color: "#1c2025", fontSize: 18 }}
+            >
               {title}
             </Typography>
           </Box>
@@ -708,15 +713,13 @@ function ReportTable<T extends Record<string, any>>({
               >
                 Submit
               </Button>
-              {isDownload && (
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={handleDownloadClick}
-                >
-                  Download
-                </Button>
-              )}
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={handleDownloadClick}
+              >
+                Download
+              </Button>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}

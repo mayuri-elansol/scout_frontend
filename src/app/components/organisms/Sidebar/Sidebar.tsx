@@ -195,33 +195,9 @@ CategorySection.displayName = "CategorySection";
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
 
-  // const is1200_1250 = useMediaQuery(
-  //   "(min-width:1200px) and (max-width:1249px)"
-  // );
-  // const is1250_1400 = useMediaQuery(
-  //   "(min-width:1250px) and (max-width:1399px)"
-  // );
-  // const is1400_1520 = useMediaQuery(
-  //   "(min-width:1400px) and (max-width:1519px)"
-  // );
-  // const is1520_1700 = useMediaQuery(
-  //   "(min-width:1520px) and (max-width:1699px)"
-  // );
 
-  // const is1200Down = useMediaQuery("(min-width:100px) and (max-width:1200px)");
-  //16vw
-  const drawerWidth: string = "315px";
-  // if (is1200_1250) {
-  //   drawerWidth = "24vw";
-  // } else if (is1250_1400) {
-  //   drawerWidth = "22vw";
-  // } else if (is1400_1520) {
-  //   drawerWidth = "20vw";
-  // } else if (is1520_1700) {
-  //   drawerWidth = "18vw";
-  // } else if (is1200Down) {
-  //   drawerWidth = "260px !important";
-  // }
+  let drawerWidth: string = "315px";
+
 
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
@@ -376,7 +352,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           boxSizing: "border-box",
           mt: "64px",
           height: "calc(100vh - 64px)",
-          overflowY: "auto",
+          // overflowY: "auto",
           borderRight: "none",
           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
           p: 2,
@@ -387,7 +363,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       }}
     >
       {/* Menu Content */}
-      <Box sx={{ flex: 1 }}>{menuContent}</Box>
+      <Box sx={{ flex: 1,overflowY: "auto" }}>{menuContent}</Box>
 
       {/* Footer */}
       <Box
@@ -398,6 +374,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           alignItems: "center",
           textAlign: "center",
           gap: 1,
+
         }}
       >
         <Box

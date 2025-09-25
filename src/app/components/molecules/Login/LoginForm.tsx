@@ -34,7 +34,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   } = useForm<LoginFormData>({
     mode: "onChange",
   });
-
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
