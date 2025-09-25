@@ -4,7 +4,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
+import { PhoneIphone, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
@@ -12,53 +12,65 @@ import { CameraZone } from "@/app/types";
 import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 const MobilePhoneUsage: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  // const MobilePhoneUsageKpiData = [
+  //     {
+  //   title: "Total Violations Today",
+  //   value: "18",
+
+  //   icon: PhoneIphone,
+  // },
+  // {
+  //   title: "Active Alarms",
+  //   value: "5",
+
+  //   icon: NotificationsActive,
+  // },
+  //    {
+  //   title: "Most Affected Zone",
+  //   value: "Assembly Line",
+
+  //   icon: LocationOn,
+  // },
+  // {
+  //   title: "Average Response Time",
+  //   value: "2m 45s",
+
+  //   icon: AccessTime,
+  // },  {
+  //   title: "Violations by Camera",
+  //   value: "Camera 07",
+
+  //   icon: Videocam,
+  // },
+  //   {
+  //   title: "Peak Violation Hour",
+  //   value: "2 PM - 3 PM",
+
+  //   icon: Schedule,
+  // },
+  // ];
+
   const MobilePhoneUsageKpiData = [
     {
-      title: "PPE Compliance Rate",
-      value: "87.5%",
-      subtitle: "Current compliance level",
-      trend: "-2.3%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Shield,
+      title: "Total Violations",
+      value: "18", // Total mobile phone usage violations
+      icon: PhoneIphone, // 📱 Mobile phone
     },
     {
-      title: "PPE Violations Per Day",
-      value: "12",
-      subtitle: "Today's violations",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Latest Incidence",
+      value: "10:30 AM", // Time of last violation detected
+      icon: AccessTime, // ⏰ Time
     },
     {
-      title: "PPE Detection Accuracy",
-      value: "94.2%",
-      subtitle: "System accuracy rate",
-      trend: "+1.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Time Since Last Violation",
-      value: "2h 34m",
-      subtitle: "Last incident recorded",
-      trend: "Recent",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
+      title: "Zone Detection",
+      value: "Assembly Line", // Zone where latest violation detected
+      icon: LocationOn, // 📍 Location/zone
     },
   ];
-
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -67,7 +79,7 @@ const MobilePhoneUsage: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",

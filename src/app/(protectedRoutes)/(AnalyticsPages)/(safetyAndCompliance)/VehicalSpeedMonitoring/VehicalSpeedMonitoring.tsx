@@ -3,13 +3,14 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
+import { AccessTime, People } from "@mui/icons-material";
 import {
-  People,
+  Speed,
   TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
+  DirectionsCar,
+  LocationOn,
 } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -20,74 +21,39 @@ const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-
   const VehicalSpeedMonitoringKpiData = [
     {
-      title: "Total Factory Occupancy",
+      title: "Speed Violation Count",
       value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
+      icon: Speed, // 🚦 Speedometer
     },
     {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
+      title: "Highest Speed Recorded",
+      value: "110 km/h",
+      icon: TrendingUp, // 📈 Indicates peak/high value
     },
     {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
+      title: "Highest Speed Violation Zone",
+      value: "Zone 3",
+      icon: LocationOn, // 📍 Zone / Location
     },
     {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Last Detection Time",
+      value: "11:15 AM",
+      icon: AccessTime, // ⏰ Time
     },
   ];
   const cameraZones: CameraZone[] = [

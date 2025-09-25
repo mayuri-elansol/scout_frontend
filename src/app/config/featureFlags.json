@@ -12,7 +12,7 @@
   "employee-presence": true,
   "people-count": true,
   "fall-detection": true,
-  "STPOverflowDetection-detection":true,
+  "STPOverflowDetection-detection":false,
   "emergency-exit-blockage-detection":true,
   "crowd-gathering-in-hazardous-zones-detection":true,
   "camera-tampering":true,

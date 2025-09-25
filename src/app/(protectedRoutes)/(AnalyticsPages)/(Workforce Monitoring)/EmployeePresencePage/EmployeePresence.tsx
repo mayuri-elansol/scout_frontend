@@ -6,11 +6,9 @@ import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 import {
   People,
-  CheckCircle,
   Warning,
   Shield,
-  Place,
-  Schedule,
+ 
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -21,71 +19,26 @@ import LockPersonIcon from "@mui/icons-material/LockPerson";
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
-      title: "Current Critical Area Occupancy",
-      value: "15/18",
-      subtitle: "Personnel in critical zones",
-      trend: "83%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+      title: "Employees in Critical Areas",
+      value: "0",
       icon: People,
     },
     {
-      title: "Real-time Presence Validations",
-      value: "127",
-      subtitle: "Validations completed today",
-      trend: "+24",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: CheckCircle,
-    },
-    {
       title: "Critical Zone Violations",
-      value: "3",
-      subtitle: "Unauthorized access detected",
-      trend: "+1",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
+      value: "127",
       icon: Warning,
     },
     {
-      title: "Personal Certification Status",
-      value: "92%",
-      subtitle: "Valid certifications",
-      trend: "+2%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+      title: "Zones Monitored",
+      value: "3",
       icon: Shield,
-    },
-    {
-      title: "Zone Coverage Status",
-      value: "16/18",
-      subtitle: "Zones adequately staffed",
-      trend: "89%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "Shift Compliance",
-      value: "94%",
-      subtitle: "On-time shift presence",
-      trend: "+1.5%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Schedule,
     },
   ];
 
   const activePersonnel = [
     {
       title: "John Mitchell - Level 3 Operator",
-      location: "Reactor Control Room",
+      zone: "Reactor Control Room",
       time: "Day Shift",
       Id: "EMP-4521",
       severity: "N/A",
@@ -95,7 +48,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Sarah Chen - Senior Technician",
-      location: "Chemical Processing Unit",
+      zone: "Chemical Processing Unit",
       time: "Day Shift",
       Id: "EMP-3847",
       severity: "N/A",
@@ -105,7 +58,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Michael Torres - Safety Coordinator",
-      location: "Emergency Response Station",
+      zone: "Emergency Response Station",
       time: "Day Shift",
       Id: "EMP-5623",
       severity: "N/A",
@@ -115,7 +68,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Lisa Anderson - Lab Supervisor",
-      location: "Quality Control Lab",
+      zone: "Quality Control Lab",
       time: "Day Shift",
       Id: "EMP-7891",
       severity: "N/A",
@@ -161,23 +114,23 @@ const EmployeePresence: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+          skeletonKeys.map((index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : // Show actual KPI cards
-            employeeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+          employeeKpiData.map((kpi, index) => (
+            <Grid
+              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              key={index + 1}
+            >
+              <KpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Content Grid */}

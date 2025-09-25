@@ -9,6 +9,12 @@ import {
   Place,
   CheckCircle,
   Warning,
+  LocalFireDepartment,
+  SmokeFree,
+  Science,
+  OilBarrel,
+  LocationOn,
+  AccessTime,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -21,54 +27,40 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
 
   const FireSmokeOilKpiData = [
     {
-      title: "Total Factory Occupancy",
+      title: "Fire Incidence",
       value: "267",
-
-      icon: People,
+      icon: LocalFireDepartment, // 🔥 Fire
     },
     {
-      title: "Peak Count Today",
+      title: "Smoke Incidence",
       value: "324",
-
-      icon: TrendingUp,
+      icon: SmokeFree, // 💨 Smoke
     },
     {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-
-      icon: Place,
+      title: "Last Detection Time",
+      value: "10:42 AM",
+      icon: AccessTime, // ⏰ Time
     },
     {
-      title: "System Performance",
-      value: "98.7%",
-
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-
-      icon: Warning,
+      title: "Last Detection Zone",
+      value: "Zone A",
+      icon: LocationOn, // 📍 Zone / Location
     },
   ];
   const cameraZones: CameraZone[] = [

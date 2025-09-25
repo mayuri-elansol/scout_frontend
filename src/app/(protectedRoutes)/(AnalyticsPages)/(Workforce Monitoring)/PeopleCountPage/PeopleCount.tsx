@@ -4,13 +4,18 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
+
 import {
   People,
   TrendingUp,
-  Place,
   CheckCircle,
-  Warning,
+  Place,
+  Schedule,
+  Videocam,
+  Login,
+  Logout,
 } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -34,7 +39,7 @@ const PeopleCount: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -43,7 +48,7 @@ const PeopleCount: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -52,56 +57,84 @@ const PeopleCount: React.FC = () => {
     },
   ];
 
+  //  const peopleCountKpiData = [
+  //   {
+  //     title: "Current People Inside",
+  //     value: "267",
+  //     subtitle: "People currently inside",
+  //     trend: "+12 vs previous",
+  //     trendColor: "#4caf50",
+  //     color: "#4caf50",
+  //     bgColor: "#e8f5e9",
+  //     icon: People,
+  //   },
+  //   {
+  //     title: "Total Entries Today",
+  //     value: "512",
+  //     subtitle: "People entered",
+  //     trend: "+25",
+  //     trendColor: "#2196f3",
+  //     color: "#2196f3",
+  //     bgColor: "#e3f2fd",
+  //     icon: TrendingUp,
+  //   },
+  //   {
+  //     title: "Total Exits Today",
+  //     value: "245",
+  //     subtitle: "People exited",
+  //     trend: "-8",
+  //     trendColor: "#ff9800",
+  //     color: "#ff9800",
+  //     bgColor: "#fff8e1",
+  //     icon: CheckCircle,
+  //   },
+  //   {
+  //     title: "Most Crowded Zone",
+  //     value: "Production Floor",
+  //     subtitle: "Zone with highest people inside",
+  //     trend: "Active",
+  //     trendColor: "#f44336",
+  //     color: "#f44336",
+  //     bgColor: "#ffebee",
+  //     icon: Place,
+  //   },
+  //   {
+  //     title: "Peak Hour",
+  //     value: "2 PM - 3 PM",
+  //     subtitle: "Max people inside",
+  //     trend: "High activity",
+  //     trendColor: "#9c27b0",
+  //     color: "#9c27b0",
+  //     bgColor: "#f3e5f5",
+  //     icon: Schedule,
+  //   },
+  //   {
+  //     title: "Camera with Most Activity",
+  //     value: "Camera 07",
+  //     subtitle: "Most movements detected",
+  //     trend: "25 entries/exits",
+  //     trendColor: "#ff5722",
+  //     color: "#ff5722",
+  //     bgColor: "#fbe9e7",
+  //     icon: Videocam,
+  //   },
+  // ];
+
   const peopleCountKpiData = [
     {
-      title: "Total Factory Occupancy",
-      value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
+      title: "People Inside",
+      value: "267", // Current count of people inside
+      icon: People, // 👥 Crowd of people
     },
     {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
+      title: "Entry Count",
+      value: "512", // Total entries today
+      icon: Login, // ⬅️ Entry
     },
     {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Exit Count",
+      value: "245", // Total exits today
+      icon: Logout, // ➡️ Exit
     },
   ];
   const KpiCardLoading = false;
