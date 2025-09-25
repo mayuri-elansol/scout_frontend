@@ -351,46 +351,7 @@ const sampleData = [
     zone: "Hazard Zone 4",
     camera: "Camera-09",
     snapshot: "https://example.com/snapshot8.jpg",
-  },
-  {
-    violationId: "PPE-7891",
-    timestamp: "15:28",
-    zone: "Welding Station",
-    employeeId: "Lisa Anderson",
-    violationType: "Improper Safety Glasses",
-  },
-  {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
-  },
-  {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
-  }, {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
-  }, {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
-  }, {
-    violationId: "PPE-7890",
-    timestamp: "15:15",
-    zone: "Chemical Storage",
-    employeeId: "Sarah Chen",
-    violationType: "Missing Safety Gloves",
-  },
+  }
 ];
 
 const SystemAlerts: React.FC = () => {

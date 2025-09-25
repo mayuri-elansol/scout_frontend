@@ -4,7 +4,7 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   Shield,
   Visibility,
@@ -17,6 +17,10 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import ShowChartIcon from '@mui/icons-material/QueryStats';
+
 const PPEDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
@@ -122,11 +126,30 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Paper sx={{ p: 3, mb: 4, backgroundColor: "#ffffff" }} elevation={8}>
+      <Paper sx={{ p: 3, mb: 4 ,backgroundColor: "#ffffff"}} >
+     
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 2,
+  }}
+>
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+{/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+    <Typography variant="h6" sx={{ fontWeight: "bold",fontSize:18 }}>
+       <Box component="span" sx={{ mr: 2 }}>📊</Box>
+       
+ Real Time Performance Overview
+    </Typography>
+  </Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+  <TimeFilter />
+</Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -135,7 +158,7 @@ const PPEDetection: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             ppeKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -144,25 +167,26 @@ const PPEDetection: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-</Paper>
+      </Paper>
+            {/* </Box> */}
+
+      
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -225,8 +249,8 @@ const PPEDetection: React.FC = () => {
             options: ["YES", "NO"],
           },
           { id: "zone", label: "Zone", type: "text" },
-          { id: "startdate", label: "Start Date", type: "date" }, // will now be datetime
-          { id: "enddate", label: "End Date", type: "date" }, // will now be datetime
+          { id: "startdate", label: "Start Date", type: "date" }, 
+          { id: "enddate", label: "End Date", type: "date" },
         ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}

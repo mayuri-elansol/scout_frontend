@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import {
@@ -20,9 +19,9 @@ import {
   TablePagination,
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
-import { SxProps, Theme } from "@mui/material/styles";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { SxProps, Theme } from "@mui/material/styles";
 
 interface ReportColumn {
   id: string;
@@ -45,7 +44,7 @@ interface ReportFilter {
 }
 
 interface ReportTableProps {
-  title?: string;
+  title: string;
   columns: ReportColumn[];
   data: ReportData[];
   downloadFileName: string;
@@ -57,7 +56,7 @@ interface ReportTableProps {
   isSubmitDisabled?: boolean;
   onView?: (row: ReportData) => void;
   onDownload?: (row: ReportData) => void;
-  sx?: SxProps<Theme>;   
+  sx?:SxProps<Theme>;
 }
 
 const ReportTable: React.FC<ReportTableProps> = ({
@@ -166,17 +165,15 @@ const ReportTable: React.FC<ReportTableProps> = ({
       return (
         <DatePicker
           label={filter.label}
-          value={
-            filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
-          }
-          onChange={(newValue: Dayjs | null) => {
-            handleFilterChange(
-              filter.id,
-              newValue ? newValue.format("YYYY-MM-DD") : ""
-            );
+          value={filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null}
+          onChange={(newValue) => {
+            // newValue could be Date | null
+            const formatted = newValue ? dayjs(newValue).format("YYYY-MM-DD") : "";
+            handleFilterChange(filter.id, formatted);
           }}
           slotProps={{ textField: { size: "small", fullWidth: true } }}
         />
+
       );
     }
     return null;
@@ -250,7 +247,8 @@ const ReportTable: React.FC<ReportTableProps> = ({
 
   return (
     <Box sx={{ mt: 4, mb: 4 }}>
-      <Card sx={{ borderRadius: 2, overflow: "hidden",...sx  }}>
+      
+      <Card sx={{ borderRadius: 2, overflow: "hidden",...sx }}>
         {/* Header */}
         <Box
           sx={{
@@ -264,7 +262,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Description sx={{ color: "#1976d2", fontSize: 24 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025",fontSize:18 }}>
               {title}
             </Typography>
           </Box>

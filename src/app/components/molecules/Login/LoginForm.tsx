@@ -26,7 +26,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   isLoading,
   onSubmit,
   onTogglePassword,
-  onSubmit,
 }) => {
   const {
     register,
