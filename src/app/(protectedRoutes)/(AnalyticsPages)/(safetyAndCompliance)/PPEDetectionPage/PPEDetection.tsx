@@ -4,7 +4,7 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
@@ -109,6 +109,7 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+      <Paper sx={{ p: 3, mb: 4, backgroundColor: "#ffffff" }} elevation={8}>
 
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
@@ -148,7 +149,7 @@ const PPEDetection: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+</Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -186,7 +187,6 @@ filters={[
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
         loading={false}
-        isDownload={true}
       />
     </Box>
   );

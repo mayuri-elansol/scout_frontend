@@ -26,7 +26,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   isLoading,
   error,
   onTogglePassword,
-  // onSubmit,
+  onSubmit,
 }) => {
   const {
     register,
@@ -35,9 +35,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
   } = useForm<LoginFormData>({
     mode: "onChange",
   });
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Form submitted login data:", data);
-  };
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography

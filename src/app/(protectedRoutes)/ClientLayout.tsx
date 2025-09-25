@@ -12,6 +12,8 @@ import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/Loader/Loader";
 import RouteLoader from "../../utils/RouteLoader";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -59,6 +61,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
 
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <Header />
@@ -88,6 +91,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
           </RouteLoader>
         </Box>
       </Box>
+    </LocalizationProvider>
     </ThemeProvider>
   );
 }

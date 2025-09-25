@@ -268,7 +268,6 @@ const SleepingSecurityPersonnelKpiData = [
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
-        isDownload={true}
       />
     </Box>
   );

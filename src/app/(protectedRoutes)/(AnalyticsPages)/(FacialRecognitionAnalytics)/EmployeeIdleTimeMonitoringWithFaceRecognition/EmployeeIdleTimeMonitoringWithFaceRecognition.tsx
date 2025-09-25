@@ -59,7 +59,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -68,7 +68,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -248,7 +248,6 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
-        isDownload={true}
       />
     </Box>
   );
