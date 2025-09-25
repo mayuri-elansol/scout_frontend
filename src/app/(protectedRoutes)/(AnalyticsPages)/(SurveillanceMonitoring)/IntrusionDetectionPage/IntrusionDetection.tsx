@@ -4,15 +4,14 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-import { Visibility } from "@mui/icons-material";
 import {
+  AccessTime,
+  Shield,
+  Visibility,
   Security,
-  ReportProblem,
-  ErrorOutline,
-  Login,
-  Dangerous,
   LocationOn,
 } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -21,35 +20,25 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
-    title: "Intrusion Attempts",
-    value: "7",
-    icon: Security,
-  },
-  {
-    title: "Active Intruders",
-    value: "2",
-    icon: ReportProblem,
-  },
-  {
-    title: "Security Threat Level",
-    value: "HIGH",
-    icon: ErrorOutline,
-  },
-  {
-    title: "Recent Entries",
-    value: "5",
-    icon: Login,
-  },
-  {
-    title: "Perimeter Breaches",
-    value: "3",
-    icon: Dangerous,
-  },
-  {
-    title: "Compromised Zones Status",
-    value: "2/5",
-    icon: LocationOn,
-  },
+      title: "Intrusion Detected",
+      value: "7", // Total number of intrusions detected
+      icon: Security, // 🛡️ Represents security/intrusion
+    },
+    {
+      title: "Security Level (Safe/Unsafe)",
+      value: "Unsafe", // Current security status
+      icon: Shield,
+    },
+    {
+      title: "Recent Intrusion Time",
+      value: "11:20 AM", // Last intrusion detection timestamp
+      icon: AccessTime, // ⏰ Time
+    },
+    {
+      title: "Zone Breaches",
+      value: "2 (Zone A, Zone C)", // Zones breached recently
+      icon: LocationOn, // 📍 Zones / locations
+    },
   ];
   const recentViolations = [
     {
@@ -184,7 +173,7 @@ const IntrusionDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Visibility sx={{ fontSize: 28, color: "#d32f2f" }} />
+          <Visibility sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -239,131 +228,85 @@ const IntrusionDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "incidentId", label: "Incident ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
-          { id: "location", label: "Location", minWidth: 150 },
-          { id: "intruderId", label: "Intruder ID", minWidth: 120 },
-          { id: "breachType", label: "Breach Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
+          { id: "id", label: "ID", minWidth: 100 },
+
+          { id: "zone", label: "Zone", minWidth: 120 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+
+          { id: "intruderDetected", label: "Intruder Detected", minWidth: 140 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "createdAt", label: "TimeStamp", minWidth: 140 },
         ]}
         data={[
           {
-            incidentId: "INT-7892",
-            timestamp: "15:42",
-            location: "Main Gate Perimeter",
-            intruderId: "UNKNOWN-001",
-            breachType: "Unauthorized Entry Attempt",
-            severity: "Critical",
-            status: "BREACH",
-            priority: "Critical",
-            resolution: "Security team dispatched",
+            id: "IDP-101",
+            snapshot: "snapshot_intrusion1.jpg",
+            zone: "Perimeter Gate A",
+            camera: "CAM-21",
+            createdAt: "2025-09-24 10:42",
+            updatedAt: "2025-09-24 10:45",
+            intruderDetected: true,
+            alarmTriggered: true,
           },
           {
-            incidentId: "INT-7891",
-            timestamp: "15:28",
-            location: "East Boundary Fence",
-            intruderId: "UNKNOWN-002",
-            breachType: "Fence Climbing",
-            severity: "High",
-            status: "INVESTIGATING",
-            priority: "High",
-            resolution: "Perimeter patrol increased",
+            id: "IDP-102",
+            snapshot: "snapshot_intrusion2.jpg",
+            zone: "Perimeter Gate B",
+            camera: "CAM-22",
+            createdAt: "2025-09-24 11:15",
+            updatedAt: "2025-09-24 11:17",
+            intruderDetected: false,
+            alarmTriggered: false,
           },
           {
-            incidentId: "INT-7890",
-            timestamp: "15:15",
-            location: "Warehouse Loading Dock",
-            intruderId: "UNKNOWN-003",
-            breachType: "Suspicious Vehicle",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Vehicle identified and cleared",
+            id: "IDP-103",
+            snapshot: "snapshot_intrusion3.jpg",
+            zone: "Loading Area Perimeter",
+            camera: "CAM-23",
+            createdAt: "2025-09-24 12:05",
+            updatedAt: "2025-09-24 12:08",
+            intruderDetected: true,
+            alarmTriggered: true,
           },
           {
-            incidentId: "INT-7889",
-            timestamp: "14:58",
-            location: "North Security Zone",
-            intruderId: "UNKNOWN-004",
-            breachType: "Multiple Persons Detected",
-            severity: "Critical",
-            status: "BREACH",
-            priority: "Critical",
-            resolution: "Emergency protocol activated",
-          },
-          {
-            incidentId: "INT-7888",
-            timestamp: "14:32",
-            location: "Parking Area",
-            intruderId: "UNKNOWN-005",
-            breachType: "After Hours Activity",
-            severity: "Medium",
-            status: "PENDING",
-            priority: "Medium",
-            resolution: "Security review ongoing",
-          },
-          {
-            incidentId: "INT-7887",
-            timestamp: "14:15",
-            location: "West Gate Access",
-            intruderId: "UNKNOWN-006",
-            breachType: "Invalid Access Card",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Access denied, logged",
+            id: "IDP-104",
+            snapshot: "snapshot_intrusion4.jpg",
+            zone: "Warehouse Perimeter",
+            camera: "CAM-24",
+            createdAt: "2025-09-24 13:20",
+            updatedAt: "2025-09-24 13:25",
+            intruderDetected: false,
+            alarmTriggered: false,
           },
         ]}
         filters={[
-          { id: "intruderId", label: "Intruder ID", type: "text" },
           {
-            id: "location",
-            label: "Location",
+            id: "zone",
+            label: "Zone",
             type: "select",
             options: [
-              "Main Gate Perimeter",
-              "East Boundary Fence",
-              "Warehouse Loading Dock",
-              "North Security Zone",
-              "Parking Area",
-              "West Gate Access",
+              "Perimeter Gate A",
+              "Perimeter Gate B",
+              "Loading Area Perimeter",
+              "Warehouse Perimeter",
             ],
           },
           {
-            id: "breachType",
-            label: "Breach Type",
+            id: "intruderDetected",
+            label: "Intruder Detected",
             type: "select",
-            options: [
-              "Unauthorized Entry Attempt",
-              "Fence Climbing",
-              "Suspicious Vehicle",
-              "Multiple Persons Detected",
-              "After Hours Activity",
-              "Invalid Access Card",
-            ],
+            options: ["true", "false"],
           },
           {
-            id: "severity",
-            label: "Severity",
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
             type: "select",
-            options: ["Critical", "High", "Medium"],
-          },
-          {
-            id: "status",
-            label: "Status",
-            type: "select",
-            options: ["BREACH", "INVESTIGATING", "RESOLVED", "PENDING"],
-          },
-          {
-            id: "priority",
-            label: "Priority",
-            type: "select",
-            options: ["Critical", "High", "Medium"],
+            options: ["true", "false"],
           },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        downloadFileName="security-intrusion-report"
+        downloadFileName="intrusion-detection-report"
         loading={false}
       />
     </Box>

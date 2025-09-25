@@ -1,81 +1,98 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import { Shield, Warning, CheckCircle, CameraAlt, Place, Schedule } from "@mui/icons-material";
-
+import SecurityIcon from "@mui/icons-material/Security";
+import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 const SleepingSecurityPersonnel: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
-const SleepingSecurityPersonnelKpiData = [
-  {
-    title: "Sleeping Incidents",
-    value: "12", // replace with actual count of sleeping incidents
-    subtitle: "Personnel caught sleeping",
-    trend: "+2",
-    trendColor: "#f44336",
-    color: "#f44336",
-    bgColor: "#ffebee",
-    icon: Warning,
-  },
-  {
-    title: "Absence Incidents",
-    value: "5", // replace with actual count of absence incidents
-    subtitle: "Personnel absent from post",
-    trend: "+1",
-    trendColor: "#ff9800",
-    color: "#ff9800",
-    bgColor: "#fff8e1",
-    icon: Shield,
-  },
-  {
-    title: "Total Incidents",
-    value: "17", // sum of sleeping + absence, without double counting
-    subtitle: "Total incidents recorded",
-    trend: "+3",
-    trendColor: "#f44336",
-    color: "#f44336",
-    bgColor: "#ffebee",
-    icon: CheckCircle,
-  },
-  {
-    title: "Active Cameras with Incidents",
-    value: "4", // unique cameras where incidents occurred
-    subtitle: "Cameras detecting incidents",
-    trend: "Stable",
-    trendColor: "#2196f3",
-    color: "#2196f3",
-    bgColor: "#e3f2fd",
-    icon: CameraAlt,
-  },
-  {
-    title: "Most Incident Zone",
-    value: "Main Gate", // zone with highest incidents
-    subtitle: "Zone with most issues",
-    trend: "Recent",
-    trendColor: "#ff9800",
-    color: "#ff9800",
-    bgColor: "#fff8e1",
-    icon: Place,
-  },
-  {
-    title: "Peak Hour of Incidents",
-    value: "14:00", // hour with maximum incidents
-    subtitle: "Hour with highest incident count",
-    trend: "Today",
-    trendColor: "#4caf50",
-    color: "#4caf50",
-    bgColor: "#e8f5e9",
-    icon: Schedule,
-  },
-];
+  // const SleepingSecurityPersonnelKpiData = [
+  //   {
+  //     title: "Sleeping Incidents",
+  //     value: "12", // replace with actual count of sleeping incidents
+  //     subtitle: "Personnel caught sleeping",
+  //     trend: "+2",
+  //     trendColor: "#f44336",
+  //     color: "#f44336",
+  //     bgColor: "#ffebee",
+  //     icon: Warning,
+  //   },
+  //   {
+  //     title: "Absence Incidents",
+  //     value: "5", // replace with actual count of absence incidents
+  //     subtitle: "Personnel absent from post",
+  //     trend: "+1",
+  //     trendColor: "#ff9800",
+  //     color: "#ff9800",
+  //     bgColor: "#fff8e1",
+  //     icon: Shield,
+  //   },
+  //   {
+  //     title: "Total Incidents",
+  //     value: "17", // sum of sleeping + absence, without double counting
+  //     subtitle: "Total incidents recorded",
+  //     trend: "+3",
+  //     trendColor: "#f44336",
+  //     color: "#f44336",
+  //     bgColor: "#ffebee",
+  //     icon: CheckCircle,
+  //   },
+  //   {
+  //     title: "Active Cameras with Incidents",
+  //     value: "4", // unique cameras where incidents occurred
+  //     subtitle: "Cameras detecting incidents",
+  //     trend: "Stable",
+  //     trendColor: "#2196f3",
+  //     color: "#2196f3",
+  //     bgColor: "#e3f2fd",
+  //     icon: CameraAlt,
+  //   },
+  //   {
+  //     title: "Most Incident Zone",
+  //     value: "Main Gate", // zone with highest incidents
+  //     subtitle: "Zone with most issues",
+  //     trend: "Recent",
+  //     trendColor: "#ff9800",
+  //     color: "#ff9800",
+  //     bgColor: "#fff8e1",
+  //     icon: Place,
+  //   },
+  //   {
+  //     title: "Peak Hour of Incidents",
+  //     value: "14:00", // hour with maximum incidents
+  //     subtitle: "Hour with highest incident count",
+  //     trend: "Today",
+  //     trendColor: "#4caf50",
+  //     color: "#4caf50",
+  //     bgColor: "#e8f5e9",
+  //     icon: Schedule,
+  //   },
+  // ];
 
-
+  const SleepingSecurityPersonnelKpiData = [
+    {
+      title: "Security Presence",
+      value: "2", // Example: percentage of required security personnel present
+      icon: Security, // 🛡️ Represents security presence
+    },
+    {
+      title: "Last Incidence",
+      value: "10:45 AM", // Timestamp of last incident
+      icon: AccessTime, // ⏰ Time
+    },
+    {
+      title: "Zone Violations",
+      value: "Zone A, Zone C", // Example: zones where violations happened
+      icon: LocationOn, // 📍 Location/zone indicator
+    },
+  ];
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -133,7 +150,7 @@ const SleepingSecurityPersonnelKpiData = [
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <SecurityIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -185,88 +202,78 @@ const SleepingSecurityPersonnelKpiData = [
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "sleeping", label: "Sleeping", minWidth: 120 },
+          { id: "absence", label: "Absence", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "SNP-001",
+            sleeping: true,
+            absence: false,
+            zone: "Main Gate",
+            camera: "CAM-201",
+            timestamp: "2025-09-24 01:15",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "SNP-002",
+            sleeping: false,
+            absence: true,
+            zone: "Loading Dock",
+            camera: "CAM-202",
+            timestamp: "2025-09-24 02:00",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "SNP-003",
+            sleeping: false,
+            absence: false,
+            zone: "Parking Lot",
+            camera: "CAM-203",
+            timestamp: "2025-09-24 02:30",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            id: "SNP-004",
+            sleeping: true,
+            absence: true,
+            zone: "Emergency Exit",
+            camera: "CAM-204",
+            timestamp: "2025-09-24 03:00",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: [
+              "Main Gate",
+              "Loading Dock",
+              "Parking Lot",
+              "Emergency Exit",
+            ],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "sleeping",
+            label: "Sleeping",
+            type: "select",
+            options: ["true", "false"],
+          },
+          {
+            id: "absence",
+            label: "Absence",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="sleeping-absence-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
       />
     </Box>

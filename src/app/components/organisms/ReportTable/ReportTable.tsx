@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
   TextField,
   MenuItem,
   Menu,
@@ -22,6 +21,8 @@ import {
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 import { SxProps, Theme } from "@mui/material/styles";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
 
 interface ReportColumn {
   id: string;
@@ -93,49 +94,16 @@ const ReportTable: React.FC<ReportTableProps> = ({
 
   const filteredData = data.filter(applyFilters);
 
-  /** Status Chip Colors */
-  const getStatusColor = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "active":
-      case "present":
-      case "resolved":
-        return { color: "#4caf50", bgColor: "#e8f5e9" };
-      case "missing":
-      case "violation":
-      case "breach":
-        return { color: "#f44336", bgColor: "#ffebee" };
-      case "on_break":
-      case "late_arrival":
-      case "warning":
-        return { color: "#ff9800", bgColor: "#fff8e1" };
-      case "investigating":
-      case "pending":
-        return { color: "#2196f3", bgColor: "#e3f2fd" };
-      default:
-        return { color: "#666", bgColor: "#f5f5f5" };
-    }
-  };
-
   /** Render Cell Values */
   const renderCellValue = (
     column: ReportColumn,
     value: string | number | boolean
   ) => {
-    if (column.id === "status") {
-      const colors = getStatusColor(String(value));
+    if (typeof value === "boolean") {
       return (
-        <Chip
-          label={value}
-          size="small"
-          sx={{
-            fontSize: "12px",
-            fontWeight: 500,
-            color: colors.color,
-            backgroundColor: colors.bgColor,
-            height: 24,
-            textTransform: "uppercase",
-          }}
-        />
+        <Typography sx={{ fontSize: "14px", color: "#333" }}>
+          {value ? "True" : "False"}
+        </Typography>
       );
     }
 
@@ -194,15 +162,23 @@ const ReportTable: React.FC<ReportTableProps> = ({
           ))}
         </TextField>
       );
-    if (filter.type === "date")
+    if (filter.type === "date") {
       return (
-        <TextField
-          {...commonProps}
-          type="date"
-          slotProps={{ inputLabel: { shrink: true } }}
+        <DatePicker
+          label={filter.label}
+          value={
+            filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
+          }
+          onChange={(newValue: Dayjs | null) => {
+            handleFilterChange(
+              filter.id,
+              newValue ? newValue.format("YYYY-MM-DD") : ""
+            );
+          }}
+          slotProps={{ textField: { size: "small", fullWidth: true } }}
         />
       );
-
+    }
     return null;
   };
 
@@ -428,4 +404,3 @@ const ReportTable: React.FC<ReportTableProps> = ({
 };
 
 export default ReportTable;
-

@@ -1,41 +1,34 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
+import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import {
-  Groups,
-  Place,
-  Assessment
-} from "@mui/icons-material";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 const PeoplePresence: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+
   const PeoplePresenceKpiData = [
-     {
-    title: "Total People",
-    value: "87.5%",
-    icon: Groups,
-  },
-  {
-    title: "Zone Occupancy",
-    value: "12",
-    icon: Place,
-  },
-  {
-    title: "Utilization",
-    value: "94",
-    icon: Assessment, 
-  },
-  {
-    title: "Overcapacity",
-    value: "2h 34m",
-    icon: Warning, 
-  },
+    {
+      title: "Total People Count",
+      value: "87", // Current number of people detected
+      icon: Groups,
+    },
+    {
+      title: "Detected Zones",
+      value: "Zone A, Zone B", // Zones where people are detected
+      icon: LocationOn,
+    },
+    {
+      title: "Last Incidence",
+      value: "10:25 AM", // Last detection timestamp
+      icon: AccessTime,
+    },
   ];
 
   const recentViolations = [
@@ -95,7 +88,7 @@ const PeoplePresence: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PeopleAltIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -147,88 +140,82 @@ const PeoplePresence: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "peopleCount", label: "People Count", minWidth: 120 },
+
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "createdAt", label: "TimeStamp", minWidth: 140 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "PPDS-001",
+            peopleCount: 5,
+            snapshot: "snapshot_shutdown1.jpg",
+            zone: "Factory Floor A",
+            camera: "CAM-41",
+            createdAt: "2025-09-24 22:15",
+            updatedAt: "2025-09-24 22:18",
+            alarmTriggered: true,
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "PPDS-002",
+            peopleCount: 2,
+            snapshot: "snapshot_shutdown2.jpg",
+            zone: "Loading Dock",
+            camera: "CAM-42",
+            createdAt: "2025-09-24 23:05",
+            updatedAt: "2025-09-24 23:07",
+            alarmTriggered: false,
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "PPDS-003",
+            peopleCount: 0,
+            snapshot: "snapshot_shutdown3.jpg",
+            zone: "Parking Lot",
+            camera: "CAM-43",
+            createdAt: "2025-09-24 22:45",
+            updatedAt: "2025-09-24 22:47",
+            alarmTriggered: false,
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
+            id: "PPDS-004",
+            peopleCount: 3,
+            snapshot: "snapshot_shutdown4.jpg",
             zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            camera: "CAM-44",
+            createdAt: "2025-09-24 22:55",
+            updatedAt: "2025-09-24 23:00",
+            alarmTriggered: true,
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: [
+              "Factory Floor A",
+              "Loading Dock",
+              "Parking Lot",
+              "Assembly Line B",
+            ],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="people-presence-shutdown-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
       />
     </Box>

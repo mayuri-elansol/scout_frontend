@@ -1,54 +1,72 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, PhoneIphone, NotificationsActive, LocationOn, AccessTime, Videocam, Schedule } from "@mui/icons-material";
+import { PhoneIphone, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-
+import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 const MobilePhoneUsage: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  // const MobilePhoneUsageKpiData = [
+  //     {
+  //   title: "Total Violations Today",
+  //   value: "18",
+
+  //   icon: PhoneIphone,
+  // },
+  // {
+  //   title: "Active Alarms",
+  //   value: "5",
+
+  //   icon: NotificationsActive,
+  // },
+  //    {
+  //   title: "Most Affected Zone",
+  //   value: "Assembly Line",
+
+  //   icon: LocationOn,
+  // },
+  // {
+  //   title: "Average Response Time",
+  //   value: "2m 45s",
+
+  //   icon: AccessTime,
+  // },  {
+  //   title: "Violations by Camera",
+  //   value: "Camera 07",
+
+  //   icon: Videocam,
+  // },
+  //   {
+  //   title: "Peak Violation Hour",
+  //   value: "2 PM - 3 PM",
+
+  //   icon: Schedule,
+  // },
+  // ];
+
   const MobilePhoneUsageKpiData = [
-      {
-    title: "Total Violations Today",
-    value: "18",
-
-    icon: PhoneIphone,
-  },
-  {
-    title: "Active Alarms",
-    value: "5",
-
-    icon: NotificationsActive,
-  },
-     {
-    title: "Most Affected Zone",
-    value: "Assembly Line",
- 
-    icon: LocationOn,
-  },
-  {
-    title: "Average Response Time",
-    value: "2m 45s",
-
-    icon: AccessTime,
-  },  {
-    title: "Violations by Camera",
-    value: "Camera 07",
-    
-    icon: Videocam,
-  },
     {
-    title: "Peak Violation Hour",
-    value: "2 PM - 3 PM",
-   
-    icon: Schedule,
-  },
+      title: "Total Violations",
+      value: "18", // Total mobile phone usage violations
+      icon: PhoneIphone,
+    },
+    {
+      title: "Latest Incidence",
+      value: "10:30 AM", // Time of last violation detected
+      icon: AccessTime,
+    },
+    {
+      title: "Zone Detection",
+      value: "Assembly Line", // Zone where latest violation detected
+      icon: LocationOn,
+    },
   ];
-
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -106,7 +124,7 @@ const MobilePhoneUsage: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PhonelinkEraseIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -158,88 +176,78 @@ const MobilePhoneUsage: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "violation", label: "Violation", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "MPU-001",
+            violation: true,
+            zone: "Assembly Line A",
+            camera: "CAM-31",
+            alarmTriggered: true,
+            timestamp: "2025-09-24 09:12",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "MPU-002",
+            violation: false,
+            zone: "Loading Dock",
+            camera: "CAM-32",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 09:20",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "MPU-003",
+            violation: true,
+            zone: "Parking Lot",
+            camera: "CAM-33",
+            alarmTriggered: true,
+            timestamp: "2025-09-24 09:35",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            id: "MPU-004",
+            violation: false,
+            zone: "Main Factory Floor",
+            camera: "CAM-34",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 09:50",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: [
+              "Assembly Line A",
+              "Loading Dock",
+              "Parking Lot",
+              "Main Factory Floor",
+            ],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "violation",
+            label: "Violation",
+            type: "select",
+            options: ["true", "false"],
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="mobile-phone-usage-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
       />
     </Box>

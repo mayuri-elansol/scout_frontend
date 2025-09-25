@@ -3,7 +3,11 @@
 
 import React, { useState } from "react";
 import { PageType } from "@/app/types";
-import { dashboardMenu, alertMenu, analyticsMenu } from "@/app/config/menuConfig";
+import {
+  dashboardMenu,
+  alertMenu,
+  analyticsMenu,
+} from "@/app/config/menuConfig";
 import {
   Box,
   Typography,
@@ -25,7 +29,7 @@ interface BreadcrumbItem {
   clickable?: boolean;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
   const theme = useTheme();
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -55,39 +59,39 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
 
   // Generate breadcrumbs dynamically
   const getBreadcrumbItems = (): BreadcrumbItem[] => {
-  const items: BreadcrumbItem[] = [];
+    const items: BreadcrumbItem[] = [];
 
-  // Check Dashboard
-  if (dashboardMenu.some((item) => item.page === currentPage)) {
-    items.push({ label: "Dashboard", clickable: false });
-    return items;
-  }
-
-  // Check Alerts / Settings / Live Streaming
-  const alertItem = alertMenu.find((item) => item.page === currentPage);
-  if (alertItem) {
-    items.push({ label: alertItem.name, clickable: false });
-    return items;
-  }
-
-  // Check Analytics nested structure
-  for (const category of analyticsMenu) {
-    const pageItem = category.items.find((item) => item.page === currentPage);
-    if (pageItem) {
-      // Add main Analytics title
-      items.push({ label: " Analytics", clickable: false });
-      // Add category title
-      items.push({ label: category.title, clickable: false });
-      // Add specific page
-      items.push({ label: pageItem.name, clickable: false });
+    // Check Dashboard
+    if (dashboardMenu.some((item) => item.page === currentPage)) {
+      items.push({ label: "Dashboard", clickable: false });
       return items;
     }
-  }
 
-  // Fallback
-  items.push({ label: "Dashboard", clickable: false });
-  return items;
-};
+    // Check Alerts / Settings / Live Streaming
+    const alertItem = alertMenu.find((item) => item.page === currentPage);
+    if (alertItem) {
+      items.push({ label: alertItem.name, clickable: false });
+      return items;
+    }
+
+    // Check Analytics nested structure
+    for (const category of analyticsMenu) {
+      const pageItem = category.items.find((item) => item.page === currentPage);
+      if (pageItem) {
+        // Add main Analytics title
+        items.push({ label: " Analytics", clickable: false });
+        // Add category title
+        items.push({ label: category.title, clickable: false });
+        // Add specific page
+        items.push({ label: pageItem.name, clickable: false });
+        return items;
+      }
+    }
+
+    // Fallback
+    items.push({ label: "Dashboard", clickable: false });
+    return items;
+  };
 
   const breadcrumbItems = getBreadcrumbItems();
 
@@ -120,12 +124,16 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage, onPageChange }) =>
             {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
             <Typography
               sx={{
-                fontWeight: index === breadcrumbItems.length - 1 ? 500 : "normal",
-                color: index === breadcrumbItems.length - 1 ? "#1c2025" : "#5c6b7d",
+                fontWeight:
+                  index === breadcrumbItems.length - 1 ? 500 : "normal",
+                color:
+                  index === breadcrumbItems.length - 1 ? "#1c2025" : "#5c6b7d",
                 fontSize: "14px",
                 cursor: item.clickable ? "pointer" : "default",
                 // color: item.clickable ? theme.palette.primary.main : undefined,
-                "&:hover": item.clickable ? { textDecoration: "underline" } : undefined,
+                "&:hover": item.clickable
+                  ? { textDecoration: "underline" }
+                  : undefined,
               }}
               onClick={item.clickable ? item.onClick : undefined}
             >

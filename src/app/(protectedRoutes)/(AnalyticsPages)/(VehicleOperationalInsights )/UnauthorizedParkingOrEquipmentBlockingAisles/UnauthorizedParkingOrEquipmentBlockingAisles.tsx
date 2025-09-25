@@ -9,34 +9,31 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import { Shield, DirectionsCar, Block, LocationOn } from "@mui/icons-material";
-
+import BlockIcon from "@mui/icons-material/Block";
+import { Block, DirectionsCar, LocationOn, Shield } from "@mui/icons-material";
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   const KpiData = [
- 
-
-
-     {
-    title: "Total Blockages",
-    value: "87", 
-    icon: Shield, 
-  },
-  {
-    title: "Vehicle Blockages",
-    value: "12", // specific to cars/vehicles
-    icon: DirectionsCar, // better for car-related blockages
-  },
-  {
-    title: "Non-Vehicle Blockages",
-    value: "94", 
-    icon: Block, 
-  },
-  {
-    title: "Most Affected Zone",
-    value: "Zone A", 
-    icon: LocationOn, 
-  },
+    {
+      title: "Total Blockages",
+      value: "87",
+      icon: Shield,
+    },
+    {
+      title: "Vehicle Blockages",
+      value: "12", // specific to cars/vehicles
+      icon: DirectionsCar, // better for car-related blockages
+    },
+    {
+      title: "Non-Vehicle Blockages",
+      value: "94",
+      icon: Block,
+    },
+    {
+      title: "Most Affected Zone",
+      value: "Zone A",
+      icon: LocationOn,
+    },
   ];
 
   const recentViolations = [
@@ -44,14 +41,14 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       title: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
-     
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
-    
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
@@ -92,7 +89,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <BlockIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -144,88 +141,72 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "type", label: "Type ", minWidth: 120 },
+
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "timestamp", label: "Timestamp", minWidth: 150 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "UP-001",
+            type: "Car",
+            snapshot: "snapshot_url_1.jpg",
+            zone: "Parking Lot A",
+            camera: "CAM-301",
+            timestamp: "2025-09-24 09:15:00",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "UP-002",
+            type: "Not Car",
+            snapshot: "snapshot_url_2.jpg",
+            zone: "Loading Dock B",
+            camera: "CAM-302",
+            timestamp: "2025-09-24 09:45:00",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "UP-003",
+            type: "Car",
+            snapshot: "snapshot_url_3.jpg",
+            zone: "Main Gate",
+            camera: "CAM-303",
+            timestamp: "2025-09-24 10:05:00",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            id: "UP-004",
+            type: "Not Car",
+            snapshot: "snapshot_url_4.jpg",
+            zone: "Warehouse Area",
+            camera: "CAM-304",
+            timestamp: "2025-09-24 10:30:00",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "typeOf",
+            label: "Type Of",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: ["Car", "Not Car"],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: [
+              "Parking Lot A",
+              "Loading Dock B",
+              "Main Gate",
+              "Warehouse Area",
+            ],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="unauthorized-parking-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
         isDownload={true}
       />

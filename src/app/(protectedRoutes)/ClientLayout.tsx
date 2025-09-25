@@ -15,6 +15,8 @@ import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface ClientLayoutProps {
   children: ReactNode;
 }
@@ -86,8 +88,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               currentPage={currentPage}
               onPageChange={handlePageChange}
             />
-
-            {children}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {children}
+            </LocalizationProvider>
           </RouteLoader>
         </Box>
       </Box>

@@ -1,46 +1,53 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import { Shield,NotificationsActive, CheckCircle, Schedule, ReportProblem,Whatshot } from "@mui/icons-material";
+import {
+  Shield,
+  NotificationsActive,
+  CheckCircle,
+  Schedule,
+  ReportProblem,
+  Whatshot,
+} from "@mui/icons-material";
 
 const FallDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
+  const fallKpiData = [
+    {
+      title: "Total Fall Incidents",
+      value: "24", // Count of all fall/laydown/sleeping incidents
+      icon: ReportProblem,
+    },
+    {
+      title: "Active Alarms",
+      value: "6", // Count of incidents where alarmTriggered = True
+      icon: NotificationsActive,
+    },
+    {
+      title: "Incident-Free Zones",
+      value: "3 / 5", // Number of zones with 0 incidents / total zones
+      icon: CheckCircle,
+    },
+    {
+      title: "Last Detection Time",
+      value: "10 42 AM", // Current timestamp - latest incident createdAt
+      icon: Schedule,
+    },
+    {
+      title: "Most Incident-Prone Zone",
+      value: "Zone B", // Zone with the highest incidents
+      icon: Whatshot,
+    },
+  ];
 
-
-const fallKpiData = [
-  {
-    title: "Total Fall/Laydown/Sleeping Incidents",
-    value: "24", // Count of all records in incident table
-    icon: ReportProblem, // Represents problem/incidents
-  },
-  {
-    title: "Active Alarms",
-    value: "6", // Count of incidents where alarmTriggered = True
-    icon: NotificationsActive, // Represents an active warning/alarm
-  },
-  {
-    title: "Incident-free Zones",
-    value: "3 / 5", // Number of zones with 0 incidents / total zones from settings
-    icon: CheckCircle, // Represents safe/compliant zones
-  },
-  {
-    title: "Time Since Last Incident",
-    value: "1h 42m", // Current timestamp - latest incident createdAt
-    icon: Schedule, // Represents time-related KPI
-  },
-  {
-    title: "Most Incident-Prone Zone",
-    value: "Zone B", // Zone with highest number of incidents
-    icon: Whatshot, // Represents hotspot or high-incident zone
-  },
-];
   const recentViolations = [
     {
       title: "Hard hat missing",

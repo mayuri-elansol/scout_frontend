@@ -10,7 +10,7 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-
+import PhotoCameraFrontIcon from "@mui/icons-material/PhotoCameraFront";
 const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   const EmpIdleTimeKpiData = [
@@ -113,7 +113,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}

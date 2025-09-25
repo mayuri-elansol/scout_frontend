@@ -14,7 +14,6 @@ import {
   Typography,
   Chip,
   useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import { BarChart, ExpandLess, ExpandMore } from "@mui/icons-material";
 import {

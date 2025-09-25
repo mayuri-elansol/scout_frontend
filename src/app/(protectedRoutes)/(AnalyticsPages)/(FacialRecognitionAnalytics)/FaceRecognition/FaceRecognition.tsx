@@ -2,62 +2,61 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, CheckCircle } from "@mui/icons-material";
+import {
+  CheckCircle,
+  AccessTime,
+  Cancel,
+  PersonAddAlt,
+  Login,
+  Logout,
+  Groups,
+} from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import {
-  Groups,
-  Cancel,
-  AccessTime,
-  Login,
-  Logout,
-  PersonAddAlt,
-  PersonRemove,
-} from "@mui/icons-material";
-
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 const FaceRecognition: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   const FaceRecognitionKpiData = [
-  
-   {
-    title: "Total Employees",
-    value: "120", // total count of registered employees
-    icon: Groups, // people group icon
-  },
-  {
-    title: "Present",
-    value: "7", // current present employees
-    icon: CheckCircle, // checkmark = present
-  },
-  {
-    title: "Absent",
-    value: "0", // current absent employees
-    icon: Cancel, // X mark = absent
-  },
-  {
-    title: "Late Arrivals",
-    value: "0", // number of employees late today
-    icon: AccessTime, // clock = late
-  },
-  {
-    title: "Early Arrivals",
-    value: "8", // employees arriving earlier than shift
-    icon: PersonAddAlt, // symbolizing early entry
-  },
-  {
-    title: "Total Entries",
-    value: "134", // total scans in (entry)
-    icon: Login, // entry arrow
-  },
-  {
-    title: "Total Exits",
-    value: "128", // total scans out (exit)
-    icon: Logout, // exit arrow
-  },
+    {
+      title: "Total Employees",
+      value: "120", // total count of registered employees
+      icon: Groups, // people group icon
+    },
+    {
+      title: "Present",
+      value: "7", // current present employees
+      icon: CheckCircle, // checkmark = present
+    },
+    {
+      title: "Absent",
+      value: "0", // current absent employees
+      icon: Cancel, // X mark = absent
+    },
+    {
+      title: "Late Arrivals",
+      value: "0", // number of employees late today
+      icon: AccessTime, // clock = late
+    },
+    {
+      title: "Early Arrivals",
+      value: "8", // employees arriving earlier than shift
+      icon: PersonAddAlt, // symbolizing early entry
+    },
+    {
+      title: "Total Entries",
+      value: "134", // total scans in (entry)
+      icon: Login, // entry arrow
+    },
+    {
+      title: "Total Exits",
+      value: "128", // total scans out (exit)
+      icon: Logout, // exit arrow
+    },
   ];
 
   const recentViolations = [
@@ -65,14 +64,14 @@ const FaceRecognition: React.FC = () => {
       title: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
- 
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
-   
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
@@ -113,7 +112,7 @@ const FaceRecognition: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PersonAddAltIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -128,23 +127,23 @@ const FaceRecognition: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-          skeletonKeys.map((index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              key={index + 1}
-            >
-              <KpiCardSkeleton />
-            </Grid>
-          ))
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
           : // Show actual KPI cards
-          FaceRecognitionKpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              key={index + 1}
-            >
-              <KpiCard {...kpi} />
-            </Grid>
-          ))}
+            FaceRecognitionKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Content Grid */}
@@ -168,88 +167,79 @@ const FaceRecognition: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "firstName", label: "First Name", minWidth: 120 },
+          { id: "lastName", label: "Last Name", minWidth: 120 },
+          { id: "type", label: "Type", minWidth: 100 },
+          { id: "zones", label: "Zones", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 150 },
+          { id: "timestamp", label: "Timestamp", minWidth: 150 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            firstName: "John",
+            lastName: "Doe",
+            type: "Entry",
+            zones: "Main Gate",
+            camera: "CAM-101",
+            timestamp: "2025-09-24 08:15:00",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            firstName: "Jane",
+            lastName: "Smith",
+            type: "Exit",
+            zones: "Side Gate",
+            camera: "CAM-102",
+            timestamp: "2025-09-24 08:45:00",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            firstName: "Alice",
+            lastName: "Johnson",
+            type: "Entry",
+            zones: "Rear Gate",
+            camera: "CAM-103",
+            timestamp: "2025-09-24 09:00:00",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            firstName: "Bob",
+            lastName: "Williams",
+            type: "Exit",
+            zones: "Main Gate",
+            camera: "CAM-104",
+            timestamp: "2025-09-24 09:30:00",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "firstName",
+            label: "First Name",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: ["John", "Jane", "Alice", "Bob"],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "lastName",
+            label: "Last Name",
+            type: "select",
+            options: ["Doe", "Smith", "Johnson", "Williams"],
+          },
+          {
+            id: "type",
+            label: "Type",
+            type: "select",
+            options: ["Entry", "Exit"],
+          },
+          {
+            id: "zones",
+            label: "Zones",
+            type: "select",
+            options: ["Main Gate", "Side Gate", "Rear Gate"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="face-recognition-entry-exit-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
 
       />

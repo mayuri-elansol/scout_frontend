@@ -5,13 +5,14 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
 
-import { People, TrendingUp, CheckCircle, Place, Schedule, Videocam } from "@mui/icons-material";
+import { People, Login, Logout } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
 export const cameraZones: CameraZone[] = [
   {
     zone: "Production Floor",
@@ -47,68 +48,23 @@ const PeopleCount: React.FC = () => {
     },
   ];
 
- const peopleCountKpiData = [
-  {
-    title: "Current People Inside",
-    value: "267",
-    subtitle: "People currently inside",
-    trend: "+12 vs previous",
-    trendColor: "#4caf50",
-    color: "#4caf50",
-    bgColor: "#e8f5e9",
-    icon: People,
-  },
-  {
-    title: "Total Entries Today",
-    value: "512",
-    subtitle: "People entered",
-    trend: "+25",
-    trendColor: "#2196f3",
-    color: "#2196f3",
-    bgColor: "#e3f2fd",
-    icon: TrendingUp,
-  },
-  {
-    title: "Total Exits Today",
-    value: "245",
-    subtitle: "People exited",
-    trend: "-8",
-    trendColor: "#ff9800",
-    color: "#ff9800",
-    bgColor: "#fff8e1",
-    icon: CheckCircle,
-  },
-  {
-    title: "Most Crowded Zone",
-    value: "Production Floor",
-    subtitle: "Zone with highest people inside",
-    trend: "Active",
-    trendColor: "#f44336",
-    color: "#f44336",
-    bgColor: "#ffebee",
-    icon: Place,
-  },
-  {
-    title: "Peak Hour",
-    value: "2 PM - 3 PM",
-    subtitle: "Max people inside",
-    trend: "High activity",
-    trendColor: "#9c27b0",
-    color: "#9c27b0",
-    bgColor: "#f3e5f5",
-    icon: Schedule,
-  },
-  {
-    title: "Camera with Most Activity",
-    value: "Camera 07",
-    subtitle: "Most movements detected",
-    trend: "25 entries/exits",
-    trendColor: "#ff5722",
-    color: "#ff5722",
-    bgColor: "#fbe9e7",
-    icon: Videocam,
-  },
-];
+  const peopleCountKpiData = [
+    {
+      title: "People Inside",
+      value: "267", // Current count of people inside
+      icon: People, // 👥 Crowd of people
+    },
+    {
+      title: "Entry Count",
+      value: "512", // Total entries today
+      icon: Login, // ⬅️ Entry
+    },
+    {
+      title: "Exit Count",
+      value: "245", // Total exits today
+      icon: Logout, // ➡️ Exit
+    },
+  ];
   const KpiCardLoading = false;
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -117,7 +73,7 @@ const PeopleCount: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <People sx={{ fontSize: 28, color: "#4caf50" }} />
+          <FollowTheSignsIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -171,90 +127,45 @@ const PeopleCount: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "recordId", label: "Record ID", minWidth: 100 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "enteredCount", label: "Entered Count", minWidth: 140 },
+          { id: "exitCount", label: "Exit Count", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "currentCount", label: "Current Count", minWidth: 100 },
-          { id: "capacity", label: "Capacity", minWidth: 80 },
-          { id: "occupancy", label: "Occupancy %", minWidth: 100 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            recordId: "PC-7892",
-            timestamp: "15:42",
+            id: "PC-001",
+            enteredCount: 45,
+            exitCount: 20,
             zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
-            status: "ACTIVE",
-            priority: "Medium",
-            resolution: "Normal operations",
+            camera: "CAM-101",
+            timestamp: "2025-09-24 08:15",
           },
           {
-            recordId: "PC-7891",
-            timestamp: "15:28",
+            id: "PC-002",
+            enteredCount: 30,
+            exitCount: 15,
             zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
-            status: "OVERCROWDED",
-            priority: "Critical",
-            resolution: "Crowd dispersal initiated",
+            camera: "CAM-102",
+            timestamp: "2025-09-24 08:30",
           },
           {
-            recordId: "PC-7890",
-            timestamp: "15:15",
+            id: "PC-003",
+            enteredCount: 60,
+            exitCount: 55,
             zone: "Assembly Line A",
-            currentCount: "45",
-            capacity: "50",
-            occupancy: "90%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Within safe limits",
+            camera: "CAM-103",
+            timestamp: "2025-09-24 09:00",
           },
           {
-            recordId: "PC-7889",
-            timestamp: "14:58",
+            id: "PC-004",
+            enteredCount: 25,
+            exitCount: 10,
             zone: "Emergency Exit Area",
-            currentCount: "25",
-            capacity: "20",
-            occupancy: "125%",
-            status: "BLOCKED",
-            priority: "Critical",
-            resolution: "Exit clearance required",
-          },
-          {
-            recordId: "PC-7888",
-            timestamp: "14:32",
-            zone: "Conference Room B",
-            currentCount: "12",
-            capacity: "15",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Meeting in progress",
-          },
-          {
-            recordId: "PC-7887",
-            timestamp: "14:15",
-            zone: "Loading Dock",
-            currentCount: "8",
-            capacity: "10",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Normal loading operations",
-          },
-          {
-            recordId: "PC-7886",
-            timestamp: "13:58",
-            zone: "Parking Lot",
-            currentCount: "156",
-            capacity: "200",
-            occupancy: "78%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Adequate parking space",
+            camera: "CAM-104",
+            timestamp: "2025-09-24 09:20",
           },
         ]}
         filters={[
@@ -267,25 +178,8 @@ const PeopleCount: React.FC = () => {
               "Cafeteria",
               "Assembly Line A",
               "Emergency Exit Area",
-              "Conference Room B",
-              "Loading Dock",
-              "Parking Lot",
             ],
           },
-          {
-            id: "status",
-            label: "Status",
-            type: "select",
-            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
-          },
-          {
-            id: "priority",
-            label: "Priority",
-            type: "select",
-            options: ["Critical", "Medium", "Low"],
-          },
-          { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
-          { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}

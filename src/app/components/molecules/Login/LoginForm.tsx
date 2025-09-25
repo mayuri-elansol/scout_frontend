@@ -24,7 +24,7 @@ import {
 const LoginForm: React.FC<LoginFormProps> = ({
   showPassword,
   isLoading,
-  error,
+  onSubmit,
   onTogglePassword,
   onSubmit,
 }) => {

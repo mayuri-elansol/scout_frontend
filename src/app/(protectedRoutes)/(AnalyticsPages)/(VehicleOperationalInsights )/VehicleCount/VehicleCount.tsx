@@ -1,37 +1,38 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield, DirectionsCar, SwapHoriz, Place,Timeline } from "@mui/icons-material";
+import { DirectionsCar, SwapHoriz, Place, Timeline } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-
+import NoCrashIcon from "@mui/icons-material/NoCrash";
 const VehicleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
- {
-    title: "Total Vehicles",
-    value: "87",
-    icon: DirectionsCar, 
-  },
-  {
-    title: "Entry vs Exit",
-    value: "12 In / 8 Out", 
-    icon: SwapHoriz, 
-  },
-  {
-    title: "Busiest Zone",
-    value: "Zone A",
-    icon: Place, 
-  },
-  {
-    title: "Current Vehicle Occupancy",
-    value: "28",
-    icon: Timeline, 
-  },
+    {
+      title: "Total Vehicles",
+      value: "87",
+      icon: DirectionsCar,
+    },
+    {
+      title: "Entry vs Exit",
+      value: "12 In / 8 Out",
+      icon: SwapHoriz,
+    },
+    {
+      title: "Busiest Zone",
+      value: "Zone A",
+      icon: Place,
+    },
+    {
+      title: "Current Vehicle Occupancy",
+      value: "28",
+      icon: Timeline,
+    },
   ];
 
   const recentViolations = [
@@ -39,14 +40,14 @@ const VehicleCount: React.FC = () => {
       title: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
-     
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
-     
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
@@ -87,7 +88,7 @@ const VehicleCount: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <NoCrashIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -139,88 +140,89 @@ const VehicleCount: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "numberDetected", label: "Number Detected", minWidth: 150 },
+          { id: "status", label: "Status (Entry/Exit)", minWidth: 150 },
+          { id: "validNumber", label: "Valid Number", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "VC-001",
+            numberDetected: "MH12AB1234",
+            status: "Entry",
+            validNumber: true,
+            zone: "Main Gate",
+            camera: "CAM-101",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 08:15",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "VC-002",
+            numberDetected: "MH12XY9876",
+            status: "Exit",
+            validNumber: false,
+            zone: "Main Gate",
+            camera: "CAM-102",
+            alarmTriggered: true,
+            timestamp: "2025-09-24 09:00",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "VC-003",
+            numberDetected: "MH14CD5678",
+            status: "Entry",
+            validNumber: true,
+            zone: "Loading Dock",
+            camera: "CAM-103",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 09:30",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            id: "VC-004",
+            numberDetected: "MH20EF2345",
+            status: "Exit",
+            validNumber: false,
+            zone: "Parking Lot",
+            camera: "CAM-104",
+            alarmTriggered: true,
+            timestamp: "2025-09-24 10:00",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: ["Main Gate", "Loading Dock", "Parking Lot"],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "status",
+            label: "Status",
+            type: "select",
+            options: ["Entry", "Exit"],
+          },
+          {
+            id: "validNumber",
+            label: "Valid Number",
+            type: "select",
+            options: ["true", "false"],
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="vehicle-count-anpr-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
       />
     </Box>

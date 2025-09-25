@@ -1,54 +1,81 @@
 "use client";
+
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Typography } from "@mui/material";
-
-import { Speed, TrendingUp, LocationOn, AccessTime } from "@mui/icons-material";
-
+import {
+  People,
+  Warning,
+  Shield,
+  Groups,
+  LocationOn,
+  AccessTime,
+} from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import SpeedIcon from "@mui/icons-material/Speed";
-const VehicalSpeedMonitoring: React.FC = () => {
-  const recentViolations = [
+import LockPersonIcon from "@mui/icons-material/LockPerson";
+const EmployeePresenceRestrictedAreaPage: React.FC = () => {
+  const employeeRestrictedPresenceKpiData = [
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      title: "Employees in Critical Area",
+      value: "12", // Number of employees detected in critical areas
+      icon: Groups, // 👥 Represents group of people
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      title: "Zone Violations",
+      value: "3 (Zone A, Zone B, Zone C)", // Number of violations and zones
+      icon: LocationOn, // 📍 Zone/location indicator
+    },
+    {
+      title: "Last Incidence",
+      value: "10:45 AM", // Time of last detected violation
+      icon: AccessTime, // ⏰ Time
     },
   ];
-  const VehicalSpeedMonitoringKpiData = [
+  const activePersonnel = [
     {
-      title: "Speed Violation Count",
-      value: "267",
-      icon: Speed, // 🚦 Speedometer
+      title: "John Mitchell - Level 3 Operator",
+      zone: "Reactor Control Room",
+      time: "Day Shift",
+      Id: "EMP-4521",
+      severity: "N/A",
+      status: "ACTIVE",
+      bgColor: "#e8f5e9",
+      imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
-      title: "Highest Speed Recorded",
-      value: "110 km/h",
-      icon: TrendingUp, // 📈 Indicates peak/high value
+      title: "Sarah Chen - Senior Technician",
+      zone: "Chemical Processing Unit",
+      time: "Day Shift",
+      Id: "EMP-3847",
+      severity: "N/A",
+      status: "ON_BREAK",
+      bgColor: "#fff8e1",
+      imageUrl: "https://picsum.photos/1200/600?random=12",
     },
     {
-      title: "Highest Speed Violation Zone",
-      value: "Zone 3",
-      icon: LocationOn, // 📍 Zone / Location
+      title: "Michael Torres - Safety Coordinator",
+      zone: "Emergency Response Station",
+      time: "Day Shift",
+      Id: "EMP-5623",
+      severity: "N/A",
+      status: "ACTIVE",
+      bgColor: "#e8f5e9",
+      imageUrl: "https://picsum.photos/1200/600?random=13",
     },
     {
-      title: "Last Detection Time",
-      value: "11:15 AM",
-      icon: AccessTime, // ⏰ Time
+      title: "Lisa Anderson - Lab Supervisor",
+      zone: "Quality Control Lab",
+      time: "Day Shift",
+      Id: "EMP-7891",
+      severity: "N/A",
+      status: "MISSING",
+      bgColor: "#ffebee",
+      imageUrl: "https://picsum.photos/1200/600?random=14",
     },
   ];
   const cameraZones: CameraZone[] = [
@@ -64,26 +91,27 @@ const VehicalSpeedMonitoring: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
-
   const KpiCardLoading = false;
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+
   return (
     <Box>
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <SpeedIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <LockPersonIcon sx={{ fontSize: 28, color: "#2196f3" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
-            Vehicle Speed Monitoring inside premises
+            Employee presence detection in Restricted areas
           </Typography>
         </Box>
       </Box>
 
       {/* KPI Cards */}
+
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
@@ -96,7 +124,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
               </Grid>
             ))
           : // Show actual KPI cards
-            VehicalSpeedMonitoringKpiData.map((kpi, index) => (
+            employeeRestrictedPresenceKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 key={index + 1}
@@ -105,85 +133,63 @@ const VehicalSpeedMonitoring: React.FC = () => {
               </Grid>
             ))}
       </Grid>
+
       {/* Content Grid */}
       <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
+        {/* Active Critical Zone Personnel */}
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
             label="Recent Violations"
-            violations={recentViolations}
+            violations={activePersonnel}
             loading={false}
           />
         </Grid>
-        {/* PPE Compliance by Zone */}
+        {/* Critical Zones Status */}
+        {/* item xs={12} lg={4} */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
 
-      {/* People Count Report */}
+      {/* Employee Presence Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
           { id: "id", label: "ID", minWidth: 100 },
-          { id: "speed", label: "Speed", minWidth: 100 },
-          { id: "vehicleType", label: "Vehicle Type", minWidth: 120 },
-          { id: "vehicleNumber", label: "Vehicle Number", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "camera", label: "Camera", minWidth: 120 },
-
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
-          { id: "createdAt", label: "Timestamp", minWidth: 140 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            id: "VD-101",
-            speed: "65 km/h",
-            vehicleType: "Truck",
-            vehicleNumber: "MH12AB1234",
-            zone: "Main Entrance",
-            camera: "CAM-01",
-            snapshot: "snapshot1.jpg",
+            id: "EPD-001",
+            zone: "Main Factory Floor",
+            camera: "CAM-21",
             alarmTriggered: true,
-            createdAt: "2025-09-24 15:42",
-            updatedAt: "2025-09-24 15:50",
+            timestamp: "2025-09-24 10:15",
           },
           {
-            id: "VD-102",
-            speed: "45 km/h",
-            vehicleType: "Car",
-            vehicleNumber: "MH14CD5678",
+            id: "EPD-002",
             zone: "Loading Dock",
-            camera: "CAM-02",
-            snapshot: "snapshot2.jpg",
+            camera: "CAM-22",
             alarmTriggered: false,
-            createdAt: "2025-09-24 15:28",
-            updatedAt: "2025-09-24 15:35",
+            timestamp: "2025-09-24 10:25",
           },
           {
-            id: "VD-103",
-            speed: "72 km/h",
-            vehicleType: "Bus",
-            vehicleNumber: "MH20EF9012",
-            zone: "Assembly Area",
-            camera: "CAM-03",
-            snapshot: "snapshot3.jpg",
+            id: "EPD-003",
+            zone: "Assembly Line A",
+            camera: "CAM-23",
             alarmTriggered: true,
-            createdAt: "2025-09-24 15:15",
-            updatedAt: "2025-09-24 15:25",
+            timestamp: "2025-09-24 10:35",
           },
           {
-            id: "VD-104",
-            speed: "30 km/h",
-            vehicleType: "Bike",
-            vehicleNumber: "MH22GH3456",
+            id: "EPD-004",
             zone: "Parking Lot",
-            camera: "CAM-04",
-            snapshot: "snapshot4.jpg",
+            camera: "CAM-24",
             alarmTriggered: false,
-            createdAt: "2025-09-24 14:58",
-            updatedAt: "2025-09-24 15:00",
+            timestamp: "2025-09-24 10:45",
           },
         ]}
         filters={[
@@ -192,17 +198,11 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Zone",
             type: "select",
             options: [
-              "Main Entrance",
+              "Main Factory Floor",
               "Loading Dock",
-              "Assembly Area",
+              "Assembly Line A",
               "Parking Lot",
             ],
-          },
-          {
-            id: "vehicleType",
-            label: "Vehicle Type",
-            type: "select",
-            options: ["Truck", "Car", "Bus", "Bike"],
           },
           {
             id: "alarmTriggered",
@@ -213,11 +213,12 @@ const VehicalSpeedMonitoring: React.FC = () => {
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        downloadFileName="vehicle-detection-report"
+        downloadFileName="employee-presence-restricted-report"
+        isDownload={true}
         loading={false}
       />
     </Box>
   );
 };
 
-export default VehicalSpeedMonitoring;
+export default EmployeePresenceRestrictedAreaPage;
