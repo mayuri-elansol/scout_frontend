@@ -4,8 +4,7 @@
 import React from "react";
 import { PageType } from "@/app/types";
 import {
-  dashboardMenu,
-  alertMenu,
+  
   analyticsMenu,
 } from "@/app/config/menuConfig";
 import { Box, Typography } from "@mui/material";
@@ -21,78 +20,6 @@ interface BreadcrumbItem {
   onClick?: () => void;
   clickable?: boolean;
 }
-
-// const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
-//   // Generate breadcrumbs dynamically
-//   const getBreadcrumbItems = (): BreadcrumbItem[] => {
-//     const items: BreadcrumbItem[] = [];
-
-//     if (dashboardMenu.some((item) => item.page === currentPage)) {
-//       items.push({ label: "Dashboard", clickable: false });
-//       return items;
-//     }
-
-//     const alertItem = alertMenu.find((item) => item.page === currentPage);
-//     if (alertItem) {
-//       items.push({ label: alertItem.name, clickable: false });
-//       return items;
-//     }
-
-//     for (const category of analyticsMenu) {
-//       const pageItem = category.items.find((item) => item.page === currentPage);
-//       if (pageItem) {
-//         items.push({ label: "Analytics", clickable: false });
-//         items.push({ label: category.title, clickable: false });
-//         items.push({ label: pageItem.name, clickable: false });
-//         return items;
-//       }
-//     }
-
-//     items.push({ label: "Dashboard", clickable: false });
-//     return items;
-//   };
-
-//   const breadcrumbItems = getBreadcrumbItems();
-
-//   return (
-//     <Box
-//       sx={{
-//         mb: 3,
-//         borderBottom: "1px solid #f0f0f0",
-//         pb:1,
-//         display: "flex",
-//         alignItems: "center",
-//         gap: 1,
-//         color: "#5c6b7d",
-//         flexWrap: "wrap",
-//         "@media (max-width:798px)": { display: "none" },
-//       }}
-//     >
-//       {breadcrumbItems.map((item, index) => (
-//         <React.Fragment key={index + 1}>
-//           {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
-//           <Typography
-//             sx={{
-//               fontWeight:
-//                 index === breadcrumbItems.length - 1 ? 500 : "normal",
-//               color:
-//                 index === breadcrumbItems.length - 1 ? "#1c2025" : "#5c6b7d",
-//               fontSize: "14px",
-//               cursor: item.clickable ? "pointer" : "default",
-//               "&:hover": item.clickable
-//                 ? { textDecoration: "underline" }
-//                 : undefined,
-//             }}
-//             onClick={item.clickable ? item.onClick : undefined}
-//           >
-//             {item.label}
-//           </Typography>
-//         </React.Fragment>
-//       ))}
-//     </Box>
-//   );
-// };
-
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
   // Generate breadcrumbs dynamically
