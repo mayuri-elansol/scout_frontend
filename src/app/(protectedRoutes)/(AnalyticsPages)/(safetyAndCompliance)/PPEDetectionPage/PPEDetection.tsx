@@ -18,8 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import ShowChartIcon from '@mui/icons-material/QueryStats';
+
 
 const PPEDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());

@@ -27,7 +27,7 @@ import {
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
-
+import theme from "../../../theme/theme"
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -37,7 +37,7 @@ interface SidebarProps {
 const MenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
-  theme: any;
+  theme: typeof theme;
 }>(({ item, pathname, theme }) => (
   <ListItem disablePadding sx={{ mb: 0.5 }}>
     <ListItemButton
@@ -83,7 +83,7 @@ MenuItem.displayName = "MenuItem";
 const SubMenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
-  theme: any;
+  theme: typeof theme;
   categoryTitle: string;
 }>(({ item, pathname, theme, categoryTitle }) => (
   <ListItem disablePadding>
@@ -145,7 +145,7 @@ const CategorySection = React.memo<{
   openCategories: Record<string, boolean>;
   onToggle: (title: string) => void;
   pathname: string;
-  theme: any;
+  theme: typeof theme;
 }>(({ category, openCategories, onToggle, pathname, theme }) => {
   const filteredItems = useMemo(
     () => category.items.filter((i) => i.featureFlag),
@@ -212,7 +212,7 @@ CategorySection.displayName = "CategorySection";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
-  let drawerWidth: string = "315px";
+  const drawerWidth: string = "315px";
 
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
@@ -433,6 +433,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
       handleAnalyticsToggle,
       handleSettingsToggle,
       handleCategoryToggle,
+        isAnalyticsActive, 
+    isSettingsActive,  
     ]
   );
 

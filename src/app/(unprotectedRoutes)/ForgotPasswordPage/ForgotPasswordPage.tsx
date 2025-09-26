@@ -30,8 +30,7 @@ const ForgotPasswordPage: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setIsSubmitted(true);
       console.log("formdata", formData);
-      // Navigate after success (optional)
-      // router.push("/login");
+  
     } catch (err) {
       console.error(err);
       setError("Failed to reset password. Please try again.");

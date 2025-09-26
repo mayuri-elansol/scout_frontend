@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import React from "react";
-import ResetPasswordForm, { ResetPasswordFormData } from "./ResetPassword";
+import ResetPasswordForm from "./ResetPassword";
+import type { ResetPasswordFormData } from "./ResetPassword.type";
 
 const meta: Meta<typeof ResetPasswordForm> = {
   title: "Components/Molecules/ResetPasswordForm",

@@ -14,7 +14,7 @@ type Story = StoryObj<typeof ViolationCard>;
 // Default sample data
 const sampleViolation: {
   title: string;
-  location: string;
+  zone: string;
   time: string;
   Id: string;
   severity?: "HIGH" | "MEDIUM" | "LOW";
@@ -22,7 +22,7 @@ const sampleViolation: {
   imageUrl?: string;
 } = {
   title: "Unauthorized Entry",
-  location: "Main Gate",
+  zone: "Main Gate",
   time: "10:30 AM",
   Id: "VIO-00123",
   severity: "HIGH",

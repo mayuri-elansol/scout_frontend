@@ -11,12 +11,14 @@ interface KpiCardProps {
   icon: SvgIconComponent;
   size?: "small" | "medium" | "large";
   customWidth?: number;
+
   trendColor?: string;
   color?: string;
   bgColor?: string;
   borderColor?: string;
   iconBg?: string;
 }
+
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
