@@ -76,7 +76,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         <Box
           sx={{
             flex: 1,
-            p: 4,
+            pl: 4,
+            pr:4,
+            pb:4,
             pt: 9,
             backgroundColor: "#f5f7fa",
             width: "78vw",

@@ -28,5 +28,8 @@
   "face-recognition":true,
   "monitoring-canteen-usage":true,
   "employee-idle-time":true,
-  "employee-idle-with-face-recognition":true
+  "employee-idle-with-face-recognition":true,
+  "user-management":true,
+  "role-management":true
+
 }

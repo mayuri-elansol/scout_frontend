@@ -44,7 +44,7 @@ interface ReportFilter {
 }
 
 interface ReportTableProps {
-  title: string;
+  title?: string;
   columns: ReportColumn[];
   data: ReportData[];
   downloadFileName: string;
@@ -399,6 +399,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
       </Card>
     </Box>
   );
+  
 };
 
 export default ReportTable;

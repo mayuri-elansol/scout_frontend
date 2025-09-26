@@ -3,13 +3,14 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const PeoplePresence: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
@@ -97,18 +98,40 @@ const PeoplePresence: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
-      {/* KPI Cards */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        {/* KPI Cards */}
+
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((key) => (
               <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             PeoplePresenceKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -117,25 +140,25 @@ const PeoplePresence: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"

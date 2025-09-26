@@ -3,78 +3,16 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import SecurityIcon from "@mui/icons-material/Security";
 import { AccessTime, LocationOn, Security } from "@mui/icons-material";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const SleepingSecurityPersonnel: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-
-  // const SleepingSecurityPersonnelKpiData = [
-  //   {
-  //     title: "Sleeping Incidents",
-  //     value: "12", // replace with actual count of sleeping incidents
-  //     subtitle: "Personnel caught sleeping",
-  //     trend: "+2",
-  //     trendColor: "#f44336",
-  //     color: "#f44336",
-  //     bgColor: "#ffebee",
-  //     icon: Warning,
-  //   },
-  //   {
-  //     title: "Absence Incidents",
-  //     value: "5", // replace with actual count of absence incidents
-  //     subtitle: "Personnel absent from post",
-  //     trend: "+1",
-  //     trendColor: "#ff9800",
-  //     color: "#ff9800",
-  //     bgColor: "#fff8e1",
-  //     icon: Shield,
-  //   },
-  //   {
-  //     title: "Total Incidents",
-  //     value: "17", // sum of sleeping + absence, without double counting
-  //     subtitle: "Total incidents recorded",
-  //     trend: "+3",
-  //     trendColor: "#f44336",
-  //     color: "#f44336",
-  //     bgColor: "#ffebee",
-  //     icon: CheckCircle,
-  //   },
-  //   {
-  //     title: "Active Cameras with Incidents",
-  //     value: "4", // unique cameras where incidents occurred
-  //     subtitle: "Cameras detecting incidents",
-  //     trend: "Stable",
-  //     trendColor: "#2196f3",
-  //     color: "#2196f3",
-  //     bgColor: "#e3f2fd",
-  //     icon: CameraAlt,
-  //   },
-  //   {
-  //     title: "Most Incident Zone",
-  //     value: "Main Gate", // zone with highest incidents
-  //     subtitle: "Zone with most issues",
-  //     trend: "Recent",
-  //     trendColor: "#ff9800",
-  //     color: "#ff9800",
-  //     bgColor: "#fff8e1",
-  //     icon: Place,
-  //   },
-  //   {
-  //     title: "Peak Hour of Incidents",
-  //     value: "14:00", // hour with maximum incidents
-  //     subtitle: "Hour with highest incident count",
-  //     trend: "Today",
-  //     trendColor: "#4caf50",
-  //     color: "#4caf50",
-  //     bgColor: "#e8f5e9",
-  //     icon: Schedule,
-  //   },
-  // ];
 
   const SleepingSecurityPersonnelKpiData = [
     {
@@ -159,18 +97,40 @@ const SleepingSecurityPersonnel: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
-      {/* KPI Cards */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        {/* KPI Cards */}
+
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((key) => (
               <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             SleepingSecurityPersonnelKpiData.map((kpi) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -179,25 +139,25 @@ const SleepingSecurityPersonnel: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"

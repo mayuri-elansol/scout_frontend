@@ -189,10 +189,15 @@
 
 "use client";
 import React, { useState } from "react";
-import { Box, Typography, Grid, Tabs, Tab } from "@mui/material";
-import { Warning, Circle } from "@mui/icons-material";
+import { Box, Typography, Grid, Tabs, Tab, Paper, Divider } from "@mui/material";
+import { Warning, Circle, DirectionsCar } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import SafetyIcon from "@mui/icons-material/Shield";
+import Visibility from "@mui/icons-material/Visibility";
+import WorkforceIcon from "@mui/icons-material/People";
+import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 
 // 🔹 Types
 interface FilterParams {
@@ -212,11 +217,11 @@ interface ReportFilter {
 }
 
 const reportColumns = [
-  { id: "violationId", label: "Violation ID", minWidth: 120 },
-  { id: "timestamp", label: "Timestamp", minWidth: 80 },
+  { id: "useCaseType", label: "Use Case Type", minWidth: 120 },
+  { id: "detectionTime", label: "Timestamp", minWidth: 80 },
   { id: "zone", label: "Zone", minWidth: 120 },
-  { id: "employeeId", label: "Employee ID", minWidth: 120 },
-  { id: "violationType", label: "Violation Type", minWidth: 150 },
+  { id: "camera", label: "Camera", minWidth: 120 },
+  // { id: "violationType", label: "Violation Type", minWidth: 150 },
 ];
 
 const reportFilters: ReportFilter[] = [
@@ -368,12 +373,13 @@ const SystemAlerts: React.FC = () => {
   ];
 
   // 🔹 Table Configs (avoid repetition)
+
   const alertTables = [
-    { key: "safety", label: "Safety and Compliances Alerts" },
-    { key: "security", label: "Security Monitoring Alerts" },
-    { key: "workforce", label: "Workforce Monitoring Alerts" },
-    { key: "operational", label: "Operational Insight Alerts" },
-    { key: "facial", label: "Facial Recognition Alerts" },
+    { key: "safety", label: "Safety and Compliances Alerts", icon: <SafetyIcon /> },
+    { key: "security", label: "Surveillance Monitoring Alerts", icon: <Visibility /> },
+    { key: "workforce", label: "Workforce Monitoring Alerts", icon: <WorkforceIcon /> },
+    { key: "operational", label: "Vehicle Operational Insight Alerts", icon: <DirectionsCar /> },
+    { key: "facial", label: "Facial Recognition Alerts", icon: <FaceRecognitionIcon /> },
   ];
 
   // 🔹 Handlers
@@ -390,7 +396,7 @@ const SystemAlerts: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Paper sx={{ pl: 3, pr: 3, pb: 3, pt: 2, mt: 1.2, mb: 4, borderRadius: 2, backgroundColor: "#ffffff" }}>
       {/* Page Header */}
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -402,7 +408,8 @@ const SystemAlerts: React.FC = () => {
             System Alerts & Notifications
           </Typography>
         </Box>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <TimeFilter />
+        {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Circle sx={{ fontSize: 8, color: "#4caf50" }} />
           <Typography sx={{ fontSize: "12px", color: "#666" }}>
             Real-time monitoring
@@ -410,7 +417,7 @@ const SystemAlerts: React.FC = () => {
           <Typography sx={{ fontSize: "12px", color: "#999", ml: 2 }}>
             Last updated: 3:53:18 PM
           </Typography>
-        </Box>
+        </Box> */}
       </Box>
 
       {/* Alert Statistics */}
@@ -432,12 +439,42 @@ const SystemAlerts: React.FC = () => {
         <Tabs
           value={tabIndex}
           onChange={(_, newValue) => setTabIndex(newValue)}
-          sx={{ mb: -4 }}
           variant="scrollable"
           scrollButtons="auto"
+          sx={{
+            mb: -4,
+            pl: 1.2,
+            // pr: 2,
+            minHeight: 36,
+            "& .MuiTabs-indicator": {
+              bottom: 0,
+              height: 2,
+            },
+            pr: 0,
+          }}
         >
           {alertTables.map((t, i) => (
-            <Tab key={t.key} label={t.label} />
+            <Tab
+              key={t.key}
+              label={t.label}
+              icon={t.icon}
+              iconPosition="start"
+              sx={{
+                display: "flex",
+                fontWeight: tabIndex === i ? "bold" : "normal",
+                textTransform: "none",
+                fontSize: 16,
+                minHeight: 36,
+                py: 2,
+                "&.MuiTab-root": {
+                  alignItems: "center",
+                },
+                boxShadow: tabIndex === i ? "none" : "0 3px 8px rgba(0,0,0,0.15)",
+
+              }}
+            />
+
+
           ))}
         </Tabs>
 
@@ -456,13 +493,13 @@ const SystemAlerts: React.FC = () => {
                 onExport={handleExport}
                 downloadFileName={`${t.key}-alerts`}
                 loading={false}
-                sx={{ borderRadius: "2.5px !important" }}
+
 
               />
             )
         )}
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

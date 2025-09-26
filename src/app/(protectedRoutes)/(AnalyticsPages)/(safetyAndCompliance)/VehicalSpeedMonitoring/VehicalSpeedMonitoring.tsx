@@ -2,7 +2,7 @@
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 
 import { Speed, TrendingUp, LocationOn, AccessTime } from "@mui/icons-material";
 
@@ -12,6 +12,7 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import SpeedIcon from "@mui/icons-material/Speed";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
     {
@@ -84,9 +85,32 @@ const VehicalSpeedMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -95,7 +119,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             VehicalSpeedMonitoringKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -104,24 +128,24 @@ const VehicalSpeedMonitoring: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* PPE Compliance by Zone */}
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* People Count Report */}
       <ReportTable
         title="Detailed Report"

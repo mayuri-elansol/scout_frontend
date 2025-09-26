@@ -119,19 +119,26 @@ const TimeFilter: React.FC = () => {
         {/* Popup Dialog for Custom Range */}
         <Dialog open={customDialogOpen} onClose={() => setCustomDialogOpen(false)} maxWidth="xs" fullWidth>
           <DialogTitle>Select Custom Range</DialogTitle>
-          <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 ,overflow:"visible"}}>
+          <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1, overflow: "visible" }}>
+
             <DateTimePicker
               label="Start"
               value={customRange.start}
               onChange={(value) => setCustomRange((prev) => ({ ...prev, start: value as Dayjs | null }))}
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              minDateTime={dayjs().subtract(3, "month").startOf("day")} 
+              maxDateTime={dayjs().endOf("day")}                      
             />
+
             <DateTimePicker
               label="End"
               value={customRange.end}
               onChange={(value) => setCustomRange((prev) => ({ ...prev, end: value as Dayjs | null }))}
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              minDateTime={dayjs().subtract(3, "month").startOf("day")}
+              maxDateTime={dayjs().endOf("day")}
             />
+
             <Button variant="contained" onClick={applyCustomRange}>
               Apply
             </Button>

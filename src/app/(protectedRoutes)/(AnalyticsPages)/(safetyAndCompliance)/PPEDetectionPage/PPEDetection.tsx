@@ -126,27 +126,29 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Paper sx={{ p: 3, mb: 4 ,backgroundColor: "#ffffff"}} >
-     
-<Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mb: 2,
-  }}
->
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-{/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
-    <Typography variant="h6" sx={{ fontWeight: "bold",fontSize:18 }}>
-       <Box component="span" sx={{ mr: 2 }}>📊</Box>
-       
- Real Time Performance Overview
-    </Typography>
-  </Box>
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
-  <TimeFilter />
-</Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
@@ -184,9 +186,9 @@ const PPEDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-            {/* </Box> */}
+      {/* </Box> */}
 
-      
+
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -249,7 +251,7 @@ const PPEDetection: React.FC = () => {
             options: ["YES", "NO"],
           },
           { id: "zone", label: "Zone", type: "text" },
-          { id: "startdate", label: "Start Date", type: "date" }, 
+          { id: "startdate", label: "Start Date", type: "date" },
           { id: "enddate", label: "End Date", type: "date" },
         ]}
         onSubmit={handleSubmitFilter}

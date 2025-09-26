@@ -3,7 +3,7 @@
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -11,6 +11,7 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
@@ -102,7 +103,29 @@ const EmployeePresence: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+ <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
       {/* KPI Cards */}
 
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
@@ -144,7 +167,7 @@ const EmployeePresence: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+</Paper>
       {/* Employee Presence Report */}
       <ReportTable
         title="Detailed Report"
@@ -207,7 +230,6 @@ const EmployeePresence: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-critical-report"
-        isDownload={true}
         loading={false}
       />
     </Box>

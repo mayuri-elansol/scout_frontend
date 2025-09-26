@@ -3,7 +3,7 @@
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   AccessTime,
   Shield,
@@ -17,6 +17,7 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
@@ -182,12 +183,34 @@ const IntrusionDetection: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
-      {/* KPI Cards */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        {/* KPI Cards */}
+
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -196,7 +219,7 @@ const IntrusionDetection: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             intrusionKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -205,25 +228,25 @@ const IntrusionDetection: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Active Intrusion Alerts */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* Security Zones Status */}
-        {/* item xs={12} lg={4} */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
-        </Grid>
-      </Grid>
 
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Active Intrusion Alerts */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* Security Zones Status */}
+          {/* item xs={12} lg={4} */}
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
+        </Grid>
+      </Paper>
       {/* Security Intrusion Report */}
       <ReportTable
         title="Detailed Report"
