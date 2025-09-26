@@ -2,89 +2,43 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   People,
-  CheckCircle,
   Warning,
   Shield,
-  Place,
-  Schedule,
+
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
-      title: "Current Critical Area Occupancy",
-      value: "15/18",
-      subtitle: "Personnel in critical zones",
-      trend: "83%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+      title: "Employees in Critical Areas",
+      value: "0",
       icon: People,
     },
     {
-      title: "Real-time Presence Validations",
-      value: "127",
-      subtitle: "Validations completed today",
-      trend: "+24",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: CheckCircle,
-    },
-    {
       title: "Critical Zone Violations",
-      value: "3",
-      subtitle: "Unauthorized access detected",
-      trend: "+1",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
+      value: "127",
       icon: Warning,
     },
     {
-      title: "Personal Certification Status",
-      value: "92%",
-      subtitle: "Valid certifications",
-      trend: "+2%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+      title: "Zones Monitored",
+      value: "3",
       icon: Shield,
-    },
-    {
-      title: "Zone Coverage Status",
-      value: "16/18",
-      subtitle: "Zones adequately staffed",
-      trend: "89%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "Shift Compliance",
-      value: "94%",
-      subtitle: "On-time shift presence",
-      trend: "+1.5%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Schedule,
     },
   ];
 
   const activePersonnel = [
     {
       title: "John Mitchell - Level 3 Operator",
-      location: "Reactor Control Room",
+      zone: "Reactor Control Room",
       time: "Day Shift",
       Id: "EMP-4521",
       severity: "N/A",
@@ -94,7 +48,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Sarah Chen - Senior Technician",
-      location: "Chemical Processing Unit",
+      zone: "Chemical Processing Unit",
       time: "Day Shift",
       Id: "EMP-3847",
       severity: "N/A",
@@ -104,7 +58,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Michael Torres - Safety Coordinator",
-      location: "Emergency Response Station",
+      zone: "Emergency Response Station",
       time: "Day Shift",
       Id: "EMP-5623",
       severity: "N/A",
@@ -114,7 +68,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Lisa Anderson - Lab Supervisor",
-      location: "Quality Control Lab",
+      zone: "Quality Control Lab",
       time: "Day Shift",
       Id: "EMP-7891",
       severity: "N/A",
@@ -154,12 +108,34 @@ const EmployeePresence: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
-      {/* KPI Cards */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        {/* KPI Cards */}
+
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -168,7 +144,7 @@ const EmployeePresence: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             employeeKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -177,26 +153,26 @@ const EmployeePresence: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Active Critical Zone Personnel */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={activePersonnel}
-            loading={false}
-          />
         </Grid>
-        {/* Critical Zones Status */}
-        {/* item xs={12} lg={4} */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Active Critical Zone Personnel */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={activePersonnel}
+              loading={false}
+            />
+          </Grid>
+          {/* Critical Zones Status */}
+          {/* item xs={12} lg={4} */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* Employee Presence Report */}
       <ReportTable
         title="Detailed Report"
@@ -342,7 +318,6 @@ const EmployeePresence: React.FC = () => {
           { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-report"
-        isDownload={true}
         loading={false}
       />
     </Box>

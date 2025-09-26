@@ -1,92 +1,60 @@
 "use client";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
-  People,
-  TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
+  LocalFireDepartment,
+  SmokeFree,
+  LocationOn,
+  AccessTime,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+
 const FireSmokeOilLeakDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
 
   const FireSmokeOilKpiData = [
     {
-      title: "Total Factory Occupancy",
+      title: "Fire Incidence",
       value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
+      icon: LocalFireDepartment, // 🔥 Fire
     },
     {
-      title: "Peak Count Today",
+      title: "Smoke Incidence",
       value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
+      icon: SmokeFree, // 💨 Smoke
     },
     {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
+      title: "Last Detection Time",
+      value: "10:42 AM",
+      icon: AccessTime, // ⏰ Time
     },
     {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Last Detection Zone",
+      value: "Zone A",
+      icon: LocationOn, // 📍 Zone / Location
     },
   ];
   const cameraZones: CameraZone[] = [
@@ -110,7 +78,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <People sx={{ fontSize: 28, color: "#4caf50" }} />
+          <LocalFireDepartmentIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -121,7 +89,29 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+    <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
@@ -160,96 +150,92 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+            </Paper>
       {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
 
       <ReportTable
         title="Detailed Report"
         columns={[
           { id: "recordId", label: "Record ID", minWidth: 100 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "currentCount", label: "Current Count", minWidth: 100 },
-          { id: "capacity", label: "Capacity", minWidth: 80 },
-          { id: "occupancy", label: "Occupancy %", minWidth: 100 },
+          { id: "cameraId", label: "Camera ID", minWidth: 100 },
+
+          { id: "zone", label: "Zone", minWidth: 100 },
+          { id: "fireDetection", label: "Fire Detection", minWidth: 100 },
+          { id: "smokeDetection", label: "Smoke Detection", minWidth: 100 },
+          { id: "oilDetection", label: "Oil Detection", minWidth: 100 },
+          { id: "gasDetection", label: "Gas Detection", minWidth: 100 },
+          { id: "timestamp", label: "Timestamp", minWidth: 100 },
         ]}
         data={[
           {
-            recordId: "PC-7892",
-            timestamp: "15:42",
+            recordId: "123",
+            cameraId: "CAM-101",
+            timestamp: "2025-09-24 15:42",
             zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
-            status: "ACTIVE",
-            priority: "Medium",
-            resolution: "Normal operations",
+            fireDetection: true,
+            smokeDetection: false,
+            oilDetection: true,
+            gasDetection: false,
           },
           {
-            recordId: "PC-7891",
-            timestamp: "15:28",
+            recordId: "124",
+            cameraId: "CAM-102",
+            timestamp: "2025-09-24 15:28",
             zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
-            status: "OVERCROWDED",
-            priority: "Critical",
-            resolution: "Crowd dispersal initiated",
+            fireDetection: false,
+            smokeDetection: true,
+            oilDetection: false,
+            gasDetection: true,
           },
           {
-            recordId: "PC-7890",
-            timestamp: "15:15",
+            recordId: "125",
+            cameraId: "CAM-103",
+            timestamp: "2025-09-24 15:15",
             zone: "Assembly Line A",
-            currentCount: "45",
-            capacity: "50",
-            occupancy: "90%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Within safe limits",
+            fireDetection: true,
+            smokeDetection: true,
+            oilDetection: false,
+            gasDetection: false,
           },
           {
-            recordId: "PC-7889",
-            timestamp: "14:58",
+            recordId: "126",
+            cameraId: "CAM-104",
+            timestamp: "2025-09-24 14:58",
             zone: "Emergency Exit Area",
-            currentCount: "25",
-            capacity: "20",
-            occupancy: "125%",
-            status: "BLOCKED",
-            priority: "Critical",
-            resolution: "Exit clearance required",
+            fireDetection: false,
+            smokeDetection: true,
+            oilDetection: true,
+            gasDetection: true,
           },
           {
-            recordId: "PC-7888",
-            timestamp: "14:32",
+            recordId: "127",
+            cameraId: "CAM-105",
+            timestamp: "2025-09-24 14:32",
             zone: "Conference Room B",
-            currentCount: "12",
-            capacity: "15",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Meeting in progress",
+            fireDetection: false,
+            smokeDetection: false,
+            oilDetection: true,
+            gasDetection: false,
           },
           {
-            recordId: "PC-7887",
-            timestamp: "14:15",
+            recordId: "128",
+            cameraId: "CAM-106",
+            timestamp: "2025-09-24 14:15",
             zone: "Loading Dock",
-            currentCount: "8",
-            capacity: "10",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Normal loading operations",
+            fireDetection: true,
+            smokeDetection: true,
+            oilDetection: false,
+            gasDetection: false,
           },
           {
-            recordId: "PC-7886",
-            timestamp: "13:58",
+            recordId: "129",
+            cameraId: "CAM-107",
+            timestamp: "2025-09-24 13:58",
             zone: "Parking Lot",
-            currentCount: "156",
-            capacity: "200",
-            occupancy: "78%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Adequate parking space",
+            fireDetection: false,
+            smokeDetection: false,
+            oilDetection: false,
+            gasDetection: true,
           },
         ]}
         filters={[
@@ -268,24 +254,33 @@ const FireSmokeOilLeakDetection: React.FC = () => {
             ],
           },
           {
-            id: "status",
-            label: "Status",
+            id: "fireDetection",
+            label: "Fire Detection",
             type: "select",
-            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
+            options: ["true", "false"],
           },
           {
-            id: "priority",
-            label: "Priority",
+            id: "smokeDetection",
+            label: "Smoke Detection",
             type: "select",
-            options: ["Critical", "Medium", "Low"],
+            options: ["true", "false"],
           },
-          { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
-          { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
+          {
+            id: "oilDetection",
+            label: "Oil Detection",
+            type: "select",
+            options: ["true", "false"],
+          },
+          {
+            id: "gasDetection",
+            label: "Gas Detection",
+            type: "select",
+            options: ["true", "false"],
+          },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        downloadFileName="people-count-report"
-        isDownload={true}
+        downloadFileName="detection-report"
         loading={false}
       />
     </Box>

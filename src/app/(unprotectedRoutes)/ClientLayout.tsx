@@ -24,12 +24,6 @@ import {
   CameraAlt,
 } from "@mui/icons-material";
 
-interface LoginFormData {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-}
-
 interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
@@ -41,7 +35,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   icon,
   title,
   description,
-  delay,
 }) => {
   const [hovered, setHovered] = useState(false);
 
