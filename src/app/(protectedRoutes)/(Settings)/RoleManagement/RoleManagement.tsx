@@ -1,3 +1,8 @@
-export function RoleManagement(){
-    return "role management page"
+"use client";
+
+
+const RoleManagement = () => {
+    return "role Management page"
 }
+
+export default RoleManagement;

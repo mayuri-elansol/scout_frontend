@@ -281,6 +281,12 @@ const SystemAlerts: React.FC = () => {
                 "&.MuiTab-root": {
                   alignItems: "center",
                 },
+                "&:hover": {
+                  backgroundColor: "#f5f5f5", // light grey background
+                  boxShadow: "0 3px 8px rgba(0,0,0,0.15)", // subtle shadow
+                  borderRadius: "8px", // optional rounded corners
+                },
+                transition: "all 0.2s ease-in-out", // smooth hover
                 boxShadow: tabIndex === i ? "none" : "0 3px 8px rgba(0,0,0,0.15)",
 
               }}
@@ -305,8 +311,6 @@ const SystemAlerts: React.FC = () => {
                 onExport={handleExport}
                 downloadFileName={`${t.key}-alerts`}
                 loading={false}
-
-
               />
             )
         )}

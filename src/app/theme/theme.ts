@@ -19,6 +19,7 @@ declare module '@mui/material/styles' {
 }
 
 export const theme = createTheme({
+
   palette: {
     primary: {
       main: '#1976d2',
@@ -110,8 +111,9 @@ export const theme = createTheme({
     },
     subtitle1: {
       fontSize: '1rem',
-      fontWeight: 500,
+      fontWeight: 600,
       lineHeight: 1.5,
+      
     },
     subtitle2: {
       fontSize: '0.875rem',
@@ -146,21 +148,27 @@ export const theme = createTheme({
           backgroundColor: '#f8f9fa',
           fontFamily: "'Inter', sans-serif",
         },
-        '*::-webkit-scrollbar': {
-          width: '6px',
+
+        // Scrollbar styles...
+        '*::-webkit-scrollbar': { width: '6px' },
+        '*::-webkit-scrollbar-track': { background: '#f1f1f1' },
+        '*::-webkit-scrollbar-thumb': { background: '#c1c1c1', borderRadius: '3px' },
+        '*::-webkit-scrollbar-thumb:hover': { background: '#a8a8a8' },
+
+        // Autofill fix for all states
+        'input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill, input:-webkit-autofill:hover, textarea:-webkit-autofill:hover, select:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill:focus, select:-webkit-autofill:focus, input:-webkit-autofill:active, textarea:-webkit-autofill:active, select:-webkit-autofill:active': {
+          // WebkitBoxShadow: '0 0 0 1000px #fff inset !important',
+          WebkitTextFillColor: '#000 !important',
+          caretColor: '#000',
+          transition: 'background-color 5000s ease-in-out 0s',
         },
-        '*::-webkit-scrollbar-track': {
-          background: '#f1f1f1',
-        },
-        '*::-webkit-scrollbar-thumb': {
-          background: '#c1c1c1',
-          borderRadius: '3px',
-        },
-        '*::-webkit-scrollbar-thumb:hover': {
-          background: '#a8a8a8',
-        },
+
       },
     },
+
+
+
+
     MuiButton: {
       styleOverrides: {
         root: {
@@ -263,7 +271,63 @@ export const theme = createTheme({
         },
       },
     },
+    MuiInputLabel: {
+      styleOverrides: {
+        asterisk: {
+          color: "red",
+        },
+        outlined: {
+          top: '-4px',
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            height: 48,
+
+          },
+          '& .MuiOutlinedInput-input': {
+            padding: '10px 14px',
+            height: '100%',
+            boxSizing: 'border-box',
+          },
+          '& .MuiInputLabel-root': {
+            lineHeight: 1.2,
+            top: '-2px',
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          height: 48,
+
+        },
+        select: {
+          padding: '10px 14px',
+          display: 'flex',
+          alignItems: 'center',
+        },
+
+      }
+    },  MuiTableCell: {
+      styleOverrides: {
+        head: {
+          // backgroundColor: "#f5f5f5",
+          fontWeight: 800,
+          color: "#1c2025",
+        },
+      },
+    },
+
   },
+
 });
 
 export default theme;

@@ -73,7 +73,7 @@ export const settingsMenu: CategoryConfig[] = [
         name: "User Management",
         icon: PeopleIcon,
         page: "user-management",
-        path: "/UserManagement",
+        path: "/UserOverview",
       },
     ],
   },

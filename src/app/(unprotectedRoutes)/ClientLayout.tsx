@@ -23,6 +23,7 @@ import {
   Timeline,
   CameraAlt,
 } from "@mui/icons-material";
+import router from "next/router";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -174,7 +175,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
             loading="lazy"
           />
 
-          <Button
+          <Button onClick={()=>{""}}
             variant="contained"
             sx={{
               textTransform: "none",
@@ -191,7 +192,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               },
             }}
           >
-            Enquiry
+            Contact Us
           </Button>
         </Box>
 
