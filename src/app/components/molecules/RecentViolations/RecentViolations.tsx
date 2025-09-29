@@ -15,9 +15,8 @@ import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup"; // import popup
 
 interface Violation {
   title: string;
-  location: string;
+  zone: string;
   time: string;
-  Id: string;
   severity?: string;
   status?: string;
   imageUrl?: string;
@@ -120,7 +119,7 @@ export default function RecentViolations({
           open={open}
           handleClose={handleClose}
           title={selectedViolation.title}
-          location={selectedViolation.location}
+          location={selectedViolation.zone}
           time={selectedViolation.time}
           imageUrl={selectedViolation.imageUrl ?? ""}
           onDownload={(url) => {

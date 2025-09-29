@@ -3,7 +3,7 @@
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   People,
   TrendingUp,
@@ -16,11 +16,13 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import WidgetsIcon from "@mui/icons-material/Widgets";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -29,7 +31,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -38,7 +40,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
       severity: "HIGH",
@@ -47,7 +49,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
       severity: "MEDIUM",
@@ -57,56 +59,42 @@ const ObjectDetection: React.FC = () => {
   ];
 
   const ObjectDetectionKpiData = [
-    {
-      title: "Total Factory Occupancy",
-      value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
-    },
-    {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
-    },
-    {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
-    },
-    {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
-    },
+  {
+    title: "Total Object Detections",
+    value: "1,452",
+ 
+    icon: TrendingUp,
+  },
+  {
+    title: "Unique Objects",
+    value: "12",
+
+    icon: People,
+  },
+  {
+    title: "Active Alarms",
+    value: "5",
+ 
+    icon: Warning,
+  },
+  {
+    title: "Most Detected Object",
+    value: "Helmet",
+ 
+    icon: CheckCircle,
+  },
+  {
+    title: "Most Triggered Zone",
+    value: "warehouse",
+  
+    icon: Place,
+  },
+  {
+    title: "Most Alerting Camera",
+    value: "Cam-04",
+
+    icon: Warning,
+  },
   ];
   const cameraZones: CameraZone[] = [
     {
@@ -155,7 +143,7 @@ const ObjectDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <People sx={{ fontSize: 28, color: "#4caf50" }} />
+          <WidgetsIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -166,6 +154,29 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+          <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
@@ -204,121 +215,65 @@ const ObjectDetection: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+            </Paper>
       {/* Object detection Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "recordId", label: "Record ID", minWidth: 100 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          {
+            id: "detectionDetected",
+            label: "Object Detected",
+            minWidth: 150,
+          },
+          { id: "objectName", label: "Object Name", minWidth: 140 },
+
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "currentCount", label: "Current Count", minWidth: 100 },
-          { id: "capacity", label: "Capacity", minWidth: 80 },
-          { id: "occupancy", label: "Occupancy %", minWidth: 100 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            recordId: "PC-7892",
-            timestamp: "15:42",
-            zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
+            id: "DD-101",
+            detectionDetected: true,
+            objectName: "Bag",
+            snapshot: "snapshot1.jpg",
+            zone: "Main Entrance",
+            camera: "CAM-01",
+            timestamp: "2025-09-24 15:42",
+            alarmTriggered: true,
           },
           {
-            recordId: "PC-7891",
-            timestamp: "15:28",
-            zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
-          },
-          {
-            recordId: "PC-7890",
-            timestamp: "15:15",
-            zone: "Assembly Line A",
-            currentCount: "45",
-            capacity: "50",
-            occupancy: "90%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Within safe limits",
-          },
-          {
-            recordId: "PC-7889",
-            timestamp: "14:58",
-            zone: "Emergency Exit Area",
-            currentCount: "25",
-            capacity: "20",
-            occupancy: "125%",
-            status: "BLOCKED",
-            priority: "Critical",
-            resolution: "Exit clearance required",
-          },
-          {
-            recordId: "PC-7888",
-            timestamp: "14:32",
-            zone: "Conference Room B",
-            currentCount: "12",
-            capacity: "15",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Meeting in progress",
-          },
-          {
-            recordId: "PC-7887",
-            timestamp: "14:15",
+            id: "DD-102",
+            detectionDetected: false,
+            objectName: "Box",
+            snapshot: "snapshot2.jpg",
             zone: "Loading Dock",
-            currentCount: "8",
-            capacity: "10",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Normal loading operations",
+            camera: "CAM-02",
+            timestamp: "2025-09-24 15:28",
+            alarmTriggered: false,
           },
           {
-            recordId: "PC-7886",
-            timestamp: "13:58",
+            id: "DD-103",
+            detectionDetected: true,
+            objectName: "Bottle",
+            snapshot: "snapshot3.jpg",
+            zone: "Assembly Area",
+            camera: "CAM-03",
+            timestamp: "2025-09-24 15:15",
+            alarmTriggered: true,
+          },
+          {
+            id: "DD-104",
+            detectionDetected: true,
+            objectName: "Box",
+            snapshot: "snapshot4.jpg",
             zone: "Parking Lot",
-            currentCount: "156",
-            capacity: "200",
-            occupancy: "78%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Adequate parking space",
-          },
-          {
-            recordId: "PC-7892",
-            timestamp: "15:42",
-            zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
-          },
-          {
-            recordId: "PC-7891",
-            timestamp: "15:28",
-            zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
-          },
-          {
-            recordId: "PC-7892",
-            timestamp: "15:42",
-            zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
-          },
-          {
-            recordId: "PC-7891",
-            timestamp: "15:28",
-            zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
+            camera: "CAM-04",
+            timestamp: "2025-09-24 14:58",
+            alarmTriggered: true,
           },
         ]}
         filters={[
@@ -327,33 +282,39 @@ const ObjectDetection: React.FC = () => {
             label: "Zone",
             type: "select",
             options: [
-              "Main Factory Floor",
-              "Cafeteria",
-              "Assembly Line A",
-              "Emergency Exit Area",
-              "Conference Room B",
+              "Main Entrance",
               "Loading Dock",
+              "Assembly Area",
               "Parking Lot",
             ],
           },
-
           {
-            id: "recordId",
-            label: "Record Id",
-            type: "text",
+            id: "detectionDetected",
+            label: "Detection Detected",
+            type: "select",
+            options: ["true", "false"],
           },
-          { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
-          { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
+          {
+            id: "objectName",
+            label: "Object Name",
+            type: "select",
+            options: ["Bag", "Box", "Bottle"],
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="object-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        downloadFileName="people-count-report"
-        isDownload={true}
         loading={false}
       />
     </Box>

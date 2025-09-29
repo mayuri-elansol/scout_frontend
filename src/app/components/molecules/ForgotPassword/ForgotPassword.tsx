@@ -83,15 +83,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               },
               pattern: { value: /^\d+$/, message: "Only digits allowed" },
             })}
-            // slotProps={{
-            //   input: {
-            //     startAdornment: (
-            //       <InputAdornment position="start">
-            //         <Lock sx={{ color: "#6b7280" }} />
-            //       </InputAdornment>
-            //     ),
-            //   },
-            // }}
+      
             slotProps={{
               input: {
                 startAdornment: (
@@ -143,15 +135,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               validate: (value) =>
                 value === watch("password") || "Passwords do not match",
             })}
-            // slotProps={{
-            //   input: {
-            //     startAdornment: (
-            //       <InputAdornment position="start">
-            //         <Lock sx={{ color: "#6b7280" }} />
-            //       </InputAdornment>
-            //     ),
-            //   },
-            // }}
+   
 
             slotProps={{
               input: {

@@ -43,6 +43,7 @@ export default function Toaster() {
         position: "fixed",
         top: "65px",
         right: "10px",
+
         display: "flex",
         flexDirection: "column",
         gap: 1,
@@ -61,7 +62,7 @@ export default function Toaster() {
             alignItems: "center",
             color: "#fff !important",
             "& .MuiAlert-icon": { color: "#fff !important" },
-            backgroundColor: getBgColor(toast.severity), // ✅ cleaner
+            backgroundColor: getBgColor(toast.severity),
           }}
         >
           {toast.message}

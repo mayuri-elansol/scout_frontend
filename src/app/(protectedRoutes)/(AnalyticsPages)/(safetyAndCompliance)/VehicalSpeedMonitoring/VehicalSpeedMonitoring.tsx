@@ -1,92 +1,55 @@
 "use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
-import {
-  People,
-  TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
-} from "@mui/icons-material";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import { Box, Grid, Paper, Typography } from "@mui/material";
+
+import { Speed, TrendingUp, LocationOn, AccessTime } from "@mui/icons-material";
+
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import SpeedIcon from "@mui/icons-material/Speed";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const VehicalSpeedMonitoring: React.FC = () => {
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
-
   const VehicalSpeedMonitoringKpiData = [
     {
-      title: "Total Factory Occupancy",
+      title: "Speed Violation Count",
       value: "267",
-      subtitle: "People currently inside",
-      trend: "+12",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: People,
+      icon: Speed, // 🚦 Speedometer
     },
     {
-      title: "Peak Count Today",
-      value: "324",
-      subtitle: "Maximum occupancy reached",
-      trend: "2:15 PM",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: TrendingUp,
+      title: "Highest Speed Recorded",
+      value: "110 km/h",
+      icon: TrendingUp, // 📈 Indicates peak/high value
     },
     {
-      title: "Most Occupied Zone",
-      value: "Production Floor",
-      subtitle: "89 people (33% of total)",
-      trend: "Active",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Place,
+      title: "Highest Speed Violation Zone",
+      value: "Zone 3",
+      icon: LocationOn, // 📍 Zone / Location
     },
     {
-      title: "System Performance",
-      value: "98.7%",
-      subtitle: "Detection accuracy rate",
-      trend: "+0.3%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
-    },
-    {
-      title: "Active Alerts",
-      value: "2",
-      subtitle: "Capacity warnings active",
-      trend: "Monitor",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Last Detection Time",
+      value: "11:15 AM",
+      icon: AccessTime, // ⏰ Time
     },
   ];
   const cameraZones: CameraZone[] = [
@@ -111,7 +74,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <People sx={{ fontSize: 28, color: "#4caf50" }} />
+          <SpeedIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -122,9 +85,32 @@ const VehicalSpeedMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
+      <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
             skeletonKeys.map((index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -133,7 +119,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
                 <KpiCardSkeleton />
               </Grid>
             ))
-          : // Show actual KPI cards
+            : // Show actual KPI cards
             VehicalSpeedMonitoringKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
@@ -142,115 +128,86 @@ const VehicalSpeedMonitoring: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-      </Grid>
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
         </Grid>
-        {/* PPE Compliance by Zone */}
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* People Count Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "recordId", label: "Record ID", minWidth: 100 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+          { id: "speed", label: "Speed", minWidth: 100 },
+          { id: "vehicleType", label: "Vehicle Type", minWidth: 120 },
+          { id: "vehicleNumber", label: "Vehicle Number", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "currentCount", label: "Current Count", minWidth: 100 },
-          { id: "capacity", label: "Capacity", minWidth: 80 },
-          { id: "occupancy", label: "Occupancy %", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
+          { id: "createdAt", label: "Timestamp", minWidth: 140 },
         ]}
         data={[
           {
-            recordId: "PC-7892",
-            timestamp: "15:42",
-            zone: "Main Factory Floor",
-            currentCount: "245",
-            capacity: "300",
-            occupancy: "82%",
-            status: "ACTIVE",
-            priority: "Medium",
-            resolution: "Normal operations",
+            id: "VD-101",
+            speed: "65 km/h",
+            vehicleType: "Truck",
+            vehicleNumber: "MH12AB1234",
+            zone: "Main Entrance",
+            camera: "CAM-01",
+            snapshot: "snapshot1.jpg",
+            alarmTriggered: true,
+            createdAt: "2025-09-24 15:42",
+            updatedAt: "2025-09-24 15:50",
           },
           {
-            recordId: "PC-7891",
-            timestamp: "15:28",
-            zone: "Cafeteria",
-            currentCount: "180",
-            capacity: "150",
-            occupancy: "120%",
-            status: "OVERCROWDED",
-            priority: "Critical",
-            resolution: "Crowd dispersal initiated",
-          },
-          {
-            recordId: "PC-7890",
-            timestamp: "15:15",
-            zone: "Assembly Line A",
-            currentCount: "45",
-            capacity: "50",
-            occupancy: "90%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Within safe limits",
-          },
-          {
-            recordId: "PC-7889",
-            timestamp: "14:58",
-            zone: "Emergency Exit Area",
-            currentCount: "25",
-            capacity: "20",
-            occupancy: "125%",
-            status: "BLOCKED",
-            priority: "Critical",
-            resolution: "Exit clearance required",
-          },
-          {
-            recordId: "PC-7888",
-            timestamp: "14:32",
-            zone: "Conference Room B",
-            currentCount: "12",
-            capacity: "15",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Meeting in progress",
-          },
-          {
-            recordId: "PC-7887",
-            timestamp: "14:15",
+            id: "VD-102",
+            speed: "45 km/h",
+            vehicleType: "Car",
+            vehicleNumber: "MH14CD5678",
             zone: "Loading Dock",
-            currentCount: "8",
-            capacity: "10",
-            occupancy: "80%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Normal loading operations",
+            camera: "CAM-02",
+            snapshot: "snapshot2.jpg",
+            alarmTriggered: false,
+            createdAt: "2025-09-24 15:28",
+            updatedAt: "2025-09-24 15:35",
           },
           {
-            recordId: "PC-7886",
-            timestamp: "13:58",
+            id: "VD-103",
+            speed: "72 km/h",
+            vehicleType: "Bus",
+            vehicleNumber: "MH20EF9012",
+            zone: "Assembly Area",
+            camera: "CAM-03",
+            snapshot: "snapshot3.jpg",
+            alarmTriggered: true,
+            createdAt: "2025-09-24 15:15",
+            updatedAt: "2025-09-24 15:25",
+          },
+          {
+            id: "VD-104",
+            speed: "30 km/h",
+            vehicleType: "Bike",
+            vehicleNumber: "MH22GH3456",
             zone: "Parking Lot",
-            currentCount: "156",
-            capacity: "200",
-            occupancy: "78%",
-            status: "ACTIVE",
-            priority: "Low",
-            resolution: "Adequate parking space",
+            camera: "CAM-04",
+            snapshot: "snapshot4.jpg",
+            alarmTriggered: false,
+            createdAt: "2025-09-24 14:58",
+            updatedAt: "2025-09-24 15:00",
           },
         ]}
         filters={[
@@ -259,34 +216,28 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Zone",
             type: "select",
             options: [
-              "Main Factory Floor",
-              "Cafeteria",
-              "Assembly Line A",
-              "Emergency Exit Area",
-              "Conference Room B",
+              "Main Entrance",
               "Loading Dock",
+              "Assembly Area",
               "Parking Lot",
             ],
           },
           {
-            id: "status",
-            label: "Status",
+            id: "vehicleType",
+            label: "Vehicle Type",
             type: "select",
-            options: ["ACTIVE", "OVERCROWDED", "BLOCKED"],
+            options: ["Truck", "Car", "Bus", "Bike"],
           },
           {
-            id: "priority",
-            label: "Priority",
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
             type: "select",
-            options: ["Critical", "Medium", "Low"],
+            options: ["true", "false"],
           },
-          { id: "minOccupancy", label: "Min Occupancy %", type: "text" },
-          { id: "maxOccupancy", label: "Max Occupancy %", type: "text" },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}
-        downloadFileName="people-count-report"
-        isDownload={true}
+        downloadFileName="vehicle-detection-report"
         loading={false}
       />
     </Box>
