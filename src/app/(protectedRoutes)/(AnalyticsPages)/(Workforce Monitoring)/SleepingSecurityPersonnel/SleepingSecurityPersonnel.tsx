@@ -1,18 +1,18 @@
 "use client";
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone, ZoneViolationsdata } from "@/app/types";
 import SecurityIcon from "@mui/icons-material/Security";
 import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const SleepingSecurityPersonnel: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -25,6 +25,11 @@ const SleepingSecurityPersonnel: React.FC = () => {
       icon: Security, // 🛡️ Represents security presence
       tooltipMessage:
         "Shows the number of security personnel currently present.",
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
       title: "Last Incidence",
@@ -42,6 +47,26 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
   ];
   const backendSleepingSecurityData = [
+    {
+      id: 901,
+      sleeping: true,
+      absence: false,
+      snapshot: "https://picsum.photos/400/200?random=51",
+      zone: "Main Gate",
+      camera: "CAM-51",
+      createdAt: "2025-09-24 08:15",
+      updatedAt: "2025-09-24 08:17",
+    },
+    {
+      id: 902,
+      sleeping: false,
+      absence: true,
+      snapshot: "https://picsum.photos/400/200?random=52",
+      zone: "Assembly Line A",
+      camera: "CAM-52",
+      createdAt: "2025-09-24 08:25",
+      updatedAt: "2025-09-24 08:27",
+    },
     {
       id: 901,
       sleeping: true,
@@ -80,9 +105,25 @@ const SleepingSecurityPersonnel: React.FC = () => {
     };
   });
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Main Gate", violations: 2, alarms: 2 },
-    { zone: "Assembly Line A", violations: 1, alarms: 1 },
+  const zoneViolationsData = [
+    {
+      zone: "Main Gate",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Assembly Line A",
+      violations: 2,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -201,7 +242,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "zone", label: "Zone", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
         data={recentViolations}

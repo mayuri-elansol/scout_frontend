@@ -1,19 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone, ZoneViolationsdata } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -87,10 +88,34 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
       alarmTriggered: item.alarmTriggered,
     };
   });
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Critical Zone A", violations: 1, alarms: 1 },
-    { zone: "Critical Zone B", violations: 1, alarms: 1 },
-    { zone: "Critical Zone C", violations: 1, alarms: 1 },
+  const zoneViolationsData = [
+    {
+      zone: "Critical Zone A",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Critical Zone B",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Critical Zone C",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   const KpiCardLoading = false;
 
@@ -209,7 +234,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
           { id: "time", label: "Time", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 150 },
 
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
         data={recentEmployeeViolations}

@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 
@@ -9,46 +8,136 @@ import { People, Login, Logout } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import PeopleIcon from "@mui/icons-material/People";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 
 const PeopleCount: React.FC = () => {
-  const cameraZones: CameraZone[] = [
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const backendData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      id: 201,
+      enteredCount: 15,
+      exitCount: 10,
+      zone: "Production Floor A",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      cameraid: "CAM-11",
+      alarmTriggered: true, // You can set this true if threshold exceeded
+      createdAt: "2025-09-30 09:42",
+      updatedAt: "2025-09-30 09:45",
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      id: 202,
+      enteredCount: 8,
+      exitCount: 5,
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      cameraid: "CAM-12",
+      alarmTriggered: false,
+      createdAt: "2025-09-30 09:28",
+      updatedAt: "2025-09-30 09:30",
+    },
+    {
+      id: 203,
+      enteredCount: 12,
+      exitCount: 11,
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      cameraid: "CAM-13",
+      alarmTriggered: false,
+      createdAt: "2025-09-30 09:15",
+      updatedAt: "2025-09-30 09:20",
+    },
+    {
+      id: 204,
+      enteredCount: 20,
+      exitCount: 18,
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      cameraid: "CAM-14",
+      alarmTriggered: true,
+      createdAt: "2025-09-30 08:58",
+      updatedAt: "2025-09-30 09:05",
+    },
+    {
+      id: 205,
+      enteredCount: 5,
+      exitCount: 2,
+      zone: "Maintenance Area",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      cameraid: "CAM-15",
+      alarmTriggered: true,
+      createdAt: "2025-09-30 08:32",
+      updatedAt: "2025-09-30 08:40",
+    },
   ];
-  const recentViolations = [
+
+  const zonePeopleCountData = [
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      zone: "Production Floor A",
+      enteredCount: 150,
+      exitCount: 120,
+      icons: {
+        enteredCount: PeopleIcon,
+        exitCount: ExitToAppIcon,
+      },
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      zone: "Welding Station",
+      enteredCount: 80,
+      exitCount: 65,
+      icons: {
+        enteredCount: PeopleIcon,
+        exitCount: ExitToAppIcon,
+      },
+    },
+    {
+      zone: "Chemical Storage",
+      enteredCount: 60,
+      exitCount: 50,
+      icons: {
+        enteredCount: PeopleIcon,
+        exitCount: ExitToAppIcon,
+      },
+    },
+    {
+      zone: "Assembly Line B",
+      enteredCount: 200,
+      exitCount: 180,
+      icons: {
+        enteredCount: PeopleIcon,
+        exitCount: ExitToAppIcon,
+      },
+    },
+    {
+      zone: "Maintenance Area",
+      enteredCount: 40,
+      exitCount: 30,
+      icons: {
+        enteredCount: PeopleIcon,
+        exitCount: ExitToAppIcon,
+      },
     },
   ];
+
+  const recentViolations = backendData.map((item) => {
+    return {
+      Voilation: `People Count (Entry/Exit)`,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.cameraid,
+      enteredCount: item.enteredCount,
+      exitCount: item.exitCount,
+    };
+  });
 
   const peopleCountKpiData = [
     {
@@ -57,6 +146,11 @@ const PeopleCount: React.FC = () => {
       icon: People, // 👥 Crowd of people
 
       tooltipMessage: "Current number of people present inside the area.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
     },
     {
       title: "Entry Count",
@@ -64,16 +158,30 @@ const PeopleCount: React.FC = () => {
       icon: Login, // ⬅️ Entry
 
       tooltipMessage: "Total number of people who entered today.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
     },
     {
       title: "Exit Count",
       value: "245", // Total exits today
       icon: Logout, // ➡️ Exit
       tooltipMessage: "Total number of people who exited today.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
     },
   ];
   const KpiCardLoading = false;
-
+  const handleViewSingle = (row: any) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
@@ -148,12 +256,17 @@ const PeopleCount: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
+              tooltipMessage="Latest 20 People Count in Factory Premises based on Entry Exit person Count with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              violationsZone={zonePeopleCountData}
+              loading={false}
+              tooltipMessage="Shows person entry and exit count per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
@@ -161,65 +274,60 @@ const PeopleCount: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
+          { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "enteredCount", label: "Entered Count", minWidth: 140 },
           { id: "exitCount", label: "Exit Count", minWidth: 120 },
+          { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 140 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
+          { id: "time", label: "Timestamp", minWidth: 140 },
         ]}
-        data={[
-          {
-            id: "PC-001",
-            enteredCount: 45,
-            exitCount: 20,
-            zone: "Main Factory Floor",
-            camera: "CAM-101",
-            timestamp: "2025-09-24 08:15",
-          },
-          {
-            id: "PC-002",
-            enteredCount: 30,
-            exitCount: 15,
-            zone: "Cafeteria",
-            camera: "CAM-102",
-            timestamp: "2025-09-24 08:30",
-          },
-          {
-            id: "PC-003",
-            enteredCount: 60,
-            exitCount: 55,
-            zone: "Assembly Line A",
-            camera: "CAM-103",
-            timestamp: "2025-09-24 09:00",
-          },
-          {
-            id: "PC-004",
-            enteredCount: 25,
-            exitCount: 10,
-            zone: "Emergency Exit Area",
-            camera: "CAM-104",
-            timestamp: "2025-09-24 09:20",
-          },
-        ]}
+        data={recentViolations}
         filters={[
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Main Factory Floor",
-              "Cafeteria",
-              "Assembly Line A",
-              "Emergency Exit Area",
-            ],
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          {
+            id: "cameraId",
+            label: "Cameras",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.cameraId))
+            ),
+          },
+          {
+            id: "startDate",
+            label: "Start Date",
+            type: "date",
+          },
+          {
+            id: "endDate",
+            label: "End Date",
+            type: "date",
+          },
         ]}
         downloadFileName="people-count-report"
         loading={false}
+        onView={handleViewSingle}
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
       />
+      {/* View Alert Popup */}
+      {viewPopupData && (
+        <ViewAlertPopup
+          open={viewPopupOpen}
+          handleClose={() => setViewPopupOpen(false)}
+          title={viewPopupData.Voilation}
+          location={viewPopupData.zone}
+          time={viewPopupData.time}
+          cameraId={viewPopupData.cameraId}
+          imageUrl={viewPopupData.imageUrl}
+          alarmTriggered={viewPopupData.alarmTriggered}
+          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        />
+      )}
     </Box>
   );
 };

@@ -174,8 +174,8 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                                 {/* Value */}
                                 <Typography
                                   sx={{
-                                    fontSize: "19px",
-                                    fontWeight: 700,
+                                    fontSize: "17px",
+                                    fontWeight: 600,
                                     color: "#f44336",
                                   }}
                                 >

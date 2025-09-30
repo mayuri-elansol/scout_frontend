@@ -1,20 +1,19 @@
 "use client";
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-
 import { Speed, TrendingUp, LocationOn, AccessTime } from "@mui/icons-material";
-
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone, ZoneViolationsdata } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import SpeedIcon from "@mui/icons-material/Speed";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const VehicalSpeedMonitoring: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -34,6 +33,30 @@ const VehicalSpeedMonitoring: React.FC = () => {
     {
       id: 302,
       speed: 55,
+      vehicleType: "Car",
+      vehicleNumber: "MH14XY5678",
+      zone: "Parking Lot",
+      camera: "CAM-10",
+      snapshot: "https://picsum.photos/400/200?random=10",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 17:15",
+      updatedAt: "2025-09-23 17:16",
+    },
+    {
+      id: 301,
+      speed: 65,
+      vehicleType: "Truck",
+      vehicleNumber: "MH12AB1234",
+      zone: "Main Gate",
+      camera: "CAM-09",
+      snapshot: "https://picsum.photos/400/200?random=9",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 17:05",
+      updatedAt: "2025-09-23 17:06",
+    },
+    {
+      id: 302,
+      speed: 58,
       vehicleType: "Car",
       vehicleNumber: "MH14XY5678",
       zone: "Parking Lot",
@@ -98,9 +121,25 @@ const VehicalSpeedMonitoring: React.FC = () => {
     },
   ];
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Main Gate", violations: 1, alarms: 1 },
-    { zone: "Parking Lot", violations: 1, alarms: 0 },
+  const zoneViolationsData = [
+    {
+      zone: "Main Gate",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Parking Lot",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
 
   const KpiCardLoading = false;
@@ -206,7 +245,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
 
           { id: "vehicleType", label: "Vehicle Type", minWidth: 120 },

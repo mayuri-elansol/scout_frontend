@@ -1,4 +1,4 @@
-import { RoleManagement } from "./RoleManagement";
+import  RoleManagement from "./RoleManagement";
 
 
 export default function page() {

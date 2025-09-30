@@ -11,6 +11,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import PeopleIcon from "@mui/icons-material/People";
 const PeoplePresence: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -73,8 +74,20 @@ const PeoplePresence: React.FC = () => {
   });
 
   const zoneViolationsData = [
-    { zone: "Production Floor", peopleCount: 15 },
-    { zone: "Loading Dock", peopleCount: 7 },
+    {
+      zone: "Production Floor",
+      peopleCount: 15,
+      icons: {
+        peopleCount: PeopleIcon,
+      },
+    },
+    {
+      zone: "Loading Dock",
+      peopleCount: 7,
+      icons: {
+        peopleCount: PeopleIcon,
+      },
+    },
   ];
 
   interface FilterParams {
@@ -193,11 +206,11 @@ const PeoplePresence: React.FC = () => {
         title="Detailed Report"
         columns={[
           { id: "Voilation", label: "Violation", minWidth: 200 },
-          { id: "time", label: "Time", minWidth: 150 },
-          { id: "zone", label: "Zone", minWidth: 150 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
 
           { id: "peopleCount", label: "People Count", minWidth: 120 },
+          { id: "time", label: "Time", minWidth: 150 },
+          { id: "zone", label: "Zone", minWidth: 150 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
         ]}
         data={recentPeoplePresence}
         filters={[
@@ -217,14 +230,14 @@ const PeoplePresence: React.FC = () => {
               new Set(recentPeoplePresence.map((item) => item.cameraId))
             ), // Unique camera IDs from the data
           },
-          {
-            id: "Voilation",
-            label: "Violation",
-            type: "select",
-            options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.Voilation))
-            ), // Unique violation messages
-          },
+          // {
+          //   id: "Voilation",
+          //   label: "Violation",
+          //   type: "select",
+          //   options: Array.from(
+          //     new Set(recentPeoplePresence.map((item) => item.Voilation))
+          //   ), // Unique violation messages
+          // },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
         ]}

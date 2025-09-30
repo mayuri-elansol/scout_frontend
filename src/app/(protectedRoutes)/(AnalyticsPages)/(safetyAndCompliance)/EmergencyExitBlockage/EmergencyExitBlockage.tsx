@@ -7,11 +7,12 @@ import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { ZoneViolationsdata } from "@/app/types";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const EmergencyExitBlockage: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -31,6 +32,11 @@ const EmergencyExitBlockage: React.FC = () => {
       tooltipMessage:
         "Shows the total number of emergency exits that are currently clear and safe for use.",
       icon: CheckCircle, // ✅ Safe / clear
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
       title: "Affected Zones (Last 3)",
@@ -63,6 +69,27 @@ const EmergencyExitBlockage: React.FC = () => {
       createdAt: "2025-09-23 19:20",
       updatedAt: "2025-09-23 19:21",
     },
+    {
+      id: 504,
+      blockage: true,
+      alarmTriggered: true,
+      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Emergency Exit A",
+      camera: "CAM-14",
+      createdAt: "2025-09-23 19:05",
+      updatedAt: "2025-09-23 19:06",
+    },
+
+    {
+      id: 505,
+      blockage: true,
+      alarmTriggered: true,
+      snapshot: "https://picsum.photos/400/200?random=16",
+      zone: "Assembly Line Exit",
+      camera: "CAM-16",
+      createdAt: "2025-09-23 19:20",
+      updatedAt: "2025-09-23 19:21",
+    },
   ];
 
   // Map backend data to recentViolations format
@@ -86,9 +113,25 @@ const EmergencyExitBlockage: React.FC = () => {
     recentExitBlockageViolations
   );
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Emergency Exit A", violations: 1, alarms: 1 },
-    { zone: "Assembly Line Exit", violations: 1, alarms: 1 },
+  const zoneViolationsData = [
+    {
+      zone: "Emergency Exit A",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Assembly Line Exit",
+      violations: 2,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -207,7 +250,7 @@ const EmergencyExitBlockage: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
         data={recentExitBlockageViolations}

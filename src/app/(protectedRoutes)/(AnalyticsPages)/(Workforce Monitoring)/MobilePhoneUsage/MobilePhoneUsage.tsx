@@ -7,11 +7,12 @@ import { PhoneIphone, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { ZoneViolationsdata } from "@/app/types";
 import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const MobilePhoneUsage: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -115,12 +116,52 @@ const MobilePhoneUsage: React.FC = () => {
   console.log("Recent Mobile Phone Violations", recentMobilePhoneViolations);
 
   // Zone violations structure
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Assembly Line", violations: 1, alarms: 1 },
-    { zone: "Production Floor A", violations: 1, alarms: 0 },
-    { zone: "Warehouse", violations: 1, alarms: 0 },
-    { zone: "Main Entrance", violations: 1, alarms: 1 },
-    { zone: "Parking Area", violations: 1, alarms: 0 },
+  const zoneViolationsData = [
+    {
+      zone: "Assembly Line",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Production Floor A",
+      violations: 1,
+      alarms: 0,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Warehouse",
+      violations: 1,
+      alarms: 0,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Main Entrance",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Parking Area",
+      violations: 1,
+      alarms: 0,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
 
   interface FilterParams {
@@ -239,7 +280,7 @@ const MobilePhoneUsage: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
 
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
@@ -261,7 +302,7 @@ const MobilePhoneUsage: React.FC = () => {
           },
           {
             id: "cameraId",
-            label: "Camera ID",
+            label: "Cameras",
             type: "select",
             options: Array.from(
               new Set(recentMobilePhoneViolations.map((v) => v.cameraId))

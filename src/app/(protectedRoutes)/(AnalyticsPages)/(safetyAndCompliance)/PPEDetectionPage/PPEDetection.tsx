@@ -235,14 +235,7 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Paper
-        sx={{
-          p: 3,
-          mb: 4,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
-        }}
-      >
+      <Paper sx={{ p: 3, mb: 0, backgroundColor: "#ffffff", borderRadius: 2 }}>
         <Box
           sx={{
             display: "flex",
@@ -257,7 +250,7 @@ const PPEDetection: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Real Time Performance Overview
             </Typography>
           </Box>
 
@@ -307,8 +300,6 @@ const PPEDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -317,7 +308,7 @@ const PPEDetection: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
         data={recentViolations}
@@ -342,7 +333,7 @@ const PPEDetection: React.FC = () => {
           },
           {
             id: "cameraId",
-            label: "Camera ID",
+            label: "Cameras",
             type: "select",
             options: Array.from(
               new Set(recentViolations.map((v) => v.cameraId))
@@ -354,6 +345,8 @@ const PPEDetection: React.FC = () => {
             type: "select",
             options: ["True", "False"],
           },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}

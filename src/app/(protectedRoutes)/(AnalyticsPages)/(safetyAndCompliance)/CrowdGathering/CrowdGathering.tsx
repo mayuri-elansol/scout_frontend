@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
@@ -13,11 +12,13 @@ import {
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { ZoneViolationsdata } from "@/app/types";
 import GroupsIcon from "@mui/icons-material/Groups";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const CrowdGathering: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -36,6 +37,28 @@ const CrowdGathering: React.FC = () => {
     },
     {
       id: 702,
+      gatheredMore: true,
+      alarmTriggered: false,
+      mobCount: 12,
+      snapshot: "https://picsum.photos/400/200?random=22",
+      zone: "Hazard Zone B",
+      camera: "CAM-22",
+      createdAt: "2025-09-23 20:15",
+      updatedAt: "2025-09-23 20:16",
+    },
+    {
+      id: 703,
+      gatheredMore: true,
+      alarmTriggered: true,
+      mobCount: 25,
+      snapshot: "https://picsum.photos/400/200?random=21",
+      zone: "Hazard Zone A",
+      camera: "CAM-21",
+      createdAt: "2025-09-23 20:05",
+      updatedAt: "2025-09-23 20:06",
+    },
+    {
+      id: 704,
       gatheredMore: true,
       alarmTriggered: false,
       mobCount: 12,
@@ -99,9 +122,25 @@ const CrowdGathering: React.FC = () => {
     };
   });
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Hazard Zone A", violations: 1, alarms: 1 },
-    { zone: "Hazard Zone B", violations: 1, alarms: 0 },
+  const zoneViolationsData = [
+    {
+      zone: "Hazard Zone A",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Hazard Zone B",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -220,7 +259,7 @@ const CrowdGathering: React.FC = () => {
 
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
           { id: "mobCount", label: "People Count", minWidth: 120 },
         ]}
@@ -239,7 +278,7 @@ const CrowdGathering: React.FC = () => {
           },
           {
             id: "cameraId",
-            label: "Camre ID",
+            label: "Cameras",
             type: "select",
             options: Array.from(
               new Set(recentCrowdViolations.map((item) => item.cameraId))

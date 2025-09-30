@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
@@ -14,12 +13,15 @@ import {
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone, ZoneViolationsdata } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const IntrusionDetection: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -32,7 +34,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Security Level (Safe/Unsafe)",
-      value: "Unsafe", // Current security status
+      value: "Safe", // Current security status
       tooltipMessage:
         "Displays whether the security status is safe or unsafe at the moment.",
 
@@ -73,6 +75,24 @@ const IntrusionDetection: React.FC = () => {
       createdAt: "2025-09-23 18:15",
       updatedAt: "2025-09-23 18:16",
     },
+    {
+      id: 203,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Perimeter Zone A",
+      camera: "CAM-11",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
+    },
+    {
+      id: 204,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Perimeter Zone B",
+      camera: "CAM-12",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:15",
+      updatedAt: "2025-09-23 18:16",
+    },
   ];
 
   const recentIntrusionViolations = backendIntrusionData.map((item) => {
@@ -96,9 +116,25 @@ const IntrusionDetection: React.FC = () => {
     };
   });
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Perimeter Zone A", violations: 1, alarms: 1 },
-    { zone: "Perimeter Zone B", violations: 1, alarms: 1 },
+  const zoneViolationsData = [
+    {
+      zone: "Perimeter Zone A",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Perimeter Zone B",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   const KpiCardLoading = false;
 
@@ -205,7 +241,7 @@ const IntrusionDetection: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
         data={recentIntrusionViolations}

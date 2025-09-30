@@ -21,7 +21,6 @@ interface ActivityItem {
 interface ActivityFeedProps {
   loading: boolean;
   activities: ActivityItem[];
-  maxHeight?: number | string;
 }
 
 const getSeverityStyle = (severity: string) => {

@@ -26,7 +26,7 @@ import {
     Avatar,
     InputAdornment
 } from "@mui/material";
-import styles from "./UserManagement.module.css";
+import styles from "./EditUser.module.css";
 import Appbar from "@/app/components/organisms/AppBar/AppBar";
 import { useRouter } from "next/navigation";
 
@@ -34,8 +34,10 @@ const UserManagement = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-    const { control, handleSubmit, formState: { errors }, reset } = useForm({
+    const [users, setUsers] = useState<any[]>([]); // history list
+    const [editIndex, setEditIndex] = useState<number | null>(null);
+  const router = useRouter(); 
+    const { handleSubmit, control, formState: { errors }, reset } = useForm({
         defaultValues: {
             role: "Organisation Admin",
             name: "",
@@ -52,8 +54,6 @@ const UserManagement = () => {
     const sites = ["Headquarters", "Mumbai Office", "Delhi Branch", "Bangalore Hub", "Remote Location"];
     const departments = ["Human Resources", "Information Technology", "Finance", "Operations", "Marketing", "Sales"];
 
-    const router = useRouter();
-
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -66,20 +66,25 @@ const UserManagement = () => {
 
     const onSubmit = (data: any) => {
         const newUser = { ...data, profileImage: imagePreview };
-        console.log("New User Added:", newUser);
 
-        alert("User added successfully!");
+        if (editIndex !== null) {
+            const updatedUsers = [...users];
+            updatedUsers[editIndex] = newUser;
+            setUsers(updatedUsers);
+            setEditIndex(null);
+            alert("User updated successfully!");
+            router.push("/UserOverview")
+
+        }
         reset();
         setImagePreview(null);
         setProfileImage(null);
-
-        // Redirect to User History page
-        router.push("/UserOverview");
     };
+
 
     return (
         <Box className={styles.formWrapper}>
-            <Appbar title="Add User" />
+            <Appbar title="Edit User" />
 
             {/* Role Section */}
             <Box className={styles.section}>
@@ -93,6 +98,7 @@ const UserManagement = () => {
                         name="role"
                         control={control}
                         rules={{ required: "Role is required" }}
+
                         render={({ field }) => (
                             <Select {...field} label="Role">
                                 {roles.map(role => <MenuItem key={role} value={role}>{role}</MenuItem>)}
@@ -104,6 +110,8 @@ const UserManagement = () => {
             </Box>
 
             {/* User Information */}
+
+
             <Box className={styles.section}>
                 <Box className={styles.sectionHeader}>
                     <Person color="primary" />
@@ -157,7 +165,6 @@ const UserManagement = () => {
                     />
                 </Box>
             </Box>
-
             {/* Credentials */}
             <Box className={styles.section}>
                 <Box className={styles.sectionHeader}>
@@ -247,25 +254,28 @@ const UserManagement = () => {
                 </Box>
             </Box>
 
-            {/* Upload Profile Picture + Submit in same row */}
+            {/* Upload Profile Picture */}
             <Box className={styles.section}>
                 <Box className={styles.sectionHeader}>
                     <CameraAlt color="primary" />
                     <Typography variant="subtitle1">Upload Profile Picture</Typography>
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Avatar src={imagePreview || ""} sx={{ width: 100, height: 100 }} />
+                <Box className={styles.imageUpload}>
+                    <Avatar src={imagePreview || ""} sx={{
+                        width: 100, height: 100, '& img': {
+                            objectFit: 'contain',
+                        },
+                    }} />
                     <Button variant="outlined" component="label" startIcon={<CloudUpload />}>
                         Upload
                         <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
                     </Button>
-                    <Box sx={{ flexGrow: 1 }} />
-
                 </Box>
             </Box>
-            {/* Submit + Back buttons */}
+
+            {/* Submit */}
             <Box textAlign="center" mt={-2} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-           
+
 
                 <Button
                     variant="outlined"
@@ -274,7 +284,7 @@ const UserManagement = () => {
                 >
                     Back
                 </Button>
-                     <Button
+                <Button
                     variant="contained"
                     className={styles.submitButton}
                     onClick={handleSubmit(onSubmit)}
@@ -282,6 +292,9 @@ const UserManagement = () => {
                     Submit
                 </Button>
             </Box>
+
+
+
 
         </Box>
     );

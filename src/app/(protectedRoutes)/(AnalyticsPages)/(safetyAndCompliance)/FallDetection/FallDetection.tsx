@@ -6,7 +6,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { ZoneViolationsdata } from "@/app/types";
 import {
   Shield,
   NotificationsActive,
@@ -18,7 +17,8 @@ import {
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FallDetection: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -91,6 +91,33 @@ const FallDetection: React.FC = () => {
       updatedAt: "2025-09-23 18:19",
       alarmTriggered: true,
     },
+    {
+      id: 404,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Production Floor A",
+      camera: "CAM-11",
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
+      alarmTriggered: true,
+    },
+    {
+      id: 405,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Warehouse",
+      camera: "CAM-12",
+      createdAt: "2025-09-23 18:12",
+      updatedAt: "2025-09-23 18:13",
+      alarmTriggered: false,
+    },
+    {
+      id: 406,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Maintenance Area",
+      camera: "CAM-13",
+      createdAt: "2025-09-23 18:18",
+      updatedAt: "2025-09-23 18:19",
+      alarmTriggered: true,
+    },
   ];
 
   // Map backend data to recentViolations format
@@ -107,10 +134,34 @@ const FallDetection: React.FC = () => {
 
   console.log("laydown recent voilation", recentLaydownViolations);
 
-  const zoneViolationsData: ZoneViolationsdata[] = [
-    { zone: "Production Floor A", violations: 1, alarms: 1 },
-    { zone: "Warehouse", violations: 1, alarms: 0 },
-    { zone: "Maintenance Area", violations: 1, alarms: 1 },
+  const zoneViolationsData = [
+    {
+      zone: "Production Floor A",
+      violations: 2,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Warehouse",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Maintenance Area",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -230,7 +281,7 @@ const FallDetection: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
         data={recentLaydownViolations}

@@ -1,6 +1,4 @@
 "use client";
-
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
@@ -11,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
@@ -19,7 +17,8 @@ import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FireSmokeOilLeakDetection: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -59,6 +58,18 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       alarmTriggered: false,
       createdAt: "2025-09-23 16:20",
       updatedAt: "2025-09-23 16:21",
+    },
+    {
+      id: 202,
+      detection: true,
+      objectname: "smoke",
+      snapshot: "https://picsum.photos/400/200?random=7",
+      zone: "Welding Station",
+      camera: "CAM-07",
+      timestamp: "2025-09-23 16:10",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 16:10",
+      updatedAt: "2025-09-23 16:12",
     },
   ];
 
@@ -105,9 +116,33 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   ];
 
   const zoneViolationsData = [
-    { zone: "Production Floor A", violations: 1, alarms: 1 },
-    { zone: "Welding Station", violations: 1, alarms: 1 },
-    { zone: "Chemical Storage", violations: 1, alarms: 0 },
+    {
+      zone: "Production Floor A",
+      violations: 1,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Welding Station",
+      violations: 21,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Chemical Storage",
+      violations: 1,
+      alarms: 0,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
 
   const KpiCardLoading = false;
@@ -221,7 +256,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
         data={recentFireViolations}
@@ -258,6 +293,8 @@ const FireSmokeOilLeakDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
         downloadFileName="detection-report"
         loading={false}

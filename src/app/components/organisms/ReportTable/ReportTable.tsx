@@ -20,12 +20,12 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
-import dayjs, { Dayjs } from "dayjs";
+
+import dayjs from "dayjs";
 import { SxProps, Theme } from "@mui/material/styles";
 
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import { DateTimePicker } from "@mui/x-date-pickers";
-
 /** Column definition */
 export interface ReportColumn<T> {
   id: keyof T;
@@ -51,11 +51,11 @@ export interface ReportTableProps<T extends Record<string, any>> {
   readonly data: readonly T[];
   readonly downloadFileName: string;
   readonly filters?: readonly ReportFilter[];
-  readonly onSubmit?: (filters: Record<string, any>) => void;
+  readonly onSubmit?: (filters: Record<string, string>) => void;
   readonly onReset?: () => void;
   readonly onExport?: (
     format: "csv" | "pdf",
-    filters: Record<string, any>
+    filters: Record<string, string>
   ) => void;
   readonly loading?: boolean;
   readonly isSubmitDisabled?: boolean;
@@ -82,12 +82,12 @@ function ReportTable<T extends Record<string, any>>({
   tooltipMessage,
 }: ReportTableProps<T>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [filterValues, setFilterValues] = useState<Record<string, any>>({});
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   /** Filter Change */
-  const handleFilterChange = (id: string, value: any) => {
+  const handleFilterChange = (id: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
@@ -98,9 +98,7 @@ function ReportTable<T extends Record<string, any>>({
         ? true
         : String(row[key as keyof T] ?? "")
             .toLowerCase()
-            .includes(
-              value.format ? value.format("YYYY-MM-DD HH:mm") : value.toString()
-            )
+            .includes(value.toLowerCase())
     );
 
   const filteredData = data.filter(applyFilters);
@@ -145,13 +143,7 @@ function ReportTable<T extends Record<string, any>>({
   };
   const handleClose = () => setAnchorEl(null);
   const handleExportClick = (format: "csv" | "pdf") => {
-    const formattedFilters = Object.fromEntries(
-      Object.entries(filterValues).map(([k, v]) => [
-        k,
-        v?.format ? v.format("YYYY-MM-DD HH:mm") : v,
-      ])
-    );
-    onExport?.(format, formattedFilters);
+    onExport?.(format, filterValues);
     handleClose();
   };
 
@@ -183,14 +175,17 @@ function ReportTable<T extends Record<string, any>>({
       return (
         <DateTimePicker
           label={filter.label}
-          value={filterValues[filter.id] || null}
+          value={
+            filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
+          }
           onChange={(newValue) => {
-            handleFilterChange(filter.id, newValue as Dayjs | null);
+            // newValue could be Date | null
+            const formatted = newValue
+              ? dayjs(newValue).format("YYYY-MM-DD")
+              : "";
+            handleFilterChange(filter.id, formatted);
           }}
-          slotProps={{
-            textField: { size: "small", fullWidth: true },
-          }}
-          //format="DD/MM/YYYY HH:mm"
+          slotProps={{ textField: { size: "small", fullWidth: true } }}
         />
       );
     }
@@ -339,15 +334,7 @@ function ReportTable<T extends Record<string, any>>({
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => {
-                  const formattedFilters = Object.fromEntries(
-                    Object.entries(filterValues).map(([k, v]) => [
-                      k,
-                      v?.format ? v.format("YYYY-MM-DD HH:mm") : v,
-                    ])
-                  );
-                  onSubmit?.(formattedFilters);
-                }}
+                onClick={() => onSubmit?.(filterValues)}
                 disabled={isSubmitDisabled}
               >
                 Submit
