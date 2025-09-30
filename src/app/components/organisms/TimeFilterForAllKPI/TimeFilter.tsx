@@ -149,7 +149,10 @@ const TimeFilter: React.FC = () => {
                 }))
               }
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              minDateTime={dayjs().subtract(3, "month").startOf("day")}
+              maxDateTime={dayjs().endOf("day")}
             />
+
             <DateTimePicker
               label="End"
               value={customRange.end}
@@ -160,7 +163,10 @@ const TimeFilter: React.FC = () => {
                 }))
               }
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
+              minDateTime={dayjs().subtract(3, "month").startOf("day")}
+              maxDateTime={dayjs().endOf("day")}
             />
+
             <Button variant="contained" onClick={applyCustomRange}>
               Apply
             </Button>

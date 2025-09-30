@@ -235,7 +235,14 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Paper sx={{ p: 3, mb: 0, backgroundColor: "#ffffff", borderRadius: 2 }}>
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -250,7 +257,7 @@ const PPEDetection: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Performance Overview
+              Real Time Overview
             </Typography>
           </Box>
 
@@ -300,6 +307,8 @@ const PPEDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+      {/* </Box> */}
+
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"

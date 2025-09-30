@@ -56,8 +56,6 @@ const KpiGrid: React.FC<KpiGridProps> = ({
             <KpiCard
               title={kpi.title}
               value={kpi.value}
-              subtitle={kpi.subtitle}
-              trend={kpi.trend}
               trendColor={kpi.trendColor}
               color={kpi.color}
               bgColor={kpi.bgColor}

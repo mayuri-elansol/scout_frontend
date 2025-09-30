@@ -3,7 +3,7 @@
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   People,
   TrendingUp,
@@ -17,6 +17,7 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
@@ -153,6 +154,29 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+          <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
@@ -191,7 +215,7 @@ const ObjectDetection: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+            </Paper>
       {/* Object detection Report */}
       <ReportTable
         title="Detailed Report"

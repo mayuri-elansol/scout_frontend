@@ -84,7 +84,9 @@ export type PageType =
   | "employee-idle-time"
   | "face-recognition"
   | "unauthorized-access"
-  | "monitoring-canteen-usage";
+  | "monitoring-canteen-usage"
+  | "role-management"
+  | "user-management";
 
 // Component Props Types
 export interface SidebarProps {

@@ -13,7 +13,6 @@ const ResetPassword: React.FC = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string>("");
 
   // 👇 states for toggle visibility
@@ -28,7 +27,6 @@ const ResetPassword: React.FC = () => {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      setIsSubmitted(true);
       console.log("formdataaa", formData);
       // Navigate after success (optional)
       // router.push("/login");

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   AccessTime,
   Shield,
@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const IntrusionDetection: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -122,53 +123,81 @@ const IntrusionDetection: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Real Time Overview
+            </Typography>
+          </Box>
 
-      {/* KPI Cards */}
+          <TimeFilter />
+        </Box>
+        {/* KPI Cards */}
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : // Show actual KPI cards
-            intrusionKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Active Intrusion Alerts */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentIntrusionViolations}
-            loading={false}
-            tooltipMessage="Latest 20 intrusion detected with details."
-          />
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              intrusionKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
-        {/* Security Zones Status */}
-        {/* item xs={12} lg={4} */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneViolations
-            violationsZone={zoneViolationsData}
-            loading={false}
-            tooltipMessage="Shows violations and alarms per zone"
-          />
-        </Grid>
-      </Grid>
 
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Active Intrusion Alerts */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentIntrusionViolations}
+              loading={false}
+              tooltipMessage="Latest 20 intrusion detected with details."
+            />
+          </Grid>
+          {/* Security Zones Status */}
+          {/* item xs={12} lg={4} */}
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <ZoneViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations and alarms per zone"
+            />
+          </Grid>
+        </Grid>
+      </Paper>
+      {/* </Box> */}
       {/* Security Intrusion Report */}
       <ReportTable
         title="Detailed Report"

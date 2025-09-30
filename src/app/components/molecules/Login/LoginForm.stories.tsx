@@ -19,7 +19,7 @@ interface LoginFormProps {
     field: keyof LoginFormData
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   onTogglePassword: () => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (data: LoginFormData) => void; 
   onForgotPassword: () => void;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -41,37 +41,38 @@ const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
       if (error) setError("");
     };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoading(true);
+const handleSubmit = (data: LoginFormData) => {
+  setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      if (formData.username === "demo" && formData.password === "password") {
-        console.log("Login successful!");
-      } else {
-        setError("Invalid username or password");
-      }
-    }, 1500);
-  };
+  // Simulate API call
+  setTimeout(() => {
+    setIsLoading(false);
+    if (data.username === "demo" && data.password === "password") {
+      console.log("Login successful!", data);
+    } else {
+      setError("Invalid username or password");
+    }
+  }, 1500);
+};
+
 
   const handleTogglePassword = () => setShowPassword((prev) => !prev);
   const handleForgotPassword = () => console.log("Forgot password clicked");
 
   return (
-    <LoginForm
-      formData={formData}
-      showPassword={showPassword}
-      isLoading={isLoading}
-      error={error}
-      onInputChange={handleInputChange}
-      onTogglePassword={handleTogglePassword}
-      onSubmit={handleSubmit}
-      onForgotPassword={handleForgotPassword}
-      setError={setError}
-      {...args}
-    />
+<LoginForm
+  formData={formData}
+  showPassword={showPassword}
+  isLoading={isLoading}
+  error={error}
+  onInputChange={handleInputChange}
+  onTogglePassword={handleTogglePassword}
+  onSubmit={handleSubmit} 
+  onForgotPassword={handleForgotPassword}
+  setError={setError}
+  {...args}
+/>
+
   );
 };
 

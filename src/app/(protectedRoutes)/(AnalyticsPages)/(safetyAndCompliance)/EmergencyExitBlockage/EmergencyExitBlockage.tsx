@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
@@ -11,6 +11,7 @@ import { ZoneViolationsdata } from "@/app/types";
 import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const EmergencyExitBlockage: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
@@ -129,48 +130,76 @@ const EmergencyExitBlockage: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Real Time Overview
+            </Typography>
+          </Box>
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : // Show actual KPI cards
-            ExitKpiData.map((kpi) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentExitBlockageViolations}
-            loading={false}
-            tooltipMessage="Latest 20 detected emergency exit blockage with details."
-          />
+          <TimeFilter />
+        </Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((key) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              ExitKpiData.map((kpi) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={kpi.title}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <ZoneViolations
-            violationsZone={zoneViolationsData}
-            loading={false}
-            tooltipMessage="Shows violations and alarms per zone"
-          />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentExitBlockageViolations}
+              loading={false}
+              tooltipMessage="Latest 20 detected emergency exit blockage with details."
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <ZoneViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations and alarms per zone"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
+      {/* </Box> */}
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"

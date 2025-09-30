@@ -1,5 +1,6 @@
+import { UserManagement } from "./UserManagement";
 
 
-export default function PPEDetectionPage() {
-  return ;
+export default function page() {
+  return <UserManagement />;
 }

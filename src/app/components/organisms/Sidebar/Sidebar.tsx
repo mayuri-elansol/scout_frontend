@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useState, useMemo, useCallback } from "react";
 import { usePathname } from "next/navigation";
@@ -15,17 +16,18 @@ import {
   Chip,
   useTheme,
 } from "@mui/material";
-import { BarChart, ExpandLess, ExpandMore } from "@mui/icons-material";
+import { BarChart, ExpandLess, ExpandMore, Settings } from "@mui/icons-material";
 import {
   dashboardMenu,
   alertMenu,
   analyticsMenu,
+  settingsMenu,
   MenuItemConfig,
-  AnalyticsCategoryConfig,
+  CategoryConfig,
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
-
+import theme from "../../../theme/theme"
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -35,7 +37,7 @@ interface SidebarProps {
 const MenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
-  theme: any;
+  theme: typeof theme;
 }>(({ item, pathname, theme }) => (
   <ListItem disablePadding sx={{ mb: 0.5 }}>
     <ListItemButton
@@ -77,12 +79,13 @@ const MenuItem = React.memo<{
 
 MenuItem.displayName = "MenuItem";
 
-// Memoized sub-menu item component
+
 const SubMenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
-  theme: any;
-}>(({ item, pathname, theme }) => (
+  theme: typeof theme;
+  categoryTitle: string;
+}>(({ item, pathname, theme, categoryTitle }) => (
   <ListItem disablePadding>
     <ListItemButton
       component={Link}
@@ -102,12 +105,25 @@ const SubMenuItem = React.memo<{
         },
       }}
     >
+      {/* Add this */}
+      {item.icon && (
+        <ListItemIcon
+          sx={{
+            minWidth: 28,
+            color: pathname === item.path ? "white" : "#6b7280",
+          }}
+        >
+          <item.icon fontSize="small" />
+        </ListItemIcon>
+      )}
+
       <ListItemText
-        primary={`• ${item.name}`}
+        primary={categoryTitle === "Settings" ? `${item.name}` : `• ${item.name}`}
         slotProps={{
           primary: {
             sx: {
-              fontSize: "12px",
+              fontSize: categoryTitle === "Settings" ? "14px" : "12px",
+
               color: pathname === item.path ? "white" : "#6b7280",
               fontWeight: pathname === item.path ? 500 : "normal",
               lineHeight: 1.3,
@@ -123,13 +139,13 @@ SubMenuItem.displayName = "SubMenuItem";
 
 // Memoized category component
 const CategorySection = React.memo<{
-  category: AnalyticsCategoryConfig & {
+  category: CategoryConfig & {
     items: (MenuItemConfig & { featureFlag: boolean })[];
   };
   openCategories: Record<string, boolean>;
   onToggle: (title: string) => void;
   pathname: string;
-  theme: any;
+  theme: typeof theme;
 }>(({ category, openCategories, onToggle, pathname, theme }) => {
   const filteredItems = useMemo(
     () => category.items.filter((i) => i.featureFlag),
@@ -182,6 +198,8 @@ const CategorySection = React.memo<{
               item={item}
               pathname={pathname}
               theme={theme}
+              categoryTitle={category.title}
+
             />
           ))}
         </List>
@@ -194,15 +212,13 @@ CategorySection.displayName = "CategorySection";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
-
-
-  let drawerWidth: string = "315px";
-
+  const drawerWidth: string = "315px";
 
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     {}
   );
@@ -213,6 +229,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
   const handleAnalyticsToggle = useCallback(() => {
     setAnalyticsOpen((prev) => !prev);
+  }, []);
+
+  const handleSettingsToggle = useCallback(() => {
+    setSettingsOpen((prev) => !prev);
   }, []);
 
   const filteredMenus = useMemo(() => {
@@ -230,7 +250,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       }))
       .filter((item) => item.featureFlag);
 
-    const analyticsFlags: (AnalyticsCategoryConfig & {
+    const analyticsFlags: (CategoryConfig & {
       items: (MenuItemConfig & { featureFlag: boolean })[];
     })[] = analyticsMenu.map((category) => ({
       ...category,
@@ -240,13 +260,30 @@ const Sidebar: React.FC<SidebarProps> = () => {
       })),
     }));
 
-    return { dashboardFlags, alertFlags, analyticsFlags };
+    const settingsFlags: (CategoryConfig & {
+      items: (MenuItemConfig & { featureFlag: boolean })[];
+    })[] = settingsMenu.map((category) => ({
+      ...category,
+      items: category.items.map((item) => ({
+        ...item,
+        featureFlag: featureFlag[item.page!] ?? false,
+      })),
+    }));
+
+    return { dashboardFlags, alertFlags, analyticsFlags, settingsFlags };
   }, [featureFlag]);
+
   const isAnalyticsActive = useMemo(() => {
     return filteredMenus.analyticsFlags.some((category) =>
       category.items.some((item) => pathname === item.path)
     );
   }, [pathname, filteredMenus.analyticsFlags]);
+
+  const isSettingsActive = useMemo(() => {
+    return filteredMenus.settingsFlags.some((category) =>
+      category.items.some((item) => pathname === item.path)
+    );
+  }, [pathname, filteredMenus.settingsFlags]);
 
   const menuContent = useMemo(
     () => (
@@ -328,6 +365,62 @@ const Sidebar: React.FC<SidebarProps> = () => {
             />
           ))}
         </List>
+
+        {/* Settings */}
+        {filteredMenus.settingsFlags.length > 0 && (
+          <List sx={{ p: 0, mt: 1 }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={handleSettingsToggle}
+                // selected={
+                //   isSettingsActive &&
+                //   !Object.values(openCategories).some(Boolean)
+                // }
+                sx={{
+                  borderRadius: 1,
+                  "&.Mui-selected": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    "&:hover": { backgroundColor: theme.palette.primary.dark },
+                  },
+                  color: isSettingsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 36,
+                    color: isSettingsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
+                >
+                  <Settings />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+                {settingsOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+
+            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+              <List sx={{ pl: 2 }}>
+                {filteredMenus.settingsFlags.map((category) =>
+                  category.items.map((item) => (
+                    <SubMenuItem
+                      key={item.path}
+                      item={item}
+                      pathname={pathname}
+                      theme={theme}
+                      categoryTitle={category.title}
+
+                    />
+                  ))
+                )}
+              </List>
+            </Collapse>
+          </List>
+        )}
       </>
     ),
     [
@@ -335,9 +428,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
       pathname,
       theme,
       analyticsOpen,
+      settingsOpen,
       openCategories,
       handleAnalyticsToggle,
+      handleSettingsToggle,
       handleCategoryToggle,
+        isAnalyticsActive, 
+    isSettingsActive,  
     ]
   );
 
@@ -352,7 +449,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           boxSizing: "border-box",
           mt: "64px",
           height: "calc(100vh - 64px)",
-          // overflowY: "auto",
           borderRight: "none",
           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
           p: 2,
@@ -363,7 +459,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       }}
     >
       {/* Menu Content */}
-      <Box sx={{ flex: 1,overflowY: "auto" }}>{menuContent}</Box>
+      <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
 
       {/* Footer */}
       <Box
@@ -374,7 +470,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           alignItems: "center",
           textAlign: "center",
           gap: 1,
-
         }}
       >
         <Box

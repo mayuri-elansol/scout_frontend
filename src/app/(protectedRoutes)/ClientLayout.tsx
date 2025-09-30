@@ -15,7 +15,6 @@ import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface ClientLayoutProps {
   children: ReactNode;
 }
@@ -76,7 +75,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
         <Box
           sx={{
             flex: 1,
-            p: 4,
+            pl: 4,
+            pr:4,
+            pb:4,
             pt: 9,
             backgroundColor: "#f5f7fa",
             width: "78vw",
