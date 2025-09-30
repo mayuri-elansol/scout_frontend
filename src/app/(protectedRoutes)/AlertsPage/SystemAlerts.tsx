@@ -283,7 +283,7 @@ const SystemAlerts: React.FC = () => {
           variant="scrollable"
           scrollButtons="auto"
           sx={{
-            mb: -2,
+            mb: -4,
             pl: 1.2,
             // pr: 2,
             minHeight: 36,
@@ -338,6 +338,7 @@ const SystemAlerts: React.FC = () => {
                 onExport={handleExport}
                 downloadFileName={`${t.key}-alerts`}
                 loading={false}
+                tooltipMessage="Shows the usecase voilations"
               />
             )
         )}

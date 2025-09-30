@@ -10,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Chip,
   TextField,
   MenuItem,
   Menu,
@@ -18,55 +19,47 @@ import {
   Card,
   TablePagination,
   Tooltip,
+  Divider,
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
-
-import dayjs from "dayjs";
-import { SxProps, Theme } from "@mui/material/styles";
-
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-import { DateTimePicker } from "@mui/x-date-pickers";
-/** Column definition */
-export interface ReportColumn<T> {
-  id: keyof T;
+interface ReportColumn {
+  id: string;
   label: string;
   minWidth?: number;
   align?: "left" | "right" | "center";
 }
 
-/** Filter definition */
+interface ReportData {
+  [key: string]: string | number | boolean;
+}
+
 type FilterType = "text" | "select" | "date";
 
-export interface ReportFilter {
+interface ReportFilter {
   id: string;
   label: string;
   type: FilterType;
   options?: string[];
 }
 
-/** Generic ReportTable props */
-export interface ReportTableProps<T extends Record<string, any>> {
-  readonly title: string;
-  readonly columns: readonly ReportColumn<T>[];
-  readonly data: readonly T[];
-  readonly downloadFileName: string;
-  readonly filters?: readonly ReportFilter[];
-  readonly onSubmit?: (filters: Record<string, string>) => void;
-  readonly onReset?: () => void;
-  readonly onExport?: (
-    format: "csv" | "pdf",
-    filters: Record<string, string>
-  ) => void;
-  readonly loading?: boolean;
-  readonly isSubmitDisabled?: boolean;
-  readonly onView?: (row: T) => void;
-  readonly onDownload?: (row: T) => void;
-  readonly sx?: SxProps<Theme>;
-  readonly tooltipMessage?: string;
+interface ReportTableProps {
+  title: string;
+  columns: ReportColumn[];
+  data: ReportData[];
+  downloadFileName: string;
+  filters?: ReportFilter[];
+  onSubmit?: (filters: Record<string, string>) => void;
+  onReset?: () => void;
+  onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
+  loading?: boolean;
+  isSubmitDisabled?: boolean;
+  onView?: (row: ReportData) => void;
+  onDownload?: (row: ReportData) => void;
+  tooltipMessage: string;
 }
 
-/** ReportTable component */
-function ReportTable<T extends Record<string, any>>({
+const ReportTable: React.FC<ReportTableProps> = ({
   title,
   columns,
   data,
@@ -78,34 +71,54 @@ function ReportTable<T extends Record<string, any>>({
   isSubmitDisabled,
   onView,
   onDownload,
-  sx,
   tooltipMessage,
-}: ReportTableProps<T>) {
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const rowsPerPage = 6;
 
-  /** Filter Change */
+  /** Filter Change Handler */
   const handleFilterChange = (id: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  /** Apply Filters */
-  const applyFilters = (row: T) =>
+  /** Filter Logic */
+  const applyFilters = (row: ReportData) =>
     Object.entries(filterValues).every(([key, value]) =>
       !value
         ? true
-        : String(row[key as keyof T] ?? "")
-            .toLowerCase()
-            .includes(value.toLowerCase())
+        : row[key]?.toString().toLowerCase().includes(value.toLowerCase())
     );
 
   const filteredData = data.filter(applyFilters);
 
+  /** Status Chip Colors */
+  const getStatusColor = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "active":
+      case "present":
+      case "resolved":
+        return { color: "#4caf50", bgColor: "#e8f5e9" };
+      case "missing":
+      case "violation":
+      case "breach":
+        return { color: "#f44336", bgColor: "#ffebee" };
+      case "on_break":
+      case "late_arrival":
+      case "warning":
+        return { color: "#ff9800", bgColor: "#fff8e1" };
+      case "investigating":
+      case "pending":
+        return { color: "#2196f3", bgColor: "#e3f2fd" };
+      default:
+        return { color: "#666", bgColor: "#f5f5f5" };
+    }
+  };
+
   /** Render Cell Values */
   const renderCellValue = (
-    column: ReportColumn<T>,
+    column: ReportColumn,
     value: string | number | boolean
   ) => {
     if (typeof value === "boolean") {
@@ -115,8 +128,25 @@ function ReportTable<T extends Record<string, any>>({
         </Typography>
       );
     }
+    if (column.id === "status") {
+      const colors = getStatusColor(String(value));
+      return (
+        <Chip
+          label={value}
+          size="small"
+          sx={{
+            fontSize: "12px",
+            fontWeight: 500,
+            color: colors.color,
+            backgroundColor: colors.bgColor,
+            height: 24,
+            textTransform: "uppercase",
+          }}
+        />
+      );
+    }
 
-    if (String(column.id).includes("id")) {
+    if (column.id.includes("id")) {
       return (
         <Typography
           sx={{
@@ -137,7 +167,7 @@ function ReportTable<T extends Record<string, any>>({
     );
   };
 
-  /** Download Menu */
+  /** Download Menu Handlers */
   const handleDownloadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -151,12 +181,14 @@ function ReportTable<T extends Record<string, any>>({
   const renderFilter = (filter: ReportFilter) => {
     const commonProps = {
       label: filter.label,
-      size: "small" as const,
+      //   size: "small" as const,
       fullWidth: true,
       value: filterValues[filter.id] || "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         handleFilterChange(filter.id, e.target.value),
-      sx: { minWidth: 150 },
+      sx: {
+        minWidth: 150,
+      },
     };
 
     if (filter.type === "text") return <TextField {...commonProps} />;
@@ -171,24 +203,15 @@ function ReportTable<T extends Record<string, any>>({
           ))}
         </TextField>
       );
-    if (filter.type === "date") {
+    if (filter.type === "date")
       return (
-        <DateTimePicker
-          label={filter.label}
-          value={
-            filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
-          }
-          onChange={(newValue) => {
-            // newValue could be Date | null
-            const formatted = newValue
-              ? dayjs(newValue).format("YYYY-MM-DD")
-              : "";
-            handleFilterChange(filter.id, formatted);
-          }}
-          slotProps={{ textField: { size: "small", fullWidth: true } }}
+        <TextField
+          {...commonProps}
+          type="date"
+          slotProps={{ inputLabel: { shrink: true } }}
         />
       );
-    }
+
     return null;
   };
 
@@ -198,7 +221,7 @@ function ReportTable<T extends Record<string, any>>({
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
         {columns.map((col) => (
-          <TableCell key={String(col.id)}>
+          <TableCell key={col.id}>
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
@@ -223,7 +246,7 @@ function ReportTable<T extends Record<string, any>>({
       >
         {columns.map((column) => (
           <TableCell
-            key={String(column.id)}
+            key={column.id}
             align={column.align || "left"}
             sx={{ py: 1.5, borderBottom: "1px solid #f0f0f0" }}
           >
@@ -232,16 +255,33 @@ function ReportTable<T extends Record<string, any>>({
         ))}
         <TableCell align="center" sx={{ py: 1.5 }}>
           <IconButton
-            size="small"
+            size="medium"
             color="primary"
             onClick={() => onView?.(row)}
+            sx={{
+              // background: "transparent",
+              transition: "transform 0.15s ease, box-shadow 0.15s ease",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.15)",
+              },
+            }}
           >
             <Visibility fontSize="small" />
           </IconButton>
+
           <IconButton
-            size="small"
+            size="medium"
             color="primary"
             onClick={() => onDownload?.(row)}
+            sx={{
+              // background: "transparent",
+              transition: "transform 0.15s ease, box-shadow 0.15s ease",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.15)",
+              },
+            }}
           >
             <Download fontSize="small" />
           </IconButton>
@@ -259,8 +299,8 @@ function ReportTable<T extends Record<string, any>>({
   }
 
   return (
-    <Box sx={{ mt: 2, mb: 4 }}>
-      <Card sx={{ borderRadius: 2, overflow: "hidden", ...sx }}>
+    <Box sx={{ mt: 4, mb: 4 }}>
+      <Card sx={{ borderRadius: 2, overflow: "hidden" }}>
         {/* Header */}
         <Box
           sx={{
@@ -274,6 +314,9 @@ function ReportTable<T extends Record<string, any>>({
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Description sx={{ color: "#1976d2", fontSize: 24 }} />
+            {/* <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
+              {title}
+            </Typography> */}
             <Box
               sx={{
                 width: "100%",
@@ -339,6 +382,7 @@ function ReportTable<T extends Record<string, any>>({
               >
                 Submit
               </Button>
+
               <Button
                 size="small"
                 variant="outlined"
@@ -346,10 +390,21 @@ function ReportTable<T extends Record<string, any>>({
               >
                 Download
               </Button>
+
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      backgroundColor: "#fff",
+                      borderRadius: 1,
+                      boxShadow: 3,
+                      minWidth: 150,
+                    },
+                  },
+                }}
               >
                 <MenuItem onClick={() => handleExportClick("csv")}>
                   📊 CSV
@@ -375,13 +430,13 @@ function ReportTable<T extends Record<string, any>>({
         </Box>
 
         {/* Table */}
-        <TableContainer sx={{ maxHeight: 500 }}>
-          <Table stickyHeader>
+        <TableContainer>
+          <Table>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#ffffff" }}>
                 {columns.map((column) => (
                   <TableCell
-                    key={String(column.id)}
+                    key={column.id}
                     align={column.align || "left"}
                     sx={{
                       minWidth: column.minWidth,
@@ -424,15 +479,11 @@ function ReportTable<T extends Record<string, any>>({
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(parseInt(e.target.value, 10));
-            setPage(0);
-          }}
-          rowsPerPageOptions={[10, 15, 20]}
+          rowsPerPageOptions={[]}
         />
       </Card>
     </Box>
   );
-}
+};
 
 export default ReportTable;
