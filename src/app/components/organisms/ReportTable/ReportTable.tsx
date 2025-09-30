@@ -17,49 +17,56 @@ import {
   IconButton,
   Card,
   TablePagination,
+  Tooltip,
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
 import dayjs from "dayjs";
 import { SxProps, Theme } from "@mui/material/styles";
 
-interface ReportColumn {
-  id: string;
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import { DateTimePicker } from "@mui/x-date-pickers";
+/** Column definition */
+export interface ReportColumn<T> {
+  id: keyof T;
   label: string;
   minWidth?: number;
   align?: "left" | "right" | "center";
 }
 
-interface ReportData {
-  [key: string]: string | number | boolean;
-}
-
+/** Filter definition */
 type FilterType = "text" | "select" | "date";
 
-interface ReportFilter {
+export interface ReportFilter {
   id: string;
   label: string;
   type: FilterType;
   options?: string[];
 }
 
-interface ReportTableProps {
-  title?: string;
-  columns: ReportColumn[];
-  data: ReportData[];
-  downloadFileName: string;
-  filters?: ReportFilter[];
-  onSubmit?: (filters: Record<string, string>) => void;
-  onReset?: () => void;
-  onExport?: (format: "csv" | "pdf", filters: Record<string, string>) => void;
-  loading?: boolean;
-  isSubmitDisabled?: boolean;
-  onView?: (row: ReportData) => void;
-  onDownload?: (row: ReportData) => void;
-  sx?:SxProps<Theme>;
+/** Generic ReportTable props */
+export interface ReportTableProps<T extends Record<string, any>> {
+  readonly title: string;
+  readonly columns: readonly ReportColumn<T>[];
+  readonly data: readonly T[];
+  readonly downloadFileName: string;
+  readonly filters?: readonly ReportFilter[];
+  readonly onSubmit?: (filters: Record<string, string>) => void;
+  readonly onReset?: () => void;
+  readonly onExport?: (
+    format: "csv" | "pdf",
+    filters: Record<string, string>
+  ) => void;
+  readonly loading?: boolean;
+  readonly isSubmitDisabled?: boolean;
+  readonly onView?: (row: T) => void;
+  readonly onDownload?: (row: T) => void;
+  readonly sx?: SxProps<Theme>;
+  readonly tooltipMessage?: string;
 }
 
-const ReportTable: React.FC<ReportTableProps> = ({
+/** ReportTable component */
+function ReportTable<T extends Record<string, any>>({
   title,
   columns,
   data,
@@ -71,31 +78,34 @@ const ReportTable: React.FC<ReportTableProps> = ({
   isSubmitDisabled,
   onView,
   onDownload,
-  sx
-}) => {
+  sx,
+  tooltipMessage,
+}: ReportTableProps<T>) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
   const [page, setPage] = useState(0);
-  const rowsPerPage = 6;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  /** Filter Change Handler */
+  /** Filter Change */
   const handleFilterChange = (id: string, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  /** Filter Logic */
-  const applyFilters = (row: ReportData) =>
+  /** Apply Filters */
+  const applyFilters = (row: T) =>
     Object.entries(filterValues).every(([key, value]) =>
       !value
         ? true
-        : row[key]?.toString().toLowerCase().includes(value.toLowerCase())
+        : String(row[key as keyof T] ?? "")
+            .toLowerCase()
+            .includes(value.toLowerCase())
     );
 
   const filteredData = data.filter(applyFilters);
 
   /** Render Cell Values */
   const renderCellValue = (
-    column: ReportColumn,
+    column: ReportColumn<T>,
     value: string | number | boolean
   ) => {
     if (typeof value === "boolean") {
@@ -106,7 +116,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
       );
     }
 
-    if (column.id.includes("id")) {
+    if (String(column.id).includes("id")) {
       return (
         <Typography
           sx={{
@@ -127,7 +137,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
     );
   };
 
-  /** Download Menu Handlers */
+  /** Download Menu */
   const handleDownloadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -163,17 +173,20 @@ const ReportTable: React.FC<ReportTableProps> = ({
       );
     if (filter.type === "date") {
       return (
-        <DatePicker
+        <DateTimePicker
           label={filter.label}
-          value={filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null}
+          value={
+            filterValues[filter.id] ? dayjs(filterValues[filter.id]) : null
+          }
           onChange={(newValue) => {
             // newValue could be Date | null
-            const formatted = newValue ? dayjs(newValue).format("YYYY-MM-DD") : "";
+            const formatted = newValue
+              ? dayjs(newValue).format("YYYY-MM-DD")
+              : "";
             handleFilterChange(filter.id, formatted);
           }}
           slotProps={{ textField: { size: "small", fullWidth: true } }}
         />
-
       );
     }
     return null;
@@ -185,7 +198,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
         {columns.map((col) => (
-          <TableCell key={col.id}>
+          <TableCell key={String(col.id)}>
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
@@ -210,7 +223,7 @@ const ReportTable: React.FC<ReportTableProps> = ({
       >
         {columns.map((column) => (
           <TableCell
-            key={column.id}
+            key={String(column.id)}
             align={column.align || "left"}
             sx={{ py: 1.5, borderBottom: "1px solid #f0f0f0" }}
           >
@@ -246,9 +259,8 @@ const ReportTable: React.FC<ReportTableProps> = ({
   }
 
   return (
-    <Box sx={{ mt: 4, mb: 4 }}>
-      
-      <Card sx={{ borderRadius: 2, overflow: "hidden",...sx }}>
+    <Box sx={{ mt: 2, mb: 4 }}>
+      <Card sx={{ borderRadius: 2, overflow: "hidden", ...sx }}>
         {/* Header */}
         <Box
           sx={{
@@ -262,9 +274,37 @@ const ReportTable: React.FC<ReportTableProps> = ({
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Description sx={{ color: "#1976d2", fontSize: 24 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025",fontSize:18 }}>
-              {title}
-            </Typography>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 600, color: "#1c2025", fontSize: 18 }}
+              >
+                {title}
+              </Typography>
+
+              {tooltipMessage && (
+                <Tooltip title={tooltipMessage} arrow>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      color: "#f44336",
+                    }}
+                  >
+                    <InfoOutlineIcon />
+                  </Box>
+                </Tooltip>
+              )}
+            </Box>
           </Box>
 
           {/* Filters + Buttons */}
@@ -299,27 +339,17 @@ const ReportTable: React.FC<ReportTableProps> = ({
               >
                 Submit
               </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  onClick={handleDownloadClick}
-                >
-                  Download
-                </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={handleDownloadClick}
+              >
+                Download
+              </Button>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
-                slotProps={{
-                  paper: {
-                    sx: {
-                      backgroundColor: "#fff",
-                      borderRadius: 1,
-                      boxShadow: 3,
-                      minWidth: 150,
-                    },
-                  },
-                }}
               >
                 <MenuItem onClick={() => handleExportClick("csv")}>
                   📊 CSV
@@ -345,13 +375,13 @@ const ReportTable: React.FC<ReportTableProps> = ({
         </Box>
 
         {/* Table */}
-        <TableContainer>
-          <Table>
+        <TableContainer sx={{ maxHeight: 500 }}>
+          <Table stickyHeader>
             <TableHead>
               <TableRow sx={{ backgroundColor: "#ffffff" }}>
                 {columns.map((column) => (
                   <TableCell
-                    key={column.id}
+                    key={String(column.id)}
                     align={column.align || "left"}
                     sx={{
                       minWidth: column.minWidth,
@@ -394,12 +424,15 @@ const ReportTable: React.FC<ReportTableProps> = ({
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
+          onRowsPerPageChange={(e) => {
+            setRowsPerPage(parseInt(e.target.value, 10));
+            setPage(0);
+          }}
+          rowsPerPageOptions={[10, 15, 20]}
         />
       </Card>
     </Box>
   );
-  
-};
+}
 
 export default ReportTable;

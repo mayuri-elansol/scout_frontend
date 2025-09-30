@@ -1,9 +1,17 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, Box, Typography, Button } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  Button,
+  Tooltip,
+} from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 interface KpiCardProps {
   title: string;
   value: string;
@@ -17,6 +25,7 @@ interface KpiCardProps {
   bgColor?: string;
   borderColor?: string;
   iconBg?: string;
+  tooltipMessage?: string;
 }
 
 const KpiCard: React.FC<KpiCardProps> = ({
@@ -31,6 +40,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
   bgColor,
   borderColor,
   iconBg = "rgba(76, 175, 80, 0.1)",
+  tooltipMessage,
 }) => {
   const getVariantStyles = () => {
     // If custom colors are passed, use them directly
@@ -180,6 +190,23 @@ const KpiCard: React.FC<KpiCardProps> = ({
           >
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
+          {tooltipMessage && (
+            <Tooltip title={tooltipMessage} arrow>
+              <Box
+                sx={{
+                  width: sizeStyles.iconBoxSize,
+                  height: sizeStyles.iconBoxSize,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: variantStyles.color,
+                }}
+              >
+                <InfoOutlineIcon />
+              </Box>
+            </Tooltip>
+          )}
 
           {route && (
             <Button

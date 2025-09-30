@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import { Box, Typography, Grid, Tabs, Tab, Paper } from "@mui/material";
@@ -168,7 +167,7 @@ const sampleData = [
     zone: "Hazard Zone 4",
     camera: "Camera-09",
     snapshot: "https://example.com/snapshot8.jpg",
-  }
+  },
 ];
 
 const SystemAlerts: React.FC = () => {
@@ -187,11 +186,31 @@ const SystemAlerts: React.FC = () => {
   // 🔹 Table Configs (avoid repetition)
 
   const alertTables = [
-    { key: "safety", label: "Safety and Compliances Alerts", icon: <SafetyIcon /> },
-    { key: "security", label: "Surveillance Monitoring Alerts", icon: <Visibility /> },
-    { key: "workforce", label: "Workforce Monitoring Alerts", icon: <WorkforceIcon /> },
-    { key: "operational", label: "Vehicle Operational Insight Alerts", icon: <DirectionsCar /> },
-    { key: "facial", label: "Facial Recognition Alerts", icon: <FaceRecognitionIcon /> },
+    {
+      key: "safety",
+      label: "Safety and Compliances Alerts",
+      icon: <SafetyIcon />,
+    },
+    {
+      key: "security",
+      label: "Surveillance Monitoring Alerts",
+      icon: <Visibility />,
+    },
+    {
+      key: "workforce",
+      label: "Workforce Monitoring Alerts",
+      icon: <WorkforceIcon />,
+    },
+    {
+      key: "operational",
+      label: "Vehicle Operational Insight Alerts",
+      icon: <DirectionsCar />,
+    },
+    {
+      key: "facial",
+      label: "Facial Recognition Alerts",
+      icon: <FaceRecognitionIcon />,
+    },
   ];
 
   // 🔹 Handlers
@@ -208,7 +227,18 @@ const SystemAlerts: React.FC = () => {
   };
 
   return (
-    <Paper sx={{ pl: 3, pr: 3, pb: 3, pt: 2, mt: 1.2, mb: 4, borderRadius: 2, backgroundColor: "#ffffff" }}>
+    <Paper
+      sx={{
+        pl: 3,
+        pr: 3,
+        pb: 3,
+        pt: 2,
+        mt: 1.2,
+        mb: 4,
+        borderRadius: 2,
+        backgroundColor: "#ffffff",
+      }}
+    >
       {/* Page Header */}
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
@@ -238,7 +268,6 @@ const SystemAlerts: React.FC = () => {
           <Grid
             key={stat.label}
             size={{ xs: 12, sm: 6, md: 2 }}
-
             sx={{ display: "flex" }}
           >
             <AlertStatsCard {...stat} />
@@ -254,7 +283,7 @@ const SystemAlerts: React.FC = () => {
           variant="scrollable"
           scrollButtons="auto"
           sx={{
-            mb: -4,
+            mb: -2,
             pl: 1.2,
             // pr: 2,
             minHeight: 36,
@@ -287,12 +316,10 @@ const SystemAlerts: React.FC = () => {
                   borderRadius: "8px", // optional rounded corners
                 },
                 transition: "all 0.2s ease-in-out", // smooth hover
-                boxShadow: tabIndex === i ? "none" : "0 3px 8px rgba(0,0,0,0.15)",
-
+                boxShadow:
+                  tabIndex === i ? "none" : "0 3px 8px rgba(0,0,0,0.15)",
               }}
             />
-
-
           ))}
         </Tabs>
 
