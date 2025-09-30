@@ -62,6 +62,8 @@ export default function RecentViolations({
         maxHeight: 420,
         display: "flex",
         flexDirection: "column",
+        borderRadius: 2,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
       <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>

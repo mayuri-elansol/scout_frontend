@@ -8,12 +8,13 @@ import {
   Tooltip,
 } from "@mui/material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+
 export interface CameraZone {
   zone: string;
-  active: number;
-  offline: number;
-  tempred: number;
-  total: number;
+  active?: number;
+  offline?: number;
+  tempred?: number;
+  total?: number;
 }
 
 interface CameraStatusProps {
@@ -40,19 +41,11 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
         maxHeight: maxheight ?? 420,
         display: "flex",
         flexDirection: "column",
+        borderRadius: 2,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
       <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
-        {/* <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 600,
-            color: "#1c2025",
-            mb: 0.5,
-          }}
-        >
-          {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
-        </Typography> */}
         <Box
           sx={{
             display: "flex",
@@ -74,9 +67,6 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           {/* Info Icon with Tooltip */}
           {!loading && tooltipMessage && (
             <Tooltip title={tooltipMessage} arrow>
-              {/* <IconButton size="small">
-                <InfoOutlineIcon fontSize="small" />
-              </IconButton> */}
               <Box
                 sx={{
                   display: "flex",
@@ -123,28 +113,70 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                       >
                         {zone.zone}
                       </Typography>
-                      <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+                      {/* camera status */}
+                      {/* <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
                         <Box
                           component="span"
                           sx={{ color: "#4caf50", fontWeight: 600 }}
                         >
-                          {zone.active}/{zone.total}
+                          {zone.total}
+                        </Box>
+                        {"  "} Total •{"  "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#4caf50", fontWeight: 600 }}
+                        >
+                          {zone.active}
                         </Box>
                         {"  "} active •{"  "}
                         <Box
                           component="span"
                           sx={{ color: "#f44336", fontWeight: 600 }}
                         >
-                          {zone.offline}/{zone.total}
+                          {zone.offline}
                         </Box>
                         {"  "} offline •{"  "}
                         <Box
                           component="span"
                           sx={{ color: "#ff9800", fontWeight: 600 }}
                         >
-                          {zone.tempred}/{zone.total}
+                          {zone.tempred}
                         </Box>
                         {"  "} tampered
+                      </Typography> */}
+
+                      <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+                        Total:{" "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#4caf50", fontWeight: 600 }}
+                        >
+                          {zone.total}
+                        </Box>
+                        {"  "}
+                        Active:{" "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#4caf50", fontWeight: 600 }}
+                        >
+                          {zone.active}
+                        </Box>
+                        {"  "}
+                        Offline:{" "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#f44336", fontWeight: 600 }}
+                        >
+                          {zone.offline}
+                        </Box>
+                        {"  "}
+                        Tempred:{" "}
+                        <Box
+                          component="span"
+                          sx={{ color: "#ff9800", fontWeight: 600 }}
+                        >
+                          {zone.tempred}
+                        </Box>
                       </Typography>
                     </>
                   )}

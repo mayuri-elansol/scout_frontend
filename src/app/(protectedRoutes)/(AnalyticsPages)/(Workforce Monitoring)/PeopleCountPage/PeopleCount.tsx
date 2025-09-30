@@ -13,20 +13,21 @@ import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
-export const cameraZones: CameraZone[] = [
-  {
-    zone: "Production Floor",
-    active: 8,
-    total: 10,
-    offline: 3,
-    tempred: 4,
-  },
-  { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-  { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-  { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-];
+
 const PeopleCount: React.FC = () => {
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  ];
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -53,16 +54,21 @@ const PeopleCount: React.FC = () => {
       title: "People Inside",
       value: "267", // Current count of people inside
       icon: People, // 👥 Crowd of people
+
+      tooltipMessage: "Current number of people present inside the area.",
     },
     {
       title: "Entry Count",
       value: "512", // Total entries today
       icon: Login, // ⬅️ Entry
+
+      tooltipMessage: "Total number of people who entered today.",
     },
     {
       title: "Exit Count",
       value: "245", // Total exits today
       icon: Logout, // ➡️ Exit
+      tooltipMessage: "Total number of people who exited today.",
     },
   ];
   const KpiCardLoading = false;

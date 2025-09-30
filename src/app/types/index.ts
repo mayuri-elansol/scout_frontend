@@ -125,6 +125,12 @@ export interface CameraZone {
   total: number;
 }
 
+export interface ZoneViolationsdata {
+  zone: string;
+  violations: number;
+  alarms: number;
+}
+
 // Analytics Data Types
 export interface PPEViolation {
   id: string;

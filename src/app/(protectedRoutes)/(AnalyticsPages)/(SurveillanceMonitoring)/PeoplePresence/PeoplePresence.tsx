@@ -1,6 +1,5 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
@@ -8,9 +7,12 @@ import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 const PeoplePresence: React.FC = () => {
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<any>(null);
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
   const PeoplePresenceKpiData = [
@@ -18,52 +20,62 @@ const PeoplePresence: React.FC = () => {
       title: "Total People Count",
       value: "87", // Current number of people detected
       icon: Groups,
+      tooltipMessage:
+        "Shows the total number of people detected in monitored zones.",
     },
     {
       title: "Detected Zones",
       value: "Zone A, Zone B", // Zones where people are detected
       icon: LocationOn,
+      tooltipMessage: "Lists the zones where people are currently detected.",
     },
     {
       title: "Last Incidence",
       value: "10:25 AM", // Last detection timestamp
       icon: AccessTime,
+      tooltipMessage:
+        "Shows the time when the most recent people presence was detected.",
+    },
+  ];
+  const backendPeoplePresenceData = [
+    {
+      id: 801,
+      snapshot: "https://picsum.photos/400/200?random=31",
+      zone: "Production Floor",
+      camera: "CAM-31",
+      count: 15,
+      createdAt: "2025-09-23 21:05",
+      updatedAt: "2025-09-23 21:06",
+    },
+    {
+      id: 802,
+      snapshot: "https://picsum.photos/400/200?random=32",
+      zone: "Loading Dock",
+      camera: "CAM-32",
+      count: 7,
+      createdAt: "2025-09-23 21:15",
+      updatedAt: "2025-09-23 21:16",
     },
   ];
 
-  const recentViolations = [
-    {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
+  const recentPeoplePresence = backendPeoplePresenceData.map((item) => {
+    let violationMsg = `People detected: ${item.count}`; // descriptive violation
+
+    return {
+      Voilation: violationMsg,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      peopleCount: item.count,
+    };
+  });
+
+  const zoneViolationsData = [
+    { zone: "Production Floor", peopleCount: 15 },
+    { zone: "Loading Dock", peopleCount: 7 },
   ];
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-  ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -81,6 +93,11 @@ const PeoplePresence: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
+  };
+  const handleViewSingle = (row: any) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   return (
@@ -125,14 +142,20 @@ const PeoplePresence: React.FC = () => {
         <Grid size={{ xs: 12, lg: 8 }}>
           <RecentViolations
             label="Recent Violations"
-            violations={recentViolations}
+            violations={recentPeoplePresence}
             loading={false}
+            tooltipMessage="Latest 20 people detection inside premises with details."
           />
         </Grid>
         {/* PPE Compliance by Zone */}
 
         <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+          {" "}
+          <ZoneViolations
+            violationsZone={zoneViolationsData}
+            loading={false}
+            tooltipMessage="Shows violations and alarms per zone"
+          />
         </Grid>
       </Grid>
 
@@ -140,74 +163,38 @@ const PeoplePresence: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
+          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
+          { id: "zone", label: "Zone", minWidth: 150 },
+          { id: "cameraId", label: "Camera ID", minWidth: 120 },
+
           { id: "peopleCount", label: "People Count", minWidth: 120 },
-
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
-          { id: "createdAt", label: "TimeStamp", minWidth: 140 },
         ]}
-        data={[
-          {
-            id: "PPDS-001",
-            peopleCount: 5,
-            snapshot: "snapshot_shutdown1.jpg",
-            zone: "Factory Floor A",
-            camera: "CAM-41",
-            createdAt: "2025-09-24 22:15",
-            updatedAt: "2025-09-24 22:18",
-            alarmTriggered: true,
-          },
-          {
-            id: "PPDS-002",
-            peopleCount: 2,
-            snapshot: "snapshot_shutdown2.jpg",
-            zone: "Loading Dock",
-            camera: "CAM-42",
-            createdAt: "2025-09-24 23:05",
-            updatedAt: "2025-09-24 23:07",
-            alarmTriggered: false,
-          },
-          {
-            id: "PPDS-003",
-            peopleCount: 0,
-            snapshot: "snapshot_shutdown3.jpg",
-            zone: "Parking Lot",
-            camera: "CAM-43",
-            createdAt: "2025-09-24 22:45",
-            updatedAt: "2025-09-24 22:47",
-            alarmTriggered: false,
-          },
-          {
-            id: "PPDS-004",
-            peopleCount: 3,
-            snapshot: "snapshot_shutdown4.jpg",
-            zone: "Assembly Line B",
-            camera: "CAM-44",
-            createdAt: "2025-09-24 22:55",
-            updatedAt: "2025-09-24 23:00",
-            alarmTriggered: true,
-          },
-        ]}
+        data={recentPeoplePresence}
         filters={[
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Factory Floor A",
-              "Loading Dock",
-              "Parking Lot",
-              "Assembly Line B",
-            ],
+            options: Array.from(
+              new Set(recentPeoplePresence.map((item) => item.zone))
+            ), // Unique zones from the data
           },
           {
-            id: "alarmTriggered",
-            label: "Alarm Triggered",
+            id: "cameraId",
+            label: "Camera",
             type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(recentPeoplePresence.map((item) => item.cameraId))
+            ), // Unique camera IDs from the data
+          },
+          {
+            id: "Voilation",
+            label: "Violation",
+            type: "select",
+            options: Array.from(
+              new Set(recentPeoplePresence.map((item) => item.Voilation))
+            ), // Unique violation messages
           },
           { id: "startDate", label: "Start Date", type: "date" },
           { id: "endDate", label: "End Date", type: "date" },
@@ -217,7 +204,22 @@ const PeoplePresence: React.FC = () => {
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
+        onView={handleViewSingle}
       />
+      {/* View Alert Popup */}
+      {viewPopupData && (
+        <ViewAlertPopup
+          open={viewPopupOpen}
+          handleClose={() => setViewPopupOpen(false)}
+          title={viewPopupData.Voilation}
+          location={viewPopupData.zone}
+          time={viewPopupData.time}
+          cameraId={viewPopupData.cameraId}
+          imageUrl={viewPopupData.imageUrl}
+          alarmTriggered={viewPopupData.alarmTriggered}
+          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        />
+      )}
     </Box>
   );
 };

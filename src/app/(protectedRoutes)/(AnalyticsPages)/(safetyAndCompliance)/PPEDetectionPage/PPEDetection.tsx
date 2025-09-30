@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
@@ -15,54 +14,21 @@ import {
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import ShowChartIcon from '@mui/icons-material/QueryStats';
 
 import { FilterParams } from "./PPEDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const PPEDetection: React.FC = () => {
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<any>(null);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  // const ppeKpiData = [
-  //   {
-  //     title: "Total Violations",
-  //     value: "87",
-  //     icon: Shield,
-  //     tooltipMessage: "total voitions ",
-  //   },
-
-  //   {
-  //     title: "Current Unsafe Zone",
-  //     value: "2",
-  //     icon: LocationOn,
-  //   },
-  //   {
-  //     title: "Last Detection Time",
-  //     value: "10:35 AM",
-  //     icon: AccessTime,
-  //   },
-  //   {
-  //     title: "Missing Helmet",
-  //     value: "12",
-  //     icon: EngineeringIcon,
-  //   },
-  //   {
-  //     title: "Missing Vest",
-  //     value: "12",
-  //     icon: Checkroom,
-  //   },
-  //   {
-  //     title: "Missing Glasses",
-  //     value: "9",
-  //     icon: Visibility,
-  //   },
-  // ];
   const ppeKpiData = [
     {
       title: "Total Violations",
@@ -185,19 +151,54 @@ const PPEDetection: React.FC = () => {
 
   console.log("RELCENTVOLATION DATAA", recentViolations);
 
-  const cameraZones: CameraZone[] = [
+  const zoneViolationsData = [
     {
       zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      violations: 5,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Warehouse",
+      violations: 3,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Parking Area",
+      violations: 4,
+      alarms: 0,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Main Entrance",
+      violations: 2,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Assembly Line",
+      violations: 6,
+      alarms: 3,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
+
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
   };
@@ -234,74 +235,75 @@ const PPEDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-      <Paper sx={{ p: 3, mb: 4 ,backgroundColor: "#ffffff"}} >
-     
-<Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mb: 2,
-  }}
->
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-{/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
-    <Typography variant="h6" sx={{ fontWeight: "bold",fontSize:18 }}>
-       <Box component="span" sx={{ mr: 2 }}>📊</Box>
-       
- Real Time Performance Overview
-    </Typography>
-  </Box>
+      <Paper sx={{ p: 3, mb: 0, backgroundColor: "#ffffff", borderRadius: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Real Time Performance Overview
+            </Typography>
+          </Box>
 
-  <TimeFilter />
-</Box>
+          <TimeFilter />
+        </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            ppeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              ppeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            tooltipMessage="Latest 20 detected PPE violations with details."
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
-        </Grid>
-        {/* PPE Compliance by Zone */}
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              tooltipMessage="Latest 20 detected PPE violations with details."
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            tooltipMessage="Shows online, offline, and tampered camera counts per zone."
-          />
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <ZoneViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations and alarms per zone"
+            />
+          </Grid>
         </Grid>
-      </Grid>
-
+      </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
           { id: "Voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
@@ -315,9 +317,7 @@ const PPEDetection: React.FC = () => {
             id: "Voilation",
             label: "Violation",
             type: "select",
-            // options: Array.from(
-            //   new Set(recentViolations.map((v) => v.Voilation))
-            // ),
+
             options: [
               "Hard hat missing",
               "Safety vest not worn",
@@ -353,7 +353,6 @@ const PPEDetection: React.FC = () => {
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
         loading={false}
-        isDownload={true}
       />
 
       {/* View Alert Popup */}
