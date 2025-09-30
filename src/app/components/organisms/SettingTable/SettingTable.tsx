@@ -30,13 +30,16 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
     if (users.length === 0) return null;
 
     return (<>
-
-
         <Appbar title="User Overview" />
         <Box mt={5} className={styles.section}>
             <TableContainer component={Paper} className={styles.historyTable}>
                 <Table>
-                    <TableHead>
+                    <TableHead
+                        sx={{
+                            backgroundColor: "#f9fafc",
+                            boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
+                        }}
+                    >
                         <TableRow>
                             <TableCell>Profile</TableCell>
                             <TableCell>Name</TableCell>

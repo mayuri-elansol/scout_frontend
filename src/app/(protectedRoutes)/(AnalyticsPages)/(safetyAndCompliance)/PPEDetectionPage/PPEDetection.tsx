@@ -18,6 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import Appbar from "@/app/components/organisms/AppBar/AppBar";
 
 
 const PPEDetection: React.FC = () => {
@@ -114,13 +115,21 @@ const PPEDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
-          <Typography
+          {/* <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} /> */}
+          {/* <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
           >
             Personal Protective Equipment (PPE) Detection
-          </Typography>
+          </Typography> */}
+<Appbar 
+  title={
+    <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
+      <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
+      <span>Personal Protective Equipment (PPE) Detection</span>
+    </Box>
+  }
+/>
         </Box>
       </Box>
 

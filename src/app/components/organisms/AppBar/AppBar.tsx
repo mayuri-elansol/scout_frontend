@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Typography, useTheme } from '@mui/material';
 import React from 'react';
 
 interface AppbarProps {
-  title: string;
+  title: React.ReactNode; 
   height?: number | string;
 }
 
@@ -21,6 +21,9 @@ export default function Appbar({ title }: Readonly<AppbarProps>) {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        p:3,
+        pt:2,
+        pb:2,
         backgroundColor:
           theme.palette.mode === 'light' ? '#e9e9e9ff' : theme.palette.background.paper,
         color: theme.palette.text.primary,
