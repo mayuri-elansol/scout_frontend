@@ -31,7 +31,6 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
   cameraZones,
   loading = true,
   maxheight,
-  tooltipMessage,
 }) => {
   const [open, setOpen] = useState(false);
 

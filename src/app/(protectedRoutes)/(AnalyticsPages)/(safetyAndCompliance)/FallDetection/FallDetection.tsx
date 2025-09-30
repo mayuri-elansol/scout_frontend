@@ -290,18 +290,17 @@ const FallDetection: React.FC = () => {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Main Entrance",
-              "Loading Dock",
-              "Assembly Area",
-              "Parking Lot",
-            ],
+            options: Array.from(
+              new Set(recentLaydownViolations.map((item) => item.zone))
+            ),
           },
           {
-            id: "vehicleType",
-            label: "Vehicle Type",
+            id: "cameraId",
+            label: "Cameras",
             type: "select",
-            options: ["Truck", "Car", "Bus", "Bike"],
+            options: Array.from(
+              new Set(recentLaydownViolations.map((item) => item.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",

@@ -262,8 +262,8 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         data={recentFireViolations}
         filters={[
           {
-            id: "detectionType",
-            label: "Detection Type",
+            id: "Voilation",
+            label: "Violation",
             type: "select",
             options: ["Fire detected", "Smoke detected", "Gas detected"],
           },

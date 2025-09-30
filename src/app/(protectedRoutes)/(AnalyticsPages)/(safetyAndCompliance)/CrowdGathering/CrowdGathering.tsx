@@ -20,8 +20,17 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const CrowdGathering: React.FC = () => {
+  interface ViolationRow {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    mobCount: number;
+  }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<ViolationRow | null>(null);
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const backendCrowdData = [
     {
@@ -159,7 +168,7 @@ const CrowdGathering: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: ViolationRow) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -269,12 +278,9 @@ const CrowdGathering: React.FC = () => {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Main Entrance",
-              "Loading Dock",
-              "Assembly Area",
-              "Parking Lot",
-            ],
+            options: Array.from(
+              new Set(recentCrowdViolations.map((item) => item.zone))
+            ),
           },
           {
             id: "cameraId",

@@ -257,13 +257,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Main Gate",
-              "Parking Lot",
-              "School Zone",
-              "Service Road",
-              "Highway Exit",
-            ],
+            options: Array.from(
+              new Set(recentVehicleViolations.map((item) => item.zone))
+            ),
           },
 
           {
@@ -276,7 +272,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
             id: "vehicleType",
             label: "Vehicle Type",
             type: "select",
-            options: ["Truck", "Car", "Bus", "Bike", "Ambulance"],
+            options: Array.from(
+              new Set(recentVehicleViolations.map((item) => item.vehicleType))
+            ),
           },
           {
             id: "vehicleNumber",

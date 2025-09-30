@@ -248,11 +248,19 @@ const SleepingSecurityPersonnel: React.FC = () => {
         data={recentViolations}
         filters={[
           {
+            id: "Voilation",
+            label: "Violation",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((item) => item.Voilation))
+            ),
+          },
+          {
             id: "zone",
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(backendSleepingSecurityData.map((item) => item.zone))
+              new Set(recentViolations.map((item) => item.zone))
             ),
           },
           {

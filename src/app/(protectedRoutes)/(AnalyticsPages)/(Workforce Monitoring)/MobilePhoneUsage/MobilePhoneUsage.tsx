@@ -287,12 +287,6 @@ const MobilePhoneUsage: React.FC = () => {
         data={recentMobilePhoneViolations}
         filters={[
           {
-            id: "Voilation",
-            label: "Violation",
-            type: "select",
-            options: ["Mobile phone usage detected", "No violation"],
-          },
-          {
             id: "zone",
             label: "Zone",
             type: "select",
