@@ -19,8 +19,19 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 
 const PeopleCount: React.FC = () => {
+  interface PeopleCountViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    enteredCount: number;
+    exitCount: number;
+    alarmTriggered: boolean;
+  }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<PeopleCountViolation | null>(null);
   const backendData = [
     {
       id: 201,
@@ -136,6 +147,7 @@ const PeopleCount: React.FC = () => {
       cameraId: item.cameraid,
       enteredCount: item.enteredCount,
       exitCount: item.exitCount,
+      alarmTriggered: item.alarmTriggered,
     };
   });
 
@@ -177,7 +189,7 @@ const PeopleCount: React.FC = () => {
     },
   ];
   const KpiCardLoading = false;
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: PeopleCountViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -188,7 +200,7 @@ const PeopleCount: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <FollowTheSignsIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <FollowTheSignsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -280,7 +292,7 @@ const PeopleCount: React.FC = () => {
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
-          { id: "time", label: "Timestamp", minWidth: 140 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
         data={recentViolations}
         filters={[
@@ -299,12 +311,18 @@ const PeopleCount: React.FC = () => {
             ),
           },
           {
-            id: "startDate",
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
+          {
+            id: "time",
             label: "Start Date",
             type: "date",
           },
           {
-            id: "endDate",
+            id: "time",
             label: "End Date",
             type: "date",
           },

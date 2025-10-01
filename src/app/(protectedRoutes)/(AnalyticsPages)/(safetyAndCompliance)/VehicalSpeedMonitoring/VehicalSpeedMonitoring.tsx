@@ -15,8 +15,20 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const VehicalSpeedMonitoring: React.FC = () => {
+  interface VehicleViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    vehicleType: string;
+    vehicleNumber: string;
+  }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<VehicleViolation | null>(
+    null
+  );
   const backendVehicleData = [
     {
       id: 301,
@@ -143,7 +155,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
   ];
 
   const KpiCardLoading = false;
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: VehicleViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -154,7 +166,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <SpeedIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <SpeedIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -261,7 +273,14 @@ const VehicalSpeedMonitoring: React.FC = () => {
               new Set(recentVehicleViolations.map((item) => item.zone))
             ),
           },
-
+          {
+            id: "cameraId",
+            label: "Cameras",
+            type: "select",
+            options: Array.from(
+              new Set(recentVehicleViolations.map((v) => v.cameraId))
+            ),
+          },
           {
             id: "alarmTriggered",
             label: "Alarm Triggered",
@@ -284,8 +303,8 @@ const VehicalSpeedMonitoring: React.FC = () => {
               new Set(recentVehicleViolations.map((item) => item.vehicleNumber))
             ),
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="vehicle-detection-report"
         loading={false}

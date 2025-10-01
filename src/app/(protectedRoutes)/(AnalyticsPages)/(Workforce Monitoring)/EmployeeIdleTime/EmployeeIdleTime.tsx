@@ -113,7 +113,7 @@ const EmployeeIdleTime: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -123,10 +123,14 @@ const EmployeeIdleTime: React.FC = () => {
         </Box>
       </Box>
 
-      <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -138,8 +142,9 @@ const EmployeeIdleTime: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
               Real Time Overview
             </Typography>
           </Box>
@@ -151,20 +156,20 @@ const EmployeeIdleTime: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((key) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            EmployeeIdleTimeKpiData.map((kpi) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              EmployeeIdleTimeKpiData.map((kpi) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={kpi.title}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}

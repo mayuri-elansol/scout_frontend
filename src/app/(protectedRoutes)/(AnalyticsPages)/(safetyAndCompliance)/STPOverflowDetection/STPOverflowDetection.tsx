@@ -9,44 +9,44 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import { Warning, NotificationImportant, Place, Videocam, Schedule } from "@mui/icons-material";
+import {
+  Warning,
+  NotificationImportant,
+  Place,
+  Videocam,
+  Schedule,
+} from "@mui/icons-material";
 
 const STPOverflowDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
-
-const StpKpiData = [
-  {
-    title: "Overflow Incidents",
-    value: "12", 
-    icon: Warning,
-    
-  },
-  {
-    title: "Alarms Triggered",
-    value: "8", 
-    icon: NotificationImportant,
-   
-  },
-  {
-    title: "Most Overflow Zone",
-    value: "Zone B", // calculated zone
-    icon: Place,
-  
-  },
-  {
-    title: "Active Cameras",
-    value: "5", // count of active cameras
-    icon: Videocam,
- 
-  },
-  {
-    title: "Peak Overflow Hour",
-    value: "14:00 - 15:00",
-    icon: Schedule,
-   
-  },
-];
+  const StpKpiData = [
+    {
+      title: "Overflow Incidents",
+      value: "12",
+      icon: Warning,
+    },
+    {
+      title: "Alarms Triggered",
+      value: "8",
+      icon: NotificationImportant,
+    },
+    {
+      title: "Most Overflow Zone",
+      value: "Zone B", // calculated zone
+      icon: Place,
+    },
+    {
+      title: "Active Cameras",
+      value: "5", // count of active cameras
+      icon: Videocam,
+    },
+    {
+      title: "Peak Overflow Hour",
+      value: "14:00 - 15:00",
+      icon: Schedule,
+    },
+  ];
   const recentViolations = [
     {
       title: "Hard hat missing",
@@ -104,7 +104,7 @@ const StpKpiData = [
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -234,7 +234,6 @@ const StpKpiData = [
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
-
       />
     </Box>
   );

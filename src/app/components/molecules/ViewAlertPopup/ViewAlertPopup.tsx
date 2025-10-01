@@ -64,7 +64,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          bgcolor: "primary.main",
+          background: "#3072b0",
           color: "white",
           fontWeight: 600,
         }}
@@ -115,13 +115,14 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
                 console.log("Download clicked", imageUrl);
               }
             }}
-            color="primary"
+            //  color="primary"
+            sx={{
+              color: "#3072b0", // this changes the icon color
+            }}
           >
             <DownloadForOfflineIcon fontSize="large" />
           </IconButton>
         </Box>
-        {/* 
-        <Divider sx={{ mb: 1.5 }} /> */}
 
         {/* Image Preview */}
         <Box

@@ -20,8 +20,18 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FireSmokeOilLeakDetection: React.FC = () => {
+  interface RecentViolationData {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<RecentViolationData | null>(null);
   const backendFireData = [
     {
       id: 201,
@@ -148,7 +158,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   const KpiCardLoading = false;
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: RecentViolationData) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -158,7 +168,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LocalFireDepartmentIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <LocalFireDepartmentIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -233,12 +243,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            {/* <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            tooltipMessage="Shows violations and alarms per zone"
-          /> */}
-
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
@@ -293,8 +297,8 @@ const FireSmokeOilLeakDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="detection-report"
         loading={false}

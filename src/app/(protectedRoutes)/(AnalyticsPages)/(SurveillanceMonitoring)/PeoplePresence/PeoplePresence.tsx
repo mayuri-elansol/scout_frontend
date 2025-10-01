@@ -13,8 +13,19 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import PeopleIcon from "@mui/icons-material/People";
 const PeoplePresence: React.FC = () => {
+  interface PeoplePresenceViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    peopleCount: number;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<PeoplePresenceViolation | null>(null);
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
   const PeoplePresenceKpiData = [
@@ -46,6 +57,7 @@ const PeoplePresence: React.FC = () => {
       zone: "Production Floor",
       camera: "CAM-31",
       count: 15,
+      alarmTriggered: true,
       createdAt: "2025-09-23 21:05",
       updatedAt: "2025-09-23 21:06",
     },
@@ -55,13 +67,14 @@ const PeoplePresence: React.FC = () => {
       zone: "Loading Dock",
       camera: "CAM-32",
       count: 7,
+      alarmTriggered: true,
       createdAt: "2025-09-23 21:15",
       updatedAt: "2025-09-23 21:16",
     },
   ];
 
   const recentPeoplePresence = backendPeoplePresenceData.map((item) => {
-    let violationMsg = `People detected: ${item.count}`; // descriptive violation
+    const violationMsg = `People detected: ${item.count}`;
 
     return {
       Voilation: violationMsg,
@@ -70,6 +83,7 @@ const PeoplePresence: React.FC = () => {
       imageUrl: item.snapshot,
       cameraId: item.camera,
       peopleCount: item.count,
+      alarmTriggered: item.alarmTriggered,
     };
   });
 
@@ -108,7 +122,7 @@ const PeoplePresence: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: PeoplePresenceViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -119,7 +133,7 @@ const PeoplePresence: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PeopleAltIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PeopleAltIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -206,11 +220,11 @@ const PeoplePresence: React.FC = () => {
         title="Detailed Report"
         columns={[
           { id: "Voilation", label: "Violation", minWidth: 200 },
-
           { id: "peopleCount", label: "People Count", minWidth: 120 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
         data={recentPeoplePresence}
         filters={[
@@ -220,7 +234,7 @@ const PeoplePresence: React.FC = () => {
             type: "select",
             options: Array.from(
               new Set(recentPeoplePresence.map((item) => item.zone))
-            ), // Unique zones from the data
+            ),
           },
           {
             id: "cameraId",
@@ -228,18 +242,16 @@ const PeoplePresence: React.FC = () => {
             type: "select",
             options: Array.from(
               new Set(recentPeoplePresence.map((item) => item.cameraId))
-            ), // Unique camera IDs from the data
+            ),
           },
-          // {
-          //   id: "Voilation",
-          //   label: "Violation",
-          //   type: "select",
-          //   options: Array.from(
-          //     new Set(recentPeoplePresence.map((item) => item.Voilation))
-          //   ), // Unique violation messages
-          // },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="people-presence-shutdown-report"
         onSubmit={handleSubmitFilter}
@@ -247,6 +259,7 @@ const PeoplePresence: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
       {viewPopupData && (

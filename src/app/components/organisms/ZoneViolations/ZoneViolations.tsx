@@ -19,7 +19,7 @@ export interface ZoneViolationsdata {
   icons?: {
     [key: string]: SvgIconComponent;
   };
-  [key: string]: any;
+  [key: string]: string | number | Record<string, SvgIconComponent> | undefined;
 }
 
 interface ZoneViolationsProps {

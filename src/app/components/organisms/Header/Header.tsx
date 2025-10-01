@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState, useRef } from "react";
 import {
@@ -17,7 +16,6 @@ import {
   Drawer,
   useMediaQuery,
   Popper,
-
 } from "@mui/material";
 import {
   Circle,
@@ -57,7 +55,6 @@ const SystemHealthTooltipContent: React.FC<{
         border: "1px solid #e0e0e0",
         borderRadius: "8px",
         overflow: "hidden",
-     
       }}
     >
       <Box
@@ -82,7 +79,7 @@ const SystemHealthTooltipContent: React.FC<{
       >
         {systemHealth.message.slice(0, 8).map((msg, idx) => (
           <Typography
-            key={idx}
+            key={idx + 1}
             variant="body2"
             sx={{
               color: "#374151",
@@ -133,11 +130,11 @@ const Header: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Simple state management for health tooltip
-  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(null);
+  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(
+    null
+  );
   const [openHealth, setOpenHealth] = useState(false);
   const healthTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-
 
   const handleHealthMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     if (healthTimerRef.current) clearTimeout(healthTimerRef.current);
@@ -267,7 +264,7 @@ const Header: React.FC = () => {
               sx={{
                 width: 32,
                 height: 32,
-                backgroundColor: "#1976d2",
+                backgroundColor: "#3072b0",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -351,7 +348,7 @@ const Header: React.FC = () => {
                     sx={{
                       width: 32,
                       height: 32,
-                      backgroundColor: theme.palette.primary.main,
+                      backgroundColor: "#3072b0",
                       fontSize: "14px",
                       fontWeight: 600,
                     }}
@@ -367,11 +364,10 @@ const Header: React.FC = () => {
                   placement="bottom-end"
                   disablePortal={false}
                   sx={{
-                    zIndex: 2000, mt: 1
+                    zIndex: 2000,
+                    mt: 1,
                   }}
-                  modifiers={[
-                    { name: "offset", options: { offset: [0, 8] } },
-                  ]}
+                  modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
                 >
                   <Box
                     onMouseEnter={handleTooltipMouseEnter}
@@ -399,7 +395,6 @@ const Header: React.FC = () => {
               </>
             )}
           </Box>
-
         </Toolbar>
       </AppBar>
 

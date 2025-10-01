@@ -23,8 +23,20 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const IntrusionDetection: React.FC = () => {
+  interface IntrusionViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    id: number;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<IntrusionViolation | null>(
+    null
+  );
   const intrusionKpiData = [
     {
       title: "Intrusion Detected",
@@ -140,7 +152,7 @@ const IntrusionDetection: React.FC = () => {
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: IntrusionViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -150,7 +162,7 @@ const IntrusionDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Visibility sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Visibility sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -268,8 +280,8 @@ const IntrusionDetection: React.FC = () => {
             type: "select",
             options: ["True", "False"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="intrusion-detection-report"
         loading={false}

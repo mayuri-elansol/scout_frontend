@@ -251,15 +251,6 @@ const SystemAlerts: React.FC = () => {
           </Typography>
         </Box>
         <TimeFilter />
-        {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Circle sx={{ fontSize: 8, color: "#4caf50" }} />
-          <Typography sx={{ fontSize: "12px", color: "#666" }}>
-            Real-time monitoring
-          </Typography>
-          <Typography sx={{ fontSize: "12px", color: "#999", ml: 2 }}>
-            Last updated: 3:53:18 PM
-          </Typography>
-        </Box> */}
       </Box>
 
       {/* Alert Statistics */}
@@ -301,7 +292,9 @@ const SystemAlerts: React.FC = () => {
               icon={t.icon}
               iconPosition="start"
               sx={{
+                width: "full",
                 display: "flex",
+
                 fontWeight: tabIndex === i ? "bold" : "normal",
                 textTransform: "none",
                 fontSize: 16,
@@ -312,7 +305,7 @@ const SystemAlerts: React.FC = () => {
                 },
                 "&:hover": {
                   backgroundColor: "#f5f5f5", // light grey background
-                  boxShadow: "0 3px 8px rgba(0,0,0,0.15)", // subtle shadow
+                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)", // subtle shadow
                   borderRadius: "8px", // optional rounded corners
                 },
                 transition: "all 0.2s ease-in-out", // smooth hover

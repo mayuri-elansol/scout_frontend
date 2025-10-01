@@ -20,8 +20,18 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FallDetection: React.FC = () => {
+  interface RecentViolationData {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<RecentViolationData | null>(null);
 
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
@@ -60,6 +70,11 @@ const FallDetection: React.FC = () => {
       icon: Whatshot,
       tooltipMessage:
         "The zone with the highest number of fall, laydown, or sleeping incidents recorded.",
+      trendColor: "#f44336",
+      color: "#f44336",
+      bgColor: "#ffebee",
+      borderColor: "#f44336",
+      iconBg: "rgba(244, 67, 54, 0.1)",
     },
   ];
 
@@ -181,7 +196,7 @@ const FallDetection: React.FC = () => {
     console.log("Export requested clikcedd:", format);
   };
 
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: RecentViolationData) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -192,7 +207,7 @@ const FallDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -308,8 +323,8 @@ const FallDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         onView={handleViewSingle}
         onSubmit={handleSubmitFilter}

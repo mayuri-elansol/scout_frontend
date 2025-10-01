@@ -14,8 +14,18 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const EmployeePresence: React.FC = () => {
+  interface EmployeePresenceViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<EmployeePresenceViolation | null>(null);
   const employeeKpiData = [
     {
       title: "Employees in Critical Area",
@@ -125,7 +135,7 @@ const EmployeePresence: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: EmployeePresenceViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -136,7 +146,7 @@ const EmployeePresence: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LockPersonIcon sx={{ fontSize: 28, color: "#2196f3" }} />
+          <LockPersonIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -255,8 +265,8 @@ const EmployeePresence: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-critical-report"
         loading={false}

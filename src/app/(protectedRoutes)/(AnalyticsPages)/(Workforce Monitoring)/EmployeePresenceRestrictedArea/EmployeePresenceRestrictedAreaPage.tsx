@@ -16,11 +16,20 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const EmployeePresenceRestrictedAreaPage: React.FC = () => {
+  interface EmployeePresenceViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] =
+    useState<EmployeePresenceViolation | null>(null);
   const employeeRestrictedPresenceKpiData = [
     {
-      title: "Employees in Critical Area",
+      title: "Employees in Restricted Area",
       value: "12", // Number of employees detected in critical areas
       icon: Groups, // 👥 Represents group of people
       trendColor: "#f44336",
@@ -50,7 +59,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
     {
       id: 201,
       snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Critical Zone A",
+      zone: "Restricted Zone A",
       camera: "CAM-11",
       createdAt: "2025-09-25 09:15",
       updatedAt: "2025-09-25 09:16",
@@ -59,7 +68,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
     {
       id: 202,
       snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Critical Zone B",
+      zone: "Restricted Zone B",
       camera: "CAM-12",
       createdAt: "2025-09-25 09:25",
       updatedAt: "2025-09-25 09:26",
@@ -68,7 +77,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
     {
       id: 203,
       snapshot: "https://picsum.photos/400/200?random=13",
-      zone: "Critical Zone C",
+      zone: "Restricted Zone C",
       camera: "CAM-13",
       createdAt: "2025-09-25 09:40",
       updatedAt: "2025-09-25 09:41",
@@ -90,7 +99,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   });
   const zoneViolationsData = [
     {
-      zone: "Critical Zone A",
+      zone: "Restricted Zone A",
       violations: 1,
       alarms: 1,
       icons: {
@@ -99,7 +108,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
       },
     },
     {
-      zone: "Critical Zone B",
+      zone: "Restricted Zone B",
       violations: 1,
       alarms: 1,
       icons: {
@@ -108,7 +117,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
       },
     },
     {
-      zone: "Critical Zone C",
+      zone: "Restricted Zone C",
       violations: 1,
       alarms: 1,
       icons: {
@@ -131,7 +140,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: EmployeePresenceViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -142,7 +151,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LockPersonIcon sx={{ fontSize: 28, color: "#2196f3" }} />
+          <LockPersonIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -261,8 +270,8 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-restricted-report"
         onReset={handleReset}

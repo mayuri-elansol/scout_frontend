@@ -14,8 +14,18 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const MobilePhoneUsage: React.FC = () => {
+  interface ViolationData {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
+    null
+  );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const MobilePhoneUsageKpiData = [
     {
@@ -182,7 +192,7 @@ const MobilePhoneUsage: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: ViolationData) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -193,7 +203,7 @@ const MobilePhoneUsage: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PhonelinkEraseIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <PhonelinkEraseIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -309,12 +319,12 @@ const MobilePhoneUsage: React.FC = () => {
             options: ["True", "False"],
           },
           {
-            id: "startDate",
+            id: "time",
             label: "Start Date",
             type: "date",
           },
           {
-            id: "endDate",
+            id: "time",
             label: "End Date",
             type: "date",
           },

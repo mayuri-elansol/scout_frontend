@@ -25,8 +25,17 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const PPEDetection: React.FC = () => {
+  interface PPEViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
@@ -134,7 +143,7 @@ const PPEDetection: React.FC = () => {
 
   // Map backend data to recentViolations format
   const recentViolations = backendData.map((item) => {
-    let titleParts = [];
+    const titleParts = [];
 
     if (item.helmet === false) titleParts.push("Hard hat missing");
     if (item.vest === false) titleParts.push("Safety vest not worn");
@@ -214,7 +223,7 @@ const PPEDetection: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: PPEViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -232,14 +241,14 @@ const PPEDetection: React.FC = () => {
           >
             Personal Protective Equipment (PPE) Detection
           </Typography> */}
-<Appbar 
-  title={
-    <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
-      <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
-      <span>Personal Protective Equipment (PPE) Detection</span>
-    </Box>
-  }
-/>
+          <Appbar
+            title={
+              <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
+                <EngineeringIcon sx={{ fontSize: 30, color: "#3072b0" }} />
+                <span>Personal Protective Equipment (PPE) Detection</span>
+              </Box>
+            }
+          />
         </Box>
       </Box>
 
@@ -259,7 +268,7 @@ const PPEDetection: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Performance Overview
+              Real Time Overview
             </Typography>
           </Box>
 
@@ -354,8 +363,8 @@ const PPEDetection: React.FC = () => {
             type: "select",
             options: ["True", "False"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
