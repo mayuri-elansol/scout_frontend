@@ -6,7 +6,7 @@ import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 
 // 👇 Default export with metadata
 const meta: Meta<typeof ZoneViolations> = {
-  title: "Components/ZoneViolations",
+  title: "Components/Organisms/ZoneViolations",
   component: ZoneViolations,
   tags: ["autodocs"],
   argTypes: {
@@ -61,7 +61,7 @@ export const Default: Story = {
 // 👇 Loading state
 export const Loading: Story = {
   args: {
-    violationsZone: [],
+    violationsZone: [], // <-- changed here
     loading: true,
   },
 };
@@ -69,7 +69,13 @@ export const Loading: Story = {
 // 👇 With tooltip
 export const WithTooltip: Story = {
   args: {
-    violationsZone: mockData,
+    violationsZone: [
+      // <-- changed here
+      { zone: "Zone A", violations: 5, alarms: 2 },
+      { zone: "Zone B", violations: 3, alarms: 0 },
+      { zone: "Zone C", violations: 8, alarms: 4 },
+      { zone: "Zone D", violations: 0, alarms: 1 },
+    ],
     loading: false,
     tooltipMessage:
       "This section shows the number of violations and alarms detected per zone.",

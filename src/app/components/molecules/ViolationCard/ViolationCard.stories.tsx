@@ -12,16 +12,9 @@ export default meta;
 type Story = StoryObj<typeof ViolationCard>;
 
 // Default sample data
-const sampleViolation: {
-  title: string;
-  zone: string;
-  time: string;
-  Id: string;
-  severity?: "HIGH" | "MEDIUM" | "LOW";
-  status?: "ACTIVE" | "RESOLVED";
-  imageUrl?: string;
-} = {
-  title: "Unauthorized Entry",
+
+const sampleViolation = {
+  Voilation: "Unauthorized Entry", 
   zone: "Main Gate",
   time: "10:30 AM",
   Id: "VIO-00123",
@@ -43,6 +36,7 @@ export const WithImage: Story = {
     violation: {
       ...sampleViolation,
       imageUrl: "https://picsum.photos/400/200",
+      Voilation: ""
     },
   },
 };
@@ -54,6 +48,7 @@ export const LowSeverity: Story = {
       ...sampleViolation,
       severity: "LOW",
       status: "RESOLVED",
+      Voilation: ""
     },
   },
 };

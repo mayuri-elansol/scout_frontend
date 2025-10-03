@@ -33,8 +33,7 @@ const Template = (args: Partial<ViewAlertPopupProps>) => {
       location={args.location ?? ""}
       time={args.time ?? ""}
       imageUrl={args.imageUrl ?? ""}
-      title="missing ppe kit"
-    />
+      title="missing ppe kit" cameraId={""} alarmTriggered={false}    />
   );
 };
 

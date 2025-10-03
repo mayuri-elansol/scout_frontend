@@ -90,29 +90,15 @@ const Dashboard: React.FC = () => {
         pt: 2,
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          mb: 3,
-        }}
-      >
-        {/* Left: Home icon + Title */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            mb: { xs: 1, sm: 0 },
-          }}
-        >
-          <Home sx={{ fontSize: 32, color: "#3072b0" }} />
-          <Typography variant="h4" fontWeight="bold" color="#111827">
-            Safety & Operations Monitoring Dashboard
-          </Typography>
-        </Box>
+<Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "end",
+    flexWrap: "wrap",
+    mb: 3,
+  }}
+>
 
         {/* Right: Time Filter */}
         <TimeFilter />
