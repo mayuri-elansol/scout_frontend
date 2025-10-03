@@ -28,7 +28,7 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  delay: number;
+  //  delay: number;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
@@ -307,13 +307,13 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                   </Box>
 
                   <Grid container spacing={{ xs: 2, md: 3 }}>
-                    {features.map((feature, index) => (
+                    {features.map((feature) => (
                       <Grid size={{ xs: 12, md: 6 }} key={feature.title}>
                         <FeatureCard
                           icon={feature.icon}
                           title={feature.title}
                           description={feature.description}
-                          delay={index * 150}
+                          //  delay={index * 150}
                         />
                       </Grid>
                     ))}
