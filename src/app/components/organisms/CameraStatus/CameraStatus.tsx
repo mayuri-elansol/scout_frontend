@@ -18,7 +18,37 @@ export interface CameraZone {
   offline?: number;
   tempred?: number;
   total?: number;
+  timeStamp?: string;
 }
+const cameraZonesData = [
+  {
+    zone: "Zone A",
+    active: 5,
+    offline: 1,
+    tempred: 0,
+    total: 6,
+    timeStamp: "2025-10-03 10:00:00",
+    camera: "Camera 1",
+  },
+  {
+    zone: "Zone B",
+    active: 3,
+    offline: 2,
+    tempred: 1,
+    total: 6,
+    timeStamp: "2025-10-03 10:05:00",
+    camera: "Camera 2",
+  },
+  {
+    zone: "Zone C",
+    active: 4,
+    offline: 0,
+    tempred: 2,
+    total: 6,
+    timeStamp: "2025-10-03 10:10:00",
+    camera: "Camera 3",
+  },
+];
 
 interface CameraStatusProps {
   cameraZones: CameraZone[];
@@ -138,20 +168,20 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           <ReportTable
             title="Camera Zones Details"
             columns={[
-              { id: "status", label: "Status" },
+              //   { id: "status", label: "Status" },
               { id: "timeStamp", label: "TimeStamp" },
               { id: "zone", label: "Zone" },
               { id: "camera", label: "Camera" },
               { id: "total", label: "Total" },
             ]}
-            data={cameraZones.map((z) => ({ ...z }))}
+            data={cameraZonesData}
             filters={[
-              { id: "status", label: "Status", type: "text" },
               { id: "timeStamp", label: "TimeStamp", type: "text" },
               { id: "zone", label: "Zone", type: "text" },
               { id: "camera", label: "Camera", type: "text" },
             ]}
             downloadFileName="camera_zones_report"
+            tooltipMessage="report table"
           />
         </DialogContent>
       </Dialog>

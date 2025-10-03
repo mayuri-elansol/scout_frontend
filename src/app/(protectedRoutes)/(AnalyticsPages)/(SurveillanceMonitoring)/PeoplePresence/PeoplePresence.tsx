@@ -112,7 +112,6 @@ const PeoplePresence: React.FC = () => {
   }
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("Selected Filters:", filters);
-    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
   };
 
   const handleReset = () => {
@@ -218,7 +217,7 @@ const PeoplePresence: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "Voilation", label: "Incident", minWidth: 200 },
           { id: "peopleCount", label: "People Count", minWidth: 120 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },

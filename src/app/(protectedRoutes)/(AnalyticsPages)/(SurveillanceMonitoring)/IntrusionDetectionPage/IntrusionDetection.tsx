@@ -249,7 +249,7 @@ const IntrusionDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "Voilation", label: "Incident", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
