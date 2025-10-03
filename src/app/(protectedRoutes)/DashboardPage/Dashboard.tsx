@@ -100,9 +100,9 @@ const Dashboard: React.FC = () => {
   }}
 >
 
-  {/* Right: Time Filter */}
-  <TimeFilter />
-</Box>
+        {/* Right: Time Filter */}
+        <TimeFilter />
+      </Box>
 
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">

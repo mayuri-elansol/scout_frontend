@@ -14,8 +14,17 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const EmergencyExitBlockage: React.FC = () => {
+  interface ReportData extends Record<string, string | number | boolean> {
+    Voilation: string;
+    zone: string;
+    time: string;
+    cameraId: string;
+    imageUrl: string;
+    alarmTriggered: boolean;
+  }
+
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+  const [viewPopupData, setViewPopupData] = useState<ReportData | null>(null);
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
   const ExitKpiData = [
@@ -93,20 +102,21 @@ const EmergencyExitBlockage: React.FC = () => {
   ];
 
   // Map backend data to recentViolations format
-  const recentExitBlockageViolations = backendExitBlockageData.map((item) => {
-    let titleParts = [];
+  const recentExitBlockageViolations: ReportData[] =
+    backendExitBlockageData.map((item) => {
+      const titleParts = [];
 
-    if (item.blockage === true) titleParts.push("Emergency exit blocked");
+      if (item.blockage === true) titleParts.push("Emergency exit blocked");
 
-    return {
-      Voilation: titleParts.join(", ") || "No violation",
-      zone: item.zone,
-      time: item.createdAt,
-      imageUrl: item.snapshot,
-      cameraId: item.camera,
-      alarmTriggered: item.alarmTriggered,
-    };
-  });
+      return {
+        Voilation: titleParts.join(", ") || "No violation",
+        zone: item.zone,
+        time: item.createdAt,
+        imageUrl: item.snapshot,
+        cameraId: item.camera,
+        alarmTriggered: item.alarmTriggered,
+      };
+    });
 
   console.log(
     "emergency exit bolockage voilation",
@@ -151,7 +161,7 @@ const EmergencyExitBlockage: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: any) => {
+  const handleViewSingle = (row: ReportData) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -162,7 +172,7 @@ const EmergencyExitBlockage: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <DirectionsRunIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <DirectionsRunIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -195,7 +205,7 @@ const EmergencyExitBlockage: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Overview
             </Typography>
           </Box>
 
@@ -244,7 +254,7 @@ const EmergencyExitBlockage: React.FC = () => {
       </Paper>
       {/* </Box> */}
       {/* PPE Violations Report */}
-      <ReportTable
+      <ReportTable<ReportData>
         title="Detailed Report"
         columns={[
           { id: "Voilation", label: "Violation", minWidth: 200 },

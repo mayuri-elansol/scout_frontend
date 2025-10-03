@@ -59,7 +59,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
 
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -68,7 +68,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -123,10 +123,14 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           </Typography>
         </Box>
       </Box>
- <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -138,58 +142,60 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Overview
             </Typography>
           </Box>
 
           <TimeFilter />
         </Box>
-      {/* KPI Cards */}
+        {/* KPI Cards */}
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index}>
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : // Show actual KPI cards
-            EmpIdleTimeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((index) => (
+                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index}>
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              EmpIdleTimeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+              tooltipMessage="recent voilaiton"
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-</Paper>
+      </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "time", label: "Timestamp", minWidth: 80 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "employeeId", label: "Employee ID", minWidth: 120 },
           { id: "violationType", label: "Violation Type", minWidth: 150 },
@@ -201,7 +207,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
         data={[
           {
             violationId: "PPE-7892",
-            timestamp: "15:42",
+            time: "15:42",
             zone: "Production Floor A",
             employeeId: "John Mitchell",
             violationType: "Missing Hard Hat",
@@ -212,7 +218,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           },
           {
             violationId: "PPE-7891",
-            timestamp: "15:28",
+            time: "15:28",
             zone: "Welding Station",
             employeeId: "Lisa Anderson",
             violationType: "Improper Safety Glasses",
@@ -223,7 +229,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           },
           {
             violationId: "PPE-7890",
-            timestamp: "15:15",
+            time: "15:15",
             zone: "Chemical Storage",
             employeeId: "Sarah Chen",
             violationType: "Missing Safety Gloves",
@@ -234,7 +240,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           },
           {
             violationId: "PPE-7889",
-            timestamp: "14:58",
+            time: "14:58",
             zone: "Assembly Line B",
             employeeId: "Michael Torres",
             violationType: "Incorrect Footwear",
@@ -245,7 +251,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           },
           {
             violationId: "PPE-7888",
-            timestamp: "14:32",
+            time: "14:32",
             zone: "Maintenance Area",
             employeeId: "David Kim",
             violationType: "Missing Safety Vest",
@@ -256,21 +262,22 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
             id: "employeeId",
             label: "Employee",
             type: "select",
             options: ["David Kim", "Missing", "Resolved"],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
-        loading={false} />
+        loading={false}
+        tooltipMessage="report table"
+      />
     </Box>
   );
 };

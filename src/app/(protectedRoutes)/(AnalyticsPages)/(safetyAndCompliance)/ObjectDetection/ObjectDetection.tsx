@@ -21,7 +21,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -30,7 +30,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -39,7 +39,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -48,7 +48,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -59,42 +59,42 @@ const ObjectDetection: React.FC = () => {
   ];
 
   const ObjectDetectionKpiData = [
-  {
-    title: "Total Object Detections",
-    value: "1,452",
- 
-    icon: TrendingUp,
-  },
-  {
-    title: "Unique Objects",
-    value: "12",
+    {
+      title: "Total Object Detections",
+      value: "1,452",
 
-    icon: People,
-  },
-  {
-    title: "Active Alarms",
-    value: "5",
- 
-    icon: Warning,
-  },
-  {
-    title: "Most Detected Object",
-    value: "Helmet",
- 
-    icon: CheckCircle,
-  },
-  {
-    title: "Most Triggered Zone",
-    value: "warehouse",
-  
-    icon: Place,
-  },
-  {
-    title: "Most Alerting Camera",
-    value: "Cam-04",
+      icon: TrendingUp,
+    },
+    {
+      title: "Unique Objects",
+      value: "12",
 
-    icon: Warning,
-  },
+      icon: People,
+    },
+    {
+      title: "Active Alarms",
+      value: "5",
+
+      icon: Warning,
+    },
+    {
+      title: "Most Detected Object",
+      value: "Helmet",
+
+      icon: CheckCircle,
+    },
+    {
+      title: "Most Triggered Zone",
+      value: "warehouse",
+
+      icon: Place,
+    },
+    {
+      title: "Most Alerting Camera",
+      value: "Cam-04",
+
+      icon: Warning,
+    },
   ];
   const cameraZones: CameraZone[] = [
     {
@@ -143,7 +143,7 @@ const ObjectDetection: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <WidgetsIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+          <WidgetsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -154,10 +154,14 @@ const ObjectDetection: React.FC = () => {
       </Box>
 
       {/* KPI Cards */}
-          <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -169,53 +173,55 @@ const ObjectDetection: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Overview
             </Typography>
           </Box>
 
           <TimeFilter />
         </Box>
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : // Show actual KPI cards
-            ObjectDetectionKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              ObjectDetectionKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
-        {/* PPE Compliance by Zone */}
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+              tooltipMessage="recent violations"
+            />
+          </Grid>
+
+          {/* PPE Compliance by Zone */}
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-            </Paper>
+      </Paper>
       {/* Object detection Report */}
       <ReportTable
         title="Detailed Report"
@@ -306,9 +312,10 @@ const ObjectDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
+        tooltipMessage="report table"
         downloadFileName="object-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}

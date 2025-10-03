@@ -519,7 +519,7 @@ const SystemHealthTooltipContent: React.FC<{
       >
         {systemHealth.message.slice(0, 8).map((msg, idx) => (
           <Typography
-            key={idx}
+            key={idx + 1}
             variant="body2"
             sx={{
               color: "#374151",
@@ -773,7 +773,7 @@ const Header: React.FC = () => {
                     sx={{
                       width: 32,
                       height: 32,
-                      backgroundColor: theme.palette.primary.main,
+                      backgroundColor: "#3072b0",
                       fontSize: "14px",
                       fontWeight: 600,
                     }}

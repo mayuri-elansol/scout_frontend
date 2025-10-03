@@ -4,12 +4,7 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  People,
-  Warning,
-  Shield,
-
-} from "@mui/icons-material";
+import { People, Warning, Shield } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -108,10 +103,14 @@ const EmployeePresence: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -123,9 +122,10 @@ const EmployeePresence: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊
+              </Box>
+              Overview
             </Typography>
           </Box>
 
@@ -136,23 +136,23 @@ const EmployeePresence: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            employeeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              employeeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}
