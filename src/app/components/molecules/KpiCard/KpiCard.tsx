@@ -11,7 +11,14 @@ interface KpiCardProps {
   icon: SvgIconComponent;
   size?: "small" | "medium" | "large";
   customWidth?: number;
+
+  trendColor?: string;
+  color?: string;
+  bgColor?: string;
+  borderColor?: string;
+  iconBg?: string;
 }
+
 const KpiCard: React.FC<KpiCardProps> = ({
   title,
   value,
@@ -19,10 +26,18 @@ const KpiCard: React.FC<KpiCardProps> = ({
   icon: IconComponent,
   size = "medium",
   customWidth,
+  trendColor,
+  color,
+  bgColor,
+  borderColor,
+  iconBg = "rgba(76, 175, 80, 0.1)",
 }) => {
   const getVariantStyles = () => {
-    const numbericvalue = Number(value);
-    if (numbericvalue === 0) {
+    // If custom colors are passed, use them directly
+    if (trendColor && color && bgColor && borderColor && iconBg) {
+      return { trendColor, color, bgColor, borderColor, iconBg };
+    }
+    if (value === "Safe") {
       return {
         trendColor: "#4caf50",
         color: "#4caf50",
@@ -30,15 +45,40 @@ const KpiCard: React.FC<KpiCardProps> = ({
         borderColor: "#4caf50",
         iconBg: "rgba(76, 175, 80, 0.1)",
       };
-    } else if (numbericvalue > 0) {
+    }
+    if (value === "Unsafe") {
       return {
-        trendColor: "#f44336",
-        color: "#f44336",
-        bgColor: "#ffebee",
-        borderColor: "#f44336",
-        iconBg: "rgba(244, 67, 54, 0.1)",
+        trendColor: "#4caf50",
+        color: "#4caf50",
+        bgColor: "#e8f5e9",
+        borderColor: "#4caf50",
+        iconBg: "rgba(76, 175, 80, 0.1)",
       };
     }
+    // Default logic if no custom colors provided
+    const numericValue = Number(value);
+
+    if (!isNaN(numericValue)) {
+      if (numericValue === 0) {
+        return {
+          trendColor: "#4caf50",
+          color: "#4caf50",
+          bgColor: "#e8f5e9",
+          borderColor: "#4caf50",
+          iconBg: "rgba(76, 175, 80, 0.1)",
+        };
+      } else if (numericValue > 0) {
+        return {
+          trendColor: "#f44336",
+          color: "#f44336",
+          bgColor: "#ffebee",
+          borderColor: "#f44336",
+          iconBg: "rgba(244, 67, 54, 0.1)",
+        };
+      }
+    }
+
+    // Default neutral style
     return {
       trendColor: "#2196f3",
       color: "#2196f3",
@@ -48,7 +88,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
     };
   };
 
-  // Get size-specific styling
   const getSizeStyles = () => {
     switch (size) {
       case "small":
@@ -77,7 +116,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
           minHeight: "160px",
           padding: "20px",
           iconSize: 20,
-          valueSize: "28px",
+          valueSize: "25px",
           titleSize: "14px",
           subtitleSize: "12px",
           iconBoxSize: 36,
@@ -99,7 +138,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         transition: "all 0.3s ease",
-        height: "100%",
+        height: "95%",
         // minHeight: finalHeight,
         width: finalWidth,
         cursor: "pointer",

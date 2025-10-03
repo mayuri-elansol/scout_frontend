@@ -1,6 +1,6 @@
 // src/utils/getBreadcrumbs.ts
-"use client"
-import { dashboardMenu, alertMenu, analyticsMenu,MenuItemConfig } from "./../app/config/menuConfig";
+"use client";
+import { alertMenu, analyticsMenu } from "./../app/config/menuConfig";
 
 export interface BreadcrumbItem {
   label: string;

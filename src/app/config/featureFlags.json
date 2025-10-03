@@ -9,9 +9,10 @@
   "fire-smoke-oil-leak-detection": true,
   "vehicle-speed": true,
   "intrusion-detection": true,
-  "employee-presence": true,
+  "employee-presence-critical-area": true,
+   "employee-presence-restricted-area": true,
   "people-count": true,
-  "fall-detection": false,
+  "fall-detection": true,
   "STPOverflowDetection-detection":false,
   "emergency-exit-blockage-detection":true,
   "crowd-gathering-in-hazardous-zones-detection":true,
@@ -27,5 +28,8 @@
   "face-recognition":true,
   "monitoring-canteen-usage":true,
   "employee-idle-time":true,
-  "employee-idle-with-face-recognition":true
+  "employee-idle-with-face-recognition":true,
+  "user-management":true,
+  "role-management":true
+
 }

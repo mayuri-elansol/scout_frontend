@@ -4,9 +4,8 @@ import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
 interface Violation {
   title: string;
-  location: string;
+  zone: string;
   time: string;
-  Id: string;
   severity?: string;
   status?: string;
   imageUrl?: string;
@@ -63,7 +62,7 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               {violation.title}
             </Typography>
             <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
-              {violation.location} • {violation.time}
+              {violation.zone} • {violation.time}
             </Typography>
           </Box>
         </Box>

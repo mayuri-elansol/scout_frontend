@@ -1,76 +1,65 @@
+"use client";
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import  ReportTable  from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import { Box, Grid, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import {
+  CheckCircle,
+  LocalShipping,
+  PlayArrow,
+  Room,
+  Timeline,
+} from "@mui/icons-material";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const VehicleUnloadingLoading: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleUnloadingLoadingKpiData = [
     {
-      title: "PPE Compliance Rate",
-      value: "87.5%",
-      subtitle: "Current compliance level",
-      trend: "-2.3%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Shield,
+      title: "Total Operations",
+      value: "87", // total count of loading/unloading events
+      icon: LocalShipping, // represents vehicles/transport
     },
     {
-      title: "PPE Violations Per Day",
-      value: "12",
-      subtitle: "Today's violations",
-      trend: "+3",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Warning,
+      title: "Ongoing Operations",
+      value: "12", // number of operations in progress
+      icon: PlayArrow, // represents active/ongoing
     },
     {
-      title: "PPE Detection Accuracy",
-      value: "94.2%",
-      subtitle: "System accuracy rate",
-      trend: "+1.1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
+      title: "Completed Operations",
+      value: "94", // percentage completed
+      icon: CheckCircle, // completed/checked
     },
     {
-      title: "Time Since Last Violation",
-      value: "2h 34m",
-      subtitle: "Last incident recorded",
-      trend: "Recent",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
+      title: "Active Zones",
+      value: "2", // number of zones currently active
+      icon: Room, // represents location/zone
+    },
+    {
+      title: "Busiest Zone",
+      value: "Zone A", // which zone has most activity
+      icon: Timeline, // represents activity metric
     },
   ];
 
   const recentViolations = [
     {
       title: "Hard hat missing",
-      location: "Production Zone A",
+      zone: "Production Zone A",
       time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
+
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
       title: "Safety vest not worn",
-      location: "Warehouse Zone B",
+      zone: "Warehouse Zone B",
       time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
+
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
   ];
@@ -111,7 +100,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <LocalShippingIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -120,7 +109,29 @@ const VehicleUnloadingLoading: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+ <Paper sx={{
+        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
+      }} >
 
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>📊</Box>
+
+              Real Time Overview
+            </Typography>
+          </Box>
+
+          <TimeFilter />
+        </Box>
       {/* KPI Cards */}
 
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
@@ -158,95 +169,88 @@ const VehicleUnloadingLoading: React.FC = () => {
           <CameraStatus cameraZones={cameraZones} loading={false} />
         </Grid>
       </Grid>
-
+</Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "id", label: "ID", minWidth: 100 },
+
+          {
+            id: "loadingState",
+            label: "Loading State (Start/Stop)",
+            minWidth: 180,
+          },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
+          { id: "timestamp", label: "Timestamp", minWidth: 150 },
         ]}
         data={[
           {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
+            id: "TL-001",
+            trackId: "TRACK-101",
+            loadingState: "Start",
+            zone: "Loading Dock A",
+            camera: "CAM-201",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 10:15:00",
           },
           {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
+            id: "TL-002",
+            trackId: "TRACK-102",
+            loadingState: "Stop",
+            zone: "Loading Dock B",
+            camera: "CAM-202",
+            alarmTriggered: true,
+            timestamp: "2025-09-24 10:45:00",
           },
           {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
+            id: "TL-003",
+            trackId: "TRACK-103",
+            loadingState: "Start",
+            zone: "Loading Dock A",
+            camera: "CAM-203",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 11:00:00",
           },
           {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
+            id: "TL-004",
+            trackId: "TRACK-104",
+            loadingState: "Stop",
+            zone: "Loading Dock C",
+            camera: "CAM-204",
+            alarmTriggered: false,
+            timestamp: "2025-09-24 11:30:00",
           },
         ]}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: ["Loading Dock A", "Loading Dock B", "Loading Dock C"],
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "loadingState",
+            label: "Loading State",
+            type: "select",
+            options: ["Start", "Stop"],
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "startDate", label: "Start Date", type: "date" },
+          { id: "endDate", label: "End Date", type: "date" },
         ]}
+        downloadFileName="vehicle-loading-time-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        downloadFileName="ppe-violations-report"
         loading={false}
-        isDownload={true}
       />
     </Box>
   );
