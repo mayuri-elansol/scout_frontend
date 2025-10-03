@@ -341,7 +341,6 @@ const PPEDetection: React.FC = () => {
               "Safety glasses missing",
             ],
           },
-
           {
             id: "zone",
             label: "Zone",

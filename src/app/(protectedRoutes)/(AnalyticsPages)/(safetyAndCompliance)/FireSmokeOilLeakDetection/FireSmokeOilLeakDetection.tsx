@@ -256,7 +256,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "Voilation", label: "Incident", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -266,7 +266,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         filters={[
           {
             id: "Voilation",
-            label: "Violation",
+            label: "Incident",
             type: "select",
             options: ["Fire detected", "Smoke detected", "Gas detected"],
           },
