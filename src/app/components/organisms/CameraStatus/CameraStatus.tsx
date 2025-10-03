@@ -150,7 +150,6 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
               { id: "timeStamp", label: "TimeStamp", type: "text" },
               { id: "zone", label: "Zone", type: "text" },
               { id: "camera", label: "Camera", type: "text" },
-              // { id: "total", label: "Total", type: "text" },
             ]}
             downloadFileName="camera_zones_report"
           />
