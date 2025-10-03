@@ -16,6 +16,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+
 import { FilterParams } from "./PPEDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
@@ -253,23 +254,23 @@ const PPEDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            ppeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              ppeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={index + 1}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}

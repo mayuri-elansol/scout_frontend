@@ -171,7 +171,7 @@ export const CriticalStatus: Story = {
 
               return (
                 <Box
-                  key={index+1}
+                  key={index + 1}
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -293,7 +293,7 @@ export const AllOperational: Story = {
               },
             ].map((zone, index) => (
               <Box
-                key={index+1}
+                key={index + 1}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Box, Typography, Grid, Tabs, Tab, Paper } from "@mui/material";
 import { Warning, DirectionsCar } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import ReportTable, { ReportColumn } from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import SafetyIcon from "@mui/icons-material/Shield";
 import Visibility from "@mui/icons-material/Visibility";
 import WorkforceIcon from "@mui/icons-material/People";
@@ -17,89 +17,6 @@ interface FilterParams {
   startDate?: string;
   endDate?: string;
 }
-
-type FilterType = "text" | "select" | "date";
-
-interface ReportFilter {
-  id: string;
-  label: string;
-  type: FilterType;
-  options?: string[];
-}
-
-interface AlertData {
-  id: string;
-  useCaseType: string;
-  time: string;
- 
-  zone: string;
-  camera: string;
-  snapshot: string;
-}
-
-const reportColumns: ReportColumn<AlertData>[] = [
-  { id: "id", label: "ID", minWidth: 50 },
-  { id: "useCaseType", label: "Use Case Type", minWidth: 150 },
-  { id: "time", label: "Timestamp", minWidth: 120 },
-
-  { id: "zone", label: "Zone", minWidth: 120 },
-  { id: "camera", label: "Camera", minWidth: 120 },
-  { id: "snapshot", label: "Snapshot", minWidth: 150 },
-];
-
-
-// const reportFilters: ReportFilter[] = [
-//   {
-//     id: "useCaseType",
-//     label: "Use Case Type",
-//     type: "select",
-//     options: [
-//       "PPE Detection",
-//       "Object Detection",
-//       "Fire/Smoke/Oil/Gas",
-//       "Vehicle Speed Monitoring",
-//       "Fall Detection",
-//       "STP/ETP Overflow Detection",
-//       "Emergency Exit Blockage",
-//       "Crowd Gathering",
-//     ],
-//   },
-
-//   {
-//     id: "zone",
-//     label: "Zone",
-//     type: "select",
-//     options: [
-//       "Zone A",
-//       "Walking Bay 3",
-//       "Zone B",
-//       "Zone C",
-//       "Entry Gate 2",
-//       "STP Area",
-//       "Exit Zone 1",
-//       "Hazard Zone 4",
-//     ],
-//   },
-//   {
-//     id: "camera",
-//     label: "Camera",
-//     type: "select",
-//     options: [
-//       "Camera-01",
-//       "Camera-02",
-//       "Camera-03",
-//       "Camera-04",
-//       "Camera-05",
-//       "Camera-07",
-//       "Camera-08",
-//       "Camera-09",
-//     ],
-//   },
-//   { id: "detectionTime", label: "Start Date", type: "date" },
-//   { id: "detectionTime", label: "End Date", type: "date" },
-// ];
-
-// 🔹 Dummy data
 
 const sampleData = [
   {
@@ -310,9 +227,9 @@ const SystemAlerts: React.FC = () => {
                   alignItems: "center",
                 },
                 "&:hover": {
-                  backgroundColor: "#f5f5f5", 
-                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)", 
-                  borderRadius: "8px", 
+                  backgroundColor: "#f5f5f5",
+                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)",
+                  borderRadius: "8px",
                 },
                 transition: "all 0.2s ease-in-out",
                 boxShadow:
