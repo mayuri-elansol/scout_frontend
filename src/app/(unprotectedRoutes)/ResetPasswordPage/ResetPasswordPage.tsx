@@ -25,11 +25,8 @@ const ResetPassword: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("formdataaa", formData);
-      // Navigate after success (optional)
-      // router.push("/login");
     } catch (err) {
       console.error(err);
       setError("Failed to reset password. Please try again.");

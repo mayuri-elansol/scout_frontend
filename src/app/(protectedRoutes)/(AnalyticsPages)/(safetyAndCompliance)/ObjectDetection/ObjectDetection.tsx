@@ -21,7 +21,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -30,7 +30,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -39,7 +39,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=2",
     },
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -48,7 +48,7 @@ const ObjectDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -176,7 +176,7 @@ const ObjectDetection: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Overview
             </Typography>
           </Box>
 
@@ -212,6 +212,7 @@ const ObjectDetection: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
+              tooltipMessage="recent violations"
             />
           </Grid>
 
@@ -311,9 +312,10 @@ const ObjectDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
+        tooltipMessage="report table"
         downloadFileName="object-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}

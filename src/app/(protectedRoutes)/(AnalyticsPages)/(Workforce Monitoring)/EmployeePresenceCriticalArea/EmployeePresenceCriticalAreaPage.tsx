@@ -177,7 +177,7 @@ const EmployeePresence: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Overview
             </Typography>
           </Box>
 

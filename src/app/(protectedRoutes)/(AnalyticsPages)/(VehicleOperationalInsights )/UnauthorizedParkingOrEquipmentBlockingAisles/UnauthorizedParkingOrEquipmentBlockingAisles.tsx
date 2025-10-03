@@ -39,14 +39,14 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
 
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
 
@@ -121,7 +121,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Overview
             </Typography>
           </Box>
 
@@ -156,6 +156,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
+              tooltipMessage="recent voliaotn"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
@@ -212,7 +213,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
         ]}
         filters={[
           {
-            id: "typeOf",
+            id: "type",
             label: "Type Of",
             type: "select",
             options: ["Car", "Not Car"],
@@ -228,14 +229,15 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               "Warehouse Area",
             ],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
         downloadFileName="unauthorized-parking-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );

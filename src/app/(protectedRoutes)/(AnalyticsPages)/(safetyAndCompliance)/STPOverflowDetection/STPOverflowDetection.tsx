@@ -4,18 +4,18 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield } from "@mui/icons-material";
-import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import {
+  Shield,
   Warning,
   NotificationImportant,
   Place,
   Videocam,
   Schedule,
 } from "@mui/icons-material";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { v4 as uuidv4 } from "uuid";
+import { CameraZone } from "@/app/types";
 
 const STPOverflowDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
@@ -49,7 +49,7 @@ const STPOverflowDetection: React.FC = () => {
   ];
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -58,7 +58,7 @@ const STPOverflowDetection: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -143,6 +143,7 @@ const STPOverflowDetection: React.FC = () => {
             label="Recent Violations"
             violations={recentViolations}
             loading={false}
+            tooltipMessage="recent volaions"
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -226,14 +227,15 @@ const STPOverflowDetection: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "createdAt", label: "Start Date", type: "date" },
+          { id: "createdAt", label: "End Date", type: "date" },
         ]}
         downloadFileName="overflow-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );

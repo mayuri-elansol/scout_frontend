@@ -58,7 +58,7 @@ const EmployeeIdleTime: React.FC = () => {
 
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -67,7 +67,7 @@ const EmployeeIdleTime: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -145,7 +145,7 @@ const EmployeeIdleTime: React.FC = () => {
               <Box component="span" sx={{ mr: 2 }}>
                 📊
               </Box>
-              Real Time Overview
+              Overview
             </Typography>
           </Box>
 
@@ -180,6 +180,7 @@ const EmployeeIdleTime: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
+              tooltipMessage="recent volaitons"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
@@ -269,14 +270,15 @@ const EmployeeIdleTime: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-idle-time-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );
