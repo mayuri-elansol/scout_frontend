@@ -9,7 +9,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import { BarChart } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 interface ActivityItem {
   time: string;
   event: string;
@@ -21,7 +21,6 @@ interface ActivityItem {
 interface ActivityFeedProps {
   loading: boolean;
   activities: ActivityItem[];
-  maxHeight?: number | string;
 }
 
 const getSeverityStyle = (severity: string) => {
@@ -70,7 +69,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
           {loading
             ? Array.from({ length: 5 }).map((_, index) => (
                 <Box
-                  key={index + 1}
+                  key={uuidv4() + index}
                   sx={{
                     display: "flex",
                     alignItems: "flex-start",
@@ -113,7 +112,7 @@ const ActivityFeed: React.FC<ActivityFeedProps> = ({
 
                 return (
                   <Box
-                    key={index + 1}
+                    key={uuidv4() + index}
                     sx={{
                       display: "flex",
 

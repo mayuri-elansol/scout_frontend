@@ -12,7 +12,6 @@ const baseQuery = fetchBaseQuery({
 export const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  // if (result.data === null) {
 
   if (result.error && result.error.status === 401) {
     console.log('In if');

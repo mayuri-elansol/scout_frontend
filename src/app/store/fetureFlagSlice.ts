@@ -11,7 +11,8 @@ const featureFlagsSlice = createSlice({
   name: "featureFlags",
   initialState,
   reducers: {
-    setFeatureFlags: (state, action: PayloadAction<FeatureFlagsState>) => action.payload,
+    setFeatureFlags: (state, action: PayloadAction<FeatureFlagsState>) =>
+      action.payload,
     updateFeatureFlag: (
       state,
       action: PayloadAction<{ key: string; value: boolean }>

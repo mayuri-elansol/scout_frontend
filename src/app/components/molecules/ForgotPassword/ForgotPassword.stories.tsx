@@ -3,7 +3,7 @@ import React from "react";
 import ForgotPasswordForm from "./ForgotPassword";
 
 const meta: Meta<typeof ForgotPasswordForm> = {
-  title: "Auth/ForgotPasswordForm",
+  title: "Components/Molecules/ForgotPasswordForm",
   component: ForgotPasswordForm,
   tags: ["autodocs"],
 };

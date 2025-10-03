@@ -3,7 +3,6 @@
 // src/config/menuConfig.ts
 import { PageType } from "../types/index";
 import {
-  Home,
   Shield,
   Visibility,
   People,
@@ -20,6 +19,7 @@ import PeopleIcon from "@mui/icons-material/People"; // For User Management
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 export interface MenuItemConfig {
   path: string;
   name: string;
@@ -37,7 +37,7 @@ export interface CategoryConfig {
 
 // Dashboard menu
 export const dashboardMenu: MenuItemConfig[] = [
-  { name: "Dashboard", icon: Home, page: "dashboard", path: "/DashboardPage" },
+  { name: "Dashboard", icon: SpaceDashboardIcon, page: "dashboard", path: "/DashboardPage" },
 ];
 
 // Alert menu
@@ -73,7 +73,7 @@ export const settingsMenu: CategoryConfig[] = [
         name: "User Management",
         icon: PeopleIcon,
         page: "user-management",
-        path: "/UserManagement",
+        path: "/UserOverview",
       },
     ],
   },

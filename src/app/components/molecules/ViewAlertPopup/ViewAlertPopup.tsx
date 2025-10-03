@@ -11,15 +11,16 @@ import {
   IconButton,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
 interface ViewAlertPopupProps {
   open: boolean;
   handleClose: () => void;
   title: string;
   location: string;
   time: string;
-
+  cameraId: string;
   imageUrl: string;
+  alarmTriggered: boolean;
 
   onDownload?: (imageUrl: string) => void;
 }
@@ -30,8 +31,9 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
   title,
   location,
   time,
-
+  cameraId,
   imageUrl,
+  alarmTriggered,
   onDownload,
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -62,7 +64,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          bgcolor: "primary.main",
+          background: "#3072b0",
           color: "white",
           fontWeight: 600,
         }}
@@ -97,7 +99,13 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
             <strong>Location:</strong> {location}
           </Typography>
           <Typography variant="body2" sx={{ mb: 0.5 }}>
+            <strong>Camera Id:</strong> {cameraId}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>
             <strong>Time:</strong> {time}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.5 }}>
+            <strong>Alarm Triggered:</strong> {alarmTriggered ? "Yes" : "No"}
           </Typography>
           <IconButton
             onClick={() => {
@@ -107,13 +115,14 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
                 console.log("Download clicked", imageUrl);
               }
             }}
-            color="primary"
+            //  color="primary"
+            sx={{
+              color: "#3072b0", // this changes the icon color
+            }}
           >
-            <ArrowDownwardIcon />
+            <DownloadForOfflineIcon fontSize="large" />
           </IconButton>
         </Box>
-        {/* 
-        <Divider sx={{ mb: 1.5 }} /> */}
 
         {/* Image Preview */}
         <Box

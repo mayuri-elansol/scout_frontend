@@ -4,12 +4,7 @@ import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  People,
-  Warning,
-  Shield,
-
-} from "@mui/icons-material";
+import { People, Warning, Shield } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { CameraZone } from "@/app/types";
@@ -37,7 +32,7 @@ const EmployeePresence: React.FC = () => {
 
   const activePersonnel = [
     {
-      title: "John Mitchell - Level 3 Operator",
+      Voilation: "John Mitchell - Level 3 Operator",
       zone: "Reactor Control Room",
       time: "Day Shift",
       Id: "EMP-4521",
@@ -47,7 +42,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
-      title: "Sarah Chen - Senior Technician",
+      Voilation: "Sarah Chen - Senior Technician",
       zone: "Chemical Processing Unit",
       time: "Day Shift",
       Id: "EMP-3847",
@@ -57,7 +52,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=12",
     },
     {
-      title: "Michael Torres - Safety Coordinator",
+      Voilation: "Michael Torres - Safety Coordinator",
       zone: "Emergency Response Station",
       time: "Day Shift",
       Id: "EMP-5623",
@@ -67,7 +62,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=13",
     },
     {
-      title: "Lisa Anderson - Lab Supervisor",
+      Voilation: "Lisa Anderson - Lab Supervisor",
       zone: "Quality Control Lab",
       time: "Day Shift",
       Id: "EMP-7891",
@@ -108,10 +103,14 @@ const EmployeePresence: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -123,9 +122,9 @@ const EmployeePresence: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊 Overview
+              </Box>
             </Typography>
           </Box>
 
@@ -136,23 +135,23 @@ const EmployeePresence: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            employeeKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              employeeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}
@@ -163,6 +162,7 @@ const EmployeePresence: React.FC = () => {
               label="Recent Violations"
               violations={activePersonnel}
               loading={false}
+              tooltipMessage="recent volaitons"
             />
           </Grid>
           {/* Critical Zones Status */}
@@ -314,11 +314,12 @@ const EmployeePresence: React.FC = () => {
             type: "select",
             options: ["Critical", "High", "Medium"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-report"
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );

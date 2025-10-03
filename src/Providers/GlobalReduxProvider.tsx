@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 export default function GlobalReduxProvider({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   return <Provider store={store}>{children}</Provider>;
 }

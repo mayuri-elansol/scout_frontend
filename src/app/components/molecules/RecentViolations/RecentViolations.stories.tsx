@@ -12,7 +12,7 @@ type Story = StoryObj<typeof RecentViolations>;
 
 const sampleViolations = [
   {
-    title: "Unauthorized Access",
+     Voilation: "Unauthorized Entry",
     zone: "Main Gate",
     time: "10:30 AM",
     Id: "V-101",
@@ -21,7 +21,7 @@ const sampleViolations = [
     imageUrl: "",
   },
   {
-    title: "Safety Protocol Breach",
+    Voilation: "Unauthorized Entry",
     zone: "Reactor Zone",
     time: "11:15 AM",
     Id: "V-102",

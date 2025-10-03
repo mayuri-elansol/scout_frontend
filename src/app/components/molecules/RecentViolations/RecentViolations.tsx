@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Grid,
   Card,
@@ -8,27 +9,32 @@ import {
   Box,
   Typography,
   Skeleton,
+  Tooltip,
 } from "@mui/material";
 import { Warning } from "@mui/icons-material";
 import { ViolationCard } from "../ViolationCard/ViolationCard";
 import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup"; // import popup
-
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 interface Violation {
-  title: string;
+  alarmTriggered?: boolean;
+  Voilation: string;
   zone: string;
   time: string;
   severity?: string;
   status?: string;
   imageUrl?: string;
+  cameraId?: string;
 }
 
 interface RecentViolationsProps {
+  readonly tooltipMessage: string;
   readonly label: string;
   readonly violations: readonly Violation[];
   readonly loading?: boolean;
 }
 
 export default function RecentViolations({
+  tooltipMessage,
   label,
   violations,
   loading = false,
@@ -57,6 +63,8 @@ export default function RecentViolations({
         maxHeight: 420,
         display: "flex",
         flexDirection: "column",
+        borderRadius: 2,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
       }}
     >
       <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
@@ -75,6 +83,22 @@ export default function RecentViolations({
               {label}
             </Typography>
           </Box>
+
+          {tooltipMessage && (
+            <Tooltip title={tooltipMessage} arrow>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#f44336",
+                }}
+              >
+                <InfoOutlineIcon />
+              </Box>
+            </Tooltip>
+          )}
         </Box>
 
         <Box>
@@ -83,7 +107,7 @@ export default function RecentViolations({
               {Array.from(new Array(4)).map((_, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <Card sx={{ p: 2 }}>
                     <Skeleton width="70%" />
@@ -98,7 +122,7 @@ export default function RecentViolations({
               {violations.map((violation, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                   sx={{ display: "flex" }}
                 >
                   {/* Pass click handler */}
@@ -118,12 +142,15 @@ export default function RecentViolations({
         <ViewAlertPopup
           open={open}
           handleClose={handleClose}
-          title={selectedViolation.title}
+          title={selectedViolation.Voilation}
           location={selectedViolation.zone}
           time={selectedViolation.time}
           imageUrl={selectedViolation.imageUrl ?? ""}
+          cameraId={selectedViolation.cameraId ?? ""}
+          alarmTriggered={selectedViolation.alarmTriggered ?? false}
           onDownload={(url) => {
             console.log("Downloading image from:", url);
+            console.log("selectedvoilaiton", selectedViolation);
           }}
         />
       )}

@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode, useState } from "react";
-
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Card,
@@ -28,7 +28,7 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  delay: number;
+  //  delay: number;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
@@ -108,7 +108,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 };
 
 interface ClientLayoutProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
@@ -175,6 +175,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
           />
 
           <Button
+            onClick={() => {}}
             variant="contained"
             sx={{
               textTransform: "none",
@@ -191,7 +192,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               },
             }}
           >
-            Enquiry
+            Contact Us
           </Button>
         </Box>
 
@@ -307,12 +308,12 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
                   <Grid container spacing={{ xs: 2, md: 3 }}>
                     {features.map((feature, index) => (
-                      <Grid size={{ xs: 12, md: 6 }} key={feature.title}>
+                      <Grid size={{ xs: 12, md: 6 }} key={uuidv4() + index}>
                         <FeatureCard
                           icon={feature.icon}
                           title={feature.title}
                           description={feature.description}
-                          delay={index * 150}
+                          //  delay={index * 150}
                         />
                       </Grid>
                     ))}

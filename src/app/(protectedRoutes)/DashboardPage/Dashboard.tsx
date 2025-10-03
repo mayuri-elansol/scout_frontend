@@ -2,16 +2,15 @@
 
 import React from "react";
 import { CameraZone, KpiData } from "@/app/types";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import {
   Shield,
   Warning,
   Visibility,
   People,
   DirectionsCar,
-  Home,
 } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
@@ -90,31 +89,26 @@ const Dashboard: React.FC = () => {
         pt: 2,
       }}
     >
-<Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    mb: 3,
-  }}
->
-  {/* Left: Home icon + Title */}
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: { xs: 1, sm: 0 } }}>
-    <Home sx={{ fontSize: 32, color: "#1976d2" }} />
-    <Typography variant="h4" fontWeight="bold" color="#111827">
-      Safety & Operations Monitoring Dashboard
-    </Typography>
-  </Box>
-
-  {/* Right: Time Filter */}
-  <TimeFilter />
-</Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "end",
+          flexWrap: "wrap",
+          mb: 3,
+        }}
+      >
+        {/* Right: Time Filter */}
+        <TimeFilter />
+      </Box>
 
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
+          <Grid
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            key={uuidv4() + index}
+          >
             <KpiCard {...kpi} route="/PPEDetectionPage" />
           </Grid>
         ))}

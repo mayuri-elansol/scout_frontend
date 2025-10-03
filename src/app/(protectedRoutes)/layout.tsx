@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import ClientLayout from "./ClientLayout";
 
 interface LayoutProps {
-  children: ReactNode;
+  readonly children: ReactNode;
 }
 
 export default function ProtectedLayout({ children }: LayoutProps) {

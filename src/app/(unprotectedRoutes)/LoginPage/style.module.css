@@ -14,7 +14,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  /* background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e0e0e0' fill-opacity='0.3'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat; */
   opacity: 0.5;
 }
 
@@ -23,7 +22,6 @@
   position: relative;
   z-index: 1;
   padding: 1rem 4rem;
-  /* height: 80px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,7 +39,6 @@
   font-weight: 600 !important;
   border-radius: 8px !important;
   padding: 0.5rem 1.5rem !important;
-  /* background-color: #052667 !important; */
 }
 
 .enquiryButton:hover {
@@ -80,10 +77,6 @@
   justify-content: space-between;
 }
 
-/* Hero Section */
-/* .heroSection {
-  margin-bottom: 1.5rem;
-} */
 
 .heroContent {
   text-align: left;
@@ -106,7 +99,6 @@
   font-size: 1rem !important;
   line-height: 1.6 !important;
   color: #666666 !important;
-  /* margin-bottom: 1.5rem !important; */
   max-width: 900px !important;
   animation: fadeInUp 0.8s ease-out 0.4s both !important;
 }
@@ -282,183 +274,6 @@
   font-weight: 500 !important;
 }
 
-.heroDescription {
-  font-size: 1.1rem !important;
-  line-height: 1.8 !important;
-  color: #666666 !important;
-  margin-bottom: 2.5rem !important;
-  max-width: 900px !important;
-  animation: fadeInUp 0.8s ease-out 0.4s both !important;
-}
-
-.chipContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: flex-start;
-  margin-bottom: 3rem;
-}
-
-.featureChip {
-  background-color: rgba(5, 38, 103, 0.1) !important;
-  color: #052667 !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(5, 38, 103, 0.3) !important;
-  font-size: 16px !important;
-  height: 40px !important;
-}
-
-/* Feature Card Styles */
-.featureCard {
-  padding: 1.25rem !important;
-  height: 100% !important;
-  border-radius: 8px !important;
-  line-height: 1.8 !important;
-  word-spacing: 2px !important;
-  border: 1px solid #e0e0e0 !important;
-  border-left: 4px solid #052667 !important;
-  background: #ffffff !important;
-  transform: translateY(0) translateX(0) !important;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  animation: slideInLeft 0.6s ease-out both;
-}
-
-.featureCard:hover,
-.featureCard.hovered {
-  background: #f8f9fa !important;
-  border-left: 4px solid #1976d2 !important;
-  box-shadow: 0 4px 12px rgba(5, 38, 103, 0.15) !important;
-  transform: translateY(-2px) translateX(2px) !important;
-}
-
-.cardContent {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.iconContainer {
-  width: 40px;
-  height: 40px;
-  background-color: #052667;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(5, 38, 103, 0.3);
-}
-
-.textContent {
-  flex: 1;
-}
-
-.cardTitle {
-  font-weight: 600 !important;
-  color: #052667 !important;
-  font-size: 1.2rem !important;
-  margin-bottom: 0.25rem !important;
-  line-height: 1.3 !important;
-}
-
-.cardDescription {
-  color: #666666 !important;
-  font-size: 1rem !important;
-  line-height: 1.5 !important;
-}
-
-/* Login Card */
-.loginCard {
-  border-radius: 12px !important;
-  max-width: 480px !important;
-  width: 100% !important;
-  background-color: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  animation: slideInRight 0.8s ease-out 0.6s both !important;
-  position: relative !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1), 0 1px 8px rgba(0,0,0,0.06) !important;
-}
-
-.loginCard::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #052667 0%, #1976d2 100%);
-  border-radius: 12px 12px 0 0;
-}
-
-.loginCard:hover,
-.loginCard.hovered {
-  transform: translateY(-4px) !important;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 0 1px rgba(5, 38, 103, 0.1) !important;
-}
-
-.loginCardHeader {
-  padding: 2rem 2rem 1.5rem 2rem;
-  text-align: center;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid rgba(240, 240, 240, 0.8);
-  border-radius: 12px 12px 0 0;
-}
-
-.loginCardTitle {
-  font-weight: 700 !important;
-  margin-bottom: 0.5rem !important;
-  color: #052667 !important;
-  font-size: 28px !important;
-}
-
-.loginCardSubtitle {
-  color: #5c6b7d !important;
-  font-size: 16px !important;
-}
-
-/* Footer Styles */
-.footer {
-  position: relative;
-  z-index: 1;
-  padding: 1.5rem 4rem;
-  text-align: center;
-  border-top: 1px solid #e0e0e0;
-  background-color: #ffffff;
-}
-
-.linksContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-}
-
-.footerLink {
-  color: #666666 !important;
-  font-size: 14px !important;
-  text-decoration: none !important;
-}
-
-.footerLink:hover {
-  color: #052667 !important;
-  text-decoration: underline !important;
-}
-
-.divider {
-  color: #9aa0a6 !important;
-  font-size: 14px !important;
-}
-
-.copyright {
-  color: #666666 !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-}
 
 /* Animations */
 @keyframes fadeInUp {
