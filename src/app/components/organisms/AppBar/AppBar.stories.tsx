@@ -2,7 +2,7 @@ import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import Appbar from './AppBar';
 
 const meta: Meta<typeof Appbar> = {
-  title: 'Components/Appbar',
+  title: 'Components/Organisms/Appbar',
   component: Appbar,
   tags: ['autodocs'],
   argTypes: {
