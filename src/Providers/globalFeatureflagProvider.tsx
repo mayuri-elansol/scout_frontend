@@ -4,12 +4,13 @@ import { Provider } from 'react-redux';
 import { store } from '../app/store/store';
 import { useInitFeatureFlags } from '../customhooks/useInitFeatureFlags';
 
-function InitFeatureFlagsWrapper({ children }: { children: React.ReactNode }) {
+// Mark children as readonly
+function InitFeatureFlagsWrapper({ children }: { readonly children: React.ReactNode }) {
   useInitFeatureFlags(); 
   return <>{children}</>;
 }
 
-export default function GlobalFeatureflagProvider({ children }: { children: React.ReactNode }) {
+export default function GlobalFeatureflagProvider({ children }: { readonly children: React.ReactNode }) {
   return (
     <Provider store={store}>
       <InitFeatureFlagsWrapper>{children}</InitFeatureFlagsWrapper>

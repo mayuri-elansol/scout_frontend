@@ -4,7 +4,7 @@ export interface FilterParams {
   startDate?: string;
   endDate?: string;
 }
-export interface tableData {
+export interface TableData {
   id: number;
   helmet: boolean;
   vest: boolean;
