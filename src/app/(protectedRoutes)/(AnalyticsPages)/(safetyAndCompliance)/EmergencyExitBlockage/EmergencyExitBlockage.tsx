@@ -203,9 +203,8 @@ const EmergencyExitBlockage: React.FC = () => {
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
-                📊
+                📊 Overview
               </Box>
-              Overview
             </Typography>
           </Box>
 
