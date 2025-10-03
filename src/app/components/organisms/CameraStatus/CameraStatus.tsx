@@ -54,7 +54,6 @@ interface CameraStatusProps {
   cameraZones: CameraZone[];
   loading?: boolean;
   maxheight?: number;
-  tooltipMessage?: string;
 }
 
 const CameraStatus: React.FC<CameraStatusProps> = ({

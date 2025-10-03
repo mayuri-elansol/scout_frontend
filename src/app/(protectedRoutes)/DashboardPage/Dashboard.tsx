@@ -2,14 +2,13 @@
 
 import React from "react";
 import { CameraZone, KpiData } from "@/app/types";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import {
   Shield,
   Warning,
   Visibility,
   People,
   DirectionsCar,
-  Home,
 } from "@mui/icons-material";
 
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";

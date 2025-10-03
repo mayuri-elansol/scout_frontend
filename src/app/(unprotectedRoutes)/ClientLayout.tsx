@@ -35,6 +35,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   icon,
   title,
   description,
+  delay
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -176,7 +177,6 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
           <Button
             onClick={() => {
-              ("");
             }}
             variant="contained"
             sx={{

@@ -1,8 +1,7 @@
-
 'use client';
 
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
     Visibility,
     VisibilityOff,
@@ -30,12 +29,28 @@ import styles from "./UserManagement.module.css";
 import Appbar from "@/app/components/organisms/AppBar/AppBar";
 import { useRouter } from "next/navigation";
 
-const UserManagement = () => {
+interface UserFormValues {
+    role: "Organisation Admin" | "Site Manager" | "Department Head" | "Team Lead" | "Employee";
+    name: string;
+    email: string;
+    phone: string;
+    username: string;
+    password: string;
+    site: string;
+    department: string;
+}
+
+const roles: UserFormValues["role"][] = ["Organisation Admin", "Site Manager", "Department Head", "Team Lead", "Employee"];
+const sites: string[] = ["Headquarters", "Mumbai Office", "Delhi Branch", "Bangalore Hub", "Remote Location"];
+const departments: string[] = ["Human Resources", "Information Technology", "Finance", "Operations", "Marketing", "Sales"];
+
+const UserManagement: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [profileImage, setProfileImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+  console.log(profileImage)
 
-    const { control, handleSubmit, formState: { errors }, reset } = useForm({
+    const { control, handleSubmit, formState: { errors }, reset } = useForm<UserFormValues>({
         defaultValues: {
             role: "Organisation Admin",
             name: "",
@@ -48,23 +63,22 @@ const UserManagement = () => {
         },
     });
 
-    const roles = ["Organisation Admin", "Site Manager", "Department Head", "Team Lead", "Employee"];
-    const sites = ["Headquarters", "Mumbai Office", "Delhi Branch", "Bangalore Hub", "Remote Location"];
-    const departments = ["Human Resources", "Information Technology", "Finance", "Operations", "Marketing", "Sales"];
-
     const router = useRouter();
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+        const file = e.target.files?.[0] ?? null;
+        setProfileImage(file);
+
         if (file) {
-            setProfileImage(file);
             const reader = new FileReader();
             reader.onloadend = () => setImagePreview(reader.result as string);
             reader.readAsDataURL(file);
+        } else {
+            setImagePreview(null);
         }
     };
 
-    const onSubmit = (data: any) => {
+    const onSubmit: SubmitHandler<UserFormValues> = (data) => {
         const newUser = { ...data, profileImage: imagePreview };
         console.log("New User Added:", newUser);
 
@@ -73,7 +87,6 @@ const UserManagement = () => {
         setImagePreview(null);
         setProfileImage(null);
 
-        // Redirect to User History page
         router.push("/UserOverview");
     };
 
@@ -247,7 +260,7 @@ const UserManagement = () => {
                 </Box>
             </Box>
 
-            {/* Upload Profile Picture + Submit in same row */}
+            {/* Upload Profile Picture + Submit */}
             <Box className={styles.section}>
                 <Box className={styles.sectionHeader}>
                     <CameraAlt color="primary" />
@@ -256,17 +269,14 @@ const UserManagement = () => {
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                     <Avatar src={imagePreview || ""} sx={{ width: 100, height: 100 }} />
                     <Button variant="outlined" component="label" startIcon={<CloudUpload />}>
-                        Upload
-                        <input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+                        Upload<input type="file" hidden accept="image/*" onChange={handleImageUpload} />
                     </Button>
                     <Box sx={{ flexGrow: 1 }} />
-
                 </Box>
             </Box>
+
             {/* Submit + Back buttons */}
             <Box textAlign="center" mt={-2} sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-           
-
                 <Button
                     variant="outlined"
                     color="secondary"
@@ -274,7 +284,7 @@ const UserManagement = () => {
                 >
                     Back
                 </Button>
-                     <Button
+                <Button
                     variant="contained"
                     className={styles.submitButton}
                     onClick={handleSubmit(onSubmit)}
@@ -282,7 +292,6 @@ const UserManagement = () => {
                     Submit
                 </Button>
             </Box>
-
         </Box>
     );
 };
