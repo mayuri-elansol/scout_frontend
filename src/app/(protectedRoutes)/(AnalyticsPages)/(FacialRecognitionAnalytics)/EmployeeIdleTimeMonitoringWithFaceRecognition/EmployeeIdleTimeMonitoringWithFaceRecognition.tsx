@@ -113,7 +113,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
     <Box>
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+        {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
           <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#1976d2" }} />
           <Typography
             variant="h4"
@@ -121,7 +121,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           >
             Employee Idle Time Monitoring With Face Recognition
           </Typography>
-        </Box>
+        </Box> */}
       </Box>
       <Paper
         sx={{

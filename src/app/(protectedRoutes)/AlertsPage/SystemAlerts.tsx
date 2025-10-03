@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Box, Typography, Grid, Tabs, Tab, Paper } from "@mui/material";
 import { Warning, DirectionsCar } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable, { ReportColumn } from "@/app/components/organisms/ReportTable/ReportTable";
 import SafetyIcon from "@mui/icons-material/Shield";
 import Visibility from "@mui/icons-material/Visibility";
 import WorkforceIcon from "@mui/icons-material/People";
@@ -27,13 +27,26 @@ interface ReportFilter {
   options?: string[];
 }
 
-const reportColumns = [
-  { id: "useCaseType", label: "Use Case Type", minWidth: 120 },
-  { id: "detectionTime", label: "Timestamp", minWidth: 80 },
+interface AlertData {
+  id: string;
+  useCaseType: string;
+  time: string;
+ 
+  zone: string;
+  camera: string;
+  snapshot: string;
+}
+
+const reportColumns: ReportColumn<AlertData>[] = [
+  { id: "id", label: "ID", minWidth: 50 },
+  { id: "useCaseType", label: "Use Case Type", minWidth: 150 },
+  { id: "time", label: "Timestamp", minWidth: 120 },
+
   { id: "zone", label: "Zone", minWidth: 120 },
   { id: "camera", label: "Camera", minWidth: 120 },
-  // { id: "violationType", label: "Violation Type", minWidth: 150 },
+  { id: "snapshot", label: "Snapshot", minWidth: 150 },
 ];
+
 
 const reportFilters: ReportFilter[] = [
   {
@@ -82,8 +95,8 @@ const reportFilters: ReportFilter[] = [
       "Camera-09",
     ],
   },
-  { id: "startDate", label: "Start Date", type: "date" },
-  { id: "endDate", label: "End Date", type: "date" },
+  { id: "time", label: "Start Date", type: "date" },
+  { id: "time", label: "End Date", type: "date" },
 ];
 
 // 🔹 Dummy data
@@ -91,7 +104,7 @@ const sampleData = [
   {
     id: "SC-001",
     useCaseType: "PPE Detection",
-    detectionTime: "2025-09-24 08:15",
+    time: "2025-09-24 08:15",
     severity: "High",
     status: "Pending",
     zone: "Zone A",
@@ -101,7 +114,7 @@ const sampleData = [
   {
     id: "SC-002",
     useCaseType: "Object Detection",
-    detectionTime: "2025-09-24 09:20",
+    time: "2025-09-24 09:20",
     severity: "Medium",
     status: "Resolved",
     zone: "Walking Bay 3",
@@ -111,7 +124,7 @@ const sampleData = [
   {
     id: "SC-003",
     useCaseType: "Fire/Smoke/Oil/Gas",
-    detectionTime: "2025-09-24 10:05",
+    time: "2025-09-24 10:05",
     severity: "High",
     status: "Pending",
     zone: "Zone C",
@@ -121,7 +134,7 @@ const sampleData = [
   {
     id: "SC-004",
     useCaseType: "Vehicle Speed Monitoring",
-    detectionTime: "2025-09-24 10:45",
+    time: "2025-09-24 10:45",
     severity: "Low",
     status: "Resolved",
     zone: "Entry Gate 2",
@@ -131,7 +144,7 @@ const sampleData = [
   {
     id: "SC-005",
     useCaseType: "Fall Detection",
-    detectionTime: "2025-09-24 11:30",
+    time: "2025-09-24 11:30",
     severity: "High",
     status: "Pending",
     zone: "Zone B",
@@ -141,7 +154,7 @@ const sampleData = [
   {
     id: "SC-006",
     useCaseType: "STP/ETP Overflow Detection",
-    detectionTime: "2025-09-24 12:15",
+    time: "2025-09-24 12:15",
     severity: "Medium",
     status: "In Progress",
     zone: "STP Area",
@@ -151,7 +164,7 @@ const sampleData = [
   {
     id: "SC-007",
     useCaseType: "Emergency Exit Blockage",
-    detectionTime: "2025-09-24 12:50",
+    time: "2025-09-24 12:50",
     severity: "High",
     status: "Pending",
     zone: "Exit Zone 1",
@@ -161,7 +174,7 @@ const sampleData = [
   {
     id: "SC-008",
     useCaseType: "Crowd Gathering",
-    detectionTime: "2025-09-24 13:20",
+    time: "2025-09-24 13:20",
     severity: "High",
     status: "In Progress",
     zone: "Hazard Zone 4",
@@ -304,11 +317,11 @@ const SystemAlerts: React.FC = () => {
                   alignItems: "center",
                 },
                 "&:hover": {
-                  backgroundColor: "#f5f5f5", // light grey background
-                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)", // subtle shadow
-                  borderRadius: "8px", // optional rounded corners
+                  backgroundColor: "#f5f5f5", 
+                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)", 
+                  borderRadius: "8px", 
                 },
-                transition: "all 0.2s ease-in-out", // smooth hover
+                transition: "all 0.2s ease-in-out",
                 boxShadow:
                   tabIndex === i ? "none" : "0 3px 8px rgba(0,0,0,0.15)",
               }}
