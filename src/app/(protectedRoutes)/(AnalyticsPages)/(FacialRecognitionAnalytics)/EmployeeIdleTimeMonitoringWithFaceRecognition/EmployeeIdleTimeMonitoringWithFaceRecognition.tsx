@@ -155,7 +155,10 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           {KpiCardLoading
             ? // Show skeletons while loading
               skeletonKeys.map((index) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index}>
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
                   <KpiCardSkeleton />
                 </Grid>
               ))
@@ -163,7 +166,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
               EmpIdleTimeKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <KpiCard {...kpi} />
                 </Grid>

@@ -5,7 +5,7 @@ import Alert from "@mui/material/Alert";
 import { hideToast } from "./toasterSlice";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
-
+import { v4 as uuidv4 } from "uuid";
 export default function Toaster() {
   const dispatch = useDispatch();
   const toasts = useSelector((state: RootState) => state.toasterGlobal.toasts);
@@ -50,9 +50,9 @@ export default function Toaster() {
         zIndex: 1400,
       }}
     >
-      {toasts.map((toast) => (
+      {toasts.map((toast, index) => (
         <Alert
-          key={toast.id}
+          key={uuidv4() + index}
           severity={toast.severity}
           variant="filled"
           sx={{

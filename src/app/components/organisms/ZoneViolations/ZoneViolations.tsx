@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import { SvgIconComponent } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 // Define typing for zone data
 export interface ZoneViolationsdata {
   zone: string;
@@ -100,7 +100,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
 
             return (
               <Box
-                key={index + 1}
+                key={uuidv4() + index}
                 sx={{
                   display: "flex",
                   flexDirection: "column",
@@ -149,7 +149,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                           const IconComponent = zone.icons?.[key];
 
                           return (
-                            <React.Fragment key={key}>
+                            <React.Fragment key={uuidv4() + i}>
                               <Box
                                 sx={{
                                   display: "flex",

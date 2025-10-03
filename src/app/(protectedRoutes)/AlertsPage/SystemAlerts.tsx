@@ -9,7 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import WorkforceIcon from "@mui/icons-material/People";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import { v4 as uuidv4 } from "uuid";
 // 🔹 Types
 interface FilterParams {
   status?: string;
@@ -178,9 +178,9 @@ const SystemAlerts: React.FC = () => {
 
       {/* Alert Statistics */}
       <Grid container spacing={2} sx={{ mb: 6 }}>
-        {alertStats.map((stat) => (
+        {alertStats.map((stat, index) => (
           <Grid
-            key={stat.label}
+            key={uuidv4() + index}
             size={{ xs: 12, sm: 6, md: 2 }}
             sx={{ display: "flex" }}
           >
@@ -210,7 +210,7 @@ const SystemAlerts: React.FC = () => {
         >
           {alertTables.map((t, i) => (
             <Tab
-              key={t.key}
+              key={uuidv4() + i}
               label={t.label}
               icon={t.icon}
               iconPosition="start"
@@ -244,7 +244,7 @@ const SystemAlerts: React.FC = () => {
           (t, i) =>
             tabIndex === i && (
               <ReportTable
-                key={t.key}
+                key={uuidv4() + i}
                 title={t.label}
                 columns={[
                   { id: "useCaseType", label: "Use Case Type", minWidth: 120 },

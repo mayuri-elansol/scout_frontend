@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import LiveMetricCard from "../../molecules/LiveMetricCard/LiveMetricCard";
-
+import { v4 as uuidv4 } from "uuid";
 export interface LiveMetric {
   value: string;
   label: string;
@@ -26,7 +26,7 @@ const LiveMetricsGrid: React.FC<LiveMetricsGridProps> = ({
   return (
     <Grid container spacing={spacing} sx={sx}>
       {metrics.map((metric, index) => (
-        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index + 1}>
+        <Grid size={{ xs: 12, sm: 6, md: 3 }} key={uuidv4() + index}>
           <LiveMetricCard
             value={metric.value}
             label={metric.label}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   Grid,
   Card,
@@ -106,7 +107,7 @@ export default function RecentViolations({
               {Array.from(new Array(4)).map((_, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <Card sx={{ p: 2 }}>
                     <Skeleton width="70%" />
@@ -121,7 +122,7 @@ export default function RecentViolations({
               {violations.map((violation, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 4, xl: 3 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                   sx={{ display: "flex" }}
                 >
                   {/* Pass click handler */}

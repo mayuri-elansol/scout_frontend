@@ -1,6 +1,6 @@
 "use client";
 import React, { ReactNode, useState } from "react";
-
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Card,
@@ -307,8 +307,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                   </Box>
 
                   <Grid container spacing={{ xs: 2, md: 3 }}>
-                    {features.map((feature) => (
-                      <Grid size={{ xs: 12, md: 6 }} key={feature.title}>
+                    {features.map((feature, index) => (
+                      <Grid size={{ xs: 12, md: 6 }} key={uuidv4() + index}>
                         <FeatureCard
                           icon={feature.icon}
                           title={feature.title}

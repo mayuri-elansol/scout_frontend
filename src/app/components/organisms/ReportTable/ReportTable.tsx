@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-
+import { v4 as uuidv4 } from "uuid";
 /** Filter Types */
 type FilterType = "text" | "select" | "date";
 
@@ -186,7 +186,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     const commonProps = {
       label: filter.label,
       fullWidth: true,
-      value: filterValues[filter.id]?? "",
+      value: filterValues[filter.id] ?? "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         handleFilterChange(filter.id, e.target.value),
       sx: { minWidth: 150 },
@@ -197,8 +197,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       return (
         <TextField {...commonProps} select>
           <MenuItem value="">All</MenuItem>
-          {filter.options?.map((opt) => (
-            <MenuItem key={opt.toString()} value={opt.toString()}>
+          {filter.options?.map((opt, index) => (
+            <MenuItem key={uuidv4() + index} value={opt.toString()}>
               {opt.toString()}
             </MenuItem>
           ))}
@@ -220,8 +220,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   if (loading) {
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
-        {columns.map((col) => (
-          <TableCell key={col.id.toString()}>
+        {columns.map((col, index) => (
+          <TableCell key={uuidv4() + index}>
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
@@ -232,9 +232,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     ));
   } else if (filteredData.length > 0) {
     tableRows = filteredData.map((row, index) => (
-      <TableRow key={index + 1}>
-        {columns.map((column) => (
-          <TableCell key={column.id.toString()} align={column.align ?? "left"}>
+      <TableRow key={uuidv4() + index}>
+        {columns.map((column, index) => (
+          <TableCell key={uuidv4() + index} align={column.align ?? "left"}>
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
@@ -293,7 +293,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
           </Box>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 2 }}>
             {filters.map((filter, index) => (
-              <Box key={index + 1} sx={{ flex: "1 1 150px" }}>
+              <Box key={uuidv4() + index} sx={{ flex: "1 1 150px" }}>
                 {renderFilter(filter)}
               </Box>
             ))}
@@ -354,7 +354,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               <TableRow sx={{ backgroundColor: "#ffffff" }}>
                 {columns.map((column, indx) => (
                   <TableCell
-                    key={indx + 1}
+                    key={uuidv4() + indx}
                     align={column.align ?? "left"}
                     sx={{
                       minWidth: column.minWidth,

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import CameraStatus from "./CameraStatus";
-
+import { v4 as uuidv4 } from "uuid";
 const meta: Meta<typeof CameraStatus> = {
   title: "Components/Organisms/CameraStatus",
   component: CameraStatus,
@@ -171,7 +171,7 @@ export const CriticalStatus: Story = {
 
               return (
                 <Box
-                  key={index + 1}
+                  key={index + uuidv4()}
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -293,7 +293,7 @@ export const AllOperational: Story = {
               },
             ].map((zone, index) => (
               <Box
-                key={index + 1}
+                key={uuidv4() + index}
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",

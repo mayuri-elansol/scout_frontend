@@ -1,7 +1,6 @@
-
-
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   AppBar,
   Toolbar,
@@ -77,7 +76,7 @@ const SystemHealthTooltipContent: React.FC<{
       >
         {systemHealth.message.slice(0, 8).map((msg, idx) => (
           <Typography
-            key={idx + 1}
+            key={uuidv4() + idx}
             variant="body2"
             sx={{
               color: "#374151",
@@ -127,7 +126,9 @@ const Header: React.FC = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(null);
+  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(
+    null
+  );
   const [openHealth, setOpenHealth] = useState(false);
   const healthTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -168,7 +169,6 @@ const Header: React.FC = () => {
     ],
     lastChecked: new Date().toLocaleTimeString(),
   });
-
 
   // Get current page title
   const getPageTitle = () => {
@@ -253,7 +253,7 @@ const Header: React.FC = () => {
           backgroundColor: "white",
           color: "#1c2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)", 
+          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)",
 
           ml: { xs: 0, lg: "315px" },
           width: { xs: "100%", lg: "calc(100% - 316px)" },
@@ -270,7 +270,7 @@ const Header: React.FC = () => {
             >
               <MenuIcon />
             </IconButton>
-            
+
             <Typography
               variant="h6"
               sx={{

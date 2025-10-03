@@ -158,19 +158,19 @@ const CameraTampering: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-              skeletonKeys.map((key, index) => (
+              skeletonKeys.map((index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <KpiCardSkeleton />
                 </Grid>
               ))
             : // Show actual KPI cards
-              CameraTamperingKpiData.map((kpi) => (
+              CameraTamperingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={kpi.title}
+                  key={uuidv4() + index}
                 >
                   <KpiCard {...kpi} />
                 </Grid>

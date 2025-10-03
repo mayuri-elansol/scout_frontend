@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@mui/material";
 import ActivityFeed from "./ActivityFeed";
-
+import { v4 as uuidv4 } from "uuid";
 const meta: Meta<typeof ActivityFeed> = {
   title: "Components/Organisms/ActivityFeed",
   component: ActivityFeed,
@@ -171,7 +171,7 @@ export const HighActivity: Story = {
               },
             ].map((activity, index) => (
               <Box
-                key={index + 1}
+                key={uuidv4() + index}
                 sx={{
                   display: "flex",
                   alignItems: "flex-start",

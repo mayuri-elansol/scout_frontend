@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-
+import { v4 as uuidv4 } from "uuid";
 export interface ZoneMetric {
   value: string | number;
   label: string;
@@ -35,7 +35,7 @@ const ZoneMetricsPanel: React.FC<ZoneMetricsPanelProps> = ({
       }}
     >
       {metrics.map((metric, index) => (
-        <Box key={index + 1} sx={{ textAlign: "center" }}>
+        <Box key={uuidv4() + index} sx={{ textAlign: "center" }}>
           <Typography
             sx={{
               fontSize: "18px",
