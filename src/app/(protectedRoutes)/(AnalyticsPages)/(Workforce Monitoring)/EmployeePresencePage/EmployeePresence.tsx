@@ -32,7 +32,7 @@ const EmployeePresence: React.FC = () => {
 
   const activePersonnel = [
     {
-      title: "John Mitchell - Level 3 Operator",
+      Voilation: "John Mitchell - Level 3 Operator",
       zone: "Reactor Control Room",
       time: "Day Shift",
       Id: "EMP-4521",
@@ -42,7 +42,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=11",
     },
     {
-      title: "Sarah Chen - Senior Technician",
+      Voilation: "Sarah Chen - Senior Technician",
       zone: "Chemical Processing Unit",
       time: "Day Shift",
       Id: "EMP-3847",
@@ -52,7 +52,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=12",
     },
     {
-      title: "Michael Torres - Safety Coordinator",
+      Voilation: "Michael Torres - Safety Coordinator",
       zone: "Emergency Response Station",
       time: "Day Shift",
       Id: "EMP-5623",
@@ -62,7 +62,7 @@ const EmployeePresence: React.FC = () => {
       imageUrl: "https://picsum.photos/1200/600?random=13",
     },
     {
-      title: "Lisa Anderson - Lab Supervisor",
+      Voilation: "Lisa Anderson - Lab Supervisor",
       zone: "Quality Control Lab",
       time: "Day Shift",
       Id: "EMP-7891",
@@ -123,9 +123,8 @@ const EmployeePresence: React.FC = () => {
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
-                📊
+                📊 Overview
               </Box>
-              Overview
             </Typography>
           </Box>
 
@@ -163,6 +162,7 @@ const EmployeePresence: React.FC = () => {
               label="Recent Violations"
               violations={activePersonnel}
               loading={false}
+              tooltipMessage="recent volaitons"
             />
           </Grid>
           {/* Critical Zones Status */}
@@ -314,11 +314,12 @@ const EmployeePresence: React.FC = () => {
             type: "select",
             options: ["Critical", "High", "Medium"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "timestamp", label: "Start Date", type: "date" },
+          { id: "timestamp", label: "End Date", type: "date" },
         ]}
         downloadFileName="employee-presence-report"
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );
