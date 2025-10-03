@@ -19,7 +19,6 @@ import {
 import { Badge, Security } from "@mui/icons-material";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import Appbar from "@/app/components/organisms/AppBar/AppBar";
-import SecurityIcon from '@mui/icons-material/Security';
 
 // Mock data for demonstration
 const mockUseCases = [

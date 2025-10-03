@@ -1,10 +1,8 @@
-// SettingTable.stories.tsx
-import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
-import SettingTable from "./SettingTable";
+import type { Meta, StoryObj } from "@storybook/react-vite"; 
+import SettingTable, { User } from "./SettingTable";
 
 // Sample user data
-const sampleUsers = [
+const sampleUsers: User[] = [
   {
     name: "John Doe",
     email: "john@example.com",

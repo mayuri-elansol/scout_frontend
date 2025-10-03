@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite"; 
 import ZoneViolations, { ZoneViolationsdata } from "./ZoneViolations";
 
 import AlarmIcon from "@mui/icons-material/Alarm";

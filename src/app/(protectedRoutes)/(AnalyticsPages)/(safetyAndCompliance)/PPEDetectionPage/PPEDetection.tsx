@@ -230,21 +230,6 @@ const PPEDetection: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      {/* <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-      
-          <Appbar
-            title={
-              <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
-                <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
-                <span>Personal Protective Equipment (PPE) Detection</span>
-              </Box>
-            }
-          />
-        </Box>
-      </Box> */}
-
       {/* KPI Cards */}
       <Paper sx={{ p: 3, mb: 0, backgroundColor: "#ffffff", borderRadius: 2 }}>
         <Box

@@ -3,7 +3,6 @@
 // src/config/menuConfig.ts
 import { PageType } from "../types/index";
 import {
-  Home,
   Shield,
   Visibility,
   People,
@@ -19,10 +18,8 @@ import PeopleIcon from "@mui/icons-material/People"; // For User Management
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import GridViewIcon from "@mui/icons-material/GridView";
+
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
-import AssessmentIcon from "@mui/icons-material/Assessment";
 export interface MenuItemConfig {
   path: string;
   name: string;

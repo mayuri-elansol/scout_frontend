@@ -5,8 +5,16 @@ import { Box, Typography, Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import SettingTable from "@/app/components/organisms/SettingTable/SettingTable";
 
-const UserOverview = () => {
-  const [users, setUsers] = useState<any[]>([
+// Define the user type
+interface User {
+  name: string;
+  email: string;
+  phone: string;
+  role: "Organisation Admin" | "Site Manager" | "Department Head" | "Team Lead" | "Employee";
+}
+
+const UserOverview: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([
     { name: "Prachi", email: "prachi@test.com", phone: "1234567890", role: "Employee" },
     { name: "Admin", email: "admin@test.com", phone: "9876543210", role: "Organisation Admin" },
   ]);
@@ -15,6 +23,8 @@ const UserOverview = () => {
 
   const handleEdit = (index: number) => {
     const user = users[index];
+      console.log(user)
+
     router.push(`/EditUser`);
   };
 
@@ -24,8 +34,6 @@ const UserOverview = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-   
-
       {users.length > 0 ? (
         <SettingTable users={users} onEdit={handleEdit} onDelete={handleDelete} />
       ) : (
