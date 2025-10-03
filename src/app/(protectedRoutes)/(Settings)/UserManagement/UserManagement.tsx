@@ -267,7 +267,7 @@ const UserManagement: React.FC = () => {
                     <Typography variant="subtitle1">Upload Profile Picture</Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Avatar src={imagePreview || ""} sx={{ width: 100, height: 100 }} />
+<Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} />
                     <Button variant="outlined" component="label" startIcon={<CloudUpload />}>
                         Upload<input type="file" hidden accept="image/*" onChange={handleImageUpload} />
                     </Button>

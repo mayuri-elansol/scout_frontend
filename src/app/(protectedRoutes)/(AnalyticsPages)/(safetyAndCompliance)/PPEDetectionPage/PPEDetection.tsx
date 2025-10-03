@@ -149,7 +149,7 @@ const PPEDetection: React.FC = () => {
     if (item.glasses === false) titleParts.push("Safety glasses missing");
 
     return {
-      Voilation: titleParts.join(", ") || "No violation",
+      Voilation: titleParts.join(", ") ?? "No violation",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,

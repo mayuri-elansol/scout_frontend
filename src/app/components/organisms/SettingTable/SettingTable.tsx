@@ -67,7 +67,7 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
                             {users.map((user, index) => (
                                 <TableRow key={index+1}>
                                     <TableCell>
-                                        <Avatar src={user.profileImage || ""} sx={{
+                                        <Avatar src={user.profileImage ?? ""} sx={{
                                             '& img': {
                                                 objectFit: 'contain',
                                             },
@@ -77,8 +77,8 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell>{user.phone}</TableCell>
                                     <TableCell>{user.role}</TableCell>
-                                    <TableCell>{user.site || "-"}</TableCell>
-                                    <TableCell>{user.department || "-"}</TableCell>
+                                    <TableCell>{user.site ?? "-"}</TableCell>
+                                    <TableCell>{user.department ?? "-"}</TableCell>
                                     <TableCell align="center">
                                         <IconButton color="primary" onClick={() => onEdit(index)}>
                                             <Edit />

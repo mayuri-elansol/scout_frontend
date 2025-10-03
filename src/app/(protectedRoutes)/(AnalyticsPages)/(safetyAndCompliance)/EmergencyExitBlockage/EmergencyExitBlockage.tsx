@@ -109,7 +109,7 @@ const EmergencyExitBlockage: React.FC = () => {
       if (item.blockage === true) titleParts.push("Emergency exit blocked");
 
       return {
-        Voilation: titleParts.join(", ") || "No violation",
+        Voilation: titleParts.join(", ") ?? "No violation",
         zone: item.zone,
         time: item.createdAt,
         imageUrl: item.snapshot,

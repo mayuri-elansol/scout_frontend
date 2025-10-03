@@ -182,7 +182,7 @@ const Header: React.FC = () => {
       (item) => item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    return currentItem?.name || "Dashboard";
+    return currentItem?.name ?? "Dashboard";
   };
 
   useEffect(() => {

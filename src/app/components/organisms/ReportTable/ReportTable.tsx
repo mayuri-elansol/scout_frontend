@@ -186,7 +186,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     const commonProps = {
       label: filter.label,
       fullWidth: true,
-      value: filterValues[filter.id] || "",
+      value: filterValues[filter.id]?? "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
         handleFilterChange(filter.id, e.target.value),
       sx: { minWidth: 150 },
@@ -234,7 +234,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     tableRows = filteredData.map((row, index) => (
       <TableRow key={index + 1}>
         {columns.map((column) => (
-          <TableCell key={column.id.toString()} align={column.align || "left"}>
+          <TableCell key={column.id.toString()} align={column.align ?? "left"}>
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
@@ -355,7 +355,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 {columns.map((column, indx) => (
                   <TableCell
                     key={indx + 1}
-                    align={column.align || "left"}
+                    align={column.align ?? "left"}
                     sx={{
                       minWidth: column.minWidth,
                       fontWeight: 600,

@@ -5,7 +5,7 @@ import languageReducer from "./languageSlice";
 
 export const store = configureStore({
   reducer: {
-    toasterGlobal: toasterReducer, // ✅ correct key
+    toasterGlobal: toasterReducer, 
     featureFlags: featureFlagsReducer,
     language: languageReducer,
   },
