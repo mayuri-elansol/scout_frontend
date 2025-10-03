@@ -232,14 +232,14 @@ const PPEDetection: React.FC = () => {
           >
             Personal Protective Equipment (PPE) Detection
           </Typography> */}
-<Appbar 
-  title={
-    <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
-      <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
-      <span>Personal Protective Equipment (PPE) Detection</span>
-    </Box>
-  }
-/>
+          <Appbar
+            title={
+              <Box sx={{ display: "flex", alignItems: "left", gap: 1 }}>
+                <EngineeringIcon sx={{ fontSize: 30, color: "#1976d2" }} />
+                <span>Personal Protective Equipment (PPE) Detection</span>
+              </Box>
+            }
+          />
         </Box>
       </Box>
 
@@ -268,23 +268,23 @@ const PPEDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-              skeletonKeys.map((index) => (
-                <Grid
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
-                >
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
             : // Show actual KPI cards
-              ppeKpiData.map((kpi, index) => (
-                <Grid
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
-                >
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
+            ppeKpiData.map((kpi, index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={index + 1}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
         </Grid>
 
         {/* Content Grid */}

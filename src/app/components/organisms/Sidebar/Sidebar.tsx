@@ -15,6 +15,7 @@ import {
   Typography,
   Chip,
   useTheme,
+  Divider,
 } from "@mui/material";
 import { BarChart, ExpandLess, ExpandMore, Settings } from "@mui/icons-material";
 import {
@@ -372,10 +373,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleSettingsToggle}
-                // selected={
-                //   isSettingsActive &&
-                //   !Object.values(openCategories).some(Boolean)
-                // }
+
                 sx={{
                   borderRadius: 1,
                   "&.Mui-selected": {
@@ -433,12 +431,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
       handleAnalyticsToggle,
       handleSettingsToggle,
       handleCategoryToggle,
-        isAnalyticsActive, 
-    isSettingsActive,  
+      isAnalyticsActive,
+      isSettingsActive,
     ]
   );
 
   return (
+
     <Drawer
       variant="permanent"
       sx={{
@@ -447,8 +446,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          mt: "64px",
-          height: "calc(100vh - 64px)",
+          height: "100vh",
           borderRight: "none",
           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
           p: 2,
@@ -458,6 +456,32 @@ const Sidebar: React.FC<SidebarProps> = () => {
         },
       }}
     >
+      {/* Customer Logo at top */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 1.2,
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            fontWeight: 700,
+            letterSpacing: 1,
+          }}
+        >
+          CUSTOMER LOGO
+
+
+
+        </Typography>
+      </Box>
+
+      {/* Divider */}
+      <Divider sx={{ mx: -2,mb:1.5 }} /> 
+
       {/* Menu Content */}
       <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
 
@@ -476,7 +500,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           component="img"
           src="/scoutLogo.png"
           alt="Elansol Logo"
-          sx={{ height: 50, width: "auto" }}
+          sx={{ height: 40, width: "auto" }}
           loading="lazy"
         />
         <Typography sx={{ fontSize: "13px", color: "#666" }}>
@@ -485,6 +509,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </Typography>
       </Box>
     </Drawer>
+
   );
 };
 

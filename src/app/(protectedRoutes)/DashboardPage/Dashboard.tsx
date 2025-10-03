@@ -94,18 +94,11 @@ const Dashboard: React.FC = () => {
   sx={{
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "end",
     flexWrap: "wrap",
     mb: 3,
   }}
 >
-  {/* Left: Home icon + Title */}
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: { xs: 1, sm: 0 } }}>
-    <Home sx={{ fontSize: 32, color: "#1976d2" }} />
-    <Typography variant="h4" fontWeight="bold" color="#111827">
-      Safety & Operations Monitoring Dashboard
-    </Typography>
-  </Box>
 
   {/* Right: Time Filter */}
   <TimeFilter />
