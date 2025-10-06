@@ -303,7 +303,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         filters={[
           {
             id: "Voilation",
-            label: "incident",
+            label: "Incident",
             type: "select",
             options: ["Fire detected", "Smoke detected", "Gas detected"],
           },

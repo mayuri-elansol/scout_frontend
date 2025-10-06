@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -23,6 +23,7 @@ import {
 import { Description, Visibility, Download } from "@mui/icons-material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import { v4 as uuidv4 } from "uuid";
+
 /** Filter Types */
 type FilterType = "text" | "select" | "date";
 
@@ -33,7 +34,9 @@ export interface ReportColumn<T> {
   minWidth?: number;
   align?: "left" | "right" | "center";
 }
+
 export type FilterOption = string | number | boolean;
+
 /** Filter definition for a given row type T */
 export interface ReportFilter<T> {
   id: keyof T;
@@ -83,20 +86,27 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  // Check if any filter has a value
+  const hasActiveFilters = useMemo(() => {
+    return Object.values(filterValues).some(
+      (value) => value !== "" && value !== undefined
+    );
+  }, [filterValues]);
+
   const handleFilterChange = (id: keyof T, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  const applyFilters = (row: T) =>
-    Object.entries(filterValues).every(([key, value]) =>
-      !value
-        ? true
-        : String(row[key as keyof T])
-            .toLowerCase()
-            .includes(value.toLowerCase())
-    );
+  const handleSubmit = () => {
+    setPage(0); // Reset to first page when submitting
+    onSubmit?.(filterValues);
+  };
 
-  const filteredData = data.filter(applyFilters);
+  const handleReset = () => {
+    setFilterValues({} as Record<keyof T, string>);
+    setPage(0); // Reset to first page when resetting
+    onReset?.();
+  };
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -176,7 +186,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const handleDownloadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => setAnchorEl(null);
+
   const handleExportClick = (format: "csv" | "pdf") => {
     onExport?.(format, filterValues);
     handleClose();
@@ -230,8 +242,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         </TableCell>
       </TableRow>
     ));
-  } else if (filteredData.length > 0) {
-    tableRows = filteredData.map((row, index) => (
+  } else if (data.length > 0) {
+    tableRows = data.map((row, index) => (
       <TableRow key={uuidv4() + index}>
         {columns.map((column, index) => (
           <TableCell key={uuidv4() + index} align={column.align ?? "left"}>
@@ -309,8 +321,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => onSubmit?.(filterValues)}
-                disabled={isSubmitDisabled}
+                onClick={handleSubmit}
+                disabled={!hasActiveFilters || isSubmitDisabled}
               >
                 Submit
               </Button>
@@ -337,10 +349,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 size="small"
                 variant="outlined"
                 color="primary"
-                onClick={() => {
-                  setFilterValues({} as Record<keyof T, string>);
-                  onReset?.();
-                }}
+                onClick={handleReset}
+                disabled={!hasActiveFilters}
               >
                 Reset
               </Button>
@@ -393,7 +403,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         {/* Pagination */}
         <TablePagination
           component="div"
-          count={tableRows.length}
+          count={data.length}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
