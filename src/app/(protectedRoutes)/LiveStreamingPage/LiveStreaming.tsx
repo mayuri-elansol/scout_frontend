@@ -1,21 +1,17 @@
 "use client";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
   Switch,
   FormControlLabel,
   Grid,
- 
   Chip,
   Paper,
 } from "@mui/material";
-import {
-  VideoCall,
- 
-} from "@mui/icons-material";
+import { VideoCall } from "@mui/icons-material";
 import { CameraFeed } from "./cameraFeed";
-
+import { v4 as uuidv4 } from "uuid";
 const LiveStreaming: React.FC = () => {
   const [aiProcessingEnabled, setAiProcessingEnabled] = useState(true);
   type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
@@ -126,8 +122,6 @@ const LiveStreaming: React.FC = () => {
     }));
   };
 
- 
-
   return (
     <Box>
       {/* Page Header */}
@@ -200,7 +194,7 @@ const LiveStreaming: React.FC = () => {
       {/* Top Metrics */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {topMetrics.map((metric, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index + 1}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={uuidv4() + index}>
             <Paper
               sx={{
                 p: 3,
@@ -229,20 +223,20 @@ const LiveStreaming: React.FC = () => {
       </Grid>
 
       {/* Camera Feeds Grid */}
-   
-<Grid container spacing={3}>
-  {cameraZones.map((zone) => (
-    <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={zone.id}>
-      <CameraFeed
-        zone={zone}
-        videoState={videoStates[zone.id]}
-        toggleVideo={toggleVideo}
-        toggleMute={toggleMute}
-        aiProcessingEnabled={aiProcessingEnabled}
-      />
-    </Grid>
-  ))}
-</Grid>
+
+      <Grid container spacing={3}>
+        {cameraZones.map((zone, index) => (
+          <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={uuidv4() + index}>
+            <CameraFeed
+              zone={zone}
+              videoState={videoStates[zone.id]}
+              toggleVideo={toggleVideo}
+              toggleMute={toggleMute}
+              aiProcessingEnabled={aiProcessingEnabled}
+            />
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };

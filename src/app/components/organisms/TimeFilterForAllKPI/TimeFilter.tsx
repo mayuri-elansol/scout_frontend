@@ -15,7 +15,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-
+import { v4 as uuidv4 } from "uuid";
 const TimeFilter: React.FC = () => {
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [customDialogOpen, setCustomDialogOpen] = useState(false);
@@ -104,9 +104,9 @@ const TimeFilter: React.FC = () => {
           transformOrigin={{ vertical: "top", horizontal: "right" }}
           slotProps={{ paper: { sx: { width: 300, maxHeight: 400, mt: 0.5 } } }}
         >
-          {timeFilters.map((range) => (
+          {timeFilters.map((range, index) => (
             <MenuItem
-              key={range}
+              key={uuidv4() + index}
               selected={selectedTimeRange === range}
               onClick={() => handleSelect(range)}
               sx={{

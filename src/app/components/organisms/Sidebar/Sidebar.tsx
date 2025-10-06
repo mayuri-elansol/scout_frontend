@@ -1,5 +1,5 @@
-
 "use client";
+import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -17,7 +17,12 @@ import {
   useTheme,
   Divider,
 } from "@mui/material";
-import { BarChart, ExpandLess, ExpandMore, Settings } from "@mui/icons-material";
+import {
+  BarChart,
+  ExpandLess,
+  ExpandMore,
+  Settings,
+} from "@mui/icons-material";
 import {
   dashboardMenu,
   alertMenu,
@@ -28,7 +33,7 @@ import {
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
-import theme from "../../../theme/theme"
+import theme from "../../../theme/theme";
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -80,7 +85,6 @@ const MenuItem = React.memo<{
 
 MenuItem.displayName = "MenuItem";
 
-
 const SubMenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
@@ -119,7 +123,9 @@ const SubMenuItem = React.memo<{
       )}
 
       <ListItemText
-        primary={categoryTitle === "Settings" ? `${item.name}` : `• ${item.name}`}
+        primary={
+          categoryTitle === "Settings" ? `${item.name}` : `• ${item.name}`
+        }
         slotProps={{
           primary: {
             sx: {
@@ -193,14 +199,13 @@ const CategorySection = React.memo<{
         unmountOnExit
       >
         <List sx={{ pl: 3 }}>
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, index) => (
             <SubMenuItem
-              key={item.path}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
               categoryTitle={category.title}
-
             />
           ))}
         </List>
@@ -291,9 +296,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
       <>
         {/* Dashboard */}
         <List sx={{ p: 0 }}>
-          {filteredMenus.dashboardFlags.map((item) => (
+          {filteredMenus.dashboardFlags.map((item, index) => (
             <MenuItem
-              key={item.name}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
@@ -340,9 +345,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
             <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
-                {filteredMenus.analyticsFlags.map((category) => (
+                {filteredMenus.analyticsFlags.map((category, index) => (
                   <CategorySection
-                    key={category.title}
+                    key={uuidv4() + index}
                     category={category}
                     openCategories={openCategories}
                     onToggle={handleCategoryToggle}
@@ -357,9 +362,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
         {/* Alerts */}
         <List sx={{ p: 0, mt: 1 }}>
-          {filteredMenus.alertFlags.map((item) => (
+          {filteredMenus.alertFlags.map((item, index) => (
             <MenuItem
-              key={item.name}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
@@ -373,7 +378,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleSettingsToggle}
-
                 sx={{
                   borderRadius: 1,
                   "&.Mui-selected": {
@@ -404,14 +408,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
                 {filteredMenus.settingsFlags.map((category) =>
-                  category.items.map((item) => (
+                  category.items.map((item, index) => (
                     <SubMenuItem
-                      key={item.path}
+                      key={uuidv4() + index}
                       item={item}
                       pathname={pathname}
                       theme={theme}
                       categoryTitle={category.title}
-
                     />
                   ))
                 )}
@@ -437,7 +440,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
   );
 
   return (
-
     <Drawer
       variant="permanent"
       sx={{
@@ -473,14 +475,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
           }}
         >
           CUSTOMER LOGO
-
-
-
         </Typography>
       </Box>
 
       {/* Divider */}
-      <Divider sx={{ mx: -2,mb:1.5 }} /> 
+      <Divider sx={{ mx: -2, mb: 1.5 }} />
 
       {/* Menu Content */}
       <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
@@ -509,7 +508,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
         </Typography>
       </Box>
     </Drawer>
-
   );
 };
 

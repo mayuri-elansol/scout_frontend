@@ -1,15 +1,11 @@
-
 "use client";
 
 import React from "react";
 import { PageType } from "@/app/types";
-import {
-  
-  analyticsMenu,
-} from "@/app/config/menuConfig";
+import { analyticsMenu } from "@/app/config/menuConfig";
 import { Box, Typography } from "@mui/material";
 import { ChevronRight } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 interface BreadcrumbProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -83,7 +79,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
       }}
     >
       {breadcrumbItems.map((item, index) => (
-        <React.Fragment key={index + 1}>
+        <React.Fragment key={uuidv4() + index}>
           {index > 0 && <ChevronRight sx={{ fontSize: 14 }} />}
           <Typography
             sx={{

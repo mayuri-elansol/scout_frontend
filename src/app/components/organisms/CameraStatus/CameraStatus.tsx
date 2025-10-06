@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ReportTable from "../../../components/organisms/ReportTable/ReportTable";
-
+import { v4 as uuidv4 } from "uuid";
 export interface CameraZone {
   zone: string;
   active?: number;
@@ -101,7 +101,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
               const hasBorder = index < lastIndex;
               return (
                 <Box
-                  key={index + 1}
+                  key={uuidv4() + index}
                   sx={{
                     display: "flex",
                     justifyContent: "space-between",

@@ -1,8 +1,7 @@
-
-
-'use client';
+"use client";
 
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
   Visibility,
@@ -42,15 +41,34 @@ interface UserFormValues {
   department: string;
 }
 
-const roles = ["Organisation Admin", "Site Manager", "Department Head", "Team Lead", "Employee"];
-const sites = ["Headquarters", "Mumbai Office", "Delhi Branch", "Bangalore Hub", "Remote Location"];
-const departments = ["Human Resources", "Information Technology", "Finance", "Operations", "Marketing", "Sales"];
+const roles = [
+  "Organisation Admin",
+  "Site Manager",
+  "Department Head",
+  "Team Lead",
+  "Employee",
+];
+const sites = [
+  "Headquarters",
+  "Mumbai Office",
+  "Delhi Branch",
+  "Bangalore Hub",
+  "Remote Location",
+];
+const departments = [
+  "Human Resources",
+  "Information Technology",
+  "Finance",
+  "Operations",
+  "Marketing",
+  "Sales",
+];
 
 const UserManagement: React.FC = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  console.log(profileImage)
+  console.log(profileImage);
   const [imagePreview, setImagePreview] = useState<string>("");
 
   const {
@@ -110,15 +128,17 @@ const UserManagement: React.FC = () => {
             rules={{ required: "Role is required" }}
             render={({ field }) => (
               <Select {...field} label="Role">
-                {roles.map((role) => (
-                  <MenuItem key={role} value={role}>
+                {roles.map((role, index) => (
+                  <MenuItem key={uuidv4() + index} value={role}>
                     {role}
                   </MenuItem>
                 ))}
               </Select>
             )}
           />
-          {errors.role && <Typography color="error">{errors.role.message}</Typography>}
+          {errors.role && (
+            <Typography color="error">{errors.role.message}</Typography>
+          )}
         </FormControl>
       </Box>
 
@@ -212,14 +232,19 @@ const UserManagement: React.FC = () => {
                 helperText={fieldState.error?.message}
                 fullWidth
                 required
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
                 }}
               />
             )}
@@ -242,15 +267,17 @@ const UserManagement: React.FC = () => {
               rules={{ required: "Site is required" }}
               render={({ field }) => (
                 <Select {...field} label="Site">
-                  {sites.map((site) => (
-                    <MenuItem key={site} value={site}>
+                  {sites.map((site, index) => (
+                    <MenuItem key={uuidv4() + index} value={site}>
                       {site}
                     </MenuItem>
                   ))}
                 </Select>
               )}
             />
-            {errors.site && <Typography color="error">{errors.site.message}</Typography>}
+            {errors.site && (
+              <Typography color="error">{errors.site.message}</Typography>
+            )}
           </FormControl>
 
           <FormControl fullWidth required margin="dense">
@@ -261,15 +288,17 @@ const UserManagement: React.FC = () => {
               rules={{ required: "Department is required" }}
               render={({ field }) => (
                 <Select {...field} label="Department">
-                  {departments.map((dept) => (
-                    <MenuItem key={dept} value={dept}>
+                  {departments.map((dept, index) => (
+                    <MenuItem key={uuidv4() + index} value={dept}>
                       {dept}
                     </MenuItem>
                   ))}
                 </Select>
               )}
             />
-            {errors.department && <Typography color="error">{errors.department.message}</Typography>}
+            {errors.department && (
+              <Typography color="error">{errors.department.message}</Typography>
+            )}
           </FormControl>
         </Box>
       </Box>
@@ -285,18 +314,41 @@ const UserManagement: React.FC = () => {
             src={imagePreview}
             sx={{ width: 100, height: 100, "& img": { objectFit: "contain" } }}
           />
-          <Button variant="outlined" component="label" startIcon={<CloudUpload />}>
-            Upload<input type="file" hidden accept="image/*" onChange={handleImageUpload} />
+          <Button
+            variant="outlined"
+            component="label"
+            startIcon={<CloudUpload />}
+          >
+            <span>Upload</span>
+
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              onChange={handleImageUpload}
+            />
           </Button>
         </Box>
       </Box>
 
       {/* Submit */}
-      <Box textAlign="center" mt={-2} sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
-        <Button variant="outlined" color="secondary" onClick={() => router.push("/UserOverview")}>
+      <Box
+        textAlign="center"
+        mt={-2}
+        sx={{ display: "flex", justifyContent: "center", gap: 2 }}
+      >
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => router.push("/UserOverview")}
+        >
           Back
         </Button>
-        <Button variant="contained" className={styles.submitButton} onClick={handleSubmit(onSubmit)}>
+        <Button
+          variant="contained"
+          className={styles.submitButton}
+          onClick={handleSubmit(onSubmit)}
+        >
           Submit
         </Button>
       </Box>

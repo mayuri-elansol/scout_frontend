@@ -10,7 +10,7 @@ import {
   People,
   DirectionsCar,
 } from "@mui/icons-material";
-
+import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
@@ -89,16 +89,15 @@ const Dashboard: React.FC = () => {
         pt: 2,
       }}
     >
-<Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "end",
-    flexWrap: "wrap",
-    mb: 3,
-  }}
->
-
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "end",
+          flexWrap: "wrap",
+          mb: 3,
+        }}
+      >
         {/* Right: Time Filter */}
         <TimeFilter />
       </Box>
@@ -106,7 +105,10 @@ const Dashboard: React.FC = () => {
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={index + 1}>
+          <Grid
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            key={uuidv4() + index}
+          >
             <KpiCard {...kpi} route="/PPEDetectionPage" />
           </Grid>
         ))}

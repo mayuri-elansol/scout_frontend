@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Box } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import KpiCard from "../../molecules/KpiCard/KpiCard";
-
+import { v4 as uuidv4 } from "uuid";
 interface KpiData {
   title: string;
   value: string;
@@ -51,7 +51,7 @@ const KpiGrid: React.FC<KpiGridProps> = ({
               lg: columns.lg,
               xl: columns.xl,
             }}
-            key={index + 1}
+            key={uuidv4() + index}
           >
             <KpiCard
               title={kpi.title}

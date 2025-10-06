@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Box, Typography, Grid, Tabs, Tab, Paper } from "@mui/material";
 import { Warning, DirectionsCar } from "@mui/icons-material";
 import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import ReportTable, { ReportColumn } from "@/app/components/organisms/ReportTable/ReportTable";
+import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import SafetyIcon from "@mui/icons-material/Shield";
 import Visibility from "@mui/icons-material/Visibility";
 import WorkforceIcon from "@mui/icons-material/People";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import { v4 as uuidv4 } from "uuid";
 // 🔹 Types
 interface FilterParams {
   status?: string;
@@ -17,37 +17,6 @@ interface FilterParams {
   startDate?: string;
   endDate?: string;
 }
-
-type FilterType = "text" | "select" | "date";
-
-interface ReportFilter {
-  id: string;
-  label: string;
-  type: FilterType;
-  options?: string[];
-}
-
-interface AlertData {
-  id: string;
-  useCaseType: string;
-  time: string;
- 
-  zone: string;
-  camera: string;
-  snapshot: string;
-}
-
-const reportColumns: ReportColumn<AlertData>[] = [
-  { id: "id", label: "ID", minWidth: 50 },
-  { id: "useCaseType", label: "Use Case Type", minWidth: 150 },
-  { id: "time", label: "Timestamp", minWidth: 120 },
-
-  { id: "zone", label: "Zone", minWidth: 120 },
-  { id: "camera", label: "Camera", minWidth: 120 },
-  { id: "snapshot", label: "Snapshot", minWidth: 150 },
-];
-
-
 
 const sampleData = [
   {
@@ -209,9 +178,9 @@ const SystemAlerts: React.FC = () => {
 
       {/* Alert Statistics */}
       <Grid container spacing={2} sx={{ mb: 6 }}>
-        {alertStats.map((stat) => (
+        {alertStats.map((stat, index) => (
           <Grid
-            key={stat.label}
+            key={uuidv4() + index}
             size={{ xs: 12, sm: 6, md: 2 }}
             sx={{ display: "flex" }}
           >
@@ -241,7 +210,7 @@ const SystemAlerts: React.FC = () => {
         >
           {alertTables.map((t, i) => (
             <Tab
-              key={t.key}
+              key={uuidv4() + i}
               label={t.label}
               icon={t.icon}
               iconPosition="start"
@@ -258,9 +227,9 @@ const SystemAlerts: React.FC = () => {
                   alignItems: "center",
                 },
                 "&:hover": {
-                  backgroundColor: "#f5f5f5", 
-                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)", 
-                  borderRadius: "8px", 
+                  backgroundColor: "#f5f5f5",
+                  boxShadow: "0 3px 2px rgba(0,0,0,0.15)",
+                  borderRadius: "8px",
                 },
                 transition: "all 0.2s ease-in-out",
                 boxShadow:
@@ -275,7 +244,7 @@ const SystemAlerts: React.FC = () => {
           (t, i) =>
             tabIndex === i && (
               <ReportTable
-                key={t.key}
+                key={uuidv4() + i}
                 title={t.label}
                 columns={[
                   { id: "useCaseType", label: "Use Case Type", minWidth: 120 },

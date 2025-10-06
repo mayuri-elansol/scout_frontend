@@ -195,7 +195,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
               skeletonKeys.map((index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <KpiCardSkeleton />
                 </Grid>
@@ -204,7 +204,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
               employeeRestrictedPresenceKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={index + 1}
+                  key={uuidv4() + index}
                 >
                   <KpiCard {...kpi} />
                 </Grid>
