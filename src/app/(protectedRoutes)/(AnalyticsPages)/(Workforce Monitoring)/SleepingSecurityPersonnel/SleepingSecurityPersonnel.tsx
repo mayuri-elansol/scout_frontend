@@ -13,6 +13,8 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import HotelIcon from "@mui/icons-material/Hotel";
 const SleepingSecurityPersonnel: React.FC = () => {
   interface SleepingSecurityViolation {
     Voilation: string;
@@ -118,12 +120,24 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Main Gate",
-      violations: 2,
+      violations: 3,
       alarms: 2,
       icons: {
         violations: ViolationsIcon,
         alarms: AlarmIcon,
       },
+      subViolations: [
+        {
+          label: "Sleeping",
+          value: 2,
+          icon: HotelIcon,
+        },
+        {
+          label: "Absence",
+          value: 1,
+          icon: PersonOffIcon,
+        },
+      ],
     },
     {
       zone: "Assembly Line A",
@@ -133,8 +147,21 @@ const SleepingSecurityPersonnel: React.FC = () => {
         violations: ViolationsIcon,
         alarms: AlarmIcon,
       },
+      subViolations: [
+        {
+          label: "Sleeping",
+          value: 1,
+          icon: HotelIcon,
+        },
+        {
+          label: "Absence",
+          value: 1,
+          icon: PersonOffIcon,
+        },
+      ],
     },
   ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;

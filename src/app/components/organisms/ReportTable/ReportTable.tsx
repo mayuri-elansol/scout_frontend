@@ -284,7 +284,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               </Typography>
             </Box>
             {tooltipMessage && (
-              <Tooltip title={tooltipMessage} arrow>
+              <Tooltip title={tooltipMessage} arrow placement="left">
                 <Box sx={{ cursor: "pointer", color: "#f44336" }}>
                   <InfoOutlineIcon />
                 </Box>

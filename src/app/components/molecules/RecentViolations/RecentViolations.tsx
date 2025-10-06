@@ -85,7 +85,7 @@ export default function RecentViolations({
           </Box>
 
           {tooltipMessage && (
-            <Tooltip title={tooltipMessage} arrow>
+            <Tooltip title={tooltipMessage} arrow placement="left">
               <Box
                 sx={{
                   display: "flex",

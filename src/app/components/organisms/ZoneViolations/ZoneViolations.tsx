@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
   Card,
@@ -6,12 +7,19 @@ import {
   Typography,
   Skeleton,
   Tooltip,
-  Divider,
+  Chip,
 } from "@mui/material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-import { SvgIconComponent } from "@mui/icons-material";
-import { v4 as uuidv4 } from "uuid";
-// Define typing for zone data
+import WarningIcon from "@mui/icons-material/Warning";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import { SvgIconComponent, Warning } from "@mui/icons-material";
+
+export interface SubViolation {
+  label: string;
+  value: number;
+  icon?: SvgIconComponent;
+}
+
 export interface ZoneViolationsdata {
   zone: string;
   violations?: number;
@@ -19,7 +27,13 @@ export interface ZoneViolationsdata {
   icons?: {
     [key: string]: SvgIconComponent;
   };
-  [key: string]: string | number | Record<string, SvgIconComponent> | undefined;
+  subViolations?: SubViolation[];
+  [key: string]:
+    | string
+    | number
+    | Record<string, SvgIconComponent>
+    | SubViolation[]
+    | undefined;
 }
 
 interface ZoneViolationsProps {
@@ -31,12 +45,11 @@ interface ZoneViolationsProps {
 
 const ZoneViolations: React.FC<ZoneViolationsProps> = ({
   violationsZone,
-  loading = true,
+  loading = false,
   maxHeight,
   tooltipMessage,
 }) => {
   const rows = loading ? Array.from(new Array(4)) : violationsZone;
-  const lastIndex = rows.length - 1;
 
   return (
     <Card
@@ -46,15 +59,22 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
         display: "flex",
         flexDirection: "column",
         borderRadius: 2,
-        boxShadow: "0px 1px 3px rgba(0,0,0,0.05)",
+        boxShadow: "0px 2px 8px rgba(0,0,0,0.08)",
         backgroundColor: "#fff",
       }}
     >
       <CardContent
         sx={{
-          p: 2,
+          p: { xs: 2, sm: 2.5 },
           flex: 1,
           overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#d0d0d0",
+            borderRadius: "3px",
+          },
         }}
       >
         {/* Header */}
@@ -63,21 +83,28 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 1,
+            mb: 2.5,
           }}
         >
-          <Typography
+          {/* <Typography
             variant="h6"
             sx={{
               fontWeight: 600,
               color: "#1c2025",
+              fontSize: { xs: "1.1rem", sm: "1.25rem" },
             }}
           >
             {loading ? <Skeleton width={180} /> : "Zone Violations"}
-          </Typography>
+          </Typography> */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Warning sx={{ fontSize: 20, color: "#f44336" }} />
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
+              Zone Violations
+            </Typography>
+          </Box>
 
           {!loading && tooltipMessage && (
-            <Tooltip title={tooltipMessage} arrow>
+            <Tooltip title={tooltipMessage} arrow placement="left">
               <Box
                 sx={{
                   display: "flex",
@@ -94,103 +121,237 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
         </Box>
 
         {/* Zone Data */}
-        <Box>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           {rows.map((zone, index) => {
-            const hasBorder = index < lastIndex;
-
             return (
               <Box
-                key={uuidv4() + index}
+                key={index + 1}
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-
-                  p: 1.5,
-                  borderBottom: hasBorder ? "1px solid #f0f0f0" : "none",
-
-                  boxShadow: "0px 1px 3px rgba(0,0,0,0.05)",
-                  border: "1px solid #f0f0f0",
+                  border: "1px solid #e8eaed",
                   borderRadius: 2,
-                  mt: 1,
+                  overflow: "hidden",
+                  backgroundColor: "#fafafa",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    boxShadow: "0px 3px 12px rgba(0,0,0,0.1)",
+                    borderColor: "#d0d0d0",
+                  },
                 }}
               >
                 {loading ? (
-                  <>
-                    <Skeleton width="40%" height={18} sx={{ mb: 0.5 }} />
-                    <Skeleton width="60%" height={14} />
-                  </>
+                  <Box sx={{ p: 2 }}>
+                    <Skeleton width="60%" height={24} sx={{ mb: 1 }} />
+                    <Skeleton width="80%" height={20} />
+                  </Box>
                 ) : (
                   <>
-                    {/* Zone Name */}
-                    {zone.zone && (
+                    {/* Zone Header */}
+                    <Box
+                      sx={{
+                        backgroundColor: "#fff",
+                        p: { xs: 1.5, sm: 2 },
+                        borderBottom: "1px solid #e8eaed",
+                      }}
+                    >
                       <Typography
                         sx={{
-                          fontWeight: 500,
-                          fontSize: "15px",
-                          mb: 1,
+                          fontWeight: 600,
+                          fontSize: "16px",
+                          color: "#1c2025",
+                          mb: 1.5,
                         }}
                       >
                         {zone.zone}
                       </Typography>
-                    )}
 
-                    {/* Inline key: value pairs with icons */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                        gap: 3,
-                      }}
-                    >
-                      {Object.keys(zone)
-                        .filter((key) => key !== "zone" && key !== "icons")
-                        .map((key, i, arr) => {
-                          const IconComponent = zone.icons?.[key];
-
-                          return (
-                            <React.Fragment key={uuidv4() + i}>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 1,
-                                }}
-                              >
-                                {/* Icon */}
-                                {IconComponent && (
+                      {/* Main Metrics  */}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: { xs: 1.5, sm: 2 },
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        {Object.keys(zone)
+                          .filter(
+                            (key) =>
+                              key !== "zone" &&
+                              key !== "icons" &&
+                              key !== "subViolations"
+                          )
+                          .map((key) => {
+                            const IconComponent =
+                              zone.icons?.[key] ||
+                              (key === "violations"
+                                ? WarningIcon
+                                : NotificationsActiveIcon);
+                            return (
+                              <Chip
+                                key={key}
+                                icon={
                                   <IconComponent
-                                    sx={{ fontSize: "20px", color: "#f44336" }}
+                                    sx={{
+                                      fontSize: "18px !important",
+                                      color: "#f44336 !important",
+                                    }}
                                   />
-                                )}
+                                }
+                                label={
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                      gap: 0.5,
+                                    }}
+                                  >
+                                    <Typography
+                                      sx={{
+                                        fontSize: {
+                                          xs: "0.8rem",
+                                          sm: "0.875rem",
+                                        },
+                                        color: "#5c6b7d",
+                                        fontWeight: 500,
+                                      }}
+                                    >
+                                      {key.charAt(0).toUpperCase() +
+                                        key.slice(1)}
+                                      :
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        fontSize: { xs: "0.9rem", sm: "1rem" },
+                                        fontWeight: 700,
+                                        color: "#f44336",
+                                      }}
+                                    >
+                                      {zone[key] as number}
+                                    </Typography>
+                                  </Box>
+                                }
+                                sx={{
+                                  backgroundColor: "#fff5f5",
+                                  border: "1px solid #ffcdd2",
+                                  height: { xs: "32px", sm: "36px" },
+                                  "& .MuiChip-label": {
+                                    px: 1.5,
+                                  },
+                                }}
+                              />
+                            );
+                          })}
+                      </Box>
+                    </Box>
 
-                                {/* Label */}
-                                <Typography
-                                  sx={{ fontSize: "14px", color: "#5c6b7d" }}
-                                >
-                                  {key.charAt(0).toUpperCase() + key.slice(1)}:
-                                </Typography>
+                    {/* Sub-Violations Section */}
+                    {zone.subViolations && zone.subViolations.length > 0 && (
+                      <Box
+                        sx={{
+                          p: { xs: 1.5, sm: 2 },
+                          backgroundColor: "#fafafa",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "0.8rem", sm: "0.85rem" },
+                            fontWeight: 600,
+                            color: "#5c6b7d",
+                            mb: 1.5,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.5px",
+                          }}
+                        >
+                          Violation Breakdown
+                        </Typography>
 
-                                {/* Value */}
-                                <Typography
+                        <Box
+                          sx={{
+                            display: "grid",
+                            gridTemplateColumns: {
+                              xs: "1fr",
+                              sm: "repeat(auto-fit, minmax(120px, 1fr))",
+                            },
+                            gap: { xs: 1, sm: 1.5 },
+                          }}
+                        >
+                          {zone.subViolations.map(
+                            (sub: SubViolation, idx: number) => {
+                              const SubIcon = sub.icon;
+                              return (
+                                <Box
+                                  key={idx + 1}
                                   sx={{
-                                    fontSize: "17px",
-                                    fontWeight: 600,
-                                    color: "#f44336",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                    backgroundColor: "#fff",
+                                    p: { xs: 1, sm: 1.25 },
+                                    borderRadius: 1.5,
+                                    border: "1px solid #e8eaed",
+                                    transition: "all 0.2s ease",
+                                    "&:hover": {
+                                      borderColor: "#ffcdd2",
+                                      backgroundColor: "#fff5f5",
+                                    },
                                   }}
                                 >
-                                  {zone[key]}
-                                </Typography>
-                              </Box>
+                                  {SubIcon && (
+                                    <SubIcon
+                                      sx={{
+                                        fontSize: { xs: "18px", sm: "20px" },
+                                        color: "#f44336",
+                                        flexShrink: 0,
+                                      }}
+                                    />
+                                  )}
 
-                              {/* Divider */}
-                              {i < arr.length - 1 && (
-                                <Divider orientation="vertical" flexItem />
-                              )}
-                            </React.Fragment>
-                          );
-                        })}
-                    </Box>
+                                  <Box
+                                    sx={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+                                      gap: 1,
+                                      // flexDirection: "column",
+                                      // minWidth: 0,
+                                      // flex: 1,
+                                    }}
+                                  >
+                                    <Typography
+                                      sx={{
+                                        fontSize: {
+                                          xs: "0.75rem",
+                                          sm: "0.8rem",
+                                        },
+                                        color: "#7a8593",
+                                        lineHeight: 1.2,
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                      }}
+                                    >
+                                      {sub.label} :
+                                    </Typography>
+                                    <Typography
+                                      sx={{
+                                        fontSize: {
+                                          xs: "1.1rem",
+                                          sm: "1.25rem",
+                                        },
+                                        fontWeight: 700,
+                                        color: "#f44336",
+                                        lineHeight: 1.2,
+                                      }}
+                                    >
+                                      {sub.value}
+                                    </Typography>
+                                  </Box>
+                                </Box>
+                              );
+                            }
+                          )}
+                        </Box>
+                      </Box>
+                    )}
                   </>
                 )}
               </Box>
