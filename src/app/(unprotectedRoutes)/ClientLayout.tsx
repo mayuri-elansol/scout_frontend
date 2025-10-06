@@ -28,14 +28,13 @@ interface FeatureCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
-  delay: number;
 }
 
 const FeatureCard: React.FC<FeatureCardProps> = ({
   icon,
   title,
   description,
-  delay
+  
 }) => {
   const [hovered, setHovered] = useState(false);
 
@@ -315,7 +314,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                           icon={feature.icon}
                           title={feature.title}
                           description={feature.description}
-                          delay={index * 150}
+                          // delay={index * 150}
                         />
                       </Grid>
                     ))}
