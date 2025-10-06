@@ -80,16 +80,16 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               pl: 4,
               pr: 4,
               pb: 4,
-              pt: 9,
+              pt: 10,
               backgroundColor: "#f5f7fa",
               width: "78vw",
             }}
           >
             <RouteLoader>
-              <Breadcrumb
+              {/* <Breadcrumb
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
-              />
+              /> */}
               {children}
             </RouteLoader>
           </Box>

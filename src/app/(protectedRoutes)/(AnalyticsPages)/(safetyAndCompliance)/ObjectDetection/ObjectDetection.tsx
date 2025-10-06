@@ -141,8 +141,8 @@ const ObjectDetection: React.FC = () => {
   return (
     <Box>
       {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+      {/* <Box sx={{ mb: 3 }}> */}
+        {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
           <WidgetsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
@@ -150,13 +150,13 @@ const ObjectDetection: React.FC = () => {
           >
             Object Detection in Walking Bays
           </Typography>
-        </Box>
-      </Box>
+        </Box> */}
+      {/* </Box> */}
 
       {/* KPI Cards */}
       <Paper
         sx={{
-          p: 3,
+          p: 2.2,
           mb: 4,
           backgroundColor: "#ffffff",
           borderRadius: 2,
