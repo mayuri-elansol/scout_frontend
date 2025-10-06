@@ -34,6 +34,7 @@ const PPEDetection: React.FC = () => {
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -341,11 +342,11 @@ const PPEDetection: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
-          { id: "time", label: "Time", minWidth: 120 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Cameras", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
+          { id: "Voilation", label: "Violation" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
         data={recentViolations}
         filters={[
@@ -393,19 +394,14 @@ const PPEDetection: React.FC = () => {
       />
 
       {/* View Alert Popup */}
-      {viewPopupData && (
-        <ViewAlertPopup
-          open={viewPopupOpen}
-          handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
-        />
-      )}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
+      />
     </Box>
   );
 };

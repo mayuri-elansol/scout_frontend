@@ -22,10 +22,14 @@ import {
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 
 /** Filter Types */
-type FilterType = "text" | "select" | "date";
+type FilterType = "text" | "select" | "date" | "datetime";
 
 /** Column definition for a given row type T */
 export interface ReportColumn<T> {
@@ -83,28 +87,70 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const [filterValues, setFilterValues] = useState<Record<keyof T, string>>(
     {} as Record<keyof T, string>
   );
+  const [dateTimeValues, setDateTimeValues] = useState<
+    Record<string, Dayjs | null>
+  >({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   // Check if any filter has a value
   const hasActiveFilters = useMemo(() => {
-    return Object.values(filterValues).some(
+    const hasTextFilters = Object.values(filterValues).some(
       (value) => value !== "" && value !== undefined
     );
-  }, [filterValues]);
+    const hasDateFilters = Object.values(dateTimeValues).some(
+      (value) => value !== null && value !== undefined
+    );
+    return hasTextFilters || hasDateFilters;
+  }, [filterValues, dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleDateTimeChange = (label: string, value: Dayjs | null) => {
+    setDateTimeValues((prev) => ({ ...prev, [label]: value }));
+  };
+
+  // Calculate min/max dates for start and end date with 3-month range
+  const getDateConstraints = (label: string) => {
+    const now = dayjs();
+    const threeMonthsAgo = now.subtract(3, "month");
+
+    if (label === "Start Date") {
+      const endDate = dateTimeValues["End Date"];
+      return {
+        minDate: threeMonthsAgo,
+        maxDate: endDate ?? now,
+      };
+    } else if (label === "End Date") {
+      const startDate = dateTimeValues["Start Date"];
+      return {
+        minDate: startDate ?? threeMonthsAgo,
+        maxDate: now,
+      };
+    }
+    return { minDate: threeMonthsAgo, maxDate: now };
+  };
+
   const handleSubmit = () => {
-    setPage(0); // Reset to first page when submitting
-    onSubmit?.(filterValues);
+    setPage(0);
+    // Combine regular filters with datetime filters
+    const combinedFilters = {
+      ...filterValues,
+      ...Object.fromEntries(
+        Object.entries(dateTimeValues)
+          .filter(([_, value]) => value !== null)
+          .map(([key, value]) => [key, value?.toISOString() || ""])
+      ),
+    };
+    onSubmit?.(combinedFilters);
   };
 
   const handleReset = () => {
     setFilterValues({} as Record<keyof T, string>);
-    setPage(0); // Reset to first page when resetting
+    setDateTimeValues({});
+    setPage(0);
     onReset?.();
   };
 
@@ -190,11 +236,46 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const handleClose = () => setAnchorEl(null);
 
   const handleExportClick = (format: "csv" | "pdf") => {
-    onExport?.(format, filterValues);
+    const combinedFilters = {
+      ...filterValues,
+      ...Object.fromEntries(
+        Object.entries(dateTimeValues)
+          .filter(([_, value]) => value !== null)
+          .map(([key, value]) => [key, value?.toISOString() || ""])
+      ),
+    };
+    onExport?.(format, combinedFilters);
     handleClose();
   };
 
   const renderFilter = (filter: ReportFilter<T>) => {
+    // Handle datetime type filters
+    if (filter.type === "date") {
+      const constraints = getDateConstraints(filter.label);
+      return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            label={filter.label}
+            value={dateTimeValues[filter.label] || null}
+            onChange={(newValue) =>
+              handleDateTimeChange(
+                filter.label,
+                newValue ? dayjs(newValue) : null
+              )
+            }
+            minDateTime={constraints.minDate}
+            maxDateTime={constraints.maxDate}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                sx: { minWidth: 150 },
+              },
+            }}
+          />
+        </LocalizationProvider>
+      );
+    }
+
     const commonProps = {
       label: filter.label,
       fullWidth: true,
@@ -215,14 +296,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             </MenuItem>
           ))}
         </TextField>
-      );
-    if (filter.type === "date")
-      return (
-        <TextField
-          {...commonProps}
-          type="date"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
       );
 
     return null;
