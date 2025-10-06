@@ -256,7 +256,7 @@ const EmergencyExitBlockage: React.FC = () => {
       </Paper>
       {/* </Box> */}
       {/* PPE Violations Report */}
-      <ReportTable<ReportData>
+      <ReportTable
         title="Detailed Report"
         columns={[
           { id: "Voilation", label: "Violation", minWidth: 200 },

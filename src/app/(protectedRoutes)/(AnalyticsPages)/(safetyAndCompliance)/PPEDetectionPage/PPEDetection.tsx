@@ -14,14 +14,17 @@ import {
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import EngineeringIcon from "@mui/icons-material/Engineering";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 
 import { FilterParams } from "./PPEDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import CheckroomIcon from "@mui/icons-material/Checkroom";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import WarningIcon from "@mui/icons-material/Warning";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
@@ -31,6 +34,7 @@ const PPEDetection: React.FC = () => {
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -162,49 +166,86 @@ const PPEDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      violations: 5,
+      zone: "Production Floor A",
+      violations: 8,
+      alarms: 3,
+      icons: {
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
+      },
+      subViolations: [
+        { label: "Helmet", value: 3, icon: EngineeringIcon },
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Welding Station",
+      violations: 6,
       alarms: 2,
       icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
       },
+      subViolations: [
+        { label: "Helmet", value: 4, icon: EngineeringIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Chemical Storage",
+      violations: 5,
+      alarms: 1,
+      icons: {
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
+      },
+      subViolations: [
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Assembly Line B",
+      violations: 7,
+      alarms: 2,
+      icons: {
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
+      },
+      subViolations: [
+        { label: "Helmet", value: 2, icon: EngineeringIcon },
+        { label: "Vest", value: 3, icon: CheckroomIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
     },
     {
       zone: "Warehouse",
-      violations: 3,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
-    },
-    {
-      zone: "Parking Area",
       violations: 4,
-      alarms: 0,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
-    },
-    {
-      zone: "Main Entrance",
-      violations: 2,
       alarms: 1,
       icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
       },
+      subViolations: [
+        { label: "Helmet", value: 1, icon: EngineeringIcon },
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 1, icon: VisibilityOffIcon },
+      ],
     },
     {
-      zone: "Assembly Line",
-      violations: 6,
-      alarms: 3,
+      zone: "Maintenance Area",
+      violations: 9,
+      alarms: 4,
       icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
+        violations: WarningIcon,
+        alarms: NotificationsActiveIcon,
       },
+      subViolations: [
+        { label: "Helmet", value: 4, icon: EngineeringIcon },
+        { label: "Vest", value: 3, icon: CheckroomIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
     },
   ];
 
@@ -288,6 +329,7 @@ const PPEDetection: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
+              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows violations and alarms per zone"
@@ -300,11 +342,11 @@ const PPEDetection: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
-          { id: "time", label: "Time", minWidth: 120 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Cameras", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
+          { id: "Voilation", label: "Violation" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
         data={recentViolations}
         filters={[
@@ -352,19 +394,14 @@ const PPEDetection: React.FC = () => {
       />
 
       {/* View Alert Popup */}
-      {viewPopupData && (
-        <ViewAlertPopup
-          open={viewPopupOpen}
-          handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
-        />
-      )}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
+      />
     </Box>
   );
 };

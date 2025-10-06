@@ -19,6 +19,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const FireSmokeOilLeakDetection: React.FC = () => {
   interface RecentViolationData {
     Voilation: string;
@@ -128,30 +129,66 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Production Floor A",
-      violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
-    },
-    {
-      zone: "Welding Station",
-      violations: 21,
+      violations: 5,
       alarms: 2,
       icons: {
         violations: ViolationsIcon,
         alarms: AlarmIcon,
       },
+      subViolations: [
+        {
+          label: "Fire",
+          value: 2,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 3,
+          icon: SmokeFree,
+        },
+      ],
+    },
+    {
+      zone: "Welding Station",
+      violations: 8,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+      subViolations: [
+        {
+          label: "Fire",
+          value: 4,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 4,
+          icon: SmokeFree,
+        },
+      ],
     },
     {
       zone: "Chemical Storage",
-      violations: 1,
+      violations: 3,
       alarms: 0,
       icons: {
         violations: ViolationsIcon,
         alarms: AlarmIcon,
       },
+      subViolations: [
+        {
+          label: "Gas Leak",
+          value: 1,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 2,
+          icon: SmokeFree,
+        },
+      ],
     },
   ];
 
@@ -266,7 +303,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         filters={[
           {
             id: "Voilation",
-            label: "incident",
+            label: "Incident",
             type: "select",
             options: ["Fire detected", "Smoke detected", "Gas detected"],
           },

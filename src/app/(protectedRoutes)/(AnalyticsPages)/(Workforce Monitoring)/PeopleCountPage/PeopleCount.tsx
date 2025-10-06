@@ -21,13 +21,15 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 const PeopleCount: React.FC = () => {
   interface PeopleCountViolation {
     Voilation: string;
-    zone: string;
-    time: string;
-    imageUrl: string;
-    cameraId: string;
     enteredCount: number;
     exitCount: number;
+    time: string;
+    zone: string;
+    cameraId: string;
     alarmTriggered: boolean;
+    imageUrl: string;
+
+    [key: string]: string | number | boolean;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
@@ -141,13 +143,13 @@ const PeopleCount: React.FC = () => {
   const recentViolations = backendData.map((item) => {
     return {
       Voilation: `People Count (Entry/Exit)`,
-      zone: item.zone,
-      time: item.createdAt,
-      imageUrl: item.snapshot,
-      cameraId: item.cameraid,
       enteredCount: item.enteredCount,
       exitCount: item.exitCount,
+      time: item.createdAt,
+      zone: item.zone,
+      cameraId: item.cameraid,
       alarmTriggered: item.alarmTriggered,
+      imageUrl: item.snapshot,
     };
   });
 
@@ -332,16 +334,13 @@ const PeopleCount: React.FC = () => {
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
+
       {viewPopupData && (
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
+          details={viewPopupData}
+          imageKey="imageUrl" // important: matches PeopleCountViolation.imageUrl
           onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
         />
       )}

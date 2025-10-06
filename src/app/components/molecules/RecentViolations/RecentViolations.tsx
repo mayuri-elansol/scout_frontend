@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -12,25 +10,16 @@ import {
   Tooltip,
 } from "@mui/material";
 import { Warning } from "@mui/icons-material";
-import { ViolationCard } from "../ViolationCard/ViolationCard";
-import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup"; // import popup
+import { ViolationCard, Violation } from "../ViolationCard/ViolationCard";
+import ViewAlertPopup from "../ViewAlertPopup/ViewAlertPopup";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-interface Violation {
-  alarmTriggered?: boolean;
-  Voilation: string;
-  zone: string;
-  time: string;
-  severity?: string;
-  status?: string;
-  imageUrl?: string;
-  cameraId?: string;
-}
 
 interface RecentViolationsProps {
   readonly tooltipMessage: string;
   readonly label: string;
   readonly violations: readonly Violation[];
   readonly loading?: boolean;
+  readonly imageKey?: string;
 }
 
 export default function RecentViolations({
@@ -38,15 +27,14 @@ export default function RecentViolations({
   label,
   violations,
   loading = false,
+  imageKey = "imageUrl",
 }: RecentViolationsProps) {
-  // state for popup
   const [selectedViolation, setSelectedViolation] = useState<Violation | null>(
     null
   );
   const [open, setOpen] = useState(false);
 
   const handleOpen = (violation: Violation) => {
-    console.log("image click", violation);
     setSelectedViolation(violation);
     setOpen(true);
   };
@@ -85,7 +73,7 @@ export default function RecentViolations({
           </Box>
 
           {tooltipMessage && (
-            <Tooltip title={tooltipMessage} arrow>
+            <Tooltip title={tooltipMessage} arrow placement="left">
               <Box
                 sx={{
                   display: "flex",
@@ -101,6 +89,7 @@ export default function RecentViolations({
           )}
         </Box>
 
+        {/* Violation Cards */}
         <Box>
           {loading ? (
             <Grid container spacing={2}>
@@ -125,7 +114,6 @@ export default function RecentViolations({
                   key={uuidv4() + index}
                   sx={{ display: "flex" }}
                 >
-                  {/* Pass click handler */}
                   <ViolationCard
                     violation={violation}
                     onClick={() => handleOpen(violation)}
@@ -142,16 +130,9 @@ export default function RecentViolations({
         <ViewAlertPopup
           open={open}
           handleClose={handleClose}
-          title={selectedViolation.Voilation}
-          location={selectedViolation.zone}
-          time={selectedViolation.time}
-          imageUrl={selectedViolation.imageUrl ?? ""}
-          cameraId={selectedViolation.cameraId ?? ""}
-          alarmTriggered={selectedViolation.alarmTriggered ?? false}
-          onDownload={(url) => {
-            console.log("Downloading image from:", url);
-            console.log("selectedvoilaiton", selectedViolation);
-          }}
+          details={selectedViolation}
+          imageKey={imageKey}
+          onDownload={(url) => console.log("Downloading image from:", url)}
         />
       )}
     </Card>
