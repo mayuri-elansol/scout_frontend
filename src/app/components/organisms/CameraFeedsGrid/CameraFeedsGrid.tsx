@@ -1,12 +1,12 @@
-import React from 'react';
-import { Grid } from '@mui/material';
-import CameraFeedCard from '../CameraFeedCard/CameraFeedCard';
-import { ZoneMetric } from '../../molecules/ZoneMetricsPanel/ZoneMetricsPanel';
-
+import React from "react";
+import { Grid } from "@mui/material";
+import CameraFeedCard from "../CameraFeedCard/CameraFeedCard";
+import { ZoneMetric } from "../../molecules/ZoneMetricsPanel/ZoneMetricsPanel";
+import { v4 as uuidv4 } from "uuid";
 export interface CameraZone {
   id: string;
   name: string;
-  status: 'LIVE' | 'OFFLINE' | 'MAINTENANCE';
+  status: "LIVE" | "OFFLINE" | "MAINTENANCE";
   worker?: string;
   metrics: ZoneMetric[];
 }
@@ -37,8 +37,8 @@ const CameraFeedsGrid: React.FC<CameraFeedsGridProps> = ({
 }) => {
   return (
     <Grid container spacing={spacing} sx={sx}>
-      {zones.map((zone) => (
-        <Grid size={{xs:12,lg:6,xl:6}} key={zone.id}>
+      {zones.map((zone, index) => (
+        <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={uuidv4() + index}>
           <CameraFeedCard
             zone={zone}
             metrics={zone.metrics}

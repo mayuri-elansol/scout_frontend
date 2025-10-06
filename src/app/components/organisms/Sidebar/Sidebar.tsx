@@ -1,5 +1,5 @@
-
 "use client";
+import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -15,8 +15,14 @@ import {
   Typography,
   Chip,
   useTheme,
+  Divider,
 } from "@mui/material";
-import { BarChart, ExpandLess, ExpandMore, Settings } from "@mui/icons-material";
+import {
+  BarChart,
+  ExpandLess,
+  ExpandMore,
+  Settings,
+} from "@mui/icons-material";
 import {
   dashboardMenu,
   alertMenu,
@@ -27,7 +33,7 @@ import {
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
-import theme from "../../../theme/theme"
+import theme from "../../../theme/theme";
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -79,7 +85,6 @@ const MenuItem = React.memo<{
 
 MenuItem.displayName = "MenuItem";
 
-
 const SubMenuItem = React.memo<{
   item: MenuItemConfig;
   pathname: string;
@@ -118,7 +123,9 @@ const SubMenuItem = React.memo<{
       )}
 
       <ListItemText
-        primary={categoryTitle === "Settings" ? `${item.name}` : `• ${item.name}`}
+        primary={
+          categoryTitle === "Settings" ? `${item.name}` : `• ${item.name}`
+        }
         slotProps={{
           primary: {
             sx: {
@@ -192,14 +199,13 @@ const CategorySection = React.memo<{
         unmountOnExit
       >
         <List sx={{ pl: 3 }}>
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, index) => (
             <SubMenuItem
-              key={item.path}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
               categoryTitle={category.title}
-
             />
           ))}
         </List>
@@ -290,9 +296,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
       <>
         {/* Dashboard */}
         <List sx={{ p: 0 }}>
-          {filteredMenus.dashboardFlags.map((item) => (
+          {filteredMenus.dashboardFlags.map((item, index) => (
             <MenuItem
-              key={item.name}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
@@ -339,9 +345,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
             <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
-                {filteredMenus.analyticsFlags.map((category) => (
+                {filteredMenus.analyticsFlags.map((category, index) => (
                   <CategorySection
-                    key={category.title}
+                    key={uuidv4() + index}
                     category={category}
                     openCategories={openCategories}
                     onToggle={handleCategoryToggle}
@@ -356,9 +362,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
         {/* Alerts */}
         <List sx={{ p: 0, mt: 1 }}>
-          {filteredMenus.alertFlags.map((item) => (
+          {filteredMenus.alertFlags.map((item, index) => (
             <MenuItem
-              key={item.name}
+              key={uuidv4() + index}
               item={item}
               pathname={pathname}
               theme={theme}
@@ -372,10 +378,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleSettingsToggle}
-                // selected={
-                //   isSettingsActive &&
-                //   !Object.values(openCategories).some(Boolean)
-                // }
                 sx={{
                   borderRadius: 1,
                   "&.Mui-selected": {
@@ -406,14 +408,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
                 {filteredMenus.settingsFlags.map((category) =>
-                  category.items.map((item) => (
+                  category.items.map((item, index) => (
                     <SubMenuItem
-                      key={item.path}
+                      key={uuidv4() + index}
                       item={item}
                       pathname={pathname}
                       theme={theme}
                       categoryTitle={category.title}
-
                     />
                   ))
                 )}
@@ -433,8 +434,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
       handleAnalyticsToggle,
       handleSettingsToggle,
       handleCategoryToggle,
-        isAnalyticsActive, 
-    isSettingsActive,  
+      isAnalyticsActive,
+      isSettingsActive,
     ]
   );
 
@@ -447,8 +448,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          mt: "64px",
-          height: "calc(100vh - 64px)",
+          height: "100vh",
           borderRight: "none",
           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
           p: 2,
@@ -458,6 +458,29 @@ const Sidebar: React.FC<SidebarProps> = () => {
         },
       }}
     >
+      {/* Customer Logo at top */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          mb: 1.2,
+        }}
+      >
+        <Typography
+          variant="h2"
+          sx={{
+            fontWeight: 700,
+            letterSpacing: 1,
+          }}
+        >
+          CUSTOMER LOGO
+        </Typography>
+      </Box>
+
+      {/* Divider */}
+      <Divider sx={{ mx: -2, mb: 1.5 }} />
+
       {/* Menu Content */}
       <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
 
@@ -476,7 +499,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           component="img"
           src="/scoutLogo.png"
           alt="Elansol Logo"
-          sx={{ height: 50, width: "auto" }}
+          sx={{ height: 40, width: "auto" }}
           loading="lazy"
         />
         <Typography sx={{ fontSize: "13px", color: "#666" }}>

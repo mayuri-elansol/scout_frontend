@@ -77,7 +77,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -86,7 +86,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -141,10 +141,14 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           </Typography>
         </Box>
       </Box>
- <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -156,55 +160,56 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊 Overview
+              </Box>
             </Typography>
           </Box>
 
           <TimeFilter />
         </Box>
-      {/* KPI Cards */}
+        {/* KPI Cards */}
 
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {KpiCardLoading
-          ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : // Show actual KPI cards
-            UnauthorizedAccessKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
-
-      {/* Content Grid */}
-      <Grid container spacing={3}>
-        {/* Recent PPE Violations */}
-        <Grid size={{ xs: 12, lg: 8 }}>
-          <RecentViolations
-            label="Recent Violations"
-            violations={recentViolations}
-            loading={false}
-          />
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              UnauthorizedAccessKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
-        {/* PPE Compliance by Zone */}
 
-        <Grid size={{ xs: 12, lg: 4 }}>
-          <CameraStatus cameraZones={cameraZones} loading={false} />
+        {/* Content Grid */}
+        <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <RecentViolations
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
+              tooltipMessage="recent volilation"
+            />
+          </Grid>
+          {/* PPE Compliance by Zone */}
+
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <CameraStatus cameraZones={cameraZones} loading={false} />
+          </Grid>
         </Grid>
-      </Grid>
-</Paper>
+      </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -252,14 +257,15 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
               "Power Plant Access",
             ],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="access-restricted-areas-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
+        tooltipMessage="report table"
       />
     </Box>
   );

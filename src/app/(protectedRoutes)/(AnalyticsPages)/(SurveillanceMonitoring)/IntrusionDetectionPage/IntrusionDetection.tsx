@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
@@ -14,167 +13,156 @@ import {
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const IntrusionDetection: React.FC = () => {
+  interface IntrusionViolation {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    id: number;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<IntrusionViolation | null>(
+    null
+  );
   const intrusionKpiData = [
     {
       title: "Intrusion Detected",
       value: "7", // Total number of intrusions detected
       icon: Security, // 🛡️ Represents security/intrusion
+      tooltipMessage: "Shows the total number of intrusions detected so far.",
     },
     {
       title: "Security Level (Safe/Unsafe)",
-      value: "Unsafe", // Current security status
+      value: "Safe", // Current security status
+      tooltipMessage:
+        "Displays whether the security status is safe or unsafe at the moment.",
+
       icon: Shield,
     },
     {
       title: "Recent Intrusion Time",
       value: "11:20 AM", // Last intrusion detection timestamp
       icon: AccessTime, // ⏰ Time
+
+      tooltipMessage:
+        "Shows the time when the most recent intrusion was detected.",
     },
     {
       title: "Zone Breaches",
       value: "2 (Zone A, Zone C)", // Zones breached recently
       icon: LocationOn, // 📍 Zones / locations
+      tooltipMessage:
+        "Displays the number of zones breached and lists those zones.",
     },
   ];
-  const recentViolations = [
+  const backendIntrusionData = [
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 201,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Perimeter Zone A",
+      camera: "CAM-11",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 202,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Perimeter Zone B",
+      camera: "CAM-12",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:15",
+      updatedAt: "2025-09-23 18:16",
     },
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 203,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Perimeter Zone A",
+      camera: "CAM-11",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-
-    {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-    {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-    {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-    {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 204,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Perimeter Zone B",
+      camera: "CAM-12",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 18:15",
+      updatedAt: "2025-09-23 18:16",
     },
   ];
 
-  const cameraZones: CameraZone[] = [
+  const recentIntrusionViolations = backendIntrusionData.map((item) => {
+    let violationMsg = "";
+
+    // Rule: If alarmTriggered is true → violation
+    if (item.alarmTriggered) {
+      violationMsg = "Intrusion detected";
+    } else {
+      violationMsg = "No violation";
+    }
+
+    return {
+      Voilation: violationMsg,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
+      id: item.id,
+    };
+  });
+
+  const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      zone: "Perimeter Zone A",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Perimeter Zone B",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   const KpiCardLoading = false;
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+
+  const handleViewSingle = (row: IntrusionViolation) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   return (
     <Box>
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Visibility sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Visibility sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -183,10 +171,14 @@ const IntrusionDetection: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -198,9 +190,9 @@ const IntrusionDetection: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊 Overview
+              </Box>
             </Typography>
           </Box>
 
@@ -211,23 +203,23 @@ const IntrusionDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            intrusionKpiData.map((kpi, index) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={index + 1}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              intrusionKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}
@@ -236,102 +228,78 @@ const IntrusionDetection: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
-              violations={recentViolations}
+              violations={recentIntrusionViolations}
               loading={false}
+              tooltipMessage="Latest 20 intrusion detected with details."
             />
           </Grid>
           {/* Security Zones Status */}
           {/* item xs={12} lg={4} */}
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations and alarms per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
+      {/* </Box> */}
       {/* Security Intrusion Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-
-          { id: "intruderDetected", label: "Intruder Detected", minWidth: 140 },
+          { id: "Voilation", label: "Incident", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
+          { id: "zone", label: "Zone", minWidth: 150 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
-          { id: "createdAt", label: "TimeStamp", minWidth: 140 },
         ]}
-        data={[
-          {
-            id: "IDP-101",
-            snapshot: "snapshot_intrusion1.jpg",
-            zone: "Perimeter Gate A",
-            camera: "CAM-21",
-            createdAt: "2025-09-24 10:42",
-            updatedAt: "2025-09-24 10:45",
-            intruderDetected: true,
-            alarmTriggered: true,
-          },
-          {
-            id: "IDP-102",
-            snapshot: "snapshot_intrusion2.jpg",
-            zone: "Perimeter Gate B",
-            camera: "CAM-22",
-            createdAt: "2025-09-24 11:15",
-            updatedAt: "2025-09-24 11:17",
-            intruderDetected: false,
-            alarmTriggered: false,
-          },
-          {
-            id: "IDP-103",
-            snapshot: "snapshot_intrusion3.jpg",
-            zone: "Loading Area Perimeter",
-            camera: "CAM-23",
-            createdAt: "2025-09-24 12:05",
-            updatedAt: "2025-09-24 12:08",
-            intruderDetected: true,
-            alarmTriggered: true,
-          },
-          {
-            id: "IDP-104",
-            snapshot: "snapshot_intrusion4.jpg",
-            zone: "Warehouse Perimeter",
-            camera: "CAM-24",
-            createdAt: "2025-09-24 13:20",
-            updatedAt: "2025-09-24 13:25",
-            intruderDetected: false,
-            alarmTriggered: false,
-          },
-        ]}
+        data={recentIntrusionViolations}
         filters={[
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Perimeter Gate A",
-              "Perimeter Gate B",
-              "Loading Area Perimeter",
-              "Warehouse Perimeter",
-            ],
+            options: Array.from(
+              new Set(recentIntrusionViolations.map((item) => item.zone))
+            ),
           },
           {
-            id: "intruderDetected",
-            label: "Intruder Detected",
+            id: "cameraId",
+            label: "Cameras",
             type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(recentIntrusionViolations.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",
             label: "Alarm Triggered",
             type: "select",
-            options: ["true", "false"],
+            options: ["True", "False"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="intrusion-detection-report"
         loading={false}
+        onView={handleViewSingle}
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
       />
+      {viewPopupData && (
+        <ViewAlertPopup
+          open={viewPopupOpen}
+          handleClose={() => setViewPopupOpen(false)}
+          title={viewPopupData.Voilation}
+          location={viewPopupData.zone}
+          time={viewPopupData.time}
+          cameraId={viewPopupData.cameraId}
+          imageUrl={viewPopupData.imageUrl}
+          alarmTriggered={viewPopupData.alarmTriggered}
+          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        />
+      )}
     </Box>
   );
 };

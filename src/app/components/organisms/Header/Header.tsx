@@ -1,6 +1,6 @@
-
 "use client";
 import React, { useEffect, useState, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   AppBar,
   Toolbar,
@@ -15,14 +15,11 @@ import {
   ListItemText,
   Paper,
   Drawer,
-  useMediaQuery,
   Popper,
-
 } from "@mui/material";
 import {
   Circle,
   ExitToApp,
-  Shield,
   InfoOutlined,
   Menu as MenuIcon,
 } from "@mui/icons-material";
@@ -41,7 +38,6 @@ interface SystemHealthData {
   lastChecked: string;
 }
 
-// Simple tooltip component without complex scroll handling
 const SystemHealthTooltipContent: React.FC<{
   systemHealth: SystemHealthData;
 }> = ({ systemHealth }) => {
@@ -57,7 +53,6 @@ const SystemHealthTooltipContent: React.FC<{
         border: "1px solid #e0e0e0",
         borderRadius: "8px",
         overflow: "hidden",
-     
       }}
     >
       <Box
@@ -67,7 +62,6 @@ const SystemHealthTooltipContent: React.FC<{
           py: 2,
           maxHeight: 180,
           overflowY: "scroll",
-          // Simple scrollbar styling
           "&::-webkit-scrollbar": {
             width: "4px",
           },
@@ -82,7 +76,7 @@ const SystemHealthTooltipContent: React.FC<{
       >
         {systemHealth.message.slice(0, 8).map((msg, idx) => (
           <Typography
-            key={idx}
+            key={uuidv4() + idx}
             variant="body2"
             sx={{
               color: "#374151",
@@ -132,16 +126,14 @@ const Header: React.FC = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Simple state management for health tooltip
-  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(null);
+  const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(
+    null
+  );
   const [openHealth, setOpenHealth] = useState(false);
   const healthTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-
-
   const handleHealthMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     if (healthTimerRef.current) clearTimeout(healthTimerRef.current);
-
     setAnchorElHealth(event.currentTarget);
     setOpenHealth(true);
   };
@@ -178,7 +170,20 @@ const Header: React.FC = () => {
     lastChecked: new Date().toLocaleTimeString(),
   });
 
-  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
+  // Get current page title
+  const getPageTitle = () => {
+    const allMenuItems = [
+      ...dashboardMenu,
+      ...alertMenu,
+      ...analyticsMenu.flatMap((category) => category.items),
+    ];
+
+    const currentItem = allMenuItems.find(
+      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+    );
+
+    return currentItem?.name ?? "Dashboard";
+  };
 
   useEffect(() => {
     const allMenuItems = [
@@ -207,7 +212,6 @@ const Header: React.FC = () => {
     handleClose();
   };
 
-  // update clock every second
   useEffect(() => {
     const updateTime = () => {
       setCurrentDateTime(
@@ -231,7 +235,6 @@ const Header: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
       if (healthTimerRef.current) {
@@ -245,15 +248,19 @@ const Header: React.FC = () => {
       <AppBar
         position="fixed"
         sx={{
-          zIndex: isMobile ? theme.zIndex.drawer - 1 : theme.zIndex.drawer + 1,
-          height: 64,
+          zIndex: theme.zIndex.drawer + 1,
+          height: 63,
           backgroundColor: "white",
           color: "#1c2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)",
+
+          ml: { xs: 0, lg: "315px" },
+          width: { xs: "100%", lg: "calc(100% - 316px)" },
         }}
       >
         <Toolbar sx={{ minHeight: "64px !important", px: 3 }}>
-          {/* Left side: logo + menu toggle for mobile */}
+          {/* Left side: menu toggle for mobile + page title */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
             <IconButton
               color="inherit"
@@ -263,44 +270,17 @@ const Header: React.FC = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Box
+
+            <Typography
+              variant="h6"
               sx={{
-                width: 32,
-                height: 32,
-                backgroundColor: "#1976d2",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                borderRadius: "4px",
+                fontWeight: 600,
+                color: "#1c2025",
+                fontSize: "20px",
               }}
             >
-              <Shield sx={{ fontSize: 18 }} />
-            </Box>
-            <Box>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: "bold",
-                  color: "#1c2025",
-                  fontSize: "18px",
-                  lineHeight: 1,
-                }}
-              >
-                SCOUT
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: "#5c6b7d",
-                  fontSize: "14px",
-                  lineHeight: 1,
-                  mt: 0.25,
-                }}
-              >
-                CCTV Analytics Portal
-              </Typography>
-            </Box>
+              {getPageTitle()}
+            </Typography>
           </Box>
 
           {/* Right side */}
@@ -345,13 +325,12 @@ const Header: React.FC = () => {
 
             {user && (
               <>
-                {/* Profile Avatar (no hover events here anymore) */}
                 <IconButton onClick={handleClick} size="small">
                   <Avatar
                     sx={{
                       width: 32,
                       height: 32,
-                      backgroundColor: theme.palette.primary.main,
+                      backgroundColor: "#3072b0",
                       fontSize: "14px",
                       fontWeight: 600,
                     }}
@@ -360,18 +339,16 @@ const Header: React.FC = () => {
                   </Avatar>
                 </IconButton>
 
-                {/* System Health Tooltip still positioned below profile */}
                 <Popper
                   open={openHealth}
                   anchorEl={anchorElHealth}
                   placement="bottom-end"
                   disablePortal={false}
                   sx={{
-                    zIndex: 2000, mt: 1
+                    zIndex: 2000,
+                    mt: 1,
                   }}
-                  modifiers={[
-                    { name: "offset", options: { offset: [0, 8] } },
-                  ]}
+                  modifiers={[{ name: "offset", options: { offset: [0, 8] } }]}
                 >
                   <Box
                     onMouseEnter={handleTooltipMouseEnter}
@@ -381,7 +358,6 @@ const Header: React.FC = () => {
                   </Box>
                 </Popper>
 
-                {/* Profile Menu */}
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
@@ -399,7 +375,6 @@ const Header: React.FC = () => {
               </>
             )}
           </Box>
-
         </Toolbar>
       </AppBar>
 

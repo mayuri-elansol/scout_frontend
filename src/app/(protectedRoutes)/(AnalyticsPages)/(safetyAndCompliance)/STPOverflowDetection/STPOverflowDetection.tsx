@@ -4,52 +4,52 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Typography } from "@mui/material";
-import { Shield } from "@mui/icons-material";
+import {
+  Shield,
+  Warning,
+  NotificationImportant,
+  Place,
+  Videocam,
+  Schedule,
+} from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import { CameraZone } from "@/app/types";
-import { Warning, NotificationImportant, Place, Videocam, Schedule } from "@mui/icons-material";
 
 const STPOverflowDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
-
-const StpKpiData = [
-  {
-    title: "Overflow Incidents",
-    value: "12", 
-    icon: Warning,
-    
-  },
-  {
-    title: "Alarms Triggered",
-    value: "8", 
-    icon: NotificationImportant,
-   
-  },
-  {
-    title: "Most Overflow Zone",
-    value: "Zone B", // calculated zone
-    icon: Place,
-  
-  },
-  {
-    title: "Active Cameras",
-    value: "5", // count of active cameras
-    icon: Videocam,
- 
-  },
-  {
-    title: "Peak Overflow Hour",
-    value: "14:00 - 15:00",
-    icon: Schedule,
-   
-  },
-];
+  const StpKpiData = [
+    {
+      title: "Overflow Incidents",
+      value: "12",
+      icon: Warning,
+    },
+    {
+      title: "Alarms Triggered",
+      value: "8",
+      icon: NotificationImportant,
+    },
+    {
+      title: "Most Overflow Zone",
+      value: "Zone B", // calculated zone
+      icon: Place,
+    },
+    {
+      title: "Active Cameras",
+      value: "5", // count of active cameras
+      icon: Videocam,
+    },
+    {
+      title: "Peak Overflow Hour",
+      value: "14:00 - 15:00",
+      icon: Schedule,
+    },
+  ];
   const recentViolations = [
     {
-      title: "Hard hat missing",
+      Voilation: "Hard hat missing",
       zone: "Production Zone A",
       time: "14:32",
       Id: "W-4521",
@@ -58,7 +58,7 @@ const StpKpiData = [
       imageUrl: "https://picsum.photos/400/200?random=1",
     },
     {
-      title: "Safety vest not worn",
+      Voilation: "Safety vest not worn",
       zone: "Warehouse Zone B",
       time: "14:18",
       Id: "W-3847",
@@ -104,7 +104,7 @@ const StpKpiData = [
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -119,16 +119,19 @@ const StpKpiData = [
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {KpiCardLoading
           ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
+            skeletonKeys.map((index) => (
+              <Grid
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                key={uuidv4() + index}
+              >
                 <KpiCardSkeleton />
               </Grid>
             ))
           : // Show actual KPI cards
-            StpKpiData.map((kpi) => (
+            StpKpiData.map((kpi, index) => (
               <Grid
                 size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
+                key={uuidv4() + index}
               >
                 <KpiCard {...kpi} />
               </Grid>
@@ -143,6 +146,7 @@ const StpKpiData = [
             label="Recent Violations"
             violations={recentViolations}
             loading={false}
+            tooltipMessage="recent volaions"
           />
         </Grid>
         {/* PPE Compliance by Zone */}
@@ -226,15 +230,15 @@ const StpKpiData = [
             type: "select",
             options: ["true", "false"],
           },
-          { id: "startDate", label: "Start Date", type: "date" },
-          { id: "endDate", label: "End Date", type: "date" },
+          { id: "createdAt", label: "Start Date", type: "date" },
+          { id: "createdAt", label: "End Date", type: "date" },
         ]}
         downloadFileName="overflow-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
-
+        tooltipMessage="report table"
       />
     </Box>
   );

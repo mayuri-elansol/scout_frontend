@@ -1,4 +1,4 @@
 {
-    "sonarQubeUri": "https://cicd.elansoltech.in/sonar",
-    "projectKey": "scout_frontend"
+  "sonarQubeUri": "https://cicd.elansoltech.in/sonar",
+  "projectKey": "scout_frontend"
 }

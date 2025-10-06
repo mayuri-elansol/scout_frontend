@@ -1,13 +1,11 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import {
   Shield,
   NotificationsActive,
@@ -16,9 +14,25 @@ import {
   ReportProblem,
   Whatshot,
 } from "@mui/icons-material";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import ViolationsIcon from "@mui/icons-material/Warning";
+import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FallDetection: React.FC = () => {
+  interface RecentViolationData {
+    Voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<RecentViolationData | null>(null);
+
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
 
   const fallKpiData = [
@@ -26,61 +40,143 @@ const FallDetection: React.FC = () => {
       title: "Total Fall Incidents",
       value: "24", // Count of all fall/laydown/sleeping incidents
       icon: ReportProblem,
+      tooltipMessage:
+        "Total number of fall, laydown, or sleeping incidents detected across all monitored zones.",
     },
     {
       title: "Active Alarms",
       value: "6", // Count of incidents where alarmTriggered = True
       icon: NotificationsActive,
+      tooltipMessage:
+        "Number of incidents where alarms were triggered due to detected falls or unsafe conditions.",
     },
     {
       title: "Incident-Free Zones",
       value: "3 / 5", // Number of zones with 0 incidents / total zones
       icon: CheckCircle,
+      tooltipMessage:
+        "Number of zones without any fall or laydown incidents out of the total monitored zones.",
     },
     {
       title: "Last Detection Time",
-      value: "10 42 AM", // Current timestamp - latest incident createdAt
+      value: "10:42 AM", // Current timestamp - latest incident createdAt
       icon: Schedule,
+      tooltipMessage:
+        "The time when the most recent fall, laydown, or sleeping incident was detected.",
     },
     {
       title: "Most Incident-Prone Zone",
       value: "Zone B", // Zone with the highest incidents
       icon: Whatshot,
+      tooltipMessage:
+        "The zone with the highest number of fall, laydown, or sleeping incidents recorded.",
+      trendColor: "#f44336",
+      color: "#f44336",
+      bgColor: "#ffebee",
+      borderColor: "#f44336",
+      iconBg: "rgba(244, 67, 54, 0.1)",
     },
   ];
 
-  const recentViolations = [
+  const backendLaydownData = [
     {
-      title: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 401,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Production Floor A",
+      camera: "CAM-11",
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
+      alarmTriggered: true,
     },
     {
-      title: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 402,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Warehouse",
+      camera: "CAM-12",
+      createdAt: "2025-09-23 18:12",
+      updatedAt: "2025-09-23 18:13",
+      alarmTriggered: false,
+    },
+    {
+      id: 403,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Maintenance Area",
+      camera: "CAM-13",
+      createdAt: "2025-09-23 18:18",
+      updatedAt: "2025-09-23 18:19",
+      alarmTriggered: true,
+    },
+    {
+      id: 404,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Production Floor A",
+      camera: "CAM-11",
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
+      alarmTriggered: true,
+    },
+    {
+      id: 405,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Warehouse",
+      camera: "CAM-12",
+      createdAt: "2025-09-23 18:12",
+      updatedAt: "2025-09-23 18:13",
+      alarmTriggered: false,
+    },
+    {
+      id: 406,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Maintenance Area",
+      camera: "CAM-13",
+      createdAt: "2025-09-23 18:18",
+      updatedAt: "2025-09-23 18:19",
+      alarmTriggered: true,
     },
   ];
-  const cameraZones: CameraZone[] = [
+
+  // Map backend data to recentViolations format
+  const recentLaydownViolations = backendLaydownData.map((item) => {
+    return {
+      Voilation: "Fall / Laydown / Sleeping detected",
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  console.log("laydown recent voilation", recentLaydownViolations);
+
+  const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      zone: "Production Floor A",
+      violations: 2,
+      alarms: 1,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Warehouse",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
+    {
+      zone: "Maintenance Area",
+      violations: 2,
+      alarms: 2,
+      icons: {
+        violations: ViolationsIcon,
+        alarms: AlarmIcon,
+      },
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -99,13 +195,19 @@ const FallDetection: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+
+  const handleViewSingle = (row: RecentViolationData) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   const KpiCardLoading = false;
   return (
     <Box>
       {/* Page Header */}
       <Box sx={{ mb: 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#1976d2" }} />
+          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"
             sx={{ fontWeight: "bold", color: "#1c2025" }}
@@ -114,10 +216,14 @@ const FallDetection: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-      <Paper sx={{
-        p: 3, mb: 4, backgroundColor: "#ffffff", borderRadius: 2
-      }} >
-
+      <Paper
+        sx={{
+          p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
+        }}
+      >
         <Box
           sx={{
             display: "flex",
@@ -129,9 +235,9 @@ const FallDetection: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-              <Box component="span" sx={{ mr: 2 }}>📊</Box>
-
-              Real Time Overview
+              <Box component="span" sx={{ mr: 2 }}>
+                📊 Overview
+              </Box>
             </Typography>
           </Box>
 
@@ -142,20 +248,23 @@ const FallDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
             ? // Show skeletons while loading
-            skeletonKeys.map((key) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }} key={key}>
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
             : // Show actual KPI cards
-            fallKpiData.map((kpi) => (
-              <Grid
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                key={kpi.title}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
+              fallKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
         </Grid>
 
         {/* Content Grid */}
@@ -164,106 +273,82 @@ const FallDetection: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
-              violations={recentViolations}
+              violations={recentLaydownViolations}
               loading={false}
+              tooltipMessage="Latest 20 detected laydown/sleeping/falldown violations with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations and alarms per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
+      {/* </Box> */}
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 80 },
+          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
+          { id: "cameraId", label: "Cameras", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
-        data={[
-          {
-            violationId: "PPE-7892",
-            timestamp: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
-          },
-          {
-            violationId: "PPE-7891",
-            timestamp: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
-          },
-          {
-            violationId: "PPE-7890",
-            timestamp: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
-          },
-          {
-            violationId: "PPE-7889",
-            timestamp: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            timestamp: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
-          },
-        ]}
+        data={recentLaydownViolations}
         filters={[
-          { id: "name", label: "Search Name", type: "text" },
           {
-            id: "employeeId",
-            label: "Employee",
+            id: "zone",
+            label: "Zone",
             type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
+            options: Array.from(
+              new Set(recentLaydownViolations.map((item) => item.zone))
+            ),
           },
-          { id: "createdAt", label: "Start Date", type: "date" },
-          { id: "resolvedAt", label: "End Date", type: "date" },
+          {
+            id: "cameraId",
+            label: "Cameras",
+            type: "select",
+            options: Array.from(
+              new Set(recentLaydownViolations.map((item) => item.cameraId))
+            ),
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["true", "false"],
+          },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
+        onView={handleViewSingle}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
         loading={false}
-
       />
+      {/* View Alert Popup */}
+      {viewPopupData && (
+        <ViewAlertPopup
+          open={viewPopupOpen}
+          handleClose={() => setViewPopupOpen(false)}
+          title={viewPopupData.Voilation}
+          location={viewPopupData.zone}
+          time={viewPopupData.time}
+          cameraId={viewPopupData.cameraId}
+          imageUrl={viewPopupData.imageUrl}
+          alarmTriggered={viewPopupData.alarmTriggered}
+          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        />
+      )}
     </Box>
   );
 };
