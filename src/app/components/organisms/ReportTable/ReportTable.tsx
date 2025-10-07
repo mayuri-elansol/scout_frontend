@@ -268,7 +268,14 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             slotProps={{
               textField: {
                 fullWidth: true,
-                sx: { minWidth: 150 },
+                sx: { minWidth: 150,
+                   "& .MuiPickersOutlinedInput-root": {
+                    height: "48px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    transformOrigin: "top left",
+                  },
+                 },
               },
             }}
           />
