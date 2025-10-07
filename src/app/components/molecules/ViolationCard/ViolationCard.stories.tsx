@@ -1,7 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+// ViolationCard.stories.tsx
 
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ViolationCard } from "./ViolationCard";
-// Storybook metadata
+
 const meta: Meta<typeof ViolationCard> = {
   title: "Components/Molecules/ViolationCard",
   component: ViolationCard,
@@ -12,9 +13,8 @@ export default meta;
 type Story = StoryObj<typeof ViolationCard>;
 
 // Default sample data
-
 const sampleViolation = {
-  Voilation: "Unauthorized Entry", 
+  voilation: "Unauthorized Entry",
   zone: "Main Gate",
   time: "10:30 AM",
   Id: "VIO-00123",
@@ -26,29 +26,29 @@ const sampleViolation = {
 // Default Story
 export const Default: Story = {
   args: {
-    violation: sampleViolation,
+    violations: sampleViolation,
   },
 };
 
-//  With Image Story
+// With Image Story
 export const WithImage: Story = {
   args: {
-    violation: {
+    violations: {
       ...sampleViolation,
       imageUrl: "https://picsum.photos/400/200",
-      Voilation: ""
+      voilation: "",
     },
   },
 };
 
-//  Low Severity Story
+// Low Severity Story
 export const LowSeverity: Story = {
   args: {
-    violation: {
+    violations: {
       ...sampleViolation,
       severity: "LOW",
       status: "RESOLVED",
-      Voilation: ""
+      voilation: "",
     },
   },
 };

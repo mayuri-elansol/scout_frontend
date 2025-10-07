@@ -18,6 +18,7 @@ interface RecentViolationsProps {
   readonly tooltipMessage: string;
   readonly label: string;
   readonly violations: readonly Violation[];
+
   readonly loading?: boolean;
   readonly imageKey?: string;
 }
@@ -115,7 +116,7 @@ export default function RecentViolations({
                   sx={{ display: "flex" }}
                 >
                   <ViolationCard
-                    violation={violation}
+                    violations={violation}
                     onClick={() => handleOpen(violation)}
                   />
                 </Grid>

@@ -18,6 +18,7 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
@@ -112,6 +113,15 @@ const Dashboard: React.FC = () => {
             <KpiCard {...kpi} route="/PPEDetectionPage" />
           </Grid>
         ))}
+        <DashboardKpiCard
+          title="PPE Kit Violations"
+          violationsCount={2}
+          lastDetection="2025-10-07 13:45"
+          status="Unsafe"
+          icon={Shield}
+          tooltipMessage="Shows total PPE violations and last detection time"
+          route="/PPEDetectionPage"
+        />
       </Grid>
 
       {/* Activity Feed and Camera Status */}

@@ -141,7 +141,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       ...filterValues,
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
-          .filter(([_, value]) => value !== null)
+          .filter(([value]) => value !== null)
           .map(([key, value]) => [key, value?.toISOString() || ""])
       ),
     };
@@ -211,11 +211,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       return (
         <Typography
           sx={{
-            color: "#1976d2",
+            //  color: "#1976d2",
             fontSize: "14px",
             fontWeight: 500,
-            cursor: "pointer",
-            "&:hover": { textDecoration: "underline" },
           }}
         >
           {String(value)}
@@ -241,7 +239,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       ...filterValues,
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
-          .filter(([_, value]) => value !== null)
+          .filter(([value]) => value !== null)
           .map(([key, value]) => [key, value?.toISOString() || ""])
       ),
     };

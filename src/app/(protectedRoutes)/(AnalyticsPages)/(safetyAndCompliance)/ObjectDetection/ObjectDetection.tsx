@@ -16,7 +16,7 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import { CameraZone } from "@/app/types";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import WidgetsIcon from "@mui/icons-material/Widgets";
+
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 const ObjectDetection: React.FC = () => {
   const recentViolations = [
@@ -142,7 +142,7 @@ const ObjectDetection: React.FC = () => {
     <Box>
       {/* Page Header */}
       {/* <Box sx={{ mb: 3 }}> */}
-        {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
+      {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
           <WidgetsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
           <Typography
             variant="h4"

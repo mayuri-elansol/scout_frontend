@@ -4,20 +4,21 @@ import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
 
 export interface Violation {
-  Voilation: string;
+  voilation?: string;
   zone: string;
   time: string;
   imageUrl?: string;
+  incident?: string;
   [key: string]: string | number | boolean | undefined; // extra dynamic fields
 }
 
 interface ViolationCardProps {
-  violation: Violation;
+  violations: Violation;
   onClick?: () => void;
 }
 
 export const ViolationCard: React.FC<ViolationCardProps> = ({
-  violation,
+  violations,
   onClick,
 }) => {
   return (
@@ -35,7 +36,7 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
     >
       <CardContent
         sx={{
-          p: 2,
+          p: 1.5,
           flex: 1,
           display: "flex",
           flexDirection: "column",
@@ -48,16 +49,16 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               fontSize: "16px",
               fontWeight: 600,
               color: "#1c2025",
-              mb: 0.5,
+              mb: 0.1,
             }}
           >
-            {violation.Voilation}
+            {violations.incident || violations.voilation || "Unknown Violation"}
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
-            {violation.zone}
+            {violations.zone}
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
-            {violation.time}
+            {violations.time}
           </Typography>
         </Box>
 
@@ -76,9 +77,9 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
             position: "relative",
           }}
         >
-          {violation.imageUrl ? (
+          {violations.imageUrl ? (
             <Image
-              src={String(violation.imageUrl)}
+              src={String(violations.imageUrl)}
               alt="Violation"
               fill
               style={{ objectFit: "cover", borderRadius: 6 }}

@@ -28,7 +28,7 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
@@ -153,7 +153,7 @@ const PPEDetection: React.FC = () => {
     if (item.glasses === false) titleParts.push("Safety glasses missing");
 
     return {
-      Voilation: titleParts.join(", ") ?? "No violation",
+      voilation: titleParts.join(", ") ?? "No violation",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -342,7 +342,7 @@ const PPEDetection: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation" },
+          { id: "voilation", label: "Violation" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
           { id: "cameraId", label: "Cameras" },
@@ -351,7 +351,7 @@ const PPEDetection: React.FC = () => {
         data={recentViolations}
         filters={[
           {
-            id: "Voilation",
+            id: "voilation",
             label: "Violation",
             type: "select",
 

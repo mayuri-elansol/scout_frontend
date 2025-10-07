@@ -15,12 +15,13 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const MobilePhoneUsage: React.FC = () => {
   interface ViolationData {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
@@ -112,7 +113,7 @@ const MobilePhoneUsage: React.FC = () => {
   // Map backend data to recentViolations format
   const recentMobilePhoneViolations = backendMobilePhoneData.map((item) => {
     return {
-      Voilation: item.voilation
+      voilation: item.voilation
         ? "Mobile phone usage detected"
         : "No violation",
       zone: item.zone,
@@ -289,7 +290,7 @@ const MobilePhoneUsage: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 150 },
+          { id: "voilation", label: "Violation", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -344,13 +345,9 @@ const MobilePhoneUsage: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

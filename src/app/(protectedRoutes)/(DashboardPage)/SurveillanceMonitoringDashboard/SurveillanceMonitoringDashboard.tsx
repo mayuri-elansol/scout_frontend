@@ -1,68 +1,47 @@
 "use client";
 
 import React from "react";
-import { CameraZone, KpiData } from "@/app/types";
+import { CameraZone } from "@/app/types";
 import { Box, Grid } from "@mui/material";
 import {
   Shield,
-  Warning,
   Visibility,
   People,
   DirectionsCar,
+  Security,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
 
-  const kpiData: KpiData[] = [
+  const kpiData = [
     {
-      title: t("PPE Compliance"),
-      value: "10",
-      icon: Shield,
+      title: "Intrusion Detection",
+      violationsCount: 3,
+      lastDetection: "Zone B - Gate 2",
+      lastDetectionTime: "02:15 AM",
+      icon: Security,
+      route: "/IntrusionDetectionPage",
+      tooltipMessage:
+        "Shows detected intrusion incidents in monitored zones during restricted hours.",
     },
     {
-      title: t("Fire & Smoke Voilations"),
-      value: "0",
-      icon: Warning,
-    },
-    {
-      title: "Security Breach",
-      value: "1",
-      icon: Visibility,
-    },
-    {
-      title: "Employees Present",
-      value: "234",
+      title: "People Presence During Shutdown",
+      violationsCount: 2,
+      lastDetection: "Warehouse Zone 4",
+      lastDetectionTime: "01:45 AM",
       icon: People,
-    },
-    {
-      title: "Total People Inside",
-      value: "267",
-      icon: People,
-    },
-    {
-      title: "Speed Voilations",
-      value: "15",
-      icon: DirectionsCar,
-    },
-    {
-      title: "Vehicles Count",
-      value: "45",
-      icon: DirectionsCar,
-    },
-
-    {
-      title: "Crowd Alert",
-      value: "1",
-      icon: People,
+      route: "/PeoplePresenceShutdownPage",
+      tooltipMessage:
+        "Displays people detected inside premises during shutdown hours.",
     },
   ];
 
@@ -115,10 +94,10 @@ const SurveillanceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
             key={uuidv4() + index}
           >
-            <KpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>

@@ -1,15 +1,20 @@
 "use client";
 
 import React from "react";
-import { CameraZone, KpiData } from "@/app/types";
+import { CameraZone } from "@/app/types";
 import { Box, Grid } from "@mui/material";
 import {
   Shield,
-  Warning,
+  LocalFireDepartment,
+  HealthAndSafety,
+  DirectionsCar,
+  WarningAmber,
+  DoorFront,
+  Groups,
   Visibility,
   People,
-  DirectionsCar,
 } from "@mui/icons-material";
+
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
@@ -18,51 +23,111 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const SafetyAndComplianceDashboard: React.FC = () => {
   const { t } = useTranslation();
 
-  const kpiData: KpiData[] = [
-    {
-      title: t("PPE Compliance"),
-      value: "10",
-      icon: Shield,
-    },
-    {
-      title: t("Fire & Smoke Voilations"),
-      value: "0",
-      icon: Warning,
-    },
-    {
-      title: "Security Breach",
-      value: "1",
-      icon: Visibility,
-    },
-    {
-      title: "Employees Present",
-      value: "234",
-      icon: People,
-    },
-    {
-      title: "Total People Inside",
-      value: "267",
-      icon: People,
-    },
-    {
-      title: "Speed Voilations",
-      value: "15",
-      icon: DirectionsCar,
-    },
-    {
-      title: "Vehicles Count",
-      value: "45",
-      icon: DirectionsCar,
-    },
+  // const kpiData: KpiData[] = [
+  //   {
+  //     title: t("PPE Compliance"),
+  //     value: "10",
+  //     icon: Shield,
+  //   },
+  //   {
+  //     title: t("Fire & Smoke Voilations"),
+  //     value: "0",
+  //     icon: Warning,
+  //   },
+  //   {
+  //     title: "Security Breach",
+  //     value: "1",
+  //     icon: Visibility,
+  //   },
+  //   {
+  //     title: "Employees Present",
+  //     value: "234",
+  //     icon: People,
+  //   },
+  //   {
+  //     title: "Total People Inside",
+  //     value: "267",
+  //     icon: People,
+  //   },
+  //   {
+  //     title: "Speed Voilations",
+  //     value: "15",
+  //     icon: DirectionsCar,
+  //   },
+  //   {
+  //     title: "Vehicles Count",
+  //     value: "45",
+  //     icon: DirectionsCar,
+  //   },
 
+  //   {
+  //     title: "Crowd Alert",
+  //     value: "1",
+  //     icon: People,
+  //   },
+  // ];
+
+  const kpiData = [
     {
-      title: "Crowd Alert",
-      value: "1",
-      icon: People,
+      title: "PPE Violations",
+      violationsCount: 5,
+      lastDetection: "Zone A",
+      lastDetectionTime: "09:58 AM",
+      icon: HealthAndSafety,
+      route: "/PPEDetectionPage",
+      tooltipMessage: "Shows total PPE rule violations detected today.",
+    },
+    {
+      title: "Fire / Smoke / Gas / Oil Alerts",
+      violationsCount: 1,
+      lastDetection: "Zone B",
+      lastDetectionTime: "09:58 AM",
+      icon: LocalFireDepartment,
+      route: "/FireSmokeOilLeakDetection",
+      tooltipMessage:
+        "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
+    },
+    {
+      title: "Speed Violations",
+      violationsCount: 12,
+      lastDetection: "Parking Zone",
+      lastDetectionTime: "10:58 AM",
+      icon: DirectionsCar,
+      route: "/VehicalSpeedMonitoring",
+      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
+    },
+    {
+      title: "Fall / Laydown Alerts",
+      violationsCount: 1,
+      lastDetection: "Production Floor",
+      lastDetectionTime: "10:40 AM",
+      icon: WarningAmber,
+      route: "/FallDetection",
+      tooltipMessage: "Indicates workers detected lying down or falling.",
+    },
+    {
+      title: "Emergency Exit Blockage",
+      violationsCount: 2,
+      lastDetection: "Exit 3",
+      lastDetectionTime: "9:28 AM",
+      icon: DoorFront,
+      route: "/EmergencyExitBlockage",
+      tooltipMessage: "Detects obstruction or blockage near emergency exits.",
+    },
+    {
+      title: "Crowd Gathering Alerts",
+      violationsCount: 3,
+      lastDetection: "Cafeteria",
+      lastDetectionTime: "11:05 AM",
+      icon: Groups,
+      route: "/CrowdGathering",
+      tooltipMessage:
+        "Identifies abnormal or unsafe crowd gathering in monitored areas.",
     },
   ];
 
@@ -79,28 +144,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //         height: "calc(100vh - 115px)", // 👈 total screen height minus header
-
-    //   
-    //>
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 115px)",
+        minHeight: "100vh",
         backgroundColor: "#f5f7fa",
-     
-        overflow: "hidden",
+        pt: 2,
+        height: "calc(100vh - 115px)", // 👈 total screen height minus header
       }}
     >
+      {/* <Box
+    //   sx={{
+    //     display: "flex",
+    //     flexDirection: "column",
+    //     height: "calc(100vh - 115px)",
+    //     backgroundColor: "#f5f7fa",
 
+    //     overflow: "hidden",
+    //   }}
+    // > */}
       <Box
         sx={{
           display: "flex",
@@ -118,10 +181,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
             key={uuidv4() + index}
           >
-            <KpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
@@ -153,7 +216,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-
             ]}
           />
         </Box>
