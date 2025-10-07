@@ -1,5 +1,8 @@
 {
-  "dashboard": true,
+  "safety-compliance-dashboard": true,
+  "surveillance-monitoring-dashboard":true,
+  "vehicle-operational-insights-dashboard":true,
+  "workforce-monitoring-dasboard":true,
   "alerts": true,
   "reports": true,
   "settings": true,

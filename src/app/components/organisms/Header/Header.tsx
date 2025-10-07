@@ -122,7 +122,7 @@ const Header: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>("safety-compliance-dashboard");
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -172,33 +172,34 @@ const Header: React.FC = () => {
   });
 
   // Get current page title
-  const getPageTitle = () => {
-    const allMenuItems = [
-      ...dashboardMenu,
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
+ const getPageTitle = () => {
+  const allMenuItems = [
+    ...dashboardMenu.flatMap((category) => category.items),
+    ...alertMenu,
+    ...analyticsMenu.flatMap((category) => category.items),
+  ];
 
-    const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
-    );
+  const currentItem = allMenuItems.find(
+    (item) => item.path.toLowerCase() === pathname.toLowerCase()
+  );
 
-    return currentItem?.name ?? "Dashboard";
-  };
+  return currentItem?.name ?? "Dashboard";
+};
 
-  useEffect(() => {
-    const allMenuItems = [
-      ...dashboardMenu,
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
 
-    const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
-    );
+useEffect(() => {
+  const allMenuItems = [
+    ...dashboardMenu.flatMap((category) => category.items),
+    ...alertMenu,
+    ...analyticsMenu.flatMap((category) => category.items),
+  ];
 
-    setCurrentPage(currentItem ? currentItem.page! : "dashboard");
-  }, [pathname]);
+  const currentItem = allMenuItems.find(
+    (item) => item.path.toLowerCase() === pathname.toLowerCase()
+  );
+
+  setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
+}, [pathname]);
 
   const handlePageChange = (page: PageType) => {
     setCurrentPage(page);
