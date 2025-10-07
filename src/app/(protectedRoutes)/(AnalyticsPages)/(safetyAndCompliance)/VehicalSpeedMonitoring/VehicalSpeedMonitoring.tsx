@@ -16,7 +16,7 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const VehicalSpeedMonitoring: React.FC = () => {
   interface VehicleViolation {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
@@ -24,6 +24,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
     alarmTriggered: boolean;
     vehicleType: string;
     vehicleNumber: string;
+    [key: string]: string | number | boolean;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleViolation | null>(
@@ -91,7 +92,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
     }
 
     return {
-      Voilation: violationMsg,
+      voilation: violationMsg,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -253,7 +254,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -315,13 +316,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

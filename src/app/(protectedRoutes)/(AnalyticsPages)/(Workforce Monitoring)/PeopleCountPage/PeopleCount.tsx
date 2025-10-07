@@ -20,7 +20,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 
 const PeopleCount: React.FC = () => {
   interface PeopleCountViolation {
-    Voilation: string;
+    voilation: string;
     enteredCount: number;
     exitCount: number;
     time: string;
@@ -142,7 +142,7 @@ const PeopleCount: React.FC = () => {
 
   const recentViolations = backendData.map((item) => {
     return {
-      Voilation: `People Count (Entry/Exit)`,
+      voilation: `People Count (Entry/Exit)`,
       enteredCount: item.enteredCount,
       exitCount: item.exitCount,
       time: item.createdAt,
@@ -287,7 +287,7 @@ const PeopleCount: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
           { id: "enteredCount", label: "Entered Count", minWidth: 140 },
           { id: "exitCount", label: "Exit Count", minWidth: 120 },
           { id: "time", label: "Time", minWidth: 120 },

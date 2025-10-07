@@ -65,7 +65,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
         iconBg: "rgba(76, 175, 80, 0.1)",
       };
     }
-    // Default logic if no custom colors provided
     const numericValue = Number(value);
 
     if (!isNaN(numericValue)) {
@@ -137,7 +136,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
   const variantStyles = getVariantStyles();
   const sizeStyles = getSizeStyles();
   const router = useRouter();
-  // Override with custom dimensions if provided
   const finalWidth = customWidth ? `${customWidth}px` : "auto";
 
   return (
@@ -149,7 +147,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         transition: "all 0.3s ease",
         height: "95%",
-        // minHeight: finalHeight,
         width: finalWidth,
         cursor: "pointer",
         "&:hover": {
@@ -224,11 +221,11 @@ const KpiCard: React.FC<KpiCardProps> = ({
                 minWidth: "unset",
                 padding: "0 6px",
                 "&:hover": {
-                  border: `1px solid ${variantStyles.trendColor}`, // keep your custom border
-                  backgroundColor: "rgba(255,255,255,0.95)", // optional hover bg
+                  border: `1px solid ${variantStyles.trendColor}`,
+                  backgroundColor: "rgba(255,255,255,0.95)",
                 },
                 "&:focus": {
-                  border: `1px solid ${variantStyles.trendColor}`, // fix focus blue border
+                  border: `1px solid ${variantStyles.trendColor}`,
                 },
               }}
               onClick={() => {

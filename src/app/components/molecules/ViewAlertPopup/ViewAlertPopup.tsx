@@ -18,8 +18,8 @@ interface ViewAlertPopupProps<
 > {
   readonly open: boolean;
   readonly handleClose: () => void;
-  readonly details?: T | null; // allow null or undefined
-  readonly imageKey?: keyof T; // key inside details for image URL
+  readonly details?: T | null;
+  readonly imageKey?: keyof T;
   readonly onDownload?: (imageUrl: string) => void;
 }
 
@@ -56,7 +56,7 @@ function ViewAlertPopup<
     >
       {/* Header */}
       <DialogTitle
-        component="div" // ✅ Prevents nested heading issue
+        component="div"
         sx={{
           py: 1,
           px: 2,
@@ -70,7 +70,7 @@ function ViewAlertPopup<
       >
         <Typography
           variant="subtitle1"
-          component="div" // ✅ Avoids nested heading tags
+          component="div"
           sx={{ fontWeight: 600 }}
         >
           Violation Details
@@ -87,7 +87,9 @@ function ViewAlertPopup<
             py: 1,
             display: "flex",
             flexWrap: "wrap",
-            gap: 2,
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
           }}
         >
           {details &&

@@ -21,12 +21,13 @@ import ViolationsIcon from "@mui/icons-material/Warning";
 import AlarmIcon from "@mui/icons-material/NotificationImportant";
 const FallDetection: React.FC = () => {
   interface RecentViolationData {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -138,7 +139,7 @@ const FallDetection: React.FC = () => {
   // Map backend data to recentViolations format
   const recentLaydownViolations = backendLaydownData.map((item) => {
     return {
-      Voilation: "Fall / Laydown / Sleeping detected",
+      voilation: "Fall / Laydown / Sleeping detected",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -289,13 +290,13 @@ const FallDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-      {/* PPE Violations Report */}
+
+      {/* Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -340,13 +341,9 @@ const FallDetection: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>
