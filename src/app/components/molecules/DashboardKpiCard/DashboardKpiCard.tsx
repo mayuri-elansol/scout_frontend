@@ -16,7 +16,7 @@ interface DashboardKpiCardProps {
   title: string;
   violationsCount: number;
   lastDetection: string;
-  status: "Safe" | "Unsafe";
+  lastDetectionTime: string;
   route?: string;
   icon: SvgIconComponent;
   tooltipMessage?: string;
@@ -27,7 +27,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   title,
   violationsCount,
   lastDetection,
-  status,
+  lastDetectionTime,
   icon: IconComponent,
   route,
   tooltipMessage,
@@ -125,6 +125,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
           borderRadius: 2,
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
           transition: "all 0.3s ease",
+
           height: "95%",
           cursor: "pointer",
           "&:hover": {
@@ -244,7 +245,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
               mt: 0.5,
             }}
           >
-            Last Detection: {lastDetection}
+            Last Detection: {lastDetectionTime}
           </Typography>
           {/* </Box> */}
         </CardContent>
