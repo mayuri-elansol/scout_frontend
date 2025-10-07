@@ -16,7 +16,6 @@ import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 
-import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
