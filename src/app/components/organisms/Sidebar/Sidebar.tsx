@@ -129,12 +129,16 @@ const SubMenuItem = React.memo<{
         slotProps={{
           primary: {
             sx: {
-              fontSize: categoryTitle === "Settings" ? "14px" : "12px",
-
-              color: pathname === item.path ? "white" : "#6b7280",
-              fontWeight: pathname === item.path ? 500 : "normal",
-              lineHeight: 1.3,
-            },
+        fontSize:
+          categoryTitle === "Dashboard" ||
+          categoryTitle === "Analytics" ||
+          categoryTitle === "Settings"
+            ? "14px"
+            : "12px",
+        color: pathname === item.path ? "white" : "#6b7280",
+        // fontWeight: pathname === item.path ? 600 : 400,
+        lineHeight: 1.4,
+      },
           },
         }}
       />
@@ -249,7 +253,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       items: category.items
         .map((item) => ({
           ...item,
-          featureFlag: featureFlag[item.page!] ?? true, // enable by default
+          featureFlag: featureFlag[item.page!] ?? true, 
         }))
         .filter((item) => item.featureFlag),
     }));
@@ -331,7 +335,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 <category.icon sx={{ fontSize: 16 }} />
               </ListItemIcon>
             )}
-            <ListItemText primary={category.title} />
+            <ListItemText primary={category.title} 
+            
+            />
             {isOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
         </ListItem>
@@ -347,6 +353,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                   pathname={pathname}
                   theme={theme}
                   categoryTitle={category.title}
+                  
                 />
               ))}
           </List>

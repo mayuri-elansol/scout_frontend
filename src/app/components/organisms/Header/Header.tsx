@@ -172,34 +172,34 @@ const Header: React.FC = () => {
   });
 
   // Get current page title
- const getPageTitle = () => {
-  const allMenuItems = [
-    ...dashboardMenu.flatMap((category) => category.items),
-    ...alertMenu,
-    ...analyticsMenu.flatMap((category) => category.items),
-  ];
+  const getPageTitle = () => {
+    const allMenuItems = [
+      ...dashboardMenu.flatMap((category) => category.items),
+      ...alertMenu,
+      ...analyticsMenu.flatMap((category) => category.items),
+    ];
 
-  const currentItem = allMenuItems.find(
-    (item) => item.path.toLowerCase() === pathname.toLowerCase()
-  );
+    const currentItem = allMenuItems.find(
+      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+    );
 
-  return currentItem?.name ?? "Dashboard";
-};
+    return currentItem?.name ?? "Dashboard";
+  };
 
 
-useEffect(() => {
-  const allMenuItems = [
-    ...dashboardMenu.flatMap((category) => category.items),
-    ...alertMenu,
-    ...analyticsMenu.flatMap((category) => category.items),
-  ];
+  useEffect(() => {
+    const allMenuItems = [
+      ...dashboardMenu.flatMap((category) => category.items),
+      ...alertMenu,
+      ...analyticsMenu.flatMap((category) => category.items),
+    ];
 
-  const currentItem = allMenuItems.find(
-    (item) => item.path.toLowerCase() === pathname.toLowerCase()
-  );
+    const currentItem = allMenuItems.find(
+      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+    );
 
-  setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
-}, [pathname]);
+    setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
+  }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
     setCurrentPage(page);
@@ -328,17 +328,8 @@ useEffect(() => {
             {user && (
               <>
                 {!isLoading && user && (
-                  <Box  sx={{ display: "flex", alignItems: "center" }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", textAlign: "right", mr: 2.5 }}>
-                      <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
-                        {user.firstName} {user.lastName}
-                      </Typography>
-                      {user.role && (
-                        <Typography variant="subtitle2" sx={{ fontWeight: 400, color: "#b1b3c1" }}>
-                          {user.role}
-                        </Typography>
-                      )}
-                    </Box>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+
 
                     <IconButton onClick={handleClick} size="small">
                       <Avatar
@@ -375,14 +366,34 @@ useEffect(() => {
                   </Box>
                 </Popper>
 
+
+
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
                   onClose={handleClose}
                   onClick={handleClose}
-                        disableScrollLock
+                  disableScrollLock
                   sx={{ mt: "15px" }}
                 >
+                  {/* User Info at top */}
+                  <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
+                      {user?.firstName} {user?.lastName}
+                    </Typography>
+                    {user?.role && (
+                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+                       {user.role}
+                      </Typography>
+                    )}
+                    {user?.email && (
+                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+                        {user.email}
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/* Logout Button */}
                   <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                       <ExitToApp fontSize="small" />
@@ -392,9 +403,6 @@ useEffect(() => {
                 </Menu>
               </>
             )}
-
-
-
           </Box>
         </Toolbar>
       </AppBar>
