@@ -88,7 +88,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Zone B",
       lastDetectionTime: "09:58 AM",
       icon: LocalFireDepartment,
-      route: "/FireSmokeGasOilPage",
+      route: "/FireSmokeOilLeakDetection",
       tooltipMessage:
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
@@ -98,7 +98,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Parking Zone",
       lastDetectionTime: "10:58 AM",
       icon: DirectionsCar,
-      route: "/VehicleSpeedPage",
+      route: "/VehicalSpeedMonitoring",
       tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
     },
     {
@@ -107,7 +107,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Production Floor",
       lastDetectionTime: "10:40 AM",
       icon: WarningAmber,
-      route: "/FallDetectionPage",
+      route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
     },
     {
@@ -116,7 +116,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Exit 3",
       lastDetectionTime: "9:28 AM",
       icon: DoorFront,
-      route: "/EmergencyExitPage",
+      route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
     {
@@ -125,7 +125,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Cafeteria",
       lastDetectionTime: "11:05 AM",
       icon: Groups,
-      route: "/CrowdDetectionPage",
+      route: "/CrowdGathering",
       tooltipMessage:
         "Identifies abnormal or unsafe crowd gathering in monitored areas.",
     },
@@ -144,28 +144,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //         height: "calc(100vh - 115px)", // 👈 total screen height minus header
-
-    //   
-    //>
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 115px)",
+        minHeight: "100vh",
         backgroundColor: "#f5f7fa",
-     
-        overflow: "hidden",
+        pt: 2,
+        height: "calc(100vh - 115px)", // 👈 total screen height minus header
       }}
     >
+      {/* <Box
+    //   sx={{
+    //     display: "flex",
+    //     flexDirection: "column",
+    //     height: "calc(100vh - 115px)",
+    //     backgroundColor: "#f5f7fa",
 
+    //     overflow: "hidden",
+    //   }}
+    // > */}
       <Box
         sx={{
           display: "flex",
@@ -218,7 +216,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-
             ]}
           />
         </Box>
