@@ -67,6 +67,7 @@ interface ReportTableProps<T extends object> {
   readonly onView?: (row: T) => void;
   readonly onDownload?: (row: T) => void;
   readonly tooltipMessage: string;
+  
 }
 
 function ReportTable<T extends Record<string, string | number | boolean>>({
@@ -320,7 +321,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         </TableCell>
       </TableRow>
     ));
-  } else if (data.length > 0) {
+  } else if (data.length > 0 ) {
     tableRows = data.map((row, index) => (
       <TableRow key={uuidv4() + index}>
         {columns.map((column, index) => (

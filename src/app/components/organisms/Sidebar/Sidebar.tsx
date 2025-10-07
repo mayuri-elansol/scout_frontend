@@ -332,7 +332,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           >
             {category.icon && (
               <ListItemIcon sx={{ minWidth: 36, color: isCategoryActive ? theme.palette.primary.dark : "#5c6b7d" }}>
-                <category.icon sx={{ fontSize: 16 }} />
+                <category.icon  />
               </ListItemIcon>
             )}
             <ListItemText primary={category.title} 
