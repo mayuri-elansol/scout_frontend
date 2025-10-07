@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import LoginForm from "../../components/molecules/Login/LoginForm";
+import { useAuth, User as AuthUser } from "@/customhooks/useAuth";
  interface LoginFormData {
   username: string;
   password: string;
@@ -17,6 +18,8 @@ interface User {
   firstName: string;
   lastName: string;
   role:string;
+  email:string;
+  lastLogin:string;
 }
 
 const Login: React.FC = () => {
@@ -25,52 +28,46 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const handleSubmit = async (data: LoginFormData) => {
-    setError("");
-    setIsLoading(true);
+const { login } = useAuth(); 
 
-    try {
-      // Simulate delay (optional)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+const handleSubmit = async (data: LoginFormData) => {
+  setError("");
+  setIsLoading(true);
 
-      // Fetch the user list
-      const response = await fetch("/data/user.json");
-      const users: User[] = await response.json();
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Find the matching user
-      const foundUser = users.find(
-        (u) => u.username === data.username && u.password === data.password
-      );
+    const response = await fetch("/data/user.json");
+    const users: User[] = await response.json();
 
-      if (foundUser) {
-        // Create a fake token
-        const token = `token-${Date.now()}`;
+  const foundUser = users.find(
+  (u) => u.username === data.username && u.password === data.password
+);
 
-        // Store all details in localStorage
-        localStorage.setItem("scout_auth_token", token);
-        localStorage.setItem(
-          "scout_user",
-          JSON.stringify({
-            username: foundUser.username,
-            firstName: foundUser.firstName,
-            lastName: foundUser.lastName,
-            role:foundUser.role,
-            lastLogin: new Date().toISOString(),
-          })
-        );
-
-        // Redirect to dashboard
-        router.push("/DashboardPage");
-      } else {
-        setError("Invalid username or password");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+if (foundUser) {
+  const token = `token-${Date.now()}`;
+  const userData: AuthUser = {
+    ...foundUser,
+    lastLogin: new Date().toISOString(),
   };
+
+  login(userData, token);
+
+  setTimeout(() => {
+    router.push("/SafetyAndComplianceDashboard");
+  }, 100);
+}
+ else {
+      setError("Invalid username or password");
+    }
+  } catch (err) {
+    console.error(err);
+    setError("Login failed. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleTogglePassword = () => setShowPassword((prev) => !prev);
 

@@ -56,18 +56,27 @@ const SurveillanceMonitoring: React.FC = () => {
     { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-        backgroundColor: "#f5f7fa",
-        pt: 2,
-      }}
-    >
+    // <Box
+    //   sx={{
+    //     display: "flex",
+    //     flexDirection: "column",
+    //     minHeight: "100vh",
+    //     backgroundColor: "#f5f7fa",
+    //     pt: 2,
+    //   }}
+    // >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "calc(100vh - 115px)",
+            backgroundColor: "#f5f7fa",
+           
+            overflow: "hidden",
+          }}
+        >
       <Box
         sx={{
           display: "flex",
@@ -120,20 +129,8 @@ const SurveillanceMonitoring: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-              {
-                time: "11:02 AM",
-                event: "Employee Check-in",
-                zone: "Main Entrance - Camera 1",
-                severity: "low",
-                icon: People,
-              },
-              {
-                time: "10:58 AM",
-                event: "Fire Safety Equipment Check",
-                zone: "Assembly Line - Camera 5",
-                severity: "low",
-                icon: Shield,
-              },
+           
+          
             ]}
           />
         </Box>
