@@ -548,7 +548,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                 <>
                   {/* Left Section: Zone Info */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                                  <CameraEnhanceIcon sx={{ color: "#1565c0", fontSize: 22 }} />
+                                  {/* <CameraEnhanceIcon sx={{ color: "#1565c0", fontSize: 22 }} /> */}
 
                     <Box>
                       <Typography sx={{ fontSize: "14px",  }}>

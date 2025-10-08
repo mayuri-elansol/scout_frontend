@@ -150,8 +150,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         minHeight: "100vh",
         backgroundColor: "#f5f7fa",
-        pt: 2,
-        height: "calc(100vh - 115px)", // 👈 total screen height minus header
+        pt: -5,
+        height: "calc(100vh - 115px)", 
       }}
     >
       {/* <Box
