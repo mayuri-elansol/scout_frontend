@@ -12,16 +12,11 @@ import {
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
-
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-
-import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const SurveillanceMonitoring: React.FC = () => {
-  const { t } = useTranslation();
-
   const kpiData = [
     {
       title: "Intrusion Detection",
@@ -67,16 +62,16 @@ const SurveillanceMonitoring: React.FC = () => {
     //     pt: 2,
     //   }}
     // >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 115px)",
-            backgroundColor: "#f5f7fa",
-           
-            overflow: "hidden",
-          }}
-        >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(100vh - 115px)",
+        backgroundColor: "#f5f7fa",
+
+        overflow: "hidden",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -94,7 +89,7 @@ const SurveillanceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />
@@ -129,8 +124,6 @@ const SurveillanceMonitoring: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-           
-          
             ]}
           />
         </Box>

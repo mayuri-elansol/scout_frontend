@@ -10,8 +10,6 @@ import {
   Chip,
 } from "@mui/material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-import WarningIcon from "@mui/icons-material/Warning";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import { SvgIconComponent, Warning } from "@mui/icons-material";
 
 export interface SubViolation {
@@ -23,10 +21,6 @@ export interface SubViolation {
 export interface ZoneViolationsdata {
   zone: string;
   violations?: number;
-  alarms?: number;
-  icons?: {
-    [key: string]: SvgIconComponent;
-  };
   subViolations?: SubViolation[];
   [key: string]:
     | string
@@ -148,9 +142,11 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                     {/* Zone Header */}
                     <Box
                       sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                         backgroundColor: "#fff",
-                        p: { xs: 1.5, sm: 2 },
-                        borderBottom: "1px solid #e8eaed",
+                        p: { xs: 1, sm: 1.5 },
                       }}
                     >
                       <Typography
@@ -158,13 +154,22 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                           fontWeight: 600,
                           fontSize: "16px",
                           color: "#1c2025",
-                          mb: 1.5,
                         }}
                       >
                         {zone.zone}
                       </Typography>
-
-                      {/* Main Metrics  */}
+                      {/* <Typography
+                        sx={{
+                          fontSize: {
+                            xs: "1.3rem",
+                            sm: "1.4rem",
+                          },
+                          fontWeight: 700,
+                          color: "#f44336",
+                        }}
+                      >
+                        2
+                      </Typography> */}
                       <Box
                         sx={{
                           display: "flex",
@@ -180,22 +185,12 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                               key !== "subViolations"
                           )
                           .map((key) => {
-                            const IconComponent =
-                              zone.icons?.[key] ||
-                              (key === "violations"
-                                ? WarningIcon
-                                : NotificationsActiveIcon);
                             return (
                               <Chip
+                                sx={{
+                                  bgcolor: "#ffffff",
+                                }}
                                 key={key}
-                                icon={
-                                  <IconComponent
-                                    sx={{
-                                      fontSize: "18px !important",
-                                      color: "#f44336 !important",
-                                    }}
-                                  />
-                                }
                                 label={
                                   <Box
                                     sx={{
@@ -229,14 +224,6 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                                     </Typography>
                                   </Box>
                                 }
-                                sx={{
-                                  backgroundColor: "#fff5f5",
-                                  border: "1px solid #ffcdd2",
-                                  height: { xs: "32px", sm: "36px" },
-                                  "& .MuiChip-label": {
-                                    px: 1.5,
-                                  },
-                                }}
                               />
                             );
                           })}
@@ -247,23 +234,10 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                     {zone.subViolations && zone.subViolations.length > 0 && (
                       <Box
                         sx={{
-                          p: { xs: 1.5, sm: 2 },
-                          backgroundColor: "#fafafa",
+                          p: { xs: 1, sm: 1 },
+                          backgroundColor: "#ffffff",
                         }}
                       >
-                        <Typography
-                          sx={{
-                            fontSize: { xs: "0.8rem", sm: "0.85rem" },
-                            fontWeight: 600,
-                            color: "#5c6b7d",
-                            mb: 1.5,
-                            textTransform: "uppercase",
-                            letterSpacing: "0.5px",
-                          }}
-                        >
-                          Violation Breakdown
-                        </Typography>
-
                         <Box
                           sx={{
                             display: "grid",

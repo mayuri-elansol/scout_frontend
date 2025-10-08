@@ -32,20 +32,20 @@ const PeoplePresence: React.FC = () => {
   const PeoplePresenceKpiData = [
     {
       title: "Total People Count",
-      value: "87", // Current number of people detected
+      value: "87",
       icon: Groups,
       tooltipMessage:
         "Shows the total number of people detected in monitored zones.",
     },
     {
       title: "Detected Zones",
-      value: "Zone A, Zone B", // Zones where people are detected
+      value: "Zone A, Zone B",
       icon: LocationOn,
       tooltipMessage: "Lists the zones where people are currently detected.",
     },
     {
       title: "Last Incidence",
-      value: "10:25 AM", // Last detection timestamp
+      value: "10:25 AM",
       icon: AccessTime,
       tooltipMessage:
         "Shows the time when the most recent people presence was detected.",

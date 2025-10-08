@@ -3,12 +3,9 @@
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-
 import { People, Login, Logout } from "@mui/icons-material";
-
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
@@ -95,48 +92,44 @@ const PeopleCount: React.FC = () => {
   const zonePeopleCountData = [
     {
       zone: "Production Floor A",
-      enteredCount: 150,
-      exitCount: 120,
-      icons: {
-        enteredCount: PeopleIcon,
-        exitCount: ExitToAppIcon,
-      },
+      // enteredCount: 150,
+      // exitCount: 120,
+      // icons: {
+      //   enteredCount: PeopleIcon,
+      //   exitCount: ExitToAppIcon,
+      // },
+      subViolations: [
+        { label: "entered Count", value: 3, icon: PeopleIcon },
+        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+      ],
     },
     {
       zone: "Welding Station",
-      enteredCount: 80,
-      exitCount: 65,
-      icons: {
-        enteredCount: PeopleIcon,
-        exitCount: ExitToAppIcon,
-      },
+      subViolations: [
+        { label: "entered Count", value: 3, icon: PeopleIcon },
+        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+      ],
     },
     {
       zone: "Chemical Storage",
-      enteredCount: 60,
-      exitCount: 50,
-      icons: {
-        enteredCount: PeopleIcon,
-        exitCount: ExitToAppIcon,
-      },
+      subViolations: [
+        { label: "entered Count", value: 3, icon: PeopleIcon },
+        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+      ],
     },
     {
       zone: "Assembly Line B",
-      enteredCount: 200,
-      exitCount: 180,
-      icons: {
-        enteredCount: PeopleIcon,
-        exitCount: ExitToAppIcon,
-      },
+      subViolations: [
+        { label: "entered Count", value: 3, icon: PeopleIcon },
+        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+      ],
     },
     {
       zone: "Maintenance Area",
-      enteredCount: 40,
-      exitCount: 30,
-      icons: {
-        enteredCount: PeopleIcon,
-        exitCount: ExitToAppIcon,
-      },
+      subViolations: [
+        { label: "entered Count", value: 3, icon: PeopleIcon },
+        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+      ],
     },
   ];
 

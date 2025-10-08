@@ -12,8 +12,7 @@ import SpeedIcon from "@mui/icons-material/Speed";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const VehicalSpeedMonitoring: React.FC = () => {
   interface VehicleViolation {
     voilation: string;
@@ -138,20 +137,10 @@ const VehicalSpeedMonitoring: React.FC = () => {
     {
       zone: "Main Gate",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Parking Lot",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
 

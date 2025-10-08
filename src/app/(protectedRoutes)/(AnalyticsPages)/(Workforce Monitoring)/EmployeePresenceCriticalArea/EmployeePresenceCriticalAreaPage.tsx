@@ -6,7 +6,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import PeopleIcon from "@mui/icons-material/People";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import LockPersonIcon from "@mui/icons-material/LockPerson";
@@ -102,24 +101,15 @@ const EmployeePresence: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Critical Zone A",
-      EmployeePresent: 10,
-      icons: {
-        EmployeePresent: PeopleIcon,
-      },
+      violations: 10,
     },
     {
       zone: "Critical Zone B",
-      EmployeePresent: 5,
-      icons: {
-        EmployeePresent: PeopleIcon,
-      },
+      violations: 5,
     },
     {
       zone: "Critical Zone C",
-      EmployeePresent: 3,
-      icons: {
-        EmployeePresent: PeopleIcon,
-      },
+      violations: 3,
     },
   ];
   const KpiCardLoading = false;

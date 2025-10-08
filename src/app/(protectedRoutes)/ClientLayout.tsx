@@ -5,7 +5,6 @@ import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
-import Breadcrumb from "../components/organisms/Breadcrumb/Breadcrumb";
 import Header from "../components/organisms/Header/Header";
 
 import { PageType } from "@/app/types";
@@ -23,7 +22,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
 
   const [mounted, setMounted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<PageType>("safety-compliance-dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>(
+    "safety-compliance-dashboard"
+  );
 
   const sidebartheme = useTheme();
   const isTabletOrPhone = useMediaQuery(
@@ -35,20 +36,22 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
     setMounted(true);
   }, []);
 
-useEffect(() => {
-  const allMenuItems = [
-    // flatten Dashboard menu (each category’s items)
-    ...dashboardMenu.flatMap((category) => category.items),
-    ...alertMenu,
-    ...analyticsMenu.flatMap((category) => category.items),
-  ];
+  useEffect(() => {
+    const allMenuItems = [
+      // flatten Dashboard menu (each category’s items)
+      ...dashboardMenu.flatMap((category) => category.items),
+      ...alertMenu,
+      ...analyticsMenu.flatMap((category) => category.items),
+    ];
 
-  const currentItem = allMenuItems.find(
-    (item) => item.path.toLowerCase() === pathname.toLowerCase()
-  );
+    const currentItem = allMenuItems.find(
+      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+    );
 
-  setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
-}, [pathname]);
+    setCurrentPage(
+      currentItem ? currentItem.page! : "safety-compliance-dashboard"
+    );
+  }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
     setCurrentPage(page);

@@ -1,16 +1,11 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Tooltip,
-  Button,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Tooltip } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+
+import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 
 interface DashboardKpiCardProps {
   title: string;
@@ -34,11 +29,6 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   size = "medium",
 }) => {
   const getVariantStyles = () => {
-    // If custom colors are passed, use them directly
-    // if (trendColor && color && bgColor && borderColor && iconBg) {
-    //   return { trendColor, color, bgColor, borderColor, iconBg };
-    // }
-
     const numericValue = Number(violationsCount);
 
     if (!isNaN(numericValue)) {
@@ -76,7 +66,6 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
       case "small":
         return {
           minHeight: "120px",
-
           padding: "16px",
           iconSize: 18,
           valueSize: "20px",
@@ -97,7 +86,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
       default:
         return {
           minHeight: "200px",
-          padding: "22px",
+          padding: "19px",
           iconSize: 24,
           valueSize: "30px",
           titleSize: "16px",
@@ -112,145 +101,126 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   const router = useRouter();
 
   return (
-    <Tooltip
-      title={tooltipMessage || ""}
-      arrow
-      placement="top"
-      disableHoverListener={!tooltipMessage}
-    >
-      <Card
-        sx={{
-          backgroundColor: variantStyles.bgColor,
-          border: `1px solid ${variantStyles.borderColor}40`,
-          borderRadius: 2,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-          transition: "all 0.3s ease",
+    <Card
+      onClick={() => {
+        if (route) {
+          router.push(route);
+        }
+      }}
+      sx={{
+        backgroundColor: variantStyles.bgColor,
+        border: `1px solid ${variantStyles.borderColor}40`,
+        borderRadius: 2,
+        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        transition: "all 0.3s ease",
 
-          height: "95%",
-          cursor: "pointer",
-          "&:hover": {
-            boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-            transform: "translateY(-2px)",
-            borderColor: variantStyles.borderColor,
-          },
+        height: "95%",
+        cursor: "pointer",
+        "&:hover": {
+          boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+          transform: "translateY(-2px)",
+          borderColor: variantStyles.borderColor,
+        },
+      }}
+    >
+      <CardContent
+        sx={{
+          p: `${sizeStyles.padding} !important`,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <CardContent
+        {/* Header */}
+        <Box
           sx={{
-            p: `${sizeStyles.padding} !important`,
-            flex: 1,
             display: "flex",
-            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 2,
           }}
         >
-          {/* Header */}
-
           <Box
             sx={{
+              width: sizeStyles.iconBoxSize,
+              height: sizeStyles.iconBoxSize,
+              backgroundColor: variantStyles.iconBg,
+              borderRadius: 1,
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
-              mb: 2,
+              justifyContent: "center",
+              color: variantStyles.color,
             }}
           >
-            <Box
-              sx={{
-                width: sizeStyles.iconBoxSize,
-                height: sizeStyles.iconBoxSize,
-                backgroundColor: variantStyles.iconBg,
-                borderRadius: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: variantStyles.color,
-              }}
-            >
-              <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
-            </Box>
+            <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
+          </Box>
 
-            {route && (
-              <Button
-                variant="outlined"
-                size="small"
+          {tooltipMessage && (
+            <Tooltip title={tooltipMessage} arrow placement="top">
+              <Box
                 sx={{
-                  fontSize: "11px",
-                  fontWeight: 600,
-                  color: variantStyles.trendColor,
-                  backgroundColor: "rgba(255,255,255,0.9)",
-                  border: `1px solid ${variantStyles.trendColor}40`,
-                  height: "20px",
-                  textTransform: "none",
-                  lineHeight: 1.2,
-                  minWidth: "unset",
-                  padding: "0 6px",
-                  "&:hover": {
-                    border: `1px solid ${variantStyles.trendColor}`,
-                    backgroundColor: "rgba(255,255,255,0.95)",
-                  },
-                  "&:focus": {
-                    border: `1px solid ${variantStyles.trendColor}`,
-                  },
-                }}
-                onClick={() => {
-                  if (route) {
-                    router.push(route);
-                  }
+                  width: sizeStyles.iconBoxSize,
+                  height: sizeStyles.iconBoxSize,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: variantStyles.color,
                 }}
               >
-                View
-              </Button>
-            )}
-          </Box>
-          {/* Value Section */}
-          <Typography
-            sx={{
-              fontSize: sizeStyles.valueSize,
-              fontWeight: "bold",
-              color: variantStyles.color,
-              lineHeight: 1.1,
-              mb: 0.5,
-            }}
-          >
-            {violationsCount}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: sizeStyles.titleSize,
-              fontWeight: 600,
-              color: variantStyles.color,
-              mb: 0.5,
-              lineHeight: 1.2,
-            }}
-          >
-            {title}
-          </Typography>
+                <InfoOutlineIcon />
+              </Box>
+            </Tooltip>
+          )}
+        </Box>
+        {/* Value Section */}
+        <Typography
+          sx={{
+            fontSize: sizeStyles.valueSize,
+            fontWeight: "bold",
+            color: variantStyles.color,
+            lineHeight: 1.1,
+            mb: 0.5,
+          }}
+        >
+          {violationsCount}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: sizeStyles.titleSize,
+            fontWeight: 600,
+            color: variantStyles.color,
+            mb: 0.5,
+            lineHeight: 1.2,
+          }}
+        >
+          {title}
+        </Typography>
 
-          {/* Additional Info */}
-          {/* <Box > */}
-          <Typography
-            sx={{
-              fontSize: sizeStyles.subtitleSize,
-              color: "#6b7280",
-              lineHeight: 1.3,
-              mt: 0.5,
-            }}
-          >
-            Last Detection Zone: {lastDetection}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: sizeStyles.subtitleSize,
-              color: "#6b7280",
-              lineHeight: 1.3,
-              mt: 0.5,
-            }}
-          >
-            Last Detection: {lastDetectionTime}
-          </Typography>
-          {/* </Box> */}
-        </CardContent>
-      </Card>
-    </Tooltip>
+        {/* Additional Info */}
+
+        <Typography
+          sx={{
+            fontSize: sizeStyles.subtitleSize,
+            color: "#6b7280",
+            lineHeight: 1.3,
+            mt: 0.5,
+          }}
+        >
+          Last Detection Zone: {lastDetection}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: sizeStyles.subtitleSize,
+            color: "#6b7280",
+            lineHeight: 1.3,
+            mt: 0.5,
+          }}
+        >
+          Last Detection: {lastDetectionTime}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
 

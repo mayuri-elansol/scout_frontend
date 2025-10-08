@@ -13,15 +13,11 @@ import {
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
-
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const WorkforceMonitoring: React.FC = () => {
-  // const { t } = useTranslation();
-
   const kpiData = [
     {
       title: "Employee Presence in Critical Area",
@@ -90,7 +86,7 @@ const WorkforceMonitoring: React.FC = () => {
     },
     { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-   
+
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
   return (
@@ -103,15 +99,15 @@ const WorkforceMonitoring: React.FC = () => {
     //     pt: 2,
     //   }}
     // >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 115px)",
-            backgroundColor: "#f5f7fa",
-            overflow: "hidden",
-          }}
-        >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(100vh - 115px)",
+        backgroundColor: "#f5f7fa",
+        overflow: "hidden",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -129,7 +125,7 @@ const WorkforceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} route="/PPEDetectionPage" />
@@ -164,8 +160,6 @@ const WorkforceMonitoring: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-         
-         
             ]}
           />
         </Box>

@@ -126,21 +126,11 @@ const EmergencyExitBlockage: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Emergency Exit A",
-      violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      BlockedExit: 2,
     },
     {
       zone: "Assembly Line Exit",
-      violations: 2,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      BlockedExit: 2,
     },
   ];
   interface FilterParams {

@@ -13,8 +13,7 @@ import LockPersonIcon from "@mui/icons-material/LockPerson";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   interface EmployeePresenceViolation {
     voilation: string;
@@ -102,29 +101,14 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
     {
       zone: "Restricted Zone A",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Restricted Zone B",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Restricted Zone C",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   const KpiCardLoading = false;

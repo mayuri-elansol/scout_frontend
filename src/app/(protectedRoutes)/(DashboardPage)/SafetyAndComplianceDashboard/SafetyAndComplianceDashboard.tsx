@@ -12,66 +12,17 @@ import {
   DoorFront,
   Groups,
   Visibility,
-  People,
 } from "@mui/icons-material";
 
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
-import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const SafetyAndComplianceDashboard: React.FC = () => {
-  const { t } = useTranslation();
-
-  // const kpiData: KpiData[] = [
-  //   {
-  //     title: t("PPE Compliance"),
-  //     value: "10",
-  //     icon: Shield,
-  //   },
-  //   {
-  //     title: t("Fire & Smoke Voilations"),
-  //     value: "0",
-  //     icon: Warning,
-  //   },
-  //   {
-  //     title: "Security Breach",
-  //     value: "1",
-  //     icon: Visibility,
-  //   },
-  //   {
-  //     title: "Employees Present",
-  //     value: "234",
-  //     icon: People,
-  //   },
-  //   {
-  //     title: "Total People Inside",
-  //     value: "267",
-  //     icon: People,
-  //   },
-  //   {
-  //     title: "Speed Voilations",
-  //     value: "15",
-  //     icon: DirectionsCar,
-  //   },
-  //   {
-  //     title: "Vehicles Count",
-  //     value: "45",
-  //     icon: DirectionsCar,
-  //   },
-
-  //   {
-  //     title: "Crowd Alert",
-  //     value: "1",
-  //     icon: People,
-  //   },
-  // ];
-
   const kpiData = [
     {
       title: "PPE Violations",
@@ -151,7 +102,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         minHeight: "100vh",
         backgroundColor: "#f5f7fa",
         pt: 2,
-        height: "calc(100vh - 115px)", // 👈 total screen height minus header
+        height: "calc(100vh - 115px)",
       }}
     >
       {/* <Box
@@ -181,7 +132,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2.4 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />

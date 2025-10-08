@@ -19,8 +19,6 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const IntrusionDetection: React.FC = () => {
   interface IntrusionViolation {
@@ -133,20 +131,10 @@ const IntrusionDetection: React.FC = () => {
     {
       zone: "Perimeter Zone A",
       incident: 2,
-      alarms: 2,
-      icons: {
-        incident: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Perimeter Zone B",
       incident: 2,
-      alarms: 2,
-      icons: {
-        incident: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   const KpiCardLoading = false;
