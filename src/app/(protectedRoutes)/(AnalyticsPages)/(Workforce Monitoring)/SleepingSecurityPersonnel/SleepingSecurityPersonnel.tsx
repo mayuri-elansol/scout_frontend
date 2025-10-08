@@ -11,8 +11,7 @@ import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import HotelIcon from "@mui/icons-material/Hotel";
 const SleepingSecurityPersonnel: React.FC = () => {
@@ -122,11 +121,6 @@ const SleepingSecurityPersonnel: React.FC = () => {
     {
       zone: "Main Gate",
       violations: 3,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
       subViolations: [
         {
           label: "Sleeping",
@@ -143,11 +137,6 @@ const SleepingSecurityPersonnel: React.FC = () => {
     {
       zone: "Assembly Line A",
       violations: 2,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
       subViolations: [
         {
           label: "Sleeping",

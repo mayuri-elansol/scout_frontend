@@ -16,8 +16,6 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const CrowdGathering: React.FC = () => {
   interface ViolationRow {
@@ -136,20 +134,10 @@ const CrowdGathering: React.FC = () => {
     {
       zone: "Hazard Zone A",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Hazard Zone B",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   interface FilterParams {

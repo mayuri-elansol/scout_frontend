@@ -17,8 +17,6 @@ import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const FireSmokeOilLeakDetection: React.FC = () => {
   interface RecentViolationData {
@@ -131,11 +129,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       zone: "Production Floor A",
       incident: 5,
-      alarms: 2,
-      icons: {
-        incident: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+
       subViolations: [
         {
           label: "Fire",
@@ -152,11 +146,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       zone: "Welding Station",
       incident: 8,
-      alarms: 1,
-      icons: {
-        incident: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+
       subViolations: [
         {
           label: "Fire",
@@ -173,11 +163,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       zone: "Chemical Storage",
       incident: 3,
-      alarms: 0,
-      icons: {
-        incident: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+
       subViolations: [
         {
           label: "Gas Leak",

@@ -50,7 +50,7 @@ export interface KpiData {
 
 // Page Navigation Types
 export type PageType =
- | "safety-compliance-dashboard"
+  | "safety-compliance-dashboard"
   | "surveillance-monitoring-dashboard"
   | "vehicle-operational-insights-dashboard"
   | "workforce-monitoring-dasboard"

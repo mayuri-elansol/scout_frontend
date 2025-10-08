@@ -23,9 +23,6 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import WarningIcon from "@mui/icons-material/Warning";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
-
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
     voilation: string;
@@ -143,8 +140,6 @@ const PPEDetection: React.FC = () => {
       createdAt: "2025-09-23 14:32",
     },
   ];
-
-  // Map backend data to recentViolations format
   const recentViolations = backendData.map((item) => {
     const titleParts = [];
 
@@ -168,11 +163,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Production Floor A",
       violations: 8,
-      alarms: 3,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Helmet", value: 3, icon: EngineeringIcon },
         { label: "Vest", value: 2, icon: CheckroomIcon },
@@ -182,11 +172,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Welding Station",
       violations: 6,
-      alarms: 2,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Helmet", value: 4, icon: EngineeringIcon },
         { label: "Glasses", value: 2, icon: VisibilityOffIcon },
@@ -195,11 +180,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Chemical Storage",
       violations: 5,
-      alarms: 1,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Vest", value: 2, icon: CheckroomIcon },
         { label: "Glasses", value: 3, icon: VisibilityOffIcon },
@@ -208,11 +188,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Assembly Line B",
       violations: 7,
-      alarms: 2,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Helmet", value: 2, icon: EngineeringIcon },
         { label: "Vest", value: 3, icon: CheckroomIcon },
@@ -222,11 +197,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Warehouse",
       violations: 4,
-      alarms: 1,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Helmet", value: 1, icon: EngineeringIcon },
         { label: "Vest", value: 2, icon: CheckroomIcon },
@@ -236,11 +206,6 @@ const PPEDetection: React.FC = () => {
     {
       zone: "Maintenance Area",
       violations: 9,
-      alarms: 4,
-      icons: {
-        violations: WarningIcon,
-        alarms: NotificationsActiveIcon,
-      },
       subViolations: [
         { label: "Helmet", value: 4, icon: EngineeringIcon },
         { label: "Vest", value: 3, icon: CheckroomIcon },

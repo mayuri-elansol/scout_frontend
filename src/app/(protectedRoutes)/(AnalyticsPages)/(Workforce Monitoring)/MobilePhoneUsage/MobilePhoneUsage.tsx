@@ -11,8 +11,7 @@ import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const MobilePhoneUsage: React.FC = () => {
   interface ViolationData {
     voilation: string;
@@ -131,47 +130,22 @@ const MobilePhoneUsage: React.FC = () => {
     {
       zone: "Assembly Line",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Production Floor A",
       violations: 1,
-      alarms: 0,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Warehouse",
       violations: 1,
-      alarms: 0,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Main Entrance",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Parking Area",
       violations: 1,
-      alarms: 0,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
 

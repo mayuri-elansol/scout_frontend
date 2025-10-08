@@ -17,8 +17,7 @@ import {
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const FallDetection: React.FC = () => {
   interface RecentViolationData {
     voilation: string;
@@ -154,29 +153,14 @@ const FallDetection: React.FC = () => {
     {
       zone: "Production Floor A",
       violations: 2,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Warehouse",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Maintenance Area",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   interface FilterParams {
