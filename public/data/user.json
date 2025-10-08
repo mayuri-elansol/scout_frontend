@@ -1,6 +1,10 @@
 [
   {
+    "firstName":"Elansol ",
+    "lastName":"Tech",
     "username": "Admin@gmail.com",
-    "password": "Test@123"
+    "password": "Test@123",
+    "role":"ADMIN",
+    "email":"jamgaonkarprachi212@gmail.com"
   }
 ]

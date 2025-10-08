@@ -2,22 +2,23 @@ import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
 import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
-interface Violation {
-  Voilation: string;
+
+export interface Violation {
+  voilation?: string;
   zone: string;
   time: string;
-  severity?: string;
-  status?: string;
   imageUrl?: string;
+  incident?: string;
+  [key: string]: string | number | boolean | undefined; // extra dynamic fields
 }
 
 interface ViolationCardProps {
-  violation: Violation;
-  onClick?: () => void; // add this
+  violations: Violation;
+  onClick?: () => void;
 }
 
 export const ViolationCard: React.FC<ViolationCardProps> = ({
-  violation,
+  violations,
   onClick,
 }) => {
   return (
@@ -35,39 +36,30 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
     >
       <CardContent
         sx={{
-          p: 2,
+          p: 1.5,
           flex: 1,
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Info */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            mb: 1.5,
-          }}
-        >
-          <Box>
-            <Typography
-              sx={{
-                fontSize: "16px",
-                fontWeight: 600,
-                color: "#1c2025",
-                mb: 0.5,
-              }}
-            >
-              {violation.Voilation}
-            </Typography>
-            <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
-              {violation.zone}
-            </Typography>
-            <Typography sx={{ fontSize: "14px", color: "#5c6b7d", mb: 0.25 }}>
-              {violation.time}
-            </Typography>
-          </Box>
+        {/* Header Info */}
+        <Box sx={{ mb: 1.5 }}>
+          <Typography
+            sx={{
+              fontSize: "16px",
+              fontWeight: 600,
+              color: "#1c2025",
+              mb: 0.1,
+            }}
+          >
+            {violations.incident || violations.voilation || "Unknown Violation"}
+          </Typography>
+          <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+            {violations.zone}
+          </Typography>
+          <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
+            {violations.time}
+          </Typography>
         </Box>
 
         {/* Image */}
@@ -85,14 +77,14 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
             position: "relative",
           }}
         >
-          {violation.imageUrl ? (
+          {violations.imageUrl ? (
             <Image
-              src={violation.imageUrl}
+              src={String(violations.imageUrl)}
               alt="Violation"
               fill
               style={{ objectFit: "cover", borderRadius: 6 }}
               unoptimized
-              priority={true}
+              priority
             />
           ) : (
             <Box sx={{ textAlign: "center", color: "#6c757d" }}>

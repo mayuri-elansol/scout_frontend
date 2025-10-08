@@ -118,10 +118,11 @@ const SystemHealthTooltipContent: React.FC<{
 
 const Header: React.FC = () => {
   const theme = useTheme();
-  const { user, logout } = useAuth();
+  const { user, isLoading, logout } = useAuth();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>("safety-compliance-dashboard");
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -173,7 +174,7 @@ const Header: React.FC = () => {
   // Get current page title
   const getPageTitle = () => {
     const allMenuItems = [
-      ...dashboardMenu,
+      ...dashboardMenu.flatMap((category) => category.items),
       ...alertMenu,
       ...analyticsMenu.flatMap((category) => category.items),
     ];
@@ -185,9 +186,10 @@ const Header: React.FC = () => {
     return currentItem?.name ?? "Dashboard";
   };
 
+
   useEffect(() => {
     const allMenuItems = [
-      ...dashboardMenu,
+      ...dashboardMenu.flatMap((category) => category.items),
       ...alertMenu,
       ...analyticsMenu.flatMap((category) => category.items),
     ];
@@ -196,7 +198,7 @@ const Header: React.FC = () => {
       (item) => item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    setCurrentPage(currentItem ? currentItem.page! : "dashboard");
+    setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
   }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
@@ -253,7 +255,7 @@ const Header: React.FC = () => {
           backgroundColor: "white",
           color: "#1c2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)",
+          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)", 
 
           ml: { xs: 0, lg: "315px" },
           width: { xs: "100%", lg: "calc(100% - 316px)" },
@@ -272,11 +274,11 @@ const Header: React.FC = () => {
             </IconButton>
 
             <Typography
-              variant="h6"
+              variant="h5"
               sx={{
-                fontWeight: 600,
                 color: "#1c2025",
-                fontSize: "20px",
+                // fontSize: "20px",
+                pl: 1.2
               }}
             >
               {getPageTitle()}
@@ -325,19 +327,25 @@ const Header: React.FC = () => {
 
             {user && (
               <>
-                <IconButton onClick={handleClick} size="small">
-                  <Avatar
-                    sx={{
-                      width: 32,
-                      height: 32,
-                      backgroundColor: "#3072b0",
-                      fontSize: "14px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {user?.username?.charAt(0).toUpperCase() ?? "?"}
-                  </Avatar>
-                </IconButton>
+                {!isLoading && user && (
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+
+
+                    <IconButton onClick={handleClick} size="small">
+                      <Avatar
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          backgroundColor: "#3072b0",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {user.username?.charAt(0).toUpperCase() ?? "?"}
+                      </Avatar>
+                    </IconButton>
+                  </Box>
+                )}
 
                 <Popper
                   open={openHealth}
@@ -358,13 +366,34 @@ const Header: React.FC = () => {
                   </Box>
                 </Popper>
 
+
+
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
                   onClose={handleClose}
                   onClick={handleClose}
+                  disableScrollLock
                   sx={{ mt: "15px" }}
                 >
+                  {/* User Info at top */}
+                  <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
+                      {user?.firstName} {user?.lastName}
+                    </Typography>
+                    {user?.role && (
+                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+                       {user.role}
+                      </Typography>
+                    )}
+                    {user?.email && (
+                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+                        {user.email}
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {/* Logout Button */}
                   <MenuItem onClick={handleLogout}>
                     <ListItemIcon>
                       <ExitToApp fontSize="small" />

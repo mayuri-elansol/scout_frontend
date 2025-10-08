@@ -14,13 +14,14 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import PeopleIcon from "@mui/icons-material/People";
 const PeoplePresence: React.FC = () => {
   interface PeoplePresenceViolation {
-    Voilation: string;
+    incident: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     peopleCount: number;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -31,20 +32,20 @@ const PeoplePresence: React.FC = () => {
   const PeoplePresenceKpiData = [
     {
       title: "Total People Count",
-      value: "87", // Current number of people detected
+      value: "87",
       icon: Groups,
       tooltipMessage:
         "Shows the total number of people detected in monitored zones.",
     },
     {
       title: "Detected Zones",
-      value: "Zone A, Zone B", // Zones where people are detected
+      value: "Zone A, Zone B",
       icon: LocationOn,
       tooltipMessage: "Lists the zones where people are currently detected.",
     },
     {
       title: "Last Incidence",
-      value: "10:25 AM", // Last detection timestamp
+      value: "10:25 AM",
       icon: AccessTime,
       tooltipMessage:
         "Shows the time when the most recent people presence was detected.",
@@ -74,10 +75,10 @@ const PeoplePresence: React.FC = () => {
   ];
 
   const recentPeoplePresence = backendPeoplePresenceData.map((item) => {
-    const violationMsg = `People detected: ${item.count}`;
+    const incidentMsg = `People detected: ${item.count}`;
 
     return {
-      Voilation: violationMsg,
+      incident: incidentMsg,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -220,7 +221,7 @@ const PeoplePresence: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Incident", minWidth: 200 },
+          { id: "incident", label: "Incident", minWidth: 200 },
           { id: "peopleCount", label: "People Count", minWidth: 120 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
@@ -267,13 +268,9 @@ const PeoplePresence: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

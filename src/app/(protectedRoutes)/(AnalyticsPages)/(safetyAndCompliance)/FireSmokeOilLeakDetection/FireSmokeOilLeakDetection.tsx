@@ -17,16 +17,16 @@ import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const FireSmokeOilLeakDetection: React.FC = () => {
   interface RecentViolationData {
-    Voilation: string;
+    incident: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -84,7 +84,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   ];
 
   const recentFireViolations = backendFireData.map((item) => ({
-    Voilation: `${
+    incident: `${
       item.objectname.charAt(0).toUpperCase() + item.objectname.slice(1)
     } detected`,
     zone: item.zone,
@@ -128,30 +128,54 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Production Floor A",
-      violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      incident: 5,
+
+      subViolations: [
+        {
+          label: "Fire",
+          value: 2,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 3,
+          icon: SmokeFree,
+        },
+      ],
     },
     {
       zone: "Welding Station",
-      violations: 21,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      incident: 8,
+
+      subViolations: [
+        {
+          label: "Fire",
+          value: 4,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 4,
+          icon: SmokeFree,
+        },
+      ],
     },
     {
       zone: "Chemical Storage",
-      violations: 1,
-      alarms: 0,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      incident: 3,
+
+      subViolations: [
+        {
+          label: "Gas Leak",
+          value: 1,
+          icon: LocalFireDepartment,
+        },
+        {
+          label: "Smoke",
+          value: 2,
+          icon: SmokeFree,
+        },
+      ],
     },
   ];
 
@@ -230,7 +254,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -239,7 +263,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
               tooltipMessage="Latest 20 detected fire & smoke violations with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Zone violations */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -256,7 +280,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "Voilation", label: "Incident", minWidth: 200 },
+          { id: "incident", label: "Incident", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 120 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -265,8 +289,8 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         data={recentFireViolations}
         filters={[
           {
-            id: "Voilation",
-            label: "incident",
+            id: "incident",
+            label: "Incident",
             type: "select",
             options: ["Fire detected", "Smoke detected", "Gas detected"],
           },
@@ -308,13 +332,9 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

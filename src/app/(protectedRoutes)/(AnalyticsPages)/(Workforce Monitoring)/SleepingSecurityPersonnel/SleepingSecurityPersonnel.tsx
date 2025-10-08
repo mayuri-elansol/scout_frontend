@@ -11,16 +11,18 @@ import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
+import PersonOffIcon from "@mui/icons-material/PersonOff";
+import HotelIcon from "@mui/icons-material/Hotel";
 const SleepingSecurityPersonnel: React.FC = () => {
   interface SleepingSecurityViolation {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -106,7 +108,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
     if (item.absence) titleParts.push("Security personnel absence detected");
 
     return {
-      Voilation: titleParts.join(", ") || "No violation",
+      voilation: titleParts.join(", ") || "No violation",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -118,23 +120,38 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Main Gate",
-      violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      violations: 3,
+      subViolations: [
+        {
+          label: "Sleeping",
+          value: 2,
+          icon: HotelIcon,
+        },
+        {
+          label: "Absence",
+          value: 1,
+          icon: PersonOffIcon,
+        },
+      ],
     },
     {
       zone: "Assembly Line A",
       violations: 2,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      subViolations: [
+        {
+          label: "Sleeping",
+          value: 1,
+          icon: HotelIcon,
+        },
+        {
+          label: "Absence",
+          value: 1,
+          icon: PersonOffIcon,
+        },
+      ],
     },
   ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -251,7 +268,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
           { id: "zone", label: "Zone", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -260,11 +277,11 @@ const SleepingSecurityPersonnel: React.FC = () => {
         data={recentViolations}
         filters={[
           {
-            id: "Voilation",
+            id: "voilation",
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.Voilation))
+              new Set(recentViolations.map((item) => item.voilation))
             ),
           },
           {
@@ -306,13 +323,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

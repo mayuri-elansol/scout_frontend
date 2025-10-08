@@ -13,8 +13,8 @@ import {
 
 } from "@mui/icons-material";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"; // For Role Management
-import PeopleIcon from "@mui/icons-material/People"; // For User Management
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"; 
+import PeopleIcon from "@mui/icons-material/People"; 
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
@@ -35,9 +35,34 @@ export interface CategoryConfig {
   items: MenuItemConfig[];
 }
 
-// Dashboard menu
-export const dashboardMenu: MenuItemConfig[] = [
-  { name: "Dashboard", icon: SpaceDashboardIcon, page: "dashboard", path: "/DashboardPage" },
+
+export const dashboardMenu: CategoryConfig[] = [
+  {
+    title: "Dashboard",
+    icon: SpaceDashboardIcon,
+    items: [
+      {
+        name: "Safety And Compliance ",
+        page: "safety-compliance-dashboard",
+        path: "/SafetyAndComplianceDashboard",
+      },
+      {
+        name: "Surveillance Monitoring ",
+        page: "surveillance-monitoring-dashboard",
+        path: "/SurveillanceMonitoringDashboard",
+      },
+      {
+        name: "Vehicle Operational Insights ",
+        page: "vehicle-operational-insights-dashboard",
+        path: "/VehicleOperationalInsightsDashboard",
+      },
+      {
+        name: "Workforce Monitoring ",
+        page: "workforce-monitoring-dasboard",
+        path: "/WorkforceMonitoringDashboard",
+      },
+    ],
+  },
 ];
 
 // Alert menu

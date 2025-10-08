@@ -13,16 +13,16 @@ import LockPersonIcon from "@mui/icons-material/LockPerson";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   interface EmployeePresenceViolation {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
@@ -87,7 +87,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
 
   const recentEmployeeViolations = backendEmployeePresenceData.map((item) => {
     return {
-      Voilation: item.alarmTriggered
+      voilation: item.alarmTriggered
         ? "Employee presence detected"
         : "No violation",
       zone: item.zone,
@@ -101,29 +101,14 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
     {
       zone: "Restricted Zone A",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Restricted Zone B",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Restricted Zone C",
       violations: 1,
-      alarms: 1,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   const KpiCardLoading = false;
@@ -238,7 +223,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 150 },
 
@@ -285,13 +270,9 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

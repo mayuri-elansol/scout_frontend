@@ -1,11 +1,13 @@
+
+
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import LoginForm from "../../components/molecules/Login/LoginForm";
-
-interface LoginFormData {
+import { useAuth, User as AuthUser } from "@/customhooks/useAuth";
+ interface LoginFormData {
   username: string;
   password: string;
 }
@@ -13,6 +15,11 @@ interface LoginFormData {
 interface User {
   username: string;
   password: string;
+  firstName: string;
+  lastName: string;
+  role:string;
+  email:string;
+  lastLogin:string;
 }
 
 const Login: React.FC = () => {
@@ -21,40 +28,46 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const handleSubmit = async (data: LoginFormData) => {
-    setError("");
-    setIsLoading(true);
+const { login } = useAuth(); 
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const response = await fetch("/data/user.json");
-      const users: User[] = await response.json();
+const handleSubmit = async (data: LoginFormData) => {
+  setError("");
+  setIsLoading(true);
 
-      const foundUser = users.find(
-        (u) => u.username === data.username && u.password === data.password
-      );
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      if (foundUser) {
-        const token = `token-${Date.now()}`;
-        localStorage.setItem("scout_auth_token", token);
-        localStorage.setItem(
-          "scout_user",
-          JSON.stringify({
-            username: foundUser.username,
-            lastLogin: new Date().toISOString(),
-          })
-        );
-        router.push("/DashboardPage");
-      } else {
-        setError("Invalid username or password");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Login failed. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    const response = await fetch("/data/user.json");
+    const users: User[] = await response.json();
+
+  const foundUser = users.find(
+  (u) => u.username === data.username && u.password === data.password
+);
+
+if (foundUser) {
+  const token = `token-${Date.now()}`;
+  const userData: AuthUser = {
+    ...foundUser,
+    lastLogin: new Date().toISOString(),
   };
+
+  login(userData, token);
+
+  setTimeout(() => {
+    router.push("/SafetyAndComplianceDashboard");
+  }, 100);
+}
+ else {
+      setError("Invalid username or password");
+    }
+  } catch (err) {
+    console.error(err);
+    setError("Login failed. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleTogglePassword = () => setShowPassword((prev) => !prev);
 

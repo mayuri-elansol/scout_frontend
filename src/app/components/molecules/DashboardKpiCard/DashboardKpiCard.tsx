@@ -1,71 +1,35 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Button,
-  Tooltip,
-} from "@mui/material";
+import { Card, CardContent, Box, Typography, Tooltip } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
-interface KpiCardProps {
+
+interface DashboardKpiCardProps {
   title: string;
-  value: string;
+  violationsCount: number;
+  lastDetection: string;
+  lastDetectionTime: string;
   route?: string;
   icon: SvgIconComponent;
-  size?: "small" | "medium" | "large";
-  customWidth?: number;
-
-  trendColor?: string;
-  color?: string;
-  bgColor?: string;
-  borderColor?: string;
-  iconBg?: string;
   tooltipMessage?: string;
+  size?: "small" | "medium" | "large";
 }
 
-const KpiCard: React.FC<KpiCardProps> = ({
+const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   title,
-  value,
-  route,
+  violationsCount,
+  lastDetection,
+  lastDetectionTime,
   icon: IconComponent,
-  size = "medium",
-  customWidth,
-  trendColor,
-  color,
-  bgColor,
-  borderColor,
-  iconBg = "rgba(76, 175, 80, 0.1)",
+  route,
   tooltipMessage,
+  size = "medium",
 }) => {
   const getVariantStyles = () => {
-    // If custom colors are passed, use them directly
-    if (trendColor && color && bgColor && borderColor && iconBg) {
-      return { trendColor, color, bgColor, borderColor, iconBg };
-    }
-    if (value === "Safe") {
-      return {
-        trendColor: "#4caf50",
-        color: "#4caf50",
-        bgColor: "#e8f5e9",
-        borderColor: "#4caf50",
-        iconBg: "rgba(76, 175, 80, 0.1)",
-      };
-    }
-    if (value === "Unsafe") {
-      return {
-        trendColor: "#4caf50",
-        color: "#4caf50",
-        bgColor: "#e8f5e9",
-        borderColor: "#4caf50",
-        iconBg: "rgba(76, 175, 80, 0.1)",
-      };
-    }
-    const numericValue = Number(value);
+    const numericValue = Number(violationsCount);
 
     if (!isNaN(numericValue)) {
       if (numericValue === 0) {
@@ -102,7 +66,6 @@ const KpiCard: React.FC<KpiCardProps> = ({
       case "small":
         return {
           minHeight: "120px",
-
           padding: "16px",
           iconSize: 18,
           valueSize: "20px",
@@ -122,13 +85,13 @@ const KpiCard: React.FC<KpiCardProps> = ({
         };
       default:
         return {
-          minHeight: "160px",
-          padding: "20px",
-          iconSize: 20,
-          valueSize: "25px",
-          titleSize: "14px",
-          subtitleSize: "12px",
-          iconBoxSize: 36,
+          minHeight: "200px",
+          padding: "19px",
+          iconSize: 24,
+          valueSize: "30px",
+          titleSize: "16px",
+          subtitleSize: "14px",
+          iconBoxSize: 44,
         };
     }
   };
@@ -136,18 +99,22 @@ const KpiCard: React.FC<KpiCardProps> = ({
   const variantStyles = getVariantStyles();
   const sizeStyles = getSizeStyles();
   const router = useRouter();
-  const finalWidth = customWidth ? `${customWidth}px` : "auto";
 
   return (
     <Card
+      onClick={() => {
+        if (route) {
+          router.push(route);
+        }
+      }}
       sx={{
         backgroundColor: variantStyles.bgColor,
         border: `1px solid ${variantStyles.borderColor}40`,
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         transition: "all 0.3s ease",
+
         height: "95%",
-        width: finalWidth,
         cursor: "pointer",
         "&:hover": {
           boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
@@ -164,7 +131,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
           flexDirection: "column",
         }}
       >
-        {/* Header with Icon and Trend */}
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
@@ -187,8 +154,9 @@ const KpiCard: React.FC<KpiCardProps> = ({
           >
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
+
           {tooltipMessage && (
-            <Tooltip title={tooltipMessage} arrow>
+            <Tooltip title={tooltipMessage} arrow placement="top">
               <Box
                 sx={{
                   width: sizeStyles.iconBoxSize,
@@ -204,42 +172,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
               </Box>
             </Tooltip>
           )}
-
-          {route && (
-            <Button
-              variant="outlined"
-              size="small"
-              sx={{
-                fontSize: "11px",
-                fontWeight: 600,
-                color: variantStyles.trendColor,
-                backgroundColor: "rgba(255,255,255,0.9)",
-                border: `1px solid ${variantStyles.trendColor}40`,
-                height: "20px",
-                textTransform: "none",
-                lineHeight: 1.2,
-                minWidth: "unset",
-                padding: "0 6px",
-                "&:hover": {
-                  border: `1px solid ${variantStyles.trendColor}`,
-                  backgroundColor: "rgba(255,255,255,0.95)",
-                },
-                "&:focus": {
-                  border: `1px solid ${variantStyles.trendColor}`,
-                },
-              }}
-              onClick={() => {
-                if (route) {
-                  router.push(route);
-                }
-              }}
-            >
-              View
-            </Button>
-          )}
         </Box>
-
-        {/* Value */}
+        {/* Value Section */}
         <Typography
           sx={{
             fontSize: sizeStyles.valueSize,
@@ -249,10 +183,8 @@ const KpiCard: React.FC<KpiCardProps> = ({
             mb: 0.5,
           }}
         >
-          {value}
+          {violationsCount}
         </Typography>
-
-        {/* Title */}
         <Typography
           sx={{
             fontSize: sizeStyles.titleSize,
@@ -264,10 +196,33 @@ const KpiCard: React.FC<KpiCardProps> = ({
         >
           {title}
         </Typography>
+
+        {/* Additional Info */}
+
+        <Typography
+          sx={{
+            fontSize: sizeStyles.subtitleSize,
+            color: "#6b7280",
+            lineHeight: 1.3,
+            mt: 0.5,
+          }}
+        >
+          Last Detection Zone: {lastDetection}
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: sizeStyles.subtitleSize,
+            color: "#6b7280",
+            lineHeight: 1.3,
+            mt: 0.5,
+          }}
+        >
+          Last Detection: {lastDetectionTime}
+        </Typography>
       </CardContent>
     </Card>
   );
 };
 
-export default KpiCard;
-export type { KpiCardProps };
+export default DashboardKpiCard;
+export type { DashboardKpiCardProps };

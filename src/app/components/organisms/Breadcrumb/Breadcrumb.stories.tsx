@@ -15,7 +15,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    currentPage: "dashboard",
+    currentPage: "safety-compliance-dashboard",
     onPageChange: () => {},
   },
 };

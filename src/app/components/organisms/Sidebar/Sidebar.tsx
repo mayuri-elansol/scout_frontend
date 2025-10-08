@@ -129,12 +129,16 @@ const SubMenuItem = React.memo<{
         slotProps={{
           primary: {
             sx: {
-              fontSize: categoryTitle === "Settings" ? "14px" : "12px",
-
-              color: pathname === item.path ? "white" : "#6b7280",
-              fontWeight: pathname === item.path ? 500 : "normal",
-              lineHeight: 1.3,
-            },
+        fontSize:
+          categoryTitle === "Dashboard" ||
+          categoryTitle === "Analytics" ||
+          categoryTitle === "Settings"
+            ? "14px"
+            : "12px",
+        color: pathname === item.path ? "white" : "#6b7280",
+        // fontWeight: pathname === item.path ? 600 : 400,
+        lineHeight: 1.4,
+      },
           },
         }}
       />
@@ -242,12 +246,17 @@ const Sidebar: React.FC<SidebarProps> = () => {
   }, []);
 
   const filteredMenus = useMemo(() => {
-    const dashboardFlags: MenuItemConfig[] = dashboardMenu
-      .map((item) => ({
-        ...item,
-        featureFlag: featureFlag[item.page!] ?? false,
-      }))
-      .filter((item) => item.featureFlag);
+    const dashboardFlags: (CategoryConfig & {
+      items: (MenuItemConfig & { featureFlag: boolean })[];
+    })[] = dashboardMenu.map((category) => ({
+      ...category,
+      items: category.items
+        .map((item) => ({
+          ...item,
+          featureFlag: featureFlag[item.page!] ?? true, 
+        }))
+        .filter((item) => item.featureFlag),
+    }));
 
     const alertFlags: MenuItemConfig[] = alertMenu
       .map((item) => ({
@@ -295,16 +304,67 @@ const Sidebar: React.FC<SidebarProps> = () => {
     () => (
       <>
         {/* Dashboard */}
-        <List sx={{ p: 0 }}>
-          {filteredMenus.dashboardFlags.map((item, index) => (
-            <MenuItem
-              key={uuidv4() + index}
-              item={item}
-              pathname={pathname}
-              theme={theme}
+        {filteredMenus.dashboardFlags.length > 0 && (
+         <List sx={{ p: 0, mt: 1 }}>
+  {filteredMenus.dashboardFlags.map((category, index) => {
+    const isCategoryActive = category.items.some(
+      (item) => item.featureFlag && pathname === item.path
+    );
+
+    const isOpen = openCategories[category.title] ?? false;
+
+    return (
+      <Box key={uuidv4() + index} sx={{ mb: 1 }}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => handleCategoryToggle(category.title)}
+            selected={isCategoryActive && !Object.values(openCategories).some(Boolean)}
+            sx={{
+              borderRadius: 1,
+              py: 1,
+              "&.Mui-selected": {
+                backgroundColor: theme.palette.primary.main,
+                color: "white",
+                "&:hover": { backgroundColor: theme.palette.primary.dark },
+              },
+              color: isCategoryActive ? theme.palette.primary.main : "#5c6b7d",
+            }}
+          >
+            {category.icon && (
+              <ListItemIcon sx={{ minWidth: 36, color: isCategoryActive ? theme.palette.primary.dark : "#5c6b7d" }}>
+                <category.icon  />
+              </ListItemIcon>
+            )}
+            <ListItemText primary={category.title} 
+            
             />
-          ))}
-        </List>
+            {isOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse in={isOpen} timeout="auto" unmountOnExit>
+          <List sx={{ pl: 2 }}>
+            {category.items
+              .filter((item) => item.featureFlag)
+              .map((item, idx) => (
+                <SubMenuItem
+                  key={uuidv4() + idx}
+                  item={item}
+                  pathname={pathname}
+                  theme={theme}
+                  categoryTitle={category.title}
+                  
+                />
+              ))}
+          </List>
+        </Collapse>
+      </Box>
+    );
+  })}
+</List>
+
+        )}
+
 
         {/* Analytics */}
         {filteredMenus.analyticsFlags.length > 0 && (

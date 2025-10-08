@@ -12,31 +12,29 @@ import {
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
-interface ViewAlertPopupProps {
-  open: boolean;
-  handleClose: () => void;
-  title: string;
-  location: string;
-  time: string;
-  cameraId: string;
-  imageUrl: string;
-  alarmTriggered: boolean;
 
-  onDownload?: (imageUrl: string) => void;
+interface ViewAlertPopupProps<
+  T extends Record<string, string | number | boolean | undefined>
+> {
+  readonly open: boolean;
+  readonly handleClose: () => void;
+  readonly details?: T | null;
+  readonly imageKey?: keyof T;
+  readonly onDownload?: (imageUrl: string) => void;
 }
 
-const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
+function ViewAlertPopup<
+  T extends Record<string, string | number | boolean | undefined>
+>({
   open,
   handleClose,
-  title,
-  location,
-  time,
-  cameraId,
-  imageUrl,
-  alarmTriggered,
+  details = {} as T,
+  imageKey,
   onDownload,
-}) => {
+}: ViewAlertPopupProps<T>) {
   const [imageError, setImageError] = useState(false);
+
+  const imageUrl = imageKey && details ? String(details[imageKey]) : "";
 
   useEffect(() => {
     setImageError(false);
@@ -58,6 +56,7 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
     >
       {/* Header */}
       <DialogTitle
+        component="div"
         sx={{
           py: 1,
           px: 2,
@@ -71,10 +70,10 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
       >
         <Typography
           variant="subtitle1"
-          component="span"
+          component="div"
           sx={{ fontWeight: 600 }}
         >
-          Voilation Details
+          Violation Details
         </Typography>
         <IconButton onClick={handleClose} sx={{ color: "white" }}>
           <Close />
@@ -82,46 +81,46 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
       </DialogTitle>
 
       <DialogContent sx={{ p: 2 }}>
-        {/* Violation Info */}
+        {/* Dynamic Details */}
         <Box
           sx={{
             py: 1,
             display: "flex",
-            justifyContent: "space-between",
+            flexWrap: "wrap",
             alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
           }}
         >
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            <strong>Title:</strong>
-            {title}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            <strong>Location:</strong> {location}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            <strong>Camera Id:</strong> {cameraId}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            <strong>Time:</strong> {time}
-          </Typography>
-          <Typography variant="body2" sx={{ mb: 0.5 }}>
-            <strong>Alarm Triggered:</strong> {alarmTriggered ? "Yes" : "No"}
-          </Typography>
-          <IconButton
-            onClick={() => {
-              if (onDownload) {
-                onDownload(imageUrl);
-              } else {
-                console.log("Download clicked", imageUrl);
-              }
-            }}
-            //  color="primary"
-            sx={{
-              color: "#3072b0", // this changes the icon color
-            }}
-          >
-            <DownloadForOfflineIcon fontSize="large" />
-          </IconButton>
+          {details &&
+            Object.entries(details).map(([key, value]) =>
+              key !== String(imageKey) ? (
+                <Typography
+                  key={key}
+                  variant="body2"
+                  sx={{ mb: 0.5 }}
+                  component="div"
+                >
+                  <strong>{key}:</strong> {String(value)}
+                </Typography>
+              ) : null
+            )}
+
+          {/* Download Button */}
+          {imageUrl && (
+            <IconButton
+              onClick={() => {
+                if (onDownload) {
+                  onDownload(imageUrl);
+                } else {
+                  console.log("Download clicked", imageUrl);
+                }
+              }}
+              sx={{ color: "#3072b0" }}
+            >
+              <DownloadForOfflineIcon fontSize="large" />
+            </IconButton>
+          )}
         </Box>
 
         {/* Image Preview */}
@@ -175,6 +174,6 @@ const ViewAlertPopup: React.FC<ViewAlertPopupProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default ViewAlertPopup;

@@ -8,10 +8,14 @@ import {
   IconButton,
   Dialog,
   DialogContent,
+  Chip,
+  Tooltip,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ReportTable from "../../../components/organisms/ReportTable/ReportTable";
+import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
 import { v4 as uuidv4 } from "uuid";
+import ReportTable from "../../../components/organisms/ReportTable/ReportTable";
+
 export interface CameraZone {
   zone: string;
   active?: number;
@@ -19,7 +23,9 @@ export interface CameraZone {
   tempred?: number;
   total?: number;
   timeStamp?: string;
+  camera?: string;
 }
+
 const cameraZonesData = [
   {
     zone: "Zone A",
@@ -58,14 +64,11 @@ interface CameraStatusProps {
 
 const CameraStatus: React.FC<CameraStatusProps> = ({
   cameraZones,
-  loading = true,
+  loading = false,
   maxheight,
 }) => {
   const [open, setOpen] = useState(false);
-
-  // Rows to render
-  const rows = loading ? Array.from(new Array(4)) : cameraZones;
-  const lastIndex = rows.length - 1;
+  const rows = loading ? Array.from(new Array(3)) : cameraZones;
 
   return (
     <>
@@ -75,10 +78,13 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           maxHeight: maxheight ?? 420,
           display: "flex",
           flexDirection: "column",
+          borderRadius: 3,
+          boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
         }}
       >
         <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
-          <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+          {/* Header */}
+          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
             <Typography
               variant="h6"
               sx={{ fontWeight: 600, color: "#1c2025", flex: 1 }}
@@ -86,77 +92,117 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
               {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
             </Typography>
             {!loading && (
-              <IconButton
-                onClick={() => setOpen(true)}
-                size="small"
-                sx={{ color: "#5c6b7d" }}
-              >
-                <VisibilityIcon />
-              </IconButton>
+              <Tooltip title="View Full Report">
+                <IconButton
+                  onClick={() => setOpen(true)}
+                  size="small"
+                  sx={{ color: "#5c6b7d" }}
+                >
+                  <VisibilityIcon />
+                </IconButton>
+              </Tooltip>
             )}
           </Box>
 
-          <Box>
-            {rows.map((zone, index) => {
-              const hasBorder = index < lastIndex;
-              return (
-                <Box
-                  key={uuidv4() + index}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    py: 1.5,
-                    borderBottom: hasBorder ? "1px solid #f0f0f0" : "none",
-                  }}
-                >
-                  <Box sx={{ width: "100%" }}>
-                    {loading ? (
-                      <>
-                        <Skeleton width="40%" height={18} sx={{ mb: 0.5 }} />
-                        <Skeleton width="60%" height={14} />
-                      </>
-                    ) : (
-                      <>
-                        <Typography
-                          sx={{ fontWeight: 500, fontSize: "14px", mb: 0.5 }}
-                        >
-                          {zone.zone}
-                        </Typography>
-                        <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
-                          <Box
-                            component="span"
-                            sx={{ color: "#4caf50", fontWeight: 600 }}
-                          >
-                            {zone.active}/{zone.total}
-                          </Box>{" "}
-                          active •{" "}
-                          <Box
-                            component="span"
-                            sx={{ color: "#f44336", fontWeight: 600 }}
-                          >
-                            {zone.offline}/{zone.total}
-                          </Box>{" "}
-                          offline •{" "}
-                          <Box
-                            component="span"
-                            sx={{ color: "#ff9800", fontWeight: 600 }}
-                          >
-                            {zone.tempred}/{zone.total}
-                          </Box>{" "}
-                          tampered
-                        </Typography>
-                      </>
-                    )}
-                  </Box>
+          {/* Zone List */}
+          {rows.map((zone, index) => (
+            <Box
+              key={index + uuidv4()}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 1.8,
+                mb: 1.3,
+                borderRadius: 2,
+                border: "1px solid #f0f0f0",
+                backgroundColor: "#fafafa",
+                transition: "background-color 0.2s ease",
+                "&:hover": { backgroundColor: "#f5f5f5" },
+              }}
+            >
+              {loading ? (
+                <Box sx={{ width: "100%" }}>
+                  <Skeleton width="40%" height={18} sx={{ mb: 1 }} />
+                  <Skeleton width="80%" height={14} />
                 </Box>
-              );
-            })}
-          </Box>
+              ) : (
+                <>
+                  {/* Left Section: Zone Info */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <CameraEnhanceIcon
+                      sx={{ color: "#1565c0", fontSize: 22 }}
+                    />
+
+                    <Box>
+                      <Typography sx={{ fontSize: "14px" }}>
+                        {zone.zone}
+                      </Typography>
+                      <Typography sx={{ fontSize: "12px", color: "#6b7280" }}>
+                        {zone.camera}
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* Right Section: Status Chips */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 0.8,
+                      flexWrap: "wrap",
+                      justifyContent: "flex-end",
+                    }}
+                  >
+                    <Chip
+                      label={`Total: ${zone.total}`}
+                      size="small"
+                      sx={{
+                        backgroundColor: "#e3f2fd",
+                        color: "#1565c0",
+                        fontWeight: 500,
+                        height: 24,
+                      }}
+                    />
+                    <Chip
+                      label={`Online: ${zone.active}`}
+                      size="small"
+                      sx={{
+                        backgroundColor: "#e8f5e9",
+                        color: "#2e7d32",
+                        fontWeight: 500,
+                        height: 24,
+                      }}
+                    />
+                    <Chip
+                      label={`Offline: ${zone.offline}`}
+                      size="small"
+                      sx={{
+                        backgroundColor: "#ffebee",
+                        color: "#c62828",
+                        fontWeight: 500,
+                        height: 24,
+                      }}
+                    />
+                    <Chip
+                      label={`Tampered: ${zone.tempred}`}
+                      size="small"
+                      sx={{
+                        backgroundColor: "#fff8e1",
+                        color: "#ef6c00",
+                        fontWeight: 500,
+                        height: 24,
+                      }}
+                    />
+                  </Box>
+                </>
+              )}
+            </Box>
+          ))}
         </CardContent>
       </Card>
 
-      {/* Modal / Popup */}
+      {/* Full Report Modal */}
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
@@ -167,7 +213,6 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           <ReportTable
             title="Camera Zones Details"
             columns={[
-              //   { id: "status", label: "Status" },
               { id: "timeStamp", label: "TimeStamp" },
               { id: "zone", label: "Zone" },
               { id: "camera", label: "Camera" },

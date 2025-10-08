@@ -1,72 +1,50 @@
 import React, { useState } from "react";
 import { Meta, StoryObj } from "@storybook/react-vite";
 import ViewAlertPopup from "./ViewAlertPopup";
+import { Box, Button } from "@mui/material";
 
-interface ViewAlertPopupProps {
-  open: boolean;
-  location: string;
-  time: string;
-  assignedTo: string;
-  duration: string;
-  imageUrl: string;
-  handleClose: () => void;
-}
+type ViewAlertPopupType = typeof ViewAlertPopup;
 
-const meta: Meta<typeof ViewAlertPopup> = {
-  title: "Components/Molecules/ViewAlertPopup",
+const meta: Meta<ViewAlertPopupType> = {
+  title: "Molecules/ViewAlertPopup",
   component: ViewAlertPopup,
+  tags: ["autodocs"],
 };
 
 export default meta;
-type Story = StoryObj<typeof ViewAlertPopup>;
+type Story = StoryObj<ViewAlertPopupType>;
 
-// ---------- Wrapper Component to use hooks ----------
-const Template = (args: Partial<ViewAlertPopupProps>) => {
-  const [open, setOpen] = useState(args.open ?? false);
+// ✅ Wrapper component to handle hooks
+const ViewAlertPopupExample: React.FC = () => {
+  const [open, setOpen] = useState(false);
 
-  const handleClose = () => setOpen(false);
+  const mockDetails = {
+    Voilation: "Hard hat missing, Safety vest not worn",
+    zone: "Production Floor A",
+    time: "2025-09-23 15:42",
+    imageUrl: "https://picsum.photos/800/600?random=1",
+    cameraId: "CAM-01",
+    alarmTriggered: true,
+    mobCount: 25,
+  };
 
   return (
-    <ViewAlertPopup
-      open={open}
-      handleClose={handleClose}
-      location={args.location ?? ""}
-      time={args.time ?? ""}
-      imageUrl={args.imageUrl ?? ""}
-      title="missing ppe kit" cameraId={""} alarmTriggered={false}    />
+    <Box>
+      <Button variant="contained" onClick={() => setOpen(true)}>
+        Open ViewAlertPopup
+      </Button>
+
+      <ViewAlertPopup
+        open={open}
+        handleClose={() => setOpen(false)}
+        details={mockDetails}
+        imageKey="imageUrl"
+        onDownload={(url) => alert("Download clicked: " + url)}
+      />
+    </Box>
   );
 };
 
-// ---------- Stories ----------
 export const Default: Story = {
-  render: (args) => <Template {...args} />,
-  args: {
-    open: true,
-    location: "Nagpur, India",
-    time: "08:30 AM, 08-Sep-2025",
-
-    imageUrl: "https://via.placeholder.com/300",
-  },
-};
-
-export const NoImage: Story = {
-  render: (args) => <Template {...args} />,
-  args: {
-    open: true,
-    location: "Mumbai, India",
-    time: "12:00 PM, 08-Sep-2025",
-
-    imageUrl: "",
-  },
-};
-
-export const ImageError: Story = {
-  render: (args) => <Template {...args} />,
-  args: {
-    open: true,
-    location: "Delhi, India",
-    time: "10:00 AM, 08-Sep-2025",
-
-    imageUrl: "https://invalid-url.com/image.png",
-  },
+  render: () => <ViewAlertPopupExample />,
 };

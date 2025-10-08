@@ -19,18 +19,17 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const IntrusionDetection: React.FC = () => {
   interface IntrusionViolation {
-    Voilation: string;
+    incident: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
     id: number;
+    [key: string]: string | number | boolean;
   }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -108,17 +107,17 @@ const IntrusionDetection: React.FC = () => {
   ];
 
   const recentIntrusionViolations = backendIntrusionData.map((item) => {
-    let violationMsg = "";
+    let incidentMsg = "";
 
     // Rule: If alarmTriggered is true → violation
     if (item.alarmTriggered) {
-      violationMsg = "Intrusion detected";
+      incidentMsg = "Intrusion detected";
     } else {
-      violationMsg = "No violation";
+      incidentMsg = "No violation";
     }
 
     return {
-      Voilation: violationMsg,
+      incident: incidentMsg,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -131,21 +130,11 @@ const IntrusionDetection: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Perimeter Zone A",
-      violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      incident: 2,
     },
     {
       zone: "Perimeter Zone B",
-      violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
+      incident: 2,
     },
   ];
   const KpiCardLoading = false;
@@ -249,7 +238,7 @@ const IntrusionDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         columns={[
-          { id: "Voilation", label: "Incident", minWidth: 200 },
+          { id: "incident", label: "Incident", minWidth: 200 },
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
           { id: "cameraId", label: "Cameras", minWidth: 120 },
@@ -291,13 +280,9 @@ const IntrusionDetection: React.FC = () => {
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

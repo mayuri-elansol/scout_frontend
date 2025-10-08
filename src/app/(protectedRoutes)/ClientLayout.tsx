@@ -5,7 +5,6 @@ import { CssBaseline, Box, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
-import Breadcrumb from "../components/organisms/Breadcrumb/Breadcrumb";
 import Header from "../components/organisms/Header/Header";
 
 import { PageType } from "@/app/types";
@@ -23,7 +22,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname();
 
   const [mounted, setMounted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>(
+    "safety-compliance-dashboard"
+  );
 
   const sidebartheme = useTheme();
   const isTabletOrPhone = useMediaQuery(
@@ -37,7 +38,8 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   useEffect(() => {
     const allMenuItems = [
-      ...dashboardMenu,
+      // flatten Dashboard menu (each category’s items)
+      ...dashboardMenu.flatMap((category) => category.items),
       ...alertMenu,
       ...analyticsMenu.flatMap((category) => category.items),
     ];
@@ -46,7 +48,9 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       (item) => item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    setCurrentPage(currentItem ? currentItem.page! : "dashboard");
+    setCurrentPage(
+      currentItem ? currentItem.page! : "safety-compliance-dashboard"
+    );
   }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
@@ -80,16 +84,16 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
               pl: 4,
               pr: 4,
               pb: 4,
-              pt: 9,
+              pt: 10,
               backgroundColor: "#f5f7fa",
               width: "78vw",
             }}
           >
             <RouteLoader>
-              <Breadcrumb
+              {/* <Breadcrumb
                 currentPage={currentPage}
                 onPageChange={handlePageChange}
-              />
+              /> */}
               {children}
             </RouteLoader>
           </Box>

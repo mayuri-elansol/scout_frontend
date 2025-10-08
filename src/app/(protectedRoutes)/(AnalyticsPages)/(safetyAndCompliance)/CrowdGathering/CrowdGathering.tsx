@@ -16,18 +16,17 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
 
 const CrowdGathering: React.FC = () => {
   interface ViolationRow {
-    Voilation: string;
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
     mobCount: number;
+    [key: string]: string | number | boolean;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<ViolationRow | null>(null);
@@ -121,7 +120,7 @@ const CrowdGathering: React.FC = () => {
     }
 
     return {
-      Voilation: violationMsg,
+      voilation: violationMsg,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -135,20 +134,10 @@ const CrowdGathering: React.FC = () => {
     {
       zone: "Hazard Zone A",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
     {
       zone: "Hazard Zone B",
       violations: 2,
-      alarms: 2,
-      icons: {
-        violations: ViolationsIcon,
-        alarms: AlarmIcon,
-      },
     },
   ];
   interface FilterParams {
@@ -266,7 +255,7 @@ const CrowdGathering: React.FC = () => {
       <ReportTable
         title="Crowd Gathering in Hazardous Zones Report"
         columns={[
-          { id: "Voilation", label: "Violation", minWidth: 200 },
+          { id: "voilation", label: "Violation", minWidth: 200 },
 
           { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 150 },
@@ -311,16 +300,23 @@ const CrowdGathering: React.FC = () => {
       />
       {/* View Alert Popup */}
       {viewPopupData && (
+        // <ViewAlertPopup
+        //   open={viewPopupOpen}
+        //   handleClose={() => setViewPopupOpen(false)}
+        //   title={viewPopupData.Voilation}
+        //   location={viewPopupData.zone}
+        //   time={viewPopupData.time}
+        //   cameraId={viewPopupData.cameraId}
+        //   imageUrl={viewPopupData.imageUrl}
+        //   alarmTriggered={viewPopupData.alarmTriggered}
+        //   onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+        // />
         <ViewAlertPopup
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
-          title={viewPopupData.Voilation}
-          location={viewPopupData.zone}
-          time={viewPopupData.time}
-          cameraId={viewPopupData.cameraId}
-          imageUrl={viewPopupData.imageUrl}
-          alarmTriggered={viewPopupData.alarmTriggered}
-          onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
+          details={viewPopupData}
+          imageKey="imageUrl"
+          onDownload={(url) => console.log("Download:", url)}
         />
       )}
     </Box>

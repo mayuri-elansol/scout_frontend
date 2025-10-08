@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -22,9 +22,14 @@ import {
 } from "@mui/material";
 import { Description, Visibility, Download } from "@mui/icons-material";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { v4 as uuidv4 } from "uuid";
+
 /** Filter Types */
-type FilterType = "text" | "select" | "date";
+type FilterType = "text" | "select" | "date" | "datetime";
 
 /** Column definition for a given row type T */
 export interface ReportColumn<T> {
@@ -33,7 +38,9 @@ export interface ReportColumn<T> {
   minWidth?: number;
   align?: "left" | "right" | "center";
 }
+
 export type FilterOption = string | number | boolean;
+
 /** Filter definition for a given row type T */
 export interface ReportFilter<T> {
   id: keyof T;
@@ -60,6 +67,7 @@ interface ReportTableProps<T extends object> {
   readonly onView?: (row: T) => void;
   readonly onDownload?: (row: T) => void;
   readonly tooltipMessage: string;
+  
 }
 
 function ReportTable<T extends Record<string, string | number | boolean>>({
@@ -80,23 +88,72 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const [filterValues, setFilterValues] = useState<Record<keyof T, string>>(
     {} as Record<keyof T, string>
   );
+  const [dateTimeValues, setDateTimeValues] = useState<
+    Record<string, Dayjs | null>
+  >({});
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // Check if any filter has a value
+  const hasActiveFilters = useMemo(() => {
+    const hasTextFilters = Object.values(filterValues).some(
+      (value) => value !== "" && value !== undefined
+    );
+    const hasDateFilters = Object.values(dateTimeValues).some(
+      (value) => value !== null && value !== undefined
+    );
+    return hasTextFilters || hasDateFilters;
+  }, [filterValues, dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
   };
 
-  const applyFilters = (row: T) =>
-    Object.entries(filterValues).every(([key, value]) =>
-      !value
-        ? true
-        : String(row[key as keyof T])
-            .toLowerCase()
-            .includes(value.toLowerCase())
-    );
+  const handleDateTimeChange = (label: string, value: Dayjs | null) => {
+    setDateTimeValues((prev) => ({ ...prev, [label]: value }));
+  };
 
-  const filteredData = data.filter(applyFilters);
+  // Calculate min/max dates for start and end date with 3-month range
+  const getDateConstraints = (label: string) => {
+    const now = dayjs();
+    const threeMonthsAgo = now.subtract(3, "month");
+
+    if (label === "Start Date") {
+      const endDate = dateTimeValues["End Date"];
+      return {
+        minDate: threeMonthsAgo,
+        maxDate: endDate ?? now,
+      };
+    } else if (label === "End Date") {
+      const startDate = dateTimeValues["Start Date"];
+      return {
+        minDate: startDate ?? threeMonthsAgo,
+        maxDate: now,
+      };
+    }
+    return { minDate: threeMonthsAgo, maxDate: now };
+  };
+
+  const handleSubmit = () => {
+    setPage(0);
+    // Combine regular filters with datetime filters
+    const combinedFilters = {
+      ...filterValues,
+      ...Object.fromEntries(
+        Object.entries(dateTimeValues)
+          .filter(([value]) => value !== null)
+          .map(([key, value]) => [key, value?.toISOString() || ""])
+      ),
+    };
+    onSubmit?.(combinedFilters);
+  };
+
+  const handleReset = () => {
+    setFilterValues({} as Record<keyof T, string>);
+    setDateTimeValues({});
+    setPage(0);
+    onReset?.();
+  };
 
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -154,11 +211,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       return (
         <Typography
           sx={{
-            color: "#1976d2",
+            //  color: "#1976d2",
             fontSize: "14px",
             fontWeight: 500,
-            cursor: "pointer",
-            "&:hover": { textDecoration: "underline" },
           }}
         >
           {String(value)}
@@ -176,13 +231,57 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const handleDownloadClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => setAnchorEl(null);
+
   const handleExportClick = (format: "csv" | "pdf") => {
-    onExport?.(format, filterValues);
+    const combinedFilters = {
+      ...filterValues,
+      ...Object.fromEntries(
+        Object.entries(dateTimeValues)
+          .filter(([value]) => value !== null)
+          .map(([key, value]) => [key, value?.toISOString() || ""])
+      ),
+    };
+    onExport?.(format, combinedFilters);
     handleClose();
   };
 
   const renderFilter = (filter: ReportFilter<T>) => {
+    // Handle datetime type filters
+    if (filter.type === "date") {
+      const constraints = getDateConstraints(filter.label);
+      return (
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DateTimePicker
+            label={filter.label}
+            value={dateTimeValues[filter.label] || null}
+            onChange={(newValue) =>
+              handleDateTimeChange(
+                filter.label,
+                newValue ? dayjs(newValue) : null
+              )
+            }
+            minDateTime={constraints.minDate}
+            maxDateTime={constraints.maxDate}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                sx: { minWidth: 150,
+                   "& .MuiPickersOutlinedInput-root": {
+                    height: "48px",
+                  },
+                  "& .MuiInputLabel-root": {
+                    transformOrigin: "top left",
+                  },
+                 },
+              },
+            }}
+          />
+        </LocalizationProvider>
+      );
+    }
+
     const commonProps = {
       label: filter.label,
       fullWidth: true,
@@ -204,14 +303,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
           ))}
         </TextField>
       );
-    if (filter.type === "date")
-      return (
-        <TextField
-          {...commonProps}
-          type="date"
-          slotProps={{ inputLabel: { shrink: true } }}
-        />
-      );
 
     return null;
   };
@@ -230,8 +321,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         </TableCell>
       </TableRow>
     ));
-  } else if (filteredData.length > 0) {
-    tableRows = filteredData.map((row, index) => (
+  } else if (data.length > 0 ) {
+    tableRows = data.map((row, index) => (
       <TableRow key={uuidv4() + index}>
         {columns.map((column, index) => (
           <TableCell key={uuidv4() + index} align={column.align ?? "left"}>
@@ -284,7 +375,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               </Typography>
             </Box>
             {tooltipMessage && (
-              <Tooltip title={tooltipMessage} arrow>
+              <Tooltip title={tooltipMessage} arrow placement="left">
                 <Box sx={{ cursor: "pointer", color: "#f44336" }}>
                   <InfoOutlineIcon />
                 </Box>
@@ -309,8 +400,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               <Button
                 size="small"
                 variant="outlined"
-                onClick={() => onSubmit?.(filterValues)}
-                disabled={isSubmitDisabled}
+                onClick={handleSubmit}
+                disabled={!hasActiveFilters || isSubmitDisabled}
               >
                 Submit
               </Button>
@@ -337,10 +428,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 size="small"
                 variant="outlined"
                 color="primary"
-                onClick={() => {
-                  setFilterValues({} as Record<keyof T, string>);
-                  onReset?.();
-                }}
+                onClick={handleReset}
+                disabled={!hasActiveFilters}
               >
                 Reset
               </Button>
@@ -393,7 +482,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         {/* Pagination */}
         <TablePagination
           component="div"
-          count={tableRows.length}
+          count={data.length}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}
