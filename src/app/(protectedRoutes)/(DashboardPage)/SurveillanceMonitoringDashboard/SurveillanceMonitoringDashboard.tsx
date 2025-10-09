@@ -15,6 +15,7 @@ import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardTabs from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
@@ -99,7 +100,7 @@ const SurveillanceMonitoring: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
+        {/* <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
           <ActivityFeed
             loading={false}
             activities={[
@@ -126,13 +127,11 @@ const SurveillanceMonitoring: React.FC = () => {
               },
             ]}
           />
-        </Box>
+        </Box> */}
+
+        {/* Tabs Section for Charts */}
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
+          <DashboardTabs />
         </Box>
       </Box>
     </Box>

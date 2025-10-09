@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CameraZone } from "@/app/types";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import {
   Shield,
   LocalFireDepartment,
@@ -21,6 +21,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardTabs from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
 const SafetyAndComplianceDashboard: React.FC = () => {
   const kpiData = [
@@ -95,14 +96,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
   return (
-    <Box
+    <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        backgroundColor: "#f5f7fa",
-        pt: -5,
-        height: "calc(100vh - 115px)", 
+        // backgroundColor: "#f5f7fa",
+        // pt:1,
+        // height: "calc(100vh - 115px)", 
+          pt:2.5,
+          pb:3,
+          px:3,
+          // p: 3,
+          mb: 4,
+          backgroundColor: "#ffffff",
+          borderRadius: 2,
       }}
     >
       {/* <Box
@@ -142,43 +150,41 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
-          <ActivityFeed
-            loading={false}
-            activities={[
-              {
-                time: "11:12 AM",
-                event: "PPE Violation Detected",
-                zone: "Production Floor - Camera 3",
-                severity: "high",
-                icon: Shield,
-              },
-              {
-                time: "11:08 AM",
-                event: "Vehicle Speed Limit Exceeded",
-                zone: "Parking Lot - Camera 7",
-                severity: "medium",
-                icon: DirectionsCar,
-              },
-              {
-                time: "11:05 AM",
-                event: "Unauthorized Access Attempt",
-                zone: "Gate 2 - Camera 12",
-                severity: "high",
-                icon: Visibility,
-              },
-            ]}
-          />
-        </Box>
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
-        </Box>
-      </Box>
-    </Box>
+             {/* <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
+               <ActivityFeed
+                 loading={false}
+                 activities={[
+                   {
+                     time: "11:12 AM",
+                     event: "PPE Violation Detected",
+                     zone: "Production Floor - Camera 3",
+                     severity: "high",
+                     icon: Shield,
+                   },
+                   {
+                     time: "11:08 AM",
+                     event: "Vehicle Speed Limit Exceeded",
+                     zone: "Parking Lot - Camera 7",
+                     severity: "medium",
+                     icon: DirectionsCar,
+                   },
+                   {
+                     time: "11:05 AM",
+                     event: "Unauthorized Access Attempt",
+                     zone: "Gate 2 - Camera 12",
+                     severity: "high",
+                     icon: Visibility,
+                   },
+                 ]}
+               />
+             </Box> */}
+     
+             {/* Tabs Section for Charts */}
+             <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
+               <DashboardTabs />
+             </Box>
+           </Box>
+    </Paper>
   );
 };
 
