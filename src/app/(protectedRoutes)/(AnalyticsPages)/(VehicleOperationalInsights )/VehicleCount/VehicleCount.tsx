@@ -23,7 +23,6 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 const VehicleCount: React.FC = () => {
   interface VehicleCountEvent {
     voilation: string;

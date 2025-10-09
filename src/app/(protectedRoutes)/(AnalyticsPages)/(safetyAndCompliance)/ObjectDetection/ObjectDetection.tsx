@@ -261,7 +261,7 @@ const ObjectDetection: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              tooltipMessage="Latest 20 detected PPE violations with details."
+              tooltipMessage="Latest 20 Forklift / Vehicle detected in Walkways with details."
               label="Recent Violations"
               violations={recentDetections}
               loading={false}
@@ -274,7 +274,7 @@ const ObjectDetection: React.FC = () => {
               //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows violations per zone"
             />
           </Grid>
         </Grid>

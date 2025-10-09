@@ -290,7 +290,7 @@ const EmployeeIdleTime: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              tooltipMessage="Latest 20 detected  idel, working,not present employee with details."
+              tooltipMessage="Latest 20 detected idel, working,not present employee with details."
               label="Recent Violations"
               violations={recentIdleEvents}
               loading={false}
@@ -303,7 +303,7 @@ const EmployeeIdleTime: React.FC = () => {
               //showSubViolations
               violationsZone={zoneIdleData}
               loading={false}
-              tooltipMessage="Shows violations per zone"
+              tooltipMessage="Shows idel, working,not present employee per zone"
             />
           </Grid>
         </Grid>

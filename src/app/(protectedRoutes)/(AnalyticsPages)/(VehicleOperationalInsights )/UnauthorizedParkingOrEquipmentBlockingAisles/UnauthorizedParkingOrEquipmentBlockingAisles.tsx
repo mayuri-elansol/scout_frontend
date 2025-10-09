@@ -282,7 +282,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
-              tooltipMessage="recent voliaotion"
+              tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
@@ -292,7 +292,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations  per zone"
+              tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
             />
           </Grid>
         </Grid>

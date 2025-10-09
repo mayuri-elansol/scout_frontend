@@ -255,7 +255,7 @@ const MobilePhoneUsage: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows mobile phone usage violations per zone"
             />
           </Grid>
         </Grid>
@@ -312,7 +312,7 @@ const MobilePhoneUsage: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed mobile phone usage  report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
       {viewPopupData && (

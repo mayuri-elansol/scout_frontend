@@ -238,7 +238,7 @@ const EmergencyExitBlockage: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows emergency exit blockage per zone"
             />
           </Grid>
         </Grid>

@@ -18,7 +18,9 @@ interface ClientLayoutProps {
   children: ReactNode;
 }
 
-export default function ClientLayout({ children }: ClientLayoutProps) {
+export default function ClientLayout({
+  children,
+}: Readonly<ClientLayoutProps>) {
   const pathname = usePathname();
 
   const [mounted, setMounted] = useState(false);

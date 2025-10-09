@@ -110,7 +110,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
   ];
   const recentCanteenUsage = backendData.map((item) => {
     return {
-      usage: item.usage, // instead of violation
+      usage: item.usage,
       count: item.count,
       zone: item.zone,
       time: item.createdAt,
@@ -261,7 +261,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Canteen Usage"
+              label="Latest 20 canteen usage with details."
               violations={recentCanteenUsage}
               loading={false}
               tooltipMessage="recent voilation"

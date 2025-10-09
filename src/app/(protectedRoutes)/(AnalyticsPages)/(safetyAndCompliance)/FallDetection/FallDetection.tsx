@@ -269,7 +269,7 @@ const FallDetection: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows laydown/sleeping/falldown violations per zone"
             />
           </Grid>
         </Grid>

@@ -92,12 +92,7 @@ const PeopleCount: React.FC = () => {
   const zonePeopleCountData = [
     {
       zone: "Production Floor A",
-      // enteredCount: 150,
-      // exitCount: 120,
-      // icons: {
-      //   enteredCount: PeopleIcon,
-      //   exitCount: ExitToAppIcon,
-      // },
+
       subViolations: [
         { label: "entered Count", value: 3, icon: PeopleIcon },
         { label: "exit Count", value: 2, icon: ExitToAppIcon },
@@ -324,7 +319,7 @@ const PeopleCount: React.FC = () => {
         downloadFileName="people-count-report"
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
 

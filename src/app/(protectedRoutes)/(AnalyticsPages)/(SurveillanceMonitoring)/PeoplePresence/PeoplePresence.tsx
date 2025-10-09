@@ -201,23 +201,23 @@ const PeoplePresence: React.FC = () => {
               label="Recent Violations"
               violations={recentPeoplePresence}
               loading={false}
-              tooltipMessage="Latest 20 people detection inside premises with details."
+              tooltipMessage="Latest 20 people detection during shutdown hours with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            {" "}
             <ZoneViolations
+              label="Zone Incident"
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows people presence during shutdown hours incidents per zone"
             />
           </Grid>
         </Grid>
       </Paper>
       {/* </Box> */}
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
@@ -261,7 +261,7 @@ const PeoplePresence: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
       {viewPopupData && (

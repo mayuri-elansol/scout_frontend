@@ -245,13 +245,13 @@ const CrowdGathering: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows crowd gathered event per zone"
             />
           </Grid>
         </Grid>
       </Paper>
       {/* </Box> */}
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Crowd Gathering in Hazardous Zones Report"
         columns={[
