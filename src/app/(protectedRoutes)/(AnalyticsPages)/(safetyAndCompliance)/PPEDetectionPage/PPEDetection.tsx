@@ -297,7 +297,7 @@ const PPEDetection: React.FC = () => {
               //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows PPE violations per zone"
             />
           </Grid>
         </Grid>

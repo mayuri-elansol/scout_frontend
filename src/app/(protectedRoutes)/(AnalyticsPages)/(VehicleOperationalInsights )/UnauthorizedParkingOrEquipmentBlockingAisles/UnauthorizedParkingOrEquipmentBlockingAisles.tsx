@@ -1,70 +1,185 @@
 "use client";
 
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import BlockIcon from "@mui/icons-material/Block";
-import { Block, DirectionsCar, LocationOn, Shield } from "@mui/icons-material";
+import {
+  DirectionsCar,
+  Block,
+  Warning,
+  ReportProblem,
+} from "@mui/icons-material";
+
+import CarIcon from "@mui/icons-material/DirectionsCar";
+import EquipmentIcon from "@mui/icons-material/Build";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
-  const KpiData = [
+  interface UnauthorizedParkingEvent {
+    eventMessage: string; // type of violation message
+    zone: string;
+    time: string; // createdAt time
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    updatedAt: string;
+    [key: string]: string | number | boolean;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<UnauthorizedParkingEvent | null>(null);
+  const UnauthorizedParkingKpiData = [
     {
-      title: "Total Blockages",
-      value: "87",
-      icon: Shield,
+      title: "Total Unauthorized Events",
+      value: "48", // total count of parking/equipment blocking events
+      icon: ReportProblem, // represents incidents
+      tooltipMessage:
+        "Total unauthorized parking or equipment blocking events recorded.",
     },
     {
-      title: "Vehicle Blockages",
-      value: "12", // specific to cars/vehicles
-      icon: DirectionsCar, // better for car-related blockages
+      title: "Unauthorized Car Parking",
+      value: "32", // count of car-type violations
+      icon: DirectionsCar,
+      tooltipMessage: "Number of unauthorized car parking events detected.",
     },
     {
-      title: "Non-Vehicle Blockages",
-      value: "94",
+      title: "Equipment Blocking Aisles",
+      value: "16", // count of non-car-type violations
       icon: Block,
+      tooltipMessage: "Number of incidents where equipment blocked aisles.",
     },
     {
-      title: "Most Affected Zone",
-      value: "Zone A",
-      icon: LocationOn,
+      title: "Active Zones",
+      value: "5", // zones with violations
+      icon: Warning,
+      tooltipMessage:
+        "Number of zones with unauthorized parking or blocking incidents.",
+    },
+    {
+      title: "Busiest Zone",
+      value: "Zone A", // zone with most events
+      icon: DirectionsCar,
+      tooltipMessage:
+        "Zone with the highest number of unauthorized parking or blocking incidents.",
     },
   ];
 
-  const recentViolations = [
+  const backendData = [
     {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 201,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Loading Bay A",
+      camera: "CAM-11",
+      createdAt: "2025-10-09 08:42",
+      updatedAt: "2025-10-09 08:45",
     },
     {
-      Voilation: "Safety vest not worn",
+      id: 202,
+      typeOf: "Not Car",
+      snapshot: "https://picsum.photos/400/200?random=12",
       zone: "Warehouse Zone B",
-      time: "14:18",
-
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      camera: "CAM-12",
+      createdAt: "2025-10-09 09:15",
+      updatedAt: "2025-10-09 09:18",
+    },
+    {
+      id: 203,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Assembly Area C",
+      camera: "CAM-13",
+      createdAt: "2025-10-09 10:05",
+      updatedAt: "2025-10-09 10:08",
+    },
+    {
+      id: 204,
+      typeOf: "Not Car",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Maintenance Area",
+      camera: "CAM-14",
+      createdAt: "2025-10-09 11:25",
+      updatedAt: "2025-10-09 11:28",
+    },
+    {
+      id: 205,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      zone: "Parking Zone D",
+      camera: "CAM-15",
+      createdAt: "2025-10-09 12:40",
+      updatedAt: "2025-10-09 12:45",
     },
   ];
-  const cameraZones: CameraZone[] = [
+
+  const recentViolations = backendData.map((item) => {
+    const eventMessage =
+      item.typeOf === "Car"
+        ? "Unauthorized Car Parking"
+        : "Equipment Blocking Aisle";
+
+    return {
+      eventMessage,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      alarmTriggered: true, // assume all are alarm-triggered for violations
+      updatedAt: item.updatedAt,
+    };
+  });
+
+  console.log(recentViolations);
+
+  const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      zone: "Loading Bay A",
+      violations: 5,
+      subViolations: [
+        { label: "Car", value: 3, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Warehouse Zone B",
+      violations: 4,
+      subViolations: [
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 3, icon: EquipmentIcon },
+      ],
+    },
+    {
+      zone: "Assembly Area C",
+      violations: 6,
+      subViolations: [
+        { label: "Car", value: 4, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
+    },
+    {
+      zone: "Maintenance Area",
+      violations: 3,
+      subViolations: [
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
+    },
+    {
+      zone: "Parking Zone D",
+      violations: 2,
+      subViolations: [
+        { label: "Car", value: 2, icon: CarIcon },
+        { label: "Equipment", value: 0, icon: EquipmentIcon },
+      ],
+    },
   ];
   interface FilterParams {
     status?: string;
@@ -83,6 +198,15 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
+  };
+
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: UnauthorizedParkingEvent) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   return (
@@ -140,7 +264,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              KpiData.map((kpi, index) => (
+              UnauthorizedParkingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -158,68 +282,41 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
-              tooltipMessage="recent voliaotn"
+              tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              //showSubViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
-        title="Detailed Report"
+        title="Unauthorized Parking / Equipment Blocking Report"
+        tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          { id: "type", label: "Type ", minWidth: 120 },
-
+          { id: "eventMessage", label: "Voilation", minWidth: 200 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 150 },
+          { id: "time", label: "Timestamp", minWidth: 150 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={[
-          {
-            id: "UP-001",
-            type: "Car",
-            snapshot: "snapshot_url_1.jpg",
-            zone: "Parking Lot A",
-            camera: "CAM-301",
-            timestamp: "2025-09-24 09:15:00",
-          },
-          {
-            id: "UP-002",
-            type: "Not Car",
-            snapshot: "snapshot_url_2.jpg",
-            zone: "Loading Dock B",
-            camera: "CAM-302",
-            timestamp: "2025-09-24 09:45:00",
-          },
-          {
-            id: "UP-003",
-            type: "Car",
-            snapshot: "snapshot_url_3.jpg",
-            zone: "Main Gate",
-            camera: "CAM-303",
-            timestamp: "2025-09-24 10:05:00",
-          },
-          {
-            id: "UP-004",
-            type: "Not Car",
-            snapshot: "snapshot_url_4.jpg",
-            zone: "Warehouse Area",
-            camera: "CAM-304",
-            timestamp: "2025-09-24 10:30:00",
-          },
-        ]}
+        data={recentViolations}
         filters={[
           {
-            id: "type",
-            label: "Type Of",
+            id: "eventMessage",
+            label: "Event",
             type: "select",
-            options: ["Car", "Not Car"],
+            options: ["Unauthorized Car Parking", "Equipment Blocking Aisle"],
           },
+
           {
             id: "zone",
             label: "Zone",
@@ -231,15 +328,26 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               "Warehouse Area",
             ],
           },
-          { id: "timestamp", label: "Start Date", type: "date" },
-          { id: "timestamp", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="unauthorized-parking-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         onExport={handleExport}
         loading={false}
-        tooltipMessage="report table"
+      />
+
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

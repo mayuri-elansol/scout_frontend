@@ -260,16 +260,17 @@ const FireSmokeOilLeakDetection: React.FC = () => {
               label="Recent Violations"
               violations={recentFireViolations}
               loading={false}
-              tooltipMessage="Latest 20 detected fire & smoke violations with details."
+              tooltipMessage="Latest 20 detected fire & smoke incident with details."
             />
           </Grid>
           {/*  Zone violations */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
+              label="Zone Incident"
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows fire & smoke incident per zone"
             />
           </Grid>
         </Grid>

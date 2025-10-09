@@ -111,9 +111,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
   return (
     <Box>
       {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-   
-      </Box>
+      <Box sx={{ mb: 3 }}></Box>
       <Paper
         sx={{
           p: 3,

@@ -226,9 +226,10 @@ const IntrusionDetection: React.FC = () => {
           {/* item xs={12} lg={4} */}
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
+              label="Zone Incident"
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows intrusion detected per zone"
             />
           </Grid>
         </Grid>

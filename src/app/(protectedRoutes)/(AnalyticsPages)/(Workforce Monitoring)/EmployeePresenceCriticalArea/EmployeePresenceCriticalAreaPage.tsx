@@ -205,7 +205,7 @@ const EmployeePresence: React.FC = () => {
               label="Recent Violations"
               violations={recentEmployeeViolations}
               loading={false}
-              tooltipMessage="Latest 20  violations where employee entred in critical areas with details."
+              tooltipMessage="Latest 20 violations where employee entred in critical areas with details."
             />
           </Grid>
           {/* Critical Zones Status */}
@@ -215,7 +215,7 @@ const EmployeePresence: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows employee entred in critical zone"
             />
           </Grid>
         </Grid>

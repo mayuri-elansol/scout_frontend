@@ -11,8 +11,7 @@ import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import ViolationsIcon from "@mui/icons-material/Warning";
-import AlarmIcon from "@mui/icons-material/NotificationImportant";
+
 const EmergencyExitBlockage: React.FC = () => {
   interface ReportData extends Record<string, string | number | boolean> {
     voilation: string;
@@ -239,7 +238,7 @@ const EmergencyExitBlockage: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows emergency exit blockage per zone"
             />
           </Grid>
         </Grid>

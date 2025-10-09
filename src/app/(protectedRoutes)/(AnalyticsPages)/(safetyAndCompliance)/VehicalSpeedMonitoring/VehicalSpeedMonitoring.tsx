@@ -223,7 +223,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
               label="Recent Violations"
               violations={recentVehicleViolations}
               loading={false}
-              tooltipMessage="Latest 20 detected vehical speed violations with details."
+              tooltipMessage="Latest 20 vehical overspeeding detected with details."
             />
           </Grid>
           {/* PPE Compliance by Zone */}
@@ -232,7 +232,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows vehical overspeeding violations per zone"
             />
           </Grid>
         </Grid>

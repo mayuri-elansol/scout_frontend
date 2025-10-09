@@ -90,6 +90,7 @@ function ViewAlertPopup<
             alignItems: "center",
             justifyContent: "space-between",
             width: "100%",
+            gap: 0.3,
           }}
         >
           {details &&
