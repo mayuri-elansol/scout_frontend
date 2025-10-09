@@ -52,10 +52,10 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               mb: 0.5,
             }}
           >
-            {violations.incident ||
-              violations.voilation ||
-              violations.usage ||
-              violations.eventMessage ||
+            {violations.incident ??
+              violations.voilation ??
+              violations.usage ??
+              violations.eventMessage ??
               "Unknown Violation"}
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
