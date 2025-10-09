@@ -245,6 +245,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                               xs: "1fr",
                               sm: "repeat(auto-fit, minmax(120px, 1fr))",
                             },
+
                             gap: { xs: 1, sm: 1.5 },
                           }}
                         >

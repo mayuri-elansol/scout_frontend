@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   Card,
@@ -188,7 +187,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
             <IconComponent sx={{ fontSize: sizeStyles.iconSize }} />
           </Box>
           {tooltipMessage && (
-            <Tooltip title={tooltipMessage} arrow>
+            <Tooltip title={tooltipMessage} arrow placement="top">
               <Box
                 sx={{
                   width: sizeStyles.iconBoxSize,

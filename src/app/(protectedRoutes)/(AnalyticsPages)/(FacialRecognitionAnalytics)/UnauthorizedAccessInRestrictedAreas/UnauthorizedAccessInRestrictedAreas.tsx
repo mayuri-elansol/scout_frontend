@@ -1,113 +1,157 @@
 "use client";
 
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
 import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-import {
-  CameraAlt,
-  Place,
-  Schedule,
-  Shield,
-  Warning,
-} from "@mui/icons-material";
+import { CameraAlt, Place, Schedule, Warning } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
+  interface UnauthorizedAccess {
+    voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
+  }
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<UnauthorizedAccess | null>(
+    null
+  );
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
   const UnauthorizedAccessKpiData = [
     {
       title: "Total Unauthorized Access",
-      value: "25", // Total records in the table
-      subtitle: "Total incidents detected",
-      trend: "+4",
+      value: "25",
       trendColor: "#f44336",
       color: "#f44336",
       bgColor: "#ffebee",
       icon: Warning,
+      tooltipMessage: "Total unauthorized entries detected.",
     },
     {
-      title: "Active Cameras with Violations",
-      value: "6", // Count of unique cameras from 'camera' field in incidents table
-      subtitle: "Cameras detecting unauthorized access",
-      trend: "Stable",
+      title: "Zones Affected",
+      value: "Zone A, Zone B, Zone C",
       trendColor: "#2196f3",
       color: "#2196f3",
       bgColor: "#e3f2fd",
       icon: CameraAlt,
+      tooltipMessage: "Zones with detected unauthorized access.",
     },
     {
       title: "Most Violated Zone",
-      value: "Chemical Storage", // Zone with highest number of incidents
-      subtitle: "Zone with most unauthorized entries",
-      trend: "Today",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
+      value: "Chemical Storage",
       icon: Place,
+      tooltipMessage: "Zone with the most access breaches.",
     },
     {
       title: "Peak Hour of Incidents",
-      value: "15:00", // Calculate: EXTRACT(HOUR from createdat) → COUNT(*) → max
-      subtitle: "Hour with maximum unauthorized access",
-      trend: "Today",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
+      value: "15:00",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
       icon: Schedule,
+      tooltipMessage: "Time with highest unauthorized entries.",
     },
-
     {
-      title: "Zones with Violations",
-      value: "5", // Unique zones from 'zone' field
-      subtitle: "Zones where incidents occurred",
-      trend: "Stable",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
-      icon: Shield,
+      title: "Last Incident Detected",
+      value: "15:00",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      icon: Schedule,
+      tooltipMessage: "Most recent unauthorized access time.",
     },
   ];
 
-  const recentViolations = [
+  const backendData = [
     {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 201,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Chemical Storage",
+      camera: "CAM-11",
+      createdat: "2025-09-23 15:42",
+      updatedat: "2025-09-23 15:45",
+      alarmTriggered: true,
     },
     {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 202,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Zone A",
+      camera: "CAM-12",
+      createdat: "2025-09-23 15:28",
+      updatedat: "2025-09-23 15:30",
+      alarmTriggered: true,
+    },
+    {
+      id: 203,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Restricted Lab",
+      camera: "CAM-13",
+      createdat: "2025-09-23 15:15",
+      updatedat: "2025-09-23 15:18",
+      alarmTriggered: true,
+    },
+    {
+      id: 204,
+      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Warehouse Entry",
+      camera: "CAM-14",
+      createdat: "2025-09-23 14:58",
+      updatedat: "2025-09-23 15:00",
+      alarmTriggered: true,
+    },
+    {
+      id: 205,
+      snapshot: "https://picsum.photos/400/200?random=15",
+      zone: "Zone C",
+      camera: "CAM-15",
+      createdat: "2025-09-23 14:32",
+      updatedat: "2025-09-23 14:36",
+      alarmTriggered: true,
     },
   ];
-  const cameraZones: CameraZone[] = [
+  const recentViolations = backendData.map((item) => ({
+    voilation: "Unauthorized Access Detected",
+    zone: item.zone,
+    time: item.createdat,
+    imageUrl: item.snapshot,
+    cameraId: item.camera,
+    alarmTriggered: item.alarmTriggered,
+  }));
+
+  const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      zone: "Chemical Storage",
+      violations: 7,
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Zone A",
+      violations: 5,
+    },
+    {
+      zone: "Restricted Lab",
+      violations: 6,
+    },
+    {
+      zone: "Warehouse Entry",
+      violations: 4,
+    },
+    {
+      zone: "Zone C",
+      violations: 3,
+    },
   ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -125,6 +169,14 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: UnauthorizedAccess) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   return (
@@ -197,75 +249,80 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
+              tooltipMessage="Latest 20 detected unauthorized access with details."
               label="Recent Violations"
               violations={recentViolations}
               loading={false}
-              tooltipMessage="recent volilation"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              //showSubViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          { id: "zone", label: "Zone", minWidth: 150 },
-          { id: "camera", label: "Camera", minWidth: 150 },
-          { id: "time", label: "Time", minWidth: 150 },
+          { id: "voilation", label: "Voilation" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={[
-          {
-            id: "AR-001",
-            zone: "Server Room",
-            camera: "CAM-401",
-            time: "2025-09-24 09:10:00",
-          },
-          {
-            id: "AR-002",
-            zone: "Control Room",
-            camera: "CAM-402",
-            time: "2025-09-24 09:25:00",
-          },
-          {
-            id: "AR-003",
-            zone: "Restricted Storage",
-            camera: "CAM-403",
-            time: "2025-09-24 10:00:00",
-          },
-          {
-            id: "AR-004",
-            zone: "Power Plant Access",
-            camera: "CAM-404",
-            time: "2025-09-24 10:45:00",
-          },
-        ]}
+        data={recentViolations}
         filters={[
           {
             id: "zone",
             label: "Zone",
             type: "select",
             options: [
-              "Server Room",
-              "Control Room",
-              "Restricted Storage",
-              "Power Plant Access",
+              "Chemical Storage",
+              "Zone A",
+              "Restricted Lab",
+              "Warehouse Entry",
+              "Zone C",
             ],
+          },
+          {
+            id: "cameraId",
+            label: "Camera",
+            type: "select",
+            options: ["CAM-11", "CAM-12", "CAM-13", "CAM-14", "CAM-15"],
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
           },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}
-        downloadFileName="access-restricted-areas-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
+        downloadFileName="unauthorized-access-report"
         loading={false}
-        tooltipMessage="report table"
+      />
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

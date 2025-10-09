@@ -1,98 +1,223 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
+import {
+  Warning,
+  VisibilityOff,
+  Lens,
+  Schedule,
+  Room,
+  Videocam,
+} from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const CameraTampering: React.FC = () => {
+  interface CameraTamperingViolation {
+    voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<CameraTamperingViolation | null>(null);
+
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const CameraTamperingKpiData = [
     {
       title: "Total Cameras Monitored",
       value: "42",
-      subtitle: "All active surveillance cameras",
-      color: "#1976d2",
-      bgColor: "#e3f2fd",
-      icon: Shield,
+      tooltipMessage:
+        "Shows the total number of cameras currently monitored in the system.",
+      icon: Videocam,
     },
     {
-      title: "Active Tampering Alerts",
+      title: "Total Tampering Events",
       value: "5",
-      subtitle: "Cameras currently in alert state",
-      color: "#f44336",
-      bgColor: "#ffebee",
+      tooltipMessage:
+        "The total number of tampering or offline detection events recorded.",
       icon: Warning,
+    },
+    {
+      title: "Last Tampering Type",
+      value: "blur vision",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+      icon: VisibilityOff,
+      tooltipMessage:
+        "The most recent type of tampering detected by the camera system.",
     },
     {
       title: "Most Common Tampering",
       value: "Lens Covered",
-      subtitle: "62% of incidents",
-      color: "#ff9800",
-      bgColor: "#fff3e0",
-      icon: Schedule,
-    },
-    {
-      title: "Offline Cameras",
-      value: "3",
-      subtitle: "Not transmitting data",
-      color: "#9c27b0",
-      bgColor: "#f3e5f5",
-      icon: CheckCircle,
-    },
-    {
-      title: "Tampering Incidents Today",
-      value: "12",
-      subtitle: "New events logged",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: Shield,
-    },
-    {
-      title: "Avg. Detection Time",
-      value: "1m 45s",
-      subtitle: "Mean Time to Detect",
+      trendColor: "#2196f3",
       color: "#2196f3",
       bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+      icon: Lens,
+      tooltipMessage:
+        "The tampering type that occurs most frequently across monitored cameras.",
+    },
+    {
+      title: "Last Detection Time",
+      value: "10.30",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
       icon: Schedule,
+      tooltipMessage: "The time when the last tampering event was detected.",
+    },
+    {
+      title: " Last Zone",
+      value: "Zone A",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+      icon: Room,
+      tooltipMessage:
+        "The location zone where the most recent tampering event occurred.",
+    },
+    {
+      title: "Camera Name / ID",
+      value: "Cam12",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+      icon: Videocam,
+      tooltipMessage:
+        "The camera identifier for the device where the last tampering event happened.",
     },
   ];
 
-  const recentViolations = [
+  const backendData = [
     {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      id: 201,
+      tamperingType: "Lens Covered",
+      zone: "Production Floor A",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      cameraid: "CAM-T01",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 14:12",
     },
     {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      id: 202,
+      tamperingType: "Blur Vision",
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      cameraid: "CAM-T02",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 13:58",
+    },
+    {
+      id: 203,
+      tamperingType: "Disconnected",
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      cameraid: "CAM-T03",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 13:45",
+    },
+    {
+      id: 204,
+      tamperingType: "Offline",
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      cameraid: "CAM-T04",
+      alarmTriggered: false,
+      createdAt: "2025-10-08 13:30",
+    },
+    {
+      id: 205,
+      tamperingType: "Lens Obstructed",
+      zone: "Maintenance Area",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      cameraid: "CAM-T05",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 13:15",
     },
   ];
-  const cameraZones: CameraZone[] = [
+
+  const recentTamperingEvents = backendData.map((item) => {
+    return {
+      voilation: item.tamperingType ?? "No tampering",
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.cameraid,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  console.log("RECENT TAMPERING DATA", recentTamperingEvents);
+
+  const zoneTamperingData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      zone: "Production Floor A",
+      violations: 7,
+      subViolations: [
+        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
+        { label: "Blur Vision", value: 2, icon: VisibilityOffIcon },
+        { label: "Disconnected", value: 2, icon: Warning },
+      ],
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      zone: "Welding Station",
+      violations: 5,
+      subViolations: [
+        { label: "Blur Vision", value: 3, icon: VisibilityOffIcon },
+        { label: "Lens Covered", value: 2, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Chemical Storage",
+      violations: 4,
+      subViolations: [
+        { label: "Disconnected", value: 2, icon: Warning },
+        { label: "Offline", value: 2, icon: Warning },
+      ],
+    },
+    {
+      zone: "Assembly Line B",
+      violations: 6,
+      subViolations: [
+        { label: "Offline", value: 4, icon: Warning },
+        { label: "Lens Obstructed", value: 2, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Maintenance Area",
+      violations: 8,
+      subViolations: [
+        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
+        { label: "Lens Obstructed", value: 3, icon: VisibilityOffIcon },
+        { label: "Offline", value: 2, icon: Warning },
+      ],
+    },
   ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -110,6 +235,14 @@ const CameraTampering: React.FC = () => {
 
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: CameraTamperingViolation) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   return (
@@ -182,107 +315,87 @@ const CameraTampering: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
+              tooltipMessage="Latest 20 detected camera temparing event with details."
               label="Recent Violations"
-              violations={recentViolations}
+              violations={recentTamperingEvents}
               loading={false}
-              tooltipMessage="recent voilaliton data"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              //showSubViolations
+              violationsZone={zoneTamperingData}
+              loading={false}
+              tooltipMessage="Shows online,offline,tampered cameras per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
-        tooltipMessage="report table"
-        title="Detailed Report"
+        title="Detailed Tampering Report"
+        tooltipMessage="Detailed camera tampering/offline detection report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          { id: "tamperingType", label: "Tampering Type", minWidth: 150 },
-
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
-          { id: "time", label: "Time", minWidth: 150 },
+          { id: "voilation", label: "Violation" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={[
-          {
-            id: "CTOD-101",
-            tamperingType: "Lens Obstruction",
-            snapshot: "snapshot_tamper1.jpg",
-            zone: "Entrance Gate A",
-            camera: "CAM-31",
-            time: "2025-09-24 09:15",
-            updatedAt: "2025-09-24 09:17",
-            alarmTriggered: true,
-          },
-          {
-            id: "CTOD-102",
-            tamperingType: "Offline",
-            snapshot: "snapshot_tamper2.jpg",
-            zone: "Warehouse Zone 1",
-            camera: "CAM-32",
-            time: "2025-09-24 09:45",
-            updatedAt: "2025-09-24 09:50",
-            alarmTriggered: true,
-          },
-          {
-            id: "CTOD-103",
-            tamperingType: "Blur",
-            snapshot: "snapshot_tamper3.jpg",
-            zone: "Parking Lot",
-            camera: "CAM-33",
-            time: "2025-09-24 10:30",
-            updatedAt: "2025-09-24 10:35",
-            alarmTriggered: false,
-          },
-          {
-            id: "CTOD-104",
-            tamperingType: "Online",
-            snapshot: "snapshot_tamper4.jpg",
-            zone: "Main Hall",
-            camera: "CAM-34",
-            time: "2025-09-24 11:00",
-            updatedAt: "2025-09-24 11:05",
-            alarmTriggered: false,
-          },
-        ]}
+        data={recentTamperingEvents}
         filters={[
           {
-            id: "tamperingType",
-            label: "Tampering Type",
+            id: "voilation",
+            label: "Violation",
             type: "select",
-            options: ["Blur", "Online", "Offline", "Lens Obstruction"],
+            options: Array.from(
+              new Set(recentTamperingEvents.map((v) => v.voilation))
+            ),
           },
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Entrance Gate A",
-              "Warehouse Zone 1",
-              "Parking Lot",
-              "Main Hall",
-            ],
+            options: Array.from(
+              new Set(recentTamperingEvents.map((v) => v.zone))
+            ),
+          },
+          {
+            id: "cameraId",
+            label: "Cameras",
+            type: "select",
+            options: Array.from(
+              new Set(recentTamperingEvents.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",
             label: "Alarm Triggered",
             type: "select",
-            options: ["true", "false"],
+            options: ["True", "False"],
           },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}
-        downloadFileName="camera-tampering-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
+        downloadFileName="camera-tampering-report"
         loading={false}
+      />
+
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );
