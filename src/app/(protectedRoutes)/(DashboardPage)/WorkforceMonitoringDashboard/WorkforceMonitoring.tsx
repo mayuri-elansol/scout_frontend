@@ -4,22 +4,21 @@ import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
-  DirectionsCar,
   Shield,
   Visibility,
   Smartphone,
   AccessTime,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import EmployeePresenceCriticalChart from "@/app/components/organisms/EmployeePresenceInCriticalAreaChart/EmployeePresenceInCriticalAreaChart";
 import EmployeePresenceInRestrictedAreaChart from "@/app/components/organisms/EmployeePresenceInRestrictedAreaChart/EmployeePresenceInRestrictedAreaChart";
 import MobilePhoneUsageChart from "@/app/components/organisms/MobilePhoneUsageInRestrictedAreaChart/MobilePhoneUsageInRestrictedAreaChart";
-import SleepingSecurityPersonnel from "../../(AnalyticsPages)/(Workforce Monitoring)/SleepingSecurityPersonnel/SleepingSecurityPersonnel";
 import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/SleepingOrAbsenceOfSecurityGuard/SleepingOrAbsenceOfSecurityGuard";
 import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
 
@@ -96,18 +95,31 @@ const WorkforceMonitoring: React.FC = () => {
 
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
-const tabs: TabConfig[] = [
-  { label: "Employee Presence (Critical Areas)", content: <EmployeePresenceCriticalChart /> },
-  { label: "Employee Presence (Restricted Areas)", content: <EmployeePresenceInRestrictedAreaChart /> },
-  { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
-  { label: "Security Personnel Status", content: <SleepingOrAbsenceOfSecurityGuard /> },
-  {label:"Employee Monitoring", content:<EmployeeIdleTimeMonitoringChart/>},
-  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
-];
-
+  const tabs: TabConfig[] = [
+    {
+      label: "Employee Presence (Critical Areas)",
+      content: <EmployeePresenceCriticalChart />,
+    },
+    {
+      label: "Employee Presence (Restricted Areas)",
+      content: <EmployeePresenceInRestrictedAreaChart />,
+    },
+    { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
+    {
+      label: "Security Personnel Status",
+      content: <SleepingOrAbsenceOfSecurityGuard />,
+    },
+    {
+      label: "Employee Monitoring",
+      content: <EmployeeIdleTimeMonitoringChart />,
+    },
+    {
+      label: "Camera Status",
+      content: <CameraStatus cameraZones={cameraZones} />,
+    },
+  ];
 
   return (
-
     <Paper
       sx={{
         display: "flex",
