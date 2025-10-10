@@ -2,19 +2,19 @@
 
 import React from "react";
 import { CameraZone } from "@/app/types";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import {
-  Shield,
-  Visibility,
+
   People,
-  DirectionsCar,
   Security,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
+import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
@@ -39,7 +39,6 @@ const SurveillanceMonitoring: React.FC = () => {
         "Displays people detected inside premises during shutdown hours.",
     },
   ];
-
   const cameraZones: CameraZone[] = [
     {
       zone: "Production Floor",
@@ -52,24 +51,26 @@ const SurveillanceMonitoring: React.FC = () => {
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
+const tabs: TabConfig[] = [
+  { label: "Surveillance Heatmap", content: <IntrusionDetectionChart /> },
+  { label: "People Count Trend", content: <PeopleCountLineChart /> },
+  { label: "Camera Operational Status", content: <CameraStatus cameraZones={cameraZones} /> },
+];
+
+
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //   }}
-    // >
-    <Box
+ 
+    <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 115px)",
-        backgroundColor: "#f5f7fa",
-
-        overflow: "hidden",
+        pt: 2.5,
+        pb: 3,
+        px: 3,
+        // p: 3,
+        mb: 4,
+        backgroundColor: "#ffffff",
+        borderRadius: 2,
       }}
     >
       <Box
@@ -99,43 +100,12 @@ const SurveillanceMonitoring: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
-          <ActivityFeed
-            loading={false}
-            activities={[
-              {
-                time: "11:12 AM",
-                event: "PPE Violation Detected",
-                zone: "Production Floor - Camera 3",
-                severity: "high",
-                icon: Shield,
-              },
-              {
-                time: "11:08 AM",
-                event: "Vehicle Speed Limit Exceeded",
-                zone: "Parking Lot - Camera 7",
-                severity: "medium",
-                icon: DirectionsCar,
-              },
-              {
-                time: "11:05 AM",
-                event: "Unauthorized Access Attempt",
-                zone: "Gate 2 - Camera 12",
-                severity: "high",
-                icon: Visibility,
-              },
-            ]}
-          />
-        </Box>
+        {/* Tabs Section for Charts */}
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
+          <DashboardTabs tabs={tabs} />
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

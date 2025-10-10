@@ -51,7 +51,7 @@ export interface ReportFilter<T> {
 
 /** Props for ReportTable with generic row type T */
 interface ReportTableProps<T extends object> {
-  readonly title: string;
+  readonly title?: string;
   readonly columns: ReportColumn<T>[];
   readonly data: T[];
   readonly downloadFileName: string;

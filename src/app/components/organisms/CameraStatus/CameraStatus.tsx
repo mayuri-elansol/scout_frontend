@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -12,7 +13,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import CameraEnhanceIcon from "@mui/icons-material/CameraEnhance";
 import { v4 as uuidv4 } from "uuid";
 import ReportTable from "../../../components/organisms/ReportTable/ReportTable";
 
@@ -84,13 +84,16 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
       >
         <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
           {/* Header */}
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <Typography
+          <Box sx={{ display: "flex", justifyContent:"end",alignItems: "center", mb: 2 }}>
+                    {/* <Typography
               variant="h6"
               sx={{ fontWeight: 600, color: "#1c2025", flex: 1 }}
             >
               {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
-            </Typography>
+
+
+            </Typography> */}
+          
             {!loading && (
               <Tooltip title="View Full Report">
                 <IconButton
@@ -107,7 +110,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           {/* Zone List */}
           {rows.map((zone, index) => (
             <Box
-              key={index + uuidv4()}
+              key={uuidv4()}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -130,12 +133,10 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                 <>
                   {/* Left Section: Zone Info */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <CameraEnhanceIcon
-                      sx={{ color: "#1565c0", fontSize: 22 }}
-                    />
+                  {/* <CameraEnhanceIcon sx={{ color: "#1565c0", fontSize: 22 }} /> */}
 
                     <Box>
-                      <Typography sx={{ fontSize: "14px" }}>
+                      <Typography sx={{ fontSize: "14px",  }}>
                         {zone.zone}
                       </Typography>
                       <Typography sx={{ fontSize: "12px", color: "#6b7280" }}>
@@ -174,6 +175,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                         height: 24,
                       }}
                     />
+                    
                     <Chip
                       label={`Offline: ${zone.offline}`}
                       size="small"

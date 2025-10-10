@@ -83,8 +83,8 @@ export default function ClientLayout({
           <Box
             sx={{
               flex: 1,
-              pl: 4,
-              pr: 4,
+              pl: 2.5,
+              pr: 2.5,
               pb: 4,
               pt: 10,
               backgroundColor: "#f5f7fa",
