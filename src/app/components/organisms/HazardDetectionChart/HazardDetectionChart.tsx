@@ -6,11 +6,7 @@ import {
   Box,
   Card,
   CardContent,
-  Typography,
-  ToggleButtonGroup,
-  ToggleButton,
-  TextField,
-  Button,
+
   Chip,
 } from "@mui/material";
 import dayjs from "dayjs";
@@ -69,16 +65,7 @@ export default function ZoneHazardLineChart() {
     return () => clearInterval(interval);
   }, [running]);
 
-  const handleRangeChange = (event: any, newRange: string | null) => {
-    if (newRange) {
-      setViewRange(newRange);
-      setData(
-        newRange === "24h"
-          ? generateTimeData(24)
-          : generateTimeData(24 * 7, 10)
-      );
-    }
-  };
+
 
   const totals = data.reduce(
     (acc, curr) => ({

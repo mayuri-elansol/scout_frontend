@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CameraZone, KpiData } from "@/app/types";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import {
   Shield,
   Warning,
@@ -18,8 +18,13 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
 import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import PeopleCountChart from "@/app/components/organisms/PeopleCountInFactoryPremises/PeopleCountInFactoryPremises";
+import UnauthorizedParkingChart from "@/app/components/organisms/UnauthorizedParkingChart/UnauthorizedParkingChart";
+import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRChart/VehicleCountANPRChart";
+import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
 
-const VehicleOperationalInsightsDashboard: React.FC = () => {
+const OperationalInsightsDashboard: React.FC = () => {
   const { t } = useTranslation();
 
   const kpiData: KpiData[] = [
@@ -78,27 +83,31 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
+
+const tabs: TabConfig[] = [
+  { label: "People Count", content: <PeopleCountChart /> },
+  { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart/> },
+  { label: "Canteen Usage", content: <CanteenUsageChart/> },
+  { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart/> },
+  { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
+  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
+];
+
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //   }}
-    // >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 115px)",
-            backgroundColor: "#f5f7fa",
-            // pt: 2,
-            // px: 2,
-            overflow: "hidden",
-          }}
-        >
+    <Paper
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        pt: 2.5,
+        pb: 3,
+        px: 3,
+        // p: 3,
+        mb: 4,
+        backgroundColor: "#ffffff",
+        borderRadius: 2,
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -126,45 +135,13 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
-          <ActivityFeed
-            loading={false}
-            activities={[
-              {
-                time: "11:12 AM",
-                event: "PPE Violation Detected",
-                zone: "Production Floor - Camera 3",
-                severity: "high",
-                icon: Shield,
-              },
-              {
-                time: "11:08 AM",
-                event: "Vehicle Speed Limit Exceeded",
-                zone: "Parking Lot - Camera 7",
-                severity: "medium",
-                icon: DirectionsCar,
-              },
-              {
-                time: "11:05 AM",
-                event: "Unauthorized Access Attempt",
-                zone: "Gate 2 - Camera 12",
-                severity: "high",
-                icon: Visibility,
-              },
-         
-            ]}
-          />
-        </Box>
+        {/* Tabs Section for Charts */}
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
+          <DashboardTabs tabs={tabs} />
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
-export default VehicleOperationalInsightsDashboard;
+export default OperationalInsightsDashboard;
