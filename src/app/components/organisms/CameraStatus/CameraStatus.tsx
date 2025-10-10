@@ -84,15 +84,15 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
       >
         <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
           {/* Header */}
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                    <Typography
+          <Box sx={{ display: "flex", justifyContent:"end",alignItems: "center", mb: 2 }}>
+                    {/* <Typography
               variant="h6"
               sx={{ fontWeight: 600, color: "#1c2025", flex: 1 }}
             >
               {loading ? <Skeleton width={180} /> : "Camera Status by Zone"}
 
 
-            </Typography>
+            </Typography> */}
           
             {!loading && (
               <Tooltip title="View Full Report">

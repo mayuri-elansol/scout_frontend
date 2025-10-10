@@ -4,26 +4,49 @@ import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
-  Shield,
   LocalFireDepartment,
   HealthAndSafety,
   DirectionsCar,
   WarningAmber,
   DoorFront,
   Groups,
-  Visibility,
 } from "@mui/icons-material";
 
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-
+import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import PPEComplianceChart from "@/app/components/organisms/PPEComplianceChart/PPEComplianceChart";
+import ZoneHazardLineChart from "@/app/components/organisms/HazardDetectionChart/HazardDetectionChart";
+import FallIncidentChart from "@/app/components/organisms/FallIncidentChart/FallIncidentChart";
+import ExitStatusChart from "@/app/components/organisms/ExitStatusChart/ExitStatusChart";
+import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import CrowdGatheringChart from "@/app/components/organisms/CrowdGatheringChart/CrowdGatheringChart";
+  const cameraZones: CameraZone[] = [
+    {
+      zone: "Production Floor",
+      active: 8,
+      total: 10,
+      offline: 3,
+      tempred: 4,
+    },
+    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
+  ];
 const SafetyAndComplianceDashboard: React.FC = () => {
+
+const tabs: TabConfig[] = [
+  { label: "PPE Compliance", content: <PPEComplianceChart /> },
+  { label: "Hazardous Zone Activity", content: <ZoneHazardLineChart /> },
+  { label: "Fall Incidents", content: <FallIncidentChart /> },
+  { label: "Emergency Exit Status", content: <ExitStatusChart /> },
+  { label: "Crowd Gathering", content: <CrowdGatheringChart /> },
+  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
+];
+
   const kpiData = [
     {
       title: "PPE Violations",
@@ -83,46 +106,23 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     },
   ];
 
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  ];
+
   return (
     <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        // backgroundColor: "#f5f7fa",
-        // pt:1,
-        // height: "calc(100vh - 115px)", 
-          pt:2.5,
-          pb:3,
-          px:3,
-          // p: 3,
-          mb: 4,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
+
+        pt: 2.5,
+        pb: 3,
+        px: 3,
+        // p: 3,
+        mb: 4,
+        backgroundColor: "#ffffff",
+        borderRadius: 2,
       }}
     >
-      {/* <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     height: "calc(100vh - 115px)",
-    //     backgroundColor: "#f5f7fa",
-
-    //     overflow: "hidden",
-    //   }}
-    // > */}
       <Box
         sx={{
           display: "flex",
@@ -150,40 +150,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-             {/* <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
-               <ActivityFeed
-                 loading={false}
-                 activities={[
-                   {
-                     time: "11:12 AM",
-                     event: "PPE Violation Detected",
-                     zone: "Production Floor - Camera 3",
-                     severity: "high",
-                     icon: Shield,
-                   },
-                   {
-                     time: "11:08 AM",
-                     event: "Vehicle Speed Limit Exceeded",
-                     zone: "Parking Lot - Camera 7",
-                     severity: "medium",
-                     icon: DirectionsCar,
-                   },
-                   {
-                     time: "11:05 AM",
-                     event: "Unauthorized Access Attempt",
-                     zone: "Gate 2 - Camera 12",
-                     severity: "high",
-                     icon: Visibility,
-                   },
-                 ]}
-               />
-             </Box> */}
-     
-             {/* Tabs Section for Charts */}
-             <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-               <DashboardTabs />
-             </Box>
-           </Box>
+        {/* Tabs Section for Charts */}
+        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
+<DashboardTabs tabs={tabs} />
+        </Box>
+      </Box>
+
+
     </Paper>
   );
 };

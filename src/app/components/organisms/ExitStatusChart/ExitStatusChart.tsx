@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 interface ExitData {
-  [key: string]: string | number;
+  [key: string]: string | number | undefined;
   hour?: string;
   day?: string;
   clear: number;
@@ -54,7 +54,7 @@ export default function ExitStatusChart() {
   return (
     <Card elevation={3} sx={{ width: "100%", height: "100%" }}>
       <CardContent>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="h6" fontWeight={600}>
             Exit Status
           </Typography>
@@ -68,7 +68,7 @@ export default function ExitStatusChart() {
             <ToggleButton value="24hr">24 Hours</ToggleButton>
             <ToggleButton value="days">30 Days</ToggleButton>
           </ToggleButtonGroup>
-        </Box>
+        </Box> */}
 
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
           <Box sx={{ textAlign: 'center' }}>
@@ -84,7 +84,7 @@ export default function ExitStatusChart() {
         {data.length > 0 && (
           <BarChart
             height={300}
-            dataset={data as any}
+            dataset={data}
             xAxis={[{ 
               scaleType: 'band', 
               dataKey: viewMode === '24hr' ? 'hour' : 'day',
@@ -108,13 +108,6 @@ export default function ExitStatusChart() {
                 stack: 'total'
               },
             ]}
-            slotProps={{
-              legend: {
-                direction: 'column' as const,
-                position: { vertical: 'top', horizontal: 'center' },
-                padding: 0,
-              }
-            }}
           />
         )}
       </CardContent>

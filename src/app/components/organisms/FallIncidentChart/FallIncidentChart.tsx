@@ -2,12 +2,8 @@
 import React from "react";
 import { LineChart } from "@mui/x-charts/LineChart";
 import {
-  Box,
   Card,
   CardContent,
-  Typography,
-  ToggleButtonGroup,
-  ToggleButton,
 } from "@mui/material";
 
 // Generate hour-wise data for 24 hours

@@ -2,65 +2,73 @@
 
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import CrowdGatheringChart from "../CrowdGatheringChart/CrowdGatheringChart";
-import ExitStatusChart from "../ExitStatusChart/ExitStatusChart";
-import FallIncidentChart from "../FallIncidentChart/FallIncidentChart";
-import HazardDetectionChart from "../HazardDetectionChart/HazardDetectionChart";
-import PPEComplianceChart from "../PPEComplianceChart/PPEComplianceChart";
 import styles from "./DashboardTabs.module.css";
 
-function TabPanel(props: any) {
-  const { children, value, index, ...other } = props;
+// In DashboardTabs.tsx
+export interface TabConfig {
+  label: string | React.ReactNode; 
+  content: React.ReactNode;
+}
 
+
+interface DynamicTabsProps {
+  tabs: TabConfig[];
+  defaultTab?: number;
+  onTabChange?: (index: number) => void;
+}
+
+function TabPanel({ children, value, index }: any) {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
-      {...other}
+      aria-labelledby={`tab-${index}`}
     >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
 
-export default function DashboardTabs() {
-  const [value, setValue] = useState(0);
-
-  const tabs = [
-    "PPE Compliance",
-    "Hazard Detection",
-    "Fall Incidents",
-    "Exit Status",
-    "Crowd Gathering",
-    "Camera Status",
-  ];
+export default function DynamicTabs({ 
+  tabs = [], 
+  defaultTab = 0,
+  onTabChange 
+}: DynamicTabsProps) {
+  const [value, setValue] = useState(defaultTab);
 
   const handleChange = (newValue: number) => {
     setValue(newValue);
+    onTabChange?.(newValue);
   };
+
+  if (!tabs || tabs.length === 0) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
+        No tabs available
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
-      {/* Chrome-style tabs container */}
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
-          {tabs.map((label, index) => (
-            <React.Fragment key={index}>
+          {tabs.map((tab, index) => (
+            <React.Fragment key={`tab-${index}`}>
               <button
                 className={`${styles.tab} ${value === index ? styles.tabActive : ""}`}
                 onClick={() => handleChange(index)}
                 role="tab"
                 aria-selected={value === index}
+                id={`tab-${index}`}
               >
-                <span className={styles.tabLabel}>{label}</span>
+                <span className={styles.tabLabel}>{tab.label}</span>
                 <div className={styles.tabBackground}></div>
               </button>
-              {/* Show divider after each tab except last, and not before/after active tab */}
               {index < tabs.length - 1 && 
                value !== index && 
                value !== index + 1 && (
-                <div className={styles.tabDivider}></div>
+                <div className={styles.tabDivider} key={`divider-${index}`}></div>
               )}
             </React.Fragment>
           ))}
@@ -68,32 +76,11 @@ export default function DashboardTabs() {
         <div className={styles.tabsUnderline}></div>
       </div>
 
-      {/* Tab Panels */}
-      <TabPanel value={value} index={0}>
-        <PPEComplianceChart />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <HazardDetectionChart />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <FallIncidentChart />
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-        <ExitStatusChart />
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        <CrowdGatheringChart />
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        <CameraStatus
-          cameraZones={[
-            { zone: "Production Floor", active: 8, total: 10, offline: 2, tempred: 4 },
-            { zone: "Warehouse", active: 3, total: 5, offline: 2, tempred: 3 },
-          ]}
-          loading={false}
-          maxheight={400}
-        />
-      </TabPanel>
+      {tabs.map((tab, index) => (
+        <TabPanel key={`panel-${index}`} value={value} index={index}>
+          {tab.content}
+        </TabPanel>
+      ))}
     </Box>
   );
 }
