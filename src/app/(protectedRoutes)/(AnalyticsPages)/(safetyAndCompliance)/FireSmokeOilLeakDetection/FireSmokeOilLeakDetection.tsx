@@ -257,7 +257,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           {/* Recent Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentFireViolations}
               loading={false}
               tooltipMessage="Latest 20 detected fire & smoke incident with details."
