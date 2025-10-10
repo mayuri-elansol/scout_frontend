@@ -1,8 +1,13 @@
 "use client";
 
 import React from "react";
+<<<<<<< HEAD:src/app/(protectedRoutes)/(DashboardPage)/VehicleOperationalInsightsDashboard/VehicleOperationalInsightsDashboard.tsx
 import { CameraZone } from "@/app/types";
 import { Box, Grid } from "@mui/material";
+=======
+import { CameraZone, KpiData } from "@/app/types";
+import { Box, Grid, Paper } from "@mui/material";
+>>>>>>> 16f620e2071a161c0fe00f725bddc99280dd5765:src/app/(protectedRoutes)/(DashboardPage)/OperationalInsightsDashboard/OperationalInsightsDashboard.tsx
 import {
   Shield,
   Visibility,
@@ -16,10 +21,23 @@ import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+<<<<<<< HEAD:src/app/(protectedRoutes)/(DashboardPage)/VehicleOperationalInsightsDashboard/VehicleOperationalInsightsDashboard.tsx
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const VehicleOperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
+=======
+import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import PeopleCountChart from "@/app/components/organisms/PeopleCountInFactoryPremises/PeopleCountInFactoryPremises";
+import UnauthorizedParkingChart from "@/app/components/organisms/UnauthorizedParkingChart/UnauthorizedParkingChart";
+import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRChart/VehicleCountANPRChart";
+import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
+
+const OperationalInsightsDashboard: React.FC = () => {
+  const { t } = useTranslation();
+
+  const kpiData: KpiData[] = [
+>>>>>>> 16f620e2071a161c0fe00f725bddc99280dd5765:src/app/(protectedRoutes)/(DashboardPage)/OperationalInsightsDashboard/OperationalInsightsDashboard.tsx
     {
       title: "People Count",
       violationsCount: 53,
@@ -81,7 +99,18 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
+
+const tabs: TabConfig[] = [
+  { label: "People Count", content: <PeopleCountChart /> },
+  { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart/> },
+  { label: "Canteen Usage", content: <CanteenUsageChart/> },
+  { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart/> },
+  { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
+  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
+];
+
   return (
+<<<<<<< HEAD:src/app/(protectedRoutes)/(DashboardPage)/VehicleOperationalInsightsDashboard/VehicleOperationalInsightsDashboard.tsx
     <Box
       sx={{
         display: "flex",
@@ -91,6 +120,20 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
         // pt: 2,
         // px: 2,
         overflow: "hidden",
+=======
+    <Paper
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        pt: 2.5,
+        pb: 3,
+        px: 3,
+        // p: 3,
+        mb: 4,
+        backgroundColor: "#ffffff",
+        borderRadius: 2,
+>>>>>>> 16f620e2071a161c0fe00f725bddc99280dd5765:src/app/(protectedRoutes)/(DashboardPage)/OperationalInsightsDashboard/OperationalInsightsDashboard.tsx
       }}
     >
       <Box
@@ -119,6 +162,7 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
       </Grid>
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+<<<<<<< HEAD:src/app/(protectedRoutes)/(DashboardPage)/VehicleOperationalInsightsDashboard/VehicleOperationalInsightsDashboard.tsx
         <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
           <ActivityFeed
             loading={false}
@@ -147,16 +191,15 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
             ]}
           />
         </Box>
+=======
+        {/* Tabs Section for Charts */}
+>>>>>>> 16f620e2071a161c0fe00f725bddc99280dd5765:src/app/(protectedRoutes)/(DashboardPage)/OperationalInsightsDashboard/OperationalInsightsDashboard.tsx
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
+          <DashboardTabs tabs={tabs} />
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 
-export default VehicleOperationalInsightsDashboard;
+export default OperationalInsightsDashboard;

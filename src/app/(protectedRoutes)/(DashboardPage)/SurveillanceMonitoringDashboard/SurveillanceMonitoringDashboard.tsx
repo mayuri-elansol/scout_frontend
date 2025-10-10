@@ -13,6 +13,7 @@ import DashboardTabs, {
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
 import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
+import CameraTamperingChart from "@/app/components/organisms/CameraTampering/CameraTamperingChart";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
@@ -72,6 +73,8 @@ const SurveillanceMonitoring: React.FC = () => {
   const tabs: TabConfig[] = [
     { label: "Surveillance Heatmap", content: <IntrusionDetectionChart /> },
     { label: "People Count Trend", content: <PeopleCountLineChart /> },
+    { label: "Camera Tempering", content: <CameraTamperingChart /> },
+
     {
       label: "Camera Operational Status",
       content: <CameraStatus cameraZones={cameraZones} />,
