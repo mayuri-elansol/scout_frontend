@@ -27,7 +27,7 @@
   "vehicle-count": true,
   "tracking-vehicle": true,
   "unauthorized-parking": true,
-  "unauthorized-access": false,
+  "unauthorized-access": true,
   "face-recognition": false,
   "monitoring-canteen-usage": true,
   "employee-idle-time": true,

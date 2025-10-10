@@ -14,38 +14,41 @@ import {
 
 import { v4 as uuidv4 } from "uuid";
 
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import PPEComplianceChart from "@/app/components/organisms/PPEComplianceChart/PPEComplianceChart";
 import ZoneHazardLineChart from "@/app/components/organisms/HazardDetectionChart/HazardDetectionChart";
 import FallIncidentChart from "@/app/components/organisms/FallIncidentChart/FallIncidentChart";
 import ExitStatusChart from "@/app/components/organisms/ExitStatusChart/ExitStatusChart";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import CrowdGatheringChart from "@/app/components/organisms/CrowdGatheringChart/CrowdGatheringChart";
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  ];
-const SafetyAndComplianceDashboard: React.FC = () => {
-
-const tabs: TabConfig[] = [
-  { label: "PPE Compliance", content: <PPEComplianceChart /> },
-  { label: "Hazardous Zone Activity", content: <ZoneHazardLineChart /> },
-  { label: "Fall Incidents", content: <FallIncidentChart /> },
-  { label: "Emergency Exit Status", content: <ExitStatusChart /> },
-  { label: "Crowd Gathering", content: <CrowdGatheringChart /> },
-  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
+const cameraZones: CameraZone[] = [
+  {
+    zone: "Production Floor",
+    active: 8,
+    total: 10,
+    offline: 3,
+    tempred: 4,
+  },
+  { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
+  { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+  { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
 ];
+const SafetyAndComplianceDashboard: React.FC = () => {
+  const tabs: TabConfig[] = [
+    { label: "PPE Compliance", content: <PPEComplianceChart /> },
+    { label: "Hazardous Zone Activity", content: <ZoneHazardLineChart /> },
+    { label: "Fall Incidents", content: <FallIncidentChart /> },
+    { label: "Emergency Exit Status", content: <ExitStatusChart /> },
+    { label: "Crowd Gathering", content: <CrowdGatheringChart /> },
+    {
+      label: "Camera Status",
+      content: <CameraStatus cameraZones={cameraZones} />,
+    },
+  ];
 
   const kpiData = [
     {
@@ -68,15 +71,6 @@ const tabs: TabConfig[] = [
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
     {
-      title: "Speed Violations",
-      violationsCount: 12,
-      lastDetection: "Parking Zone",
-      lastDetectionTime: "10:58 AM",
-      icon: DirectionsCar,
-      route: "/VehicalSpeedMonitoring",
-      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-    },
-    {
       title: "Fall / Laydown Alerts",
       violationsCount: 1,
       lastDetection: "Production Floor",
@@ -84,6 +78,15 @@ const tabs: TabConfig[] = [
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
+    },
+    {
+      title: "Forklift / Vehicle in Walkways",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: DirectionsCar,
+      route: "/ObjectDetection",
+      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
     },
     {
       title: "Emergency Exit Blockage",
@@ -94,6 +97,16 @@ const tabs: TabConfig[] = [
       route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
+    // {
+    //   title: "Speed Violations",
+    //   violationsCount: 12,
+    //   lastDetection: "Parking Zone",
+    //   lastDetectionTime: "10:58 AM",
+    //   icon: DirectionsCar,
+    //   route: "/VehicalSpeedMonitoring",
+    //   tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
+    // },
+
     {
       title: "Crowd Gathering Alerts",
       violationsCount: 3,
@@ -105,7 +118,6 @@ const tabs: TabConfig[] = [
         "Identifies abnormal or unsafe crowd gathering in monitored areas.",
     },
   ];
-
 
   return (
     <Paper
@@ -152,11 +164,9 @@ const tabs: TabConfig[] = [
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
         {/* Tabs Section for Charts */}
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-<DashboardTabs tabs={tabs} />
+          <DashboardTabs tabs={tabs} />
         </Box>
       </Box>
-
-
     </Paper>
   );
 };

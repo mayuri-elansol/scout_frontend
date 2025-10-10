@@ -48,7 +48,7 @@ export const dashboardMenu: CategoryConfig[] = [
         path: "/SurveillanceMonitoringDashboard",
       },
       {
-        name: "Vehicle Operational Insights ",
+        name: "Operational Insights ",
         page: "vehicle-operational-insights-dashboard",
         path: "/VehicleOperationalInsightsDashboard",
       },

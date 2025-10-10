@@ -7,7 +7,6 @@ import {
   DirectionsCar,
   Shield,
   Visibility,
-  People,
   Smartphone,
   AccessTime,
 } from "@mui/icons-material";
@@ -42,6 +41,17 @@ const WorkforceMonitoring: React.FC = () => {
         "Shows employee presence in areas that require special clearance.",
     },
     {
+      title: "Employee Idel Time",
+      value: "0",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: Visibility,
+      route: "/EmployeeIdleTime",
+      tooltipMessage:
+        "Shows employee presence in areas that require special clearance.",
+    },
+    {
       title: "Mobile Phone Usage in Critical Area",
       value: "3",
       violationsCount: 3,
@@ -52,17 +62,7 @@ const WorkforceMonitoring: React.FC = () => {
       tooltipMessage:
         "Displays incidents of unauthorized mobile phone usage inside critical areas.",
     },
-    {
-      title: "People Count in Factory Premises",
-      value: "215",
-      violationsCount: 215,
-      lastDetection: "Main Entrance",
-      lastDetectionTime: "04:05 PM",
-      icon: People,
-      route: "/PeopleCount",
-      tooltipMessage:
-        "Displays total number of people inside factory premises based on entry/exit data.",
-    },
+
     {
       title: "Sleeping or Absence of Security Personnel",
       value: "2",

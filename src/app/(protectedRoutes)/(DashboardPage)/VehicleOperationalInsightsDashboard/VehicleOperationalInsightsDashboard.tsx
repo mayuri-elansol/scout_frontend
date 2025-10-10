@@ -1,68 +1,71 @@
 "use client";
 
 import React from "react";
-import { CameraZone, KpiData } from "@/app/types";
+import { CameraZone } from "@/app/types";
 import { Box, Grid } from "@mui/material";
 import {
   Shield,
-  Warning,
   Visibility,
-  People,
   DirectionsCar,
+  People,
+  Security,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
-import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const VehicleOperationalInsightsDashboard: React.FC = () => {
-  const { t } = useTranslation();
-
-  const kpiData: KpiData[] = [
+  const kpiData = [
     {
-      title: t("PPE Compliance"),
-      value: "10",
-      icon: Shield,
+      title: "People Count",
+      violationsCount: 53,
+      lastDetection: "Zone B - Gate 2",
+      lastDetectionTime: "02:15 AM",
+      icon: Security,
+      route: "/PeopleCountPage",
+      tooltipMessage:
+        "Shows detected intrusion incidents in monitored zones during restricted hours.",
     },
     {
-      title: t("Fire & Smoke Voilations"),
-      value: "0",
-      icon: Warning,
-    },
-    {
-      title: "Security Breach",
-      value: "1",
-      icon: Visibility,
-    },
-    {
-      title: "Employees Present",
-      value: "234",
+      title: "Vehicle Count & ANPR at Gates",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
+      route: "/VehicleCount",
+      tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
     },
     {
-      title: "Total People Inside",
-      value: "267",
+      title: "Canteen Usage Monitoring",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
-    },
-    {
-      title: "Speed Voilations",
-      value: "15",
-      icon: DirectionsCar,
-    },
-    {
-      title: "Vehicles Count",
-      value: "45",
-      icon: DirectionsCar,
+      route: "/MonitoringCanteenUsage&Timings",
+      tooltipMessage: "Displays canteen usage and monitoring.",
     },
 
     {
-      title: "Crowd Alert",
-      value: "1",
+      title: "Vehicle Loading/Unloading Monitoring",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
+      route: "/VehicleUnloadingLoading",
+      tooltipMessage: "Displays vehical loading and unloading oprations",
+    },
+    {
+      title: "Unauthorised Parking / Blocking Aisles",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: DirectionsCar,
+      route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+      tooltipMessage: "Shows unauthorized parking or equipment blocking.",
     },
   ];
 
@@ -88,17 +91,17 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
     //     pt: 2,
     //   }}
     // >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "calc(100vh - 115px)",
-            backgroundColor: "#f5f7fa",
-            // pt: 2,
-            // px: 2,
-            overflow: "hidden",
-          }}
-        >
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "calc(100vh - 115px)",
+        backgroundColor: "#f5f7fa",
+        // pt: 2,
+        // px: 2,
+        overflow: "hidden",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -116,14 +119,13 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
-            <KpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
-
       {/* Activity Feed and Camera Status */}
       <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
         <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
@@ -151,7 +153,6 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
                 severity: "high",
                 icon: Visibility,
               },
-         
             ]}
           />
         </Box>

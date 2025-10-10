@@ -3,15 +3,13 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-
-  People,
-  Security,
-} from "@mui/icons-material";
+import { People, Security } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
 import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
@@ -29,7 +27,27 @@ const SurveillanceMonitoring: React.FC = () => {
         "Shows detected intrusion incidents in monitored zones during restricted hours.",
     },
     {
-      title: "People Presence During Shutdown",
+      title: "Unauthorized Access In Restrcited Areas",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: People,
+      route: "/UnauthorizedAccessInRestrictedAreas",
+      tooltipMessage: "Displays unauthorized acess in restricted ares.",
+    },
+    {
+      title: "Camera Tempering Detection",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: People,
+      route: "/CameraTampering",
+      tooltipMessage:
+        "Displays people detected inside premises during shutdown hours.",
+    },
+
+    {
+      title: "Movement During Shutdown",
       violationsCount: 2,
       lastDetection: "Warehouse Zone 4",
       lastDetectionTime: "01:45 AM",
@@ -51,15 +69,16 @@ const SurveillanceMonitoring: React.FC = () => {
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
-const tabs: TabConfig[] = [
-  { label: "Surveillance Heatmap", content: <IntrusionDetectionChart /> },
-  { label: "People Count Trend", content: <PeopleCountLineChart /> },
-  { label: "Camera Operational Status", content: <CameraStatus cameraZones={cameraZones} /> },
-];
-
+  const tabs: TabConfig[] = [
+    { label: "Surveillance Heatmap", content: <IntrusionDetectionChart /> },
+    { label: "People Count Trend", content: <PeopleCountLineChart /> },
+    {
+      label: "Camera Operational Status",
+      content: <CameraStatus cameraZones={cameraZones} />,
+    },
+  ];
 
   return (
- 
     <Paper
       sx={{
         display: "flex",
