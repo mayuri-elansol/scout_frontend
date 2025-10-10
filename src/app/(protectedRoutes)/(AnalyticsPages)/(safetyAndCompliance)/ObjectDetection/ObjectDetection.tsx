@@ -16,7 +16,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ForkliftIcon from "@mui/icons-material/Forklift";
 const ObjectDetection: React.FC = () => {
   interface ForkliftDetectionEvent {
-    eventMessage: string; // e.g., "Forklift detected"
+    voilation: string; // e.g., "Forklift detected"
     objectName?: string; // Optional
     imageUrl: string; // Image URL
     zone: string; // Zone name
@@ -126,7 +126,7 @@ const ObjectDetection: React.FC = () => {
   ];
   const recentDetections = backendData.map((item) => {
     return {
-      eventMessage: `${item.objectName} detected`,
+      voilation: `${item.objectName} detected`,
       objectName: item.objectName,
       zone: item.zone,
       time: item.createdAt,
@@ -193,19 +193,6 @@ const ObjectDetection: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
-      {/* Page Header */}
-      {/* <Box sx={{ mb: 3 }}> */}
-      {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <WidgetsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Object Detection in Walking Bays
-          </Typography>
-        </Box> */}
-      {/* </Box> */}
-
       {/* KPI Cards */}
       <Paper
         sx={{
@@ -281,25 +268,25 @@ const ObjectDetection: React.FC = () => {
       </Paper>
       {/* Object detection Report */}
       <ReportTable
-        title="Forklift / Vehicle Detection in Walkways Report"
+        title="Detailed Report"
         tooltipMessage="Detailed detection events for forklifts/vehicles in walkways with filter, reset, and export options."
         columns={[
-          { id: "eventMessage", label: "Event Message", minWidth: 150 },
+          { id: "voilation", label: "Voilation", minWidth: 150 },
           { id: "objectName", label: "Object Name", minWidth: 120 },
+          { id: "time", label: " Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
           { id: "cameraId", label: "Camera", minWidth: 120 },
-          { id: "time", label: "Detection Time", minWidth: 150 },
 
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
         data={recentDetections} // The mapped backend data for this case
         filters={[
           {
-            id: "eventMessage",
+            id: "voilation",
             label: "Event Message",
             type: "select",
             options: Array.from(
-              new Set(recentDetections.map((v) => v.eventMessage))
+              new Set(recentDetections.map((v) => v.voilation))
             ),
           },
           {

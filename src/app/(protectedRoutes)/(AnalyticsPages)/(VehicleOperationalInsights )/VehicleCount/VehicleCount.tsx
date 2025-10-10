@@ -17,7 +17,6 @@ import {
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import NoCrashIcon from "@mui/icons-material/NoCrash";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -25,7 +24,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const VehicleCount: React.FC = () => {
   interface VehicleCountEvent {
-    voilation: string;
+    incident: string;
     vehicleNumber: string;
     status: string;
     validNumber: boolean;
@@ -179,7 +178,7 @@ const VehicleCount: React.FC = () => {
     }
 
     return {
-      voilation: violation,
+      incident: violation,
       vehicleNumber: item.numberDetected,
       status: item.status,
       validNumber: item.validNumber,
@@ -260,18 +259,6 @@ const VehicleCount: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <NoCrashIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Vehicle Count & ANPR at Entry/Exit Gates
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -329,7 +316,7 @@ const VehicleCount: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 Vehicle Count & ANPR at Entry/Exit Gates with details."
-              label="Recent Violations"
+              label="Recent Incident"
               violations={vehicleViolations}
               loading={false}
             />
@@ -338,7 +325,7 @@ const VehicleCount: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
+              label="Zone Incident"
               violationsZone={vehicleZoneViolationsData}
               loading={false}
               tooltipMessage="Shows violations per zone"
@@ -348,17 +335,17 @@ const VehicleCount: React.FC = () => {
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
-        title="Detailed Vehicle Count Report"
+        title="Detailed Report"
         tooltipMessage="Detailed vehicle count report with filters, reset, and export options."
         columns={[
-          { id: "voilation", label: "Violation", minWidth: 200 },
+          { id: "incident", label: "Incident", minWidth: 200 },
           { id: "vehicleNumber", label: "Vehicle Number", minWidth: 150 },
           { id: "status", label: "Status (Entry/Exit)", minWidth: 150 },
           { id: "validNumber", label: "Valid Number", minWidth: 120 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
+          { id: "zone", label: "Zone", minWidth: 120 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
         ]}
         data={vehicleViolations}
         filters={[

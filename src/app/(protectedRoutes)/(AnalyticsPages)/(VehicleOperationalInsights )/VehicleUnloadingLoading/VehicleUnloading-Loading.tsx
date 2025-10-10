@@ -8,7 +8,6 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import {
   CheckCircle,
   LocalShipping,
@@ -21,7 +20,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
-    eventMessage: string;
+    incident: string;
     trackId: string;
     zone: string;
     time: string;
@@ -126,11 +125,11 @@ const VehicleUnloadingLoading: React.FC = () => {
   ];
 
   const recentLoadingEvents = backendData.map((item) => {
-    const eventMessage =
+    const incident =
       item.loadingState === "Start" ? "Loading started" : "Loading stopped";
 
     return {
-      eventMessage,
+      incident,
       trackId: item.trackId,
       zone: item.zone,
       time: item.createdAt,
@@ -213,18 +212,6 @@ const VehicleUnloadingLoading: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LocalShippingIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Tracking Vehicle Unloading/Loading Time
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -280,7 +267,7 @@ const VehicleUnloadingLoading: React.FC = () => {
           {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentLoadingEvents}
               loading={false}
               tooltipMessage="Latest 20 Vehicle unloading and loading events with details."
@@ -290,7 +277,7 @@ const VehicleUnloadingLoading: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
+              label="Zone Incident"
               violationsZone={zoneLoadingData}
               loading={false}
               tooltipMessage="Shows vehicle unloading and loading events per zone"
@@ -300,10 +287,10 @@ const VehicleUnloadingLoading: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
-        title="Vehicle Loading/Unloading Report"
+        title="Detailed Report"
         tooltipMessage="Detailed vehicle loading/unloading events report with filter, reset, and export options."
         columns={[
-          { id: "eventMessage", label: "Event" },
+          { id: "incident", label: "incident" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
           { id: "cameraId", label: "Camera" },
@@ -312,11 +299,11 @@ const VehicleUnloadingLoading: React.FC = () => {
         data={recentLoadingEvents}
         filters={[
           {
-            id: "eventMessage",
-            label: "Event",
+            id: "incident",
+            label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.eventMessage))
+              new Set(recentLoadingEvents.map((v) => v.incident))
             ),
           },
           {

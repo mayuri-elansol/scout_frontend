@@ -7,7 +7,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import BlockIcon from "@mui/icons-material/Block";
 import {
   DirectionsCar,
   Block,
@@ -211,18 +210,6 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <BlockIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Unauthorized Parking or Equipment Blocking Aisles
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -299,12 +286,13 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
-        title="Unauthorized Parking / Equipment Blocking Report"
+        title="Detailed Report"
         tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
           { id: "eventMessage", label: "Voilation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "time", label: "Timestamp", minWidth: 150 },
+
           { id: "cameraId", label: "Camera", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}

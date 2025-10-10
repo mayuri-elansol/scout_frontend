@@ -6,7 +6,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import SecurityIcon from "@mui/icons-material/Security";
 import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -178,18 +177,6 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <SecurityIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Sleeping or Absence of Security Personnel
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -269,8 +256,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
-          { id: "zone", label: "Zone", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
+          { id: "zone", label: "Zone", minWidth: 150 },
+
           { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}
