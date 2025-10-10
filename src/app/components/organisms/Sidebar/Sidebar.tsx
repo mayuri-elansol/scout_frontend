@@ -129,16 +129,16 @@ const SubMenuItem = React.memo<{
         slotProps={{
           primary: {
             sx: {
-        fontSize:
-          categoryTitle === "Dashboard" ||
-          categoryTitle === "Analytics" ||
-          categoryTitle === "Settings"
-            ? "14px"
-            : "12px",
-        color: pathname === item.path ? "white" : "#6b7280",
-        // fontWeight: pathname === item.path ? 600 : 400,
-        lineHeight: 1.4,
-      },
+              fontSize:
+                categoryTitle === "Dashboard" ||
+                categoryTitle === "Analytics" ||
+                categoryTitle === "Settings"
+                  ? "14px"
+                  : "12px",
+              color: pathname === item.path ? "white" : "#6b7280",
+              // fontWeight: pathname === item.path ? 600 : 400,
+              lineHeight: 1.4,
+            },
           },
         }}
       />
@@ -253,7 +253,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       items: category.items
         .map((item) => ({
           ...item,
-          featureFlag: featureFlag[item.page!] ?? true, 
+          featureFlag: featureFlag[item.page!] ?? true,
         }))
         .filter((item) => item.featureFlag),
     }));
@@ -305,66 +305,75 @@ const Sidebar: React.FC<SidebarProps> = () => {
       <>
         {/* Dashboard */}
         {filteredMenus.dashboardFlags.length > 0 && (
-         <List sx={{ p: 0, mt: 1 }}>
-  {filteredMenus.dashboardFlags.map((category, index) => {
-    const isCategoryActive = category.items.some(
-      (item) => item.featureFlag && pathname === item.path
-    );
+          <List sx={{ p: 0, mt: 1 }}>
+            {filteredMenus.dashboardFlags.map((category, index) => {
+              const isCategoryActive = category.items.some(
+                (item) => item.featureFlag && pathname === item.path
+              );
 
-    const isOpen = openCategories[category.title] ?? false;
+              const isOpen = openCategories[category.title] ?? false;
 
-    return (
-      <Box key={uuidv4() + index} sx={{ mb: 1 }}>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => handleCategoryToggle(category.title)}
-            selected={isCategoryActive && !Object.values(openCategories).some(Boolean)}
-            sx={{
-              borderRadius: 1,
-              py: 1,
-              "&.Mui-selected": {
-                backgroundColor: theme.palette.primary.main,
-                color: "white",
-                "&:hover": { backgroundColor: theme.palette.primary.dark },
-              },
-              color: isCategoryActive ? theme.palette.primary.main : "#5c6b7d",
-            }}
-          >
-            {category.icon && (
-              <ListItemIcon sx={{ minWidth: 36, color: isCategoryActive ? theme.palette.primary.dark : "#5c6b7d" }}>
-                <category.icon  />
-              </ListItemIcon>
-            )}
-            <ListItemText primary={category.title} 
-            
-            />
-            {isOpen ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-        </ListItem>
+              return (
+                <Box key={uuidv4() + index} sx={{ mb: 1 }}>
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      onClick={() => handleCategoryToggle(category.title)}
+                      selected={
+                        isCategoryActive &&
+                        !Object.values(openCategories).some(Boolean)
+                      }
+                      sx={{
+                        borderRadius: 1,
+                        py: 1,
+                        "&.Mui-selected": {
+                          backgroundColor: theme.palette.primary.main,
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
+                        },
+                        color: isCategoryActive
+                          ? theme.palette.primary.main
+                          : "#5c6b7d",
+                      }}
+                    >
+                      {category.icon && (
+                        <ListItemIcon
+                          sx={{
+                            minWidth: 36,
+                            color: isCategoryActive
+                              ? theme.palette.primary.dark
+                              : "#5c6b7d",
+                          }}
+                        >
+                          <category.icon />
+                        </ListItemIcon>
+                      )}
+                      <ListItemText primary={category.title} />
+                      {isOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemButton>
+                  </ListItem>
 
-        <Collapse in={isOpen} timeout="auto" unmountOnExit>
-          <List sx={{ pl: 2 }}>
-            {category.items
-              .filter((item) => item.featureFlag)
-              .map((item, idx) => (
-                <SubMenuItem
-                  key={uuidv4() + idx}
-                  item={item}
-                  pathname={pathname}
-                  theme={theme}
-                  categoryTitle={category.title}
-                  
-                />
-              ))}
+                  <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                    <List sx={{ pl: 2 }}>
+                      {category.items
+                        .filter((item) => item.featureFlag)
+                        .map((item, idx) => (
+                          <SubMenuItem
+                            key={uuidv4() + idx}
+                            item={item}
+                            pathname={pathname}
+                            theme={theme}
+                            categoryTitle={category.title}
+                          />
+                        ))}
+                    </List>
+                  </Collapse>
+                </Box>
+              );
+            })}
           </List>
-        </Collapse>
-      </Box>
-    );
-  })}
-</List>
-
         )}
-
 
         {/* Analytics */}
         {filteredMenus.analyticsFlags.length > 0 && (
@@ -524,18 +533,28 @@ const Sidebar: React.FC<SidebarProps> = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          mb: 1.2,
+          // height: 50,
+          // gap: 2,
         }}
       >
-        <Typography
-          variant="h2"
+        <Box
+          component="img"
+          src="./CustomerLogo1.png"
+          alt="Customer Logo"
+          sx={{
+            height: 45,
+          }}
+        />
+        {/* <Typography
+          // variant="h2"
           sx={{
             fontWeight: 700,
+            fontSize: "22px",
             letterSpacing: 1,
           }}
         >
           CUSTOMER LOGO
-        </Typography>
+        </Typography> */}
       </Box>
 
       {/* Divider */}

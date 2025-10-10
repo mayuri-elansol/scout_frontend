@@ -82,15 +82,6 @@ const VehicleOperationalInsightsDashboard: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //   }}
-    // >
     <Box
       sx={{
         display: "flex",
