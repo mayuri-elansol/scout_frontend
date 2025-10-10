@@ -35,6 +35,7 @@ interface ZoneViolationsProps {
   loading?: boolean;
   maxHeight?: number;
   tooltipMessage?: string;
+  label?: string;
 }
 
 const ZoneViolations: React.FC<ZoneViolationsProps> = ({
@@ -42,6 +43,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
   loading = false,
   maxHeight,
   tooltipMessage,
+  label,
 }) => {
   const rows = loading ? Array.from(new Array(4)) : violationsZone;
 
@@ -93,7 +95,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Warning sx={{ fontSize: 20, color: "#f44336" }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
-              Zone Violations
+              {label ?? " Zone Violations"}
             </Typography>
           </Box>
 
@@ -241,10 +243,13 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                         <Box
                           sx={{
                             display: "grid",
-                            gridTemplateColumns: {
-                              xs: "1fr",
-                              sm: "repeat(auto-fit, minmax(120px, 1fr))",
-                            },
+                            // gridTemplateColumns: {
+                            //   xs: "1fr",
+                            //   sm: "repeat(auto-fit, minmax(120px, 1fr))",
+                            // },
+
+                            gridTemplateColumns:
+                              "repeat(auto-fill, minmax(140px, 1fr))",
                             gap: { xs: 1, sm: 1.5 },
                           }}
                         >

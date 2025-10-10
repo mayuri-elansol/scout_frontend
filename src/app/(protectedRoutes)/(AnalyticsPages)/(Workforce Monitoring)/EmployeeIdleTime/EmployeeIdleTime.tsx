@@ -1,94 +1,196 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
-import PhotoCameraFrontIcon from "@mui/icons-material/PhotoCameraFront";
-import { CheckCircle, PersonOff, Schedule, Timer } from "@mui/icons-material";
+import { AccessTime, Room, PersonOff, WorkOutline } from "@mui/icons-material";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  interface EmployeeIdleEvent {
+    incident: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+
+    [key: string]: string | number | boolean;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
+    null
+  );
   const EmployeeIdleTimeKpiData = [
     {
-      title: "Idle Employees",
-      value: "14%",
-      subtitle: "Currently idle workforce",
-      trend: "+2%",
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      icon: Schedule,
+      title: "Total Idle Events",
+      value: "23",
+      icon: AccessTime,
+      tooltipMessage:
+        "Total number of idle time events detected by the system.",
     },
     {
-      title: "Active Employees",
-      value: "72%",
-      subtitle: "Currently working",
-      trend: "-1%",
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      icon: CheckCircle,
+      title: "Total Working Events",
+      value: "54",
+      icon: WorkOutline,
+      tooltipMessage:
+        "Total number of active working events detected by the system.",
     },
     {
-      title: "Absent Employees",
-      value: "6%",
-      subtitle: "Not detected in zones",
-      trend: "+1%",
-      trendColor: "#ff9800",
-      color: "#ff9800",
-      bgColor: "#fff8e1",
+      title: "Total Not Present Events",
+      value: "8",
       icon: PersonOff,
+      tooltipMessage:
+        "Total number of times employees were detected as not present.",
     },
     {
-      title: "Avg. Idle Duration",
-      value: "18m",
-      subtitle: "Average idle time per employee",
-      trend: "-3m",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Timer,
+      title: "Last Idle Detection Time",
+      value: "10:45 AM",
+      icon: AccessTime,
+      tooltipMessage: "The most recent idle detection timestamp.",
+    },
+    {
+      title: "Last Zone",
+      value: "Assembly Line A",
+      icon: Room,
+      tooltipMessage: "The zone where the most recent idle event was detected.",
+    },
+  ];
+  const backendIdleData = [
+    {
+      id: 301,
+      isIdle: true,
+      isWorking: false,
+      notPresent: false,
+      trackingId: "TRK-01",
+      zone: "Production Floor A",
+      snapshot: "https://picsum.photos/400/200?random=21",
+      cameraid: "CAM-I01",
+      createdAt: "2025-10-08 14:50",
+      updatedAt: "2025-10-08 14:55",
+    },
+    {
+      id: 302,
+      isIdle: false,
+      isWorking: true,
+      notPresent: false,
+      trackingId: "TRK-02",
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=22",
+      cameraid: "CAM-I02",
+      createdAt: "2025-10-08 14:40",
+      updatedAt: "2025-10-08 14:45",
+    },
+    {
+      id: 303,
+      isIdle: true,
+      isWorking: false,
+      notPresent: false,
+      trackingId: "TRK-03",
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=23",
+      cameraid: "CAM-I03",
+      createdAt: "2025-10-08 14:30",
+      updatedAt: "2025-10-08 14:35",
+    },
+    {
+      id: 304,
+      isIdle: false,
+      isWorking: false,
+      notPresent: true,
+      trackingId: "TRK-04",
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=24",
+      cameraid: "CAM-I04",
+      createdAt: "2025-10-08 14:20",
+      updatedAt: "2025-10-08 14:25",
+    },
+    {
+      id: 305,
+      isIdle: true,
+      isWorking: false,
+      notPresent: false,
+      trackingId: "TRK-05",
+      zone: "Maintenance Area",
+      snapshot: "https://picsum.photos/400/200?random=25",
+      cameraid: "CAM-I05",
+      createdAt: "2025-10-08 14:10",
+      updatedAt: "2025-10-08 14:15",
     },
   ];
 
-  const recentViolations = [
+  const recentIdleEvents = backendIdleData.map((item) => {
+    const titleParts = [];
+
+    if (item.isIdle) titleParts.push("Employee Idle");
+    if (item.isWorking) titleParts.push("Employee Working");
+    if (item.notPresent) titleParts.push("Employee Not Present");
+
+    return {
+      incident: titleParts.join(", ") ?? "No event",
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.cameraid,
+    };
+  });
+
+  console.log("RECENT IDLE EVENTS", recentIdleEvents);
+
+  const zoneIdleData = [
     {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
+      zone: "Production Floor A",
+      incidents: 7,
+      subViolations: [
+        { label: "Idle", value: 4, icon: AccessTimeIcon },
+        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Not Present", value: 1, icon: PersonOffIcon },
+      ],
     },
     {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      zone: "Welding Station",
+      incidents: 5,
+      subViolations: [
+        { label: "Working", value: 4, icon: WorkOutlineIcon },
+        { label: "Idle", value: 1, icon: AccessTimeIcon },
+      ],
+    },
+    {
+      zone: "Chemical Storage",
+      incidents: 6,
+      subViolations: [
+        { label: "Idle", value: 3, icon: AccessTimeIcon },
+        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Not Present", value: 1, icon: PersonOffIcon },
+      ],
+    },
+    {
+      zone: "Assembly Line B",
+      incidents: 4,
+      subViolations: [
+        { label: "Not Present", value: 2, icon: PersonOffIcon },
+        { label: "Working", value: 2, icon: WorkOutlineIcon },
+      ],
+    },
+    {
+      zone: "Maintenance Area",
+      incidents: 8,
+      subViolations: [
+        { label: "Idle", value: 5, icon: AccessTimeIcon },
+        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Not Present", value: 1, icon: PersonOffIcon },
+      ],
     },
   ];
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-  ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -107,22 +209,17 @@ const EmployeeIdleTime: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: EmployeeIdleEvent) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Employee Idle Time Monitoring
-          </Typography>
-        </Box>
-      </Box>
-
       <Paper
         sx={{
           p: 3,
@@ -179,108 +276,79 @@ const EmployeeIdleTime: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
-              violations={recentViolations}
+              tooltipMessage="Latest 20 detected idel, working,not present employee with details."
+              label="Recent Incident"
+              violations={recentIdleEvents}
               loading={false}
-              tooltipMessage="recent volaitons"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              //showSubViolations
+              violationsZone={zoneIdleData}
+              loading={false}
+              tooltipMessage="Shows idel, working,not present employee per zone"
+              label="Zone Incident"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          { id: "isIdle", label: "Is Idle", minWidth: 100 },
-          { id: "isWorking", label: "Is Working", minWidth: 120 },
-          { id: "notPresent", label: "Not Present", minWidth: 120 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-          { id: "timestamp", label: "Timestamp", minWidth: 140 },
+          { id: "incident", label: "Incident" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
         ]}
-        data={[
-          {
-            id: "EIT-001",
-            isIdle: true,
-            isWorking: false,
-            notPresent: false,
-            zone: "Assembly Line A",
-            camera: "CAM-51",
-            timestamp: "2025-09-24 09:15",
-          },
-          {
-            id: "EIT-002",
-            isIdle: false,
-            isWorking: true,
-            notPresent: false,
-            zone: "Loading Dock",
-            camera: "CAM-52",
-            timestamp: "2025-09-24 09:25",
-          },
-          {
-            id: "EIT-003",
-            isIdle: false,
-            isWorking: false,
-            notPresent: true,
-            zone: "Parking Lot",
-            camera: "CAM-53",
-            timestamp: "2025-09-24 09:35",
-          },
-          {
-            id: "EIT-004",
-            isIdle: true,
-            isWorking: false,
-            notPresent: false,
-            zone: "Main Factory Floor",
-            camera: "CAM-54",
-            timestamp: "2025-09-24 09:45",
-          },
-        ]}
+        data={recentIdleEvents}
         filters={[
+          {
+            id: "incident",
+            label: "Incident",
+            type: "select",
+            options: Array.from(
+              new Set(recentIdleEvents.map((v) => v.incident))
+            ),
+          },
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Assembly Line A",
-              "Loading Dock",
-              "Parking Lot",
-              "Main Factory Floor",
-            ],
+            options: Array.from(new Set(recentIdleEvents.map((v) => v.zone))),
           },
           {
-            id: "isIdle",
-            label: "Is Idle",
+            id: "cameraId",
+            label: "Cameras",
             type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(recentIdleEvents.map((v) => v.cameraId))
+            ),
           },
-          {
-            id: "isWorking",
-            label: "Is Working",
-            type: "select",
-            options: ["true", "false"],
-          },
-          {
-            id: "notPresent",
-            label: "Not Present",
-            type: "select",
-            options: ["true", "false"],
-          },
-          { id: "timestamp", label: "Start Date", type: "date" },
-          { id: "timestamp", label: "End Date", type: "date" },
+
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
-        downloadFileName="employee-idle-time-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
+        downloadFileName="employee-idle-time-report"
         loading={false}
-        tooltipMessage="report table"
+      />
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

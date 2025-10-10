@@ -1,70 +1,235 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { DirectionsCar, SwapHoriz, Place, Timeline } from "@mui/icons-material";
+import {
+  DirectionsCar,
+  SwapHoriz,
+  Place,
+  Timeline,
+  CheckCircle,
+  ReportProblem,
+  Schedule,
+  ExitToApp,
+  MeetingRoom,
+} from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
-import NoCrashIcon from "@mui/icons-material/NoCrash";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const VehicleCount: React.FC = () => {
+  interface VehicleCountEvent {
+    incident: string;
+    vehicleNumber: string;
+    status: string;
+    validNumber: boolean;
+    time: string;
+    zone: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    imageUrl: string;
+    [key: string]: string | number | boolean | undefined;
+  }
+
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] = useState<VehicleCountEvent | null>(
+    null
+  );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
     {
-      title: "Total Vehicles",
-      value: "87",
+      title: "Total Vehicles Detected",
+      value: "152",
       icon: DirectionsCar,
+      tooltipMessage:
+        "Total number of vehicles detected at all entry/exit gates.",
+    },
+    {
+      title: "Total Valid Numbers",
+      value: "145",
+      icon: CheckCircle,
+      tooltipMessage:
+        "Number of detected vehicles with valid license plate numbers.",
+    },
+    {
+      title: "Total Invalid Numbers",
+      value: "7",
+      icon: ReportProblem,
+      tooltipMessage:
+        "Number of detected vehicles with invalid or unreadable license plate numbers.",
+    },
+    {
+      title: "Last Detection Time",
+      value: "16:20",
+      icon: Schedule,
+      tooltipMessage: "The most recent time when a vehicle was detected.",
+    },
+    {
+      title: "Last Zone",
+      value: "Gate A - Entry",
+      icon: MeetingRoom,
+      tooltipMessage: "Zone of the last vehicle detection.",
+    },
+    {
+      title: "Last Camera ID",
+      value: "CAM-VEH-12",
+      icon: DirectionsCar,
+      tooltipMessage: "Camera that detected the last vehicle.",
+    },
+    {
+      title: "Last Status",
+      value: "Entry",
+      icon: ExitToApp,
+      tooltipMessage:
+        "Whether the last detection was at an entry or exit gate.",
     },
     {
       title: "Entry vs Exit",
       value: "12 In / 8 Out",
       icon: SwapHoriz,
+      tooltipMessage: "vehical entry exit count",
     },
     {
       title: "Busiest Zone",
       value: "Zone A",
       icon: Place,
+      tooltipMessage: "most busiest zone",
     },
     {
       title: "Current Vehicle Occupancy",
       value: "28",
       icon: Timeline,
+      tooltipMessage: "current vehical occupancy",
+    },
+  ];
+  const vehicleCountBackendData = [
+    {
+      id: 201,
+      numberDetected: "MH12AB1234",
+      status: "Entry",
+      validNumber: true,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Main Gate A",
+      camera: "CAM-ENTRY-01",
+      createdAt: "2025-09-23 09:42",
+      updatedAt: "2025-09-23 09:43",
+      alarmTriggered: false,
+    },
+    {
+      id: 202,
+      numberDetected: "MH14XY7890",
+      status: "Exit",
+      validNumber: false,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Exit Gate B",
+      camera: "CAM-EXIT-02",
+      createdAt: "2025-09-23 09:58",
+      updatedAt: "2025-09-23 10:00",
+      alarmTriggered: true,
+    },
+    {
+      id: 203,
+      numberDetected: "GJ05TR5678",
+      status: "Entry",
+      validNumber: true,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Warehouse Entry",
+      camera: "CAM-ENTRY-03",
+      createdAt: "2025-09-23 10:12",
+      updatedAt: "2025-09-23 10:14",
+      alarmTriggered: false,
+    },
+    {
+      id: 204,
+      numberDetected: "DL09GH4567",
+      status: "Exit",
+      validNumber: false,
+      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Service Exit",
+      camera: "CAM-EXIT-04",
+      createdAt: "2025-09-23 10:30",
+      updatedAt: "2025-09-23 10:32",
+      alarmTriggered: true,
+    },
+    {
+      id: 205,
+      numberDetected: "MH15PQ2345",
+      status: "Entry",
+      validNumber: true,
+      snapshot: "https://picsum.photos/400/200?random=15",
+      zone: "Visitor Gate",
+      camera: "CAM-ENTRY-05",
+      createdAt: "2025-09-23 11:00",
+      updatedAt: "2025-09-23 11:02",
+      alarmTriggered: false,
     },
   ];
 
-  const recentViolations = [
-    {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
+  const vehicleViolations = vehicleCountBackendData.map((item) => {
+    let violation = "No violation";
 
-      imageUrl: "https://picsum.photos/400/200?random=1",
+    if (!item.validNumber) {
+      violation = "Invalid number plate detected";
+    }
+
+    return {
+      incident: violation,
+      vehicleNumber: item.numberDetected,
+      status: item.status,
+      validNumber: item.validNumber,
+      time: item.createdAt,
+      zone: item.zone,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
+      imageUrl: item.snapshot,
+    };
+  });
+
+  console.log(vehicleViolations);
+
+  const vehicleZoneViolationsData = [
+    {
+      zone: "Main Gate A",
+      violations: 5,
+      subViolations: [
+        { label: "Invalid Number Plate", value: 3, icon: ErrorOutlineIcon },
+      ],
     },
     {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      zone: "Exit Gate B",
+      violations: 7,
+      subViolations: [
+        { label: "Invalid Number Plate", value: 4, icon: ErrorOutlineIcon },
+      ],
+    },
+    {
+      zone: "Warehouse Entry",
+      violations: 4,
+      subViolations: [
+        { label: "Invalid Number Plate", value: 2, icon: ErrorOutlineIcon },
+      ],
+    },
+    {
+      zone: "Service Exit",
+      violations: 6,
+      subViolations: [
+        { label: "Invalid Number Plate", value: 3, icon: ErrorOutlineIcon },
+      ],
+    },
+    {
+      zone: "Visitor Gate",
+      violations: 3,
+      subViolations: [
+        { label: "Invalid Number Plate", value: 2, icon: ErrorOutlineIcon },
+      ],
     },
   ];
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-  ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -83,21 +248,17 @@ const VehicleCount: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: VehicleCountEvent) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <NoCrashIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Vehicle Count & ANPR at Entry/Exit Gates
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -154,86 +315,53 @@ const VehicleCount: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
-              violations={recentViolations}
+              tooltipMessage="Latest 20 Vehicle Count & ANPR at Entry/Exit Gates with details."
+              label="Recent Incident"
+              violations={vehicleViolations}
               loading={false}
-              tooltipMessage="recent volaitons"
             />
           </Grid>
           {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              label="Zone Incident"
+              violationsZone={vehicleZoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed vehicle count report with filters, reset, and export options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          { id: "numberDetected", label: "Number Detected", minWidth: 150 },
+          { id: "incident", label: "Incident", minWidth: 200 },
+          { id: "vehicleNumber", label: "Vehicle Number", minWidth: 150 },
           { id: "status", label: "Status (Entry/Exit)", minWidth: 150 },
           { id: "validNumber", label: "Valid Number", minWidth: 120 },
+          { id: "time", label: "Time", minWidth: 140 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
-          { id: "timestamp", label: "Timestamp", minWidth: 140 },
         ]}
-        data={[
-          {
-            id: "VC-001",
-            numberDetected: "MH12AB1234",
-            status: "Entry",
-            validNumber: true,
-            zone: "Main Gate",
-            camera: "CAM-101",
-            alarmTriggered: false,
-            timestamp: "2025-09-24 08:15",
-          },
-          {
-            id: "VC-002",
-            numberDetected: "MH12XY9876",
-            status: "Exit",
-            validNumber: false,
-            zone: "Main Gate",
-            camera: "CAM-102",
-            alarmTriggered: true,
-            timestamp: "2025-09-24 09:00",
-          },
-          {
-            id: "VC-003",
-            numberDetected: "MH14CD5678",
-            status: "Entry",
-            validNumber: true,
-            zone: "Loading Dock",
-            camera: "CAM-103",
-            alarmTriggered: false,
-            timestamp: "2025-09-24 09:30",
-          },
-          {
-            id: "VC-004",
-            numberDetected: "MH20EF2345",
-            status: "Exit",
-            validNumber: false,
-            zone: "Parking Lot",
-            camera: "CAM-104",
-            alarmTriggered: true,
-            timestamp: "2025-09-24 10:00",
-          },
-        ]}
+        data={vehicleViolations}
         filters={[
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: ["Main Gate", "Loading Dock", "Parking Lot"],
+            options: Array.from(new Set(vehicleViolations.map((v) => v.zone))),
           },
           {
             id: "status",
             label: "Status",
             type: "select",
-            options: ["Entry", "Exit"],
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.status))
+            ),
           },
           {
             id: "validNumber",
@@ -247,15 +375,24 @@ const VehicleCount: React.FC = () => {
             type: "select",
             options: ["true", "false"],
           },
-          { id: "timestamp", label: "Start Date", type: "date" },
-          { id: "timestamp", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
         downloadFileName="vehicle-count-anpr-report"
         onSubmit={handleSubmitFilter}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         onReset={handleReset}
         onExport={handleExport}
         loading={false}
-        tooltipMessage="report table"
+      />
+      {/* View Alert Popup */}
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

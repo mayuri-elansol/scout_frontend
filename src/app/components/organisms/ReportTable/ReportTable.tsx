@@ -67,7 +67,6 @@ interface ReportTableProps<T extends object> {
   readonly onView?: (row: T) => void;
   readonly onDownload?: (row: T) => void;
   readonly tooltipMessage: string;
-  
 }
 
 function ReportTable<T extends Record<string, string | number | boolean>>({
@@ -102,7 +101,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     const hasDateFilters = Object.values(dateTimeValues).some(
       (value) => value !== null && value !== undefined
     );
-    return hasTextFilters || hasDateFilters;
+    return hasTextFilters ?? hasDateFilters;
   }, [filterValues, dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
@@ -142,7 +141,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
           .filter(([value]) => value !== null)
-          .map(([key, value]) => [key, value?.toISOString() || ""])
+          .map(([key, value]) => [key, value?.toISOString() ?? ""])
       ),
     };
     onSubmit?.(combinedFilters);
@@ -240,7 +239,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
           .filter(([value]) => value !== null)
-          .map(([key, value]) => [key, value?.toISOString() || ""])
+          .map(([key, value]) => [key, value?.toISOString() ?? ""])
       ),
     };
     onExport?.(format, combinedFilters);
@@ -255,7 +254,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
             label={filter.label}
-            value={dateTimeValues[filter.label] || null}
+            value={dateTimeValues[filter.label] ?? null}
             onChange={(newValue) =>
               handleDateTimeChange(
                 filter.label,
@@ -267,14 +266,15 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             slotProps={{
               textField: {
                 fullWidth: true,
-                sx: { minWidth: 150,
-                   "& .MuiPickersOutlinedInput-root": {
+                sx: {
+                  minWidth: 150,
+                  "& .MuiPickersOutlinedInput-root": {
                     height: "48px",
                   },
                   "& .MuiInputLabel-root": {
                     transformOrigin: "top left",
                   },
-                 },
+                },
               },
             }}
           />
@@ -321,7 +321,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
         </TableCell>
       </TableRow>
     ));
-  } else if (data.length > 0 ) {
+  } else if (data.length > 0) {
     tableRows = data.map((row, index) => (
       <TableRow key={uuidv4() + index}>
         {columns.map((column, index) => (

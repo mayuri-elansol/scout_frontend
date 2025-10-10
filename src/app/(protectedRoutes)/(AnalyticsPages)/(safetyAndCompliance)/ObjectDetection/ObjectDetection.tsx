@@ -1,114 +1,165 @@
 "use client";
 
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  People,
-  TrendingUp,
-  Place,
-  CheckCircle,
-  Warning,
-} from "@mui/icons-material";
+import { DirectionsCar, CameraAlt, Timeline, Room } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { CameraZone } from "@/app/types";
+
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import ForkliftIcon from "@mui/icons-material/Forklift";
 const ObjectDetection: React.FC = () => {
-  const recentViolations = [
-    {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-    {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
-      Id: "W-4521",
-      severity: "HIGH",
-      status: "ACTIVE",
-      imageUrl: "https://picsum.photos/400/200?random=1",
-    },
-    {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-      Id: "W-3847",
-      severity: "MEDIUM",
-      status: "ACKNOWLEDGED",
-      imageUrl: "https://picsum.photos/400/200?random=2",
-    },
-  ];
+  interface ForkliftDetectionEvent {
+    voilation: string; // e.g., "Forklift detected"
+    objectName?: string; // Optional
+    imageUrl: string; // Image URL
+    zone: string; // Zone name
+    cameraId: string; // Camera ID
+    time: string; // Detection timestamp
 
+    alarmTriggered: boolean; // True/False
+    [key: string]: string | number | boolean | undefined;
+  }
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<ForkliftDetectionEvent | null>(null);
   const ObjectDetectionKpiData = [
     {
-      title: "Total Object Detections",
-      value: "1,452",
-
-      icon: TrendingUp,
+      title: "Total Detections",
+      value: "150",
+      icon: DirectionsCar,
+      tooltipMessage: "Total forklift/vehicle detections.",
     },
     {
-      title: "Unique Objects",
-      value: "12",
-
-      icon: People,
+      title: "Safe Zones",
+      value: "4",
+      icon: Room,
+      tooltipMessage: "Zones where no detections occurred.",
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Active Alarms",
-      value: "5",
-
-      icon: Warning,
+      title: "Most Common Object",
+      value: "Forklift",
+      icon: CameraAlt,
+      tooltipMessage: "Object detected most often.",
     },
     {
-      title: "Most Detected Object",
-      value: "Helmet",
-
-      icon: CheckCircle,
+      title: "Latest Detection Time",
+      value: "2025-10-09 14:30",
+      icon: Timeline,
+      tooltipMessage: "Time of the most recent detection.",
     },
     {
-      title: "Most Triggered Zone",
-      value: "warehouse",
-
-      icon: Place,
-    },
-    {
-      title: "Most Alerting Camera",
-      value: "Cam-04",
-
-      icon: Warning,
+      title: "Latest Detection Zone",
+      value: "Zone A",
+      icon: Room,
+      tooltipMessage: "Time of the most recent detection.",
     },
   ];
-  const cameraZones: CameraZone[] = [
+
+  const backendData = [
     {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
+      id: 201,
+      detected: true,
+      objectName: "Forklift",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Walkway Zone A",
+      camera: "CAM-101",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 09:15",
+      updatedAt: "2025-10-08 09:20",
     },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    {
+      id: 202,
+      detected: true,
+      objectName: "Vehicle",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Walkway Zone B",
+      camera: "CAM-102",
+      alarmTriggered: false,
+      createdAt: "2025-10-08 09:30",
+      updatedAt: "2025-10-08 09:32",
+    },
+    {
+      id: 203,
+      detected: true,
+      objectName: "Forklift",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Walkway Zone C",
+      camera: "CAM-103",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 10:05",
+      updatedAt: "2025-10-08 10:10",
+    },
+    {
+      id: 204,
+      detected: true,
+      objectName: "Vehicle",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Walkway Zone A",
+      camera: "CAM-104",
+      alarmTriggered: true,
+      createdAt: "2025-10-08 10:25",
+      updatedAt: "2025-10-08 10:30",
+    },
+    {
+      id: 205,
+      detected: true,
+      objectName: "Forklift",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      zone: "Walkway Zone B",
+      camera: "CAM-105",
+      alarmTriggered: false,
+      createdAt: "2025-10-08 11:00",
+      updatedAt: "2025-10-08 11:05",
+    },
   ];
+  const recentDetections = backendData.map((item) => {
+    return {
+      voilation: `${item.objectName} detected`,
+      objectName: item.objectName,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  const zoneViolationsData = [
+    {
+      zone: "Walkway Zone A",
+      violations: 8,
+      subViolations: [
+        { label: "Forklift", value: 5, icon: ForkliftIcon },
+        { label: "Vehicle", value: 3, icon: DirectionsCar },
+      ],
+    },
+    {
+      zone: "Walkway Zone B",
+      violations: 6,
+      subViolations: [
+        { label: "Forklift", value: 2, icon: ForkliftIcon },
+        { label: "Vehicle", value: 4, icon: DirectionsCar },
+      ],
+    },
+    {
+      zone: "Walkway Zone C",
+      violations: 5,
+      subViolations: [{ label: "Forklift", value: 5, icon: ForkliftIcon }],
+    },
+  ];
+
   interface FilterParams {
     zone?: string;
     status?: string;
@@ -133,26 +184,15 @@ const ObjectDetection: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = () => {
-    console.log("view single row");
+  const handleViewSingle = (row: ForkliftDetectionEvent) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
-      {/* Page Header */}
-      {/* <Box sx={{ mb: 3 }}> */}
-      {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <WidgetsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Object Detection in Walking Bays
-          </Typography>
-        </Box> */}
-      {/* </Box> */}
-
       {/* KPI Cards */}
       <Paper
         sx={{
@@ -208,120 +248,95 @@ const ObjectDetection: React.FC = () => {
           {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
+              tooltipMessage="Latest 20 Forklift / Vehicle detected in Walkways with details."
               label="Recent Violations"
-              violations={recentViolations}
+              violations={recentDetections}
               loading={false}
-              tooltipMessage="recent violations"
             />
           </Grid>
-
           {/* PPE Compliance by Zone */}
+
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              //showSubViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
+              tooltipMessage="Shows violations per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
       {/* Object detection Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed detection events for forklifts/vehicles in walkways with filter, reset, and export options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-          {
-            id: "detectionDetected",
-            label: "Object Detected",
-            minWidth: 150,
-          },
-          { id: "objectName", label: "Object Name", minWidth: 140 },
-
+          { id: "voilation", label: "Voilation", minWidth: 150 },
+          { id: "objectName", label: "Object Name", minWidth: 120 },
+          { id: "time", label: " Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
 
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
-          { id: "timestamp", label: "Timestamp", minWidth: 140 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
         ]}
-        data={[
-          {
-            id: "DD-101",
-            detectionDetected: true,
-            objectName: "Bag",
-            snapshot: "snapshot1.jpg",
-            zone: "Main Entrance",
-            camera: "CAM-01",
-            timestamp: "2025-09-24 15:42",
-            alarmTriggered: true,
-          },
-          {
-            id: "DD-102",
-            detectionDetected: false,
-            objectName: "Box",
-            snapshot: "snapshot2.jpg",
-            zone: "Loading Dock",
-            camera: "CAM-02",
-            timestamp: "2025-09-24 15:28",
-            alarmTriggered: false,
-          },
-          {
-            id: "DD-103",
-            detectionDetected: true,
-            objectName: "Bottle",
-            snapshot: "snapshot3.jpg",
-            zone: "Assembly Area",
-            camera: "CAM-03",
-            timestamp: "2025-09-24 15:15",
-            alarmTriggered: true,
-          },
-          {
-            id: "DD-104",
-            detectionDetected: true,
-            objectName: "Box",
-            snapshot: "snapshot4.jpg",
-            zone: "Parking Lot",
-            camera: "CAM-04",
-            timestamp: "2025-09-24 14:58",
-            alarmTriggered: true,
-          },
-        ]}
+        data={recentDetections} // The mapped backend data for this case
         filters={[
           {
-            id: "zone",
-            label: "Zone",
+            id: "voilation",
+            label: "Event Message",
             type: "select",
-            options: [
-              "Main Entrance",
-              "Loading Dock",
-              "Assembly Area",
-              "Parking Lot",
-            ],
-          },
-          {
-            id: "detectionDetected",
-            label: "Detection Detected",
-            type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(recentDetections.map((v) => v.voilation))
+            ),
           },
           {
             id: "objectName",
             label: "Object Name",
             type: "select",
-            options: ["Bag", "Box", "Bottle"],
+            options: Array.from(
+              new Set(recentDetections.map((v) => v.objectName))
+            ),
+          },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: Array.from(new Set(recentDetections.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "Camera",
+            type: "select",
+            options: Array.from(
+              new Set(recentDetections.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",
             label: "Alarm Triggered",
             type: "select",
-            options: ["true", "false"],
+            options: ["True", "False"],
           },
-          { id: "timestamp", label: "Start Date", type: "date" },
-          { id: "timestamp", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
-        tooltipMessage="report table"
-        downloadFileName="object-detection-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
+        downloadFileName="forklift-vehicle-detection-report"
         loading={false}
+      />
+
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

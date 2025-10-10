@@ -7,7 +7,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import {
-  Shield,
   NotificationsActive,
   CheckCircle,
   Schedule,
@@ -189,18 +188,6 @@ const FallDetection: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Fall Detection /Laydown/Sleeping Detection in Work Areas
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -269,7 +256,7 @@ const FallDetection: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows laydown/sleeping/falldown violations per zone"
             />
           </Grid>
         </Grid>

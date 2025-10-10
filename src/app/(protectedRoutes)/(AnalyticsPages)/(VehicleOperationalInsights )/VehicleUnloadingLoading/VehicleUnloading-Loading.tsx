@@ -1,14 +1,13 @@
 "use client";
-import React from "react";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraZone } from "@/app/types";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
 import {
   CheckCircle,
   LocalShipping,
@@ -17,65 +16,172 @@ import {
   Timeline,
 } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const VehicleUnloadingLoading: React.FC = () => {
+  interface VehicleLoadingEvent {
+    incident: string;
+    trackId: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+
+    [key: string]: string | number | boolean;
+  }
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<VehicleLoadingEvent | null>(null);
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleUnloadingLoadingKpiData = [
     {
       title: "Total Operations",
       value: "87", // total count of loading/unloading events
       icon: LocalShipping, // represents vehicles/transport
+      tooltipMessage: "Total loading/unloading events recorded.",
     },
     {
       title: "Ongoing Operations",
       value: "12", // number of operations in progress
       icon: PlayArrow, // represents active/ongoing
+      tooltipMessage: "Number of operations currently in progress.",
     },
     {
       title: "Completed Operations",
       value: "94", // percentage completed
+      tooltipMessage: "Number of operations completed successfully.",
       icon: CheckCircle, // completed/checked
     },
     {
       title: "Active Zones",
       value: "2", // number of zones currently active
       icon: Room, // represents location/zone
+      tooltipMessage: "Total zones currently engaged in operations.",
     },
     {
       title: "Busiest Zone",
       value: "Zone A", // which zone has most activity
       icon: Timeline, // represents activity metric
+      tooltipMessage: "Zone with the highest operation activity.",
+    },
+  ];
+  const backendData = [
+    {
+      id: 301,
+      trackId: "TRK-001",
+      loadingState: "Start",
+      snapshot: "https://picsum.photos/400/200?random=21",
+      zone: "Loading Bay A",
+      camera: "CAM-21",
+      alarmTriggered: true,
+      createdAt: "2025-10-09 08:15",
+      updatedAt: "2025-10-09 08:20",
+    },
+    {
+      id: 302,
+      trackId: "TRK-002",
+      loadingState: "Stop",
+      snapshot: "https://picsum.photos/400/200?random=22",
+      zone: "Loading Bay B",
+      camera: "CAM-22",
+      alarmTriggered: false,
+      createdAt: "2025-10-09 09:30",
+      updatedAt: "2025-10-09 09:35",
+    },
+    {
+      id: 303,
+      trackId: "TRK-003",
+      loadingState: "Start",
+      snapshot: "https://picsum.photos/400/200?random=23",
+      zone: "Unloading Bay A",
+      camera: "CAM-23",
+      alarmTriggered: true,
+      createdAt: "2025-10-09 10:00",
+      updatedAt: "2025-10-09 10:05",
+    },
+    {
+      id: 304,
+      trackId: "TRK-004",
+      loadingState: "Stop",
+      snapshot: "https://picsum.photos/400/200?random=24",
+      zone: "Unloading Bay B",
+      camera: "CAM-24",
+      alarmTriggered: false,
+      createdAt: "2025-10-09 11:00",
+      updatedAt: "2025-10-09 11:05",
+    },
+    {
+      id: 305,
+      trackId: "TRK-005",
+      loadingState: "Start",
+      snapshot: "https://picsum.photos/400/200?random=25",
+      zone: "Loading Bay C",
+      camera: "CAM-25",
+      alarmTriggered: true,
+      createdAt: "2025-10-09 12:15",
+      updatedAt: "2025-10-09 12:20",
     },
   ];
 
-  const recentViolations = [
-    {
-      Voilation: "Hard hat missing",
-      zone: "Production Zone A",
-      time: "14:32",
+  const recentLoadingEvents = backendData.map((item) => {
+    const incident =
+      item.loadingState === "Start" ? "Loading started" : "Loading stopped";
 
-      imageUrl: "https://picsum.photos/400/200?random=1",
+    return {
+      incident,
+      trackId: item.trackId,
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  const zoneLoadingData = [
+    {
+      zone: "Loading Bay A",
+      events: 12,
+      subViolations: [
+        { label: "Start", value: 7, icon: PlayCircleIcon },
+        { label: "Stop", value: 5, icon: StopCircleIcon },
+      ],
     },
     {
-      Voilation: "Safety vest not worn",
-      zone: "Warehouse Zone B",
-      time: "14:18",
-
-      imageUrl: "https://picsum.photos/400/200?random=2",
+      zone: "Loading Bay B",
+      events: 9,
+      subViolations: [
+        { label: "Start", value: 4, icon: PlayCircleIcon },
+        { label: "Stop", value: 5, icon: StopCircleIcon },
+      ],
+    },
+    {
+      zone: "Unloading Bay A",
+      events: 15,
+      subViolations: [
+        { label: "Start", value: 9, icon: PlayCircleIcon },
+        { label: "Stop", value: 6, icon: StopCircleIcon },
+      ],
+    },
+    {
+      zone: "Unloading Bay B",
+      events: 8,
+      subViolations: [
+        { label: "Start", value: 4, icon: PlayCircleIcon },
+        { label: "Stop", value: 4, icon: StopCircleIcon },
+      ],
+    },
+    {
+      zone: "Loading Bay C",
+      events: 10,
+      subViolations: [
+        { label: "Start", value: 6, icon: PlayCircleIcon },
+        { label: "Stop", value: 4, icon: StopCircleIcon },
+      ],
     },
   ];
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-  ];
+
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -94,21 +200,18 @@ const VehicleUnloadingLoading: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
+  const handleViewSingle = (row: VehicleLoadingEvent) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LocalShippingIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Tracking Vehicle Unloading/Loading Time
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -126,7 +229,6 @@ const VehicleUnloadingLoading: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -162,104 +264,89 @@ const VehicleUnloadingLoading: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
-              violations={recentViolations}
+              label="Recent Incident"
+              violations={recentLoadingEvents}
               loading={false}
-              tooltipMessage="recent volaitions"
+              tooltipMessage="Latest 20 Vehicle unloading and loading events with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
-            <CameraStatus cameraZones={cameraZones} loading={false} />
+            <ZoneViolations
+              label="Zone Incident"
+              violationsZone={zoneLoadingData}
+              loading={false}
+              tooltipMessage="Shows vehicle unloading and loading events per zone"
+            />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed vehicle loading/unloading events report with filter, reset, and export options."
         columns={[
-          { id: "id", label: "ID", minWidth: 100 },
-
-          {
-            id: "loadingState",
-            label: "Loading State (Start/Stop)",
-            minWidth: 180,
-          },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
-          { id: "timestamp", label: "Timestamp", minWidth: 150 },
+          { id: "incident", label: "incident" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Camera" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={[
-          {
-            id: "TL-001",
-            trackId: "TRACK-101",
-            loadingState: "Start",
-            zone: "Loading Dock A",
-            camera: "CAM-201",
-            alarmTriggered: false,
-            timestamp: "2025-09-24 10:15:00",
-          },
-          {
-            id: "TL-002",
-            trackId: "TRACK-102",
-            loadingState: "Stop",
-            zone: "Loading Dock B",
-            camera: "CAM-202",
-            alarmTriggered: true,
-            timestamp: "2025-09-24 10:45:00",
-          },
-          {
-            id: "TL-003",
-            trackId: "TRACK-103",
-            loadingState: "Start",
-            zone: "Loading Dock A",
-            camera: "CAM-203",
-            alarmTriggered: false,
-            timestamp: "2025-09-24 11:00:00",
-          },
-          {
-            id: "TL-004",
-            trackId: "TRACK-104",
-            loadingState: "Stop",
-            zone: "Loading Dock C",
-            camera: "CAM-204",
-            alarmTriggered: false,
-            timestamp: "2025-09-24 11:30:00",
-          },
-        ]}
+        data={recentLoadingEvents}
         filters={[
+          {
+            id: "incident",
+            label: "Incident",
+            type: "select",
+            options: Array.from(
+              new Set(recentLoadingEvents.map((v) => v.incident))
+            ),
+          },
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: ["Loading Dock A", "Loading Dock B", "Loading Dock C"],
+            options: Array.from(
+              new Set(recentLoadingEvents.map((v) => v.zone))
+            ),
           },
           {
-            id: "loadingState",
-            label: "Loading State",
+            id: "cameraId",
+            label: "Camera",
             type: "select",
-            options: ["Start", "Stop"],
+            options: Array.from(
+              new Set(recentLoadingEvents.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",
             label: "Alarm Triggered",
             type: "select",
-            options: ["true", "false"],
+            options: ["True", "False"],
           },
-          { id: "timestamp", label: "Start Date", type: "date" },
-          { id: "timestamp", label: "End Date", type: "date" },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
-        downloadFileName="vehicle-loading-time-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
+        downloadFileName="vehicle-loading-unloading-report"
         loading={false}
-        tooltipMessage="report table"
+      />
+      {/* View Alert Popup */}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

@@ -5,6 +5,6 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-export default function ProtectedLayout({ children }: LayoutProps) {
+export default function ProtectedLayout({ children }: Readonly<LayoutProps>) {
   return <ClientLayout>{children}</ClientLayout>;
 }

@@ -8,7 +8,7 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import LockPersonIcon from "@mui/icons-material/LockPerson";
+
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -134,18 +134,6 @@ const EmployeePresence: React.FC = () => {
 
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LockPersonIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Employee presence detection in critical areas
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -205,7 +193,7 @@ const EmployeePresence: React.FC = () => {
               label="Recent Violations"
               violations={recentEmployeeViolations}
               loading={false}
-              tooltipMessage="Latest 20  violations where employee entred in critical areas with details."
+              tooltipMessage="Latest 20 violations where employee entred in critical areas with details."
             />
           </Grid>
           {/* Critical Zones Status */}
@@ -215,7 +203,7 @@ const EmployeePresence: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations and alarms per zone"
+              tooltipMessage="Shows employee entred in critical zone"
             />
           </Grid>
         </Grid>

@@ -8,7 +8,6 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import PeopleIcon from "@mui/icons-material/People";
@@ -92,12 +91,7 @@ const PeopleCount: React.FC = () => {
   const zonePeopleCountData = [
     {
       zone: "Production Floor A",
-      // enteredCount: 150,
-      // exitCount: 120,
-      // icons: {
-      //   enteredCount: PeopleIcon,
-      //   exitCount: ExitToAppIcon,
-      // },
+
       subViolations: [
         { label: "entered Count", value: 3, icon: PeopleIcon },
         { label: "exit Count", value: 2, icon: ExitToAppIcon },
@@ -192,18 +186,6 @@ const PeopleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <FollowTheSignsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            People Count in Factory Premises based on Entry Exit Counting
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -324,7 +306,7 @@ const PeopleCount: React.FC = () => {
         downloadFileName="people-count-report"
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options."
       />
       {/* View Alert Popup */}
 
