@@ -4,23 +4,21 @@ import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
-  DirectionsCar,
   Shield,
   Visibility,
-  People,
   Smartphone,
   AccessTime,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import EmployeePresenceCriticalChart from "@/app/components/organisms/EmployeePresenceInCriticalAreaChart/EmployeePresenceInCriticalAreaChart";
 import EmployeePresenceInRestrictedAreaChart from "@/app/components/organisms/EmployeePresenceInRestrictedAreaChart/EmployeePresenceInRestrictedAreaChart";
 import MobilePhoneUsageChart from "@/app/components/organisms/MobilePhoneUsageInRestrictedAreaChart/MobilePhoneUsageInRestrictedAreaChart";
-import SleepingSecurityPersonnel from "../../(AnalyticsPages)/(Workforce Monitoring)/SleepingSecurityPersonnel/SleepingSecurityPersonnel";
 import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/SleepingOrAbsenceOfSecurityGuard/SleepingOrAbsenceOfSecurityGuard";
 import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
 
@@ -49,6 +47,17 @@ const WorkforceMonitoring: React.FC = () => {
         "Shows employee presence in areas that require special clearance.",
     },
     {
+      title: "Employee Idel Time",
+      value: "0",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: Visibility,
+      route: "/EmployeeIdleTime",
+      tooltipMessage:
+        "Shows employee presence in areas that require special clearance.",
+    },
+    {
       title: "Mobile Phone Usage in Critical Area",
       value: "3",
       violationsCount: 3,
@@ -59,17 +68,7 @@ const WorkforceMonitoring: React.FC = () => {
       tooltipMessage:
         "Displays incidents of unauthorized mobile phone usage inside critical areas.",
     },
-    {
-      title: "People Count in Factory Premises",
-      value: "215",
-      violationsCount: 215,
-      lastDetection: "Main Entrance",
-      lastDetectionTime: "04:05 PM",
-      icon: People,
-      route: "/PeopleCount",
-      tooltipMessage:
-        "Displays total number of people inside factory premises based on entry/exit data.",
-    },
+
     {
       title: "Sleeping or Absence of Security Personnel",
       value: "2",
@@ -96,18 +95,31 @@ const WorkforceMonitoring: React.FC = () => {
 
     { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
   ];
-const tabs: TabConfig[] = [
-  { label: "Employee Presence (Critical Areas)", content: <EmployeePresenceCriticalChart /> },
-  { label: "Employee Presence (Restricted Areas)", content: <EmployeePresenceInRestrictedAreaChart /> },
-  { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
-  { label: "Security Personnel Status", content: <SleepingOrAbsenceOfSecurityGuard /> },
-  {label:"Employee Monitoring", content:<EmployeeIdleTimeMonitoringChart/>},
-  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
-];
-
+  const tabs: TabConfig[] = [
+    {
+      label: "Employee Presence (Critical Areas)",
+      content: <EmployeePresenceCriticalChart />,
+    },
+    {
+      label: "Employee Presence (Restricted Areas)",
+      content: <EmployeePresenceInRestrictedAreaChart />,
+    },
+    { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
+    {
+      label: "Security Personnel Status",
+      content: <SleepingOrAbsenceOfSecurityGuard />,
+    },
+    {
+      label: "Employee Monitoring",
+      content: <EmployeeIdleTimeMonitoringChart />,
+    },
+    {
+      label: "Camera Status",
+      content: <CameraStatus cameraZones={cameraZones} />,
+    },
+  ];
 
   return (
-
     <Paper
       sx={{
         display: "flex",

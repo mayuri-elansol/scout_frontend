@@ -1,73 +1,71 @@
 "use client";
 
 import React from "react";
-import { CameraZone, KpiData } from "@/app/types";
+import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-  Shield,
-  Warning,
-  Visibility,
-  People,
-  DirectionsCar,
-} from "@mui/icons-material";
+import { People, DirectionsCar, Security } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 
-import { useTranslation } from "react-i18next";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import PeopleCountChart from "@/app/components/organisms/PeopleCountInFactoryPremises/PeopleCountInFactoryPremises";
 import UnauthorizedParkingChart from "@/app/components/organisms/UnauthorizedParkingChart/UnauthorizedParkingChart";
 import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRChart/VehicleCountANPRChart";
 import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 const OperationalInsightsDashboard: React.FC = () => {
-  const { t } = useTranslation();
-
-  const kpiData: KpiData[] = [
+  const kpiData = [
     {
-      title: t("PPE Compliance"),
-      value: "10",
-      icon: Shield,
+      title: "People Count",
+      violationsCount: 53,
+      lastDetection: "Zone B - Gate 2",
+      lastDetectionTime: "02:15 AM",
+      icon: Security,
+      route: "/PeopleCountPage",
+      tooltipMessage:
+        "Shows detected intrusion incidents in monitored zones during restricted hours.",
     },
     {
-      title: t("Fire & Smoke Voilations"),
-      value: "0",
-      icon: Warning,
-    },
-    {
-      title: "Security Breach",
-      value: "1",
-      icon: Visibility,
-    },
-    {
-      title: "Employees Present",
-      value: "234",
+      title: "Vehicle Count & ANPR at Gates",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
+      route: "/VehicleCount",
+      tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
     },
     {
-      title: "Total People Inside",
-      value: "267",
+      title: "Canteen Usage Monitoring",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
-    },
-    {
-      title: "Speed Voilations",
-      value: "15",
-      icon: DirectionsCar,
-    },
-    {
-      title: "Vehicles Count",
-      value: "45",
-      icon: DirectionsCar,
+      route: "/MonitoringCanteenUsage&Timings",
+      tooltipMessage: "Displays canteen usage and monitoring.",
     },
 
     {
-      title: "Crowd Alert",
-      value: "1",
+      title: "Vehicle Loading/Unloading Monitoring",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
       icon: People,
+      route: "/VehicleUnloadingLoading",
+      tooltipMessage: "Displays vehical loading and unloading oprations",
+    },
+    {
+      title: "Unauthorised Parking / Blocking Aisles",
+      violationsCount: 0,
+      lastDetection: "-",
+      lastDetectionTime: "-",
+      icon: DirectionsCar,
+      route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+      tooltipMessage: "Shows unauthorized parking or equipment blocking.",
     },
   ];
 
@@ -84,14 +82,17 @@ const OperationalInsightsDashboard: React.FC = () => {
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
 
-const tabs: TabConfig[] = [
-  { label: "People Count", content: <PeopleCountChart /> },
-  { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart/> },
-  { label: "Canteen Usage", content: <CanteenUsageChart/> },
-  { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart/> },
-  { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
-  { label: "Camera Status", content: <CameraStatus cameraZones={cameraZones} /> },
-];
+  const tabs: TabConfig[] = [
+    { label: "People Count", content: <PeopleCountChart /> },
+    { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart /> },
+    { label: "Canteen Usage", content: <CanteenUsageChart /> },
+    { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart /> },
+    { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
+    {
+      label: "Camera Status",
+      content: <CameraStatus cameraZones={cameraZones} />,
+    },
+  ];
 
   return (
     <Paper
@@ -125,10 +126,10 @@ const tabs: TabConfig[] = [
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
-            <KpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
