@@ -164,8 +164,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "60vh",
-        pt: 2.5,
+        minHeight: "100vh",
+
+        pt: 1,
+        pb: 1,
         px: 3,
         mb: 4,
         backgroundColor: "#ffffff",
@@ -179,7 +181,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         <TimeFilter />
@@ -188,7 +190,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       {/* KPI Cards Grid */}
       <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
-          <Grid size={{xs:12,sm:6,md:4,lg:3}}  key={uuidv4() + index}>
+          <Grid
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            key={uuidv4() + index}
+          >
             <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
