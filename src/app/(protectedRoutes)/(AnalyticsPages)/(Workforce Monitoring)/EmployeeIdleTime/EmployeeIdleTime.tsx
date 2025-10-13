@@ -38,20 +38,6 @@ const EmployeeIdleTime: React.FC = () => {
         "Total number of idle time events detected by the system.",
     },
     {
-      title: "Total Working Events",
-      value: "54",
-      icon: WorkOutline,
-      tooltipMessage:
-        "Total number of active working events detected by the system.",
-    },
-    {
-      title: "Total Not Present Events",
-      value: "8",
-      icon: PersonOff,
-      tooltipMessage:
-        "Total number of times employees were detected as not present.",
-    },
-    {
       title: "Last Idle Detection Time",
       value: "10:45 AM",
       icon: AccessTime,

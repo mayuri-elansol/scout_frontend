@@ -185,8 +185,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         <TimeFilter />
       </Box>
 
-      {/* KPI Cards */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      {/* KPI Cards Grid */}
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid size={{xs:12,sm:6,md:4,lg:3}}  key={uuidv4() + index}>
             <DashboardKpiCard {...kpi} />
