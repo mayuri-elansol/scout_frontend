@@ -6,10 +6,9 @@ import styles from "./DashboardTabs.module.css";
 
 // In DashboardTabs.tsx
 export interface TabConfig {
-  label: string | React.ReactNode; 
+  label: string | React.ReactNode;
   content: React.ReactNode;
 }
-
 
 interface DynamicTabsProps {
   tabs: TabConfig[];
@@ -24,15 +23,15 @@ function TabPanel({ children, value, index }: any) {
       hidden={value !== index}
       aria-labelledby={`tab-${index}`}
     >
-      {value === index && <Box sx={{ p:-1}}>{children}</Box>}
+      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
 }
 
-export default function DynamicTabs({ 
-  tabs = [], 
+export default function DynamicTabs({
+  tabs = [],
   defaultTab = 0,
-  onTabChange 
+  onTabChange,
 }: DynamicTabsProps) {
   const [value, setValue] = useState(defaultTab);
 
@@ -43,20 +42,22 @@ export default function DynamicTabs({
 
   if (!tabs || tabs.length === 0) {
     return (
-      <Box sx={{ p: 3, textAlign: 'center', color: 'text.secondary' }}>
+      <Box sx={{ p: 3, textAlign: "center", color: "text.secondary" }}>
         No tabs available
       </Box>
     );
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", height:'100%' }}>
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
           {tabs.map((tab, index) => (
             <React.Fragment key={`tab-${index}`}>
               <button
-                className={`${styles.tab} ${value === index ? styles.tabActive : ""}`}
+                className={`${styles.tab} ${
+                  value === index ? styles.tabActive : ""
+                }`}
                 onClick={() => handleChange(index)}
                 role="tab"
                 aria-selected={value === index}
@@ -65,11 +66,14 @@ export default function DynamicTabs({
                 <span className={styles.tabLabel}>{tab.label}</span>
                 <div className={styles.tabBackground}></div>
               </button>
-              {index < tabs.length - 1 && 
-               value !== index && 
-               value !== index + 1 && (
-                <div className={styles.tabDivider} key={`divider-${index}`}></div>
-              )}
+              {index < tabs.length - 1 &&
+                value !== index &&
+                value !== index + 1 && (
+                  <div
+                    className={styles.tabDivider}
+                    key={`divider-${index}`}
+                  ></div>
+                )}
             </React.Fragment>
           ))}
         </div>

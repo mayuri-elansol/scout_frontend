@@ -68,10 +68,11 @@ export default function ClientLayout({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box sx={{ display: "flex"}}>
+        <Box sx={{ display: "flex", height: "100vh" }}>
           <Header />
 
           {/* Desktop Sidebar */}
+
           {!isTabletOrPhone && (
             <Sidebar
               currentPage={currentPage}
@@ -89,8 +90,8 @@ export default function ClientLayout({
               pt: 10,
               backgroundColor: "#f5f7fa",
               width: "78vw",
-              overflowY: "auto",
-              height:"calc(100vh-6.5vh)"
+              // overflowY:"auto",
+              height: "100%",
             }}
           >
             <RouteLoader>

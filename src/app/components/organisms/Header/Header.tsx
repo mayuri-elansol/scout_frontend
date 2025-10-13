@@ -251,11 +251,11 @@ const Header: React.FC = () => {
   return (
     <>
       <AppBar
-        // position="fixed"
+        position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          // height: 63,
-          height: "6.5vh",
+          height: 63,
+          // height: "6.5vh",
 
           backgroundColor: "white",
           color: "#1c2025",
