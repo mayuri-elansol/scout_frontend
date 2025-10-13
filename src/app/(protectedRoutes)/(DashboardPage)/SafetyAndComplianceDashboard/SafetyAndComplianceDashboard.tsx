@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -11,7 +12,6 @@ import {
   DoorFront,
   Groups,
 } from "@mui/icons-material";
-
 import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -19,27 +19,77 @@ import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/Dashbo
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-import PPEComplianceChart from "@/app/components/organisms/PPEComplianceChart/PPEComplianceChart";
+import PPEComplianceChart from "@/app/components/organisms/Safety&CompilanceDashboardChart/PPECharts/PPEComplianceBarChart/PPEComplianceChart";
 import ZoneHazardLineChart from "@/app/components/organisms/HazardDetectionChart/HazardDetectionChart";
 import FallIncidentChart from "@/app/components/organisms/FallIncidentChart/FallIncidentChart";
 import ExitStatusChart from "@/app/components/organisms/ExitStatusChart/ExitStatusChart";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import CrowdGatheringChart from "@/app/components/organisms/CrowdGatheringChart/CrowdGatheringChart";
+import PPEPieChartForEachVolationCount from "@/app/components/organisms/Safety&CompilanceDashboardChart/PPECharts/PPEPieChartForEachVolationCount/PPEPieChartForEachVolationCount";
+import PPEViolationCountPieChartForZone from "@/app/components/organisms/Safety&CompilanceDashboardChart/PPECharts/PPEViolationCountPieChartForZone/PPEViolationCountPieChartForZone";
+
 const cameraZones: CameraZone[] = [
-  {
-    zone: "Production Floor",
-    active: 8,
-    total: 10,
-    offline: 3,
-    tempred: 4,
-  },
+  { zone: "Production Floor", active: 8, total: 10, offline: 3, tempred: 4 },
   { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
   { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
   { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
 ];
+
 const SafetyAndComplianceDashboard: React.FC = () => {
   const tabs: TabConfig[] = [
-    { label: "PPE Compliance", content: <PPEComplianceChart /> },
+{
+  label: "PPE Compliance",
+  content: (
+    <Grid
+      container
+      spacing={2.5}
+      sx={{
+        mt: 1,
+        alignItems: "stretch", // ensures both sides equal height
+      }}
+    >
+      {/* Left side: Bar chart */}
+      <Grid
+        size={{ xs: 12, md: 8 }}
+        sx={{
+          display: "flex",
+          alignItems: "stretch",
+        }}
+      >
+        <Box
+          sx={{
+            flex: 1,
+            height: "100%", // ensure equal height
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <PPEComplianceChart />
+        </Box>
+      </Grid>
+
+      {/* Right side: Two pie charts stacked */}
+      <Grid
+        size={{ xs: 12, md: 4 }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
+        }}
+      >
+        <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+          <PPEPieChartForEachVolationCount />
+        </Box>
+        <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+          <PPEViolationCountPieChartForZone />
+        </Box>
+      </Grid>
+    </Grid>
+  ),
+},
+
     { label: "Hazardous Zone Activity", content: <ZoneHazardLineChart /> },
     { label: "Fall Incidents", content: <FallIncidentChart /> },
     { label: "Emergency Exit Status", content: <ExitStatusChart /> },
@@ -71,6 +121,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
     {
+      title: "Speed Violations",
+      violationsCount: 12,
+      lastDetection: "Parking Zone",
+      lastDetectionTime: "10:58 AM",
+      icon: DirectionsCar,
+      route: "/VehicalSpeedMonitoring",
+      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
+    },
+    {
       title: "Fall / Laydown Alerts",
       violationsCount: 1,
       lastDetection: "Production Floor",
@@ -78,15 +137,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
-    },
-    {
-      title: "Forklift / Vehicle in Walkways",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: DirectionsCar,
-      route: "/ObjectDetection",
-      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
     },
     {
       title: "Emergency Exit Blockage",
@@ -97,16 +147,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
-    // {
-    //   title: "Speed Violations",
-    //   violationsCount: 12,
-    //   lastDetection: "Parking Zone",
-    //   lastDetectionTime: "10:58 AM",
-    //   icon: DirectionsCar,
-    //   route: "/VehicalSpeedMonitoring",
-    //   tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-    // },
-
     {
       title: "Crowd Gathering Alerts",
       violationsCount: 3,
@@ -125,16 +165,14 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-
         pt: 2.5,
-        pb: 3,
         px: 3,
-        // p: 3,
         mb: 4,
         backgroundColor: "#ffffff",
         borderRadius: 2,
       }}
     >
+      {/* Top Right Time Filter */}
       <Box
         sx={{
           display: "flex",
@@ -144,28 +182,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           mb: 3,
         }}
       >
-        {/* Right: Time Filter */}
         <TimeFilter />
       </Box>
 
-      {/* KPI Cards Grid */}
+      {/* KPI Cards */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
-            key={uuidv4() + index}
-          >
+          <Grid size={{xs:12,sm:6,md:4,lg:3}}  key={uuidv4() + index}>
             <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
 
-      {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        {/* Tabs Section for Charts */}
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <DashboardTabs tabs={tabs} />
-        </Box>
+      {/* Tabs Section */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
   );
