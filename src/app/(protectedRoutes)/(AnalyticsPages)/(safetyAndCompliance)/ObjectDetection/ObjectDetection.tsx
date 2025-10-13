@@ -3,7 +3,12 @@
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { DirectionsCar, CameraAlt, Timeline, Room } from "@mui/icons-material";
+import {
+  DirectionsCar,
+  Block,
+  CheckCircle,
+  LocationOn,
+} from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 
@@ -31,16 +36,18 @@ const ObjectDetection: React.FC = () => {
     useState<ForkliftDetectionEvent | null>(null);
   const ObjectDetectionKpiData = [
     {
-      title: "Total Detections",
-      value: "150",
-      icon: DirectionsCar,
-      tooltipMessage: "Total forklift/vehicle detections.",
+      title: "Blocked Walkways",
+      value: "87", // Count of currently blocked exits
+      tooltipMessage:
+        "Shows the total number of walkways that are currently blocked.",
+      icon: Block,
     },
     {
-      title: "Safe Zones",
-      value: "4",
-      icon: Room,
-      tooltipMessage: "Zones where no detections occurred.",
+      title: "Clear Walkways",
+      value: "12", // Count of safe/clear exits
+      tooltipMessage:
+        "Shows the total number of walkways that are currently clear and safe for use.",
+      icon: CheckCircle, // ✅ Safe / clear
       trendColor: "#4caf50",
       color: "#4caf50",
       bgColor: "#e8f5e9",
@@ -48,22 +55,11 @@ const ObjectDetection: React.FC = () => {
       iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Most Common Object",
-      value: "Forklift",
-      icon: CameraAlt,
-      tooltipMessage: "Object detected most often.",
-    },
-    {
-      title: "Latest Detection Time",
-      value: "2025-10-09 14:30",
-      icon: Timeline,
-      tooltipMessage: "Time of the most recent detection.",
-    },
-    {
-      title: "Latest Detection Zone",
-      value: "Zone A",
-      icon: Room,
-      tooltipMessage: "Time of the most recent detection.",
+      title: "Affected Zones (Last 3)",
+      value: "Zone A, Zone B, Zone C", // Last 3 affected zones
+      tooltipMessage:
+        "Displays the last three zones where blocked Walkways were detected.",
+      icon: LocationOn, // 📍 Zone/location indicator
     },
   ];
 
@@ -126,7 +122,7 @@ const ObjectDetection: React.FC = () => {
   ];
   const recentDetections = backendData.map((item) => {
     return {
-      voilation: `${item.objectName} detected`,
+      voilation: "Walkway Blocked ",
       objectName: item.objectName,
       zone: item.zone,
       time: item.createdAt,
@@ -281,14 +277,6 @@ const ObjectDetection: React.FC = () => {
         ]}
         data={recentDetections} // The mapped backend data for this case
         filters={[
-          {
-            id: "voilation",
-            label: "Event Message",
-            type: "select",
-            options: Array.from(
-              new Set(recentDetections.map((v) => v.voilation))
-            ),
-          },
           {
             id: "objectName",
             label: "Object Name",

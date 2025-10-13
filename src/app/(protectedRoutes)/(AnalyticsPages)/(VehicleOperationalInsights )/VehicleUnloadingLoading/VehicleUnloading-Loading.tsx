@@ -8,16 +8,11 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import {
-  CheckCircle,
-  LocalShipping,
-  PlayArrow,
-  Room,
-  Timeline,
-} from "@mui/icons-material";
+import { LocalShipping, Timeline } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
     incident: string;
@@ -36,29 +31,18 @@ const VehicleUnloadingLoading: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleUnloadingLoadingKpiData = [
     {
-      title: "Total Operations",
+      title: "Total Loading/Unloading Event",
       value: "87", // total count of loading/unloading events
       icon: LocalShipping, // represents vehicles/transport
       tooltipMessage: "Total loading/unloading events recorded.",
     },
     {
-      title: "Ongoing Operations",
-      value: "12", // number of operations in progress
-      icon: PlayArrow, // represents active/ongoing
+      title: "Average Loading/Unloading Time",
+      value: "1.56 hrs", // number of operations in progress
+      icon: AccessTimeIcon, // represents active/ongoing
       tooltipMessage: "Number of operations currently in progress.",
     },
-    {
-      title: "Completed Operations",
-      value: "94", // percentage completed
-      tooltipMessage: "Number of operations completed successfully.",
-      icon: CheckCircle, // completed/checked
-    },
-    {
-      title: "Active Zones",
-      value: "2", // number of zones currently active
-      icon: Room, // represents location/zone
-      tooltipMessage: "Total zones currently engaged in operations.",
-    },
+
     {
       title: "Busiest Zone",
       value: "Zone A", // which zone has most activity

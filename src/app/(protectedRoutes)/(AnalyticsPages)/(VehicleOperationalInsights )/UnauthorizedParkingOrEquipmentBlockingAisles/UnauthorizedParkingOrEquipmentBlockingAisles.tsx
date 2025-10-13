@@ -7,12 +7,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import {
-  DirectionsCar,
-  Block,
-  Warning,
-  ReportProblem,
-} from "@mui/icons-material";
+import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 
 import CarIcon from "@mui/icons-material/DirectionsCar";
 import EquipmentIcon from "@mui/icons-material/Build";
@@ -37,37 +32,30 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     useState<UnauthorizedParkingEvent | null>(null);
   const UnauthorizedParkingKpiData = [
     {
-      title: "Total Unauthorized Events",
-      value: "48", // total count of parking/equipment blocking events
-      icon: ReportProblem, // represents incidents
+      title: "Blocked Parking",
+      value: "87", // Count of currently blocked exits
       tooltipMessage:
-        "Total unauthorized parking or equipment blocking events recorded.",
-    },
-    {
-      title: "Unauthorized Car Parking",
-      value: "32", // count of car-type violations
-      icon: DirectionsCar,
-      tooltipMessage: "Number of unauthorized car parking events detected.",
-    },
-    {
-      title: "Equipment Blocking Aisles",
-      value: "16", // count of non-car-type violations
+        "Shows the total number of parking that are currently blocked.",
       icon: Block,
-      tooltipMessage: "Number of incidents where equipment blocked aisles.",
     },
     {
-      title: "Active Zones",
-      value: "5", // zones with violations
-      icon: Warning,
+      title: "Clear Parking",
+      value: "12",
       tooltipMessage:
-        "Number of zones with unauthorized parking or blocking incidents.",
+        "Shows the total number of parking that are currently clear and safe for use.",
+      icon: CheckCircle,
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Busiest Zone",
-      value: "Zone A", // zone with most events
-      icon: DirectionsCar,
+      title: "Affected Zones (Last 3)",
+      value: "Zone A, Zone B, Zone C",
       tooltipMessage:
-        "Zone with the highest number of unauthorized parking or blocking incidents.",
+        "Displays the last three zones where blocked parking were detected.",
+      icon: LocationOn,
     },
   ];
 
@@ -131,7 +119,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       time: item.createdAt,
       imageUrl: item.snapshot,
       cameraId: item.camera,
-      alarmTriggered: true, // assume all are alarm-triggered for violations
+      alarmTriggered: true,
       updatedAt: item.updatedAt,
     };
   });
@@ -272,7 +260,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations

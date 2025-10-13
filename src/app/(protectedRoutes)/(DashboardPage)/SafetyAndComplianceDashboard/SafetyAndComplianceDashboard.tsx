@@ -97,15 +97,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
-    // {
-    //   title: "Speed Violations",
-    //   violationsCount: 12,
-    //   lastDetection: "Parking Zone",
-    //   lastDetectionTime: "10:58 AM",
-    //   icon: DirectionsCar,
-    //   route: "/VehicalSpeedMonitoring",
-    //   tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-    // },
 
     {
       title: "Crowd Gathering Alerts",
@@ -149,7 +140,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
             size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}

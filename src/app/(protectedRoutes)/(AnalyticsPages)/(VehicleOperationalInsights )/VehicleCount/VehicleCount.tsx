@@ -5,14 +5,10 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   DirectionsCar,
-  SwapHoriz,
-  Place,
-  Timeline,
   CheckCircle,
   ReportProblem,
-  Schedule,
-  ExitToApp,
-  MeetingRoom,
+  Login,
+  Logout,
 } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
@@ -43,11 +39,40 @@ const VehicleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
     {
-      title: "Total Vehicles Detected",
-      value: "152",
+      title: "Total Vehicle Entries",
+      value: "120",
+      icon: Login,
+      tooltipMessage:
+        "Total number of vehicles that entered through all gates during the selected time period.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+    },
+    {
+      title: "Total Vehicle Exits",
+      value: "92",
+      icon: Logout,
+      tooltipMessage:
+        "Total number of vehicles that exited through all gates during the selected time period.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+    },
+    {
+      title: "Vehicles Inside",
+      value: "28",
       icon: DirectionsCar,
       tooltipMessage:
-        "Total number of vehicles detected at all entry/exit gates.",
+        "Total number of vehicles currently inside the premises (calculated as entries minus exits).",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
     },
     {
       title: "Total Valid Numbers",
@@ -55,6 +80,11 @@ const VehicleCount: React.FC = () => {
       icon: CheckCircle,
       tooltipMessage:
         "Number of detected vehicles with valid license plate numbers.",
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
       title: "Total Invalid Numbers",
@@ -62,49 +92,6 @@ const VehicleCount: React.FC = () => {
       icon: ReportProblem,
       tooltipMessage:
         "Number of detected vehicles with invalid or unreadable license plate numbers.",
-    },
-    {
-      title: "Last Detection Time",
-      value: "16:20",
-      icon: Schedule,
-      tooltipMessage: "The most recent time when a vehicle was detected.",
-    },
-    {
-      title: "Last Zone",
-      value: "Gate A - Entry",
-      icon: MeetingRoom,
-      tooltipMessage: "Zone of the last vehicle detection.",
-    },
-    {
-      title: "Last Camera ID",
-      value: "CAM-VEH-12",
-      icon: DirectionsCar,
-      tooltipMessage: "Camera that detected the last vehicle.",
-    },
-    {
-      title: "Last Status",
-      value: "Entry",
-      icon: ExitToApp,
-      tooltipMessage:
-        "Whether the last detection was at an entry or exit gate.",
-    },
-    {
-      title: "Entry vs Exit",
-      value: "12 In / 8 Out",
-      icon: SwapHoriz,
-      tooltipMessage: "vehical entry exit count",
-    },
-    {
-      title: "Busiest Zone",
-      value: "Zone A",
-      icon: Place,
-      tooltipMessage: "most busiest zone",
-    },
-    {
-      title: "Current Vehicle Occupancy",
-      value: "28",
-      icon: Timeline,
-      tooltipMessage: "current vehical occupancy",
     },
   ];
   const vehicleCountBackendData = [

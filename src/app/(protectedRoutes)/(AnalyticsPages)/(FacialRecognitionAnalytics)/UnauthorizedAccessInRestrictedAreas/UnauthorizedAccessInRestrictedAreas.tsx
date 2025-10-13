@@ -7,7 +7,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { CameraAlt, Place, Schedule, Warning } from "@mui/icons-material";
+import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -29,46 +29,30 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
   const UnauthorizedAccessKpiData = [
     {
-      title: "Total Unauthorized Access",
-      value: "25",
+      title: "Unauthorized Access In Restricted Areas",
+      value: "12", // Number of employees detected in critical areas
+      icon: Groups, // 👥 Represents group of people
       trendColor: "#f44336",
       color: "#f44336",
       bgColor: "#ffebee",
-      icon: Warning,
-      tooltipMessage: "Total unauthorized entries detected.",
+      borderColor: "#f44336",
+      iconBg: "rgba(244, 67, 54, 0.1)",
+      tooltipMessage:
+        "Shows the number of unauthorized access in restricted areas.",
     },
     {
-      title: "Zones Affected",
-      value: "Zone A, Zone B, Zone C",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: CameraAlt,
-      tooltipMessage: "Zones with detected unauthorized access.",
+      title: "Zone Violations",
+      value: "3 (Zone A, Zone B, Zone C)", // Number of violations and zones
+      icon: LocationOn, // 📍 Zone/location indicator
+      tooltipMessage:
+        "Displays the count and name of restricted zones where unauthorized aeople entered .",
     },
     {
-      title: "Most Violated Zone",
-      value: "Chemical Storage",
-      icon: Place,
-      tooltipMessage: "Zone with the most access breaches.",
-    },
-    {
-      title: "Peak Hour of Incidents",
-      value: "15:00",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-      tooltipMessage: "Time with highest unauthorized entries.",
-    },
-    {
-      title: "Last Incident Detected",
-      value: "15:00",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-      tooltipMessage: "Most recent unauthorized access time.",
+      title: "Last Incidence",
+      value: "10:45 AM", // Time of last detected violation
+      icon: AccessTime, // ⏰ Time
+      tooltipMessage:
+        "Most recent time unauthorized people were detected in restricted zones.",
     },
   ];
 
@@ -281,7 +265,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           },
           {
             id: "cameraId",
-            label: "Camera",
+            label: "Cameras",
             type: "select",
             options: ["CAM-11", "CAM-12", "CAM-13", "CAM-14", "CAM-15"],
           },
