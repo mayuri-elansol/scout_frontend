@@ -22,7 +22,7 @@ export default function UnauthorizedParkingChart() {
         p: 2,
         borderRadius: "16px",
         boxShadow: 3,
-        overflowX: "auto", // horizontal scroller for time
+        overflowX: "auto", 
       }}
     >
       <CardContent sx={{ minWidth: 700 }}>
