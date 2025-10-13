@@ -164,7 +164,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        minHeight: "60vh",
         pt: 2.5,
         px: 3,
         mb: 4,

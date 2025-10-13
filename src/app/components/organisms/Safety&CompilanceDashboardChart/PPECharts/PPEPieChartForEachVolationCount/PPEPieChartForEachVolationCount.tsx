@@ -73,7 +73,7 @@
 'use client';
 
 import * as React from 'react';
-import { Card, CardContent } from '@mui/material';
+import {  CardContent } from '@mui/material';
 import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 import { DefaultizedPieValueType } from '@mui/x-charts/models';
 
