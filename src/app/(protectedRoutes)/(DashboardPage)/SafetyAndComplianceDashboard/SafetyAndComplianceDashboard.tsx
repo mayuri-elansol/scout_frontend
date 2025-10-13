@@ -117,8 +117,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         minHeight: "100vh",
 
-        pt: 2.5,
-        pb: 3,
+        pt: 1,
+        pb: 1,
         px: 3,
         // p: 3,
         mb: 4,
@@ -132,7 +132,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         {/* Right: Time Filter */}
@@ -143,7 +143,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />
