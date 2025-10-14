@@ -146,10 +146,17 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
+                // data={[
+                //   { label: "ZONE A", value: 31, color: "#f78c89" },
+                //   { label: "ZONE B", value: 43, color: "#ffd54f" },
+                //   { label: "ZONE C", value: 26, color: "#7fbfff" },
+                // ]}
                 data={[
-                  { label: "ZONE A", value: 31, color: "#f78c89" },
-                  { label: "ZONE B", value: 43, color: "#ffd54f" },
-                  { label: "ZONE C", value: 26, color: "#7fbfff" },
+                  { label: "Production Gate", value: 31, color: "#f44336" },
+                  { label: "Warehouse Gate", value: 43, color: "#ff9800" },
+                  { label: "Parking Gate", value: 26, color: "#ffc107" },
+                  { label: "Main Entrance", value: 20, color: "#ef5350" },
+                  { label: "Side Exit", value: 71, color: "#ff6b6b" },
                 ]}
               />
             </Box>
@@ -221,19 +228,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
-                  { label: "Fire", value: 29, color: "#ef5350" },
-                  { label: "Smoke", value: 28, color: "#ff9800" },
-                  { label: "Gas", value: 28, color: "#42a5f5" },
-                  { label: "Oil", value: 15, color: "#66bb6a" },
+                  { label: "Fire", value: 29, color: "#f78c89" },
+                  { label: "Smoke", value: 28, color: "#ffd54f" },
+                  { label: "Gas", value: 28, color: "#7fbfff" },
+                  { label: "Oil", value: 15, color: "#a8d5a2" },
                 ]}
               />
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
+                // data={[
+                //   { label: "ZONE A", value: 31, color: "#ffa94d" },
+                //   { label: "ZONE B", value: 43, color: "#ff6b6b" },
+                //   { label: "ZONE C", value: 26, color: "#74c0fc" },
+                // ]}
                 data={[
-                  { label: "ZONE A", value: 31, color: "#ffa94d" },
-                  { label: "ZONE B", value: 43, color: "#ff6b6b" },
-                  { label: "ZONE C", value: 26, color: "#74c0fc" },
+                  { label: "Production Gate", value: 5, color: "#f44336" },
+                  { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+                  { label: "Parking Gate", value: 2, color: "#ffc107" },
+                  { label: "Main Entrance", value: 4, color: "#ef5350" },
+                  { label: "Side Exit", value: 1, color: "#ff6b6b" },
                 ]}
               />
             </Box>
