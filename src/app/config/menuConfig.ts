@@ -12,6 +12,7 @@ import {
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PeopleIcon from "@mui/icons-material/People";
+import TuneIcon from "@mui/icons-material/Tune";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
@@ -95,6 +96,11 @@ export const settingsMenu: CategoryConfig[] = [
         icon: PeopleIcon,
         page: "user-management",
         path: "/UserOverview",
+      },      {
+        name: "Configurator",
+        icon: TuneIcon,
+        page: "configurator",
+        path: "/Configurator",
       },
     ],
   },

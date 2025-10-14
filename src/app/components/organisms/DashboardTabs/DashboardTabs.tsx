@@ -49,7 +49,7 @@ export default function DynamicTabs({
   }
 
   return (
-    <Box sx={{ width: "100%", height:'100%' }}>
+    <Box sx={{ width: "100%" }}>
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
           {tabs.map((tab, index) => (

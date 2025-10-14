@@ -37,7 +37,7 @@ const DynamicBarChartWithThreshold: React.FC<
   thresholdColor = "red",
   yAxisLabel = "User Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 480 },
+  height = { mobile: 300, tablet: 400, desktop: 400 },
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -84,7 +84,7 @@ const DynamicBarChartWithThreshold: React.FC<
   return (
     <CardContent
       ref={chartContainerRef}
-      sx={{ width: "100%", position: "relative", pb: 4 }}
+      sx={{ width: "100%", position: "relative"}}
     >
       <BarChart
         height={chartHeight}
@@ -102,10 +102,10 @@ const DynamicBarChartWithThreshold: React.FC<
         ]}
         yAxis={[{ label: yAxisLabel, min: yMin }]}
         margin={{
-          bottom: isMobile ? 80 : 50,
-          top: 20,
-          left: 40,
-          right: 20,
+          // bottom: isMobile ? 80 : 50,
+          // top: 20,
+          // left: 40,
+          // right: 20,
         }}
       />
 

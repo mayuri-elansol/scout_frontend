@@ -89,7 +89,8 @@ export type PageType =
   | "unauthorized-access"
   | "monitoring-canteen-usage"
   | "role-management"
-  | "user-management";
+  | "user-management"
+  | "configurator";
 
 // Component Props Types
 export interface SidebarProps {

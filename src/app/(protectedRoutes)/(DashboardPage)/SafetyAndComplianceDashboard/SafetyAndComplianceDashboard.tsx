@@ -1,7 +1,4 @@
-
-
 "use client";
-
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
@@ -33,6 +30,24 @@ const cameraZones: CameraZone[] = [
 ];
 
 // Generate hour-wise data for charts
+
+const PASTEL_COLORS = {
+  helmet: "#ffa8a8", // pastel red
+  vest: "#ffd8a8",   // pastel orange
+  glass: "#a8d8ff",  // pastel blue
+  fire: "#ffb3b3",
+  smoke: "#ffe0b3",
+  gas: "#b3d9ff",
+  oil: "#b3ffb3",
+  falls: "#ffddb3",
+  laydowns: "#ffe6cc",
+  blocked: "#ffb3b3",
+  clear: "#b3ffb3",
+  zoneA: "#ffd8a8",
+  zoneB: "#ffb3b3",
+  zoneC: "#a8d8ff",
+};
+
 const generateHourData = () => {
   const data = [];
   for (let i = 0; i < 24; i++) {
@@ -88,21 +103,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 data={hourlyData}
                 xAxisKey="time"
                 series={[
-                  {
-                    dataKey: "helmet",
-                    label: "Helmet Violations",
-                    color: "#ef5350",
-                  },
-                  {
-                    dataKey: "vest",
-                    label: "Vest Violations",
-                    color: "#ffa94d",
-                  },
-                  {
-                    dataKey: "glass",
-                    label: "Glass Violations",
-                    color: "#74c0fc",
-                  },
+{ dataKey: "helmet", label: "Helmet Violations", color: "#f78c89" }, 
+{ dataKey: "vest", label: "Vest Violations", color: "#ffd54f" },     
+{ dataKey: "glass", label: "Glass Violations", color: "#7fbfff" },    
+
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="ppe"
@@ -123,18 +127,18 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
-                  { label: "Helmet", value: 29, color: "#ef5350" },
-                  { label: "Vest", value: 28, color: "#ffa94d" },
-                  { label: "Glass", value: 28, color: "#74c0fc" },
+                  { label: "Helmet", value: 29, color: "#f78c89" },
+                  { label: "Vest", value: 28, color: "#ffd54f" },
+                  { label: "Glass", value: 28, color: "#7fbfff" },
                 ]}
               />
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
-                  { label: "ZONE A", value: 31, color: "#ffa94d" },
-                  { label: "ZONE B", value: 43, color: "#ff6b6b" },
-                  { label: "ZONE C", value: 26, color: "#74c0fc" },
+                  { label: "ZONE A", value: 31, color: "#f78c89" },
+                  { label: "ZONE B", value: 43, color: "#ffd54f" },
+                  { label: "ZONE C", value: 26, color: "#7fbfff" },
                 ]}
               />
             </Box>
@@ -177,18 +181,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   {
                     dataKey: "fire",
                     label: "Fire Violations",
-                    color: "#ef5350",
+                    color: "#f78c89",
                   },
                   {
                     dataKey: "smoke",
                     label: "Smoke Violations",
-                    color: "#ff9800",
+                    color: "#ffd54f",
                   },
-                  { dataKey: "gas", label: "Gas Violations", color: "#42a5f5" },
-                  { dataKey: "oil", label: "Oil Violations", color: "#66bb6a" },
+                  { dataKey: "gas", label: "Gas Violations", color: "#7fbfff" },
+                  { dataKey: "oil", label: "Oil Violations", color: "#a8d5a2" },
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"
+
+
+
               />
             </Box>
           </Grid>
@@ -281,6 +288,68 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
+     {
+      label: "Vehicle In Walkways",
+      content: (
+        <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
+          {/* Left: Bar chart */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
+            sx={{ display: "flex", alignItems: "stretch" }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicBarChart
+                data={[
+                  { gate: "Production Gate", blocked: 5, clear: 19 },
+                  { gate: "Warehouse Gate", blocked: 3, clear: 21 },
+                  { gate: "Parking Gate", blocked: 2, clear: 22 },
+                  { gate: "Main Entrance", blocked: 4, clear: 20 },
+                  { gate: "Side Exit", blocked: 1, clear: 23 },
+                ]}
+                xAxisKey="gate"
+                series={[
+                  {
+                    dataKey: "blocked",
+                    label: "Blocked Hours",
+                    color: "#f44336",
+                  },
+                  { dataKey: "clear", label: "Clear Hours", color: "#4caf50" },
+                ]}
+                yAxisLabel="Hours "
+                stackId="exitStatus"
+              />
+            </Box>
+          </Grid>
+
+          {/* Right: Pie chart vertically centered */}
+          <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <DynamicPieChart
+              data={[
+                { label: "Production Gate", value: 5, color: "#f44336" },
+                { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+                { label: "Parking Gate", value: 2, color: "#ffc107" },
+                { label: "Main Entrance", value: 4, color: "#ef5350" },
+                { label: "Side Exit", value: 1, color: "#ff6b6b" },
+              ]}
+            />
+          </Grid>
+        </Grid>
+      ),
+    },
     {
       label: "Emergency Exit Status",
       content: (
@@ -332,7 +401,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           >
             <DynamicPieChart
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
+                       { label: "Production Gate", value: 5, color: "#f44336" },
                 { label: "Warehouse Gate", value: 3, color: "#ff9800" },
                 { label: "Parking Gate", value: 2, color: "#ffc107" },
                 { label: "Main Entrance", value: 4, color: "#ef5350" },
@@ -472,14 +541,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         pt: 2,
-        pb: 1,
         px: 3,
-        // mb: 4,
+        mb:2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
+          flex: 1,          
+  
       }}
     >
-      Top Right Time Filter
+      {/* Top Right Time Filter */}
       <Box
         sx={{
           display: "flex",
