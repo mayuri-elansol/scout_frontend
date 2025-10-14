@@ -96,7 +96,8 @@ export const settingsMenu: CategoryConfig[] = [
         icon: PeopleIcon,
         page: "user-management",
         path: "/UserOverview",
-      },      {
+      },
+      {
         name: "Configurator",
         icon: TuneIcon,
         page: "configurator",

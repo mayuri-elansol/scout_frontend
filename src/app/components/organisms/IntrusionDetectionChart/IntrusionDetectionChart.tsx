@@ -24,14 +24,15 @@ export default function IntrusionDetectionChart() {
         height={350}
         xAxis={[
           {
-            scaleType: "band", 
+            scaleType: "band",
             data: data.map((d) => d.time),
           },
         ]}
         yAxis={[
           {
             min: 0,
-            max: Math.max(...data.flatMap((d) => [d.zoneA, d.zoneB, d.zoneC])) + 2,
+            max:
+              Math.max(...data.flatMap((d) => [d.zoneA, d.zoneB, d.zoneC])) + 2,
           },
         ]}
         series={[

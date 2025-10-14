@@ -137,7 +137,7 @@ const FallDetection: React.FC = () => {
   // Map backend data to recentViolations format
   const recentLaydownViolations = backendLaydownData.map((item) => {
     return {
-      voilation: "Fall / Laydown / Sleeping detected",
+      voilation: "Fall / Laydown detected",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,

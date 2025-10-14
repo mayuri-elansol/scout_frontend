@@ -105,18 +105,18 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 series={[
                   {
                     dataKey: "helmet",
-                    label: "Helmet Violations",
-                    color: "#f78c89",
+                    label: "Helmet",
+                    color: "#FFB6C1",
                   },
                   {
                     dataKey: "vest",
-                    label: "Vest Violations",
-                    color: "#ffd54f",
+                    label: "Vest",
+                    color: "#FFEAA7",
                   },
                   {
                     dataKey: "glass",
-                    label: "Glass Violations",
-                    color: "#7fbfff",
+                    label: "Glass",
+                    color: "#A8E6CF",
                   },
                 ]}
                 yAxisLabel="Violation Count"
@@ -126,7 +126,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
 
           {/* Right side: Two pie charts stacked */}
-          <Grid
+          {/* <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
@@ -157,6 +157,41 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Parking Gate", value: 26, color: "#ffc107" },
                   { label: "Main Entrance", value: 20, color: "#ef5350" },
                   { label: "Side Exit", value: 71, color: "#ff6b6b" },
+                ]}
+              />
+            </Box>
+          </Grid> */}
+          <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+            }}
+          >
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+              <DynamicPieChart
+                data={[
+                  { label: "Helmet", value: 29, color: "#FFB6C1" },
+                  { label: "Vest", value: 28, color: "#FFEAA7" },
+                  { label: "Glass", value: 28, color: "#A8E6CF" },
+                ]}
+              />
+            </Box>
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
+              <DynamicPieChart
+                // data={[
+                //   { label: "ZONE A", value: 31, color: "#f78c89" },
+                //   { label: "ZONE B", value: 43, color: "#ffd54f" },
+                //   { label: "ZONE C", value: 26, color: "#7fbfff" },
+                // ]}
+                data={[
+                  { label: "Production Gate", value: 31, color: "#FFB6C1" },
+                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
+                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
+                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
               />
             </Box>
@@ -195,19 +230,41 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               <DynamicBarChart
                 data={hourlyData}
                 xAxisKey="time"
+                // series={[
+                //   {
+                //     dataKey: "fire",
+                //     label: "Fire Violations",
+                //     color: "#f78c89",
+                //   },
+                //   {
+                //     dataKey: "smoke",
+                //     label: "Smoke Violations",
+                //     color: "#ffd54f",
+                //   },
+                //   { dataKey: "gas", label: "Gas Violations", color: "#7fbfff" },
+                //   { dataKey: "oil", label: "Oil Violations", color: "#a8d5a2" },
+                // ]}
                 series={[
                   {
                     dataKey: "fire",
                     label: "Fire Violations",
-                    color: "#f78c89",
+                    color: "#FFB3BA",
                   },
                   {
                     dataKey: "smoke",
                     label: "Smoke Violations",
-                    color: "#ffd54f",
+                    color: "#FFDFBA",
                   },
-                  { dataKey: "gas", label: "Gas Violations", color: "#7fbfff" },
-                  { dataKey: "oil", label: "Oil Violations", color: "#a8d5a2" },
+                  {
+                    dataKey: "gas",
+                    label: "Gas Violations",
+                    color: "#FFFFBA",
+                  },
+                  {
+                    dataKey: "oil",
+                    label: "Oil Violations",
+                    color: "#BAFFC9",
+                  },
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"
@@ -227,27 +284,35 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           >
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
+                // data={[
+                //   { label: "Fire", value: 29, color: "#f78c89" },
+                //   { label: "Smoke", value: 28, color: "#ffd54f" },
+                //   { label: "Gas", value: 28, color: "#7fbfff" },
+                //   { label: "Oil", value: 15, color: "#a8d5a2" },
+                // ]}
                 data={[
-                  { label: "Fire", value: 29, color: "#f78c89" },
-                  { label: "Smoke", value: 28, color: "#ffd54f" },
-                  { label: "Gas", value: 28, color: "#7fbfff" },
-                  { label: "Oil", value: 15, color: "#a8d5a2" },
+                  { label: "Fire", value: 29, color: "#FFB3BA" },
+                  { label: "Smoke", value: 28, color: "#FFDFBA" },
+                  { label: "Gas", value: 28, color: "#FFFFBA" },
+                  { label: "Oil", value: 15, color: "#BAFFC9" },
                 ]}
               />
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 // data={[
-                //   { label: "ZONE A", value: 31, color: "#ffa94d" },
-                //   { label: "ZONE B", value: 43, color: "#ff6b6b" },
-                //   { label: "ZONE C", value: 26, color: "#74c0fc" },
+                //   { label: "Production Gate", value: 5, color: "#f44336" },
+                //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+                //   { label: "Parking Gate", value: 2, color: "#ffc107" },
+                //   { label: "Main Entrance", value: 4, color: "#ef5350" },
+                //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
                 // ]}
                 data={[
-                  { label: "Production Gate", value: 5, color: "#f44336" },
-                  { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                  { label: "Parking Gate", value: 2, color: "#ffc107" },
-                  { label: "Main Entrance", value: 4, color: "#ef5350" },
-                  { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                  { label: "Production Gate", value: 5, color: "#FFB3BA" },
+                  { label: "Warehouse Gate", value: 3, color: "#FFDFBA" },
+                  { label: "Parking Gate", value: 2, color: "#FFFFBA" },
+                  { label: "Main Entrance", value: 4, color: "#E6CCFF" },
+                  { label: "Side Exit", value: 1, color: "#BAE1FF" },
                 ]}
               />
             </Box>
@@ -275,11 +340,18 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               <DynamicBarChart
                 data={hourlyData}
                 xAxisKey="time"
+                // series={[
+                //   {
+                //     dataKey: "falls",
+                //     label: "Fall Incidents",
+                //     color: "#ff9800",
+                //   },
+                // ]}
                 series={[
                   {
                     dataKey: "falls",
                     label: "Fall Incidents",
-                    color: "#ff9800",
+                    color: "#FFCBB3",
                   },
                 ]}
                 yAxisLabel="Incident Count"
@@ -298,12 +370,19 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
+              // data={[
+              //   { label: "Production Gate", value: 5, color: "#f44336" },
+              //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+              //   { label: "Parking Gate", value: 2, color: "#ffc107" },
+              //   { label: "Main Entrance", value: 4, color: "#ef5350" },
+              //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
+              // ]}
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
-                { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                { label: "Parking Gate", value: 2, color: "#ffc107" },
-                { label: "Main Entrance", value: 4, color: "#ef5350" },
-                { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                { label: "Production Gate", value: 5, color: "#FFCBB3" },
+                { label: "Warehouse Gate", value: 3, color: "#FFE0B3" },
+                { label: "Parking Gate", value: 2, color: "#FFF4B3" },
+                { label: "Main Entrance", value: 4, color: "#D4F1D4" },
+                { label: "Side Exit", value: 1, color: "#B3E5FC" },
               ]}
             />
           </Grid>
@@ -336,13 +415,25 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { gate: "Side Exit", blocked: 1, clear: 23 },
                 ]}
                 xAxisKey="gate"
+                // series={[
+                //   {
+                //     dataKey: "blocked",
+                //     label: "Blocked Hours",
+                //     color: "#f44336",
+                //   },
+                //   { dataKey: "clear", label: "Clear Hours", color: "#4caf50" },
+                // ]}
                 series={[
                   {
                     dataKey: "blocked",
                     label: "Blocked Hours",
-                    color: "#f44336",
+                    color: "#FFB3BA",
                   },
-                  { dataKey: "clear", label: "Clear Hours", color: "#4caf50" },
+                  {
+                    dataKey: "clear",
+                    label: "Clear Hours",
+                    color: "#BAFFC9",
+                  },
                 ]}
                 yAxisLabel="Hours "
                 stackId="exitStatus"
@@ -360,12 +451,19 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
+              // data={[
+              //   { label: "Production Gate", value: 5, color: "#f44336" },
+              //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+              //   { label: "Parking Gate", value: 2, color: "#ffc107" },
+              //   { label: "Main Entrance", value: 4, color: "#ef5350" },
+              //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
+              // ]}
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
-                { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                { label: "Parking Gate", value: 2, color: "#ffc107" },
-                { label: "Main Entrance", value: 4, color: "#ef5350" },
-                { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                { label: "Production Gate", value: 5, color: "#FFB3BA" },
+                { label: "Warehouse Gate", value: 3, color: "#FFDFBA" },
+                { label: "Parking Gate", value: 2, color: "#FFFFBA" },
+                { label: "Main Entrance", value: 4, color: "#C7EDCC" },
+                { label: "Side Exit", value: 1, color: "#BAFFC9" },
               ]}
             />
           </Grid>
@@ -398,13 +496,25 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { gate: "Side Exit", blocked: 1, clear: 23 },
                 ]}
                 xAxisKey="gate"
+                // series={[
+                //   {
+                //     dataKey: "blocked",
+                //     label: "Blocked Hours",
+                //     color: "#f44336",
+                //   },
+                //   { dataKey: "clear", label: "Clear Hours", color: "#4caf50" },
+                // ]}
                 series={[
                   {
                     dataKey: "blocked",
                     label: "Blocked Hours",
-                    color: "#f44336",
+                    color: "#FFC0CB",
                   },
-                  { dataKey: "clear", label: "Clear Hours", color: "#4caf50" },
+                  {
+                    dataKey: "clear",
+                    label: "Clear Hours",
+                    color: "#B0E0E6",
+                  },
                 ]}
                 yAxisLabel="Hours"
                 stackId="exitStatus"
@@ -422,12 +532,19 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
+              // data={[
+              //   { label: "Production Gate", value: 5, color: "#f44336" },
+              //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+              //   { label: "Parking Gate", value: 2, color: "#ffc107" },
+              //   { label: "Main Entrance", value: 4, color: "#ef5350" },
+              //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
+              // ]}
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
-                { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                { label: "Parking Gate", value: 2, color: "#ffc107" },
-                { label: "Main Entrance", value: 4, color: "#ef5350" },
-                { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                { label: "Production Gate", value: 5, color: "#FFC0CB" },
+                { label: "Warehouse Gate", value: 3, color: "#FFD4B5" },
+                { label: "Parking Gate", value: 2, color: "#FFE4B5" },
+                { label: "Main Entrance", value: 4, color: "#D4E6D4" },
+                { label: "Side Exit", value: 1, color: "#B0E0E6" },
               ]}
             />
           </Grid>
@@ -464,12 +581,20 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { month: "August", users: 80 },
                 ]}
                 xAxisKey="month"
+                // series={[
+                //   { dataKey: "users", label: "Users", color: "#2196f3" },
+                // ]}
                 series={[
-                  { dataKey: "users", label: "Users", color: "#2196f3" },
+                  {
+                    dataKey: "users",
+                    label: "Users",
+                    color: "#A8D8FF",
+                  },
                 ]}
                 thresholdValue={60}
                 thresholdLabel="Target"
-                thresholdColor="orange"
+                //    thresholdColor="orange"
+                thresholdColor="#FFB84D"
               />
             </Box>
           </Grid>
@@ -484,12 +609,19 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
+              // data={[
+              //   { label: "Production Gate", value: 5, color: "#f44336" },
+              //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
+              //   { label: "Parking Gate", value: 2, color: "#ffc107" },
+              //   { label: "Main Entrance", value: 4, color: "#ef5350" },
+              //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
+              // ]}
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
-                { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                { label: "Parking Gate", value: 2, color: "#ffc107" },
-                { label: "Main Entrance", value: 4, color: "#ef5350" },
-                { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                { label: "Production Gate", value: 5, color: "#F8BBD0" },
+                { label: "Warehouse Gate", value: 3, color: "#FFE0B2" },
+                { label: "Parking Gate", value: 2, color: "#FFF9C4" },
+                { label: "Main Entrance", value: 4, color: "#C8E6C9" },
+                { label: "Side Exit", value: 1, color: "#B2DFDB" },
               ]}
             />
           </Grid>

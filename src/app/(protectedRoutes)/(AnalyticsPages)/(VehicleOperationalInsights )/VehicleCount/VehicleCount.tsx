@@ -341,7 +341,7 @@ const VehicleCount: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.status))
+              new Set(vehicleViolations.map((v) => v.vehicleNumber))
             ),
           },
           {

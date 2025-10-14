@@ -8,7 +8,6 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -31,11 +30,6 @@ const EmployeePresence: React.FC = () => {
       title: "Employees in Critical Area",
       value: "12", // Number of employees detected in critical areas
       icon: Groups, // 👥 Represents group of people
-      trendColor: "#4caf50",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      borderColor: "#4caf50",
-      iconBg: "rgba(76, 175, 80, 0.1)",
 
       tooltipMessage:
         "Shows the number of employees detected in critical areas.",
@@ -87,9 +81,7 @@ const EmployeePresence: React.FC = () => {
 
   const recentEmployeeViolations = backendEmployeePresenceData.map((item) => {
     return {
-      voilation: item.alarmTriggered
-        ? "Employee presence detected"
-        : "No violation",
+      voilation: item.alarmTriggered ? "Employee not detected" : "No violation",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
