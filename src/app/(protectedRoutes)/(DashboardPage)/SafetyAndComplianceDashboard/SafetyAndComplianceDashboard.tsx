@@ -119,15 +119,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       tooltipMessage:
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
-    {
-      title: "Speed Violations",
-      violationsCount: 12,
-      lastDetection: "Parking Zone",
-      lastDetectionTime: "10:58 AM",
-      icon: DirectionsCar,
-      route: "/VehicalSpeedMonitoring",
-      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-    },
+
     {
       title: "Fall / Laydown Alerts",
       violationsCount: 1,
@@ -136,6 +128,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
+    },
+    {
+      title: "Forklift / Vehicle In Walkways",
+      violationsCount: 6,
+      lastDetection: "Walkway Zone B",
+      lastDetectionTime: "10:58 AM",
+      icon: DirectionsCar,
+      route: "/ObjectDetection",
+      tooltipMessage: "Shows Forklift / Vehicle In Walkways.",
     },
     {
       title: "Emergency Exit Blockage",

@@ -100,10 +100,10 @@ const OperationalInsightsDashboard: React.FC = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        pt: 2.5,
-        pb: 3,
+
+        pt: 1,
+        pb: 1,
         px: 3,
-        // p: 3,
         mb: 4,
         backgroundColor: "#ffffff",
         borderRadius: 2,
@@ -115,7 +115,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         {/* Right: Time Filter */}
@@ -123,10 +123,10 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />
@@ -135,11 +135,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        {/* Tabs Section for Charts */}
+      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+      
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
           <DashboardTabs tabs={tabs} />
         </Box>
+      </Box> */}
+      {/* Tabs Section */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
   );
