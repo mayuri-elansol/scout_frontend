@@ -120,7 +120,7 @@ const WorkforceMonitoring: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 1,
+          mb: 2,
         }}
       >
         {/* Right: Time Filter */}

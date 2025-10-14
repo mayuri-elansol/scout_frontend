@@ -24,14 +24,14 @@ export default function PeopleCountChart() {
     }}>
 
 
-      <Box sx={{ width: times.length * 60, height: 400 }}>
+      {/* <Box sx={{ width: times.length * 60, height: 400 }}> */}
         <LineChart
           height={400}
           xAxis={[{ data: times, scaleType: "band" }]} 
           series={series} 
           grid={{ horizontal: true }}
         />
-      </Box>
+      {/* </Box> */}
     </Box>
   );
 }

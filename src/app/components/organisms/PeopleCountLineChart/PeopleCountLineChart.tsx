@@ -20,7 +20,7 @@ export default function PeopleCountLineChart() {
     <Box sx={{ width: "100%", p:4 }}>
 
       <LineChart
-        height={400}
+        height={500}
         xAxis={[
           {
             scaleType: "point",

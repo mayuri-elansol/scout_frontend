@@ -28,18 +28,18 @@ const series = [
 
 export default function EmployeeIdleTimeMonitoringChart() {
   return (
-    <Box sx={{ width: "100%", 
+    <Box sx={{ width: "100%",pt:2 
     // overflowX: "auto" 
     }}>
    
-      <Box sx={{ width: times.length * 50, height: 400 }}>
+      {/* <Box sx={{ width: times.length * 50, height: 400 }}> */}
         <BarChart
-          // height={400}
+          height={550}
           xAxis={[{ data: times }]} // X-axis: times
           series={series}           // Y-axis: counts
           
         />
-      </Box>
+      {/* </Box> */}
     </Box>
   );
 }

@@ -25,7 +25,7 @@ export default function VehicleCountANPRChart() {
         }}
       >
         {/* Wider chart to enable horizontal scrolling */}
-        <Box sx={{ width: times.length * 60, height: 400 }}>
+        {/* <Box sx={{ width: times.length * 60, height: 400 }}> */}
           <BarChart
             height={400}
             xAxis={[{ data: times, scaleType: "band" }]} // Time-based X-axis
@@ -47,7 +47,7 @@ export default function VehicleCountANPRChart() {
               },
             ]}
           />
-        </Box>
+        {/* </Box> */}
       </Box>
     </Box>
   );

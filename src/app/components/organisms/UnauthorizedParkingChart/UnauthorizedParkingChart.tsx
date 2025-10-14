@@ -21,7 +21,7 @@ export default function UnauthorizedParkingChart() {
       <CardContent sx={{ minWidth: 700 }}>
     
 
-        <Box sx={{ height: 400, minWidth: 800 }}>
+        {/* <Box sx={{ height: 400, minWidth: 800 }}> */}
           <BarChart
             dataset={dataset}
             xAxis={[{ dataKey: "time", label: "Time" }]}
@@ -29,11 +29,11 @@ export default function UnauthorizedParkingChart() {
               { dataKey: "car", label: "Car Detected" },
               { dataKey: "notCar", label: "Other Object Detected" },
             ]}
-            height={380}
+            height={400}
             margin={{ top: 30, bottom: 40 }}
             grid={{ horizontal: true }}
           />
-        </Box>
+        {/* </Box> */}
       </CardContent>
   );
 }

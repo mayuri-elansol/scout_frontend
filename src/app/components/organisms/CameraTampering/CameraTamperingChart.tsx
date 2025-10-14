@@ -37,13 +37,13 @@ export default function CameraTamperingTimeChart() {
     }}>
      
 
-      <Box sx={{ width: times.length * 60, height: 400 }}>
+      {/* <Box sx={{ width: times.length * 60, height: 400 }}> */}
         <BarChart
-          height={400}
+          height={500}
           xAxis={[{ data: times, scaleType: "band" }]} // time on X-axis
           series={series} // data series
         />
-      </Box>
+      {/* </Box> */}
     </Box>
   );
 }

@@ -21,16 +21,16 @@ const series = [
 
 export default function SecurityPersonnelBarChart() {
   return (
-    <Box sx={{ width: "100%", overflowX: "auto" }}>
+    <Box sx={{ width: "100%", overflowX: "auto",pt:2 }}>
   
 
-      <Box sx={{ width: times.length * 50, height: 400 }}>
+      {/* <Box sx={{ width: times.length * 50, height: 400 }}> */}
         <BarChart
-          // height={400}
+          height={550}
           xAxis={[{ data: times }]} 
           series={series}           
         />
-      </Box>
+      {/* </Box> */}
     </Box>
   );
 }

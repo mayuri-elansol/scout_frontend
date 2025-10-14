@@ -3,7 +3,7 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import { People, Security } from "@mui/icons-material";
+import { People, Security,VideocamOff } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
@@ -42,7 +42,7 @@ const SurveillanceMonitoring: React.FC = () => {
       violationsCount: 2,
       lastDetection: "Zone C",
       lastDetectionTime: "2:42 PM",
-      icon: VideocamOffIcon,
+      icon: VideocamOff,
       route: "/CameraTampering",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
@@ -101,19 +101,17 @@ const SurveillanceMonitoring: React.FC = () => {
   ];
 
   return (
-    <Paper
+   <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-
-        pt: 1,
-        pb: 1,
+        pt: 2,
         px: 3,
-        mb: 4,
+        mb:2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
-        height:"90vh"
+          flex: 1,          
+  
       }}
     >
       <Box
@@ -122,7 +120,7 @@ const SurveillanceMonitoring: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 1,
+          mb: 2,
         }}
       >
         {/* Right: Time Filter */}

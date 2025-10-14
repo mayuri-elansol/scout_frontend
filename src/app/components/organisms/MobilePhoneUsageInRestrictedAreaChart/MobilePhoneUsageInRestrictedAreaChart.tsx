@@ -15,11 +15,11 @@ const data = [
 
 export default function MobilePhoneUsageChart() {
   return (
-    <Box sx={{ width: "100%", height: 400 }}>
+    <Box sx={{ width: "100%",pt:2 }}>
 
 
       <BarChart
-        height={350}
+        height={550}
         xAxis={[{ data: data.map(d => d.createdAt) }]} // X-axis: time
         series={[
           { label: "Zone A", data: data.map(d => d.ZoneA) },

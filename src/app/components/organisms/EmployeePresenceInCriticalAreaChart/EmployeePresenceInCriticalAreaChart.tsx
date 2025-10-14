@@ -22,7 +22,6 @@
 
 //   return (
 //     <Box sx={{ width: "100%", height: 400 }}>
-  
 
 //       <LineChart
 //         height={350}
@@ -51,24 +50,21 @@ const restrictedData = [
 ];
 
 export default function EmployeePresenceCriticalChart() {
-  const xLabels = restrictedData.map(d => d.time);
-  const zoneA = restrictedData.map(d => d.ZoneA);
-  const zoneB = restrictedData.map(d => d.ZoneB);
+  const xLabels = restrictedData.map((d) => d.time);
+  const zoneA = restrictedData.map((d) => d.ZoneA);
+  const zoneB = restrictedData.map((d) => d.ZoneB);
 
   return (
-    <Box sx={{ width: "100%", height: 400 }}>
-   
-
-<LineChart
-  height={350}
-  xAxis={[{ data: xLabels, scaleType: 'point' }]}  // Add scaleType
-  yAxis={[{ min: 0 }]}
-  series={[
-    { label: "Zone A", data: zoneA },
-    { label: "Zone B", data: zoneB },
-  ]}
-/>
-
+    <Box sx={{ width: "100%" }}>
+      <LineChart
+        height={550}
+        xAxis={[{ data: xLabels, scaleType: "point" }]} // Add scaleType
+        yAxis={[{ min: 0 }]}
+        series={[
+          { label: "Zone A", data: zoneA },
+          { label: "Zone B", data: zoneB },
+        ]}
+      />
     </Box>
   );
 }

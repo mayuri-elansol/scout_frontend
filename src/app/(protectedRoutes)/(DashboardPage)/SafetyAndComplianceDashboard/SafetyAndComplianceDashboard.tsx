@@ -33,8 +33,8 @@ const cameraZones: CameraZone[] = [
 
 const PASTEL_COLORS = {
   helmet: "#ffa8a8", // pastel red
-  vest: "#ffd8a8", // pastel orange
-  glass: "#a8d8ff", // pastel blue
+  vest: "#ffd8a8",   // pastel orange
+  glass: "#a8d8ff",  // pastel blue
   fire: "#ffb3b3",
   smoke: "#ffe0b3",
   gas: "#b3d9ff",
@@ -103,21 +103,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 data={hourlyData}
                 xAxisKey="time"
                 series={[
-                  {
-                    dataKey: "helmet",
-                    label: "Helmet Violations",
-                    color: "#f78c89",
-                  },
-                  {
-                    dataKey: "vest",
-                    label: "Vest Violations",
-                    color: "#ffd54f",
-                  },
-                  {
-                    dataKey: "glass",
-                    label: "Glass Violations",
-                    color: "#7fbfff",
-                  },
+{ dataKey: "helmet", label: "Helmet Violations", color: "#f78c89" }, 
+{ dataKey: "vest", label: "Vest Violations", color: "#ffd54f" },     
+{ dataKey: "glass", label: "Glass Violations", color: "#7fbfff" },    
+
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="ppe"
@@ -146,17 +135,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
-                // data={[
-                //   { label: "ZONE A", value: 31, color: "#f78c89" },
-                //   { label: "ZONE B", value: 43, color: "#ffd54f" },
-                //   { label: "ZONE C", value: 26, color: "#7fbfff" },
-                // ]}
                 data={[
-                  { label: "Production Gate", value: 31, color: "#f44336" },
-                  { label: "Warehouse Gate", value: 43, color: "#ff9800" },
-                  { label: "Parking Gate", value: 26, color: "#ffc107" },
-                  { label: "Main Entrance", value: 20, color: "#ef5350" },
-                  { label: "Side Exit", value: 71, color: "#ff6b6b" },
+                  { label: "ZONE A", value: 31, color: "#f78c89" },
+                  { label: "ZONE B", value: 43, color: "#ffd54f" },
+                  { label: "ZONE C", value: 26, color: "#7fbfff" },
                 ]}
               />
             </Box>
@@ -211,6 +193,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"
+
+
+
               />
             </Box>
           </Grid>
@@ -237,17 +222,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
-                // data={[
-                //   { label: "ZONE A", value: 31, color: "#ffa94d" },
-                //   { label: "ZONE B", value: 43, color: "#ff6b6b" },
-                //   { label: "ZONE C", value: 26, color: "#74c0fc" },
-                // ]}
                 data={[
-                  { label: "Production Gate", value: 5, color: "#f44336" },
-                  { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                  { label: "Parking Gate", value: 2, color: "#ffc107" },
-                  { label: "Main Entrance", value: 4, color: "#ef5350" },
-                  { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                 { label: "ZONE A", value: 31, color: "#f78c89" },
+                  { label: "ZONE B", value: 43, color: "#ffd54f" },
+                  { label: "ZONE C", value: 26, color: "#7fbfff" },
                 ]}
               />
             </Box>
@@ -310,7 +288,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
-    {
+     {
       label: "Vehicle In Walkways",
       content: (
         <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
@@ -423,7 +401,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           >
             <DynamicPieChart
               data={[
-                { label: "Production Gate", value: 5, color: "#f44336" },
+                       { label: "Production Gate", value: 5, color: "#f44336" },
                 { label: "Warehouse Gate", value: 3, color: "#ff9800" },
                 { label: "Parking Gate", value: 2, color: "#ffc107" },
                 { label: "Main Entrance", value: 4, color: "#ef5350" },
@@ -456,10 +434,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { month: "Jan", users: 20 },
                   { month: "Feb", users: 50 },
                   { month: "Mar", users: 80 },
-                  { month: "Jan", users: 20 },
+                         { month: "Jan", users: 20 },
                   { month: "April", users: 50 },
                   { month: "May", users: 80 },
-                  { month: "June", users: 20 },
+                         { month: "June", users: 20 },
                   { month: "July", users: 50 },
                   { month: "August", users: 80 },
                 ]}
@@ -518,7 +496,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       tooltipMessage:
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
-
+    {
+      title: "Speed Violations",
+      violationsCount: 12,
+      lastDetection: "Parking Zone",
+      lastDetectionTime: "10:58 AM",
+      icon: DirectionsCar,
+      route: "/VehicalSpeedMonitoring",
+      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
+    },
     {
       title: "Fall / Laydown Alerts",
       violationsCount: 1,
@@ -527,15 +513,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
-    },
-    {
-      title: "Forklift / Vehicle In Walkways",
-      violationsCount: 2,
-      lastDetection: "Walkway Zone B",
-      lastDetectionTime: "10:58 AM",
-      icon: DirectionsCar,
-      route: "/ObjectDetection",
-      tooltipMessage: "Shows forklift/vehicle detected in walkways.",
     },
     {
       title: "Emergency Exit Blockage",
@@ -565,10 +542,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb: 2,
+        mb:2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
-        flex: 1,
+          flex: 1,          
+  
       }}
     >
       {/* Top Right Time Filter */}

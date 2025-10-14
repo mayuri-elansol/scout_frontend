@@ -28,7 +28,7 @@ export default function IntrusionDetectionChart() {
     <Box sx={{ width: "100%", p:4 }}>
       
       <BarChart
-        height={420}
+        height={500}
         xAxis={[
           {
             scaleType: "band", 
