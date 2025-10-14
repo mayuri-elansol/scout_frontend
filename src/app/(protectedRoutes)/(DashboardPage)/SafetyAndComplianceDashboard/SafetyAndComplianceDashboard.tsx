@@ -188,8 +188,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-          </Grid> */}
-          <Grid
+          </Grid> 
+          {/* <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
@@ -223,7 +223,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       ),
     },
@@ -329,21 +329,19 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+        <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
               <DynamicPieChart
                 // data={[
-                //   { label: "Production Gate", value: 5, color: "#f44336" },
-                //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-                //   { label: "Parking Gate", value: 2, color: "#ffc107" },
-                //   { label: "Main Entrance", value: 4, color: "#ef5350" },
-                //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
+                //   { label: "ZONE A", value: 31, color: "#f78c89" },
+                //   { label: "ZONE B", value: 43, color: "#ffd54f" },
+                //   { label: "ZONE C", value: 26, color: "#7fbfff" },
                 // ]}
                 data={[
-                  { label: "Production Gate", value: 5, color: "#FFB3BA" },
-                  { label: "Warehouse Gate", value: 3, color: "#FFDFBA" },
-                  { label: "Parking Gate", value: 2, color: "#FFFFBA" },
-                  { label: "Main Entrance", value: 4, color: "#E6CCFF" },
-                  { label: "Side Exit", value: 1, color: "#BAE1FF" },
+                  { label: "Production Gate", value: 31, color: "#FFB6C1" },
+                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
+                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
+                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
               />
             </Box>
@@ -760,7 +758,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       </Grid>
 
       {/* Tabs Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 
+}}>
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
