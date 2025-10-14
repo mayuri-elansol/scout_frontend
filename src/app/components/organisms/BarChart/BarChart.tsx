@@ -30,7 +30,9 @@ const DynamicBarChart: React.FC<DynamicBarChartProps> = ({
   series,
   yAxisLabel = "Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 480 },
+  height = { mobile: 300, tablet: 400, desktop: 400 },
+    // height = { mobile: 300, tablet: 400, desktop: 0 },
+
 
 }) => {
   const theme = useTheme();
@@ -65,7 +67,7 @@ if (isMobile) {
             scaleType: "band",
             data: xLabels,
             tickLabelStyle: {
-              angle: isMobile ? -45 : 0,
+              // angle: isMobile ? -45 : 0,
               textAnchor: isMobile ? "end" : "middle",
               fontSize: isMobile ? 9 : 11,
             },
@@ -74,10 +76,10 @@ if (isMobile) {
         yAxis={[{ label: yAxisLabel }]}
         
         margin={{
-          bottom: isMobile ? 80 : 60,
+          // bottom: isMobile ? 30 : 35,
         //   left: 20,
         //   right: 10,
-          top: 10,
+          // top: 10,
         }}
       />
     </CardContent>

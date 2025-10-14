@@ -30,6 +30,7 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({ data }) => {
   const chartSize = isMobile ? 180 : 200;
   const outerRadius = isMobile ? 60 : 100;
 
+
   return (
     <CardContent
       sx={{

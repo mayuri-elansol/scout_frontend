@@ -30,6 +30,24 @@ const cameraZones: CameraZone[] = [
 ];
 
 // Generate hour-wise data for charts
+
+const PASTEL_COLORS = {
+  helmet: "#ffa8a8", // pastel red
+  vest: "#ffd8a8", // pastel orange
+  glass: "#a8d8ff", // pastel blue
+  fire: "#ffb3b3",
+  smoke: "#ffe0b3",
+  gas: "#b3d9ff",
+  oil: "#b3ffb3",
+  falls: "#ffddb3",
+  laydowns: "#ffe6cc",
+  blocked: "#ffb3b3",
+  clear: "#b3ffb3",
+  zoneA: "#ffd8a8",
+  zoneB: "#ffb3b3",
+  zoneC: "#a8d8ff",
+};
+
 const generateHourData = () => {
   const data = [];
   for (let i = 0; i < 24; i++) {
@@ -88,17 +106,17 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   {
                     dataKey: "helmet",
                     label: "Helmet Violations",
-                    color: "#ef5350",
+                    color: "#f78c89",
                   },
                   {
                     dataKey: "vest",
                     label: "Vest Violations",
-                    color: "#ffa94d",
+                    color: "#ffd54f",
                   },
                   {
                     dataKey: "glass",
                     label: "Glass Violations",
-                    color: "#74c0fc",
+                    color: "#7fbfff",
                   },
                 ]}
                 yAxisLabel="Violation Count"
@@ -120,18 +138,18 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
-                  { label: "Helmet", value: 29, color: "#ef5350" },
-                  { label: "Vest", value: 28, color: "#ffa94d" },
-                  { label: "Glass", value: 28, color: "#74c0fc" },
+                  { label: "Helmet", value: 29, color: "#f78c89" },
+                  { label: "Vest", value: 28, color: "#ffd54f" },
+                  { label: "Glass", value: 28, color: "#7fbfff" },
                 ]}
               />
             </Box>
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
-                  { label: "ZONE A", value: 31, color: "#ffa94d" },
-                  { label: "ZONE B", value: 43, color: "#ff6b6b" },
-                  { label: "ZONE C", value: 26, color: "#74c0fc" },
+                  { label: "ZONE A", value: 31, color: "#f78c89" },
+                  { label: "ZONE B", value: 43, color: "#ffd54f" },
+                  { label: "ZONE C", value: 26, color: "#7fbfff" },
                 ]}
               />
             </Box>
@@ -174,15 +192,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   {
                     dataKey: "fire",
                     label: "Fire Violations",
-                    color: "#ef5350",
+                    color: "#f78c89",
                   },
                   {
                     dataKey: "smoke",
                     label: "Smoke Violations",
-                    color: "#ff9800",
+                    color: "#ffd54f",
                   },
-                  { dataKey: "gas", label: "Gas Violations", color: "#42a5f5" },
-                  { dataKey: "oil", label: "Oil Violations", color: "#66bb6a" },
+                  { dataKey: "gas", label: "Gas Violations", color: "#7fbfff" },
+                  { dataKey: "oil", label: "Oil Violations", color: "#a8d5a2" },
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"

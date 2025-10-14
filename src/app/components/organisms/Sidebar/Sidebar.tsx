@@ -531,7 +531,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
+          justifyContent: "left",
           alignItems: "center",
           // height: 50,
           // gap: 2,
@@ -542,7 +542,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           src="./CustomerLogo1.png"
           alt="Customer Logo"
           sx={{
-            height: 45,
+            height: 46,
           }}
         />
         {/* <Typography
@@ -578,7 +578,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           component="img"
           src="/scoutLogo.png"
           alt="Elansol Logo"
-          sx={{ height: 40, width: "auto" }}
+          sx={{ height: 46, width: "auto" }}
           loading="lazy"
         />
         <Typography sx={{ fontSize: "13px", color: "#666" }}>
