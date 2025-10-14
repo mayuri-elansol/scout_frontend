@@ -86,6 +86,10 @@ const SurveillanceMonitoring: React.FC = () => {
     { time: "09:00", zone: "Zone C", count: 11 },
     { time: "10:00", zone: "Zone C", count: 5 },
     { time: "11:00", zone: "Zone C", count: 8 },
+     { time: "08:00", zone: "Zone D", count: 2 },
+    { time: "09:00", zone: "Zone E", count: 11 },
+    { time: "10:00", zone: "Zone F", count: 5 },
+    { time: "11:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
     { label: "Intrusion Detection", content: (<IntrusionDetectionChart />) },
