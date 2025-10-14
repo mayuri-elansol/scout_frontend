@@ -3,12 +3,7 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-  Shield,
-  Visibility,
-  Smartphone,
-  AccessTime,
-} from "@mui/icons-material";
+import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -25,12 +20,12 @@ import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/Employee
 const WorkforceMonitoring: React.FC = () => {
   const WorkForcekpiData = [
     {
-      title: "Employee Presence in Critical Area",
+      title: "Employee in Critical Area",
       value: "7",
       violationsCount: 7,
       lastDetection: "Critical Zone A",
       lastDetectionTime: "03:25 PM",
-      icon: Shield,
+      icon: People,
       route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
         "Shows the number of employees detected in critical areas where restricted access is enforced.",
@@ -65,7 +60,7 @@ const WorkforceMonitoring: React.FC = () => {
       violationsCount: 2,
       lastDetection: "Gate 2 - Shift B",
       lastDetectionTime: "02:30 AM",
-      icon: AccessTime,
+      icon: Security,
       route: "/SleepingSecurityPersonnel",
       tooltipMessage:
         "Shows detected cases of security personnel sleeping or absent from their post.",

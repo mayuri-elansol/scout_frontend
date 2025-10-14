@@ -3,7 +3,12 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import { People, DirectionsCar, Security } from "@mui/icons-material";
+import {
+  People,
+  DirectionsCar,
+  LocalShipping,
+  Block,
+} from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
@@ -18,6 +23,7 @@ import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRCh
 import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
@@ -25,7 +31,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 53,
       lastDetection: "Zone B - Gate 2",
       lastDetectionTime: "02:15 AM",
-      icon: Security,
+      icon: People,
       route: "/PeopleCountPage",
       tooltipMessage:
         "Shows detected intrusion incidents in monitored zones during restricted hours.",
@@ -35,7 +41,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 2,
       lastDetection: "Main Gate A",
       lastDetectionTime: "10.20 PM",
-      icon: People,
+      icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
     },
@@ -44,7 +50,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 13,
       lastDetection: "Main Canteen",
       lastDetectionTime: "3:24 AM",
-      icon: People,
+      icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
     },
@@ -54,7 +60,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 8,
       lastDetection: "Loading Bay A",
       lastDetectionTime: "10:10 PM",
-      icon: People,
+      icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
       tooltipMessage: "Displays vehical loading and unloading oprations",
     },
@@ -63,7 +69,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 5,
       lastDetection: "Loading Bay A",
       lastDetectionTime: "10:27 PM",
-      icon: DirectionsCar,
+      icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
     },

@@ -14,7 +14,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
 import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
 import CameraTamperingChart from "@/app/components/organisms/CameraTampering/CameraTamperingChart";
-
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
     {
@@ -41,7 +41,7 @@ const SurveillanceMonitoring: React.FC = () => {
       violationsCount: 2,
       lastDetection: "Zone C",
       lastDetectionTime: "2:42 PM",
-      icon: People,
+      icon: VideocamOffIcon,
       route: "/CameraTampering",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
