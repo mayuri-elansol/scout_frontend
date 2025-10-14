@@ -94,10 +94,10 @@ const SurveillanceMonitoring: React.FC = () => {
     { label: "Unauthorized Access ", content: <PeopleCountLineChart /> },
     { label: "Camera Tempering Detection", content: <CameraTamperingChart /> },
 
-    // {
-    //   label: "Movement During shutdown",
-    //   content:  <DynamicViolationScatterChart data={violationData} />,
-    // },
+    {
+      label: "Movement During shutdown",
+      content:  <DynamicViolationScatterChart data={violationData} />,
+    },
   ];
 
   return (
