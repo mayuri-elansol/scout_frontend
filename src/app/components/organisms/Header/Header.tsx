@@ -122,7 +122,9 @@ const Header: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [currentPage, setCurrentPage] = useState<PageType>("safety-compliance-dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>(
+    "safety-compliance-dashboard"
+  );
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -186,7 +188,6 @@ const Header: React.FC = () => {
     return currentItem?.name ?? "Dashboard";
   };
 
-
   useEffect(() => {
     const allMenuItems = [
       ...dashboardMenu.flatMap((category) => category.items),
@@ -198,7 +199,9 @@ const Header: React.FC = () => {
       (item) => item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    setCurrentPage(currentItem ? currentItem.page! : "safety-compliance-dashboard");
+    setCurrentPage(
+      currentItem ? currentItem.page! : "safety-compliance-dashboard"
+    );
   }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
@@ -252,10 +255,12 @@ const Header: React.FC = () => {
         sx={{
           zIndex: theme.zIndex.drawer + 1,
           height: 63,
+          // height: "6.5vh",
+
           backgroundColor: "white",
           color: "#1c2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)", 
+          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)",
 
           ml: { xs: 0, lg: "315px" },
           width: { xs: "100%", lg: "calc(100% - 316px)" },
@@ -278,7 +283,7 @@ const Header: React.FC = () => {
               sx={{
                 color: "#1c2025",
                 // fontSize: "20px",
-                pl: 1.2
+                pl: 1.2,
               }}
             >
               {getPageTitle()}
@@ -329,8 +334,6 @@ const Header: React.FC = () => {
               <>
                 {!isLoading && user && (
                   <Box sx={{ display: "flex", alignItems: "center" }}>
-
-
                     <IconButton onClick={handleClick} size="small">
                       <Avatar
                         sx={{
@@ -366,8 +369,6 @@ const Header: React.FC = () => {
                   </Box>
                 </Popper>
 
-
-
                 <Menu
                   anchorEl={anchorEl}
                   open={open}
@@ -377,17 +378,28 @@ const Header: React.FC = () => {
                   sx={{ mt: "15px" }}
                 >
                   {/* User Info at top */}
-                  <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}>
-                    <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
+                  <Box
+                    sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{ fontWeight: 600, color: "#1c2025" }}
+                    >
                       {user?.firstName} {user?.lastName}
                     </Typography>
                     {user?.role && (
-                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
-                       {user.role}
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#6b7280", fontWeight: 400 }}
+                      >
+                        {user.role}
                       </Typography>
                     )}
                     {user?.email && (
-                      <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#6b7280", fontWeight: 400 }}
+                      >
                         {user.email}
                       </Typography>
                     )}

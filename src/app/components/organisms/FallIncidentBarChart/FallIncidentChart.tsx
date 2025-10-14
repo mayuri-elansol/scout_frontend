@@ -36,7 +36,7 @@ const generateDayData = () => {
   return data;
 };
 
-export default function FallIncidentChart() {
+export default function FallIncidentBarChart() {
   const [viewMode, setViewMode] = React.useState('24hr');
   
   // Get data based on view mode

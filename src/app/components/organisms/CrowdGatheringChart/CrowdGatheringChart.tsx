@@ -55,32 +55,9 @@ export default function CrowdGatheringChart() {
     const newData = viewMode === '24hr' ? generateHourData() : generateDayData();
     setDataset(newData);
   }, [viewMode]);
-
-  const totalCount = dataset.reduce((acc, curr) => acc + curr.count, 0);
-  const avgCount = dataset.length > 0 ? Math.round(totalCount / dataset.length) : 0;
-  const threshold = dataset.length > 0 ? dataset[0].threshold : 0;
-  const exceedCount = dataset.filter(d => d.count > d.threshold).length;
-
-  console.log('Dataset:', dataset); // Debug log
-
   return (
     <Card elevation={0} sx={{ width: "100%", height: "100%", border: '1px solid #e0e0e0' }}>
       <CardContent>
-        {/* <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography variant="h6" fontWeight={600}>
-            Crowd Count vs Threshold
-          </Typography>
-          
-          <ToggleButtonGroup
-            value={viewMode}
-            exclusive
-            onChange={(e, newMode) => newMode && setViewMode(newMode)}
-            size="small"
-          >
-            <ToggleButton value="24hr">24 Hours</ToggleButton>
-            <ToggleButton value="days">30 Days</ToggleButton>
-          </ToggleButtonGroup>
-        </Box> */}
 
         {dataset.length > 0 ? (
           <Box sx={{ width: "100%", height: 400 }}>

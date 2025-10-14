@@ -1,7 +1,4 @@
 
-
-
-
 "use client";
 
 import React from "react";
@@ -21,17 +18,15 @@ const generateHourData = () => {
   }
   return data;
 };
-const PPEComplianceChart = () => {
+const FallIncidentBarChart = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   
   const displayData = generateHourData();
   const xLabels = displayData.map((d) => d.time);
-  const fireData = displayData.map((d) => d.fire);
-  const smokeData = displayData.map((d) => d.smoke);
-  const gasData = displayData.map((d) => d.gas);
-  // const oilData = displayData.map((d) => d.oil);
+  const fallData = displayData.map((d) => d.fire);
+
 
   const chartHeight = isMobile ? 300 : isTablet ? 400 : 480;
 
@@ -41,23 +36,12 @@ const PPEComplianceChart = () => {
         height={chartHeight}
         series={[
           {
-            data: fireData,
-            label: "Helmet Violations",
+            data: fallData,
+            label: "Fall Incident",
             color: "#ef5350",
             stack: "hazard",
           },
-          {
-            data: smokeData,
-            label: "Vest Violations",
-            color: "#ffa94d",
-            stack: "hazard",
-          },
-          {
-            data: gasData,
-            label: "Glass Violations",
-            color: "#42a5f5",
-            stack: "hazard",
-          }
+          
         ]}
         xAxis={[
           {
@@ -72,7 +56,7 @@ const PPEComplianceChart = () => {
         ]}
         yAxis={[{ label: "Violations" }]}
         margin={{
-          bottom: isMobile ? 80 : 50,
+         bottom: isMobile ? 80 : 50,
           left: 20,
           right: 10,
           top: 10,
@@ -82,4 +66,4 @@ const PPEComplianceChart = () => {
   );
 };
 
-export default PPEComplianceChart;
+export default FallIncidentBarChart;

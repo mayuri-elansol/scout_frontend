@@ -23,7 +23,7 @@ function TabPanel({ children, value, index }: any) {
       hidden={value !== index}
       aria-labelledby={`tab-${index}`}
     >
-      {value === index && <Box sx={{ p: -1 }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
 }
@@ -49,7 +49,7 @@ export default function DynamicTabs({
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", height: "100%" }}>
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
           {tabs.map((tab, index) => (
@@ -69,7 +69,10 @@ export default function DynamicTabs({
               {index < tabs.length - 1 &&
                 value !== index &&
                 value !== index + 1 && (
-                  <div className={styles.tabDivider} key={index + 1}></div>
+                  <div
+                    className={styles.tabDivider}
+                    key={`divider-${index}`}
+                  ></div>
                 )}
             </React.Fragment>
           ))}

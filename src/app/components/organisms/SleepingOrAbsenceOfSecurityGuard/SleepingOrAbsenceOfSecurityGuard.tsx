@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
 // Times for X-axis
@@ -27,8 +27,8 @@ export default function SecurityPersonnelBarChart() {
       <Box sx={{ width: times.length * 50, height: 300 }}>
         <BarChart
           height={300}
-          xAxis={[{ data: times }]} // X-axis: times
-          series={series}           // Y-axis: counts
+          xAxis={[{ data: times }]} 
+          series={series}           
         />
       </Box>
     </Box>

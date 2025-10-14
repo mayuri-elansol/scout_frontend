@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -6,14 +5,15 @@ import { CardContent, useTheme, useMediaQuery } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { DefaultizedPieValueType } from "@mui/x-charts/models";
 
-const PPEPieChartForEachViolationCount = () => {
+const HazardPieChartByType = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   
   const data = [
-    { label: "ZONE A", value: 31, color: "#ffa94d" },
-    { label: "ZONE B", value: 43, color: "#ff6b6b" },
-    { label: "ZONE C", value: 26, color: "#74c0fc" },
+    { label: "Fire", value: 29, color: "#ef5350" },
+    { label: "Smoke", value: 28, color: "#ff9800" },
+    { label: "Gas", value: 28, color: "#42a5f5" },
+    { label: "oil", value: 15, color: "#66bb6a" },
   ];
 
   const TOTAL = data.reduce((sum, item) => sum + item.value, 0);
@@ -61,4 +61,4 @@ const PPEPieChartForEachViolationCount = () => {
   );
 };
 
-export default PPEPieChartForEachViolationCount;
+export default HazardPieChartByType;

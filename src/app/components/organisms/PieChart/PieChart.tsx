@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -6,15 +5,20 @@ import { CardContent, useTheme, useMediaQuery } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { DefaultizedPieValueType } from "@mui/x-charts/models";
 
-const PPEPieChartForEachViolationCount = () => {
+// Types for the component props
+export interface PieDataItem {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export interface DynamicPieChartProps {
+  data: PieDataItem[];
+}
+
+const DynamicPieChart: React.FC<DynamicPieChartProps> = ({ data }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  
-  const data = [
-    { label: "ZONE A", value: 31, color: "#ffa94d" },
-    { label: "ZONE B", value: 43, color: "#ff6b6b" },
-    { label: "ZONE C", value: 26, color: "#74c0fc" },
-  ];
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const TOTAL = data.reduce((sum, item) => sum + item.value, 0);
 
@@ -24,16 +28,18 @@ const PPEPieChartForEachViolationCount = () => {
   };
 
   const chartSize = isMobile ? 180 : 200;
-  const outerRadius = isMobile ? 60 : 90;
+  const outerRadius = isMobile ? 60 : 100;
 
   return (
-    <CardContent sx={{ 
-      width: "100%", 
-      p: 2, 
-      display: "flex", 
-      justifyContent: "center", 
-      alignItems: "center" 
-    }}>
+    <CardContent
+      sx={{
+        width: "100%",
+        p: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <PieChart
         series={[
           {
@@ -61,4 +67,4 @@ const PPEPieChartForEachViolationCount = () => {
   );
 };
 
-export default PPEPieChartForEachViolationCount;
+export default DynamicPieChart;
