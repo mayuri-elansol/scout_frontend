@@ -309,6 +309,12 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               new Set(recentViolations.map((v) => v.cameraId))
             ),
           },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}

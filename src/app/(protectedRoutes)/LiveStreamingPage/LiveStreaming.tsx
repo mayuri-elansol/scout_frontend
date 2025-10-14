@@ -7,9 +7,7 @@ import {
   FormControlLabel,
   Grid,
   Chip,
-  Paper,
 } from "@mui/material";
-import { VideoCall } from "@mui/icons-material";
 import { CameraFeed } from "./cameraFeed";
 import { v4 as uuidv4 } from "uuid";
 const LiveStreaming: React.FC = () => {
@@ -27,33 +25,6 @@ const LiveStreaming: React.FC = () => {
     "zone-c": { playing: false, muted: true },
     "zone-d": { playing: false, muted: true },
   });
-
-  const topMetrics = [
-    {
-      value: "87.5%",
-      label: "PPE Compliance Rate",
-      color: "#ff9800",
-      borderColor: "#ff9800",
-    },
-    {
-      value: "3",
-      label: "Active Violations",
-      color: "#f44336",
-      borderColor: "#f44336",
-    },
-    {
-      value: "234",
-      label: "People Detected",
-      color: "#4caf50",
-      borderColor: "#4caf50",
-    },
-    {
-      value: "12",
-      label: "No Helmet Detected",
-      color: "#f44336",
-      borderColor: "#f44336",
-    },
-  ];
 
   const cameraZones = [
     {
