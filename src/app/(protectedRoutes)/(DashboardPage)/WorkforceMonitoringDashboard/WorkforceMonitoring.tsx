@@ -3,12 +3,7 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-  Shield,
-  Visibility,
-  Smartphone,
-  AccessTime,
-} from "@mui/icons-material";
+import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -23,35 +18,25 @@ import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/Sleepin
 import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
 
 const WorkforceMonitoring: React.FC = () => {
-  const kpiData = [
+  const WorkForcekpiData = [
     {
-      title: "Employee Presence in Critical Area",
+      title: "Employee in Critical Area",
       value: "7",
       violationsCount: 7,
       lastDetection: "Critical Zone A",
       lastDetectionTime: "03:25 PM",
-      icon: Shield,
-      route: "/CriticalAreaPresence",
+      icon: People,
+      route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
         "Shows the number of employees detected in critical areas where restricted access is enforced.",
     },
-    {
-      title: "Employee Presence in Restricted Area",
-      value: "4",
-      violationsCount: 4,
-      lastDetection: "Restricted Zone B",
-      lastDetectionTime: "02:45 PM",
-      icon: Visibility,
-      route: "/RestrictedAreaPresence",
-      tooltipMessage:
-        "Shows employee presence in areas that require special clearance.",
-    },
+
     {
       title: "Employee Idel Time",
       value: "0",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
+      violationsCount: 2,
+      lastDetection: "Production Floor A",
+      lastDetectionTime: "4:20 PM",
       icon: Visibility,
       route: "/EmployeeIdleTime",
       tooltipMessage:
@@ -70,13 +55,13 @@ const WorkforceMonitoring: React.FC = () => {
     },
 
     {
-      title: "Sleeping or Absence of Security Personnel",
+      title: "Sleeping / Absence of Security Personnel",
       value: "2",
       violationsCount: 2,
       lastDetection: "Gate 2 - Shift B",
       lastDetectionTime: "02:30 AM",
-      icon: AccessTime,
-      route: "/SecurityPersonnelMonitoring",
+      icon: Security,
+      route: "/SleepingSecurityPersonnel",
       tooltipMessage:
         "Shows detected cases of security personnel sleeping or absent from their post.",
     },
@@ -135,7 +120,7 @@ const WorkforceMonitoring: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         {/* Right: Time Filter */}
@@ -143,23 +128,26 @@ const WorkforceMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {kpiData.map((kpi, index) => (
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
+        {WorkForcekpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
-            <DashboardKpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        {/* Tabs Section for Charts */}
+      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+       
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
           <DashboardTabs tabs={tabs} />
         </Box>
+      </Box> */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
   );

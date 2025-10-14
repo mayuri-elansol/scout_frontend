@@ -30,19 +30,19 @@ const SurveillanceMonitoring: React.FC = () => {
     },
     {
       title: "Unauthorized Access In Restrcited Areas",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
+      violationsCount: 4,
+      lastDetection: "Zone C",
+      lastDetectionTime: "3:10 AM",
       icon: People,
       route: "/UnauthorizedAccessInRestrictedAreas",
       tooltipMessage: "Displays unauthorized acess in restricted ares.",
     },
     {
       title: "Camera Tempering Detection",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: People,
+      violationsCount: 2,
+      lastDetection: "Zone C",
+      lastDetectionTime: "2:42 PM",
+      icon: VideocamOffIcon,
       route: "/CameraTampering",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
@@ -105,10 +105,11 @@ const SurveillanceMonitoring: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        pt: 2.5,
-        pb: 3,
+        minHeight: "100vh",
+
+        pt: 1,
+        pb: 1,
         px: 3,
-        // p: 3,
         mb: 4,
         backgroundColor: "#ffffff",
         borderRadius: 2,
@@ -121,7 +122,7 @@ const SurveillanceMonitoring: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         {/* Right: Time Filter */}
@@ -129,10 +130,10 @@ const SurveillanceMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />
@@ -141,11 +142,15 @@ const SurveillanceMonitoring: React.FC = () => {
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        {/* Tabs Section for Charts */}
+      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+       
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
           <DashboardTabs tabs={tabs} />
         </Box>
+      </Box> */}
+      {/* Tabs Section */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
   );

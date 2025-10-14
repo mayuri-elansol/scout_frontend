@@ -3,7 +3,12 @@
 import React from "react";
 import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import { People, DirectionsCar, Security } from "@mui/icons-material";
+import {
+  People,
+  DirectionsCar,
+  LocalShipping,
+  Block,
+} from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
@@ -18,6 +23,7 @@ import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRCh
 import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
+import RestaurantIcon from "@mui/icons-material/Restaurant";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
@@ -25,45 +31,45 @@ const OperationalInsightsDashboard: React.FC = () => {
       violationsCount: 53,
       lastDetection: "Zone B - Gate 2",
       lastDetectionTime: "02:15 AM",
-      icon: Security,
+      icon: People,
       route: "/PeopleCountPage",
       tooltipMessage:
         "Shows detected intrusion incidents in monitored zones during restricted hours.",
     },
     {
-      title: "Vehicle Count & ANPR at Gates",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: People,
+      title: "Vehicle Count",
+      violationsCount: 2,
+      lastDetection: "Main Gate A",
+      lastDetectionTime: "10.20 PM",
+      icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
     },
     {
       title: "Canteen Usage Monitoring",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: People,
+      violationsCount: 13,
+      lastDetection: "Main Canteen",
+      lastDetectionTime: "3:24 AM",
+      icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
     },
 
     {
       title: "Vehicle Loading/Unloading Monitoring",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: People,
+      violationsCount: 8,
+      lastDetection: "Loading Bay A",
+      lastDetectionTime: "10:10 PM",
+      icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
       tooltipMessage: "Displays vehical loading and unloading oprations",
     },
     {
       title: "Unauthorised Parking / Blocking Aisles",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
-      icon: DirectionsCar,
+      violationsCount: 5,
+      lastDetection: "Loading Bay A",
+      lastDetectionTime: "10:27 PM",
+      icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
     },
@@ -110,7 +116,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 1,
         }}
       >
         {/* Right: Time Filter */}
@@ -118,10 +124,10 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
             <DashboardKpiCard {...kpi} />
@@ -130,11 +136,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        {/* Tabs Section for Charts */}
+      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
+      
         <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
           <DashboardTabs tabs={tabs} />
         </Box>
+      </Box> */}
+      {/* Tabs Section */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>
   );

@@ -1,6 +1,6 @@
 /* Login Page Styles */
 .container {
-  height: calc(100vh - 80px); /* Subtract header height */
+  height: calc(100vh - 80px); 
   background-color: #f8f9fa;
   position: relative;
   display: flex;

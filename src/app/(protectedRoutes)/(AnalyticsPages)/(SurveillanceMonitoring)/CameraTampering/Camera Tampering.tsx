@@ -9,7 +9,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const CameraTampering: React.FC = () => {
@@ -30,14 +30,14 @@ const CameraTampering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const CameraTamperingKpiData = [
     {
-      title: "Offline Cameras",
+      title: "Total Offline Cameras",
       value: "42",
       tooltipMessage:
         "Shows the total number of offline cameras currently monitored in the system.",
-      icon: Videocam,
+      icon: VideocamOffIcon,
     },
     {
-      title: "Tampred Cameras",
+      title: "Total Tampred Cameras",
       value: "5",
       tooltipMessage: "The total number of tampered detected cameras .",
       icon: Warning,
@@ -279,7 +279,7 @@ const CameraTampering: React.FC = () => {
       </Paper>
       {/* PPE Violations Report */}
       <ReportTable
-        title="Detailed Tampering Report"
+        title="Detailed Report"
         tooltipMessage="Detailed camera tampering/offline detection report with filter, reset, and CSV/PDF download options."
         columns={[
           { id: "voilation", label: "Violation" },

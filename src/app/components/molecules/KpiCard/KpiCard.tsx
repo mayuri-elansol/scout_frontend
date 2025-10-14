@@ -124,7 +124,7 @@ const KpiCard: React.FC<KpiCardProps> = ({
           minHeight: "160px",
           padding: "20px",
           iconSize: 20,
-          valueSize: "25px",
+          valueSize: "24px",
           titleSize: "14px",
           subtitleSize: "12px",
           iconBoxSize: 36,

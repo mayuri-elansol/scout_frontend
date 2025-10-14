@@ -245,7 +245,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows escurity personnel sleeping,absence violations per zone"
+              tooltipMessage="Shows security personnel sleeping,absence violations per zone"
             />
           </Grid>
         </Grid>

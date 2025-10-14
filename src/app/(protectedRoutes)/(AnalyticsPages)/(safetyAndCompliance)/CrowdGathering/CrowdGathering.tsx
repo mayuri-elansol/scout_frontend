@@ -79,29 +79,35 @@ const CrowdGathering: React.FC = () => {
 
   const CrowdKpiData = [
     {
-      title: "Crowded Zone",
-      value: "Zone B", // Zone currently most crowded
-      icon: Groups,
-      tooltipMessage:
-        "Displays the zone that currently has the highest crowd gathering.",
-    },
-    {
       title: "Total Incidents Detected",
-      value: "56", // Total crowd-related incidents
+      value: "56",
       icon: ReportProblem,
       tooltipMessage:
         "Shows the total number of crowd gathering incidents detected so far.",
     },
     {
+      title: "Crowded Zone",
+      value: "Zone B",
+      icon: Groups,
+      tooltipMessage:
+        "Displays the zone that currently has the highest crowd gathering.",
+    },
+
+    {
       title: "Peak Crowd Density ",
-      value: "50 (Zone B)", // Zone with highest density
+      value: "50 (Zone B)",
       icon: LocationOn,
       tooltipMessage:
         "Shows the highest recorded crowd density along with the zone where it occurred.",
+      trendColor: "#f44336",
+      color: "#f44336",
+      bgColor: "#ffebee",
+      borderColor: "#f44336",
+      iconBg: "rgba(244, 67, 54, 0.1)",
     },
     {
       title: "Last Incidence",
-      value: "09:45 AM", // Timestamp of last detected crowd incident
+      value: "09:45 AM",
       icon: AccessTime,
       tooltipMessage:
         "Displays the timestamp of the most recent crowd gathering incident detected.",
@@ -111,7 +117,6 @@ const CrowdGathering: React.FC = () => {
   const recentCrowdViolations = backendCrowdData.map((item) => {
     let violationMsg = "";
 
-    // Rule: If gatheredMore is true → violation
     if (item.gatheredMore) {
       violationMsg = `Crowd gathering detected `;
     } else {

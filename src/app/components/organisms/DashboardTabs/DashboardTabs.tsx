@@ -53,7 +53,7 @@ export default function DynamicTabs({
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
           {tabs.map((tab, index) => (
-            <React.Fragment key={`tab-${index}`}>
+            <React.Fragment key={index + 1}>
               <button
                 className={`${styles.tab} ${
                   value === index ? styles.tabActive : ""
@@ -81,7 +81,7 @@ export default function DynamicTabs({
       </div>
 
       {tabs.map((tab, index) => (
-        <TabPanel key={`panel-${index}`} value={value} index={index}>
+        <TabPanel key={index + 1} value={value} index={index}>
           {tab.content}
         </TabPanel>
       ))}

@@ -70,7 +70,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         transition: "all 0.3s ease",
-        height: "100%",
+        height: "94%",
         cursor: route ? "pointer" : "default",
         position: "relative",
         //  overflow: "hidden",
