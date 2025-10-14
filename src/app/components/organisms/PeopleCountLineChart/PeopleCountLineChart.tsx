@@ -17,13 +17,10 @@ const data = [
 
 export default function PeopleCountLineChart() {
   return (
-    <Box sx={{ width: "100%", height: 400 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        People Count by Zone Over Time
-      </Typography>
+    <Box sx={{ width: "100%", p:4 }}>
 
       <LineChart
-        height={350}
+        height={400}
         xAxis={[
           {
             scaleType: "point",

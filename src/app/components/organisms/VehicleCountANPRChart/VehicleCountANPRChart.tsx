@@ -15,10 +15,7 @@ const invalidNumbers = times.map(() => Math.floor(Math.random() * 3));  // 0–2
 export default function VehicleCountANPRChart() {
   return (
     <Box sx={{ width: "100%" }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Vehicle Count & ANPR (Entry / Exit Gates)
-      </Typography>
-
+     
       {/* Horizontal scroll only */}
       <Box
         sx={{

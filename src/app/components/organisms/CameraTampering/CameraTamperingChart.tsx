@@ -31,13 +31,11 @@ const series = [
 
 export default function CameraTamperingTimeChart() {
   return (
-    <Box sx={{ width: "100%", 
+    <Box sx={{ width: "100%", pt:4
     
     // overflowX: "auto" 
     }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Camera Tampering / Offline Detection (Time-wise)
-      </Typography>
+     
 
       <Box sx={{ width: times.length * 60, height: 400 }}>
         <BarChart

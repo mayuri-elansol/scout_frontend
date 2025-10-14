@@ -88,25 +88,20 @@ const OperationalInsightsDashboard: React.FC = () => {
     { label: "Canteen Usage", content: <CanteenUsageChart /> },
     { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart /> },
     { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
-    {
-      label: "Camera Status",
-      content: <CameraStatus cameraZones={cameraZones} />,
-    },
+   
   ];
 
   return (
     <Paper
       sx={{
-        display: "flex",
+         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-        pt: 2.5,
-        pb: 3,
+        pt: 2,
         px: 3,
-        // p: 3,
-        mb: 4,
+        mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
+        flex: 1,
       }}
     >
       <Box

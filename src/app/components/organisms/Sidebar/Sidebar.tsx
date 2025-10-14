@@ -30,6 +30,7 @@ import {
   settingsMenu,
   MenuItemConfig,
   CategoryConfig,
+  liveStreamingMenu,
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
@@ -246,6 +247,12 @@ const Sidebar: React.FC<SidebarProps> = () => {
   }, []);
 
   const filteredMenus = useMemo(() => {
+     const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu
+      .map((item) => ({
+        ...item,
+        featureFlag: featureFlag[item.page!] ?? true,
+      }))
+      .filter((item) => item.featureFlag);
     const dashboardFlags: (CategoryConfig & {
       items: (MenuItemConfig & { featureFlag: boolean })[];
     })[] = dashboardMenu.map((category) => ({
@@ -285,7 +292,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       })),
     }));
 
-    return { dashboardFlags, alertFlags, analyticsFlags, settingsFlags };
+    return { liveStreamingFlags,dashboardFlags, alertFlags, analyticsFlags, settingsFlags };
   }, [featureFlag]);
 
   const isAnalyticsActive = useMemo(() => {
@@ -303,6 +310,19 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const menuContent = useMemo(
     () => (
       <>
+      {/* Live Streaming - At the very top */}
+        {filteredMenus.liveStreamingFlags.length > 0 && (
+          <List sx={{ p: 0, mt: 1 }}>
+            {filteredMenus.liveStreamingFlags.map((item, index) => (
+              <MenuItem
+                key={uuidv4() + index}
+                item={item}
+                pathname={pathname}
+                theme={theme}
+              />
+            ))}
+          </List>
+        )}
         {/* Dashboard */}
         {filteredMenus.dashboardFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>

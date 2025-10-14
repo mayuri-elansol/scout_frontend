@@ -100,10 +100,10 @@ const WorkforceMonitoring: React.FC = () => {
       label: "Employee Presence (Critical Areas)",
       content: <EmployeePresenceCriticalChart />,
     },
-    {
-      label: "Employee Presence (Restricted Areas)",
-      content: <EmployeePresenceInRestrictedAreaChart />,
-    },
+    // {
+    //   label: "Employee Presence (Restricted Areas)",
+    //   content: <EmployeePresenceInRestrictedAreaChart />,
+    // },
     { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
     {
       label: "Security Personnel Status",
@@ -113,26 +113,20 @@ const WorkforceMonitoring: React.FC = () => {
       label: "Employee Monitoring",
       content: <EmployeeIdleTimeMonitoringChart />,
     },
-    {
-      label: "Camera Status",
-      content: <CameraStatus cameraZones={cameraZones} />,
-    },
+    
   ];
 
   return (
     <Paper
       sx={{
-        display: "flex",
+         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-
-        pt: 2.5,
-        pb: 3,
+        pt: 2,
         px: 3,
-        // p: 3,
-        mb: 4,
+        mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
+        flex: 1,
       }}
     >
       <Box

@@ -31,13 +31,10 @@ export default function EmployeeIdleTimeMonitoringChart() {
     <Box sx={{ width: "100%", 
     // overflowX: "auto" 
     }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Employee Idle Time Monitoring (Time-wise)
-      </Typography>
-
+   
       <Box sx={{ width: times.length * 50, height: 400 }}>
         <BarChart
-          height={400}
+          // height={400}
           xAxis={[{ data: times }]} // X-axis: times
           series={series}           // Y-axis: counts
           

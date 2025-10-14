@@ -17,18 +17,9 @@ export default function UnauthorizedParkingChart() {
   ];
 
   return (
-    <Card
-      sx={{
-        p: 2,
-        borderRadius: "16px",
-        boxShadow: 3,
-        overflowX: "auto", 
-      }}
-    >
+
       <CardContent sx={{ minWidth: 700 }}>
-        <Typography variant="h6" gutterBottom>
-          🚧 Unauthorized Parking / Aisle Blocking Detection
-        </Typography>
+    
 
         <Box sx={{ height: 400, minWidth: 800 }}>
           <BarChart
@@ -44,6 +35,5 @@ export default function UnauthorizedParkingChart() {
           />
         </Box>
       </CardContent>
-    </Card>
   );
 }

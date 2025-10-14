@@ -33,8 +33,8 @@ const cameraZones: CameraZone[] = [
 
 const PASTEL_COLORS = {
   helmet: "#ffa8a8", // pastel red
-  vest: "#ffd8a8",   // pastel orange
-  glass: "#a8d8ff",  // pastel blue
+  vest: "#ffd8a8", // pastel orange
+  glass: "#a8d8ff", // pastel blue
   fire: "#ffb3b3",
   smoke: "#ffe0b3",
   gas: "#b3d9ff",
@@ -103,10 +103,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 data={hourlyData}
                 xAxisKey="time"
                 series={[
-{ dataKey: "helmet", label: "Helmet Violations", color: "#f78c89" }, 
-{ dataKey: "vest", label: "Vest Violations", color: "#ffd54f" },     
-{ dataKey: "glass", label: "Glass Violations", color: "#7fbfff" },    
-
+                  {
+                    dataKey: "helmet",
+                    label: "Helmet Violations",
+                    color: "#f78c89",
+                  },
+                  {
+                    dataKey: "vest",
+                    label: "Vest Violations",
+                    color: "#ffd54f",
+                  },
+                  {
+                    dataKey: "glass",
+                    label: "Glass Violations",
+                    color: "#7fbfff",
+                  },
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="ppe"
@@ -193,9 +204,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"
-
-
-
               />
             </Box>
           </Grid>
@@ -288,7 +296,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
-     {
+    {
       label: "Vehicle In Walkways",
       content: (
         <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
@@ -401,7 +409,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           >
             <DynamicPieChart
               data={[
-                       { label: "Production Gate", value: 5, color: "#f44336" },
+                { label: "Production Gate", value: 5, color: "#f44336" },
                 { label: "Warehouse Gate", value: 3, color: "#ff9800" },
                 { label: "Parking Gate", value: 2, color: "#ffc107" },
                 { label: "Main Entrance", value: 4, color: "#ef5350" },
@@ -434,10 +442,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { month: "Jan", users: 20 },
                   { month: "Feb", users: 50 },
                   { month: "Mar", users: 80 },
-                         { month: "Jan", users: 20 },
+                  { month: "Jan", users: 20 },
                   { month: "April", users: 50 },
                   { month: "May", users: 80 },
-                         { month: "June", users: 20 },
+                  { month: "June", users: 20 },
                   { month: "July", users: 50 },
                   { month: "August", users: 80 },
                 ]}
@@ -542,11 +550,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb:2,
+        mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
-          flex: 1,          
-  
+        flex: 1,
       }}
     >
       {/* Top Right Time Filter */}

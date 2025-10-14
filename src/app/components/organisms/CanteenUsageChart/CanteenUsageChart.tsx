@@ -13,11 +13,9 @@ const workingTime = [
 
 export default function CanteenUsageChart() {
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%" ,pt:2}}>
       {/* Title */}
-      <Typography variant="h6" sx={{ mb: 1 }}>
-        Monitoring Canteen Usage & Timings
-      </Typography>
+    
 
       {/* Legend */}
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>

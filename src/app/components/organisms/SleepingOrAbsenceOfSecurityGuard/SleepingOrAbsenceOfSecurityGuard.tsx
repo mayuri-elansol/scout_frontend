@@ -24,9 +24,9 @@ export default function SecurityPersonnelBarChart() {
     <Box sx={{ width: "100%", overflowX: "auto" }}>
   
 
-      <Box sx={{ width: times.length * 50, height: 300 }}>
+      <Box sx={{ width: times.length * 50, height: 400 }}>
         <BarChart
-          height={300}
+          // height={400}
           xAxis={[{ data: times }]} 
           series={series}           
         />

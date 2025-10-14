@@ -14,6 +14,7 @@ import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
 import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
 import CameraTamperingChart from "@/app/components/organisms/CameraTampering/CameraTamperingChart";
+import DynamicViolationScatterChart, { ViolationData } from "@/app/components/organisms/ScatterChart/ScatterChart";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
@@ -53,7 +54,7 @@ const SurveillanceMonitoring: React.FC = () => {
       lastDetection: "Warehouse Zone 4",
       lastDetectionTime: "01:45 AM",
       icon: People,
-      route: "/PeoplePresenceShutdownPage",
+      route: "/PeoplePresence",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
     },
@@ -70,15 +71,33 @@ const SurveillanceMonitoring: React.FC = () => {
     { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
     { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
   ];
+    const violationData: ViolationData[] = [
+    { time: "08:00", zone: "Zone A", count: 5 },
+    { time: "09:00", zone: "Zone A", count: 8 },
+    { time: "10:00", zone: "Zone A", count: 3 },
+    { time: "11:00", zone: "Zone A", count: 12 },
+    
+    { time: "08:00", zone: "Zone B", count: 7 },
+    { time: "09:00", zone: "Zone B", count: 4 },
+    { time: "10:00", zone: "Zone B", count: 9 },
+    { time: "11:00", zone: "Zone B", count: 6 },
+    
+    { time: "08:00", zone: "Zone C", count: 2 },
+    { time: "09:00", zone: "Zone C", count: 11 },
+    { time: "10:00", zone: "Zone C", count: 5 },
+    { time: "11:00", zone: "Zone C", count: 8 },
+  ];
   const tabs: TabConfig[] = [
-    { label: "Surveillance Heatmap", content: <IntrusionDetectionChart /> },
-    { label: "People Count Trend", content: <PeopleCountLineChart /> },
-    { label: "Camera Tempering", content: <CameraTamperingChart /> },
+    { label: "Intrusion Detection", content: (<IntrusionDetectionChart />) },
+        
 
-    {
-      label: "Camera Operational Status",
-      content: <CameraStatus cameraZones={cameraZones} />,
-    },
+    { label: "Unauthorized Access ", content: <PeopleCountLineChart /> },
+    { label: "Camera Tempering Detection", content: <CameraTamperingChart /> },
+
+    // {
+    //   label: "Movement During shutdown",
+    //   content:  <DynamicViolationScatterChart data={violationData} />,
+    // },
   ];
 
   return (
@@ -93,6 +112,7 @@ const SurveillanceMonitoring: React.FC = () => {
         mb: 4,
         backgroundColor: "#ffffff",
         borderRadius: 2,
+        height:"90vh"
       }}
     >
       <Box

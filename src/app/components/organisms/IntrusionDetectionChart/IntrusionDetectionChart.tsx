@@ -11,17 +11,24 @@ const data = [
   { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
   { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
   { time: "12:00", zoneA: 6, zoneB: 4, zoneC: 5 },
+    { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
+  { time: "09:00", zoneA: 4, zoneB: 3, zoneC: 2 },
+  { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
+  { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
+  { time: "12:00", zoneA: 6, zoneB: 4, zoneC: 5 },
+    { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
+  { time: "09:00", zoneA: 4, zoneB: 3, zoneC: 2 },
+  { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
+  { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
+  { time: "12:00", zoneA: 6, zoneB: 4, zoneC: 5 },
 ];
 
 export default function IntrusionDetectionChart() {
   return (
-    <Box sx={{ width: "100%", height: 400 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        Surveillance Activity (Time vs Zones)
-      </Typography>
-
+    <Box sx={{ width: "100%", p:4 }}>
+      
       <BarChart
-        height={350}
+        height={420}
         xAxis={[
           {
             scaleType: "band", 
