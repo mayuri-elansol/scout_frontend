@@ -288,21 +288,26 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
         filters={[
           {
             id: "eventMessage",
-            label: "Event",
+            label: "Voilation",
             type: "select",
-            options: ["Unauthorized Car Parking", "Equipment Blocking Aisle"],
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.eventMessage))
+            ),
           },
 
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Parking Lot A",
-              "Loading Dock B",
-              "Main Gate",
-              "Warehouse Area",
-            ],
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "Camera",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.cameraId))
+            ),
           },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },

@@ -44,7 +44,7 @@ const EmployeeIdleTime: React.FC = () => {
       tooltipMessage: "The most recent idle detection timestamp.",
     },
     {
-      title: "Last Zone",
+      title: "Last Idle Detection Zone",
       value: "Assembly Line A",
       icon: Room,
       tooltipMessage: "The zone where the most recent idle event was detected.",

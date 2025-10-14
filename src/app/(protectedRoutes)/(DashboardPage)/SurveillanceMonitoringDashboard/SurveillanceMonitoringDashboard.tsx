@@ -53,7 +53,7 @@ const SurveillanceMonitoring: React.FC = () => {
       lastDetection: "Warehouse Zone 4",
       lastDetectionTime: "01:45 AM",
       icon: People,
-      route: "/PeoplePresenceShutdownPage",
+      route: "/PeoplePresence",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
     },

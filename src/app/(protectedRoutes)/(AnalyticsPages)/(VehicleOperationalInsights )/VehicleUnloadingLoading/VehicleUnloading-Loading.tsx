@@ -40,7 +40,8 @@ const VehicleUnloadingLoading: React.FC = () => {
       title: "Average Loading/Unloading Time",
       value: "1.56 hrs", // number of operations in progress
       icon: AccessTimeIcon, // represents active/ongoing
-      tooltipMessage: "Number of operations currently in progress.",
+      tooltipMessage:
+        "Shows the Average Time for Vehical Loading/Unloading event",
     },
 
     {
@@ -126,7 +127,7 @@ const VehicleUnloadingLoading: React.FC = () => {
   const zoneLoadingData = [
     {
       zone: "Loading Bay A",
-      events: 12,
+      incident: 12,
       subViolations: [
         { label: "Start", value: 7, icon: PlayCircleIcon },
         { label: "Stop", value: 5, icon: StopCircleIcon },
@@ -134,7 +135,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Loading Bay B",
-      events: 9,
+      incident: 9,
       subViolations: [
         { label: "Start", value: 4, icon: PlayCircleIcon },
         { label: "Stop", value: 5, icon: StopCircleIcon },
@@ -142,7 +143,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Unloading Bay A",
-      events: 15,
+      incident: 15,
       subViolations: [
         { label: "Start", value: 9, icon: PlayCircleIcon },
         { label: "Stop", value: 6, icon: StopCircleIcon },
@@ -150,7 +151,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Unloading Bay B",
-      events: 8,
+      incident: 8,
       subViolations: [
         { label: "Start", value: 4, icon: PlayCircleIcon },
         { label: "Stop", value: 4, icon: StopCircleIcon },
@@ -158,7 +159,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Loading Bay C",
-      events: 10,
+      incident: 10,
       subViolations: [
         { label: "Start", value: 6, icon: PlayCircleIcon },
         { label: "Stop", value: 4, icon: StopCircleIcon },

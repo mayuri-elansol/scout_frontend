@@ -51,15 +51,15 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
   aiProcessingEnabled,
 }) => {
   return (
-    <Card sx={{ height: "100%" }}>
-      <Box sx={{ position: "relative", p: 2, pb: 1 }}>
+    <Card sx={{ height: "100%", p: 0, m: 0 }}>
+      <Box sx={{ px: "10px", py: "5px" }}>
         {/* Zone Header */}
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            mb: 2,
+            mb: 0.3,
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -134,7 +134,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
                   top: 60,
                   left: 40,
                   width: 120,
-                  height: 160,
+                  height: 150,
                   border: "2px solid #1976d2",
                   borderRadius: 1,
                   zIndex: 1,
@@ -212,9 +212,9 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
         </Box>
 
         {/* Zone Metrics */}
-        <CardContent sx={{ pt: 1 }}>
+        <CardContent sx={{ p: "5px" }}>
           <Box
-            sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}
+            sx={{ display: "flex", justifyContent: "space-between", gap: 0 }}
           >
             <Box sx={{ textAlign: "center" }}>
               <Typography

@@ -337,14 +337,16 @@ const VehicleCount: React.FC = () => {
         data={vehicleViolations}
         filters={[
           {
-            id: "zone",
-            label: "Zone",
+            id: "vehicleNumber",
+            label: "Vehicle Number",
             type: "select",
-            options: Array.from(new Set(vehicleViolations.map((v) => v.zone))),
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.status))
+            ),
           },
           {
             id: "status",
-            label: "Status",
+            label: "status",
             type: "select",
             options: Array.from(
               new Set(vehicleViolations.map((v) => v.status))
@@ -354,7 +356,23 @@ const VehicleCount: React.FC = () => {
             id: "validNumber",
             label: "Valid Number",
             type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.validNumber))
+            ),
+          },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: Array.from(new Set(vehicleViolations.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "camera",
+            type: "select",
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",

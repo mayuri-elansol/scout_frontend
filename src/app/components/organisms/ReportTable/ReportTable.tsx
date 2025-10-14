@@ -369,7 +369,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              {title ?? (
+              {title && (
                 <>
                   <Description sx={{ color: "#1976d2", fontSize: 24 }} />
                   <Typography variant="h6" sx={{ fontWeight: 600 }}>

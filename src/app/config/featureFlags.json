@@ -13,7 +13,7 @@
   "vehicle-speed": true,
   "intrusion-detection": true,
   "employee-presence-critical-area": true,
-  "employee-presence-restricted-area": true,
+  "employee-presence-restricted-area": false,
   "people-count": true,
   "fall-detection": true,
   "STPOverflowDetection-detection": false,

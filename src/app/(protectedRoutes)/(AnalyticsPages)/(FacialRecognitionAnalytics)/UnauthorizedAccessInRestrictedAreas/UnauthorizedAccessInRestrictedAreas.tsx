@@ -41,8 +41,8 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
         "Shows the number of unauthorized access in restricted areas.",
     },
     {
-      title: "Zone Violations",
-      value: "3 (Zone A, Zone B, Zone C)", // Number of violations and zones
+      title: "Zone Violations (Last 3)",
+      value: "Warehouse Entry, Restricted Lab, Zone C", // Number of violations and zones
       icon: LocationOn, // 📍 Zone/location indicator
       tooltipMessage:
         "Displays the count and name of restricted zones where unauthorized aeople entered .",
@@ -233,7 +233,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
               //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations per zone"
+              tooltipMessage="Shows unauthorized access per zone"
             />
           </Grid>
         </Grid>

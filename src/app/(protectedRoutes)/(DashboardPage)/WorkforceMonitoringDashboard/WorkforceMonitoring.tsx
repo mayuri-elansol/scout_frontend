@@ -23,7 +23,7 @@ import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/Sleepin
 import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
 
 const WorkforceMonitoring: React.FC = () => {
-  const kpiData = [
+  const WorkForcekpiData = [
     {
       title: "Employee Presence in Critical Area",
       value: "7",
@@ -31,27 +31,17 @@ const WorkforceMonitoring: React.FC = () => {
       lastDetection: "Critical Zone A",
       lastDetectionTime: "03:25 PM",
       icon: Shield,
-      route: "/CriticalAreaPresence",
+      route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
         "Shows the number of employees detected in critical areas where restricted access is enforced.",
     },
-    {
-      title: "Employee Presence in Restricted Area",
-      value: "4",
-      violationsCount: 4,
-      lastDetection: "Restricted Zone B",
-      lastDetectionTime: "02:45 PM",
-      icon: Visibility,
-      route: "/RestrictedAreaPresence",
-      tooltipMessage:
-        "Shows employee presence in areas that require special clearance.",
-    },
+
     {
       title: "Employee Idel Time",
       value: "0",
-      violationsCount: 0,
-      lastDetection: "-",
-      lastDetectionTime: "-",
+      violationsCount: 2,
+      lastDetection: "Production Floor A",
+      lastDetectionTime: "4:20 PM",
       icon: Visibility,
       route: "/EmployeeIdleTime",
       tooltipMessage:
@@ -70,13 +60,13 @@ const WorkforceMonitoring: React.FC = () => {
     },
 
     {
-      title: "Sleeping or Absence of Security Personnel",
+      title: "Sleeping / Absence of Security Personnel",
       value: "2",
       violationsCount: 2,
       lastDetection: "Gate 2 - Shift B",
       lastDetectionTime: "02:30 AM",
       icon: AccessTime,
-      route: "/SecurityPersonnelMonitoring",
+      route: "/SleepingSecurityPersonnel",
       tooltipMessage:
         "Shows detected cases of security personnel sleeping or absent from their post.",
     },
@@ -150,12 +140,12 @@ const WorkforceMonitoring: React.FC = () => {
 
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {kpiData.map((kpi, index) => (
+        {WorkForcekpiData.map((kpi, index) => (
           <Grid
             size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
             key={uuidv4() + index}
           >
-            <DashboardKpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>

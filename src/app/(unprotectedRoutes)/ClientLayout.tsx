@@ -217,7 +217,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
           >
             <Grid container spacing={{ xs: 3, md: 4 }} sx={{ width: "100%" }}>
               {/* Left Section - Features */}
-              <Grid size={{ xs: 12, lg: 7 }}>
+              <Grid size={{ xs: 12, lg: 7 }} sx={{ bgcolor: "red" }}>
                 <Box
                   sx={{
                     pr: { lg: 4 },
