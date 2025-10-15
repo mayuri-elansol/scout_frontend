@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Warning, Room, Videocam } from "@mui/icons-material";
+import { Warning, Room } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
@@ -256,7 +256,7 @@ const CameraTampering: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected camera temparing event with details."
@@ -265,11 +265,10 @@ const CameraTampering: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneTamperingData}
               loading={false}
               tooltipMessage="Shows offline,tampered cameras per zone"
@@ -277,7 +276,7 @@ const CameraTampering: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed camera tampering/offline detection report with filter, reset, and CSV/PDF download options."

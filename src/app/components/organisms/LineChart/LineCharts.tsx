@@ -16,7 +16,6 @@ export interface Props {
   usageData: number[];
   workingTime?: WorkingSlot[];
   height?: number; // default height for desktop
-  barWidth?: number;
 }
 
 const LineCharts: React.FC<Props> = ({
@@ -53,7 +52,7 @@ const LineCharts: React.FC<Props> = ({
         <Chip label="🟢 Usage Count" variant="outlined" color="success" />
         {workingTime.map((slot, idx) => (
           <Chip
-            key={idx}
+            key={idx + 1}
             label={`🟡 ${slot.label} (${slot.startTime}:00 - ${slot.stopTime}:00)`}
             variant="outlined"
             sx={{
@@ -90,7 +89,7 @@ const LineCharts: React.FC<Props> = ({
           {/* Shaded working time slots */}
           {workingTime.map((slot, idx) => (
             <Box
-              key={idx}
+              key={idx + 1}
               sx={{
                 position: "absolute",
                 top: 30,

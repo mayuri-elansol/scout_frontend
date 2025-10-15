@@ -32,8 +32,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const SleepingSecurityPersonnelKpiData = [
     {
       title: "Security Presence",
-      value: "2", // Example: percentage of required security personnel present
-      icon: Security, // 🛡️ Represents security presence
+      value: "2",
+      icon: Security,
       tooltipMessage:
         "Shows the number of security personnel currently present.",
       trendColor: "#4caf50",
@@ -44,15 +44,15 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM", // Timestamp of last incident
-      icon: AccessTime, // ⏰ Time
+      value: "10:45 AM",
+      icon: AccessTime,
       tooltipMessage:
         "Displays the time of the most recent incident involving security personnel.",
     },
     {
       title: "Zone Violations",
-      value: "Zone A, Zone C", // Example: zones where violations happened
-      icon: LocationOn, // 📍 Location/zone indicator
+      value: "Zone A, Zone C",
+      icon: LocationOn,
       tooltipMessage:
         "Lists the zones where sleeping security personnel violations were detected.",
     },
@@ -230,7 +230,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -239,7 +239,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
               tooltipMessage="Latest 20 Security personnel sleeping,absence detection with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -250,8 +250,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-      {/* PPE Violations Report */}
+
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[

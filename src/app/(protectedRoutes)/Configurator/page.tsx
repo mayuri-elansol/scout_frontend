@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -17,7 +16,7 @@ export default function ConfiguratorPage() {
     >
       {/* IFRAME CONTAINER */}
       <iframe
-        src="https://your-system-configurator-url.com" 
+        src="https://your-system-configurator-url.com"
         title="System Configurator"
         style={{
           width: "100%",

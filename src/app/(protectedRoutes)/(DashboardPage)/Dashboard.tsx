@@ -118,7 +118,6 @@ const Dashboard: React.FC = () => {
           violationsCount={2}
           lastDetection="2025-10-07 13:45"
           lastDetectionTime=""
-          //  status="Unsafe"
           icon={Shield}
           tooltipMessage="Shows total PPE violations and last detection time"
           route="/PPEDetectionPage"

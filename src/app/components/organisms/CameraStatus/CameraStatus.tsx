@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -84,8 +83,15 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
       >
         <CardContent sx={{ p: 3, flex: 1, overflowY: "auto" }}>
           {/* Header */}
-          <Box sx={{ display: "flex", justifyContent:"end",alignItems: "center", mb: 2 }}>
-                    {/* <Typography
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            {/* <Typography
               variant="h6"
               sx={{ fontWeight: 600, color: "#1c2025", flex: 1 }}
             >
@@ -93,7 +99,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
 
 
             </Typography> */}
-          
+
             {!loading && (
               <Tooltip title="View Full Report">
                 <IconButton
@@ -108,7 +114,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           </Box>
 
           {/* Zone List */}
-          {rows.map((zone, index) => (
+          {rows.map((zone) => (
             <Box
               key={uuidv4()}
               sx={{
@@ -133,10 +139,10 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                 <>
                   {/* Left Section: Zone Info */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  {/* <CameraEnhanceIcon sx={{ color: "#1565c0", fontSize: 22 }} /> */}
+                    {/* <CameraEnhanceIcon sx={{ color: "#1565c0", fontSize: 22 }} /> */}
 
                     <Box>
-                      <Typography sx={{ fontSize: "14px",  }}>
+                      <Typography sx={{ fontSize: "14px" }}>
                         {zone.zone}
                       </Typography>
                       <Typography sx={{ fontSize: "12px", color: "#6b7280" }}>
@@ -175,7 +181,7 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
                         height: 24,
                       }}
                     />
-                    
+
                     <Chip
                       label={`Offline: ${zone.offline}`}
                       size="small"

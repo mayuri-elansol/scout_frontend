@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
 import Header from "../components/organisms/Header/Header";
-
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/Loader/Loader";

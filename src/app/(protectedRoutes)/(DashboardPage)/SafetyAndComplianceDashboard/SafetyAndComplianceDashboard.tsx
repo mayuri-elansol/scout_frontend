@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
   LocalFireDepartment,
@@ -21,54 +20,11 @@ import DashboardTabs, {
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
+import { hourlyData } from "@/app/config/chartDataConfig";
 
-const cameraZones: CameraZone[] = [
-  { zone: "Production Floor", active: 8, total: 10, offline: 3, tempred: 4 },
-  { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-  { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-  { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-];
 
-// Generate hour-wise data for charts
-
-const PASTEL_COLORS = {
-  helmet: "#ffa8a8", // pastel red
-  vest: "#ffd8a8",   // pastel orange
-  glass: "#a8d8ff",  // pastel blue
-  fire: "#ffb3b3",
-  smoke: "#ffe0b3",
-  gas: "#b3d9ff",
-  oil: "#b3ffb3",
-  falls: "#ffddb3",
-  laydowns: "#ffe6cc",
-  blocked: "#ffb3b3",
-  clear: "#b3ffb3",
-  zoneA: "#ffd8a8",
-  zoneB: "#ffb3b3",
-  zoneC: "#a8d8ff",
-};
-
-const generateHourData = () => {
-  const data = [];
-  for (let i = 0; i < 24; i++) {
-    data.push({
-      time: `${i.toString().padStart(2, "0")}:00`,
-      helmet: Math.floor(Math.random() * 30) + 10,
-      vest: Math.floor(Math.random() * 35) + 15,
-      glass: Math.floor(Math.random() * 40) + 20,
-      fire: Math.floor(Math.random() * 30) + 10,
-      smoke: Math.floor(Math.random() * 35) + 15,
-      gas: Math.floor(Math.random() * 40) + 20,
-      oil: Math.floor(Math.random() * 25) + 10,
-      falls: Math.floor(Math.random() * 15) + 5,
-      laydowns: Math.floor(Math.random() * 10) + 3,
-    });
-  }
-  return data;
-};
 
 const SafetyAndComplianceDashboard: React.FC = () => {
-  const hourlyData = generateHourData();
 
   const tabs: TabConfig[] = [
     {
@@ -222,9 +178,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
                 yAxisLabel="Violation Count"
                 stackId="hazard"
-
-
-
               />
             </Box>
           </Grid>
@@ -250,7 +203,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-        <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
               <DynamicPieChart
           
                 data={[
@@ -323,7 +276,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
-     {
+    {
       label: "Vehicle In Walkways",
       content: (
         <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
@@ -481,10 +434,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { month: "Jan", users: 20 },
                   { month: "Feb", users: 50 },
                   { month: "Mar", users: 80 },
-                         { month: "Jan", users: 20 },
+                  { month: "Jan", users: 20 },
                   { month: "April", users: 50 },
                   { month: "May", users: 80 },
-                         { month: "June", users: 20 },
+                  { month: "June", users: 20 },
                   { month: "July", users: 50 },
                   { month: "August", users: 80 },
                 ]}
@@ -604,11 +557,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb:2,
+        mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
-          flex: 1,          
-  
+        flex: 1,
       }}
     >
       {/* Top Right Time Filter */}
@@ -637,8 +589,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       </Grid>
 
       {/* Tabs Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 
-}}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>

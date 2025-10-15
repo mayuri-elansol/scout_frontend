@@ -15,16 +15,21 @@ export interface ViolationData {
 
 export interface DynamicViolationScatterChartProps {
   data: ViolationData[];
-  height?: number;
+height?:number
   colors?: string[];
-  showLegend?: boolean;
 }
-
+export interface ScatterPoint {
+  x: number;
+  y: number;
+  count: number;
+  zoneName: string;
+  timeName: string;
+  id: string;
+}
 const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> = ({
   data = [],
   height = 550,
   colors = ["#ef5350", "#42a5f5", "#66bb6a", "#ffa726"],
-  showLegend = true,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -42,24 +47,7 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
   }, [data]);
 
   const zoneLabels = React.useMemo(() => Array.from(new Set(data.map((d) => d.zone))), [data]);
-
-  if (!data || data.length === 0) {
-    return (
-      <Box
-        sx={{
-          width: "100%",
-          height,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        No data
-      </Box>
-    );
-  }
-
-  // Group data by zone for series
+// Group data by zone for series
   const seriesData = React.useMemo(() => {
     const grouped = new Map<string, ViolationData[]>();
     data.forEach((item) => {
@@ -85,6 +73,23 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
     }));
   }, [data, timeLabels, zoneLabels, colors]);
 
+  if (!data || data.length === 0) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          height,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        No data
+      </Box>
+    );
+  }
+
+  
   // Set width & height conditionally
   const chartWidth = isMac ? 982 : Math.max(600, zoneLabels.length * 200);
   const chartHeight = isMac ? 360 : height;
@@ -116,7 +121,7 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
               fontWeight: 600,
               fill: "#444",
               angle: isMobile ? 0 : -30,
-              textAnchor: isMobile ? "middle" : "end",
+              textAnchor: isMobile ? "middle" : "end"
             },
           },
         ]}

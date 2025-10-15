@@ -32,22 +32,22 @@ const VehicleUnloadingLoading: React.FC = () => {
   const VehicleUnloadingLoadingKpiData = [
     {
       title: "Total Loading/Unloading Event",
-      value: "87", // total count of loading/unloading events
-      icon: LocalShipping, // represents vehicles/transport
+      value: "87",
+      icon: LocalShipping,
       tooltipMessage: "Total loading/unloading events recorded.",
     },
     {
       title: "Average Loading/Unloading Time",
-      value: "1.56 hrs", // number of operations in progress
-      icon: AccessTimeIcon, // represents active/ongoing
+      value: "1.56 hrs",
+      icon: AccessTimeIcon,
       tooltipMessage:
         "Shows the Average Time for Vehical Loading/Unloading event",
     },
 
     {
       title: "Busiest Zone",
-      value: "Zone A", // which zone has most activity
-      icon: Timeline, // represents activity metric
+      value: "Zone A",
+      icon: Timeline,
       tooltipMessage: "Zone with the highest operation activity.",
     },
   ];

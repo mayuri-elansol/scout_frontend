@@ -92,7 +92,7 @@ const WorkforceMonitoring: React.FC = () => {
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
-      content: <DynamicViolationScatterChart data={violationData} />,
+      content: <DynamicViolationScatterChart data={violationData}  />,
     },
     {
       label: "Employee Monitoring",

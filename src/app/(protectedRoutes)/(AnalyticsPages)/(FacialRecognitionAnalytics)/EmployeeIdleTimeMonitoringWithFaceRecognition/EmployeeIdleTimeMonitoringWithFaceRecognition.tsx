@@ -165,7 +165,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -174,14 +174,14 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
               tooltipMessage="recent voilaiton"
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <CameraStatus cameraZones={cameraZones} loading={false} />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Report Table"
         columns={[

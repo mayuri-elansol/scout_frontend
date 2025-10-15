@@ -28,23 +28,23 @@ const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
       title: "Employees in Critical Area",
-      value: "12", // Number of employees detected in critical areas
-      icon: Groups, // 👥 Represents group of people
+      value: "12",
+      icon: Groups,
 
       tooltipMessage:
         "Shows the number of employees detected in critical areas.",
     },
     {
       title: "Zone Violations",
-      value: "3 (Zone A, Zone B, Zone C)", // Number of violations and zones
-      icon: LocationOn, // 📍 Zone/location indicator
+      value: "3 (Zone A, Zone B, Zone C)",
+      icon: LocationOn,
       tooltipMessage:
         "Displays the count and name of critical zones where employees entered .",
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM", // Time of last detected violation
-      icon: AccessTime, // ⏰ Time
+      value: "10:45 AM",
+      icon: AccessTime,
       tooltipMessage:
         "Most recent time employees were detected in critical zones.",
     },
@@ -189,7 +189,6 @@ const EmployeePresence: React.FC = () => {
             />
           </Grid>
           {/* Critical Zones Status */}
-          {/* item xs={12} lg={4} */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations

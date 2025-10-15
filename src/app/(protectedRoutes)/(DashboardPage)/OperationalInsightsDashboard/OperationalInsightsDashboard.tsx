@@ -123,7 +123,7 @@ const workingSlots: WorkingSlot[] = [
   return (
     <Paper
       sx={{
-         display: "flex",
+        display: "flex",
         flexDirection: "column",
         pt: 2,
         px: 3,

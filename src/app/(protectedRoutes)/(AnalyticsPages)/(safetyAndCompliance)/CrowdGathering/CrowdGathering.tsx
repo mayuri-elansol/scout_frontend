@@ -186,7 +186,6 @@ const CrowdGathering: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -222,7 +221,7 @@ const CrowdGathering: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -231,7 +230,7 @@ const CrowdGathering: React.FC = () => {
               tooltipMessage="Latest 20 detected crowd gathering violations with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -242,7 +241,7 @@ const CrowdGathering: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
+
       {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"

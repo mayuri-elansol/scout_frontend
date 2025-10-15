@@ -263,7 +263,6 @@ const VehicleCount: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -299,7 +298,7 @@ const VehicleCount: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 Vehicle Count & ANPR at Entry/Exit Gates with details."
@@ -308,7 +307,7 @@ const VehicleCount: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/* Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -320,7 +319,7 @@ const VehicleCount: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed vehicle count report with filters, reset, and export options."
