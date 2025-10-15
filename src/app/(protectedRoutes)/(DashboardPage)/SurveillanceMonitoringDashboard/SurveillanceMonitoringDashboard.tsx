@@ -1,20 +1,19 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import { People, Security,VideocamOff } from "@mui/icons-material";
+import { People, Security, VideocamOff } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import IntrusionDetectionChart from "@/app/components/organisms/IntrusionDetectionChart/IntrusionDetectionChart";
-import PeopleCountLineChart from "@/app/components/organisms/PeopleCountLineChart/PeopleCountLineChart";
-import CameraTamperingChart from "@/app/components/organisms/CameraTampering/CameraTamperingChart";
-import DynamicViolationScatterChart, { ViolationData } from "@/app/components/organisms/ScatterChart/ScatterChart";
+
+import DynamicViolationScatterChart, {
+  ViolationData,
+} from "@/app/components/organisms/ScatterChart/ScatterChart";
+import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
@@ -59,63 +58,96 @@ const SurveillanceMonitoring: React.FC = () => {
         "Displays people detected inside premises during shutdown hours.",
     },
   ];
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  ];
-    const violationData: ViolationData[] = [
+
+  const violationData: ViolationData[] = [
     { time: "08:00", zone: "Zone A", count: 5 },
     { time: "09:00", zone: "Zone A", count: 8 },
     { time: "10:00", zone: "Zone A", count: 3 },
     { time: "11:00", zone: "Zone A", count: 12 },
-    
+
     { time: "08:00", zone: "Zone B", count: 7 },
     { time: "09:00", zone: "Zone B", count: 4 },
     { time: "10:00", zone: "Zone B", count: 9 },
     { time: "11:00", zone: "Zone B", count: 6 },
-    
-    { time: "08:00", zone: "Zone C", count: 2 },
-    { time: "09:00", zone: "Zone C", count: 11 },
-    { time: "10:00", zone: "Zone C", count: 5 },
-    { time: "11:00", zone: "Zone C", count: 8 },
-     { time: "08:00", zone: "Zone D", count: 2 },
-    { time: "09:00", zone: "Zone E", count: 11 },
-    { time: "10:00", zone: "Zone F", count: 5 },
-    { time: "11:00", zone: "Zone G", count: 8 },
+
+    { time: "12:00", zone: "Zone C", count: 2 },
+    { time: "01:00", zone: "Zone C", count: 11 },
+    { time: "03:00", zone: "Zone C", count: 5 },
+    { time: "04:00", zone: "Zone C", count: 8 },
+    { time: "05:00", zone: "Zone D", count: 2 },
+    { time: "06:00", zone: "Zone E", count: 11 },
+    { time: "07:00", zone: "Zone F", count: 5 },
+    { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
-    { label: "Intrusion Detection", content: (<IntrusionDetectionChart />) },
-        
+    {
+      label: "Intrusion Detection",
+      content: <DynamicViolationScatterChart data={violationData} />,
+    },
 
-    { label: "Unauthorized Access ", content: <PeopleCountLineChart /> },
-    { label: "Camera Tempering Detection", content: <CameraTamperingChart /> },
+    {
+      label: "Unauthorized Access ",
+      content: <DynamicViolationScatterChart data={violationData} />,
+    },
+    {
+      label: "Camera Tempering Detection",
+      content: (
+       <Box
+  sx={{
+    display: "flex",
+    flexDirection: "row",
+    gap: 3, 
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "nowrap", // Changed from "wrap" to "nowrap"
+    overflowX: "auto", // Added for horizontal scroll if needed
+  }}
+>
+  <DynamicPieChart
+    zoneName="Online"
+    data={[
+      { label: "Zone A", value: 12, color: "#4caf50" },
+      { label: "Zone B", value: 5, color: "#f44336" },
+      { label: "Zone C", value: 2, color: "#ffa726" },
+    ]}
+  />
+  <DynamicPieChart
+    zoneName="Offline"
+    data={[
+      { label: "Zone A", value: 20, color: "#4caf50" },
+      { label: "Zone B", value: 3, color: "#f44336" },
+      { label: "Zone C", value: 1, color: "#ffa726" },
+    ]}
+  />
+  <DynamicPieChart
+    zoneName="Tampered"
+    data={[
+      { label: "Zone A", value: 20, color: "#4caf50" },
+      { label: "Zone B", value: 3, color: "#f44336" },
+      { label: "Zone C", value: 1, color: "#ffa726" },
+    ]}
+  />
+</Box>
+      ),
+    },
 
     {
       label: "Movement During shutdown",
-      content:  <DynamicViolationScatterChart data={violationData} />,
+      content: <DynamicViolationScatterChart data={violationData} />,
     },
   ];
 
   return (
-   <Paper
+    <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb:2,
+        // mb:2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
-          flex: 1,          
-  
+        flex: 1,
       }}
     >
       <Box
@@ -143,13 +175,6 @@ const SurveillanceMonitoring: React.FC = () => {
         ))}
       </Grid>
 
-      {/* Activity Feed and Camera Status */}
-      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-       
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <DashboardTabs tabs={tabs} />
-        </Box>
-      </Box> */}
       {/* Tabs Section */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <DashboardTabs tabs={tabs} />

@@ -90,7 +90,6 @@ export default function ClientLayout({
               pt: 10,
               backgroundColor: "#f5f7fa",
               width: "78vw",
-              height:"94vh"
             }}
           >
             <RouteLoader>

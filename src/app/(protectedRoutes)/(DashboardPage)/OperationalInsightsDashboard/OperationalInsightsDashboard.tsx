@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
   People,
@@ -11,19 +10,18 @@ import {
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-import PeopleCountChart from "@/app/components/organisms/PeopleCountInFactoryPremises/PeopleCountInFactoryPremises";
-import UnauthorizedParkingChart from "@/app/components/organisms/UnauthorizedParkingChart/UnauthorizedParkingChart";
-import VehicleCountANPRChart from "@/app/components/organisms/VehicleCountANPRChart/VehicleCountANPRChart";
-import CanteenUsageChart from "@/app/components/organisms/CanteenUsageChart/CanteenUsageChart";
+
+import CanteenUsageChart, { WorkingSlot } from "@/app/components/organisms/LineChart/LineCharts";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 import RestaurantIcon from "@mui/icons-material/Restaurant";
+import JointBarGraphChart,{ VehicleChartData }  from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
+import DynamicViolationScatterChart, { ViolationData } from "@/app/components/organisms/ScatterChart/ScatterChart";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
@@ -75,25 +73,50 @@ const OperationalInsightsDashboard: React.FC = () => {
     },
   ];
 
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  ];
+ 
+const times = ["08:00","09:00","10:00","11:00","12:00","13:00"];
+const series: VehicleChartData[] = [
+  { label: "Entry", data: [5, 8, 3, 12, 7,8], color: "#4caf50" },
+  { label: "Exit", data: [7, 4, 9, 6, 10,12], color: "#2196f3" },
+];
+const usageData = [12, 20, 18, 25, 30, 22];
 
+const workingSlots: WorkingSlot[] = [
+  { startTime: 12, stopTime: 13, label: "Lunch Time" },
+  { startTime: 15, stopTime: 16, label: "Tea Break" },
+];
+  const violationData: ViolationData[] = [
+    { time: "08:00", zone: "Zone A", count: 5 },
+    { time: "09:00", zone: "Zone A", count: 8 },
+    { time: "10:00", zone: "Zone A", count: 3 },
+    { time: "11:00", zone: "Zone A", count: 12 },
+
+    { time: "08:00", zone: "Zone B", count: 7 },
+    { time: "09:00", zone: "Zone B", count: 4 },
+    { time: "10:00", zone: "Zone B", count: 9 },
+    { time: "11:00", zone: "Zone B", count: 6 },
+
+    { time: "12:00", zone: "Zone C", count: 2 },
+    { time: "01:00", zone: "Zone C", count: 11 },
+    { time: "03:00", zone: "Zone C", count: 5 },
+    { time: "04:00", zone: "Zone C", count: 8 },
+    { time: "05:00", zone: "Zone D", count: 2 },
+    { time: "06:00", zone: "Zone E", count: 11 },
+    { time: "07:00", zone: "Zone F", count: 5 },
+    { time: "08:00", zone: "Zone G", count: 8 },
+  ];
   const tabs: TabConfig[] = [
-    { label: "People Count", content: <PeopleCountChart /> },
-    { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart /> },
-    { label: "Canteen Usage", content: <CanteenUsageChart /> },
-    { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart /> },
-    { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
+    { label: "People Count", content: <JointBarGraphChart  times={times} seriesData={series} height={400}/> },
+    { label: "Vehicle Count & ANPR", content: <JointBarGraphChart  times={times} seriesData={series} height={400}/> },
+    { label: "Canteen Usage", content:   <CanteenUsageChart
+      times={times}
+      usageData={usageData}
+      workingTime={workingSlots}
+      height={400}
+    /> },
+    { label: "Vehicle Monitoring", content: <JointBarGraphChart times={times} seriesData={series} height={400} /> },
+    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} />,
+ },
    
   ];
 
@@ -134,14 +157,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         ))}
       </Grid>
-
-      {/* Activity Feed and Camera Status */}
-      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-      
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <DashboardTabs tabs={tabs} />
-        </Box>
-      </Box> */}
+  
       {/* Tabs Section */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <DashboardTabs tabs={tabs} />

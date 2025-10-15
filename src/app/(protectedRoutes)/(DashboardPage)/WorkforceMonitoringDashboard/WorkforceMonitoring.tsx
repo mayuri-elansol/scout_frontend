@@ -1,21 +1,24 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
-import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
+import {
+  Visibility,
+  Smartphone,
+  Security,
+  People,
+} from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-import EmployeePresenceCriticalChart from "@/app/components/organisms/EmployeePresenceInCriticalAreaChart/EmployeePresenceInCriticalAreaChart";
-import EmployeePresenceInRestrictedAreaChart from "@/app/components/organisms/EmployeePresenceInRestrictedAreaChart/EmployeePresenceInRestrictedAreaChart";
-import MobilePhoneUsageChart from "@/app/components/organisms/MobilePhoneUsageInRestrictedAreaChart/MobilePhoneUsageInRestrictedAreaChart";
-import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/SleepingOrAbsenceOfSecurityGuard/SleepingOrAbsenceOfSecurityGuard";
-import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
+
+import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
+import DynamicViolationScatterChart, {
+  ViolationData,
+} from "@/app/components/organisms/ScatterChart/ScatterChart";
 
 const WorkforceMonitoring: React.FC = () => {
   const WorkForcekpiData = [
@@ -66,45 +69,105 @@ const WorkforceMonitoring: React.FC = () => {
         "Shows detected cases of security personnel sleeping or absent from their post.",
     },
   ];
+  const violationData: ViolationData[] = [
+    { time: "08:00", zone: "Zone A", count: 5 },
+    { time: "09:00", zone: "Zone A", count: 8 },
+    { time: "10:00", zone: "Zone A", count: 3 },
+    { time: "11:00", zone: "Zone A", count: 12 },
 
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
+    { time: "08:00", zone: "Zone B", count: 7 },
+    { time: "09:00", zone: "Zone B", count: 4 },
+    { time: "10:00", zone: "Zone B", count: 9 },
+    { time: "11:00", zone: "Zone B", count: 6 },
 
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+    { time: "12:00", zone: "Zone C", count: 2 },
+    { time: "01:00", zone: "Zone C", count: 11 },
+    { time: "03:00", zone: "Zone C", count: 5 },
+    { time: "04:00", zone: "Zone C", count: 8 },
+    { time: "05:00", zone: "Zone D", count: 2 },
+    { time: "06:00", zone: "Zone E", count: 11 },
+    { time: "07:00", zone: "Zone F", count: 5 },
+    { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
-      content: <EmployeePresenceCriticalChart />,
-    },
-    // {
-    //   label: "Employee Presence (Restricted Areas)",
-    //   content: <EmployeePresenceInRestrictedAreaChart />,
-    // },
-    { label: "Mobile Phone Usage", content: <MobilePhoneUsageChart /> },
-    {
-      label: "Security Personnel Status",
-      content: <SleepingOrAbsenceOfSecurityGuard />,
+      content: <DynamicViolationScatterChart data={violationData} />,
     },
     {
       label: "Employee Monitoring",
-      content: <EmployeeIdleTimeMonitoringChart />,
+      content: (
+        <DynamicBarChart
+          data={[
+            { gate: "Production Gate", Idle: 5, Working: 19, NotPresent: 20 },
+            { gate: "Warehouse Gate", Idle: 3, Working: 21, NotPresent: 18 },
+            { gate: "Parking Gate", Idle: 2, Working: 22, NotPresent: 25 },
+            { gate: "Main Entrance", Idle: 4, Working: 20, NotPresent: 65 },
+            { gate: "Side Exit", Idle: 1, Working: 23, NotPresent: 23 },
+          ]}
+          xAxisKey="gate"
+          series={[
+            {
+              dataKey: "Idle",
+              label: "Idle Count",
+              color: "#FFD1DC",
+            },
+            {
+              dataKey: "Working",
+              label: "Working Count",
+              color: "#AEEEEE", 
+            },
+            {
+              dataKey: "NotPresent",
+              label: "Not Present Count",
+              color: "#FFF5BA",
+            },
+          ]}
+          yAxisLabel="Count"
+          stackId="exitStatus"
+        />
+      ),
     },
-    
+
+    {
+      label: "Mobile Phone Usage",
+      content: <DynamicViolationScatterChart data={violationData} />,
+    },
+    {
+      label: "Security Personnel Status",
+      content: (
+        <DynamicBarChart
+          data={[
+            { gate: "Production Gate", Absent: 5, Present: 19 },
+            { gate: "Warehouse Gate", Absent: 3, Present: 21 },
+            { gate: "Parking Gate", Absent: 2, Present: 22 },
+            { gate: "Main Entrance", Absent: 4, Present: 20 },
+            { gate: "Side Exit", Absent: 1, Present: 23 },
+          ]}
+          xAxisKey="gate"
+          series={[
+            {
+              dataKey: "Absent",
+              label: "Absent Count",
+              color: "#FFC0CB",
+            },
+            {
+              dataKey: "Present",
+              label: "Present Count",
+              color: "#B0E0E6",
+            },
+          ]}
+          yAxisLabel="Count"
+          stackId="exitStatus"
+        />
+      ),
+    },
   ];
 
   return (
     <Paper
       sx={{
-         display: "flex",
+        display: "flex",
         flexDirection: "column",
         pt: 2,
         px: 3,
