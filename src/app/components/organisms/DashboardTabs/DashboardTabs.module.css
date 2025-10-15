@@ -1,5 +1,4 @@
 .tabsContainer {
-  /* background: #f4f5f5; */
   background-color: #f5f7fa;
   border-bottom: 1px solid #9aa0a6;
   position: relative;
@@ -80,7 +79,6 @@
   left: 8px;
   right: 8px;
   bottom: 5px;
-  /* background: #bdc1c6; */
   background: #e5e5e6;
   border-radius: 16px;
   z-index: -1;
@@ -96,7 +94,6 @@
 }
 
 .tabActive {
-  /* color: #202124 !important; */
   color:#3072b0 !important;
   z-index: 2;
       font-weight: 800;
@@ -147,10 +144,7 @@
 .tabLabel {
   position: relative;
   z-index: 1;
-  /* white-space: nowrap; */
-  /* overflow: hidden; */
-  /* text-overflow: ellipsis; */
-  /* flex: 1; */
+ 
   text-align: center !important;
 
 }
