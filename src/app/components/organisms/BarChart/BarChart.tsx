@@ -4,17 +4,20 @@ import React from "react";
 import { CardContent, useTheme, useMediaQuery } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 
-// Types for the component props
-export interface SeriesConfig {
-  dataKey: string;
+// Generic series configuration
+export interface SeriesConfig<T> {
+  dataKey: keyof T;
   label: string;
   color: string;
 }
 
-export interface DynamicBarChartProps {
-  data: Record<string, any>[];
-  xAxisKey: string;
-  series: SeriesConfig[];
+// Props for DynamicBarChart
+export interface DynamicBarChartProps<
+  T extends Record<string, number | string>
+> {
+  data: T[];
+  xAxisKey: keyof T;
+  series: SeriesConfig<T>[];
   yAxisLabel?: string;
   stackId?: string;
   height?: {
@@ -24,41 +27,36 @@ export interface DynamicBarChartProps {
   };
 }
 
-const DynamicBarChart: React.FC<DynamicBarChartProps> = ({
+const DynamicBarChart = <T extends Record<string, number | string>>({
   data,
   xAxisKey,
   series,
   yAxisLabel = "Count",
   stackId = "stack",
   height = { mobile: 300, tablet: 400, desktop: 400 },
-    // height = { mobile: 300, tablet: 400, desktop: 0 },
-
-
-}) => {
+}: DynamicBarChartProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   // Extract x-axis labels
-  const xLabels = data.map((d) => d[xAxisKey]);
+  const xLabels = data.map((d) => d[xAxisKey] as string);
 
   // Prepare series data for the chart
   const chartSeries = series.map((s) => ({
-    data: data.map((d) => d[s.dataKey]),
+    data: data.map((d) => d[s.dataKey] as number),
     label: s.label,
     color: s.color,
     stack: stackId,
   }));
 
   // Determine chart height based on screen size
-let chartHeight = height.desktop;
-if (isMobile) {
-  chartHeight = height.mobile;
-} else if (isTablet) {
-  chartHeight = height.tablet;
-}
+  let chartHeight = height.desktop!;
+  if (isMobile) chartHeight = height.mobile!;
+  else if (isTablet) chartHeight = height.tablet!;
+
   return (
-    <CardContent sx={{ width: "100%"}}>
+    <CardContent sx={{ width: "100%" }}>
       <BarChart
         height={chartHeight}
         series={chartSeries}
@@ -67,20 +65,13 @@ if (isMobile) {
             scaleType: "band",
             data: xLabels,
             tickLabelStyle: {
-              // angle: isMobile ? -45 : 0,
               textAnchor: isMobile ? "end" : "middle",
               fontSize: isMobile ? 9 : 11,
             },
           },
         ]}
         yAxis={[{ label: yAxisLabel }]}
-        
-        margin={{
-          // bottom: isMobile ? 30 : 35,
-        //   left: 20,
-        //   right: 10,
-          // top: 10,
-        }}
+        margin={{}}
       />
     </CardContent>
   );

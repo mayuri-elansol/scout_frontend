@@ -1,19 +1,23 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { CardContent, useTheme, useMediaQuery, Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 
-export interface SeriesConfig {
-  dataKey: string;
+// Generic Series configuration for any data type T
+export interface SeriesConfig<T> {
+  dataKey: keyof T;
   label: string;
   color: string;
 }
 
-export interface DynamicBarChartWithThresholdProps {
-  data: Record<string, any>[];
-  xAxisKey: string;
-  series: SeriesConfig[];
+// Generic props for DynamicBarChartWithThreshold
+export interface DynamicBarChartWithThresholdProps<
+  T extends Record<string, number | string>
+> {
+  data: T[];
+  xAxisKey: keyof T;
+  series: SeriesConfig<T>[];
   thresholdValue: number;
   thresholdLabel?: string;
   thresholdColor?: string;
@@ -26,9 +30,9 @@ export interface DynamicBarChartWithThresholdProps {
   };
 }
 
-const DynamicBarChartWithThreshold: React.FC<
-  DynamicBarChartWithThresholdProps
-> = ({
+const DynamicBarChartWithThreshold = <
+  T extends Record<string, number | string>
+>({
   data,
   xAxisKey,
   series,
@@ -38,41 +42,37 @@ const DynamicBarChartWithThreshold: React.FC<
   yAxisLabel = "User Count",
   stackId = "stack",
   height = { mobile: 300, tablet: 400, desktop: 400 },
-}) => {
+}: DynamicBarChartWithThresholdProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
-  const [chartDims, setChartDims] = useState({ height: 0, top: 0, bottom: 0 });
 
-  const xLabels = data.map((d) => d[xAxisKey]);
-  const allValues = series.flatMap((s) => data.map((d) => d[s.dataKey]));
+  // Prepare X labels
+  const xLabels = data.map((d) => d[xAxisKey] as string);
+
+  // Flatten all series values to calculate max/min
+  const allValues = series.flatMap((s) =>
+    data.map((d) => d[s.dataKey] as number)
+  );
   const maxValue = Math.max(...allValues);
   const minValue = Math.min(0, ...allValues);
 
+  // Map series to BarChart format
   const chartSeries = series.map((s) => ({
-    data: data.map((d) => d[s.dataKey]),
+    data: data.map((d) => d[s.dataKey] as number),
     label: s.label,
     color: s.color,
     stack: stackId,
   }));
 
-  let chartHeight = height.desktop;
-  if (isMobile) chartHeight = height.mobile;
-  else if (isTablet) chartHeight = height.tablet;
+  // Responsive height
+  let chartHeight = height.desktop!;
+  if (isMobile) chartHeight = height.mobile!;
+  else if (isTablet) chartHeight = height.tablet!;
 
-  useEffect(() => {
-    if (chartContainerRef.current) {
-      const rect = chartContainerRef.current.getBoundingClientRect();
-      setChartDims({
-        height: rect.height,
-        top: rect.top,
-        bottom: rect.bottom,
-      });
-    }
-  }, [chartHeight, data]);
-
+  // Calculate threshold line position
   const yMin = minValue;
   const yMax = maxValue;
   const usableHeight = chartHeight ? chartHeight - 60 : 0;
@@ -84,7 +84,7 @@ const DynamicBarChartWithThreshold: React.FC<
   return (
     <CardContent
       ref={chartContainerRef}
-      sx={{ width: "100%", position: "relative"}}
+      sx={{ width: "100%", position: "relative" }}
     >
       <BarChart
         height={chartHeight}
@@ -101,15 +101,10 @@ const DynamicBarChartWithThreshold: React.FC<
           },
         ]}
         yAxis={[{ label: yAxisLabel, min: yMin }]}
-        margin={{
-          // bottom: isMobile ? 80 : 50,
-          // top: 20,
-          // left: 40,
-          // right: 20,
-        }}
+        margin={{}}
       />
 
-      {/* Threshold Line (EXACTLY at y=thresholdValue) */}
+      {/* Threshold Line */}
       <Box
         sx={{
           position: "absolute",

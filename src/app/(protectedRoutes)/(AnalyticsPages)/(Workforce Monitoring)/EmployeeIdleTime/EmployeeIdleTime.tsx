@@ -6,7 +6,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { AccessTime, Room, PersonOff, WorkOutline } from "@mui/icons-material";
+import { AccessTime, Room } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -223,7 +223,6 @@ const EmployeeIdleTime: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -259,7 +258,7 @@ const EmployeeIdleTime: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected idel, working,not present employee with details."
@@ -272,7 +271,6 @@ const EmployeeIdleTime: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneIdleData}
               loading={false}
               tooltipMessage="Shows idel, working,not present employee per zone"
@@ -281,7 +279,7 @@ const EmployeeIdleTime: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."

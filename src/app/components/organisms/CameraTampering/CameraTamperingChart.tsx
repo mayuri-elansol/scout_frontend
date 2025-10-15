@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
 // Times for the X-axis (24-hour format)
@@ -31,18 +31,20 @@ const series = [
 
 export default function CameraTamperingTimeChart() {
   return (
-    <Box sx={{ width: "100%", pt:4
-    
-    // overflowX: "auto" 
-    }}>
-     
+    <Box
+      sx={{
+        width: "100%",
+        pt: 4,
 
+        // overflowX: "auto"
+      }}
+    >
       {/* <Box sx={{ width: times.length * 60, height: 400 }}> */}
-        <BarChart
-          height={500}
-          xAxis={[{ data: times, scaleType: "band" }]} // time on X-axis
-          series={series} // data series
-        />
+      <BarChart
+        height={500}
+        xAxis={[{ data: times, scaleType: "band" }]} // time on X-axis
+        series={series} // data series
+      />
       {/* </Box> */}
     </Box>
   );

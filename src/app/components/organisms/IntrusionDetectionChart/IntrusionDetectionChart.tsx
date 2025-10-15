@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
 // Example data: time vs zones
@@ -11,12 +11,12 @@ const data = [
   { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
   { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
   { time: "12:00", zoneA: 6, zoneB: 4, zoneC: 5 },
-    { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
+  { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
   { time: "09:00", zoneA: 4, zoneB: 3, zoneC: 2 },
   { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
   { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
   { time: "12:00", zoneA: 6, zoneB: 4, zoneC: 5 },
-    { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
+  { time: "08:00", zoneA: 2, zoneB: 1, zoneC: 3 },
   { time: "09:00", zoneA: 4, zoneB: 3, zoneC: 2 },
   { time: "10:00", zoneA: 5, zoneB: 2, zoneC: 4 },
   { time: "11:00", zoneA: 3, zoneB: 5, zoneC: 3 },
@@ -25,8 +25,7 @@ const data = [
 
 export default function IntrusionDetectionChart() {
   return (
-    <Box sx={{ width: "100%", p:4 }}>
-      
+    <Box sx={{ width: "100%", p: 4 }}>
       <BarChart
         height={500}
         xAxis={[

@@ -22,7 +22,7 @@
   padding: 16px;
   background-color: #fff5f5;
   border: 1px solid #fecaca;
-  border-radius: 8px; /* borderRadius: 2 → 8px */
+  border-radius: 8px;
 }
 
 .errorMessage {

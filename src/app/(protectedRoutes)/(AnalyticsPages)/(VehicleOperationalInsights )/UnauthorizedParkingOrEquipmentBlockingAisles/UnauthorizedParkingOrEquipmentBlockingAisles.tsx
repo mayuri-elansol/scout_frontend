@@ -17,9 +17,9 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   interface UnauthorizedParkingEvent {
-    eventMessage: string; // type of violation message
+    eventMessage: string;
     zone: string;
-    time: string; // createdAt time
+    time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
@@ -33,7 +33,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const UnauthorizedParkingKpiData = [
     {
       title: "Blocked Parking",
-      value: "87", // Count of currently blocked exits
+      value: "87",
       tooltipMessage:
         "Shows the total number of parking that are currently blocked.",
       icon: Block,
@@ -215,7 +215,6 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -251,7 +250,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -264,7 +263,6 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
@@ -272,7 +270,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"

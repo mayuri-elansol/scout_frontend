@@ -1,14 +1,7 @@
 "use client";
 import React from "react";
 import { BarChart } from "@mui/x-charts";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  ToggleButtonGroup,
-  ToggleButton,
-} from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
 
 interface ExitData {
   [key: string]: string | number | undefined;
@@ -21,7 +14,7 @@ interface ExitData {
 // Generate hour-wise data for 24 hours
 const generateHourData = (): ExitData[] => {
   return Array.from({ length: 24 }, (_, i) => ({
-    hour: `${i.toString().padStart(2, '0')}:00`,
+    hour: `${i.toString().padStart(2, "0")}:00`,
     clear: Math.floor(Math.random() * 30) + 20,
     blocked: Math.floor(Math.random() * 20) + 5,
   }));
@@ -37,11 +30,12 @@ const generateDayData = (): ExitData[] => {
 };
 
 export default function ExitStatusChart() {
-  const [viewMode, setViewMode] = React.useState<'24hr' | 'days'>('24hr');
+  const [viewMode] = React.useState<"24hr" | "days">("24hr");
   const [data, setData] = React.useState<ExitData[]>([]);
 
   React.useEffect(() => {
-    const newData = viewMode === '24hr' ? generateHourData() : generateDayData();
+    const newData =
+      viewMode === "24hr" ? generateHourData() : generateDayData();
     setData(newData);
   }, [viewMode]);
 
@@ -70,14 +64,30 @@ export default function ExitStatusChart() {
           </ToggleButtonGroup>
         </Box> */}
 
-        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 2, flexWrap: 'wrap' }}>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">Clear</Typography>
-            <Typography variant="h6" color="#4caf50">{clearPercent}%</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 2,
+            mb: 2,
+            flexWrap: "wrap",
+          }}
+        >
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary">
+              Clear
+            </Typography>
+            <Typography variant="h6" color="#4caf50">
+              {clearPercent}%
+            </Typography>
           </Box>
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography variant="body2" color="text.secondary">Blocked</Typography>
-            <Typography variant="h6" color="#f44336">{blockedPercent}%</Typography>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="body2" color="text.secondary">
+              Blocked
+            </Typography>
+            <Typography variant="h6" color="#f44336">
+              {blockedPercent}%
+            </Typography>
           </Box>
         </Box>
 
@@ -85,27 +95,29 @@ export default function ExitStatusChart() {
           <BarChart
             height={300}
             dataset={data}
-            xAxis={[{ 
-              scaleType: 'band', 
-              dataKey: viewMode === '24hr' ? 'hour' : 'day',
-              tickLabelStyle: {
-                angle: -45,
-                textAnchor: 'end',
-                fontSize: 10,
-              }
-            }]}
-            series={[
-              { 
-                dataKey: 'clear', 
-                label: 'Clear', 
-                color: '#4caf50',
-                stack: 'total'
+            xAxis={[
+              {
+                scaleType: "band",
+                dataKey: viewMode === "24hr" ? "hour" : "day",
+                tickLabelStyle: {
+                  angle: -45,
+                  textAnchor: "end",
+                  fontSize: 10,
+                },
               },
-              { 
-                dataKey: 'blocked', 
-                label: 'Blocked', 
-                color: '#f44336',
-                stack: 'total'
+            ]}
+            series={[
+              {
+                dataKey: "clear",
+                label: "Clear",
+                color: "#4caf50",
+                stack: "total",
+              },
+              {
+                dataKey: "blocked",
+                label: "Blocked",
+                color: "#f44336",
+                stack: "total",
               },
             ]}
           />

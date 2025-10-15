@@ -1,22 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, ReactNode } from "react";
 import { Box } from "@mui/material";
 import styles from "./DashboardTabs.module.css";
 
-// In DashboardTabs.tsx
+// Tab configuration
 export interface TabConfig {
-  label: string | React.ReactNode;
-  content: React.ReactNode;
+  label: string | ReactNode;
+  content: ReactNode;
 }
 
 interface DynamicTabsProps {
-  tabs: TabConfig[];
-  defaultTab?: number;
-  onTabChange?: (index: number) => void;
+  readonly tabs: TabConfig[];
+  readonly defaultTab?: number;
+  readonly onTabChange?: (index: number) => void;
 }
 
-function TabPanel({ children, value, index }: any) {
+// Type-safe props for TabPanel
+interface TabPanelProps {
+  readonly children: ReactNode;
+  readonly value: number;
+  readonly index: number;
+}
+
+function TabPanel({ children, value, index }: TabPanelProps) {
   return (
     <div
       role="tabpanel"
@@ -69,10 +76,7 @@ export default function DynamicTabs({
               {index < tabs.length - 1 &&
                 value !== index &&
                 value !== index + 1 && (
-                  <div
-                    className={styles.tabDivider}
-                    key={`divider-${index}`}
-                  ></div>
+                  <div className={styles.tabDivider}></div>
                 )}
             </React.Fragment>
           ))}

@@ -9,10 +9,6 @@ const meta: Meta<typeof DashboardKpiCard> = {
   component: DashboardKpiCard,
   tags: ["autodocs"],
   argTypes: {
-    size: {
-      control: { type: "radio" },
-      options: ["small", "medium", "large"],
-    },
     tooltipMessage: {
       control: "text",
     },
@@ -88,7 +84,6 @@ export const SmallSize: Story = {
     lastDetection: "Zone E - Pump Room",
     lastDetectionTime: "2025-10-08 06:10 AM",
     icon: Shield,
-    size: "small",
   },
 };
 
@@ -99,6 +94,5 @@ export const LargeSize: Story = {
     lastDetection: "Zone F - Main Entry",
     lastDetectionTime: "2025-10-08 09:00 AM",
     icon: Visibility,
-    size: "large",
   },
 };

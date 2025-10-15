@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
 import Header from "../components/organisms/Header/Header";
-
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/Loader/Loader";
@@ -90,7 +89,7 @@ export default function ClientLayout({
               pt: 10,
               backgroundColor: "#f5f7fa",
               width: "78vw",
-              height:"94vh"
+              height: "94vh",
             }}
           >
             <RouteLoader>

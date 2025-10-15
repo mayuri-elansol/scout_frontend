@@ -30,8 +30,8 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const UnauthorizedAccessKpiData = [
     {
       title: "Unauthorized Access In Restricted Areas",
-      value: "12", // Number of employees detected in critical areas
-      icon: Groups, // 👥 Represents group of people
+      value: "12",
+      icon: Groups,
       trendColor: "#f44336",
       color: "#f44336",
       bgColor: "#ffebee",
@@ -42,15 +42,15 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       title: "Zone Violations (Last 3)",
-      value: "Warehouse Entry, Restricted Lab, Zone C", // Number of violations and zones
-      icon: LocationOn, // 📍 Zone/location indicator
+      value: "Warehouse Entry, Restricted Lab, Zone C",
+      icon: LocationOn,
       tooltipMessage:
         "Displays the count and name of restricted zones where unauthorized aeople entered .",
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM", // Time of last detected violation
-      icon: AccessTime, // ⏰ Time
+      value: "10:45 AM",
+      icon: AccessTime,
       tooltipMessage:
         "Most recent time unauthorized people were detected in restricted zones.",
     },
@@ -181,7 +181,6 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -217,7 +216,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected unauthorized access with details."
@@ -226,11 +225,10 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows unauthorized access per zone"
@@ -238,7 +236,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."

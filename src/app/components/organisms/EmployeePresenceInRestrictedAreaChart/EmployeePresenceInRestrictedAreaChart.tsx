@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 
 // Random data
@@ -16,24 +16,21 @@ const restrictedData = [
 ];
 
 export default function EmployeePresenceInRestrictedAreaChart() {
-  const xLabels = restrictedData.map(d => d.time);
-  const zoneA = restrictedData.map(d => d.ZoneA);
-  const zoneB = restrictedData.map(d => d.ZoneB);
+  const xLabels = restrictedData.map((d) => d.time);
+  const zoneA = restrictedData.map((d) => d.ZoneA);
+  const zoneB = restrictedData.map((d) => d.ZoneB);
 
   return (
     <Box sx={{ width: "100%", height: 400 }}>
-
-
-<LineChart
-  height={350}
-  xAxis={[{ data: xLabels, scaleType: 'point' }]}  
-  yAxis={[{ min: 0 }]}
-  series={[
-    { label: "Zone A", data: zoneA },
-    { label: "Zone B", data: zoneB },
-  ]}
-/>
-
+      <LineChart
+        height={350}
+        xAxis={[{ data: xLabels, scaleType: "point" }]}
+        yAxis={[{ min: 0 }]}
+        series={[
+          { label: "Zone A", data: zoneA },
+          { label: "Zone B", data: zoneB },
+        ]}
+      />
     </Box>
   );
 }

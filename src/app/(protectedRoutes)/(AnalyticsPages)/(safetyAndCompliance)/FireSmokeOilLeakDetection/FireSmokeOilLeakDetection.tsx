@@ -97,28 +97,28 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       title: "Fire Incidence",
       value: "267",
-      icon: LocalFireDepartment, // 🔥 Fire
+      icon: LocalFireDepartment,
       tooltipMessage:
         "Total number of fire detections recorded across all monitored zones.",
     },
     {
       title: "Smoke Incidence",
       value: "324",
-      icon: SmokeFree, // 💨 Smoke
+      icon: SmokeFree,
       tooltipMessage:
         "Total number of smoke detections recorded across all monitored zones.",
     },
     {
       title: "Last Detection Time",
       value: "10:42 AM",
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
       tooltipMessage:
         "The time when the last fire or smoke detection was recorded.",
     },
     {
       title: "Last Detection Zone",
       value: "Zone A",
-      icon: LocationOn, // 📍 Zone / Location
+      icon: LocationOn,
       tooltipMessage:
         "The zone where the most recent fire or smoke detection occurred.",
     },
@@ -188,7 +188,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   };
   return (
     <Box>
-      {/* KPI Cards */}
       <Paper
         sx={{
           p: 3,
@@ -206,7 +205,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview

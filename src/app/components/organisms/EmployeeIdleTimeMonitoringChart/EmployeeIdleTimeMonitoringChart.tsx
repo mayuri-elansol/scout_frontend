@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
 // Example times (X-axis)
@@ -28,17 +28,19 @@ const series = [
 
 export default function EmployeeIdleTimeMonitoringChart() {
   return (
-    <Box sx={{ width: "100%",pt:2 
-    // overflowX: "auto" 
-    }}>
-   
+    <Box
+      sx={{
+        width: "100%",
+        pt: 2,
+        // overflowX: "auto"
+      }}
+    >
       {/* <Box sx={{ width: times.length * 50, height: 400 }}> */}
-        <BarChart
-          height={550}
-          xAxis={[{ data: times }]} // X-axis: times
-          series={series}           // Y-axis: counts
-          
-        />
+      <BarChart
+        height={550}
+        xAxis={[{ data: times }]} // X-axis: times
+        series={series} // Y-axis: counts
+      />
       {/* </Box> */}
     </Box>
   );

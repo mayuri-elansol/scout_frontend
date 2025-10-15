@@ -21,14 +21,14 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ForkliftIcon from "@mui/icons-material/Forklift";
 const ObjectDetection: React.FC = () => {
   interface ForkliftDetectionEvent {
-    voilation: string; // e.g., "Forklift detected"
-    objectName?: string; // Optional
-    imageUrl: string; // Image URL
-    zone: string; // Zone name
-    cameraId: string; // Camera ID
-    time: string; // Detection timestamp
+    voilation: string;
+    objectName?: string;
+    imageUrl: string;
+    zone: string;
+    cameraId: string;
+    time: string;
 
-    alarmTriggered: boolean; // True/False
+    alarmTriggered: boolean;
     [key: string]: string | number | boolean | undefined;
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
@@ -37,17 +37,17 @@ const ObjectDetection: React.FC = () => {
   const ObjectDetectionKpiData = [
     {
       title: "Blocked Walkways",
-      value: "87", // Count of currently blocked exits
+      value: "87",
       tooltipMessage:
         "Shows the total number of walkways that are currently blocked.",
       icon: Block,
     },
     {
       title: "Clear Walkways",
-      value: "12", // Count of safe/clear exits
+      value: "12",
       tooltipMessage:
         "Shows the total number of walkways that are currently clear and safe for use.",
-      icon: CheckCircle, // ✅ Safe / clear
+      icon: CheckCircle,
       trendColor: "#4caf50",
       color: "#4caf50",
       bgColor: "#e8f5e9",
@@ -56,10 +56,10 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Affected Zones (Last 3)",
-      value: "Zone A, Zone B, Zone C", // Last 3 affected zones
+      value: "Zone A, Zone B, Zone C",
       tooltipMessage:
         "Displays the last three zones where blocked Walkways were detected.",
-      icon: LocationOn, // 📍 Zone/location indicator
+      icon: LocationOn,
     },
   ];
 
@@ -207,7 +207,6 @@ const ObjectDetection: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -241,7 +240,7 @@ const ObjectDetection: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 Forklift / Vehicle detected in Walkways with details."
@@ -250,11 +249,10 @@ const ObjectDetection: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows violations per zone"

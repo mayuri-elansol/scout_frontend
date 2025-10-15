@@ -1,18 +1,15 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import EmployeePresenceCriticalChart from "@/app/components/organisms/EmployeePresenceInCriticalAreaChart/EmployeePresenceInCriticalAreaChart";
-import EmployeePresenceInRestrictedAreaChart from "@/app/components/organisms/EmployeePresenceInRestrictedAreaChart/EmployeePresenceInRestrictedAreaChart";
 import MobilePhoneUsageChart from "@/app/components/organisms/MobilePhoneUsageInRestrictedAreaChart/MobilePhoneUsageInRestrictedAreaChart";
 import SleepingOrAbsenceOfSecurityGuard from "@/app/components/organisms/SleepingOrAbsenceOfSecurityGuard/SleepingOrAbsenceOfSecurityGuard";
 import EmployeeIdleTimeMonitoringChart from "@/app/components/organisms/EmployeeIdleTimeMonitoringChart/EmployeeIdleTimeMonitoringChart";
@@ -67,19 +64,6 @@ const WorkforceMonitoring: React.FC = () => {
     },
   ];
 
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
-  ];
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
@@ -98,13 +82,12 @@ const WorkforceMonitoring: React.FC = () => {
       label: "Employee Monitoring",
       content: <EmployeeIdleTimeMonitoringChart />,
     },
-    
   ];
 
   return (
     <Paper
       sx={{
-         display: "flex",
+        display: "flex",
         flexDirection: "column",
         pt: 2,
         px: 3,

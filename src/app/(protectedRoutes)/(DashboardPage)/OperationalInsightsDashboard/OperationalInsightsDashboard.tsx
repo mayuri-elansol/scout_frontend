@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
 import { Box, Grid, Paper } from "@mui/material";
 import {
   People,
@@ -10,9 +9,6 @@ import {
   Block,
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardTabs, {
   TabConfig,
@@ -75,32 +71,18 @@ const OperationalInsightsDashboard: React.FC = () => {
     },
   ];
 
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-    { zone: "Main Entrance", active: 2, total: 3, offline: 1, tempred: 2 },
-  ];
-
   const tabs: TabConfig[] = [
     { label: "People Count", content: <PeopleCountChart /> },
     { label: "Vehicle Count & ANPR", content: <VehicleCountANPRChart /> },
     { label: "Canteen Usage", content: <CanteenUsageChart /> },
     { label: "Vehicle MOnitoring", content: <VehicleCountANPRChart /> },
     { label: "Unauthorized parking", content: <UnauthorizedParkingChart /> },
-   
   ];
 
   return (
     <Paper
       sx={{
-         display: "flex",
+        display: "flex",
         flexDirection: "column",
         pt: 2,
         px: 3,

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 
 // Sample time-zone based data
@@ -17,8 +17,7 @@ const data = [
 
 export default function PeopleCountLineChart() {
   return (
-    <Box sx={{ width: "100%", p:4 }}>
-
+    <Box sx={{ width: "100%", p: 4 }}>
       <LineChart
         height={500}
         xAxis={[
@@ -30,7 +29,8 @@ export default function PeopleCountLineChart() {
         yAxis={[
           {
             min: 0,
-            max: Math.max(...data.flatMap((d) => [d.zoneA, d.zoneB, d.zoneC])) + 5,
+            max:
+              Math.max(...data.flatMap((d) => [d.zoneA, d.zoneB, d.zoneC])) + 5,
           },
         ]}
         series={[

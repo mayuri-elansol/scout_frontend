@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts";
 
 // Sample data for Mobile Phone Usage in Critical Areas
@@ -15,16 +15,14 @@ const data = [
 
 export default function MobilePhoneUsageChart() {
   return (
-    <Box sx={{ width: "100%",pt:2 }}>
-
-
+    <Box sx={{ width: "100%", pt: 2 }}>
       <BarChart
         height={550}
-        xAxis={[{ data: data.map(d => d.createdAt) }]} // X-axis: time
+        xAxis={[{ data: data.map((d) => d.createdAt) }]} // X-axis: time
         series={[
-          { label: "Zone A", data: data.map(d => d.ZoneA) },
-          { label: "Zone B", data: data.map(d => d.ZoneB) },
-          { label: "Zone C", data: data.map(d => d.ZoneC) },
+          { label: "Zone A", data: data.map((d) => d.ZoneA) },
+          { label: "Zone B", data: data.map((d) => d.ZoneB) },
+          { label: "Zone C", data: data.map((d) => d.ZoneC) },
         ]}
       />
     </Box>

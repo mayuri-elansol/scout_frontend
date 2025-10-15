@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Box, Typography, Chip, Stack } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 
 const times = Array.from({ length: 24 }, (_, i) => `${i}:00`);
@@ -13,16 +13,15 @@ const workingTime = [
 
 export default function CanteenUsageChart() {
   return (
-    <Box sx={{ width: "100%" ,pt:2}}>
+    <Box sx={{ width: "100%", pt: 2 }}>
       {/* Title */}
-    
 
       {/* Legend */}
       <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
         <Chip label="🟢 Usage Count" variant="outlined" color="success" />
         {workingTime.map((slot, idx) => (
           <Chip
-            key={idx}
+            key={idx + 1}
             label={`🟡 ${slot.label} (${slot.startTime}:00 - ${slot.stopTime}:00)`}
             variant="outlined"
             sx={{
@@ -36,7 +35,9 @@ export default function CanteenUsageChart() {
 
       {/* Chart with horizontal scroll */}
       <Box sx={{ overflowX: "auto", overflowY: "hidden", pb: 1 }}>
-        <Box sx={{ width: times.length * 60, height: 400, position: "relative" }}>
+        <Box
+          sx={{ width: times.length * 60, height: 400, position: "relative" }}
+        >
           {/* LineChart */}
           <LineChart
             height={400}
@@ -54,7 +55,7 @@ export default function CanteenUsageChart() {
           {/* Shaded working time slots only (without labels inside chart) */}
           {workingTime.map((slot, idx) => (
             <Box
-              key={idx}
+              key={idx + 1}
               sx={{
                 position: "absolute",
                 top: 0,
