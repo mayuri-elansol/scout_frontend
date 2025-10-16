@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from "react";
@@ -31,11 +30,16 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
   series,
   yAxisLabel = "Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 400 },
+  height = { mobile: 300, tablet: 400, desktop: 425 },
+    // height = { mobile: 300, tablet: 400, desktop: 525 },
+
 }: DynamicBarChartProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  
+  const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)");
+  
 
   // Extract x-axis labels
   const xLabels = data.map((d) => String(d[xAxisKey]));
@@ -50,10 +54,13 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
 
   // Determine chart height based on screen size
   let chartHeight = height.desktop!;
+  
   if (isMobile) {
     chartHeight = height.mobile!;
   } else if (isTablet) {
     chartHeight = height.tablet!;
+  } else if (isMediumWidth) {
+    chartHeight = 337; 
   }
 
   return (

@@ -15,19 +15,20 @@ export interface Props {
   times: string[];
   usageData: number[];
   workingTime?: WorkingSlot[];
-  height?: number; // default height for desktop
+  height?: number; 
 }
 
 const LineCharts: React.FC<Props> = ({
   times,
   usageData,
   workingTime = [],
-  height = 350,
+  // height = 350,
+  height = 400,
 
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const chartHeight = isMobile ? 250 : height; 
+  const chartHeight = isMobile ? 290 : height; 
 
   if (!times || !usageData || times.length === 0 || usageData.length === 0) {
     return (
@@ -68,7 +69,7 @@ const LineCharts: React.FC<Props> = ({
       <Box sx={{ overflowX: "auto", overflowY: "hidden", pb: 1 }}>
         <Box
           sx={{
-            minWidth: times.length * 60, // ensure horizontal scroll if many points
+            minWidth: times.length * 60, 
             height: chartHeight,
             position: "relative",
           }}
@@ -95,7 +96,7 @@ const LineCharts: React.FC<Props> = ({
                 top: 30,
                 left: `${(slot.startTime / 24) * 100}%`,
                 width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
-                height: "85%",
+                height: "82%",
                 bgcolor: "rgba(255, 235, 59, 0.2)",
                 borderLeft: "2px dashed #fbc02d",
                 borderRight: "2px dashed #fbc02d",

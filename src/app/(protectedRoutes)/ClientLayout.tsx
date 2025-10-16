@@ -67,7 +67,7 @@ export default function ClientLayout({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box sx={{ display: "flex", height: "100%" }}>
+        <Box sx={{ display: "flex", height: "100vh" }}>
           <Header />
 
           {/* Desktop Sidebar */}
@@ -82,23 +82,31 @@ export default function ClientLayout({
           {/* Main Content */}
           <Box
             sx={{
+              // flex: 1,
+              // pl: 2.5,
+              // pr: 2.5,
+              // pb: 4,
+              // pt: 10,
+              // backgroundColor: "#f5f7fa",
+              // width: "78vw",
               flex: 1,
+              display: "flex", // Add flexbox
+              flexDirection: "column", // Stack children vertically
               pl: 2.5,
               pr: 2.5,
-              pb: 4,
+              pb: 2,
               pt: 10,
               backgroundColor: "#f5f7fa",
-              width: "78vw",
+              overflow: "auto", // Allow scrolling if content exceeds
+              minHeight: 0, // Allow flex shrinking
             }}
           >
             <RouteLoader>
-              {/* <Breadcrumb
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              /> */}
+        
               {children}
             </RouteLoader>
           </Box>
+
         </Box>
       </LocalizationProvider>
     </ThemeProvider>

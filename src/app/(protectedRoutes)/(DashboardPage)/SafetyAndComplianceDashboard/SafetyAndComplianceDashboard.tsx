@@ -43,7 +43,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, md: 8 }}
             sx={{
               display: "flex",
-              // alignItems: "stretch",
+              alignItems: "stretch",
             }}
           >
             <Box
@@ -83,16 +83,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
           {/* Right side: Two pie charts stacked */}
          
-          <Grid
+          {/* <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              marginBottom:"80"
+              gap:1.5
             }}
           >
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <DynamicPieChart
                 data={[
                   { label: "Helmet", value: 29, color: "#FFB6C1" },
@@ -101,13 +101,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
+            <Box sx={{  display: "flex", alignItems: "center", pl: 7 }}>
               <DynamicPieChart
-                // data={[
-                //   { label: "ZONE A", value: 31, color: "#f78c89" },
-                //   { label: "ZONE B", value: 43, color: "#ffd54f" },
-                //   { label: "ZONE C", value: 26, color: "#7fbfff" },
-                // ]}
+               
                 data={[
                   { label: "Production Gate", value: 31, color: "#FFB6C1" },
                   { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
@@ -117,8 +113,37 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-          </Grid> 
-         
+          </Grid>  */}
+         <Grid
+  size={{ xs: 12, md: 4 }}
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    // gap: 5 , 
+    
+  }}
+>
+  <Box sx={{ display: "flex", alignItems: "center" }}>
+    <DynamicPieChart
+      data={[
+        { label: "Helmet", value: 29, color: "#FFB6C1" },
+        { label: "Vest", value: 28, color: "#FFEAA7" },
+        { label: "Glass", value: 28, color: "#A8E6CF" },
+      ]}
+    />
+  </Box>
+  <Box sx={{ display: "flex", alignItems: "center",pl:5 }}>  
+    <DynamicPieChart
+      data={[
+        { label: "Production Gate", value: 31, color: "#FFB6C1" },
+        { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
+        { label: "Parking Gate", value: 26, color: "#FFEAA7" },
+        { label: "Main Entrance", value: 20, color: "#C7EDCC" },
+        { label: "Side Exit", value: 71, color: "#A8E6CF" },
+      ]}
+    />
+  </Box>
+</Grid>
         </Grid>
       ),
     },
@@ -557,10 +582,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb: 2,
+        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
+        // height:"100%"
       }}
     >
       {/* Top Right Time Filter */}

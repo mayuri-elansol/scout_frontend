@@ -2,34 +2,51 @@
 "use client";
 
 import React from "react";
-import { CardContent, useTheme, useMediaQuery, Typography } from "@mui/material";
+import {
+  CardContent,
+  useTheme,
+  useMediaQuery,
+  Typography,
+
+} from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { DefaultizedPieValueType } from "@mui/x-charts/models";
 
 // Types for Pie chart items
 export interface PieDataItem {
-  label: string; // e.g., "Online", "Offline", "Tampered"
-  value: number; // count
-  color: string; // color of the slice
+  label: string;
+  value: number;
+  color: string;
 }
 
 // Props for dynamic pie chart
 export interface DynamicPieChartProps {
-  zoneName?: string;           // optional zone label
-  data: PieDataItem[];         // data for the pie chart
-  size?: number;               // optional chart size override
+  zoneName?: string;
+  data: PieDataItem[];
+  size?: number;
+  height?:number; 
 }
 
 const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   data,
   zoneName,
   size,
+  height
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMediumWidth = useMediaQuery(
+    "(min-width: 1400px) and (max-width: 1600px)"
+  );
 
   const chartSize = size || (isMobile ? 180 : 200);
-  const outerRadius = isMobile ? 60 : 85;
+
+  // Adjust outer radius based on height
+  let outerRadius = isMobile ? 60 : 100;
+  if (isMediumWidth) {
+    outerRadius = 80;
+  }
+
 
   const TOTAL = data.reduce((sum, item) => sum + item.value, 0);
 
@@ -42,14 +59,21 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
     <CardContent
       sx={{
         width: "100%",
-        p: 2,
+        p: isMediumWidth ? "0px !important" : "12px !important",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
       {zoneName && (
-        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600 }}>
+        <Typography variant="subtitle1" 
+         sx={{ 
+          mb: 2,
+          mt:6, 
+          fontWeight: 600,
+            marginRight:"95px"
+        }}
+        >
           {zoneName}
         </Typography>
       )}
@@ -65,6 +89,7 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
         colors={data.map((item) => item.color)}
         width={chartSize}
         height={chartSize}
+        // margin={{ top: 10, bottom: 10, left: 10, right: 10 }}
         sx={{
           [`& .${pieArcLabelClasses.root}`]: {
             fill: "white",

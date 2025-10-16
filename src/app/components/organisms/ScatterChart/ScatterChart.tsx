@@ -1,6 +1,5 @@
 
 
-
 "use client";
 import React from "react";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
@@ -15,9 +14,10 @@ export interface ViolationData {
 
 export interface DynamicViolationScatterChartProps {
   data: ViolationData[];
-height?:number
+  height?: number;
   colors?: string[];
 }
+
 export interface ScatterPoint {
   x: number;
   y: number;
@@ -26,6 +26,7 @@ export interface ScatterPoint {
   timeName: string;
   id: string;
 }
+
 const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> = ({
   data = [],
   height = 550,
@@ -33,8 +34,25 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  // Mac-specific screen width approx 1440px
-  const isMac = useMediaQuery("(min-width: 1440px) and (max-width: 1600px)");
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const isMediumHeight = useMediaQuery("(min-height: 900px) and (max-height: 950px)");
+
+  // Container ref to get dynamic width
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = React.useState(0);
+
+  // Update container width on mount and resize
+  React.useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   // Sort times in 24-hour order
   const timeLabels = React.useMemo(() => {
@@ -46,8 +64,12 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
     });
   }, [data]);
 
-  const zoneLabels = React.useMemo(() => Array.from(new Set(data.map((d) => d.zone))), [data]);
-// Group data by zone for series
+  const zoneLabels = React.useMemo(
+    () => Array.from(new Set(data.map((d) => d.zone))),
+    [data]
+  );
+
+  // Group data by zone for series
   const seriesData = React.useMemo(() => {
     const grouped = new Map<string, ViolationData[]>();
     data.forEach((item) => {
@@ -67,11 +89,11 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
         timeName: item.time,
         id: `${zone}-${idx}`,
       })),
-      markerSize: 4,
+      markerSize: isMobile ? 3 : 4,
       valueFormatter: (point: any) =>
         `Time: ${point.timeName}\nViolations: ${point.count}`,
     }));
-  }, [data, timeLabels, zoneLabels, colors]);
+  }, [data, timeLabels, zoneLabels, colors, isMobile]);
 
   if (!data || data.length === 0) {
     return (
@@ -89,25 +111,35 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
     );
   }
 
-  
-  // Set width & height conditionally
-  const chartWidth = isMac ? 982 : Math.max(600, zoneLabels.length * 200);
-  const chartHeight = isMac ? 360 : height;
+  // Responsive chart dimensions
+  let chartHeight = height;
+  if (isMobile) {
+    chartHeight = 350;
+  } else if (isTablet) {
+    chartHeight = 400;
+  } else if (isMediumHeight) {
+    chartHeight = 337;
+  }
+
+  // Use container width with padding adjustment
+  const chartWidth = containerWidth > 0 ? containerWidth - 32 : 600;
+
 
   return (
     <Box
+      ref={containerRef}
       sx={{
-        overflowX: "auto",
+        width: "100%",
         display: "flex",
         justifyContent: "center",
-        // p: { xs: 2, md: 4 },
-        pt:2
+        pt: 2,
+        overflow: "hidden", 
       }}
     >
       <ScatterChart
         width={chartWidth}
         height={chartHeight}
-        margin={{ left: 10, right: 10, bottom: 40 }}
+        // margin={chartMargins}
         series={seriesData}
         xAxis={[
           {
@@ -117,11 +149,11 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
             valueFormatter: (i: number) =>
               zoneLabels[Math.round(i - 0.3)] || "",
             tickLabelStyle: {
-              fontSize: 12,
+              fontSize: isMobile ? 10 : 12,
               fontWeight: 600,
               fill: "#444",
-              angle: isMobile ? 0 : -30,
-              textAnchor: isMobile ? "middle" : "end"
+              angle: isMobile ? -45 : -30,
+              textAnchor: "end",
             },
           },
         ]}
@@ -131,8 +163,16 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
             scaleType: "point",
             data: timeLabels.map((_, i) => i),
             valueFormatter: (i: number) => timeLabels[i] || "",
-            tickLabelStyle: { fontSize: 11, fontWeight: 600, fill: "#444" },
-            labelStyle: { fontSize: 14, fontWeight: 700, fill: "#222" },
+            tickLabelStyle: {
+              fontSize: isMobile ? 9 : 11,
+              fontWeight: 600,
+              fill: "#444",
+            },
+            labelStyle: {
+              fontSize: isMobile ? 12 : 14,
+              fontWeight: 700,
+              fill: "#222",
+            },
           },
         ]}
         grid={{ horizontal: true, vertical: false }}

@@ -92,42 +92,49 @@ const SurveillanceMonitoring: React.FC = () => {
     {
       label: "Camera Tempering Detection",
       content: (
-       <Box
-  sx={{
-    display: "flex",
-    flexDirection: "row",
-    gap: 3, 
-    justifyContent: "center",
-    alignItems: "center",
-    flexWrap: "nowrap", // Changed from "wrap" to "nowrap"
-    overflowX: "auto", // Added for horizontal scroll if needed
-  }}
->
-  <DynamicPieChart
-    zoneName="Online"
-    data={[
-      { label: "Zone A", value: 12, color: "#4caf50" },
-      { label: "Zone B", value: 5, color: "#f44336" },
-      { label: "Zone C", value: 2, color: "#ffa726" },
-    ]}
-  />
-  <DynamicPieChart
-    zoneName="Offline"
-    data={[
-      { label: "Zone A", value: 20, color: "#4caf50" },
-      { label: "Zone B", value: 3, color: "#f44336" },
-      { label: "Zone C", value: 1, color: "#ffa726" },
-    ]}
-  />
-  <DynamicPieChart
-    zoneName="Tampered"
-    data={[
-      { label: "Zone A", value: 20, color: "#4caf50" },
-      { label: "Zone B", value: 3, color: "#f44336" },
-      { label: "Zone C", value: 1, color: "#ffa726" },
-    ]}
-  />
-</Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" },
+            gap: 2,
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <DynamicPieChart
+              zoneName="Online"
+              data={[
+                { label: "Zone A", value: 12, color: "#4caf50" },
+                { label: "Zone B", value: 5, color: "#f44336" },
+                { label: "Zone C", value: 2, color: "#ffa726" },
+              ]}
+            />
+          </Box>
+
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <DynamicPieChart
+              zoneName="Offline"
+              data={[
+                { label: "Zone A", value: 20, color: "#4caf50" },
+                { label: "Zone B", value: 3, color: "#f44336" },
+                { label: "Zone C", value: 1, color: "#ffa726" },
+              ]}
+            />
+          </Box>
+
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <DynamicPieChart
+              zoneName="Tampered"
+              data={[
+                { label: "Zone A", value: 20, color: "#4caf50" },
+                { label: "Zone B", value: 3, color: "#f44336" },
+                { label: "Zone C", value: 1, color: "#ffa726" },
+              ]}
+            />
+          </Box>
+        </Box>
       ),
     },
 

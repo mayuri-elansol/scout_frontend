@@ -2,12 +2,7 @@
 
 import React from "react";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-  Visibility,
-  Smartphone,
-  Security,
-  People,
-} from "@mui/icons-material";
+import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
@@ -74,12 +69,10 @@ const WorkforceMonitoring: React.FC = () => {
     { time: "09:00", zone: "Zone A", count: 8 },
     { time: "10:00", zone: "Zone A", count: 3 },
     { time: "11:00", zone: "Zone A", count: 12 },
-
     { time: "08:00", zone: "Zone B", count: 7 },
     { time: "09:00", zone: "Zone B", count: 4 },
     { time: "10:00", zone: "Zone B", count: 9 },
     { time: "11:00", zone: "Zone B", count: 6 },
-
     { time: "12:00", zone: "Zone C", count: 2 },
     { time: "01:00", zone: "Zone C", count: 11 },
     { time: "03:00", zone: "Zone C", count: 5 },
@@ -92,12 +85,15 @@ const WorkforceMonitoring: React.FC = () => {
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
-      content: <DynamicViolationScatterChart data={violationData}  />,
+      content: <DynamicViolationScatterChart data={violationData} />,
     },
     {
       label: "Employee Monitoring",
       content: (
         <DynamicBarChart
+          height={{
+            desktop: 525,
+          }}
           data={[
             { gate: "Production Gate", Idle: 5, Working: 19, NotPresent: 20 },
             { gate: "Warehouse Gate", Idle: 3, Working: 21, NotPresent: 18 },
@@ -115,7 +111,7 @@ const WorkforceMonitoring: React.FC = () => {
             {
               dataKey: "Working",
               label: "Working Count",
-              color: "#AEEEEE", 
+              color: "#AEEEEE",
             },
             {
               dataKey: "NotPresent",
@@ -137,6 +133,9 @@ const WorkforceMonitoring: React.FC = () => {
       label: "Security Personnel Status",
       content: (
         <DynamicBarChart
+          height={{
+            desktop: 525,
+          }}
           data={[
             { gate: "Production Gate", Absent: 5, Present: 19 },
             { gate: "Warehouse Gate", Absent: 3, Present: 21 },
@@ -171,7 +170,7 @@ const WorkforceMonitoring: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb: 2,
+        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
@@ -203,12 +202,7 @@ const WorkforceMonitoring: React.FC = () => {
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      {/* <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-       
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <DashboardTabs tabs={tabs} />
-        </Box>
-      </Box> */}
+
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <DashboardTabs tabs={tabs} />
       </Box>

@@ -112,10 +112,10 @@ const workingSlots: WorkingSlot[] = [
       times={times}
       usageData={usageData}
       workingTime={workingSlots}
-      height={400}
+      height={290}
     /> },
     { label: "Vehicle Monitoring", content: <JointBarGraphChart times={times} seriesData={series} height={400} /> },
-    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} />,
+    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} height={380} />,
  },
    
   ];
@@ -127,7 +127,7 @@ const workingSlots: WorkingSlot[] = [
         flexDirection: "column",
         pt: 2,
         px: 3,
-        mb: 2,
+        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,

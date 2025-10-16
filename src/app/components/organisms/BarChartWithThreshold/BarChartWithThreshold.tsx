@@ -27,6 +27,7 @@ export interface DynamicBarChartWithThresholdProps<
     mobile?: number;
     tablet?: number;
     desktop?: number;
+    mac?:number
   };
 }
 
@@ -41,11 +42,12 @@ const DynamicBarChartWithThreshold = <
   thresholdColor = "red",
   yAxisLabel = "User Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 400 },
+  height = { mobile: 300, tablet: 400, desktop: 400,mac :350 },
 }: DynamicBarChartWithThresholdProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)");
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
@@ -71,6 +73,7 @@ const DynamicBarChartWithThreshold = <
   let chartHeight = height.desktop!;
   if (isMobile) chartHeight = height.mobile!;
   else if (isTablet) chartHeight = height.tablet!;
+  else if(isMediumWidth)  chartHeight = height.mac!;
 
   // Calculate threshold line position
   const yMin = minValue;
