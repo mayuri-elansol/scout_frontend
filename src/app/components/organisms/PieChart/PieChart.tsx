@@ -24,14 +24,13 @@ export interface DynamicPieChartProps {
   zoneName?: string;
   data: PieDataItem[];
   size?: number;
-  height?:number; 
 }
 
 const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   data,
   zoneName,
   size,
-  height
+  // height
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -107,3 +106,4 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
 };
 
 export default DynamicPieChart;
+
