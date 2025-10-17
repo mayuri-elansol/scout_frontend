@@ -60,7 +60,7 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   }
 
   // Chart size should be based on outerRadius to prevent clipping
-  const chartSize = size || outerRadius * 2.8;
+  const chartSize = size ?? outerRadius * 2.8;
 
   const TOTAL = data.reduce((sum, item) => sum + item.value, 0);
 

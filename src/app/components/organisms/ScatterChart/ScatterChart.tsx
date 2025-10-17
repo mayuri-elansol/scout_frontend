@@ -154,7 +154,7 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
             scaleType: "linear",
             data: zoneLabels,
             valueFormatter: (i: number) =>
-              zoneLabels[Math.round(i - 0.3)] || "",
+              zoneLabels[Math.round(i - 0.3)] ?? "",
             tickLabelStyle: {
               fontSize: isMobile ? 10 : 12,
               fontWeight: 600,
@@ -169,7 +169,7 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
             label: "Time (24-hour)",
             scaleType: "point",
             data: timeLabels.map((_, i) => i),
-            valueFormatter: (i: number) => timeLabels[i] || "",
+            valueFormatter: (i: number) => timeLabels[i] ?? "",
             tickLabelStyle: {
               fontSize: isMobile ? 9 : 11,
               fontWeight: 600,
