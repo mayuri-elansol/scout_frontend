@@ -43,6 +43,7 @@ const DynamicBarChartWithThreshold = <
   yAxisLabel = "User Count",
   stackId = "stack",
   height = { mobile: 300, tablet: 400, desktop: 400,mac :350 },
+
 }: DynamicBarChartWithThresholdProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -75,6 +76,11 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
   else if (isTablet) chartHeight = height.tablet!;
   else if(isMediumWidth)  chartHeight = height.mac!;
 
+// if (isMacWidth) chartHeight = height.mac!;
+// else if (isTablet) chartHeight = height.tablet!;
+// else if (isMobile) chartHeight = height.mobile!;
+// else chartHeight = height.desktop!;
+
   // Calculate threshold line position
   const yMin = minValue;
   const yMax = maxValue;
@@ -87,7 +93,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
   return (
     <CardContent
       ref={chartContainerRef}
-      sx={{ width: "100%", position: "relative" }}
+      sx={{ width: "100%"}}
     >
       <BarChart
         height={chartHeight}

@@ -106,16 +106,16 @@ const workingSlots: WorkingSlot[] = [
     { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
-    { label: "People Count", content: <JointBarGraphChart  times={times} seriesData={series} height={400}/> },
-    { label: "Vehicle Count & ANPR", content: <JointBarGraphChart  times={times} seriesData={series} height={400}/> },
+    { label: "People Count", content: <JointBarGraphChart  times={times} seriesData={series} height={370}/> },
+    { label: "Vehicle Count & ANPR", content: <JointBarGraphChart  times={times} seriesData={series} height={370}/> },
     { label: "Canteen Usage", content:   <CanteenUsageChart
       times={times}
       usageData={usageData}
       workingTime={workingSlots}
       height={290}
     /> },
-    { label: "Vehicle Monitoring", content: <JointBarGraphChart times={times} seriesData={series} height={400} /> },
-    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} height={380} />,
+    { label: "Vehicle Monitoring", content: <JointBarGraphChart times={times} seriesData={series} height={370} /> },
+    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} height={350} />,
  },
    
   ];

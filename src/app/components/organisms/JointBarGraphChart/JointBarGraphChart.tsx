@@ -20,14 +20,14 @@ export interface VehicleCountBarChartProps {
 const VehicleCountBarChart: React.FC<VehicleCountBarChartProps> = ({
   times,
   seriesData,
-  height = 300,
+  height 
 }) => {
   const isMediumWidth = useMediaQuery(
     "(min-width: 1400px) and (max-width: 1500px)"
   );
 
   // Responsive height based on screen width
-  const actualHeight = isMediumWidth ? 280 : height;
+  const actualHeight = isMediumWidth ? 337 : height;
 
   if (!times?.length || !seriesData?.length) {
     return (

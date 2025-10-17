@@ -22,10 +22,7 @@ import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
 import { hourlyData } from "@/app/config/chartDataConfig";
 
-
-
 const SafetyAndComplianceDashboard: React.FC = () => {
-
   const tabs: TabConfig[] = [
     {
       label: "PPE Compliance",
@@ -56,6 +53,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChart
+                height={{
+                  desktop: 375,
+                }}
                 data={hourlyData}
                 xAxisKey="time"
                 series={[
@@ -82,7 +82,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
 
           {/* Right side: Two pie charts stacked */}
-         
+
           {/* <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
@@ -114,36 +114,37 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               />
             </Box>
           </Grid>  */}
-         <Grid
-  size={{ xs: 12, md: 4 }}
-  sx={{
-    display: "flex",
-    flexDirection: "column",
-    // gap: 5 , 
-    
-  }}
->
-  <Box sx={{ display: "flex", alignItems: "center" }}>
-    <DynamicPieChart
-      data={[
-        { label: "Helmet", value: 29, color: "#FFB6C1" },
-        { label: "Vest", value: 28, color: "#FFEAA7" },
-        { label: "Glass", value: 28, color: "#A8E6CF" },
-      ]}
-    />
-  </Box>
-  <Box sx={{ display: "flex", alignItems: "center",pl:5 }}>  
-    <DynamicPieChart
-      data={[
-        { label: "Production Gate", value: 31, color: "#FFB6C1" },
-        { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
-        { label: "Parking Gate", value: 26, color: "#FFEAA7" },
-        { label: "Main Entrance", value: 20, color: "#C7EDCC" },
-        { label: "Side Exit", value: 71, color: "#A8E6CF" },
-      ]}
-    />
-  </Box>
-</Grid>
+          <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              // gap: 5 ,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <DynamicPieChart
+                height={270}
+                data={[
+                  { label: "Helmet", value: 29, color: "#FFB6C1" },
+                  { label: "Vest", value: 28, color: "#FFEAA7" },
+                  { label: "Glass", value: 28, color: "#A8E6CF" },
+                ]}
+              />
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", pl: 8 }}>
+              <DynamicPieChart
+                height={270}
+                data={[
+                  { label: "Production Gate", value: 31, color: "#FFB6C1" },
+                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
+                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
+                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
+                ]}
+              />
+            </Box>
+          </Grid>
         </Grid>
       ),
     },
@@ -176,9 +177,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChart
+                height={{
+                  desktop: 375,
+                }}
                 data={hourlyData}
                 xAxisKey="time"
-     
                 series={[
                   {
                     dataKey: "fire",
@@ -219,7 +222,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           >
             <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
               <DynamicPieChart
-        
+                height={270}
                 data={[
                   { label: "Fire", value: 29, color: "#FFB3BA" },
                   { label: "Smoke", value: 28, color: "#FFDFBA" },
@@ -228,9 +231,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 7 }}>
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 8 }}>
               <DynamicPieChart
-          
+                height={270}
                 data={[
                   { label: "Production Gate", value: 31, color: "#FFB6C1" },
                   { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
@@ -262,9 +265,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChart
+                height={{
+                  desktop: 375,
+                }}
                 data={hourlyData}
                 xAxisKey="time"
-         
                 series={[
                   {
                     dataKey: "falls",
@@ -288,7 +293,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
-          
               data={[
                 { label: "Production Gate", value: 5, color: "#FFCBB3" },
                 { label: "Warehouse Gate", value: 3, color: "#FFE0B3" },
@@ -319,6 +323,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChart
+                     height={{
+            desktop: 375,
+          }}
                 data={[
                   { gate: "Production Gate", blocked: 5, clear: 19 },
                   { gate: "Warehouse Gate", blocked: 3, clear: 21 },
@@ -327,7 +334,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { gate: "Side Exit", blocked: 1, clear: 23 },
                 ]}
                 xAxisKey="gate"
-       
                 series={[
                   {
                     dataKey: "blocked",
@@ -356,7 +362,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
-       
               data={[
                 { label: "Production Gate", value: 5, color: "#FFB3BA" },
                 { label: "Warehouse Gate", value: 3, color: "#FFDFBA" },
@@ -387,6 +392,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChart
+                     height={{
+            desktop: 375,
+          }}
                 data={[
                   { gate: "Production Gate", blocked: 5, clear: 19 },
                   { gate: "Warehouse Gate", blocked: 3, clear: 21 },
@@ -395,7 +403,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { gate: "Side Exit", blocked: 1, clear: 23 },
                 ]}
                 xAxisKey="gate"
-         
                 series={[
                   {
                     dataKey: "blocked",
@@ -424,7 +431,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             }}
           >
             <DynamicPieChart
-       
               data={[
                 { label: "Production Gate", value: 5, color: "#FFC0CB" },
                 { label: "Warehouse Gate", value: 3, color: "#FFD4B5" },
@@ -455,6 +461,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               }}
             >
               <DynamicBarChartWithThreshold
+                     height={{
+            desktop: 360,mac:350
+          }}
                 data={[
                   { month: "Jan", users: 20 },
                   { month: "Feb", users: 50 },

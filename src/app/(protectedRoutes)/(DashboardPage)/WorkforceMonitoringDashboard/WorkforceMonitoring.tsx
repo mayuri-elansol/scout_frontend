@@ -92,7 +92,7 @@ const WorkforceMonitoring: React.FC = () => {
       content: (
         <DynamicBarChart
           height={{
-            desktop: 525,
+            desktop: 490,
           }}
           data={[
             { gate: "Production Gate", Idle: 5, Working: 19, NotPresent: 20 },
@@ -134,7 +134,7 @@ const WorkforceMonitoring: React.FC = () => {
       content: (
         <DynamicBarChart
           height={{
-            desktop: 525,
+            desktop: 490,
           }}
           data={[
             { gate: "Production Gate", Absent: 5, Present: 19 },

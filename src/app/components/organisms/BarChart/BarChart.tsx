@@ -60,7 +60,7 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
   } else if (isTablet) {
     chartHeight = height.tablet!;
   } else if (isMediumWidth) {
-    chartHeight = 337; 
+    chartHeight = 366; 
   }
 
   return (
