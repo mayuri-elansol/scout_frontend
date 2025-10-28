@@ -8,20 +8,14 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import StopCircleIcon from "@mui/icons-material/StopCircle";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import {
-  CheckCircle,
-  LocalShipping,
-  PlayArrow,
-  Room,
-  Timeline,
-} from "@mui/icons-material";
+import { LocalShipping, Timeline } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
-    eventMessage: string;
+    incident: string;
     trackId: string;
     zone: string;
     time: string;
@@ -37,33 +31,23 @@ const VehicleUnloadingLoading: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleUnloadingLoadingKpiData = [
     {
-      title: "Total Operations",
-      value: "87", // total count of loading/unloading events
-      icon: LocalShipping, // represents vehicles/transport
+      title: "Total Loading/Unloading Event",
+      value: "87",
+      icon: LocalShipping,
       tooltipMessage: "Total loading/unloading events recorded.",
     },
     {
-      title: "Ongoing Operations",
-      value: "12", // number of operations in progress
-      icon: PlayArrow, // represents active/ongoing
-      tooltipMessage: "Number of operations currently in progress.",
+      title: "Average Loading/Unloading Time",
+      value: "1.56 hrs",
+      icon: AccessTimeIcon,
+      tooltipMessage:
+        "Shows the Average Time for Vehical Loading/Unloading event",
     },
-    {
-      title: "Completed Operations",
-      value: "94", // percentage completed
-      tooltipMessage: "Number of operations completed successfully.",
-      icon: CheckCircle, // completed/checked
-    },
-    {
-      title: "Active Zones",
-      value: "2", // number of zones currently active
-      icon: Room, // represents location/zone
-      tooltipMessage: "Total zones currently engaged in operations.",
-    },
+
     {
       title: "Busiest Zone",
-      value: "Zone A", // which zone has most activity
-      icon: Timeline, // represents activity metric
+      value: "Zone A",
+      icon: Timeline,
       tooltipMessage: "Zone with the highest operation activity.",
     },
   ];
@@ -126,11 +110,11 @@ const VehicleUnloadingLoading: React.FC = () => {
   ];
 
   const recentLoadingEvents = backendData.map((item) => {
-    const eventMessage =
+    const incident =
       item.loadingState === "Start" ? "Loading started" : "Loading stopped";
 
     return {
-      eventMessage,
+      incident,
       trackId: item.trackId,
       zone: item.zone,
       time: item.createdAt,
@@ -143,7 +127,7 @@ const VehicleUnloadingLoading: React.FC = () => {
   const zoneLoadingData = [
     {
       zone: "Loading Bay A",
-      events: 12,
+      incident: 12,
       subViolations: [
         { label: "Start", value: 7, icon: PlayCircleIcon },
         { label: "Stop", value: 5, icon: StopCircleIcon },
@@ -151,7 +135,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Loading Bay B",
-      events: 9,
+      incident: 9,
       subViolations: [
         { label: "Start", value: 4, icon: PlayCircleIcon },
         { label: "Stop", value: 5, icon: StopCircleIcon },
@@ -159,7 +143,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Unloading Bay A",
-      events: 15,
+      incident: 15,
       subViolations: [
         { label: "Start", value: 9, icon: PlayCircleIcon },
         { label: "Stop", value: 6, icon: StopCircleIcon },
@@ -167,7 +151,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Unloading Bay B",
-      events: 8,
+      incident: 8,
       subViolations: [
         { label: "Start", value: 4, icon: PlayCircleIcon },
         { label: "Stop", value: 4, icon: StopCircleIcon },
@@ -175,7 +159,7 @@ const VehicleUnloadingLoading: React.FC = () => {
     },
     {
       zone: "Loading Bay C",
-      events: 10,
+      incident: 10,
       subViolations: [
         { label: "Start", value: 6, icon: PlayCircleIcon },
         { label: "Stop", value: 4, icon: StopCircleIcon },
@@ -213,18 +197,6 @@ const VehicleUnloadingLoading: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LocalShippingIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Tracking Vehicle Unloading/Loading Time
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -280,7 +252,7 @@ const VehicleUnloadingLoading: React.FC = () => {
           {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentLoadingEvents}
               loading={false}
               tooltipMessage="Latest 20 Vehicle unloading and loading events with details."
@@ -290,7 +262,7 @@ const VehicleUnloadingLoading: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
+              label="Zone Incident"
               violationsZone={zoneLoadingData}
               loading={false}
               tooltipMessage="Shows vehicle unloading and loading events per zone"
@@ -300,10 +272,10 @@ const VehicleUnloadingLoading: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
-        title="Vehicle Loading/Unloading Report"
+        title="Detailed Report"
         tooltipMessage="Detailed vehicle loading/unloading events report with filter, reset, and export options."
         columns={[
-          { id: "eventMessage", label: "Event" },
+          { id: "incident", label: "incident" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
           { id: "cameraId", label: "Camera" },
@@ -312,11 +284,11 @@ const VehicleUnloadingLoading: React.FC = () => {
         data={recentLoadingEvents}
         filters={[
           {
-            id: "eventMessage",
-            label: "Event",
+            id: "incident",
+            label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.eventMessage))
+              new Set(recentLoadingEvents.map((v) => v.incident))
             ),
           },
           {

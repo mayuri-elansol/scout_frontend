@@ -12,7 +12,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
@@ -98,28 +97,28 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     {
       title: "Fire Incidence",
       value: "267",
-      icon: LocalFireDepartment, // 🔥 Fire
+      icon: LocalFireDepartment,
       tooltipMessage:
         "Total number of fire detections recorded across all monitored zones.",
     },
     {
       title: "Smoke Incidence",
       value: "324",
-      icon: SmokeFree, // 💨 Smoke
+      icon: SmokeFree,
       tooltipMessage:
         "Total number of smoke detections recorded across all monitored zones.",
     },
     {
       title: "Last Detection Time",
       value: "10:42 AM",
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
       tooltipMessage:
         "The time when the last fire or smoke detection was recorded.",
     },
     {
       title: "Last Detection Zone",
       value: "Zone A",
-      icon: LocationOn, // 📍 Zone / Location
+      icon: LocationOn,
       tooltipMessage:
         "The zone where the most recent fire or smoke detection occurred.",
     },
@@ -189,20 +188,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
   };
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <LocalFireDepartmentIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Fire, Smoke, Oil and Gas Leak Detection
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* KPI Cards */}
       <Paper
         sx={{
           p: 3,
@@ -220,7 +205,6 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -257,7 +241,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
           {/* Recent Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentFireViolations}
               loading={false}
               tooltipMessage="Latest 20 detected fire & smoke incident with details."

@@ -7,7 +7,6 @@ import { PhoneIphone, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import PhonelinkEraseIcon from "@mui/icons-material/PhonelinkErase";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -30,7 +29,7 @@ const MobilePhoneUsage: React.FC = () => {
   const MobilePhoneUsageKpiData = [
     {
       title: "Total Violations",
-      value: "18", // Total mobile phone usage violations
+      value: "18",
       icon: PhoneIphone,
       trendColor: "#f44336",
       color: "#f44336",
@@ -43,14 +42,14 @@ const MobilePhoneUsage: React.FC = () => {
     },
     {
       title: "Latest Incidence",
-      value: "10:30 AM", // Time of last violation detected
+      value: "10:30 AM",
       icon: AccessTime,
       tooltipMessage:
         "The time when the most recent mobile phone usage violation was detected.",
     },
     {
       title: "Zone Detection",
-      value: "Assembly Line", // Zone where latest violation detected
+      value: "Assembly Line",
       icon: LocationOn,
       tooltipMessage:
         "The zone where the latest mobile phone usage violation was detected.",
@@ -125,7 +124,6 @@ const MobilePhoneUsage: React.FC = () => {
 
   console.log("Recent Mobile Phone Violations", recentMobilePhoneViolations);
 
-  // Zone violations structure
   const zoneViolationsData = [
     {
       zone: "Assembly Line",
@@ -175,18 +173,6 @@ const MobilePhoneUsage: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PhonelinkEraseIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Mobile Phone Usage in Restricted Areas
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -204,7 +190,6 @@ const MobilePhoneUsage: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -240,7 +225,7 @@ const MobilePhoneUsage: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -249,7 +234,7 @@ const MobilePhoneUsage: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -260,7 +245,7 @@ const MobilePhoneUsage: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[

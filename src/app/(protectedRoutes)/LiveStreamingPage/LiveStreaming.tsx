@@ -7,9 +7,7 @@ import {
   FormControlLabel,
   Grid,
   Chip,
-  Paper,
 } from "@mui/material";
-import { VideoCall } from "@mui/icons-material";
 import { CameraFeed } from "./cameraFeed";
 import { v4 as uuidv4 } from "uuid";
 const LiveStreaming: React.FC = () => {
@@ -28,44 +26,17 @@ const LiveStreaming: React.FC = () => {
     "zone-d": { playing: false, muted: true },
   });
 
-  const topMetrics = [
-    {
-      value: "87.5%",
-      label: "PPE Compliance Rate",
-      color: "#ff9800",
-      borderColor: "#ff9800",
-    },
-    {
-      value: "3",
-      label: "Active Violations",
-      color: "#f44336",
-      borderColor: "#f44336",
-    },
-    {
-      value: "234",
-      label: "People Detected",
-      color: "#4caf50",
-      borderColor: "#4caf50",
-    },
-    {
-      value: "12",
-      label: "No Helmet Detected",
-      color: "#f44336",
-      borderColor: "#f44336",
-    },
-  ];
-
   const cameraZones = [
     {
       id: "zone-a" as ZoneId,
       name: "Production Zone A",
-      status: <>LIVE</>,
-      roiDetection: <>ROI DETECTION</>,
+      status: "LIVE",
+      roiDetection: "ROI DETECTION",
       worker: <>{"Worker #2"}</>, // wrap as React element
-      compliance: <>87.5%</>,
-      people: <>234</>,
-      violations: <>3</>,
-      noHelmet: <>12</>,
+      compliance: "87.5%",
+      people: "24",
+      violations: "3",
+      noHelmet: "12",
     },
     {
       id: "zone-b" as ZoneId,
@@ -125,25 +96,15 @@ const LiveStreaming: React.FC = () => {
   return (
     <Box>
       {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 0 }}>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            mb: 1,
+            justifyContent: "end",
+            //  mb: 1,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            <VideoCall sx={{ fontSize: 28, color: "#1976d2" }} />
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: "bold", color: "#1c2025" }}
-            >
-              Live Streaming
-            </Typography>
-          </Box>
-
           {/* AI Processing Toggle */}
           <FormControlLabel
             control={
@@ -182,22 +143,15 @@ const LiveStreaming: React.FC = () => {
             sx={{ ml: 0 }}
           />
         </Box>
-        <Typography
-          variant="body1"
-          sx={{ fontSize: "16px", color: "#5c6b7d", lineHeight: 1.5 }}
-        >
-          Real-time monitoring across various factory zones with AI-powered
-          analytics
-        </Typography>
       </Box>
 
       {/* Top Metrics */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+      {/* <Grid container spacing={3} sx={{ mb: 0.6 }}>
         {topMetrics.map((metric, index) => (
           <Grid size={{ xs: 12, sm: 6, md: 3 }} key={uuidv4() + index}>
             <Paper
               sx={{
-                p: 3,
+                p: 0.5,
                 textAlign: "center",
                 border: `2px solid ${metric.borderColor}`,
                 borderRadius: 2,
@@ -209,7 +163,7 @@ const LiveStreaming: React.FC = () => {
                   fontSize: "32px",
                   fontWeight: "bold",
                   color: metric.color,
-                  mb: 1,
+                  mb: 0.5,
                 }}
               >
                 {metric.value}
@@ -220,11 +174,11 @@ const LiveStreaming: React.FC = () => {
             </Paper>
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
 
       {/* Camera Feeds Grid */}
 
-      <Grid container spacing={3}>
+      <Grid container spacing={2}>
         {cameraZones.map((zone, index) => (
           <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={uuidv4() + index}>
             <CameraFeed

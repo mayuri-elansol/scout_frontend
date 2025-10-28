@@ -25,38 +25,38 @@ const FaceRecognition: React.FC = () => {
   const FaceRecognitionKpiData = [
     {
       title: "Total Employees",
-      value: "120", // total count of registered employees
-      icon: Groups, // people group icon
+      value: "120",
+      icon: Groups,
     },
     {
       title: "Present",
-      value: "7", // current present employees
-      icon: CheckCircle, // checkmark = present
+      value: "7",
+      icon: CheckCircle,
     },
     {
       title: "Absent",
-      value: "0", // current absent employees
-      icon: Cancel, // X mark = absent
+      value: "0",
+      icon: Cancel,
     },
     {
       title: "Late Arrivals",
-      value: "0", // number of employees late today
-      icon: AccessTime, // clock = late
+      value: "0",
+      icon: AccessTime,
     },
     {
       title: "Early Arrivals",
-      value: "8", // employees arriving earlier than shift
-      icon: PersonAddAlt, // symbolizing early entry
+      value: "8",
+      icon: PersonAddAlt,
     },
     {
       title: "Total Entries",
-      value: "134", // total scans in (entry)
-      icon: Login, // entry arrow
+      value: "134",
+      icon: Login,
     },
     {
       title: "Total Exits",
-      value: "128", // total scans out (exit)
-      icon: Logout, // exit arrow
+      value: "128",
+      icon: Logout,
     },
   ];
 
@@ -175,7 +175,7 @@ const FaceRecognition: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -184,14 +184,14 @@ const FaceRecognition: React.FC = () => {
               tooltipMessage="recent voialtion"
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <CameraStatus cameraZones={cameraZones} loading={false} />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[

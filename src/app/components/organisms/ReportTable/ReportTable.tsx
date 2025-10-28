@@ -51,7 +51,7 @@ export interface ReportFilter<T> {
 
 /** Props for ReportTable with generic row type T */
 interface ReportTableProps<T extends object> {
-  readonly title: string;
+  readonly title?: string;
   readonly columns: ReportColumn<T>[];
   readonly data: T[];
   readonly downloadFileName: string;
@@ -369,10 +369,14 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-              <Description sx={{ color: "#1976d2", fontSize: 24 }} />
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                {title}
-              </Typography>
+              {title && (
+                <>
+                  <Description sx={{ color: "#1976d2", fontSize: 24 }} />
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {title}
+                  </Typography>
+                </>
+              )}
             </Box>
             {tooltipMessage && (
               <Tooltip title={tooltipMessage} arrow placement="left">

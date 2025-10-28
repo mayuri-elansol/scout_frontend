@@ -55,10 +55,5 @@ export const Loading: Story = {
 export const Filled: Story = {
   args: {
     ...defaultProps,
-    formData: {
-      currentPassword: "Current123!",
-      password: "Secret123!",
-      confirmPassword: "Secret123!",
-    },
   },
 };

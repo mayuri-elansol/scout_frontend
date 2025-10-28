@@ -7,13 +7,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import BlockIcon from "@mui/icons-material/Block";
-import {
-  DirectionsCar,
-  Block,
-  Warning,
-  ReportProblem,
-} from "@mui/icons-material";
+import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 
 import CarIcon from "@mui/icons-material/DirectionsCar";
 import EquipmentIcon from "@mui/icons-material/Build";
@@ -23,9 +17,9 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   interface UnauthorizedParkingEvent {
-    eventMessage: string; // type of violation message
+    eventMessage: string;
     zone: string;
-    time: string; // createdAt time
+    time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
@@ -38,37 +32,30 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     useState<UnauthorizedParkingEvent | null>(null);
   const UnauthorizedParkingKpiData = [
     {
-      title: "Total Unauthorized Events",
-      value: "48", // total count of parking/equipment blocking events
-      icon: ReportProblem, // represents incidents
+      title: "Blocked Parking",
+      value: "87",
       tooltipMessage:
-        "Total unauthorized parking or equipment blocking events recorded.",
-    },
-    {
-      title: "Unauthorized Car Parking",
-      value: "32", // count of car-type violations
-      icon: DirectionsCar,
-      tooltipMessage: "Number of unauthorized car parking events detected.",
-    },
-    {
-      title: "Equipment Blocking Aisles",
-      value: "16", // count of non-car-type violations
+        "Shows the total number of parking that are currently blocked.",
       icon: Block,
-      tooltipMessage: "Number of incidents where equipment blocked aisles.",
     },
     {
-      title: "Active Zones",
-      value: "5", // zones with violations
-      icon: Warning,
+      title: "Clear Parking",
+      value: "12",
       tooltipMessage:
-        "Number of zones with unauthorized parking or blocking incidents.",
+        "Shows the total number of parking that are currently clear and safe for use.",
+      icon: CheckCircle,
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Busiest Zone",
-      value: "Zone A", // zone with most events
-      icon: DirectionsCar,
+      title: "Affected Zones (Last 3)",
+      value: "Zone A, Zone B, Zone C",
       tooltipMessage:
-        "Zone with the highest number of unauthorized parking or blocking incidents.",
+        "Displays the last three zones where blocked parking were detected.",
+      icon: LocationOn,
     },
   ];
 
@@ -132,7 +119,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       time: item.createdAt,
       imageUrl: item.snapshot,
       cameraId: item.camera,
-      alarmTriggered: true, // assume all are alarm-triggered for violations
+      alarmTriggered: true,
       updatedAt: item.updatedAt,
     };
   });
@@ -211,18 +198,6 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <BlockIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Unauthorized Parking or Equipment Blocking Aisles
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -240,7 +215,6 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -276,7 +250,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -285,11 +259,10 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
               tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
@@ -297,14 +270,15 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
-        title="Unauthorized Parking / Equipment Blocking Report"
+        title="Detailed Report"
         tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
           { id: "eventMessage", label: "Voilation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "time", label: "Timestamp", minWidth: 150 },
+
           { id: "cameraId", label: "Camera", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
@@ -312,21 +286,32 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
         filters={[
           {
             id: "eventMessage",
-            label: "Event",
+            label: "Voilation",
             type: "select",
-            options: ["Unauthorized Car Parking", "Equipment Blocking Aisle"],
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.eventMessage))
+            ),
           },
 
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: [
-              "Parking Lot A",
-              "Loading Dock B",
-              "Main Gate",
-              "Warehouse Area",
-            ],
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "Camera",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.cameraId))
+            ),
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
           },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },

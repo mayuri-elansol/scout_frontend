@@ -7,7 +7,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import {
-  Shield,
   NotificationsActive,
   CheckCircle,
   Schedule,
@@ -38,35 +37,35 @@ const FallDetection: React.FC = () => {
   const fallKpiData = [
     {
       title: "Total Fall Incidents",
-      value: "24", // Count of all fall/laydown/sleeping incidents
+      value: "24",
       icon: ReportProblem,
       tooltipMessage:
         "Total number of fall, laydown, or sleeping incidents detected across all monitored zones.",
     },
     {
       title: "Active Alarms",
-      value: "6", // Count of incidents where alarmTriggered = True
+      value: "6",
       icon: NotificationsActive,
       tooltipMessage:
         "Number of incidents where alarms were triggered due to detected falls or unsafe conditions.",
     },
     {
       title: "Incident-Free Zones",
-      value: "3 / 5", // Number of zones with 0 incidents / total zones
+      value: "3 / 5",
       icon: CheckCircle,
       tooltipMessage:
         "Number of zones without any fall or laydown incidents out of the total monitored zones.",
     },
     {
       title: "Last Detection Time",
-      value: "10:42 AM", // Current timestamp - latest incident createdAt
+      value: "10:42 AM",
       icon: Schedule,
       tooltipMessage:
         "The time when the most recent fall, laydown, or sleeping incident was detected.",
     },
     {
       title: "Most Incident-Prone Zone",
-      value: "Zone B", // Zone with the highest incidents
+      value: "Zone B",
       icon: Whatshot,
       tooltipMessage:
         "The zone with the highest number of fall, laydown, or sleeping incidents recorded.",
@@ -138,7 +137,7 @@ const FallDetection: React.FC = () => {
   // Map backend data to recentViolations format
   const recentLaydownViolations = backendLaydownData.map((item) => {
     return {
-      voilation: "Fall / Laydown / Sleeping detected",
+      voilation: "Fall / Laydown detected",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -189,18 +188,6 @@ const FallDetection: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Shield sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Fall Detection /Laydown/Sleeping Detection in Work Areas
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -218,7 +205,6 @@ const FallDetection: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -254,7 +240,7 @@ const FallDetection: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -263,7 +249,7 @@ const FallDetection: React.FC = () => {
               tooltipMessage="Latest 20 detected laydown/sleeping/falldown violations with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/* Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations

@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { theme } from "../theme/theme";
 import Sidebar from "../components/organisms/Sidebar/Sidebar";
 import Header from "../components/organisms/Header/Header";
-
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/Loader/Loader";
@@ -68,10 +67,11 @@ export default function ClientLayout({
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Box sx={{ display: "flex", minHeight: "100vh" }}>
+        <Box sx={{ display: "flex", height: "100vh" }}>
           <Header />
 
           {/* Desktop Sidebar */}
+
           {!isTabletOrPhone && (
             <Sidebar
               currentPage={currentPage}
@@ -82,23 +82,31 @@ export default function ClientLayout({
           {/* Main Content */}
           <Box
             sx={{
+              // flex: 1,
+              // pl: 2.5,
+              // pr: 2.5,
+              // pb: 4,
+              // pt: 10,
+              // backgroundColor: "#f5f7fa",
+              // width: "78vw",
               flex: 1,
-              pl: 4,
-              pr: 4,
-              pb: 4,
+              display: "flex", // Add flexbox
+              flexDirection: "column", // Stack children vertically
+              pl: 2.5,
+              pr: 2.5,
+              pb: 2,
               pt: 10,
               backgroundColor: "#f5f7fa",
-              width: "78vw",
+              overflow: "auto", // Allow scrolling if content exceeds
+              minHeight: 0, // Allow flex shrinking
             }}
           >
             <RouteLoader>
-              {/* <Breadcrumb
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
-              /> */}
+        
               {children}
             </RouteLoader>
           </Box>
+
         </Box>
       </LocalizationProvider>
     </ThemeProvider>

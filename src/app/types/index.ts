@@ -52,7 +52,7 @@ export interface KpiData {
 export type PageType =
   | "safety-compliance-dashboard"
   | "surveillance-monitoring-dashboard"
-  | "vehicle-operational-insights-dashboard"
+  | "operational-insights-dashboard"
   | "workforce-monitoring-dasboard"
   | "ppe-detection"
   | "intrusion-detection"
@@ -89,7 +89,8 @@ export type PageType =
   | "unauthorized-access"
   | "monitoring-canteen-usage"
   | "role-management"
-  | "user-management";
+  | "user-management"
+  | "configurator";
 
 // Component Props Types
 export interface SidebarProps {

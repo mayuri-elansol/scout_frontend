@@ -3,13 +3,7 @@
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  AccessTime,
-  Shield,
-  Visibility,
-  Security,
-  LocationOn,
-} from "@mui/icons-material";
+import { AccessTime, Shield, Security, LocationOn } from "@mui/icons-material";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
@@ -39,13 +33,13 @@ const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
       title: "Intrusion Detected",
-      value: "7", // Total number of intrusions detected
-      icon: Security, // 🛡️ Represents security/intrusion
+      value: "7",
+      icon: Security,
       tooltipMessage: "Shows the total number of intrusions detected so far.",
     },
     {
       title: "Security Level (Safe/Unsafe)",
-      value: "Safe", // Current security status
+      value: "Safe",
       tooltipMessage:
         "Displays whether the security status is safe or unsafe at the moment.",
 
@@ -53,16 +47,16 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Recent Intrusion Time",
-      value: "11:20 AM", // Last intrusion detection timestamp
-      icon: AccessTime, // ⏰ Time
+      value: "11:20 AM",
+      icon: AccessTime,
 
       tooltipMessage:
         "Shows the time when the most recent intrusion was detected.",
     },
     {
       title: "Zone Breaches",
-      value: "2 (Zone A, Zone C)", // Zones breached recently
-      icon: LocationOn, // 📍 Zones / locations
+      value: "2 (Zone A, Zone C)",
+      icon: LocationOn,
       tooltipMessage:
         "Displays the number of zones breached and lists those zones.",
     },
@@ -109,7 +103,6 @@ const IntrusionDetection: React.FC = () => {
   const recentIntrusionViolations = backendIntrusionData.map((item) => {
     let incidentMsg = "";
 
-    // Rule: If alarmTriggered is true → violation
     if (item.alarmTriggered) {
       incidentMsg = "Intrusion detected";
     } else {
@@ -148,18 +141,6 @@ const IntrusionDetection: React.FC = () => {
   };
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <Visibility sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Intrusion Detection at Premises Perimeter
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -216,14 +197,14 @@ const IntrusionDetection: React.FC = () => {
           {/* Active Intrusion Alerts */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentIntrusionViolations}
               loading={false}
               tooltipMessage="Latest 20 intrusion detected with details."
             />
           </Grid>
           {/* Security Zones Status */}
-          {/* item xs={12} lg={4} */}
+
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
               label="Zone Incident"
@@ -234,7 +215,7 @@ const IntrusionDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
+
       {/* Security Intrusion Report */}
       <ReportTable
         title="Detailed Report"

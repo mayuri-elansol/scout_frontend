@@ -8,7 +8,6 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import FollowTheSignsIcon from "@mui/icons-material/FollowTheSigns";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import PeopleIcon from "@mui/icons-material/People";
@@ -39,7 +38,7 @@ const PeopleCount: React.FC = () => {
       zone: "Production Floor A",
       snapshot: "https://picsum.photos/400/200?random=11",
       cameraid: "CAM-11",
-      alarmTriggered: true, // You can set this true if threshold exceeded
+      alarmTriggered: true,
       createdAt: "2025-09-30 09:42",
       updatedAt: "2025-09-30 09:45",
     },
@@ -144,8 +143,8 @@ const PeopleCount: React.FC = () => {
   const peopleCountKpiData = [
     {
       title: "People Inside",
-      value: "267", // Current count of people inside
-      icon: People, // 👥 Crowd of people
+      value: "267",
+      icon: People,
 
       tooltipMessage: "Current number of people present inside the area.",
       trendColor: "#2196f3",
@@ -156,8 +155,8 @@ const PeopleCount: React.FC = () => {
     },
     {
       title: "Entry Count",
-      value: "512", // Total entries today
-      icon: Login, // ⬅️ Entry
+      value: "512",
+      icon: Login,
 
       tooltipMessage: "Total number of people who entered today.",
       trendColor: "#2196f3",
@@ -168,8 +167,8 @@ const PeopleCount: React.FC = () => {
     },
     {
       title: "Exit Count",
-      value: "245", // Total exits today
-      icon: Logout, // ➡️ Exit
+      value: "245",
+      icon: Logout,
       tooltipMessage: "Total number of people who exited today.",
       trendColor: "#2196f3",
       color: "#2196f3",
@@ -187,18 +186,6 @@ const PeopleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <FollowTheSignsIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            People Count in Factory Premises based on Entry Exit Counting
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -216,7 +203,6 @@ const PeopleCount: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -251,7 +237,7 @@ const PeopleCount: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -260,7 +246,7 @@ const PeopleCount: React.FC = () => {
               tooltipMessage="Latest 20 People Count in Factory Premises based on Entry Exit person Count with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -328,7 +314,7 @@ const PeopleCount: React.FC = () => {
           open={viewPopupOpen}
           handleClose={() => setViewPopupOpen(false)}
           details={viewPopupData}
-          imageKey="imageUrl" // important: matches PeopleCountViolation.imageUrl
+          imageKey="imageUrl"
           onDownload={(imageUrl) => console.log("Download image:", imageUrl)}
         />
       )}

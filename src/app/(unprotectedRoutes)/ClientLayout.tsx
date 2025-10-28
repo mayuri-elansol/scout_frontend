@@ -15,11 +15,11 @@ import {
 } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import {
-  Analytics,
+  SettingsSuggest,
   NotificationsActive,
-  Search,
+  TrendingUp,
+  Explore,
   Security,
-  SmartToy,
   Timeline,
   CameraAlt,
 } from "@mui/icons-material";
@@ -116,31 +116,30 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   const features = [
     {
-      icon: <SmartToy sx={{ fontSize: 20 }} />,
-      title: "AI-Powered Detection",
+      icon: <SettingsSuggest sx={{ fontSize: 20 }} />,
+      title: "Plug & Play Intelligence",
       description:
-        "Advanced computer vision algorithms for real-time object, person, and anomaly detection across multiple camera feeds.",
-    },
-    {
-      icon: <Analytics sx={{ fontSize: 20 }} />,
-      title: "Smart Analytics Dashboard",
-      description:
-        "Comprehensive reporting with heat maps, traffic patterns, and behavioral analysis for data-driven security decisions.",
+        "Seamless integration with existing CCTV. Edge or cloud-based deployment with minimal hardware upgrades.",
     },
     {
       icon: <NotificationsActive sx={{ fontSize: 20 }} />,
-      title: "Real-Time Alerts",
+      title: "24/7 Instant Alerts",
       description:
-        "Instant notifications for security breaches, unusual activities, and predefined events with customizable alert thresholds.",
+        "Continuous monitoring with real-time notifications via mobile, email, or dashboard.",
     },
     {
-      icon: <Search sx={{ fontSize: 20 }} />,
-      title: "Advanced Search & Forensics",
+      icon: <TrendingUp sx={{ fontSize: 20 }} />,
+      title: "Industry-Specific Analytics",
       description:
-        "Powerful search capabilities with facial recognition, license plate detection, and timeline-based investigation tools.",
+        "Customized monitoring solutions with automated compliance documentation for your industry.",
+    },
+    {
+      icon: <Explore sx={{ fontSize: 20 }} />,
+      title: "Grow at Your Pace",
+      description:
+        "Scalable deployment from single cameras to facility-wide coverage without disruption.",
     },
   ];
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -254,11 +253,12 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
                         mx: { xs: "auto", lg: 0 },
                       }}
                     >
-                      Your Smart CCTV Analysis Partner. SCOUT transforms
-                      traditional surveillance into intelligent monitoring,
-                      delivering real-time insights, automated threat detection,
-                      and comprehensive analytics for enhanced security
-                      operations.
+                      Don’t replace your CCTV system, make it smarter. SCOUT
+                      integrates cutting-edge AI intelligence into your existing
+                      surveillance infrastructure, transforming reactive cameras
+                      into proactive safety and security monitoring systems that
+                      deliver real-time insights and prevent incidents before
+                      they occur.
                     </Typography>
 
                     <Box

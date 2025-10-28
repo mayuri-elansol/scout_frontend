@@ -5,19 +5,14 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   DirectionsCar,
-  SwapHoriz,
-  Place,
-  Timeline,
   CheckCircle,
   ReportProblem,
-  Schedule,
-  ExitToApp,
-  MeetingRoom,
+  Login,
+  Logout,
 } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import NoCrashIcon from "@mui/icons-material/NoCrash";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -25,7 +20,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const VehicleCount: React.FC = () => {
   interface VehicleCountEvent {
-    voilation: string;
+    incident: string;
     vehicleNumber: string;
     status: string;
     validNumber: boolean;
@@ -44,11 +39,40 @@ const VehicleCount: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
     {
-      title: "Total Vehicles Detected",
-      value: "152",
+      title: "Total Vehicle Entries",
+      value: "120",
+      icon: Login,
+      tooltipMessage:
+        "Total number of vehicles that entered through all gates during the selected time period.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+    },
+    {
+      title: "Total Vehicle Exits",
+      value: "92",
+      icon: Logout,
+      tooltipMessage:
+        "Total number of vehicles that exited through all gates during the selected time period.",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+    },
+    {
+      title: "Vehicles Inside",
+      value: "28",
       icon: DirectionsCar,
       tooltipMessage:
-        "Total number of vehicles detected at all entry/exit gates.",
+        "Total number of vehicles currently inside the premises (calculated as entries minus exits).",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
     },
     {
       title: "Total Valid Numbers",
@@ -56,6 +80,11 @@ const VehicleCount: React.FC = () => {
       icon: CheckCircle,
       tooltipMessage:
         "Number of detected vehicles with valid license plate numbers.",
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
       title: "Total Invalid Numbers",
@@ -63,49 +92,6 @@ const VehicleCount: React.FC = () => {
       icon: ReportProblem,
       tooltipMessage:
         "Number of detected vehicles with invalid or unreadable license plate numbers.",
-    },
-    {
-      title: "Last Detection Time",
-      value: "16:20",
-      icon: Schedule,
-      tooltipMessage: "The most recent time when a vehicle was detected.",
-    },
-    {
-      title: "Last Zone",
-      value: "Gate A - Entry",
-      icon: MeetingRoom,
-      tooltipMessage: "Zone of the last vehicle detection.",
-    },
-    {
-      title: "Last Camera ID",
-      value: "CAM-VEH-12",
-      icon: DirectionsCar,
-      tooltipMessage: "Camera that detected the last vehicle.",
-    },
-    {
-      title: "Last Status",
-      value: "Entry",
-      icon: ExitToApp,
-      tooltipMessage:
-        "Whether the last detection was at an entry or exit gate.",
-    },
-    {
-      title: "Entry vs Exit",
-      value: "12 In / 8 Out",
-      icon: SwapHoriz,
-      tooltipMessage: "vehical entry exit count",
-    },
-    {
-      title: "Busiest Zone",
-      value: "Zone A",
-      icon: Place,
-      tooltipMessage: "most busiest zone",
-    },
-    {
-      title: "Current Vehicle Occupancy",
-      value: "28",
-      icon: Timeline,
-      tooltipMessage: "current vehical occupancy",
     },
   ];
   const vehicleCountBackendData = [
@@ -179,7 +165,7 @@ const VehicleCount: React.FC = () => {
     }
 
     return {
-      voilation: violation,
+      incident: violation,
       vehicleNumber: item.numberDetected,
       status: item.status,
       validNumber: item.validNumber,
@@ -260,18 +246,6 @@ const VehicleCount: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <NoCrashIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Vehicle Count & ANPR at Entry/Exit Gates
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -289,7 +263,6 @@ const VehicleCount: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -325,20 +298,20 @@ const VehicleCount: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 Vehicle Count & ANPR at Entry/Exit Gates with details."
-              label="Recent Violations"
+              label="Recent Incident"
               violations={vehicleViolations}
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/* Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
+              label="Zone Incident"
               violationsZone={vehicleZoneViolationsData}
               loading={false}
               tooltipMessage="Shows violations per zone"
@@ -346,31 +319,33 @@ const VehicleCount: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
-        title="Detailed Vehicle Count Report"
+        title="Detailed Report"
         tooltipMessage="Detailed vehicle count report with filters, reset, and export options."
         columns={[
-          { id: "voilation", label: "Violation", minWidth: 200 },
+          { id: "incident", label: "Incident", minWidth: 200 },
           { id: "vehicleNumber", label: "Vehicle Number", minWidth: 150 },
           { id: "status", label: "Status (Entry/Exit)", minWidth: 150 },
           { id: "validNumber", label: "Valid Number", minWidth: 120 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Camera ID", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
+          { id: "zone", label: "Zone", minWidth: 120 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 150 },
         ]}
         data={vehicleViolations}
         filters={[
           {
-            id: "zone",
-            label: "Zone",
+            id: "vehicleNumber",
+            label: "Vehicle Number",
             type: "select",
-            options: Array.from(new Set(vehicleViolations.map((v) => v.zone))),
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.vehicleNumber))
+            ),
           },
           {
             id: "status",
-            label: "Status",
+            label: "status",
             type: "select",
             options: Array.from(
               new Set(vehicleViolations.map((v) => v.status))
@@ -380,7 +355,23 @@ const VehicleCount: React.FC = () => {
             id: "validNumber",
             label: "Valid Number",
             type: "select",
-            options: ["true", "false"],
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.validNumber))
+            ),
+          },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: Array.from(new Set(vehicleViolations.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "camera",
+            type: "select",
+            options: Array.from(
+              new Set(vehicleViolations.map((v) => v.cameraId))
+            ),
           },
           {
             id: "alarmTriggered",

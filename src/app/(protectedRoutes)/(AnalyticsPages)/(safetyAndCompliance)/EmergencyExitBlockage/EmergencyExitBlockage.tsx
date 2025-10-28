@@ -7,7 +7,6 @@ import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import DirectionsRunIcon from "@mui/icons-material/DirectionsRun";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -29,17 +28,17 @@ const EmergencyExitBlockage: React.FC = () => {
   const ExitKpiData = [
     {
       title: "Blocked Emergency Exit",
-      value: "87", // Count of currently blocked exits
+      value: "87",
       tooltipMessage:
         "Shows the total number of emergency exits that are currently blocked.",
       icon: Block,
     },
     {
       title: "Clear Emergency Exit Routes",
-      value: "12", // Count of safe/clear exits
+      value: "12",
       tooltipMessage:
         "Shows the total number of emergency exits that are currently clear and safe for use.",
-      icon: CheckCircle, // ✅ Safe / clear
+      icon: CheckCircle,
       trendColor: "#4caf50",
       color: "#4caf50",
       bgColor: "#e8f5e9",
@@ -48,10 +47,10 @@ const EmergencyExitBlockage: React.FC = () => {
     },
     {
       title: "Affected Zones (Last 3)",
-      value: "Zone A, Zone B, Zone C", // Last 3 affected zones
+      value: "Zone A, Zone B, Zone C",
       tooltipMessage:
         "Displays the last three zones where blocked emergency exits were detected.",
-      icon: LocationOn, // 📍 Zone/location indicator
+      icon: LocationOn,
     },
   ];
 
@@ -158,20 +157,6 @@ const EmergencyExitBlockage: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <DirectionsRunIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Emergency Exit Blockage Detection
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* KPI Cards */}
       <Paper
         sx={{
           p: 3,
@@ -223,7 +208,7 @@ const EmergencyExitBlockage: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -232,7 +217,7 @@ const EmergencyExitBlockage: React.FC = () => {
               tooltipMessage="Latest 20 detected emergency exit blockage with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -243,8 +228,8 @@ const EmergencyExitBlockage: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-      {/* PPE Violations Report */}
+
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[

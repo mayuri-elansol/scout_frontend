@@ -1,43 +1,42 @@
 "use client";
 
 import React from "react";
-import { CameraZone } from "@/app/types";
-import { Box, Grid } from "@mui/material";
-import {
-  DirectionsCar,
-  Shield,
-  Visibility,
-  People,
-  Smartphone,
-  AccessTime,
-} from "@mui/icons-material";
+import { Box, Grid, Paper } from "@mui/material";
+import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
-import ActivityFeed from "@/app/components/organisms/ActivityFeed/ActivityFeed";
-import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+
+import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
+import DynamicViolationScatterChart, {
+  ViolationData,
+} from "@/app/components/organisms/ScatterChart/ScatterChart";
 
 const WorkforceMonitoring: React.FC = () => {
-  const kpiData = [
+  const WorkForcekpiData = [
     {
-      title: "Employee Presence in Critical Area",
+      title: "Employee in Critical Area",
       value: "7",
       violationsCount: 7,
       lastDetection: "Critical Zone A",
       lastDetectionTime: "03:25 PM",
-      icon: Shield,
-      route: "/CriticalAreaPresence",
+      icon: People,
+      route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
         "Shows the number of employees detected in critical areas where restricted access is enforced.",
     },
+
     {
-      title: "Employee Presence in Restricted Area",
-      value: "4",
-      violationsCount: 4,
-      lastDetection: "Restricted Zone B",
-      lastDetectionTime: "02:45 PM",
+      title: "Employee Idel Time",
+      value: "0",
+      violationsCount: 2,
+      lastDetection: "Production Floor A",
+      lastDetectionTime: "4:20 PM",
       icon: Visibility,
-      route: "/RestrictedAreaPresence",
+      route: "/EmployeeIdleTime",
       tooltipMessage:
         "Shows employee presence in areas that require special clearance.",
     },
@@ -52,60 +51,129 @@ const WorkforceMonitoring: React.FC = () => {
       tooltipMessage:
         "Displays incidents of unauthorized mobile phone usage inside critical areas.",
     },
+
     {
-      title: "People Count in Factory Premises",
-      value: "215",
-      violationsCount: 215,
-      lastDetection: "Main Entrance",
-      lastDetectionTime: "04:05 PM",
-      icon: People,
-      route: "/PeopleCount",
-      tooltipMessage:
-        "Displays total number of people inside factory premises based on entry/exit data.",
-    },
-    {
-      title: "Sleeping or Absence of Security Personnel",
+      title: "Sleeping / Absence of Security Personnel",
       value: "2",
       violationsCount: 2,
       lastDetection: "Gate 2 - Shift B",
       lastDetectionTime: "02:30 AM",
-      icon: AccessTime,
-      route: "/SecurityPersonnelMonitoring",
+      icon: Security,
+      route: "/SleepingSecurityPersonnel",
       tooltipMessage:
         "Shows detected cases of security personnel sleeping or absent from their post.",
     },
   ];
-
-  const cameraZones: CameraZone[] = [
-    {
-      zone: "Production Floor",
-      active: 8,
-      total: 10,
-      offline: 3,
-      tempred: 4,
-    },
-    { zone: "Warehouse", active: 3, total: 6, offline: 3, tempred: 4 },
-    { zone: "Parking Area", active: 4, total: 5, offline: 1, tempred: 2 },
-
-    { zone: "Assembly Line", active: 2, total: 4, offline: 1, tempred: 2 },
+  const violationData: ViolationData[] = [
+    { time: "08:00", zone: "Zone A", count: 5 },
+    { time: "09:00", zone: "Zone A", count: 8 },
+    { time: "10:00", zone: "Zone A", count: 3 },
+    { time: "11:00", zone: "Zone A", count: 12 },
+    { time: "08:00", zone: "Zone B", count: 7 },
+    { time: "09:00", zone: "Zone B", count: 4 },
+    { time: "10:00", zone: "Zone B", count: 9 },
+    { time: "11:00", zone: "Zone B", count: 6 },
+    { time: "12:00", zone: "Zone C", count: 2 },
+    { time: "01:00", zone: "Zone C", count: 11 },
+    { time: "03:00", zone: "Zone C", count: 5 },
+    { time: "04:00", zone: "Zone C", count: 8 },
+    { time: "05:00", zone: "Zone D", count: 2 },
+    { time: "06:00", zone: "Zone E", count: 11 },
+    { time: "07:00", zone: "Zone F", count: 5 },
+    { time: "08:00", zone: "Zone G", count: 8 },
   ];
+  const tabs: TabConfig[] = [
+    {
+      label: "Employee Presence (Critical Areas)",
+      content: <DynamicViolationScatterChart data={violationData} />,
+    },
+    {
+      label: "Employee Monitoring",
+      content: (
+        <DynamicBarChart
+          height={{
+            desktop: 490,
+          }}
+          data={[
+            { gate: "Production Gate", Idle: 5, Working: 19, NotPresent: 20 },
+            { gate: "Warehouse Gate", Idle: 3, Working: 21, NotPresent: 18 },
+            { gate: "Parking Gate", Idle: 2, Working: 22, NotPresent: 25 },
+            { gate: "Main Entrance", Idle: 4, Working: 20, NotPresent: 65 },
+            { gate: "Side Exit", Idle: 1, Working: 23, NotPresent: 23 },
+          ]}
+          xAxisKey="gate"
+          series={[
+            {
+              dataKey: "Idle",
+              label: "Idle Count",
+              color: "#FFD1DC",
+            },
+            {
+              dataKey: "Working",
+              label: "Working Count",
+              color: "#AEEEEE",
+            },
+            {
+              dataKey: "NotPresent",
+              label: "Not Present Count",
+              color: "#FFF5BA",
+            },
+          ]}
+          yAxisLabel="Count"
+          stackId="exitStatus"
+        />
+      ),
+    },
+
+    {
+      label: "Mobile Phone Usage",
+      content: <DynamicViolationScatterChart data={violationData} />,
+    },
+    {
+      label: "Security Personnel Status",
+      content: (
+        <DynamicBarChart
+          height={{
+            desktop: 490,
+          }}
+          data={[
+            { gate: "Production Gate", Absent: 5, Present: 19 },
+            { gate: "Warehouse Gate", Absent: 3, Present: 21 },
+            { gate: "Parking Gate", Absent: 2, Present: 22 },
+            { gate: "Main Entrance", Absent: 4, Present: 20 },
+            { gate: "Side Exit", Absent: 1, Present: 23 },
+          ]}
+          xAxisKey="gate"
+          series={[
+            {
+              dataKey: "Absent",
+              label: "Absent Count",
+              color: "#FFC0CB",
+            },
+            {
+              dataKey: "Present",
+              label: "Present Count",
+              color: "#B0E0E6",
+            },
+          ]}
+          yAxisLabel="Count"
+          stackId="exitStatus"
+        />
+      ),
+    },
+  ];
+
   return (
-    // <Box
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
-    //   }}
-    // >
-    <Box
+    <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "calc(100vh - 115px)",
-        backgroundColor: "#f5f7fa",
-        overflow: "hidden",
+        pt: 2,
+        px: 3,
+        // mb: 2,
+        backgroundColor: "#ffffff",
+        borderRadius: 2,
+        flex: 1,
       }}
     >
       <Box
@@ -114,7 +182,7 @@ const WorkforceMonitoring: React.FC = () => {
           alignItems: "center",
           justifyContent: "end",
           flexWrap: "wrap",
-          mb: 3,
+          mb: 2,
         }}
       >
         {/* Right: Time Filter */}
@@ -122,56 +190,23 @@ const WorkforceMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-        {kpiData.map((kpi, index) => (
+      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
+        {WorkForcekpiData.map((kpi, index) => (
           <Grid
-            size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 3 }}
+            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
-            <DashboardKpiCard {...kpi} route="/PPEDetectionPage" />
+            <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
-      <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-        <Box sx={{ flex: "1 1 50%", minWidth: "200px", mb: 2 }}>
-          <ActivityFeed
-            loading={false}
-            activities={[
-              {
-                time: "11:12 AM",
-                event: "PPE Violation Detected",
-                zone: "Production Floor - Camera 3",
-                severity: "high",
-                icon: Shield,
-              },
-              {
-                time: "11:08 AM",
-                event: "Vehicle Speed Limit Exceeded",
-                zone: "Parking Lot - Camera 7",
-                severity: "medium",
-                icon: DirectionsCar,
-              },
-              {
-                time: "11:05 AM",
-                event: "Unauthorized Access Attempt",
-                zone: "Gate 2 - Camera 12",
-                severity: "high",
-                icon: Visibility,
-              },
-            ]}
-          />
-        </Box>
-        <Box sx={{ flex: "1 1 45%", minWidth: "200px", mb: 2 }}>
-          <CameraStatus
-            cameraZones={cameraZones}
-            loading={false}
-            maxheight={600}
-          />
-        </Box>
+
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+        <DashboardTabs tabs={tabs} />
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

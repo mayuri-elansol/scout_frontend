@@ -6,7 +6,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import SecurityIcon from "@mui/icons-material/Security";
 import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -33,8 +32,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const SleepingSecurityPersonnelKpiData = [
     {
       title: "Security Presence",
-      value: "2", // Example: percentage of required security personnel present
-      icon: Security, // 🛡️ Represents security presence
+      value: "2",
+      icon: Security,
       tooltipMessage:
         "Shows the number of security personnel currently present.",
       trendColor: "#4caf50",
@@ -45,15 +44,15 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM", // Timestamp of last incident
-      icon: AccessTime, // ⏰ Time
+      value: "10:45 AM",
+      icon: AccessTime,
       tooltipMessage:
         "Displays the time of the most recent incident involving security personnel.",
     },
     {
       title: "Zone Violations",
-      value: "Zone A, Zone C", // Example: zones where violations happened
-      icon: LocationOn, // 📍 Location/zone indicator
+      value: "Zone A, Zone C",
+      icon: LocationOn,
       tooltipMessage:
         "Lists the zones where sleeping security personnel violations were detected.",
     },
@@ -178,18 +177,6 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <SecurityIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Sleeping or Absence of Security Personnel
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -243,7 +230,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -252,25 +239,26 @@ const SleepingSecurityPersonnel: React.FC = () => {
               tooltipMessage="Latest 20 Security personnel sleeping,absence detection with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows escurity personnel sleeping,absence violations per zone"
+              tooltipMessage="Shows security personnel sleeping,absence violations per zone"
             />
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-      {/* PPE Violations Report */}
+
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
-          { id: "zone", label: "Zone", minWidth: 150 },
           { id: "time", label: "Time", minWidth: 140 },
+          { id: "zone", label: "Zone", minWidth: 150 },
+
           { id: "cameraId", label: "Cameras", minWidth: 120 },
           { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
         ]}

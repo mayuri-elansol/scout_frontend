@@ -1,6 +1,3 @@
-
-
-// src/config/menuConfig.ts
 import { PageType } from "../types/index";
 import {
   Shield,
@@ -10,16 +7,17 @@ import {
   VideoCall,
   Warning,
   DirectionsCar,
-
 } from "@mui/icons-material";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
-import ManageAccountsIcon from "@mui/icons-material/ManageAccounts"; 
-import PeopleIcon from "@mui/icons-material/People"; 
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import PeopleIcon from "@mui/icons-material/People";
+import TuneIcon from "@mui/icons-material/Tune";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+
 export interface MenuItemConfig {
   path: string;
   name: string;
@@ -35,7 +33,17 @@ export interface CategoryConfig {
   items: MenuItemConfig[];
 }
 
+// Live Streaming menu (at the top)
+export const liveStreamingMenu: MenuItemConfig[] = [
+  {
+    name: "Live Streaming",
+    icon: VideoCall,
+    page: "live-streaming",
+    path: "/LiveStreamingPage",
+  },
+];
 
+// Dashboard menu
 export const dashboardMenu: CategoryConfig[] = [
   {
     title: "Dashboard",
@@ -52,9 +60,9 @@ export const dashboardMenu: CategoryConfig[] = [
         path: "/SurveillanceMonitoringDashboard",
       },
       {
-        name: "Vehicle Operational Insights ",
-        page: "vehicle-operational-insights-dashboard",
-        path: "/VehicleOperationalInsightsDashboard",
+        name: " Operational Insights ",
+        page: "operational-insights-dashboard",
+        path: "/OperationalInsightsDashboard",
       },
       {
         name: "Workforce Monitoring ",
@@ -73,12 +81,6 @@ export const alertMenu: MenuItemConfig[] = [
     badge: "12",
     page: "alerts",
     path: "/AlertsPage",
-  },
-  {
-    name: "Live Streaming",
-    icon: VideoCall,
-    page: "live-streaming",
-    path: "/LiveStreamingPage",
   },
 ];
 
@@ -100,6 +102,12 @@ export const settingsMenu: CategoryConfig[] = [
         page: "user-management",
         path: "/UserOverview",
       },
+      {
+        name: "Configurator",
+        icon: TuneIcon,
+        page: "configurator",
+        path: "/Configurator",
+      },
     ],
   },
 ];
@@ -111,34 +119,24 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: Shield,
     items: [
       {
-        name: "Personal Protective Equipment (PPE) Detection",
+        name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
         page: "ppe-detection",
         path: "/PPEDetectionPage",
       },
       {
-        name: "Object Detection in Walking Bays",
-        page: "object-detection",
-        path: "/ObjectDetection",
-      },
-      {
-        name: "Fire, Smoke, Oil and Gas Leak Detection",
+        name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
         page: "fire-smoke-oil-leak-detection",
         path: "/FireSmokeOilLeakDetection",
       },
       {
-        name: "Vehicle Speed Monitoring inside premises",
-        page: "vehicle-speed",
-        path: "/VehicalSpeedMonitoring",
-      },
-      {
-        name: "Fall Detection /Laydown/Sleeping Detection in Work Area",
+        name: "Fall / Laydown Detection",
         page: "fall-detection",
         path: "/FallDetection",
       },
       {
-        name: "STP/ETP Overflow Detection",
-        page: "STPOverflowDetection-detection",
-        path: "/STPOverflowDetection",
+        name: "Forklift / Vehicle In Walkways",
+        page: "object-detection",
+        path: "/ObjectDetection",
       },
       {
         name: "Emergency Exit Blockage Detection",
@@ -146,7 +144,7 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/EmergencyExitBlockage",
       },
       {
-        name: "Crowd Gathering in Hazardous Zones",
+        name: "Crowd Detection In Hazardous Zones",
         page: "crowd-gathering-in-hazardous-zones-detection",
         path: "/CrowdGathering",
       },
@@ -157,17 +155,22 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: Visibility,
     items: [
       {
-        name: "Intrusion Detection at Premises Perimeter",
+        name: "Intrusion Detection At Perimeter",
         page: "intrusion-detection",
         path: "/IntrusionDetectionPage",
       },
       {
-        name: "Camera Tampering or Offline Detection",
+        name: "Unauthorized Access In Restricted Areas",
+        page: "unauthorized-access",
+        path: "/UnauthorizedAccessInRestrictedAreas",
+      },
+      {
+        name: "Camera Tampering Detection",
         page: "camera-tampering",
         path: "/CameraTampering",
       },
       {
-        name: "People Presence during Shutdown Hours",
+        name: "Movement During Shutdown Hours",
         page: "people-presence",
         path: "/PeoplePresence",
       },
@@ -178,53 +181,58 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: People,
     items: [
       {
+        name: "Employee Presence In Critical Areas",
+        page: "employee-presence-critical-area",
+        path: "/EmployeePresenceCriticalArea",
+      },
+      {
+        name: "Employee Presence In Restricted Areas",
+        page: "employee-presence-restricted-area",
+        path: "/EmployeePresenceRestrictedArea",
+      },
+      {
         name: "Employee Idle Time Monitoring",
         page: "employee-idle-time",
         path: "/EmployeeIdleTime",
       },
       {
-        name: "Employee presence detection in critical areas",
-        page: "employee-presence-critical-area",
-        path: "/EmployeePresenceCriticalArea",
-      },
-      {
-        name: "Employee presence detection in Restricted areas",
-        page: "employee-presence-restricted-area",
-        path: "/EmployeePresenceRestrictedArea",
-      },
-      {
-        name: "Mobile Phone Usage in Restricted Areas",
+        name: "Mobile Phone Usage In Restricted Zones",
         page: "mobile-phone-usage",
         path: "/MobilePhoneUsage",
       },
       {
-        name: "People Count in Factory Premises based on Entry Exit person Counting",
-        page: "people-count",
-        path: "/PeopleCountPage",
-      },
-      {
-        name: "Sleeping or Absence of Security Personnel",
+        name: "Sleeping / Absence Of Security Guards",
         page: "sleeping-absence-security-personnel",
         path: "/SleepingSecurityPersonnel",
       },
     ],
   },
   {
-    title: "Vehicle Operational Insight",
+    title: "Operational Insight",
     icon: DirectionsCar,
     items: [
       {
-        name: "Vehicle Count & ANPR at Entry/Exit Gates",
+        name: "People Count In Factory Premises ",
+        page: "people-count",
+        path: "/PeopleCountPage",
+      },
+      {
+        name: "Vehicle Count & ANPR At Gates",
         page: "vehicle-count",
         path: "/VehicleCount",
       },
       {
-        name: "Tracking Vehicle Unloading/Loading Time",
+        name: "Canteen Usage Monitoring",
+        page: "monitoring-canteen-usage",
+        path: "/MonitoringCanteenUsage&Timings",
+      },
+      {
+        name: "Vehicle Unloading / Loading Monitoring",
         page: "tracking-vehicle",
         path: "/VehicleUnloadingLoading",
       },
       {
-        name: "Unauthorized Parking or Equipment Blocking Aisles",
+        name: "Unauthorized Parking / Blocking Aisles",
         page: "unauthorized-parking",
         path: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       },
@@ -235,19 +243,9 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: FaceRecognitionIcon,
     items: [
       {
-        name: "Unauthorized Access in Restricted Areas",
-        page: "unauthorized-access",
-        path: "/UnauthorizedAccessInRestrictedAreas",
-      },
-      {
         name: "Face Recognition for Entry/Exit Logging",
         page: "face-recognition",
         path: "/FaceRecognition",
-      },
-      {
-        name: "Monitoring Canteen Usage & Timings",
-        page: "monitoring-canteen-usage",
-        path: "/MonitoringCanteenUsage&Timings",
       },
       {
         name: "Employee Idle Time Monitoring with Face Recognition",

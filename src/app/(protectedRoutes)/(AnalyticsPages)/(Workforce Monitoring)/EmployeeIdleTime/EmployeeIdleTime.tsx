@@ -6,8 +6,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import PhotoCameraFrontIcon from "@mui/icons-material/PhotoCameraFront";
-import { AccessTime, Room, PersonOff, WorkOutline } from "@mui/icons-material";
+import { AccessTime, Room } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -17,7 +16,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   interface EmployeeIdleEvent {
-    voilation: string;
+    incident: string;
     zone: string;
     time: string;
     imageUrl: string;
@@ -39,27 +38,13 @@ const EmployeeIdleTime: React.FC = () => {
         "Total number of idle time events detected by the system.",
     },
     {
-      title: "Total Working Events",
-      value: "54",
-      icon: WorkOutline,
-      tooltipMessage:
-        "Total number of active working events detected by the system.",
-    },
-    {
-      title: "Total Not Present Events",
-      value: "8",
-      icon: PersonOff,
-      tooltipMessage:
-        "Total number of times employees were detected as not present.",
-    },
-    {
       title: "Last Idle Detection Time",
       value: "10:45 AM",
       icon: AccessTime,
       tooltipMessage: "The most recent idle detection timestamp.",
     },
     {
-      title: "Last Zone",
+      title: "Last Idle Detection Zone",
       value: "Assembly Line A",
       icon: Room,
       tooltipMessage: "The zone where the most recent idle event was detected.",
@@ -136,7 +121,7 @@ const EmployeeIdleTime: React.FC = () => {
     if (item.notPresent) titleParts.push("Employee Not Present");
 
     return {
-      voilation: titleParts.join(", ") ?? "No event",
+      incident: titleParts.join(", ") ?? "No event",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -149,7 +134,7 @@ const EmployeeIdleTime: React.FC = () => {
   const zoneIdleData = [
     {
       zone: "Production Floor A",
-      violations: 7,
+      incidents: 7,
       subViolations: [
         { label: "Idle", value: 4, icon: AccessTimeIcon },
         { label: "Working", value: 2, icon: WorkOutlineIcon },
@@ -158,7 +143,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       zone: "Welding Station",
-      violations: 5,
+      incidents: 5,
       subViolations: [
         { label: "Working", value: 4, icon: WorkOutlineIcon },
         { label: "Idle", value: 1, icon: AccessTimeIcon },
@@ -166,7 +151,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       zone: "Chemical Storage",
-      violations: 6,
+      incidents: 6,
       subViolations: [
         { label: "Idle", value: 3, icon: AccessTimeIcon },
         { label: "Working", value: 2, icon: WorkOutlineIcon },
@@ -175,7 +160,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       zone: "Assembly Line B",
-      violations: 4,
+      incidents: 4,
       subViolations: [
         { label: "Not Present", value: 2, icon: PersonOffIcon },
         { label: "Working", value: 2, icon: WorkOutlineIcon },
@@ -183,7 +168,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       zone: "Maintenance Area",
-      violations: 8,
+      incidents: 8,
       subViolations: [
         { label: "Idle", value: 5, icon: AccessTimeIcon },
         { label: "Working", value: 2, icon: WorkOutlineIcon },
@@ -221,19 +206,6 @@ const EmployeeIdleTime: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <PhotoCameraFrontIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Employee Idle Time Monitoring
-          </Typography>
-        </Box>
-      </Box>
-
       <Paper
         sx={{
           p: 3,
@@ -251,7 +223,6 @@ const EmployeeIdleTime: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -287,11 +258,11 @@ const EmployeeIdleTime: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected idel, working,not present employee with details."
-              label="Recent Violations"
+              label="Recent Incident"
               violations={recentIdleEvents}
               loading={false}
             />
@@ -300,20 +271,20 @@ const EmployeeIdleTime: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneIdleData}
               loading={false}
               tooltipMessage="Shows idel, working,not present employee per zone"
+              label="Zone Incident"
             />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
-        title="Detailed Employee Idle Time Report"
+        title="Detailed Report"
         tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "voilation", label: "Violation" },
+          { id: "incident", label: "Incident" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
           { id: "cameraId", label: "Cameras" },
@@ -321,11 +292,11 @@ const EmployeeIdleTime: React.FC = () => {
         data={recentIdleEvents}
         filters={[
           {
-            id: "voilation",
-            label: "Violation",
+            id: "incident",
+            label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.voilation))
+              new Set(recentIdleEvents.map((v) => v.incident))
             ),
           },
           {

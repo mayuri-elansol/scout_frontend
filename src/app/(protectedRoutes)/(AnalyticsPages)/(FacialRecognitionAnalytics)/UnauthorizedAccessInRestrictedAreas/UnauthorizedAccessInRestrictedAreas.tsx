@@ -7,8 +7,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import NoAccountsIcon from "@mui/icons-material/NoAccounts";
-import { CameraAlt, Place, Schedule, Warning } from "@mui/icons-material";
+import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -30,46 +29,30 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
   const UnauthorizedAccessKpiData = [
     {
-      title: "Total Unauthorized Access",
-      value: "25",
+      title: "Unauthorized Access In Restricted Areas",
+      value: "12",
+      icon: Groups,
       trendColor: "#f44336",
       color: "#f44336",
       bgColor: "#ffebee",
-      icon: Warning,
-      tooltipMessage: "Total unauthorized entries detected.",
+      borderColor: "#f44336",
+      iconBg: "rgba(244, 67, 54, 0.1)",
+      tooltipMessage:
+        "Shows the number of unauthorized access in restricted areas.",
     },
     {
-      title: "Zones Affected",
-      value: "Zone A, Zone B, Zone C",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: CameraAlt,
-      tooltipMessage: "Zones with detected unauthorized access.",
+      title: "Zone Violations (Last 3)",
+      value: "Warehouse Entry, Restricted Lab, Zone C",
+      icon: LocationOn,
+      tooltipMessage:
+        "Displays the count and name of restricted zones where unauthorized aeople entered .",
     },
     {
-      title: "Most Violated Zone",
-      value: "Chemical Storage",
-      icon: Place,
-      tooltipMessage: "Zone with the most access breaches.",
-    },
-    {
-      title: "Peak Hour of Incidents",
-      value: "15:00",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-      tooltipMessage: "Time with highest unauthorized entries.",
-    },
-    {
-      title: "Last Incident Detected",
-      value: "15:00",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      icon: Schedule,
-      tooltipMessage: "Most recent unauthorized access time.",
+      title: "Last Incidence",
+      value: "10:45 AM",
+      icon: AccessTime,
+      tooltipMessage:
+        "Most recent time unauthorized people were detected in restricted zones.",
     },
   ];
 
@@ -181,18 +164,6 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <NoAccountsIcon sx={{ fontSize: 28, color: "#1976d2" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Unauthorized Access in Restricted Areas
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -210,7 +181,6 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -246,7 +216,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected unauthorized access with details."
@@ -255,19 +225,18 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows violations per zone"
+              tooltipMessage="Shows unauthorized access per zone"
             />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
@@ -294,7 +263,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
           },
           {
             id: "cameraId",
-            label: "Camera",
+            label: "Cameras",
             type: "select",
             options: ["CAM-11", "CAM-12", "CAM-13", "CAM-14", "CAM-15"],
           },

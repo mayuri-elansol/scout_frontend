@@ -8,7 +8,7 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 
 import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import SpeedIcon from "@mui/icons-material/Speed";
+
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -106,28 +106,28 @@ const VehicalSpeedMonitoring: React.FC = () => {
     {
       title: "Speed Violation Count",
       value: "267",
-      icon: Speed, // 🚦 Speedometer
+      icon: Speed,
       tooltipMessage:
         "Total number of detected vehicle speed violations inside the premises.",
     },
     {
       title: "Highest Speed Recorded",
       value: "110 km/h",
-      icon: TrendingUp, // 📈 Indicates peak/high value
+      icon: TrendingUp,
       tooltipMessage:
         "The maximum speed recorded among all monitored vehicles.",
     },
     {
       title: "Highest Speed Violation Zone",
       value: "Zone 3",
-      icon: LocationOn, // 📍 Zone / Location
+      icon: LocationOn,
       tooltipMessage:
         "The zone where the highest vehicle speed violation was detected.",
     },
     {
       title: "Last Detection Time",
       value: "11:15 AM",
-      icon: AccessTime, // ⏰ Time
+      icon: AccessTime,
       tooltipMessage:
         "The time when the most recent vehicle speed violation was detected.",
     },
@@ -153,19 +153,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <SpeedIcon sx={{ fontSize: 28, color: "#3072b0" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Vehicle Speed Monitoring inside premises
-          </Typography>
-        </Box>
-      </Box>
-
       {/* KPI Cards */}
       <Paper
         sx={{
@@ -184,7 +171,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -217,7 +203,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
         </Grid>
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
@@ -226,7 +212,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
               tooltipMessage="Latest 20 vehical overspeeding detected with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
@@ -237,8 +223,8 @@ const VehicalSpeedMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/* </Box> */}
-      {/* People Count Report */}
+
+      {/*  Report */}
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."

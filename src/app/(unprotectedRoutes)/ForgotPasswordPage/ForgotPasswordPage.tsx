@@ -28,7 +28,6 @@ const ForgotPasswordPage: React.FC = () => {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("formdata", formData);
-  
     } catch (err) {
       console.error(err);
       setError("Failed to reset password. Please try again.");
@@ -54,8 +53,8 @@ const ForgotPasswordPage: React.FC = () => {
         isLoading={isLoading}
         error={error}
         onInputChange={handleInputChange}
-        onTogglePassword={() => setShowPassword((prev) => !prev)} // ✅ working toggle
-        onToggleConfirmPassword={() => setShowConfirmPassword((prev) => !prev)} // ✅ working toggle
+        onTogglePassword={() => setShowPassword((prev) => !prev)}
+        onToggleConfirmPassword={() => setShowConfirmPassword((prev) => !prev)}
         onSubmit={handleSubmit}
         setError={setError}
       />

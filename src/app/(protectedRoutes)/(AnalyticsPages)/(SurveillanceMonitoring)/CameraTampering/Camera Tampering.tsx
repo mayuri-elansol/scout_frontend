@@ -3,21 +3,13 @@ import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  Warning,
-  VisibilityOff,
-  Lens,
-  Schedule,
-  Room,
-  Videocam,
-} from "@mui/icons-material";
+import { Warning, Room } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 const CameraTampering: React.FC = () => {
@@ -38,56 +30,20 @@ const CameraTampering: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const CameraTamperingKpiData = [
     {
-      title: "Total Cameras Monitored",
+      title: "Total Offline Cameras",
       value: "42",
       tooltipMessage:
-        "Shows the total number of cameras currently monitored in the system.",
-      icon: Videocam,
+        "Shows the total number of offline cameras currently monitored in the system.",
+      icon: VideocamOffIcon,
     },
     {
-      title: "Total Tampering Events",
+      title: "Total Tampred Cameras",
       value: "5",
-      tooltipMessage:
-        "The total number of tampering or offline detection events recorded.",
+      tooltipMessage: "The total number of tampered detected cameras .",
       icon: Warning,
     },
     {
-      title: "Last Tampering Type",
-      value: "blur vision",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "rgba(33, 150, 243, 0.1)",
-      icon: VisibilityOff,
-      tooltipMessage:
-        "The most recent type of tampering detected by the camera system.",
-    },
-    {
-      title: "Most Common Tampering",
-      value: "Lens Covered",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "rgba(33, 150, 243, 0.1)",
-      icon: Lens,
-      tooltipMessage:
-        "The tampering type that occurs most frequently across monitored cameras.",
-    },
-    {
-      title: "Last Detection Time",
-      value: "10.30",
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "rgba(33, 150, 243, 0.1)",
-      icon: Schedule,
-      tooltipMessage: "The time when the last tampering event was detected.",
-    },
-    {
-      title: " Last Zone",
+      title: "Offline Camera Zone",
       value: "Zone A",
       trendColor: "#2196f3",
       color: "#2196f3",
@@ -96,19 +52,19 @@ const CameraTampering: React.FC = () => {
       iconBg: "rgba(33, 150, 243, 0.1)",
       icon: Room,
       tooltipMessage:
-        "The location zone where the most recent tampering event occurred.",
+        "The  zone where the most recent offline cameras occurred.",
     },
     {
-      title: "Camera Name / ID",
-      value: "Cam12",
+      title: "Tampred Camera Zone",
+      value: "Zone B",
       trendColor: "#2196f3",
       color: "#2196f3",
       bgColor: "#e3f2fd",
       borderColor: "#2196f3",
       iconBg: "rgba(33, 150, 243, 0.1)",
-      icon: Videocam,
+      icon: Room,
       tooltipMessage:
-        "The camera identifier for the device where the last tampering event happened.",
+        "The  zone where the most recent tampred cameras occurred.",
     },
   ];
 
@@ -247,18 +203,6 @@ const CameraTampering: React.FC = () => {
   const KpiCardLoading = false;
   return (
     <Box>
-      {/* Page Header */}
-      <Box sx={{ mb: 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1 }}>
-          <CameraAltIcon sx={{ fontSize: 28, color: "#1976d2" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            Camera Tampering or Offline Detection
-          </Typography>
-        </Box>
-      </Box>
       <Paper
         sx={{
           p: 3,
@@ -312,7 +256,7 @@ const CameraTampering: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected camera temparing event with details."
@@ -321,21 +265,20 @@ const CameraTampering: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneTamperingData}
               loading={false}
-              tooltipMessage="Shows online,offline,tampered cameras per zone"
+              tooltipMessage="Shows offline,tampered cameras per zone"
             />
           </Grid>
         </Grid>
       </Paper>
-      {/* PPE Violations Report */}
+      {/*  Violations Report */}
       <ReportTable
-        title="Detailed Tampering Report"
+        title="Detailed Report"
         tooltipMessage="Detailed camera tampering/offline detection report with filter, reset, and CSV/PDF download options."
         columns={[
           { id: "voilation", label: "Violation" },
