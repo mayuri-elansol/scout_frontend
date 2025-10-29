@@ -27,7 +27,7 @@ export interface DynamicBarChartWithThresholdProps<
     mobile?: number;
     tablet?: number;
     desktop?: number;
-    mac?:number
+    mac?: number;
   };
 }
 
@@ -42,13 +42,14 @@ const DynamicBarChartWithThreshold = <
   thresholdColor = "red",
   yAxisLabel = "User Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 400,mac :350 },
-
+  height = { mobile: 300, tablet: 400, desktop: 400, mac: 350 },
 }: DynamicBarChartWithThresholdProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
-const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)");
+  const isMediumWidth = useMediaQuery(
+    "(min-width: 1400px) and (max-width: 1600px)"
+  );
 
   const chartContainerRef = useRef<HTMLDivElement>(null);
 
@@ -74,8 +75,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
   let chartHeight = height.desktop!;
   if (isMobile) chartHeight = height.mobile!;
   else if (isTablet) chartHeight = height.tablet!;
-  else if(isMediumWidth)  chartHeight = height.mac!;
-
+  else if (isMediumWidth) chartHeight = height.mac!;
 
   // Calculate threshold line position
   const yMin = minValue;
@@ -87,10 +87,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
       : 0;
 
   return (
-    <CardContent
-      ref={chartContainerRef}
-      sx={{ width: "100%"}}
-    >
+    <CardContent ref={chartContainerRef} sx={{ width: "100%" }}>
       <BarChart
         height={chartHeight}
         series={chartSeries}
@@ -110,7 +107,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
       />
 
       {/* Threshold Line */}
-      <Box
+      {/* <Box
         sx={{
           position: "absolute",
           top: `${thresholdY}px`,
@@ -123,7 +120,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
           sx={{
             position: "absolute",
             right: 5,
-            top: -12,
+            // top: -12,
             backgroundColor: "white",
             px: 1,
             fontSize: 12,
@@ -132,7 +129,7 @@ const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)
         >
           {thresholdLabel} ({thresholdValue})
         </Box>
-      </Box>
+      </Box> */}
     </CardContent>
   );
 };

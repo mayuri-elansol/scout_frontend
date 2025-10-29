@@ -10,18 +10,23 @@ import {
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
-import CanteenUsageChart, { WorkingSlot } from "@/app/components/organisms/LineChart/LineCharts";
+import CanteenUsageChart, {
+  WorkingSlot,
+} from "@/app/components/organisms/LineChart/LineCharts";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 import RestaurantIcon from "@mui/icons-material/Restaurant";
-import JointBarGraphChart,{ VehicleChartData }  from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
-import DynamicViolationScatterChart, { ViolationData } from "@/app/components/organisms/ScatterChart/ScatterChart";
+import JointBarGraphChart, {
+  VehicleChartData,
+} from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
+import DynamicViolationScatterChart, {
+  ViolationData,
+} from "@/app/components/organisms/ScatterChart/ScatterChart";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
@@ -73,18 +78,17 @@ const OperationalInsightsDashboard: React.FC = () => {
     },
   ];
 
- 
-const times = ["08:00","09:00","10:00","11:00","12:00","13:00"];
-const series: VehicleChartData[] = [
-  { label: "Entry", data: [5, 8, 3, 12, 7,8], color: "#4caf50" },
-  { label: "Exit", data: [7, 4, 9, 6, 10,12], color: "#2196f3" },
-];
-const usageData = [12, 20, 18, 25, 30, 22];
+  const times = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00"];
+  const series: VehicleChartData[] = [
+    { label: "Entry", data: [5, 8, 3, 12, 7, 8], color: "#A8E6CF" },
+    { label: "Exit", data: [7, 4, 9, 6, 10, 12], color: "#B0E0E6" },
+  ];
+  const usageData = [12, 20, 18, 25, 30, 22];
 
-const workingSlots: WorkingSlot[] = [
-  { startTime: 12, stopTime: 13, label: "Lunch Time" },
-  { startTime: 15, stopTime: 16, label: "Tea Break" },
-];
+  const workingSlots: WorkingSlot[] = [
+    { startTime: 12, stopTime: 13, label: "Lunch Time" },
+    { startTime: 15, stopTime: 16, label: "Tea Break" },
+  ];
   const violationData: ViolationData[] = [
     { time: "08:00", zone: "Zone A", count: 5 },
     { time: "09:00", zone: "Zone A", count: 8 },
@@ -106,18 +110,41 @@ const workingSlots: WorkingSlot[] = [
     { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
-    { label: "People Count", content: <JointBarGraphChart  times={times} seriesData={series} height={370}/> },
-    { label: "Vehicle Count & ANPR", content: <JointBarGraphChart  times={times} seriesData={series} height={370}/> },
-    { label: "Canteen Usage", content:   <CanteenUsageChart
-      times={times}
-      usageData={usageData}
-      workingTime={workingSlots}
-      height={290}
-    /> },
-    { label: "Vehicle Monitoring", content: <JointBarGraphChart times={times} seriesData={series} height={370} /> },
-    { label: "Unauthorized parking",       content: <DynamicViolationScatterChart data={violationData} height={350} />,
- },
-   
+    {
+      label: "People Count",
+      content: (
+        <JointBarGraphChart times={times} seriesData={series} height={370} />
+      ),
+    },
+    {
+      label: "Vehicle Count & ANPR",
+      content: (
+        <JointBarGraphChart times={times} seriesData={series} height={370} />
+      ),
+    },
+    {
+      label: "Canteen Usage",
+      content: (
+        <CanteenUsageChart
+          times={times}
+          usageData={usageData}
+          workingTime={workingSlots}
+          height={290}
+        />
+      ),
+    },
+    {
+      label: "Vehicle Monitoring",
+      content: (
+        <JointBarGraphChart times={times} seriesData={series} height={370} />
+      ),
+    },
+    {
+      label: "Unauthorized parking",
+      content: (
+        <DynamicViolationScatterChart data={violationData} height={350} />
+      ),
+    },
   ];
 
   return (
@@ -157,7 +184,7 @@ const workingSlots: WorkingSlot[] = [
           </Grid>
         ))}
       </Grid>
-  
+
       {/* Tabs Section */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
         <DashboardTabs tabs={tabs} />

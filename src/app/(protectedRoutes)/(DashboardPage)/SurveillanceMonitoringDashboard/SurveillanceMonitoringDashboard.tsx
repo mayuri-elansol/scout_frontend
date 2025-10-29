@@ -95,7 +95,12 @@ const SurveillanceMonitoring: React.FC = () => {
         <Box
           sx={{
             display: "flex",
-            flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" },
+            flexDirection: {
+              xs: "column",
+              sm: "column",
+              md: "column",
+              lg: "row",
+            },
             gap: 2,
             justifyContent: "center",
             alignItems: "center",
@@ -106,9 +111,9 @@ const SurveillanceMonitoring: React.FC = () => {
             <DynamicPieChart
               zoneName="Online"
               data={[
-                { label: "Zone A", value: 12, color: "#4caf50" },
-                { label: "Zone B", value: 5, color: "#f44336" },
-                { label: "Zone C", value: 2, color: "#ffa726" },
+                { label: "Zone A", value: 12, color: "#A8E6CF" },
+                { label: "Zone B", value: 5, color: "#ffcdd2" },
+                { label: "Zone C", value: 2, color: "#FFEAA7" },
               ]}
             />
           </Box>
@@ -117,9 +122,9 @@ const SurveillanceMonitoring: React.FC = () => {
             <DynamicPieChart
               zoneName="Offline"
               data={[
-                { label: "Zone A", value: 20, color: "#4caf50" },
-                { label: "Zone B", value: 3, color: "#f44336" },
-                { label: "Zone C", value: 1, color: "#ffa726" },
+                { label: "Zone A", value: 20, color: "#A8E6CF" },
+                { label: "Zone B", value: 3, color: "#ffcdd2" },
+                { label: "Zone C", value: 1, color: "#FFEAA7" },
               ]}
             />
           </Box>
@@ -128,9 +133,9 @@ const SurveillanceMonitoring: React.FC = () => {
             <DynamicPieChart
               zoneName="Tampered"
               data={[
-                { label: "Zone A", value: 20, color: "#4caf50" },
-                { label: "Zone B", value: 3, color: "#f44336" },
-                { label: "Zone C", value: 1, color: "#ffa726" },
+                { label: "Zone A", value: 20, color: "#A8E6CF" },
+                { label: "Zone B", value: 3, color: "#ffcdd2" },
+                { label: "Zone C", value: 1, color: "#FFEAA7" },
               ]}
             />
           </Box>

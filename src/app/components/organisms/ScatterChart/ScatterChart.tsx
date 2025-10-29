@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 import { ScatterChart } from "@mui/x-charts/ScatterChart";
@@ -26,15 +25,18 @@ export interface ScatterPoint {
   id: string;
 }
 
-const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> = ({
+const DynamicViolationScatterChart: React.FC<
+  DynamicViolationScatterChartProps
+> = ({
   data = [],
   height = 500,
-  colors = ["#ef5350", "#42a5f5", "#66bb6a", "#ffa726"],
+  // colors = ["#ef5350", "#42a5f5", "#66bb6a", "#ffa726"],
+  colors = ["#ffcdd2", "#B0E0E6", "#A8E6CF", "#FFEAA7"],
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
- const isMediumWidth = useMediaQuery(
+  const isMediumWidth = useMediaQuery(
     "(min-width: 1400px) and (max-width: 1600px)"
   );
 
@@ -71,28 +73,32 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
   );
 
   // Group data by zone for series
+  // Group data by zone for series
   const seriesData = React.useMemo(() => {
     const grouped = new Map<string, ViolationData[]>();
-  for (const item of data) {
-  if (!grouped.has(item.zone)) {
-    grouped.set(item.zone, []);
-  }
-}
 
+    // ✅ Collect all items per zone
+    for (const item of data) {
+      if (!grouped.has(item.zone)) {
+        grouped.set(item.zone, []);
+      }
+      grouped.get(item.zone)!.push(item);
+    }
 
+    // ✅ Now map to chart series
     return Array.from(grouped.entries()).map(([zone, items], index) => ({
       id: zone,
       label: zone,
       color: colors[index % colors.length],
       data: items.map((item, idx) => ({
-        x: zoneLabels.indexOf(item.zone) + 0.2,
+        x: zoneLabels.indexOf(item.zone) + 1, // ensure distinct x spacing
         y: timeLabels.indexOf(item.time),
         count: item.count,
         zoneName: item.zone,
         timeName: item.time,
         id: `${zone}-${idx}`,
       })),
-      markerSize: isMobile ? 3 : 4,
+      markerSize: isMobile ? 6 : 8, // slightly larger for visibility
     }));
   }, [data, timeLabels, zoneLabels, colors, isMobile]);
 
@@ -140,7 +146,7 @@ const DynamicViolationScatterChart: React.FC<DynamicViolationScatterChartProps> 
         display: "flex",
         justifyContent: "center",
         pt: 2,
-        overflow: "hidden", 
+        overflow: "hidden",
       }}
     >
       <ScatterChart
