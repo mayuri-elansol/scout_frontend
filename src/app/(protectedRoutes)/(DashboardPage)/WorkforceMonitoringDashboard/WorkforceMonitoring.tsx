@@ -85,80 +85,184 @@ const WorkforceMonitoring: React.FC = () => {
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
-      content: <DynamicViolationScatterChart data={violationData} />,
+      content: (
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />,
+        </Box>
+        // </Grid>
+      ),
     },
     {
       label: "Employee Monitoring",
       content: (
-        <DynamicBarChart
-          height={{
-            desktop: 490,
+        <Grid
+          container
+          // spacing={2.5}
+          sx={{
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
           }}
-          data={[
-            { gate: "Production Gate", Idle: 5, Working: 19, NotPresent: 20 },
-            { gate: "Warehouse Gate", Idle: 3, Working: 21, NotPresent: 18 },
-            { gate: "Parking Gate", Idle: 2, Working: 22, NotPresent: 25 },
-            { gate: "Main Entrance", Idle: 4, Working: 20, NotPresent: 65 },
-            { gate: "Side Exit", Idle: 1, Working: 23, NotPresent: 23 },
-          ]}
-          xAxisKey="gate"
-          series={[
-            {
-              dataKey: "Idle",
-              label: "Idle Count",
-              color: "#FFD1DC",
-            },
-            {
-              dataKey: "Working",
-              label: "Working Count",
-              color: "#AEEEEE",
-            },
-            {
-              dataKey: "NotPresent",
-              label: "Not Present Count",
-              color: "#FFF5BA",
-            },
-          ]}
-          yAxisLabel="Count"
-          stackId="exitStatus"
-        />
+        >
+          {/* Left side: Bar chart */}
+
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              bgcolor: "blue",
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
+            }}
+          >
+            <DynamicBarChart
+              data={[
+                {
+                  gate: "Production Gate",
+                  Idle: 5,
+                  Working: 19,
+                  NotPresent: 20,
+                },
+                {
+                  gate: "Warehouse Gate",
+                  Idle: 3,
+                  Working: 21,
+                  NotPresent: 18,
+                },
+                { gate: "Parking Gate", Idle: 2, Working: 22, NotPresent: 25 },
+                { gate: "Main Entrance", Idle: 4, Working: 20, NotPresent: 65 },
+                { gate: "Side Exit", Idle: 1, Working: 23, NotPresent: 23 },
+              ]}
+              xAxisKey="gate"
+              series={[
+                {
+                  dataKey: "Idle",
+                  label: "Idle Count",
+                  color: "#FFD1DC",
+                },
+                {
+                  dataKey: "Working",
+                  label: "Working Count",
+                  color: "#AEEEEE",
+                },
+                {
+                  dataKey: "NotPresent",
+                  label: "Not Present Count",
+                  color: "#FFF5BA",
+                },
+              ]}
+              yAxisLabel="Count"
+              stackId="exitStatus"
+            />
+          </Box>
+        </Grid>
       ),
     },
-
     {
       label: "Mobile Phone Usage",
-      content: <DynamicViolationScatterChart data={violationData} />,
+      content: (
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />,
+        </Box>
+        // </Grid>
+      ),
     },
     {
       label: "Security Personnel Status",
       content: (
-        <DynamicBarChart
-          height={{
-            desktop: 490,
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%",
+            },
           }}
-          data={[
-            { gate: "Production Gate", Absent: 5, Present: 19 },
-            { gate: "Warehouse Gate", Absent: 3, Present: 21 },
-            { gate: "Parking Gate", Absent: 2, Present: 22 },
-            { gate: "Main Entrance", Absent: 4, Present: 20 },
-            { gate: "Side Exit", Absent: 1, Present: 23 },
-          ]}
-          xAxisKey="gate"
-          series={[
-            {
-              dataKey: "Absent",
-              label: "Absent Count",
-              color: "#FFC0CB",
-            },
-            {
-              dataKey: "Present",
-              label: "Present Count",
-              color: "#B0E0E6",
-            },
-          ]}
-          yAxisLabel="Count"
-          stackId="exitStatus"
-        />
+        >
+          <DynamicBarChart
+            data={[
+              { gate: "Production Gate", Absent: 5, Present: 19 },
+              { gate: "Warehouse Gate", Absent: 3, Present: 21 },
+              { gate: "Parking Gate", Absent: 2, Present: 22 },
+              { gate: "Main Entrance", Absent: 4, Present: 20 },
+              { gate: "Side Exit", Absent: 1, Present: 23 },
+            ]}
+            xAxisKey="gate"
+            series={[
+              {
+                dataKey: "Absent",
+                label: "Absent Count",
+                color: "#FFC0CB",
+              },
+              {
+                dataKey: "Present",
+                label: "Present Count",
+                color: "#B0E0E6",
+              },
+            ]}
+            yAxisLabel="Count"
+            stackId="exitStatus"
+          />
+        </Box>
+        // </Grid>
       ),
     },
   ];
@@ -170,10 +274,10 @@ const WorkforceMonitoring: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
+        minHeight: 0,
       }}
     >
       <Box
@@ -190,7 +294,7 @@ const WorkforceMonitoring: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ mb: 2 }} alignItems="stretch">
         {WorkForcekpiData.map((kpi, index) => (
           <Grid
             size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
@@ -203,7 +307,14 @@ const WorkforceMonitoring: React.FC = () => {
 
       {/* Activity Feed and Camera Status */}
 
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>

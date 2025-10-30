@@ -82,70 +82,180 @@ const SurveillanceMonitoring: React.FC = () => {
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection",
-      content: <DynamicViolationScatterChart data={violationData} />,
-    },
+      content: (
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
 
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />,
+        </Box>
+        // </Grid>
+      ),
+    },
     {
       label: "Unauthorized Access ",
-      content: <DynamicViolationScatterChart data={violationData} />,
+      content: (
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />,
+        </Box>
+        // </Grid>
+      ),
     },
     {
       label: "Camera Tempering Detection",
       content: (
-        <Box
+        <Grid
+          container
+          // spacing={2.5}
           sx={{
-            display: "flex",
-            flexDirection: {
-              xs: "column",
-              sm: "column",
-              md: "column",
-              lg: "row",
-            },
-            gap: 2,
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
           }}
         >
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <DynamicPieChart
-              zoneName="Online"
-              data={[
-                { label: "Zone A", value: 12, color: "#A8E6CF" },
-                { label: "Zone B", value: 5, color: "#ffcdd2" },
-                { label: "Zone C", value: 2, color: "#FFEAA7" },
-              ]}
-            />
-          </Box>
+          {/* Right side: Two pie charts stacked */}
 
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <DynamicPieChart
-              zoneName="Offline"
-              data={[
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
-              ]}
-            />
-          </Box>
-
-          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
-            <DynamicPieChart
-              zoneName="Tampered"
-              data={[
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
-              ]}
-            />
-          </Box>
-        </Box>
+          <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              // flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flex: 1,
+              //    bgcolor: "blue",
+              height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              gap: 2,
+            }}
+          >
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                zoneName="Online"
+                data={[
+                  { label: "Zone A", value: 12, color: "#A8E6CF" },
+                  { label: "Zone B", value: 5, color: "#ffcdd2" },
+                  { label: "Zone C", value: 2, color: "#FFEAA7" },
+                ]}
+              />
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                zoneName="Offline"
+                data={[
+                  { label: "Zone A", value: 20, color: "#A8E6CF" },
+                  { label: "Zone B", value: 3, color: "#ffcdd2" },
+                  { label: "Zone C", value: 1, color: "#FFEAA7" },
+                ]}
+              />
+            </Box>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                zoneName="Tampered"
+                data={[
+                  { label: "Zone A", value: 20, color: "#A8E6CF" },
+                  { label: "Zone B", value: 3, color: "#ffcdd2" },
+                  { label: "Zone C", value: 1, color: "#FFEAA7" },
+                ]}
+              />
+            </Box>
+          </Grid>
+        </Grid>
       ),
     },
-
     {
       label: "Movement During shutdown",
-      content: <DynamicViolationScatterChart data={violationData} />,
+      content: (
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />,
+        </Box>
+        // </Grid>
+      ),
     },
   ];
 
@@ -156,10 +266,10 @@ const SurveillanceMonitoring: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        // mb:2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
+        minHeight: 0,
       }}
     >
       <Box
@@ -188,7 +298,14 @@ const SurveillanceMonitoring: React.FC = () => {
       </Grid>
 
       {/* Tabs Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>

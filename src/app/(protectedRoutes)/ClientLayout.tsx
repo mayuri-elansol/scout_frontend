@@ -101,12 +101,8 @@ export default function ClientLayout({
               minHeight: 0, // Allow flex shrinking
             }}
           >
-            <RouteLoader>
-        
-              {children}
-            </RouteLoader>
+            <RouteLoader>{children}</RouteLoader>
           </Box>
-
         </Box>
       </LocalizationProvider>
     </ThemeProvider>

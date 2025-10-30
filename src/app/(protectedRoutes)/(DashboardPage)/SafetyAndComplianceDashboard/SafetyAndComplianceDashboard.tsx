@@ -31,100 +31,77 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           container
           // spacing={2.5}
           sx={{
-            mt: 1,
+            //  mt: 1,
             alignItems: "stretch",
+            height: "100%",
           }}
         >
           {/* Left side: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
+
+          <Box
             sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
               display: "flex",
-              alignItems: "stretch",
+              //   bgcolor: "blue",
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
             }}
           >
-            <Box
-              sx={{
-                flex: 1,
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChart
-                height={{
-                  desktop: 375,
-                }}
-                data={hourlyData}
-                xAxisKey="time"
-                series={[
-                  {
-                    dataKey: "helmet",
-                    label: "Helmet",
-                    color: "#ffcdd2",
-                  },
-                  {
-                    dataKey: "vest",
-                    label: "Vest",
-                    color: "#FFEAA7",
-                  },
-                  {
-                    dataKey: "glass",
-                    label: "Glass",
-                    color: "#A8E6CF",
-                  },
-                ]}
-                yAxisLabel="Violation Count"
-                stackId="ppe"
-              />
-            </Box>
-          </Grid>
+            <DynamicBarChart
+              data={hourlyData}
+              xAxisKey="time"
+              series={[
+                {
+                  dataKey: "helmet",
+                  label: "Helmet",
+                  color: "#ffcdd2",
+                },
+                {
+                  dataKey: "vest",
+                  label: "Vest",
+                  color: "#FFEAA7",
+                },
+                {
+                  dataKey: "glass",
+                  label: "Glass",
+                  color: "#A8E6CF",
+                },
+              ]}
+              yAxisLabel="Violation Count"
+              stackId="ppe"
+            />
+          </Box>
 
           {/* Right side: Two pie charts stacked */}
 
-          {/* <Grid
+          <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              gap:1.5
+              alignItems: "center",
+              flex: 1,
+              //    bgcolor: "blue",
+              height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              gap: 2,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <DynamicPieChart
-                data={[
-                  { label: "Helmet", value: 29, color: "#FFB6C1" },
-                  { label: "Vest", value: 28, color: "#FFEAA7" },
-                  { label: "Glass", value: 28, color: "#A8E6CF" },
-                ]}
-              />
-            </Box>
-            <Box sx={{  display: "flex", alignItems: "center", pl: 7 }}>
-              <DynamicPieChart
-               
-                data={[
-                  { label: "Production Gate", value: 31, color: "#FFB6C1" },
-                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
-                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
-                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
-                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
-                ]}
-              />
-            </Box>
-          </Grid>  */}
-          <Grid
-            size={{ xs: 12, md: 4 }}
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              // gap: 5 ,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <DynamicPieChart
-                height={270}
                 data={[
                   { label: "Helmet", value: 29, color: "#ffcdd2" },
                   { label: "Vest", value: 28, color: "#FFEAA7" },
@@ -132,9 +109,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", pl: 8 }}>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <DynamicPieChart
-                height={270}
                 data={[
                   { label: "Production Gate", value: 31, color: "#ffcdd2" },
                   { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
@@ -153,76 +137,84 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          spacing={2.5}
+          // spacing={2.5}
           sx={{
-            mt: 1,
+            //  mt: 1,
             alignItems: "stretch",
+            height: "100%",
           }}
         >
           {/* Left side: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
+
+          <Box
             sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
               display: "flex",
-              alignItems: "stretch",
+              //   bgcolor: "blue",
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
             }}
           >
-            <Box
-              sx={{
-                flex: 1,
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChart
-                height={{
-                  desktop: 375,
-                }}
-                data={hourlyData}
-                xAxisKey="time"
-                series={[
-                  {
-                    dataKey: "fire",
-                    label: "Fire Violations",
-                    color: "#ffcdd2",
-                  },
-                  {
-                    dataKey: "smoke",
-                    label: "Smoke Violations",
-                    color: "#FFCBB3",
-                  },
-                  {
-                    dataKey: "gas",
-                    label: "Gas Violations",
-                    color: "#FFEAA7",
-                  },
-                  {
-                    dataKey: "oil",
-                    label: "Oil Violations",
-                    color: "#A8E6CF",
-                  },
-                ]}
-                yAxisLabel="Violation Count"
-                stackId="hazard"
-              />
-            </Box>
-          </Grid>
+            <DynamicBarChart
+              data={hourlyData}
+              xAxisKey="time"
+              series={[
+                {
+                  dataKey: "fire",
+                  label: "Fire Violations",
+                  color: "#ffcdd2",
+                },
+                {
+                  dataKey: "smoke",
+                  label: "Smoke Violations",
+                  color: "#FFCBB3",
+                },
+                {
+                  dataKey: "gas",
+                  label: "Gas Violations",
+                  color: "#FFEAA7",
+                },
+                {
+                  dataKey: "oil",
+                  label: "Oil Violations",
+                  color: "#A8E6CF",
+                },
+              ]}
+              yAxisLabel="Violation Count"
+              stackId="hazard"
+            />
+          </Box>
 
           {/* Right side: Two pie charts stacked */}
+
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
+              alignItems: "center",
+              flex: 1,
+              //    bgcolor: "blue",
               height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              gap: 2,
             }}
           >
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <DynamicPieChart
-                height={270}
                 data={[
                   { label: "Fire", value: 29, color: "#ffcdd2" },
                   { label: "Smoke", value: 28, color: "#FFCBB3" },
@@ -231,9 +223,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 ]}
               />
             </Box>
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center", pl: 8 }}>
+            <Box
+              sx={{
+                flex: 1,
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <DynamicPieChart
-                height={270}
                 data={[
                   { label: "Production Gate", value: 31, color: "#ffcdd2" },
                   { label: "Warehouse Gate", value: 43, color: "#FFCBB3" },
@@ -247,129 +246,168 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
-    {
-      label: "Fall Incidents",
-      content: (
-        <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
-          {/* Left: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{ display: "flex", alignItems: "stretch" }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChart
-                height={{
-                  desktop: 375,
-                }}
-                data={hourlyData}
-                xAxisKey="time"
-                series={[
-                  {
-                    dataKey: "falls",
-                    label: "Fall Incidents",
-                    color: "#FFCBB3",
-                  },
-                ]}
-                yAxisLabel="Incident Count"
-                stackId="fall"
-              />
-            </Box>
-          </Grid>
 
-          {/* Right: Pie chart vertically centered */}
+    {
+      label: "Vehicle In Walkways",
+
+      content: (
+        <Grid
+          container
+          // spacing={2.5}
+          sx={{
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side: Bar chart */}
+
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              //   bgcolor: "blue",
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
+            }}
+          >
+            <DynamicBarChart
+              data={[
+                { gate: "Production Gate", blocked: 5, clear: 19 },
+                { gate: "Warehouse Gate", blocked: 3, clear: 21 },
+                { gate: "Parking Gate", blocked: 2, clear: 22 },
+                { gate: "Main Entrance", blocked: 4, clear: 20 },
+                { gate: "Side Exit", blocked: 1, clear: 23 },
+              ]}
+              xAxisKey="gate"
+              series={[
+                {
+                  dataKey: "blocked",
+                  label: "Blocked Hours",
+                  color: "#ffcdd2",
+                },
+                {
+                  dataKey: "clear",
+                  label: "Clear Hours",
+                  color: "#A8E6CF",
+                },
+              ]}
+              yAxisLabel="Hours "
+              stackId="exitStatus"
+            />
+          </Box>
+
+          {/* Right side: Two pie charts stacked */}
+
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              height: "100%",
             }}
           >
-            <DynamicPieChart
-              data={[
-                { label: "Production Gate", value: 5, color: "#FFCBB3" },
-                { label: "Warehouse Gate", value: 3, color: "#FFE0B3" },
-                { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                { label: "Main Entrance", value: 4, color: "#A8E6CF" },
-                { label: "Side Exit", value: 1, color: "#B3E5FC" },
-              ]}
-            />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                data={[
+                  { label: "Production Gate", value: 5, color: "#ffcdd2" },
+                  { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
+                  { label: "Parking Gate", value: 2, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 4, color: "#C7EDCC" },
+                  { label: "Side Exit", value: 1, color: "#A8E6CF" },
+                ]}
+              />
+            </Box>
           </Grid>
         </Grid>
       ),
     },
     {
-      label: "Vehicle In Walkways",
+      label: "Fall Incidents",
       content: (
-        <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
-          {/* Left: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{ display: "flex", alignItems: "stretch" }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChart
-                height={{
-                  desktop: 375,
-                }}
-                data={[
-                  { gate: "Production Gate", blocked: 5, clear: 19 },
-                  { gate: "Warehouse Gate", blocked: 3, clear: 21 },
-                  { gate: "Parking Gate", blocked: 2, clear: 22 },
-                  { gate: "Main Entrance", blocked: 4, clear: 20 },
-                  { gate: "Side Exit", blocked: 1, clear: 23 },
-                ]}
-                xAxisKey="gate"
-                series={[
-                  {
-                    dataKey: "blocked",
-                    label: "Blocked Hours",
-                    color: "#ffcdd2",
-                  },
-                  {
-                    dataKey: "clear",
-                    label: "Clear Hours",
-                    color: "#A8E6CF",
-                  },
-                ]}
-                yAxisLabel="Hours "
-                stackId="exitStatus"
-              />
-            </Box>
-          </Grid>
+        <Grid
+          container
+          // spacing={2.5}
+          sx={{
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side: Bar chart */}
 
-          {/* Right: Pie chart vertically centered */}
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              //   bgcolor: "blue",
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
+            }}
+          >
+            <DynamicBarChart
+              height={{
+                desktop: 375,
+              }}
+              data={hourlyData}
+              xAxisKey="time"
+              series={[
+                {
+                  dataKey: "falls",
+                  label: "Fall Incidents",
+                  color: "#FFCBB3",
+                },
+              ]}
+              yAxisLabel="Incident Count"
+              stackId="fall"
+            />
+          </Box>
+
+          {/* Right side: Two pie charts stacked */}
+
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              height: "100%",
             }}
           >
-            <DynamicPieChart
-              data={[
-                { label: "Production Gate", value: 5, color: "#ffcdd2" },
-                { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
-                { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                { label: "Main Entrance", value: 4, color: "#C7EDCC" },
-                { label: "Side Exit", value: 1, color: "#A8E6CF" },
-              ]}
-            />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                data={[
+                  { label: "Production Gate", value: 5, color: "#FFCBB3" },
+                  { label: "Warehouse Gate", value: 3, color: "#FFE0B3" },
+                  { label: "Parking Gate", value: 2, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 4, color: "#A8E6CF" },
+                  { label: "Side Exit", value: 1, color: "#B3E5FC" },
+                ]}
+              />
+            </Box>
           </Grid>
         </Grid>
       ),
@@ -377,68 +415,88 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     {
       label: "Emergency Exit Status",
       content: (
-        <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
-          {/* Left: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{ display: "flex", alignItems: "stretch" }}
-          >
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChart
-                height={{
-                  desktop: 375,
-                }}
-                data={[
-                  { gate: "Production Gate", blocked: 5, clear: 19 },
-                  { gate: "Warehouse Gate", blocked: 3, clear: 21 },
-                  { gate: "Parking Gate", blocked: 2, clear: 22 },
-                  { gate: "Main Entrance", blocked: 4, clear: 20 },
-                  { gate: "Side Exit", blocked: 1, clear: 23 },
-                ]}
-                xAxisKey="gate"
-                series={[
-                  {
-                    dataKey: "blocked",
-                    label: "Blocked Hours",
-                    color: "#ffcdd2",
-                  },
-                  {
-                    dataKey: "clear",
-                    label: "Clear Hours",
-                    color: "#B0E0E6",
-                  },
-                ]}
-                yAxisLabel="Hours"
-                stackId="exitStatus"
-              />
-            </Box>
-          </Grid>
+        <Grid
+          container
+          // spacing={2.5}
+          sx={{
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side: Bar chart */}
 
-          {/* Right: Pie chart vertically centered */}
+          <Box
+            sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
+            }}
+          >
+            <DynamicBarChart
+              height={{
+                desktop: 375,
+              }}
+              data={[
+                { gate: "Production Gate", blocked: 5, clear: 19 },
+                { gate: "Warehouse Gate", blocked: 3, clear: 21 },
+                { gate: "Parking Gate", blocked: 2, clear: 22 },
+                { gate: "Main Entrance", blocked: 4, clear: 20 },
+                { gate: "Side Exit", blocked: 1, clear: 23 },
+              ]}
+              xAxisKey="gate"
+              series={[
+                {
+                  dataKey: "blocked",
+                  label: "Blocked Hours",
+                  color: "#ffcdd2",
+                },
+                {
+                  dataKey: "clear",
+                  label: "Clear Hours",
+                  color: "#B0E0E6",
+                },
+              ]}
+              yAxisLabel="Hours"
+              stackId="exitStatus"
+            />
+          </Box>
+
+          {/* Right side: Two pie charts stacked */}
+
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              height: "100%",
             }}
           >
-            <DynamicPieChart
-              data={[
-                { label: "Production Gate", value: 5, color: "#ffcdd2" },
-                { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
-                { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                { label: "Main Entrance", value: 4, color: "#D4E6D4" },
-                { label: "Side Exit", value: 1, color: "#B0E0E6" },
-              ]}
-            />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                data={[
+                  { label: "Production Gate", value: 5, color: "#ffcdd2" },
+                  { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
+                  { label: "Parking Gate", value: 2, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 4, color: "#D4E6D4" },
+                  { label: "Side Exit", value: 1, color: "#B0E0E6" },
+                ]}
+              />
+            </Box>
           </Grid>
         </Grid>
       ),
@@ -446,81 +504,91 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     {
       label: "Crowd Gathering",
       content: (
-        <Grid container spacing={2} sx={{ mt: 1, alignItems: "stretch" }}>
-          {/* Left: Bar chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{ display: "flex", alignItems: "stretch" }}
+        <Grid
+          container
+          // spacing={2.5}
+          sx={{
+            //  mt: 1,
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side: Bar chart */}
+
+          <Box
+            //    size={{ xs: 12, md: 8 }}
+            sx={{
+              flex: 1,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+
+              "& .MuiCardContent-root": {
+                height: "100%", // let BarChart content stretch
+              },
+            }}
           >
-            <Box
-              sx={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicBarChartWithThreshold
-                height={{
-                  desktop: 360,
-                  mac: 350,
-                }}
-                data={[
-                  { month: "Jan", users: 20 },
-                  { month: "Feb", users: 50 },
-                  { month: "Mar", users: 80 },
-                  { month: "Jan", users: 20 },
-                  { month: "April", users: 50 },
-                  { month: "May", users: 80 },
-                  { month: "June", users: 20 },
-                  { month: "July", users: 50 },
-                  { month: "August", users: 80 },
-                ]}
-                xAxisKey="month"
-                // series={[
-                //   { dataKey: "users", label: "Users", color: "#2196f3" },
-                // ]}
+            <DynamicBarChartWithThreshold
+              data={[
+                { month: "Jan", users: 20 },
+                { month: "Feb", users: 50 },
+                { month: "Mar", users: 80 },
+                { month: "Jan", users: 20 },
+                { month: "April", users: 50 },
+                { month: "May", users: 80 },
+                { month: "June", users: 20 },
+                { month: "July", users: 50 },
+                { month: "August", users: 80 },
+              ]}
+              xAxisKey="month"
+              // series={[
+              //   { dataKey: "users", label: "Users", color: "#2196f3" },
+              // ]}
 
-                series={[
-                  {
-                    dataKey: "users",
-                    label: "Users",
-                    color: "#B0E0E6",
-                  },
-                ]}
-                thresholdValue={60}
-                thresholdLabel="Target"
-                //    thresholdColor="orange"
-                thresholdColor="#FFB84D"
-              />
-            </Box>
-          </Grid>
+              series={[
+                {
+                  dataKey: "users",
+                  label: "Users",
+                  color: "#B0E0E6",
+                },
+              ]}
+              thresholdValue={60}
+              thresholdLabel="Target"
+              //    thresholdColor="orange"
+              thresholdColor="#FFB84D"
+            />
+          </Box>
 
-          {/* Right: Pie chart vertically centered */}
+          {/* Right side: Two pie charts stacked */}
+
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              height: "100%",
             }}
           >
-            <DynamicPieChart
-              // data={[
-              //   { label: "Production Gate", value: 5, color: "#f44336" },
-              //   { label: "Warehouse Gate", value: 3, color: "#ff9800" },
-              //   { label: "Parking Gate", value: 2, color: "#ffc107" },
-              //   { label: "Main Entrance", value: 4, color: "#ef5350" },
-              //   { label: "Side Exit", value: 1, color: "#ff6b6b" },
-              // ]}
-              data={[
-                { label: "Production Gate", value: 5, color: "#ffcdd2" },
-                { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
-                { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                { label: "Main Entrance", value: 4, color: "#C8E6C9" },
-                { label: "Side Exit", value: 1, color: "#B0E0E6" },
-              ]}
-            />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                data={[
+                  { label: "Production Gate", value: 5, color: "#ffcdd2" },
+                  { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
+                  { label: "Parking Gate", value: 2, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 4, color: "#C8E6C9" },
+                  { label: "Side Exit", value: 1, color: "#B0E0E6" },
+                ]}
+              />
+            </Box>
           </Grid>
         </Grid>
       ),
@@ -548,7 +616,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
     },
     {
-      title: "Speed Violations",
+      title: "Vehicle In Walkways",
       violationsCount: 12,
       lastDetection: "Parking Zone",
       lastDetectionTime: "10:58 AM",
@@ -593,11 +661,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
-        // height:"100%"
+        minHeight: 0,
       }}
     >
       {/* Top Right Time Filter */}
@@ -626,7 +693,14 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       </Grid>
 
       {/* Tabs Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>

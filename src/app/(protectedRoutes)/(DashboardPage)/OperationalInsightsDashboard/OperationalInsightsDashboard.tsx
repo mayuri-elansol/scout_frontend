@@ -113,36 +113,122 @@ const OperationalInsightsDashboard: React.FC = () => {
     {
       label: "People Count",
       content: (
-        <JointBarGraphChart times={times} seriesData={series} height={370} />
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <JointBarGraphChart times={times} seriesData={series} />
+        </Box>
+        // </Grid>
       ),
     },
     {
       label: "Vehicle Count & ANPR",
       content: (
-        <JointBarGraphChart times={times} seriesData={series} height={370} />
+        // <Grid
+        //   container
+        //   // spacing={2.5}
+        //   sx={{
+        //     //  mt: 1,
+        //     alignItems: "stretch",
+        //     height: "100%",
+        //   }}
+        // >
+
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%", // let BarChart content stretch
+            },
+          }}
+        >
+          <JointBarGraphChart times={times} seriesData={series} />
+        </Box>
+        // </Grid>
       ),
     },
     {
       label: "Canteen Usage",
       content: (
-        <CanteenUsageChart
-          times={times}
-          usageData={usageData}
-          workingTime={workingSlots}
-          height={290}
-        />
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%",
+            },
+          }}
+        >
+          <CanteenUsageChart
+            times={times}
+            usageData={usageData}
+            workingTime={workingSlots}
+          />
+        </Box>
       ),
     },
     {
       label: "Vehicle Monitoring",
       content: (
-        <JointBarGraphChart times={times} seriesData={series} height={370} />
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%",
+            },
+          }}
+        >
+          <JointBarGraphChart times={times} seriesData={series} />
+        </Box>
       ),
     },
     {
       label: "Unauthorized parking",
       content: (
-        <DynamicViolationScatterChart data={violationData} height={350} />
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            bgcolor: "blue",
+            "& .MuiCardContent-root": {
+              height: "100%",
+            },
+          }}
+        >
+          <DynamicViolationScatterChart data={violationData} />
+        </Box>
       ),
     },
   ];
@@ -154,10 +240,10 @@ const OperationalInsightsDashboard: React.FC = () => {
         flexDirection: "column",
         pt: 2,
         px: 3,
-        // mb: 2,
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
+        minHeight: 0,
       }}
     >
       <Box
@@ -174,6 +260,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Box>
 
       {/* KPI Cards Grid */}
+
       <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
         {kpiData.map((kpi, index) => (
           <Grid
@@ -186,7 +273,14 @@ const OperationalInsightsDashboard: React.FC = () => {
       </Grid>
 
       {/* Tabs Section */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
         <DashboardTabs tabs={tabs} />
       </Box>
     </Paper>

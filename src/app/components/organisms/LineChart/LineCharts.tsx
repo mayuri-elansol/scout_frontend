@@ -15,27 +15,22 @@ export interface Props {
   times: string[];
   usageData: number[];
   workingTime?: WorkingSlot[];
-  height?: number; 
 }
 
 const LineCharts: React.FC<Props> = ({
   times,
   usageData,
   workingTime = [],
-  // height = 350,
-  height = 400,
-
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const chartHeight = isMobile ? 290 : height; 
 
-  if (!times || !usageData || times.length === 0 || usageData.length === 0) {
+  if (!times?.length || !usageData?.length) {
     return (
       <Box
         sx={{
           width: "100%",
-          height: chartHeight,
+          height: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -47,9 +42,23 @@ const LineCharts: React.FC<Props> = ({
   }
 
   return (
-    <Box sx={{ width: "100%", pt: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Legend */}
-      <Stack direction="row" spacing={2}>
+      <Stack
+        direction={isMobile ? "column" : "row"}
+        spacing={1.5}
+        sx={{
+          flexShrink: 0,
+          pt: 1,
+        }}
+      >
         <Chip label="🟢 Usage Count" variant="outlined" color="success" />
         {workingTime.map((slot, idx) => (
           <Chip
@@ -65,46 +74,48 @@ const LineCharts: React.FC<Props> = ({
         ))}
       </Stack>
 
-      {/* Chart with horizontal scroll */}
-      <Box sx={{ overflowX: "auto", overflowY: "hidden", pb: 1 }}>
-        <Box
+      {/* Chart area fills remaining height */}
+      <Box
+        sx={{
+          flex: 1,
+          position: "relative",
+          width: "100%",
+          minHeight: 0, // ✅ allows flex child to shrink correctly
+        }}
+      >
+        <LineChart
           sx={{
-            minWidth: times.length * 60, 
-            height: chartHeight,
-            position: "relative",
+            width: "100%",
+            height: "100%",
           }}
-        >
-          <LineChart
-            height={chartHeight}
-            xAxis={[{ data: times, scaleType: "band" }]}
-            series={[
-              {
-                label: "Canteen Usage Count",
-                data: usageData,
-                color: "#4caf50",
-              },
-            ]}
-            grid={{ horizontal: true }}
-          />
+          xAxis={[{ data: times, scaleType: "band" }]}
+          series={[
+            {
+              label: "Canteen Usage Count",
+              data: usageData,
+              color: "#4caf50",
+            },
+          ]}
+          grid={{ horizontal: true }}
+        />
 
-          {/* Shaded working time slots */}
-          {workingTime.map((slot, idx) => (
-            <Box
-              key={idx + 1}
-              sx={{
-                position: "absolute",
-                top: 30,
-                left: `${(slot.startTime / 24) * 100}%`,
-                width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
-                height: "82%",
-                bgcolor: "rgba(255, 235, 59, 0.2)",
-                borderLeft: "2px dashed #fbc02d",
-                borderRight: "2px dashed #fbc02d",
-                pointerEvents: "none",
-              }}
-            />
-          ))}
-        </Box>
+        {/* Shaded working time slots */}
+        {workingTime.map((slot, idx) => (
+          <Box
+            key={idx + 1}
+            sx={{
+              position: "absolute",
+              top: "30px",
+              left: `${(slot.startTime / 24) * 100}%`,
+              width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
+              height: "calc(100% - 40px)",
+              bgcolor: "rgba(255, 235, 59, 0.2)",
+              borderLeft: "2px dashed #fbc02d",
+              borderRight: "2px dashed #fbc02d",
+              pointerEvents: "none",
+            }}
+          />
+        ))}
       </Box>
     </Box>
   );
