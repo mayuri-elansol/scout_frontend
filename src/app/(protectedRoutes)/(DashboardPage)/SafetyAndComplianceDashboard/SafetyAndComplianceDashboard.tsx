@@ -44,7 +44,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              //   bgcolor: "blue",
+
               "& .MuiCardContent-root": {
                 height: "100%", // let BarChart content stretch
               },
@@ -85,7 +85,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               justifyContent: "space-between",
               alignItems: "center",
               flex: 1,
-              //    bgcolor: "blue",
+
               height: "100%",
               width: "100%",
               //  p: 1.5,
@@ -152,9 +152,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              //   bgcolor: "blue",
+
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
@@ -198,7 +198,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               justifyContent: "space-between",
               alignItems: "center",
               flex: 1,
-              //    bgcolor: "blue",
+
               height: "100%",
               width: "100%",
               //  p: 1.5,
@@ -268,7 +268,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              //   bgcolor: "blue",
               "& .MuiCardContent-root": {
                 height: "100%", // let BarChart content stretch
               },
@@ -354,16 +353,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              //   bgcolor: "blue",
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
             <DynamicBarChart
-              height={{
-                desktop: 375,
-              }}
               data={hourlyData}
               xAxisKey="time"
               series={[
@@ -434,14 +429,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               display: "flex",
 
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
             <DynamicBarChart
-              height={{
-                desktop: 375,
-              }}
               data={[
                 { gate: "Production Gate", blocked: 5, clear: 19 },
                 { gate: "Warehouse Gate", blocked: 3, clear: 21 },
@@ -516,7 +508,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           {/* Left side: Bar chart */}
 
           <Box
-            //    size={{ xs: 12, md: 8 }}
             sx={{
               flex: 1,
               width: "100%",
@@ -524,7 +515,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               display: "flex",
 
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
@@ -541,10 +532,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 { month: "August", users: 80 },
               ]}
               xAxisKey="month"
-              // series={[
-              //   { dataKey: "users", label: "Users", color: "#2196f3" },
-              // ]}
-
               series={[
                 {
                   dataKey: "users",
@@ -554,7 +541,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               ]}
               thresholdValue={60}
               thresholdLabel="Target"
-              //    thresholdColor="orange"
               thresholdColor="#FFB84D"
             />
           </Box>

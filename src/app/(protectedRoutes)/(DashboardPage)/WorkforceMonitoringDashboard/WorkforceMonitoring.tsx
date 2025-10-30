@@ -86,31 +86,20 @@ const WorkforceMonitoring: React.FC = () => {
     {
       label: "Employee Presence (Critical Areas)",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
+
             "& .MuiCardContent-root": {
-              height: "100%", // let BarChart content stretch
+              height: "100%",
             },
           }}
         >
           <DynamicViolationScatterChart data={violationData} />,
         </Box>
-        // </Grid>
       ),
     },
     {
@@ -118,7 +107,6 @@ const WorkforceMonitoring: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
             //  mt: 1,
             alignItems: "stretch",
@@ -133,9 +121,8 @@ const WorkforceMonitoring: React.FC = () => {
               width: "100%",
               height: "100%",
               display: "flex",
-              bgcolor: "blue",
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
@@ -185,53 +172,30 @@ const WorkforceMonitoring: React.FC = () => {
     {
       label: "Mobile Phone Usage",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
             "& .MuiCardContent-root": {
-              height: "100%", // let BarChart content stretch
+              height: "100%",
             },
           }}
         >
           <DynamicViolationScatterChart data={violationData} />,
         </Box>
-        // </Grid>
       ),
     },
     {
       label: "Security Personnel Status",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
             "& .MuiCardContent-root": {
               height: "100%",
             },
@@ -262,7 +226,6 @@ const WorkforceMonitoring: React.FC = () => {
             stackId="exitStatus"
           />
         </Box>
-        // </Grid>
       ),
     },
   ];

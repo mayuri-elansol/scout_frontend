@@ -18,11 +18,6 @@ export interface DynamicBarChartProps<T> {
   series: SeriesConfig<T>[];
   yAxisLabel?: string;
   stackId?: string;
-  height?: {
-    mobile?: number;
-    tablet?: number;
-    desktop?: number;
-  };
 }
 
 const DynamicBarChart = <T extends Record<string, string | number>>({
@@ -31,21 +26,20 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
   series,
   yAxisLabel = "Count",
   stackId = "stack",
-}: //height = { mobile: 300, tablet: 400, desktop: 425 },,
-
-DynamicBarChartProps<T>) => {
+}: DynamicBarChartProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const [showAxis, setShowAxis] = React.useState(false);
 
-  const isMediumWidth = useMediaQuery(
-    "(min-width: 1400px) and (max-width: 1600px)"
-  );
+  // Delay axis visibility slightly after render
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowAxis(true), 150);
+    return () => clearTimeout(timer);
+  }, []);
 
-  // Extract x-axis labels
+  if (!data || data.length === 0) return null;
+
   const xLabels = data.map((d) => String(d[xAxisKey]));
-
-  // Prepare series data for the chart
   const chartSeries = series.map((s) => ({
     data: data.map((d) => Number(d[s.dataKey])),
     label: s.label,
@@ -53,22 +47,11 @@ DynamicBarChartProps<T>) => {
     stack: stackId,
   }));
 
-  // Determine chart height based on screen size
-  // let chartHeight = height.desktop!;
-
-  // if (isMobile) {
-  //   chartHeight = height.mobile!;
-  // } else if (isTablet) {
-  //   chartHeight = height.tablet!;
-  // } else if (isMediumWidth) {
-  //   chartHeight = 366;
-  // }
-
   return (
     <CardContent
       sx={{
         width: "100%",
-        height: "100%", // 👈 ensures it can fill the parent
+        height: "100%",
         p: 0,
         display: "flex",
         flexDirection: "column",
@@ -76,37 +59,9 @@ DynamicBarChartProps<T>) => {
           paddingBottom: "0px !important",
         },
       }}
-      // sx={{
-      //   width: "100%",
-      //   p: "1px !important",
-      //   display: "flex",
-      //   flexDirection: "column",
-      //   alignItems: "center",
-      // "&:last-child": {
-      //   paddingBottom: "0px !important",
-      // },
-      // }}
     >
       <Box sx={{ flex: 1, width: "100%", height: "100%" }}>
-        {/* <BarChart
-          // height={chartHeight}
-          series={chartSeries}
-          xAxis={[
-            {
-              scaleType: "band",
-              data: xLabels,
-              tickLabelStyle: {
-                textAnchor: isMobile ? "end" : "middle",
-                fontSize: isMobile ? 9 : 11,
-              },
-            },
-          ]}
-          yAxis={[{ label: yAxisLabel }]}
-          margin={{}}
-        /> */}
         <BarChart
-          width={undefined} // let it auto-fit
-          height={undefined} // 👈 allow responsive auto-sizing
           series={chartSeries}
           xAxis={[
             {
@@ -115,11 +70,26 @@ DynamicBarChartProps<T>) => {
               tickLabelStyle: {
                 textAnchor: isMobile ? "end" : "middle",
                 fontSize: isMobile ? 9 : 11,
+                opacity: showAxis ? 1 : 0,
+                transition: "opacity 0.3s ease",
               },
             },
           ]}
-          yAxis={[{ label: yAxisLabel }]}
-          //margin={{ top: 30, right: 30, bottom: 40, left: 60 }}
+          yAxis={[
+            {
+              label: yAxisLabel,
+              tickLabelStyle: {
+                opacity: showAxis ? 1 : 0,
+                //  transition: "opacity 0.3s ease",
+              },
+            },
+          ]}
+          sx={{
+            "& .MuiChartsAxis-root line, & .MuiChartsAxis-root path": {
+              opacity: showAxis ? 1 : 0,
+              // transition: "opacity 0.3s ease",
+            },
+          }}
         />
       </Box>
     </CardContent>

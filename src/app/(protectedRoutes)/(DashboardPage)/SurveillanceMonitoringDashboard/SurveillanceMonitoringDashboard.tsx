@@ -83,25 +83,14 @@ const SurveillanceMonitoring: React.FC = () => {
     {
       label: "Intrusion Detection",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
             "& .MuiCardContent-root": {
-              height: "100%", // let BarChart content stretch
+              height: "100%",
             },
           }}
         >
@@ -113,31 +102,19 @@ const SurveillanceMonitoring: React.FC = () => {
     {
       label: "Unauthorized Access ",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
             "& .MuiCardContent-root": {
-              height: "100%", // let BarChart content stretch
+              height: "100%",
             },
           }}
         >
           <DynamicViolationScatterChart data={violationData} />,
         </Box>
-        // </Grid>
       ),
     },
     {
@@ -145,9 +122,7 @@ const SurveillanceMonitoring: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
@@ -158,14 +133,13 @@ const SurveillanceMonitoring: React.FC = () => {
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              // flexDirection: "column",
+
               justifyContent: "space-between",
               alignItems: "center",
               flex: 1,
-              //    bgcolor: "blue",
               height: "100%",
               width: "100%",
-              //  p: 1.5,
+
               gap: 2,
             }}
           >
@@ -230,31 +204,19 @@ const SurveillanceMonitoring: React.FC = () => {
     {
       label: "Movement During shutdown",
       content: (
-        // <Grid
-        //   container
-        //   // spacing={2.5}
-        //   sx={{
-        //     //  mt: 1,
-        //     alignItems: "stretch",
-        //     height: "100%",
-        //   }}
-        // >
-
         <Box
           sx={{
             flex: 1,
             width: "100%",
             height: "100%",
             display: "flex",
-            bgcolor: "blue",
             "& .MuiCardContent-root": {
-              height: "100%", // let BarChart content stretch
+              height: "100%",
             },
           }}
         >
           <DynamicViolationScatterChart data={violationData} />,
         </Box>
-        // </Grid>
       ),
     },
   ];
