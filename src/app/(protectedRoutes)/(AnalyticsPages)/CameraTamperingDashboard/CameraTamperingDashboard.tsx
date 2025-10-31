@@ -6,7 +6,6 @@ import {
   VideocamOutlined,
   WifiOff,
   WarningAmber,
-  NotificationsActive,
   Domain,
   WifiTethering,
 } from "@mui/icons-material";
@@ -54,15 +53,6 @@ const kpiData = [
     icon: WarningAmber,
     tooltipMessage:
       "Number of tampering incidents (blurred, covered, or offline) detected today.",
-  },
-  {
-    title: "Alarms Triggered",
-    violationsCount: 8,
-    lastDetection: "Zone D - Loading Bay",
-    lastDetectionTime: "09:40 AM",
-    icon: NotificationsActive,
-    tooltipMessage:
-      "Shows cameras that triggered an alert due to tampering or offline detection.",
   },
   {
     title: "Zones Affected",

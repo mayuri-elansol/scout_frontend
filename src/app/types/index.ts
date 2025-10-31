@@ -90,8 +90,8 @@ export type PageType =
   | "monitoring-canteen-usage"
   | "role-management"
   | "user-management"
-  | "configurator";
-
+  | "configurator"
+  | "camera-tamparing-dasboard";
 // Component Props Types
 export interface SidebarProps {
   currentPage: PageType;

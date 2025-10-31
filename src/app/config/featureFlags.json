@@ -31,5 +31,6 @@
   "face-recognition": false,
   "monitoring-canteen-usage": true,
   "employee-idle-time": true,
-  "employee-idle-with-face-recognition": false
+  "employee-idle-with-face-recognition": false,
+  "camera-tamparing-dasboard": true
 }
