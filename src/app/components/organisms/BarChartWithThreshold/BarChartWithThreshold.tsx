@@ -38,7 +38,10 @@ const DynamicBarChartWithThreshold = <
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Prepare data
-  const xLabels = useMemo(() => data.map((d) => String(d[xAxisKey])), [data]);
+  const xLabels = useMemo(
+    () => data.map((d) => String(d[xAxisKey])),
+    [data, xAxisKey]
+  );
   const allValues = useMemo(
     () => series.flatMap((s) => data.map((d) => Number(d[s.dataKey]))),
     [data, series]

@@ -246,7 +246,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         </Grid>
       ),
     },
-
     {
       label: "Vehicle In Walkways",
 
