@@ -19,11 +19,13 @@ export interface PieDataItem {
 export interface DynamicPieChartProps {
   zoneName?: string;
   data: PieDataItem[];
+  count: number;
 }
 
 const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   data,
   zoneName,
+  count,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState<number>(0);
@@ -97,14 +99,15 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
             series={[
               {
                 data,
-                outerRadius: size / 3,
+                // outerRadius: size / 4,
+                outerRadius: size / count,
 
                 arcLabel: getArcLabel,
               },
             ]}
             colors={data.map((item) => item.color)}
-            width={size}
-            height={size}
+            // width={size}
+            // height={size}
             sx={{
               [`& .${pieArcLabelClasses.root}`]: {
                 fill: "white",

@@ -107,6 +107,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Vest", value: 28, color: "#FFEAA7" },
                   { label: "Glass", value: 28, color: "#A8E6CF" },
                 ]}
+                count={2}
               />
             </Box>
             <Box
@@ -126,6 +127,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 20, color: "#C7EDCC" },
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
+                count={2}
               />
             </Box>
           </Grid>
@@ -221,6 +223,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Gas", value: 28, color: "#FFEAA7" },
                   { label: "Oil", value: 15, color: "#A8E6CF" },
                 ]}
+                count={3}
               />
             </Box>
             <Box
@@ -240,6 +243,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 20, color: "#C7EDCC" },
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
+                count={3}
               />
             </Box>
           </Grid>
@@ -326,6 +330,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#C7EDCC" },
                   { label: "Side Exit", value: 1, color: "#A8E6CF" },
                 ]}
+                count={4}
               />
             </Box>
           </Grid>
@@ -400,6 +405,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#A8E6CF" },
                   { label: "Side Exit", value: 1, color: "#B3E5FC" },
                 ]}
+                count={4}
               />
             </Box>
           </Grid>
@@ -486,6 +492,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#D4E6D4" },
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
+                count={4}
               />
             </Box>
           </Grid>
@@ -572,6 +579,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#C8E6C9" },
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
+                count={4}
               />
             </Box>
           </Grid>
