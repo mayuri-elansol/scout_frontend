@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper } from "@mui/material";
 import {
   LocalFireDepartment,
   HealthAndSafety,
@@ -29,12 +29,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
-            bgcolor: "red",
           }}
         >
           {/* Left side: Bar chart */}
@@ -89,8 +86,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
               height: "100%",
               width: "100%",
-              //  p: 1.5,
-              ///gap: 0.5,
             }}
           >
             <Box
@@ -102,8 +97,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
-                //  gap: 0.5,
-                //    bgcolor: "blue",
               }}
             >
               <DynamicPieChart
@@ -113,14 +106,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Glass", value: 28, color: "#A8E6CF" },
                 ]}
                 count={2.5}
-                carttitle="ppe comaplinces"
+                carttitle="PPE Violation Distribution"
               />
-              {/* <Typography
-                variant="subtitle2"
-                sx={{ fontWeight: 600, textAlign: "center" }}
-              >
-                PPE Compliance
-              </Typography> */}
             </Box>
             <Box
               sx={{
@@ -131,8 +118,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
-                // gap: 0.5,
-                // mb: 1,
               }}
             >
               <DynamicPieChart
@@ -144,14 +129,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
                 count={2.5}
-                carttitle="entry gate berakdown"
+                carttitle="PPE Violations by Zone"
               />
-              {/* <Typography
-                variant="subtitle2"
-                sx={{ fontWeight: 600, textAlign: "center" }}
-              >
-                Entry Gate Breakdown
-              </Typography> */}
             </Box>
           </Grid>
         </Grid>
@@ -162,15 +141,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
         >
           {/* Left side: Bar chart */}
-
           <Box
             sx={{
               flex: 1,
@@ -248,7 +224,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Oil", value: 15, color: "#A8E6CF" },
                 ]}
                 count={2.5}
-                carttitle="hazordouse zone"
+                carttitle="Hazard Type Distribution"
               />
             </Box>
             <Box
@@ -273,7 +249,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
                 count={2.5}
-                carttitle="hazrodouse zoness"
+                carttitle="Zone-wise Hazard Detection"
               />
             </Box>
           </Grid>
@@ -286,9 +262,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
@@ -367,7 +341,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 1, color: "#A8E6CF" },
                 ]}
                 count={2.5}
-                carttitle="vehical in walkways"
+                carttitle="Vehicle in Walkways by Zone"
               />
             </Box>
           </Grid>
@@ -379,9 +353,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
@@ -427,8 +399,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
               height: "100%",
               width: "100%",
-              //  p: 1.5,
-              ///gap: 0.5,
             }}
           >
             <Box
@@ -451,7 +421,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 1, color: "#B3E5FC" },
                 ]}
                 count={2.5}
-                carttitle="fall incident"
+                carttitle="Zone-wise Fall/Laydown Incidents"
               />
             </Box>
           </Grid>
@@ -463,9 +433,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
@@ -523,8 +491,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
               height: "100%",
               width: "100%",
-              //  p: 1.5,
-              ///gap: 0.5,
             }}
           >
             <Box
@@ -547,7 +513,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
                 count={2.5}
-                carttitle="enerygnecy exit status"
+                carttitle="Zone-wise Blocked Emergency Exits"
               />
             </Box>
           </Grid>
@@ -559,9 +525,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
@@ -619,8 +583,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
               height: "100%",
               width: "100%",
-              //  p: 1.5,
-              ///gap: 0.5,
             }}
           >
             <Box
@@ -643,7 +605,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
                 count={2.5}
-                carttitle="crowd gatharing"
+                carttitle="Zone-wise Crowd Gathering Incidents"
               />
             </Box>
           </Grid>

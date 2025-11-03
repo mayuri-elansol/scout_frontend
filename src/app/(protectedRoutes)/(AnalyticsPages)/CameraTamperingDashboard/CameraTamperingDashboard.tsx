@@ -186,7 +186,11 @@ export default function CameraTamperingDashboard() {
                 justifyContent: "center",
               }}
             >
-              <DynamicPieChart data={tamperingTypeData} />
+              <DynamicPieChart
+                data={tamperingTypeData}
+                count={2.8}
+                carttitle="Camera Status Distribution"
+              />
             </Box>
           </Grid>
         </Grid>

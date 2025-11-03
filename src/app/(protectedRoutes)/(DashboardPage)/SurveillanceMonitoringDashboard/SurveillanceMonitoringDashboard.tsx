@@ -117,87 +117,158 @@ const SurveillanceMonitoring: React.FC = () => {
         </Box>
       ),
     },
+    // {
+    //   label: "Camera Tempering Detection",
+    //   content: (
+    //     <Grid
+    //       container
+    //       sx={{
+    //         alignItems: "stretch",
+    //         height: "100%",
+    //         width: "100%",
+    //         bgcolor: "red",
+    //       }}
+    //     >
+    //       <Grid
+    //         size={{ xs: 12, md: 4 }}
+    //         sx={{
+    //           display: "flex",
+    //           flexDirection: "column",
+    //           justifyContent: "center",
+    //           alignItems: "center",
+    //           flex: 1,
+    //           height: "100%",
+    //           width: "100%",
+    //           bgcolor: "blue",
+    //         }}
+    //       >
+    //         <Box
+    //           sx={{
+    //             flex: 1,
+    //             width: "100%",
+    //             display: "flex",
+    //             flexDirection: "row",
+    //             alignItems: "center",
+    //             justifyContent: "center",
+    //             overflow: "hidden",
+    //           }}
+    //         >
+    //           <DynamicPieChart
+    //             data={[
+    //               { label: "Zone A", value: 12, color: "#A8E6CF" },
+    //               { label: "Zone B", value: 5, color: "#ffcdd2" },
+    //               { label: "Zone C", value: 2, color: "#FFEAA7" },
+    //             ]}
+    //             count={2.5}
+    //             carttitle="online"
+    //           />
+    //         </Box>
+    //         <Box
+    //           sx={{
+    //             flex: 1,
+    //             width: "100%",
+    //             display: "flex",
+    //             flexDirection: "column",
+    //             alignItems: "center",
+    //             justifyContent: "center",
+    //             overflow: "hidden",
+    //           }}
+    //         >
+    //           <DynamicPieChart
+    //             // zoneName="Offline"
+    //             data={[
+    //               { label: "Zone A", value: 20, color: "#A8E6CF" },
+    //               { label: "Zone B", value: 3, color: "#ffcdd2" },
+    //               { label: "Zone C", value: 1, color: "#FFEAA7" },
+    //             ]}
+    //             count={2.5}
+    //             carttitle="offline"
+    //           />
+    //         </Box>
+    //         <Box
+    //           sx={{
+    //             flex: 1,
+    //             width: "100%",
+    //             display: "flex",
+    //             flexDirection: "column",
+    //             alignItems: "center",
+    //             justifyContent: "center",
+    //             overflow: "hidden",
+    //           }}
+    //         >
+    //           <DynamicPieChart
+    //             // zoneName="Tampered"
+    //             data={[
+    //               { label: "Zone A", value: 20, color: "#A8E6CF" },
+    //               { label: "Zone B", value: 3, color: "#ffcdd2" },
+    //               { label: "Zone C", value: 1, color: "#FFEAA7" },
+    //             ]}
+    //             count={2.5}
+    //             carttitle="tampred"
+    //           />
+    //         </Box>
+    //       </Grid>
+    //     </Grid>
+    //   ),
+    // },
     {
       label: "Camera Tempering Detection",
       content: (
         <Grid
           container
+          spacing={1}
           sx={{
             alignItems: "stretch",
             height: "100%",
+            width: "100%",
           }}
         >
-          {/* Right side: Two pie charts stacked */}
-
-          <Grid
-            size={{ xs: 12, md: 4 }}
-            sx={{
-              display: "flex",
-
-              justifyContent: "space-between",
-              alignItems: "center",
-              flex: 1,
-              height: "100%",
-              width: "100%",
-
-              gap: 2,
-            }}
-          >
-            <Box
+          {/* 3 Pie charts side by side */}
+          {[
+            {
+              title: "Online Cameras by Zone",
+              data: [
+                { label: "Zone A", value: 12, color: "#A8E6CF" },
+                { label: "Zone B", value: 5, color: "#ffcdd2" },
+                { label: "Zone C", value: 2, color: "#FFEAA7" },
+              ],
+            },
+            {
+              title: "Offline Cameras by Zone",
+              data: [
+                { label: "Zone A", value: 20, color: "#A8E6CF" },
+                { label: "Zone B", value: 3, color: "#ffcdd2" },
+                { label: "Zone C", value: 1, color: "#FFEAA7" },
+              ],
+            },
+            {
+              title: "Tampered Cameras by Zone",
+              data: [
+                { label: "Zone A", value: 20, color: "#A8E6CF" },
+                { label: "Zone B", value: 3, color: "#ffcdd2" },
+                { label: "Zone C", value: 1, color: "#FFEAA7" },
+              ],
+            },
+          ].map((chart, index) => (
+            <Grid
+              key={index + 1}
+              size={{ xs: 12, md: 4 }}
               sx={{
-                flex: 1,
-                width: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-              }}
-            >
-              <DynamicPieChart
-                zoneName="Online"
-                data={[
-                  { label: "Zone A", value: 12, color: "#A8E6CF" },
-                  { label: "Zone B", value: 5, color: "#ffcdd2" },
-                  { label: "Zone C", value: 2, color: "#FFEAA7" },
-                ]}
-              />
-            </Box>
-            <Box
-              sx={{
-                flex: 1,
+
+                height: "100%",
                 width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
               <DynamicPieChart
-                zoneName="Offline"
-                data={[
-                  { label: "Zone A", value: 20, color: "#A8E6CF" },
-                  { label: "Zone B", value: 3, color: "#ffcdd2" },
-                  { label: "Zone C", value: 1, color: "#FFEAA7" },
-                ]}
+                data={chart.data}
+                count={2.5}
+                carttitle={chart.title}
               />
-            </Box>
-            <Box
-              sx={{
-                flex: 1,
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <DynamicPieChart
-                zoneName="Tampered"
-                data={[
-                  { label: "Zone A", value: 20, color: "#A8E6CF" },
-                  { label: "Zone B", value: 3, color: "#ffcdd2" },
-                  { label: "Zone C", value: 1, color: "#FFEAA7" },
-                ]}
-              />
-            </Box>
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
       ),
     },
