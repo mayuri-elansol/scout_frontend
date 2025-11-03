@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Chip, Stack, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { LineChart } from "@mui/x-charts";
@@ -24,6 +24,24 @@ const LineCharts: React.FC<Props> = ({
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [ready, setReady] = useState(false);
+
+  // ✅ Wait until container has valid size before rendering chart
+  useEffect(() => {
+    const checkSize = () => {
+      const width = containerRef.current?.offsetWidth ?? 0;
+      const height = containerRef.current?.offsetHeight ?? 0;
+      setReady(width > 50 && height > 50);
+    };
+
+    checkSize();
+
+    const resizeObserver = new ResizeObserver(checkSize);
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   if (!times?.length || !usageData?.length) {
     return (
@@ -74,48 +92,49 @@ const LineCharts: React.FC<Props> = ({
         ))}
       </Stack>
 
-      {/* Chart area fills remaining height */}
+      {/* Chart */}
       <Box
+        ref={containerRef}
         sx={{
           flex: 1,
           position: "relative",
           width: "100%",
-          minHeight: 0, // ✅ allows flex child to shrink correctly
+          minHeight: 0,
         }}
       >
-        <LineChart
-          sx={{
-            width: "100%",
-            height: "100%",
-          }}
-          xAxis={[{ data: times, scaleType: "band" }]}
-          series={[
-            {
-              label: "Canteen Usage Count",
-              data: usageData,
-              color: "#4caf50",
-            },
-          ]}
-          grid={{ horizontal: true }}
-        />
+        {ready && (
+          <LineChart
+            sx={{ width: "100%", height: "100%" }}
+            xAxis={[{ data: times, scaleType: "band" }]}
+            series={[
+              {
+                label: "Canteen Usage Count",
+                data: usageData,
+                color: "#4caf50",
+              },
+            ]}
+            grid={{ horizontal: true }}
+          />
+        )}
 
         {/* Shaded working time slots */}
-        {workingTime.map((slot, idx) => (
-          <Box
-            key={idx + 1}
-            sx={{
-              position: "absolute",
-              top: "30px",
-              left: `${(slot.startTime / 24) * 100}%`,
-              width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
-              height: "calc(100% - 40px)",
-              bgcolor: "rgba(255, 235, 59, 0.2)",
-              borderLeft: "2px dashed #fbc02d",
-              borderRight: "2px dashed #fbc02d",
-              pointerEvents: "none",
-            }}
-          />
-        ))}
+        {ready &&
+          workingTime.map((slot, idx) => (
+            <Box
+              key={idx + 1}
+              sx={{
+                position: "absolute",
+                top: "30px",
+                left: `${(slot.startTime / 24) * 100}%`,
+                width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
+                height: "calc(100% - 40px)",
+                bgcolor: "rgba(255, 235, 59, 0.2)",
+                borderLeft: "2px dashed #fbc02d",
+                borderRight: "2px dashed #fbc02d",
+                pointerEvents: "none",
+              }}
+            />
+          ))}
       </Box>
     </Box>
   );
