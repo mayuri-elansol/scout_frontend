@@ -17,6 +17,7 @@ export interface ResetPasswordFormProps {
   onToggleCurrentPassword: () => void;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
+
+  onSubmit: (data: ResetPasswordFormData) => void | Promise<void>;
   setError: (error: string) => void;
 }

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Grid, Paper } from "@mui/material";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   LocalFireDepartment,
   HealthAndSafety,
@@ -34,6 +34,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             //  mt: 1,
             alignItems: "stretch",
             height: "100%",
+            bgcolor: "red",
           }}
         >
           {/* Left side: Bar chart */}
@@ -46,7 +47,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               display: "flex",
 
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
@@ -89,7 +90,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               height: "100%",
               width: "100%",
               //  p: 1.5,
-              gap: 2,
+              ///gap: 0.5,
             }}
           >
             <Box
@@ -97,8 +98,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 flex: 1,
                 width: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
+                //  gap: 0.5,
+                //    bgcolor: "blue",
               }}
             >
               <DynamicPieChart
@@ -107,16 +112,27 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Vest", value: 28, color: "#FFEAA7" },
                   { label: "Glass", value: 28, color: "#A8E6CF" },
                 ]}
-                count={2}
+                count={2.5}
+                carttitle="ppe comaplinces"
               />
+              {/* <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, textAlign: "center" }}
+              >
+                PPE Compliance
+              </Typography> */}
             </Box>
             <Box
               sx={{
                 flex: 1,
                 width: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
+                // gap: 0.5,
+                // mb: 1,
               }}
             >
               <DynamicPieChart
@@ -127,8 +143,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 20, color: "#C7EDCC" },
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
-                count={2}
+                count={2.5}
+                carttitle="entry gate berakdown"
               />
+              {/* <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, textAlign: "center" }}
+              >
+                Entry Gate Breakdown
+              </Typography> */}
             </Box>
           </Grid>
         </Grid>
@@ -203,8 +226,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
               height: "100%",
               width: "100%",
-              //  p: 1.5,
-              gap: 2,
             }}
           >
             <Box
@@ -212,8 +233,11 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 flex: 1,
                 width: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
+                //  gap: 0.5,
               }}
             >
               <DynamicPieChart
@@ -223,7 +247,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Gas", value: 28, color: "#FFEAA7" },
                   { label: "Oil", value: 15, color: "#A8E6CF" },
                 ]}
-                count={3}
+                count={2.5}
+                carttitle="hazordouse zone"
               />
             </Box>
             <Box
@@ -231,8 +256,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 flex: 1,
                 width: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
+                gap: 0.5,
+                mb: 1,
               }}
             >
               <DynamicPieChart
@@ -243,7 +272,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 20, color: "#C7EDCC" },
                   { label: "Side Exit", value: 71, color: "#A8E6CF" },
                 ]}
-                count={3}
+                count={2.5}
+                carttitle="hazrodouse zoness"
               />
             </Box>
           </Grid>
@@ -272,7 +302,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               height: "100%",
               display: "flex",
               "& .MuiCardContent-root": {
-                height: "100%", // let BarChart content stretch
+                height: "100%",
               },
             }}
           >
@@ -308,18 +338,24 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+
               height: "100%",
+              width: "100%",
             }}
           >
             <Box
               sx={{
+                flex: 1,
                 width: "100%",
-                height: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
               }}
             >
               <DynamicPieChart
@@ -330,7 +366,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#C7EDCC" },
                   { label: "Side Exit", value: 1, color: "#A8E6CF" },
                 ]}
-                count={4}
+                count={2.5}
+                carttitle="vehical in walkways"
               />
             </Box>
           </Grid>
@@ -383,18 +420,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+
               height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              ///gap: 0.5,
             }}
           >
             <Box
               sx={{
+                flex: 1,
                 width: "100%",
-                height: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
               }}
             >
               <DynamicPieChart
@@ -405,7 +450,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#A8E6CF" },
                   { label: "Side Exit", value: 1, color: "#B3E5FC" },
                 ]}
-                count={4}
+                count={2.5}
+                carttitle="fall incident"
               />
             </Box>
           </Grid>
@@ -470,18 +516,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+
               height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              ///gap: 0.5,
             }}
           >
             <Box
               sx={{
+                flex: 1,
                 width: "100%",
-                height: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
               }}
             >
               <DynamicPieChart
@@ -492,7 +546,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#D4E6D4" },
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
-                count={4}
+                count={2.5}
+                carttitle="enerygnecy exit status"
               />
             </Box>
           </Grid>
@@ -557,18 +612,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              alignItems: "center",
+              flexDirection: "column",
               justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+
               height: "100%",
+              width: "100%",
+              //  p: 1.5,
+              ///gap: 0.5,
             }}
           >
             <Box
               sx={{
+                flex: 1,
                 width: "100%",
-                height: "100%",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
               }}
             >
               <DynamicPieChart
@@ -579,7 +642,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   { label: "Main Entrance", value: 4, color: "#C8E6C9" },
                   { label: "Side Exit", value: 1, color: "#B0E0E6" },
                 ]}
-                count={4}
+                count={2.5}
+                carttitle="crowd gatharing"
               />
             </Box>
           </Grid>

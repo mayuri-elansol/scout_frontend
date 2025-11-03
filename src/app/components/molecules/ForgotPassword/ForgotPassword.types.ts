@@ -14,6 +14,7 @@ export interface ForgotPasswordFormProps {
   ) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   onTogglePassword: () => void;
   onToggleConfirmPassword: () => void;
-  onSubmit: (event: React.FormEvent) => void;
+
+  onSubmit: (data: ForgotPasswordFormData) => void | Promise<void>;
   setError: (error: string) => void;
 }

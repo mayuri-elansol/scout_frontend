@@ -52,7 +52,6 @@
 //       sx={{
 //         width: "100%",
 //         height: "100%",
-
 //         p: 0,
 //         display: "flex",
 //         flexDirection: "column",
@@ -81,14 +80,14 @@
 //               label: yAxisLabel,
 //               tickLabelStyle: {
 //                 opacity: showAxis ? 1 : 0,
-//                 transition: "opacity 0.3s ease",
+//                 //  transition: "opacity 0.3s ease",
 //               },
 //             },
 //           ]}
 //           sx={{
 //             "& .MuiChartsAxis-root line, & .MuiChartsAxis-root path": {
 //               opacity: showAxis ? 1 : 0,
-//               transition: "opacity 0.3s ease",
+//               // transition: "opacity 0.3s ease",
 //             },
 //           }}
 //         />
