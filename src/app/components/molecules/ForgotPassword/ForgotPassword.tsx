@@ -22,6 +22,7 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   onToggleConfirmPassword,
   showConfirmPassword,
   isLoading,
+  onSubmit,
 }) => {
   const {
     register,
@@ -31,10 +32,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
   } = useForm<ForgotPasswordFormData>({
     mode: "onChange",
   });
-
-  const onSubmit = (data: ForgotPasswordFormData) => {
-    console.log("Form submitted:", data);
-  };
 
   return (
     <CardContent sx={{ padding: 4 }}>
@@ -83,7 +80,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               },
               pattern: { value: /^\d+$/, message: "Only digits allowed" },
             })}
-      
             slotProps={{
               input: {
                 startAdornment: (
@@ -135,8 +131,6 @@ const ForgotPasswordForm: React.FC<ForgotPasswordFormProps> = ({
               validate: (value) =>
                 value === watch("password") || "Passwords do not match",
             })}
-   
-
             slotProps={{
               input: {
                 startAdornment: (

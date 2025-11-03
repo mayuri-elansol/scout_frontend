@@ -15,19 +15,16 @@ const ForgotPasswordPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
-  // 👇 states for toggle visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (data: ForgotPasswordFormData) => {
     setError("");
     setIsLoading(true);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("formdata", formData);
+      console.log("formdata from forgot password", data);
     } catch (err) {
       console.error(err);
       setError("Failed to reset password. Please try again.");

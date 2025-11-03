@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Box, Grid, Paper } from "@mui/material";
 import {
@@ -110,9 +109,6 @@ const tamperingTypeData = [
   { label: "Online", value: 20, color: "#B3E5FC" },
 ];
 
-// -------------------- ADDITIONAL CHART DATA --------------------
-
-// Top 5 Cameras by Tampering Frequency
 const topCameras = [
   { camera: "CAM-007", incidents: 15 },
   { camera: "CAM-002", incidents: 13 },
@@ -121,7 +117,6 @@ const topCameras = [
   { camera: "CAM-004", incidents: 5 },
 ];
 
-//  Camera Health Summary
 const cameraHealth = [
   { zone: "Gate 1", online: 6, offline: 1, tampered: 2 },
   { zone: "Warehouse", online: 4, offline: 2, tampered: 3 },
@@ -137,9 +132,7 @@ export default function CameraTamperingDashboard() {
       content: (
         <Grid
           container
-          // spacing={2.5}
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}

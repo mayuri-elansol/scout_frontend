@@ -18,14 +18,13 @@ const ResetPassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async (data: ResetPasswordFormData) => {
     setError("");
     setIsLoading(true);
 
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log("formdataaa", formData);
+      console.log("formdataaa from the reset password", data);
     } catch (err) {
       console.error(err);
       setError("Failed to reset password. Please try again.");
