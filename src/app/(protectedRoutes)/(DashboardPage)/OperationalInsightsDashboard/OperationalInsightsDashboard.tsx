@@ -113,100 +113,140 @@ const OperationalInsightsDashboard: React.FC = () => {
     {
       label: "People Count",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <JointBarGraphChart times={times} seriesData={series} />
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <JointBarGraphChart times={times} seriesData={series} />
+          </Grid>
+        </Grid>
       ),
     },
     {
       label: "Vehicle Count & ANPR",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <JointBarGraphChart times={times} seriesData={series} />
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <JointBarGraphChart times={times} seriesData={series} />
+          </Grid>
+        </Grid>
       ),
     },
     {
       label: "Canteen Usage",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <CanteenUsageChart
-            times={times}
-            usageData={usageData}
-            workingTime={workingSlots}
-          />
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <CanteenUsageChart
+              times={times}
+              usageData={usageData}
+              workingTime={workingSlots}
+            />
+          </Grid>
+        </Grid>
       ),
     },
     {
       label: "Vehicle Monitoring",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <JointBarGraphChart times={times} seriesData={series} />
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <JointBarGraphChart times={times} seriesData={series} />
+          </Grid>
+        </Grid>
       ),
     },
     {
       label: "Unauthorized parking",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <DynamicViolationScatterChart data={violationData} />
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            <DynamicViolationScatterChart data={violationData} />
+          </Grid>
+        </Grid>
       ),
     },
   ];
@@ -221,7 +261,8 @@ const OperationalInsightsDashboard: React.FC = () => {
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
-        minHeight: 0,
+        // minHeight: 0,
+        minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
       <Box
@@ -256,7 +297,8 @@ const OperationalInsightsDashboard: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          minHeight: 0,
+          //  minHeight: 0,
+          minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
         <DashboardTabs tabs={tabs} />

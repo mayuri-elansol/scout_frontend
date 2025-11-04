@@ -34,15 +34,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
-
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -52,51 +50,41 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               data={hourlyData}
               xAxisKey="time"
               series={[
-                {
-                  dataKey: "helmet",
-                  label: "Helmet",
-                  color: "#ffcdd2",
-                },
-                {
-                  dataKey: "vest",
-                  label: "Vest",
-                  color: "#FFEAA7",
-                },
-                {
-                  dataKey: "glass",
-                  label: "Glass",
-                  color: "#A8E6CF",
-                },
+                { dataKey: "helmet", label: "Helmet", color: "#ffcdd2" },
+                { dataKey: "vest", label: "Vest", color: "#FFEAA7" },
+                { dataKey: "glass", label: "Glass", color: "#A8E6CF" },
               ]}
               yAxisLabel="Violation Count"
               stackId="ppe"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
+
+              flexDirection: { xs: "row", md: "column" },
               justifyContent: "space-between",
               alignItems: "center",
-              flex: 1,
-
-              height: "100%",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -109,15 +97,17 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 carttitle="PPE Violation Distribution"
               />
             </Box>
+
+            {/* Second Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -146,14 +136,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
-
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -187,33 +176,34 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               yAxisLabel="Violation Count"
               stackId="hazard"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
+
+              flexDirection: { xs: "row", md: "column" },
               justifyContent: "space-between",
               alignItems: "center",
-              flex: 1,
-
-              height: "100%",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
-                //  gap: 0.5,
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -227,17 +217,17 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 carttitle="Hazard Type Distribution"
               />
             </Box>
+
+            {/* Second Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
-                gap: 0.5,
-                mb: 1,
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -258,7 +248,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     },
     {
       label: "Vehicle In Walkways",
-
       content: (
         <Grid
           container
@@ -267,14 +256,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -304,32 +292,34 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               yAxisLabel="Hours "
               stackId="exitStatus"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
 
-              height: "100%",
+              flexDirection: { xs: "row", md: "column" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -344,6 +334,31 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 carttitle="Vehicle in Walkways by Zone"
               />
             </Box>
+
+            {/* Second Pie Chart */}
+            {/* <Box
+              sx={{
+                flex: 1,
+                minWidth: { xs: "50%", md: "100%" },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: { xs: 140, md: "50%" },
+              }}
+            >
+              <DynamicPieChart
+                data={[
+                  { label: "Production Gate", value: 31, color: "#ffcdd2" },
+                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
+                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
+                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
+                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
+                ]}
+                count={2.5}
+                carttitle="PPE Violations by Zone"
+              />
+            </Box> */}
           </Grid>
         </Grid>
       ),
@@ -358,14 +373,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -384,32 +398,34 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               yAxisLabel="Incident Count"
               stackId="fall"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
 
-              height: "100%",
+              flexDirection: { xs: "row", md: "column" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -438,15 +454,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
-
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -476,32 +490,34 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               yAxisLabel="Hours"
               stackId="exitStatus"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
 
-              height: "100%",
+              flexDirection: { xs: "row", md: "column" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -530,15 +546,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
-
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -568,32 +582,34 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               thresholdLabel="Target"
               thresholdColor="#FFB84D"
             />
-          </Box>
+          </Grid>
 
-          {/* Right side: Two pie charts stacked */}
-
+          {/* Right side*/}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              flex: 1,
 
-              height: "100%",
+              flexDirection: { xs: "row", md: "column" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
               width: "100%",
             }}
           >
+            {/* First Pie Chart */}
             <Box
               sx={{
                 flex: 1,
-                width: "100%",
+                minWidth: { xs: "50%", md: "100%" },
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                overflow: "hidden",
+                height: { xs: 140, md: "50%" },
               }}
             >
               <DynamicPieChart
@@ -683,7 +699,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
-        minHeight: 0,
+        // minHeight: 0,
+
+        minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
       {/* Top Right Time Filter */}
@@ -717,7 +735,9 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          minHeight: 0,
+          //  minHeight: 0,
+
+          minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
         <DashboardTabs tabs={tabs} />

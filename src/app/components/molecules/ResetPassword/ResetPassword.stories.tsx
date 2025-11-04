@@ -33,9 +33,8 @@ const defaultProps = {
   onTogglePassword: () => console.log("Toggle password visibility"),
   onToggleConfirmPassword: () =>
     console.log("Toggle confirm password visibility"),
-  onSubmit: (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted");
+  onSubmit: (data: ResetPasswordFormData) => {
+    console.log("Form submitted", data);
   },
   setError: (err: string) => console.log("Set error:", err),
 };
