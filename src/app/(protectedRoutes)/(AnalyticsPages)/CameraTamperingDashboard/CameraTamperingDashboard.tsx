@@ -13,9 +13,10 @@ import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
-import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
+import JointBarGraphChart from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import CameraStatusDonutChart from "@/app/components/organisms/DonutChart/DonutChart";
 
 // -------------------- KPI DATA --------------------
 const kpiData = [
@@ -65,15 +66,6 @@ const kpiData = [
 ];
 
 // -------------------- SAMPLE DATA --------------------
-const uptimeData = [
-  { camera: "CAM-001", uptime: 99, downtime: 1 },
-  { camera: "CAM-002", uptime: 95, downtime: 5 },
-  { camera: "CAM-003", uptime: 98, downtime: 2 },
-  { camera: "CAM-004", uptime: 93, downtime: 7 },
-  { camera: "CAM-005", uptime: 97, downtime: 3 },
-  { camera: "CAM-006", uptime: 90, downtime: 10 },
-  { camera: "CAM-007", uptime: 94, downtime: 6 },
-];
 
 const tamperingTrendData = [
   { time: "00:00", offline: 3, blur: 2, lensCovered: 1 },
@@ -124,6 +116,29 @@ const cameraHealth = [
   { zone: "Parking", online: 5, offline: 1, tampered: 2 },
 ];
 
+const cameras = [
+  "CAM-001",
+  "CAM-002",
+  "CAM-003",
+  "CAM-004",
+  "CAM-005",
+  "CAM-006",
+  "CAM-007",
+];
+
+const series = [
+  {
+    label: "Uptime %",
+    data: [99, 97, 95, 92, 98, 94, 90],
+    color: "#4CAF50",
+  },
+  {
+    label: "Downtime %",
+    data: [1, 3, 5, 8, 2, 6, 10],
+    color: "#F44336",
+  },
+];
+
 // -------------------- MAIN DASHBOARD --------------------
 export default function CameraTamperingDashboard() {
   const tabs: TabConfig[] = [
@@ -138,7 +153,6 @@ export default function CameraTamperingDashboard() {
           }}
         >
           {/* Left side: Bar chart */}
-
           <Box
             sx={{
               flex: 1,
@@ -165,9 +179,34 @@ export default function CameraTamperingDashboard() {
               yAxisLabel="Incident Count"
             />
           </Box>
-
           {/* Right side: Two pie charts stacked */}
-
+          {/* 1) only shows the status distribution pie chart  */}
+          {/* <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
+            }}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <DynamicPieChart
+                data={tamperingTypeData}
+                count={2.8}
+                carttitle="Camera Status Distribution"
+              />
+            </Box>
+          </Grid> */}
+          {/* 2) shows the donut chart for the camera status distrubtion */}
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
@@ -186,12 +225,13 @@ export default function CameraTamperingDashboard() {
                 justifyContent: "center",
               }}
             >
-              <DynamicPieChart data={tamperingTypeData} />
+              <CameraStatusDonutChart data={tamperingTypeData} />
             </Box>
           </Grid>
         </Grid>
       ),
     },
+
     {
       label: "Camera Uptime",
       content: (
@@ -206,7 +246,7 @@ export default function CameraTamperingDashboard() {
             },
           }}
         >
-          <DynamicBarChart
+          {/* <DynamicBarChart
             data={uptimeData}
             xAxisKey="camera"
             series={[
@@ -214,11 +254,11 @@ export default function CameraTamperingDashboard() {
               { dataKey: "downtime", label: "Downtime %", color: "#ffcdd2" },
             ]}
             yAxisLabel="Percentage"
-          />
+          /> */}
+          <JointBarGraphChart times={cameras} seriesData={series} />
         </Box>
       ),
     },
-
     {
       label: "Top Cameras",
       content: (
@@ -244,7 +284,6 @@ export default function CameraTamperingDashboard() {
         </Box>
       ),
     },
-
     {
       label: "Camera Health Summary",
       content: (

@@ -1,5 +1,5 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import DynamicPieChart, { DynamicPieChartProps } from "./PieChart";
 
 const meta: Meta<typeof DynamicPieChart> = {
@@ -41,14 +41,12 @@ const sampleData = [
 
 export const Default: Story = {
   args: {
-    zoneName: "Zone A",
     data: sampleData,
   },
 };
 
 export const SmallDataset: Story = {
   args: {
-    zoneName: "Zone B",
     data: [
       { label: "Operational", value: 70, color: "#2196f3" },
       { label: "Fault", value: 30, color: "#e91e63" },

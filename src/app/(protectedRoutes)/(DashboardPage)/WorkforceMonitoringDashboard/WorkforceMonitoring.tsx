@@ -86,20 +86,29 @@ const WorkforceMonitoring: React.FC = () => {
     {
       label: "Employee Presence (Critical Areas)",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <DynamicViolationScatterChart data={violationData} />,
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+            padding={{ xs: "10px" }}
+          >
+            <DynamicViolationScatterChart data={violationData} />,
+          </Grid>
+        </Grid>
       ),
     },
     {
@@ -108,19 +117,17 @@ const WorkforceMonitoring: React.FC = () => {
         <Grid
           container
           sx={{
-            //  mt: 1,
             alignItems: "stretch",
             height: "100%",
           }}
         >
-          {/* Left side: Bar chart */}
-
-          <Box
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
             sx={{
-              flex: 1,
-              width: "100%",
-              height: "100%",
               display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
@@ -165,67 +172,86 @@ const WorkforceMonitoring: React.FC = () => {
               yAxisLabel="Count"
               stackId="exitStatus"
             />
-          </Box>
+          </Grid>
         </Grid>
       ),
     },
     {
       label: "Mobile Phone Usage",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <DynamicViolationScatterChart data={violationData} />,
-        </Box>
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+            padding={{ xs: "10px" }}
+          >
+            <DynamicViolationScatterChart data={violationData} />,
+          </Grid>
+        </Grid>
       ),
     },
     {
       label: "Security Personnel Status",
       content: (
-        <Box
+        <Grid
+          container
           sx={{
-            flex: 1,
-            width: "100%",
+            alignItems: "stretch",
             height: "100%",
-            display: "flex",
-            "& .MuiCardContent-root": {
-              height: "100%",
-            },
           }}
         >
-          <DynamicBarChart
-            data={[
-              { gate: "Production Gate", Absent: 5, Present: 19 },
-              { gate: "Warehouse Gate", Absent: 3, Present: 21 },
-              { gate: "Parking Gate", Absent: 2, Present: 22 },
-              { gate: "Main Entrance", Absent: 4, Present: 20 },
-              { gate: "Side Exit", Absent: 1, Present: 23 },
-            ]}
-            xAxisKey="gate"
-            series={[
-              {
-                dataKey: "Absent",
-                label: "Absent Count",
-                color: "#FFC0CB",
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
               },
-              {
-                dataKey: "Present",
-                label: "Present Count",
-                color: "#B0E0E6",
-              },
-            ]}
-            yAxisLabel="Count"
-            stackId="exitStatus"
-          />
-        </Box>
+            }}
+          >
+            <DynamicBarChart
+              data={[
+                { gate: "Production Gate", Absent: 5, Present: 19 },
+                { gate: "Warehouse Gate", Absent: 3, Present: 21 },
+                { gate: "Parking Gate", Absent: 2, Present: 22 },
+                { gate: "Main Entrance", Absent: 4, Present: 20 },
+                { gate: "Side Exit", Absent: 1, Present: 23 },
+              ]}
+              xAxisKey="gate"
+              series={[
+                {
+                  dataKey: "Absent",
+                  label: "Absent Count",
+                  color: "#FFC0CB",
+                },
+                {
+                  dataKey: "Present",
+                  label: "Present Count",
+                  color: "#B0E0E6",
+                },
+              ]}
+              yAxisLabel="Count"
+              stackId="exitStatus"
+            />
+          </Grid>
+        </Grid>
       ),
     },
   ];
@@ -240,7 +266,8 @@ const WorkforceMonitoring: React.FC = () => {
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
-        minHeight: 0,
+        // minHeight: 0,
+        minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
       <Box
@@ -275,7 +302,8 @@ const WorkforceMonitoring: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          minHeight: 0,
+          //  minHeight: 0,
+          minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
         <DashboardTabs tabs={tabs} />

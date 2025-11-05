@@ -39,16 +39,11 @@ const DynamicBarChartWithThreshold = <
   const containerRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
-  // ✅ Prevent flicker — render chart only when container has valid size
   useEffect(() => {
     const checkSize = () => {
       const width = containerRef.current?.offsetWidth ?? 0;
       const height = containerRef.current?.offsetHeight ?? 0;
-      if (width > 50 && height > 50) {
-        setReady(true);
-      } else {
-        setReady(false);
-      }
+      setReady(width > 50 && height > 50);
     };
 
     checkSize();
@@ -58,16 +53,14 @@ const DynamicBarChartWithThreshold = <
     return () => resizeObserver.disconnect();
   }, []);
 
-  // Defensive guards
-  if (!data || data.length === 0 || !Array.isArray(series)) return null;
-
-  // ✅ Prepare data
+  // ✅ Always call hooks first (even if data is empty)
   const xLabels = useMemo(
-    () => data.map((d) => String(d[xAxisKey])),
+    () => (data ? data.map((d) => String(d[xAxisKey])) : []),
     [data, xAxisKey]
   );
 
   const allValues = useMemo(() => {
+    if (!data || !Array.isArray(series)) return [0];
     const vals = series.flatMap((s) =>
       data.map((d) => Number(d[s.dataKey]) || 0)
     );
@@ -83,6 +76,9 @@ const DynamicBarChartWithThreshold = <
     color: s.color,
     stack: stackId,
   }));
+
+  // ✅ Now it's safe to conditionally return
+  if (!data || data.length === 0 || !Array.isArray(series)) return null;
 
   return (
     <CardContent
@@ -126,7 +122,7 @@ const DynamicBarChartWithThreshold = <
               margin={{ top: 40, right: 30, bottom: 40, left: 50 }}
             />
 
-            {/* ✅ Responsive threshold line overlay */}
+            {/* Threshold line overlay */}
             {maxValue > minValue && (
               <Box
                 sx={{
