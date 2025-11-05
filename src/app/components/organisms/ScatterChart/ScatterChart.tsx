@@ -83,7 +83,7 @@ const DynamicViolationScatterChart: React.FC<
         ref={containerRef}
         sx={{
           width: "100%",
-          height: "100%",
+          // height: "100%",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -99,11 +99,11 @@ const DynamicViolationScatterChart: React.FC<
       ref={containerRef}
       sx={{
         width: "100%",
-        height: "100%",
+        // height: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        overflow: "hidden", // Prevent scrollbars
+        overflow: "hidden",
       }}
     >
       {dimensions.width > 0 && dimensions.height > 0 && (
@@ -147,7 +147,7 @@ const DynamicViolationScatterChart: React.FC<
           grid={{ horizontal: true, vertical: false }}
           sx={{
             "& .MuiChartsLegend-root": {
-              transform: "translate(0, 15px)", // keep legend inside safely
+              transform: "translate(0, 15px)",
             },
             "& text": { userSelect: "none" },
           }}
