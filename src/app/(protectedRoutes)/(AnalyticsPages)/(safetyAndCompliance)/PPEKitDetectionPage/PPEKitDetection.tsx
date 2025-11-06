@@ -1,28 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  Shield,
-  Visibility,
-  LocationOn,
-  AccessTime,
-  Checkroom,
-} from "@mui/icons-material";
+
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 
-import { FilterParams } from "./PPEDetection.types";
+import { FilterParams, KpiItem, PPEKpi } from "./PPEKitDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { useSSEListener } from "@/hooks/useSSEListener";
+import { useLazyGetPPEKitDetectionKpiDataQuery } from "./PPEKitDetectionApi";
+import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
     voilation: string;
@@ -36,53 +33,32 @@ const PPEDetection: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
+  const [fetchKpi, { data: kpiData, isLoading }] =
+    useLazyGetPPEKitDetectionKpiDataQuery();
+
+  // ✅ Listen for SSE events
+  useSSEListener(() => {
+    console.log("🔁 SSE triggered — refetching KPI data...");
+    fetchKpi({ tenantId: "0b49972a28f8a982" });
+  });
+
+  // ✅ Initial fetch on mount
+  useEffect(() => {
+    fetchKpi({ tenantId: "0b49972a28f8a982" });
+  }, [fetchKpi]);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  const ppeKpiData = [
-    {
-      title: "Total Violations",
-      value: "87",
-      icon: Shield,
-      tooltipMessage:
-        "Total number of PPE violations detected across all monitored zones.",
-    },
-    {
-      title: "Current Unsafe Zone",
-      value: "2",
-      icon: LocationOn,
-      tooltipMessage:
-        "Number of zones where unsafe PPE compliance was detected.",
-    },
-    {
-      title: "Last Detection Time",
-      value: "10:35 AM",
-      icon: AccessTime,
-      tooltipMessage: "The time when the last PPE violation was detected.",
-    },
-    {
-      title: "Missing Helmet",
-      value: "12",
-      icon: EngineeringIcon,
-      tooltipMessage:
-        "Number of detected instances where workers were missing helmets.",
-    },
-    {
-      title: "Missing Vest",
-      value: "12",
-      icon: Checkroom,
-      tooltipMessage:
-        "Number of detected instances where workers were missing safety vests.",
-    },
-    {
-      title: "Missing Glasses",
-      value: "9",
-      icon: Visibility,
-      tooltipMessage:
-        "Number of detected instances where workers were missing safety glasses.",
-    },
-  ];
-
+  const ppeKpiData =
+    kpiData?.map((item: KpiItem) => {
+      const config =
+        ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
+      return {
+        ...item,
+        icon: config.icon,
+        tooltipMessage: config.tooltipMessage,
+      };
+    }) || [];
   const backendData = [
     {
       id: 101,
@@ -233,7 +209,7 @@ const PPEDetection: React.FC = () => {
     setViewPopupData(row);
     setViewPopupOpen(true);
   };
-  const KpiCardLoading = false;
+  const KpiCardLoading = isLoading;
   return (
     <Box>
       {/* KPI Cards */}
@@ -269,7 +245,7 @@ const PPEDetection: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              ppeKpiData.map((kpi, index) => (
+              ppeKpiData.map((kpi: PPEKpi, index: number) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}

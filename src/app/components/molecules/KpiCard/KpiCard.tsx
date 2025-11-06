@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 interface KpiCardProps {
   title: string;
-  value: string;
+  value: string | number;
   route?: string;
   icon: SvgIconComponent;
   size?: "small" | "medium" | "large";

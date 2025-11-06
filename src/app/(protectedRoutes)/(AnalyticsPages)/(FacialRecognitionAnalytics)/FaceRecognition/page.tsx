@@ -1,5 +1,5 @@
 import FaceRecognition from "./FaceRecognition";
 
-export default function PPEDetectionPage() {
+export default function PPEKitDetectionPage() {
   return <FaceRecognition />;
 }

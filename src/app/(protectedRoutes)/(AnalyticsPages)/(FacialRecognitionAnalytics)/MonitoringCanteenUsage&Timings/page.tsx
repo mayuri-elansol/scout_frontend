@@ -1,5 +1,5 @@
 import MonitoringCanteenUsageTimings from "./MonitoringCanteenUsage&Timings";
 
-export default function PPEDetectionPage() {
+export default function PPEKitDetectionPage() {
   return <MonitoringCanteenUsageTimings />;
 }

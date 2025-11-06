@@ -132,7 +132,7 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
         page: "ppe-detection",
-        path: "/PPEDetectionPage",
+        path: "/PPEKitDetectionPage",
       },
       {
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
