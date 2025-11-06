@@ -5,7 +5,7 @@ import DashboardKpiCard from "./DashboardKpiCard";
 import { Warning, Shield, Visibility } from "@mui/icons-material";
 
 const meta: Meta<typeof DashboardKpiCard> = {
-  title: "Components/Molecules/KpiCard",
+  title: "Components/Molecules/DashboardKpiCard",
   component: DashboardKpiCard,
   tags: ["autodocs"],
   argTypes: {

@@ -1,17 +1,14 @@
 "use client";
-
-import React, { useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { CardContent, useTheme, useMediaQuery, Box } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 
-// Generic Series configuration for any data type T
 export interface SeriesConfig<T> {
   dataKey: keyof T;
   label: string;
   color: string;
 }
 
-// Generic props for DynamicBarChartWithThreshold
 export interface DynamicBarChartWithThresholdProps<
   T extends Record<string, number | string>
 > {
@@ -23,12 +20,6 @@ export interface DynamicBarChartWithThresholdProps<
   thresholdColor?: string;
   yAxisLabel?: string;
   stackId?: string;
-  height?: {
-    mobile?: number;
-    tablet?: number;
-    desktop?: number;
-    mac?:number
-  };
 }
 
 const DynamicBarChartWithThreshold = <
@@ -42,96 +33,127 @@ const DynamicBarChartWithThreshold = <
   thresholdColor = "red",
   yAxisLabel = "User Count",
   stackId = "stack",
-  height = { mobile: 300, tablet: 400, desktop: 400,mac :350 },
-
 }: DynamicBarChartWithThresholdProps<T>) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
-const isMediumWidth = useMediaQuery("(min-width: 1400px) and (max-width: 1600px)");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
 
-  const chartContainerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const checkSize = () => {
+      const width = containerRef.current?.offsetWidth ?? 0;
+      const height = containerRef.current?.offsetHeight ?? 0;
+      setReady(width > 50 && height > 50);
+    };
 
-  // Prepare X labels
-  const xLabels = data.map((d) => d[xAxisKey] as string);
+    checkSize();
+    const resizeObserver = new ResizeObserver(checkSize);
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
 
-  // Flatten all series values to calculate max/min
-  const allValues = series.flatMap((s) =>
-    data.map((d) => d[s.dataKey] as number)
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  // ✅ Always call hooks first (even if data is empty)
+  const xLabels = useMemo(
+    () => (data ? data.map((d) => String(d[xAxisKey])) : []),
+    [data, xAxisKey]
   );
-  const maxValue = Math.max(...allValues);
-  const minValue = Math.min(0, ...allValues);
 
-  // Map series to BarChart format
+  const allValues = useMemo(() => {
+    if (!data || !Array.isArray(series)) return [0];
+    const vals = series.flatMap((s) =>
+      data.map((d) => Number(d[s.dataKey]) || 0)
+    );
+    return vals.length ? vals : [0];
+  }, [data, series]);
+
+  const maxValue = Math.max(...allValues, thresholdValue);
+  const minValue = Math.min(0, ...allValues, thresholdValue);
+
   const chartSeries = series.map((s) => ({
-    data: data.map((d) => d[s.dataKey] as number),
+    data: data.map((d) => Number(d[s.dataKey]) || 0),
     label: s.label,
     color: s.color,
     stack: stackId,
   }));
 
-  // Responsive height
-  let chartHeight = height.desktop!;
-  if (isMobile) chartHeight = height.mobile!;
-  else if (isTablet) chartHeight = height.tablet!;
-  else if(isMediumWidth)  chartHeight = height.mac!;
-
-
-  // Calculate threshold line position
-  const yMin = minValue;
-  const yMax = maxValue;
-  const usableHeight = chartHeight ? chartHeight - 60 : 0;
-  const thresholdY =
-    usableHeight > 0
-      ? usableHeight * (1 - (thresholdValue - yMin) / (yMax - yMin)) + 56
-      : 0;
+  // ✅ Now it's safe to conditionally return
+  if (!data || data.length === 0 || !Array.isArray(series)) return null;
 
   return (
     <CardContent
-      ref={chartContainerRef}
-      sx={{ width: "100%"}}
+      sx={{
+        width: "100%",
+        height: "100%",
+        p: 0,
+        display: "flex",
+        flexDirection: "column",
+        "&:last-child": {
+          paddingBottom: "0px !important",
+        },
+        position: "relative",
+      }}
     >
-      <BarChart
-        height={chartHeight}
-        series={chartSeries}
-        xAxis={[
-          {
-            scaleType: "band",
-            data: xLabels,
-            tickLabelStyle: {
-              angle: isMobile ? -45 : 0,
-              textAnchor: isMobile ? "end" : "middle",
-              fontSize: isMobile ? 9 : 11,
-            },
-          },
-        ]}
-        yAxis={[{ label: yAxisLabel, min: yMin }]}
-        margin={{}}
-      />
-
-      {/* Threshold Line */}
       <Box
+        ref={containerRef}
         sx={{
-          position: "absolute",
-          top: `${thresholdY}px`,
-          left: 0,
-          right: 0,
-          borderTop: `2px dashed ${thresholdColor}`,
+          flex: 1,
+          width: "100%",
+          height: 300,
+          minHeight: 250,
+          position: "relative",
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            right: 5,
-            top: -12,
-            backgroundColor: "white",
-            px: 1,
-            fontSize: 12,
-            color: thresholdColor,
-          }}
-        >
-          {thresholdLabel} ({thresholdValue})
-        </Box>
+        {ready && (
+          <>
+            <BarChart
+              series={chartSeries}
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: xLabels,
+                  tickLabelStyle: {
+                    textAnchor: isMobile ? "end" : "middle",
+                    fontSize: isMobile ? 9 : 11,
+                  },
+                },
+              ]}
+              yAxis={[{ label: yAxisLabel, min: minValue }]}
+              margin={{ top: 40, right: 30, bottom: 40, left: 50 }}
+            />
+
+            {/* Threshold line overlay */}
+            {maxValue > minValue && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: `${
+                    (1 - (thresholdValue - minValue) / (maxValue - minValue)) *
+                    100
+                  }%`,
+                  left: 0,
+                  right: 0,
+                  borderTop: `2px dashed ${thresholdColor}`,
+                  pointerEvents: "none",
+                }}
+              >
+                <Box
+                  sx={{
+                    position: "absolute",
+                    right: 10,
+                    top: "-12px",
+                    background: "white",
+                    fontSize: 12,
+                    color: thresholdColor,
+                    px: "4px",
+                  }}
+                >
+                  {thresholdLabel} ({thresholdValue})
+                </Box>
+              </Box>
+            )}
+          </>
+        )}
       </Box>
     </CardContent>
   );

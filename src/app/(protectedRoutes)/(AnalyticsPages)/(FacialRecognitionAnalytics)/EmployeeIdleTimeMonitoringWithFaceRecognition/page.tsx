@@ -1,5 +1,5 @@
 import EmployeeIdleTimeMonitoringWithFaceRecognition from "./EmployeeIdleTimeMonitoringWithFaceRecognition";
 
-export default function PPEDetectionPage() {
+export default function PPEKitDetectionPage() {
   return <EmployeeIdleTimeMonitoringWithFaceRecognition />;
 }

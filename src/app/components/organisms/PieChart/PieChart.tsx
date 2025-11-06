@@ -1,123 +1,139 @@
-
-
 "use client";
-
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   CardContent,
   useTheme,
   useMediaQuery,
   Typography,
+  Box,
 } from "@mui/material";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { DefaultizedPieValueType } from "@mui/x-charts/models";
 
-// Types for Pie chart items
 export interface PieDataItem {
   label: string;
   value: number;
   color: string;
 }
 
-// Props for dynamic pie chart
 export interface DynamicPieChartProps {
-  zoneName?: string;
+  carttitle: string;
   data: PieDataItem[];
-  size?: number;
-  height?: number;
+  count: number;
 }
 
 const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   data,
-  zoneName,
-  size,
-  height,
+  carttitle,
+  count,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerSize, setContainerSize] = useState<{
+    width: number;
+    height: number;
+  }>({
+    width: 0,
+    height: 0,
+  });
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isMediumWidth = useMediaQuery(
-    "(min-width: 1400px) and (max-width: 1600px)"
-  );
 
-  // Determine outer radius dynamically based on height prop
-  let outerRadius = 100; // Default
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  if (isMobile) {
-    outerRadius = 60;
-  } else if (isMediumWidth) {
-    outerRadius = 80;
-  }
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setContainerSize((prev) => {
+        const newWidth = Math.floor(width);
+        const newHeight = Math.floor(height);
+        if (
+          Math.abs(newWidth - prev.width) > 5 ||
+          Math.abs(newHeight - prev.height) > 5
+        ) {
+          return { width: newWidth, height: newHeight };
+        }
+        return prev;
+      });
+    });
 
-  // If height prop is provided, calculate radius from it
-  if (height !== undefined) {
-    if (height <= 300) {
-      outerRadius = height * 0.25;
-    } else if (height <= 500) {
-      outerRadius = height * 0.3;
-    } else {
-      outerRadius = height * 0.35;
-    }
-  }
-
-  // Chart size should be based on outerRadius to prevent clipping
-  const chartSize = size ?? outerRadius * 2.8;
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   const TOTAL = data.reduce((sum, item) => sum + item.value, 0);
+  const getArcLabel = (params: DefaultizedPieValueType) =>
+    `${((params.value / TOTAL) * 100).toFixed(0)}%`;
 
-  const getArcLabel = (params: DefaultizedPieValueType) => {
-    const percent = (params.value / TOTAL) * 100;
-    return `${percent.toFixed(0)}`;
-  };
+  // Calculate optimal chart size based on container
+  const chartSize = Math.min(containerSize.width, containerSize.height);
+  const outerRadius = count ? Math.max(chartSize / count, 40) : 40;
 
   return (
     <CardContent
+      ref={containerRef}
       sx={{
         width: "100%",
-        p: isMediumWidth ? "0px !important" : "12px !important",
+        height: "100%",
+        p: "0px !important",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+
+        justifyContent: "center",
+        "&:last-child": { paddingBottom: 0 },
       }}
     >
-      {zoneName && (
-        <Typography
-          variant="subtitle1"
-          sx={{
-            mb: 2,
-            mt: 2,
-            fontWeight: 600,
-            textAlign: "center",
-            width: "100%",
-          }}
-        >
-          {zoneName}
-        </Typography>
-      )}
-
-      <PieChart
-        series={[
-          {
-            outerRadius,
-            data,
-            arcLabel: getArcLabel,
-          },
-        ]}
-        colors={data.map((item) => item.color)}
-        width={chartSize}
-        height={chartSize}
-        margin={{ top: 10, bottom: 10, left: 10, right: 10 }}
+      {/* Chart Wrapper - centered with exact size */}
+      <Box
         sx={{
-          [`& .${pieArcLabelClasses.root}`]: {
-            fill: "white",
-            fontSize: isMobile ? 12 : 14,
-            fontWeight: 600,
-          },
-          "& path": {
-            stroke: "#fff",
-            strokeWidth: 2,
-          },
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          flexDirection: "column",
+          gap: 1,
         }}
-      />
+      >
+        {chartSize > 0 && (
+          <>
+            <PieChart
+              series={[
+                {
+                  data,
+                  outerRadius,
+                  arcLabel: getArcLabel,
+                  paddingAngle: 0,
+                },
+              ]}
+              colors={data.map((item) => item.color)}
+              width={outerRadius * 2}
+              height={outerRadius * 2}
+              sx={{
+                "& .MuiChartsLegend-root": {
+                  display: "none !important",
+                },
+                [`& .${pieArcLabelClasses.root}`]: {
+                  fill: "white",
+                  fontSize: isMobile ? 10 : 13,
+                  fontWeight: 600,
+                },
+                "& path": {
+                  stroke: "#fff",
+                  strokeWidth: 2,
+                },
+              }}
+              margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+            />
+            <Typography
+              sx={{ fontWeight: 400, textAlign: "center", fontSize: "14px" }}
+            >
+              {carttitle}
+            </Typography>
+          </>
+        )}
+      </Box>
     </CardContent>
   );
 };

@@ -31,7 +31,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (data: LoginFormData) => {
     setError("");
     setIsLoading(true);
-
+    console.log("formdata from the login page", data);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 

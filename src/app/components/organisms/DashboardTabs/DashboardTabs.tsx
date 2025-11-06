@@ -25,13 +25,20 @@ interface TabPanelProps {
 
 function TabPanel({ children, value, index }: TabPanelProps) {
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       aria-labelledby={`tab-${index}`}
+      sx={{
+        display: value === index ? "flex" : "none",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+        overflow: "auto",
+      }}
     >
-      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
-    </div>
+      {children}
+    </Box>
   );
 }
 
@@ -56,7 +63,16 @@ export default function DynamicTabs({
   }
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+      }}
+    >
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
           {tabs.map((tab, index) => (
@@ -84,11 +100,15 @@ export default function DynamicTabs({
         <div className={styles.tabsUnderline}></div>
       </div>
 
-      {tabs.map((tab, index) => (
-        <TabPanel key={index + 1} value={value} index={index}>
-          {tab.content}
-        </TabPanel>
-      ))}
+      <Box
+        sx={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}
+      >
+        {tabs.map((tab, index) => (
+          <TabPanel key={index + 1} value={value} index={index}>
+            {tab.content}
+          </TabPanel>
+        ))}
+      </Box>
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Chip, Stack, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { LineChart } from "@mui/x-charts";
@@ -15,27 +15,40 @@ export interface Props {
   times: string[];
   usageData: number[];
   workingTime?: WorkingSlot[];
-  height?: number; 
 }
 
 const LineCharts: React.FC<Props> = ({
   times,
   usageData,
   workingTime = [],
-  // height = 350,
-  height = 400,
-
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const chartHeight = isMobile ? 290 : height; 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [ready, setReady] = useState(false);
 
-  if (!times || !usageData || times.length === 0 || usageData.length === 0) {
+  // ✅ Wait until container has valid size before rendering chart
+  useEffect(() => {
+    const checkSize = () => {
+      const width = containerRef.current?.offsetWidth ?? 0;
+      const height = containerRef.current?.offsetHeight ?? 0;
+      setReady(width > 50 && height > 50);
+    };
+
+    checkSize();
+
+    const resizeObserver = new ResizeObserver(checkSize);
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  if (!times?.length || !usageData?.length) {
     return (
       <Box
         sx={{
           width: "100%",
-          height: chartHeight,
+          height: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -47,9 +60,23 @@ const LineCharts: React.FC<Props> = ({
   }
 
   return (
-    <Box sx={{ width: "100%", pt: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       {/* Legend */}
-      <Stack direction="row" spacing={2}>
+      <Stack
+        direction={isMobile ? "column" : "row"}
+        spacing={1.5}
+        sx={{
+          flexShrink: 0,
+          pt: 1,
+        }}
+      >
         <Chip label="🟢 Usage Count" variant="outlined" color="success" />
         {workingTime.map((slot, idx) => (
           <Chip
@@ -65,17 +92,19 @@ const LineCharts: React.FC<Props> = ({
         ))}
       </Stack>
 
-      {/* Chart with horizontal scroll */}
-      <Box sx={{ overflowX: "auto", overflowY: "hidden", pb: 1 }}>
-        <Box
-          sx={{
-            minWidth: times.length * 60, 
-            height: chartHeight,
-            position: "relative",
-          }}
-        >
+      {/* Chart */}
+      <Box
+        ref={containerRef}
+        sx={{
+          flex: 1,
+          position: "relative",
+          width: "100%",
+          minHeight: 0,
+        }}
+      >
+        {ready && (
           <LineChart
-            height={chartHeight}
+            sx={{ width: "100%", height: "100%" }}
             xAxis={[{ data: times, scaleType: "band" }]}
             series={[
               {
@@ -86,17 +115,19 @@ const LineCharts: React.FC<Props> = ({
             ]}
             grid={{ horizontal: true }}
           />
+        )}
 
-          {/* Shaded working time slots */}
-          {workingTime.map((slot, idx) => (
+        {/* Shaded working time slots */}
+        {ready &&
+          workingTime.map((slot, idx) => (
             <Box
               key={idx + 1}
               sx={{
                 position: "absolute",
-                top: 30,
+                top: "30px",
                 left: `${(slot.startTime / 24) * 100}%`,
                 width: `${((slot.stopTime - slot.startTime) / 24) * 100}%`,
-                height: "82%",
+                height: "calc(100% - 40px)",
                 bgcolor: "rgba(255, 235, 59, 0.2)",
                 borderLeft: "2px dashed #fbc02d",
                 borderRight: "2px dashed #fbc02d",
@@ -104,7 +135,6 @@ const LineCharts: React.FC<Props> = ({
               }}
             />
           ))}
-        </Box>
       </Box>
     </Box>
   );

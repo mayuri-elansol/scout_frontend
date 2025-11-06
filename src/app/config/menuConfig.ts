@@ -12,7 +12,7 @@ import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PeopleIcon from "@mui/icons-material/People";
 import TuneIcon from "@mui/icons-material/Tune";
-
+import VideocamIcon from "@mui/icons-material/Videocam";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
@@ -115,13 +115,24 @@ export const settingsMenu: CategoryConfig[] = [
 // Analytics categories
 export const analyticsMenu: CategoryConfig[] = [
   {
+    title: "Camera Tamparing",
+    icon: VideocamIcon,
+    items: [
+      {
+        name: "Camera Tamparing Dashboard",
+        page: "camera-tamparing-dasboard",
+        path: "/CameraTamperingDashboard",
+      },
+    ],
+  },
+  {
     title: "Safety and Compliance",
     icon: Shield,
     items: [
       {
         name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
         page: "ppe-detection",
-        path: "/PPEDetectionPage",
+        path: "/PPEKitDetectionPage",
       },
       {
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",

@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
             size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
             key={uuidv4() + index}
           >
-            <KpiCard {...kpi} route="/PPEDetectionPage" />
+            <KpiCard {...kpi} route="/PPEKitDetectionPage" />
           </Grid>
         ))}
         <DashboardKpiCard
@@ -120,7 +120,7 @@ const Dashboard: React.FC = () => {
           lastDetectionTime=""
           icon={Shield}
           tooltipMessage="Shows total PPE violations and last detection time"
-          route="/PPEDetectionPage"
+          route="/PPEKitDetectionPage"
         />
       </Grid>
 
