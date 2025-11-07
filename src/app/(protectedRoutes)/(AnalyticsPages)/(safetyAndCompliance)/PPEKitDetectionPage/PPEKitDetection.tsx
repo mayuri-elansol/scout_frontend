@@ -39,12 +39,17 @@ const PPEDetection: React.FC = () => {
   // ✅ Listen for SSE events
   useSSEListener(() => {
     console.log("🔁 SSE triggered — refetching KPI data...");
-    fetchKpi({ tenantId: "0b49972a28f8a982" });
+    fetchKpi({ tenantId: "34769771e3da8efb" })
+      .unwrap()
+      .then((res) => {
+        console.log("Updated KPI data from SSE:", res);
+      })
+      .catch((err) => console.error("Failed to fetch KPI on SSE:", err));
   });
 
   // ✅ Initial fetch on mount
   useEffect(() => {
-    fetchKpi({ tenantId: "0b49972a28f8a982" });
+    fetchKpi({ tenantId: "34769771e3da8efb" });
   }, [fetchKpi]);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
