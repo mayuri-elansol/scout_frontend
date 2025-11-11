@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
@@ -20,7 +20,13 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useSSEListener } from "@/hooks/useSSEListener";
 import { useLazyGetPPEKitDetectionKpiDataQuery } from "./PPEKitDetectionApi";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
+import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
 const PPEDetection: React.FC = () => {
+  const detectionCountRef = useRef(0);
+  useRealtimeSocket("ppe_detections", (data) => {
+    detectionCountRef.current++;
+    console.log(`🔥 [PPE] Detection #${detectionCountRef.current}`, data);
+  });
   interface PPEViolation {
     voilation: string;
     zone: string;
