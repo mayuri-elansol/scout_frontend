@@ -35,6 +35,7 @@ export const useSSEListener = (onEvent?: (data: any) => void): void => {
     );
 
     const handleMessage = (event: MessageEvent) => {
+      console.log("🖥️ Frontend received at:", Date.now());
       console.log("📡 SSE Event Received:", event.data);
       if (onEvent) onEvent(event.data);
     };

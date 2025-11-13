@@ -1,26 +1,34 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  startTransition,
+} from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-
 import { FilterParams, KpiItem, PPEKpi } from "./PPEKitDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
-
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useSSEListener } from "@/hooks/useSSEListener";
 import { useLazyGetPPEKitDetectionKpiDataQuery } from "./PPEKitDetectionApi";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
+import { useSocketListeners } from "@/hooks/useSocketListeners";
+
 const PPEDetection: React.FC = () => {
+  // ✅ Add deduplication ref at the top
+  const processedEvents = useRef(new Set<string>());
+
   interface PPEViolation {
     voilation: string;
     zone: string;
@@ -36,15 +44,133 @@ const PPEDetection: React.FC = () => {
   const [fetchKpi, { data: kpiData, isLoading }] =
     useLazyGetPPEKitDetectionKpiDataQuery();
 
-  // ✅ Listen for SSE events
-  useSSEListener(() => {
-    console.log("🔁 SSE triggered — refetching KPI data...");
-    fetchKpi({ tenantId: "34769771e3da8efb" })
-      .unwrap()
-      .then((res) => {
-        console.log("Updated KPI data from SSE:", res);
-      })
-      .catch((err) => console.error("Failed to fetch KPI on SSE:", err));
+  // ✅ Single source of truth for KPI data
+  const [displayKpi, setDisplayKpi] = useState<KpiItem[] | null>(null);
+
+  // ✅ Track optimistic updates with version control
+  const optimisticVersionRef = useRef<number>(0);
+  const lastSyncTimestampRef = useRef<number>(0);
+  const refetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // ✅ Sync displayKpi with fetched data only if not stale
+  useEffect(() => {
+    if (kpiData) {
+      const now = Date.now();
+      // Only update if this is a fresh fetch (not stale data)
+      if (now - lastSyncTimestampRef.current > 100) {
+        setDisplayKpi(kpiData);
+        optimisticVersionRef.current = 0; // Reset optimistic counter
+        lastSyncTimestampRef.current = now;
+        console.log("🔄 KPI data synced from backend");
+      }
+    }
+  }, [kpiData]);
+
+  // ✅ Debounced refetch with version control
+  const scheduleRefetch = useCallback(() => {
+    // Clear existing timeout
+    if (refetchTimeoutRef.current) {
+      clearTimeout(refetchTimeoutRef.current);
+    }
+
+    // Schedule refetch after 500ms of inactivity
+    refetchTimeoutRef.current = setTimeout(() => {
+      console.log("🔄 Triggering backend refetch...");
+
+      fetchKpi({ tenantId: "34769771e3da8efb" })
+        .unwrap()
+        .then((freshData) => {
+          console.log("✅ Backend sync complete:", freshData);
+          setDisplayKpi(freshData);
+          optimisticVersionRef.current = 0;
+          lastSyncTimestampRef.current = Date.now();
+        })
+        .catch((err) => {
+          console.error("❌ Refetch failed:", err);
+        });
+    }, 500);
+  }, [fetchKpi]);
+
+  // ✅ Optimistic update handler with deduplication and batching
+  const handleNewPPEDetection = useCallback(
+    (socketData: any) => {
+      // Create unique event ID to prevent duplicates
+      const eventId = `${socketData.data?.id || "unknown"}-${
+        socketData.serverTimestamp || Date.now()
+      }`;
+
+      // Skip if already processed
+      if (processedEvents.current.has(eventId)) {
+        console.log("🚫 Skipping duplicate event:", eventId);
+        return;
+      }
+
+      processedEvents.current.add(eventId);
+      const timestamp = socketData.serverTimestamp || Date.now();
+      console.log("📡 PPE detection received at:", timestamp, socketData);
+
+      // Increment version
+      optimisticVersionRef.current += 1;
+      const currentVersion = optimisticVersionRef.current;
+
+      // ✅ INSTANT optimistic update using functional setState with batching
+      startTransition(() => {
+        setDisplayKpi((prevKpi) => {
+          if (!prevKpi) return prevKpi;
+
+          console.log(
+            "⚡ Applying optimistic update (version:",
+            currentVersion,
+            ")"
+          );
+
+          const updated = prevKpi.map((item: KpiItem) => {
+            const violation = socketData.data;
+
+            // Update Total Violations
+            if (item.title === "Total Violations") {
+              return { ...item, value: Number(item.value) + 1 };
+            }
+
+            // Update specific violation types
+            if (
+              item.title === "Helmet Violations" &&
+              violation.helmet === false
+            ) {
+              return { ...item, value: Number(item.value) + 1 };
+            }
+            if (item.title === "Vest Violations" && violation.vest === false) {
+              return { ...item, value: Number(item.value) + 1 };
+            }
+            if (
+              item.title === "Glasses Violations" &&
+              violation.glasses === false
+            ) {
+              return { ...item, value: Number(item.value) + 1 };
+            }
+
+            return item;
+          });
+
+          return updated;
+        });
+      });
+
+      // Cleanup old entries (keep last 100)
+      if (processedEvents.current.size > 100) {
+        const entries = Array.from(processedEvents.current);
+        processedEvents.current = new Set(entries.slice(-100));
+      }
+
+      // ✅ Schedule background sync
+      scheduleRefetch();
+    },
+    [scheduleRefetch]
+  );
+
+  // ✅ Setup socket listeners
+  useSocketListeners({
+    "ppe_kit_detection-INSERT": handleNewPPEDetection,
   });
 
   // ✅ Initial fetch on mount
@@ -52,18 +178,33 @@ const PPEDetection: React.FC = () => {
     fetchKpi({ tenantId: "34769771e3da8efb" });
   }, [fetchKpi]);
 
+  // ✅ Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (refetchTimeoutRef.current) {
+        clearTimeout(refetchTimeoutRef.current);
+      }
+      processedEvents.current.clear();
+    };
+  }, []);
+
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  const ppeKpiData =
-    kpiData?.map((item: KpiItem) => {
-      const config =
-        ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
-      return {
-        ...item,
-        icon: config.icon,
-        tooltipMessage: config.tooltipMessage,
-      };
-    }) || [];
+  // ✅ Memoize KPI data to prevent unnecessary re-renders
+  const ppeKpiData = useMemo(() => {
+    return (
+      displayKpi?.map((item: KpiItem) => {
+        const config =
+          ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
+        return {
+          ...item,
+          icon: config.icon,
+          tooltipMessage: config.tooltipMessage,
+        };
+      }) || []
+    );
+  }, [displayKpi]);
+
   const backendData = [
     {
       id: 101,
@@ -121,6 +262,7 @@ const PPEDetection: React.FC = () => {
       createdAt: "2025-09-23 14:32",
     },
   ];
+
   const recentViolations = backendData.map((item) => {
     const titleParts = [];
 
@@ -129,7 +271,7 @@ const PPEDetection: React.FC = () => {
     if (item.glasses === false) titleParts.push("Safety glasses missing");
 
     return {
-      voilation: titleParts.join(", ") ?? "No violation",
+      voilation: titleParts.join(", ") || "No violation",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
@@ -137,8 +279,6 @@ const PPEDetection: React.FC = () => {
       alarmTriggered: item.alarmTriggered,
     };
   });
-
-  console.log("RELCENTVOLATION DATAA", recentViolations);
 
   const zoneViolationsData = [
     {
@@ -200,21 +340,25 @@ const PPEDetection: React.FC = () => {
   };
 
   const handleReset = () => {
-    console.log("reset button clickedd");
+    console.log("reset button clicked");
   };
 
   const handleExport = (format: "csv" | "pdf") => {
-    console.log("Export requested clikcedd:", format);
+    console.log("Export requested:", format);
   };
+
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
+
   const handleViewSingle = (row: PPEViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
   };
+
   const KpiCardLoading = isLoading;
+
   return (
     <Box>
       {/* KPI Cards */}
@@ -228,7 +372,6 @@ const PPEDetection: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -240,8 +383,7 @@ const PPEDetection: React.FC = () => {
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
-            ? // Show skeletons while loading
-              skeletonKeys.map((index) => (
+            ? skeletonKeys.map((index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -249,11 +391,10 @@ const PPEDetection: React.FC = () => {
                   <KpiCardSkeleton />
                 </Grid>
               ))
-            : // Show actual KPI cards
-              ppeKpiData.map((kpi: PPEKpi, index: number) => (
+            : ppeKpiData.map((kpi: PPEKpi, index: number) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={uuidv4() + index}
+                  key={`${kpi.title}-${index}`}
                 >
                   <KpiCard {...kpi} />
                 </Grid>
@@ -262,7 +403,6 @@ const PPEDetection: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected PPE violations with details."
@@ -271,11 +411,9 @@ const PPEDetection: React.FC = () => {
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              //showSubViolations
               violationsZone={zoneViolationsData}
               loading={false}
               tooltipMessage="Shows PPE violations per zone"
@@ -283,6 +421,7 @@ const PPEDetection: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
+
       {/* PPE Violations Report */}
       <ReportTable
         title="Detailed Report"
@@ -300,7 +439,6 @@ const PPEDetection: React.FC = () => {
             id: "voilation",
             label: "Violation",
             type: "select",
-
             options: [
               "Hard hat missing",
               "Safety vest not worn",
@@ -338,8 +476,6 @@ const PPEDetection: React.FC = () => {
         downloadFileName="ppe-violations-report"
         loading={false}
       />
-
-      {/* View Alert Popup */}
 
       <ViewAlertPopup
         open={viewPopupOpen}
