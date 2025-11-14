@@ -549,7 +549,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
       <Grid container spacing={1.5}>
         {/* Left Panel - Camera Info and Controls */}
-        <Grid item xs={12} lg={3.5}>
+      
+        <Grid size={{xs: 12, lg: 5}}>
           <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
               <Typography
@@ -628,7 +629,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         </Grid>
 
         {/* Right Panel - Use Cases Configuration */}
-        <Grid item xs={12} lg={8.5}>
+        
+        <Grid size={{xs: 12, lg: 7}}>
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" gutterBottom>
