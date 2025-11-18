@@ -19,7 +19,11 @@ import {
   Paper,
   Menu,
   MenuItem,
+  Drawer,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
+
 
 import {
   CropSquare as RectangleIcon,
@@ -37,6 +41,7 @@ import {
   Check as IncludeIcon,
   Block as ExcludeIcon,
   ArrowDropDown as ArrowDropDownIcon,
+  Menu as MenuIcon,
 } from '@mui/icons-material';
 
 type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
@@ -64,6 +69,7 @@ interface RoiSelectionModalProps {
   onSave: (roiShapes: ROIShape[]) => void;
 }
 
+/* ----------------------------- Constants ----------------------------- */
 
 const ROI_COLORS = [
   '#00ff00', // Bright Green
@@ -78,7 +84,6 @@ const ROI_COLORS = [
   '#ff1493', // Deep Pink
 ];
 
-// Predefined labels per use case
 const USE_CASE_LABELS: Record<string, string[]> = {
   'Personal Protective Equipment (PPE) Detection': ['Helmet', 'Vest', 'Gloves', 'Goggles', 'Shoes'],
   'Object Detection in Walking Bays': ['Person', 'Object', 'Forklift', 'Obstacle'],
@@ -110,6 +115,7 @@ const USE_CASE_LABELS: Record<string, string[]> = {
   default: ['ROI Zone 1', 'ROI Zone 2', 'ROI Zone 3'],
 };
 
+/* ----------------------------- Component ----------------------------- */
 
 const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   open,
@@ -119,6 +125,15 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   existingROI,
   onSave,
 }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+
+  // Responsive drawer/sidebar state
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  const drawerWidth = 200;
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -131,20 +146,12 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const [selectedColor, setSelectedColor] = useState<string>(ROI_COLORS[0]);
-  const [nextColorIndex, setNextColorIndex] = useState(0);
-  // const getNextColor = () => {
-  //   const color = ROI_COLORS[nextColorIndex];
-  //   setNextColorIndex((nextColorIndex + 1) % ROI_COLORS.length);
-  //   return color;
-  // };
   const nextColorRef = useRef(0);
-
   const getNextColor = useCallback(() => {
     const idx = nextColorRef.current % ROI_COLORS.length;
     nextColorRef.current = (nextColorRef.current + 1) % ROI_COLORS.length;
     return ROI_COLORS[idx];
   }, []);
-
 
   const [selectedROIIndex, setSelectedROIIndex] = useState<number | null>(null);
   const [editingNameIndex, setEditingNameIndex] = useState<number | null>(null);
@@ -158,6 +165,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
   const [history, setHistory] = useState<ROIShape[][]>([[]]);
   const [historyIndex, setHistoryIndex] = useState(0);
+
+  // Drawer state for small screens
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Label currently selected in the toolbar dropdown
   const [selectedLabel, setSelectedLabel] = useState<string>(
@@ -177,105 +187,132 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       setSelectedROIIndex(null);
       setEditingNameIndex(null);
 
-      // ensure toolbar label matches use case
       const first = (USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default)[0];
       setSelectedLabel(first);
     }
   }, [open, useCaseName, existingROI]);
 
-  // Load and setup image
- 
-  // Load and setup image
-useEffect(() => {
-  console.log("🟡 useEffect triggered", { open, cameraFeedUrl, useCaseName });
-  if (!open) return;
-  console.log("🟢 Modal is open — starting image reload logic");
+  // Responsive canvas loader: recalculates width/height on open and on resize
+const recalcCanvasSize = useCallback(() => {
+  const img = imgRef.current;
+  const canvas = canvasRef.current;
+  const container = containerRef.current;
+  if (!img || !canvas || !container) return;
 
-  // Wait briefly for the <img> to mount in the Dialog portal
-  const delay = setTimeout(() => {
+  const containerRect = container.getBoundingClientRect();
+  const containerWidth = containerRect.width;
+  const containerHeight = containerRect.height;
+  
+  // 🔥 Force 16:9 aspect ratio calculation
+  const targetAspectRatio = 16 / 9;
+  const containerAspectRatio = containerWidth / containerHeight;
+  
+  let newCanvasWidth, newCanvasHeight;
+  
+  if (containerAspectRatio > targetAspectRatio) {
+    // Container is wider than 16:9 - fit to height
+    newCanvasHeight = containerHeight;
+    newCanvasWidth = containerHeight * targetAspectRatio;
+  } else {
+    // Container is taller than 16:9 - fit to width
+    newCanvasWidth = containerWidth;
+    newCanvasHeight = containerWidth / targetAspectRatio;
+  }
+
+  // 🔥 Ensure we don't exceed container bounds
+  newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
+  newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
+
+  canvas.width = newCanvasWidth;
+  canvas.height = newCanvasHeight;
+  setCanvasWidth(newCanvasWidth);
+  setCanvasHeight(newCanvasHeight);
+}, []);
+
+  useEffect(() => {
+    if (!open) return;
     const img = imgRef.current;
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
+    if (!img) return;
 
-    console.log("🔵 imgRef.current after delay:", img);
-
-    if (!img || !canvas || !container) {
-      console.warn("⚠️ DOM refs not ready yet. Skipping image load.");
-      return;
-    }
-
-    setImageLoaded(false);
-
-    img.onload = () => {
-      console.log("✅ Image loaded successfully:", img.src);
-
-      const containerWidth = container.clientWidth || 640;
-      const aspectRatio = img.naturalWidth / img.naturalHeight || 16 / 9;
-
-      const newCanvasWidth = containerWidth;
-      const newCanvasHeight = containerWidth / aspectRatio;
-
-      canvas.width = newCanvasWidth;
-      canvas.height = newCanvasHeight;
-
-      setCanvasWidth(newCanvasWidth);
-      setCanvasHeight(newCanvasHeight);
+    const onLoad = () => {
       setImageLoaded(true);
-
+      recalcCanvasSize();
       requestAnimationFrame(() => {
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.drawImage(img, 0, 0, newCanvasWidth, newCanvasHeight);
-          console.log("🎨 Canvas drawn successfully");
+        const ctx = canvasRef.current?.getContext('2d');
+        if (ctx && img) {
+          try {
+            ctx.drawImage(img, 0, 0, canvasRef.current!.width, canvasRef.current!.height);
+          } catch {}
         }
       });
     };
 
-    img.onerror = (err) => {
-      console.error("❌ Image load failed:", err);
-      setImageLoaded(false);
+    const onError = () => setImageLoaded(false);
+
+    img.onload = onLoad;
+    img.onerror = onError;
+    img.crossOrigin = 'anonymous';
+
+    // set src with cache-buster
+    // const freshUrl = cameraFeedUrl.includes('?') ? `${cameraFeedUrl}&_ts=${Date.now()}` : `${cameraFeedUrl}?_ts=${Date.now()}`;
+    // img.src = '';
+    // setTimeout(() => (img.src = freshUrl), 50);
+
+    // inside the useEffect that runs on open:
+const freshUrl = cameraFeedUrl
+  ? (cameraFeedUrl.includes('?') ? `${cameraFeedUrl}&_ts=${Date.now()}` : `${cameraFeedUrl}?_ts=${Date.now()}`)
+  : '/img/siteimage.jpg';
+
+try {
+  // don't set to '' first — set directly (less race)
+  img.src = freshUrl;
+  console.log('⤵ Setting image src ->', freshUrl);
+} catch (err) {
+  console.error('❌ Failed to set img.src', err);
+  img.src = '/img/siteimage.jpg';
+}
+
+
+    // recalc on resize while modal is open
+    const onResize = () => {
+      recalcCanvasSize();
+      requestAnimationFrame(() => {
+        const ctx = canvasRef.current?.getContext('2d');
+        if (ctx && img && canvasRef.current) {
+          try {
+            ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
+          } catch {}
+        }
+      });
     };
+    window.addEventListener('resize', onResize);
 
-    img.crossOrigin = "anonymous";
+    return () => {
+      window.removeEventListener('resize', onResize);
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [open, cameraFeedUrl, recalcCanvasSize]);
 
-    const freshUrl = cameraFeedUrl.includes("?")
-      ? `${cameraFeedUrl}&_ts=${Date.now()}`
-      : `${cameraFeedUrl}?_ts=${Date.now()}`;
-
-    console.log("🔁 Setting img.src to:", freshUrl);
-    img.src = ""; // Clear previous
-    setTimeout(() => {
-      img.src = freshUrl;
-    }, 50);
-  }, 300); // 🕒 wait 300ms to let Dialog content mount
-
-  return () => clearTimeout(delay);
-}, [open, cameraFeedUrl, useCaseName]);
-
-
-
-
-  // Redraw canvas
+  // Redraw canvas on changes
   useEffect(() => {
     if (imageLoaded) {
       redrawCanvas();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roiShapes, currentShape, imageLoaded, selectedROIIndex, selectedColor]);
 
-  const redrawCanvas = useCallback(() => {11
+  const redrawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     const img = imgRef.current;
-    console.log("🖼️ redrawCanvas() called — imageLoaded:", imageLoaded);
-
-
     if (!canvas || !ctx || !img || !imageLoaded) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     try {
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     } catch {
-      return;
+      // ignore
     }
 
     roiShapes.forEach((shape, index) => {
@@ -301,8 +338,6 @@ useEffect(() => {
 
     ctx.save();
 
-
-    // Utility: convert hex to RGBA for matching tint
     const hexToRgba = (hex: string, alpha: number) => {
       const r = parseInt(hex.slice(1, 3), 16);
       const g = parseInt(hex.slice(3, 5), 16);
@@ -312,18 +347,10 @@ useEffect(() => {
 
     const isExclude = shape.mode === 'exclude';
 
-    // Use shape’s color for border (blue highlight if selected)
     ctx.strokeStyle = isSelected ? '#0066ff' : color;
     ctx.lineWidth = isSelected ? 4 : 2;
-
-    // Exclude = dashed, Include = solid
     ctx.setLineDash(isExclude ? [8, 4] : []);
-
-    // Fill uses the same color as the border, just with transparency
-    // Slightly lighter for exclude, more visible for include
     ctx.fillStyle = hexToRgba(color, isExclude ? 0.18 : 0.25);
-
-
 
     if (shape.type === 'rectangle' && points.length === 2) {
       const width = points[1].x - points[0].x;
@@ -355,7 +382,6 @@ useEffect(() => {
       });
     }
 
-    // Label with mode indicator
     if (points.length > 0) {
       const centerX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
       const centerY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
@@ -579,8 +605,8 @@ useEffect(() => {
     const newShapes = roiShapes.map((shape, i) =>
       i === index ? { ...shape, mode: shape.mode === 'include' ? 'exclude' : 'include' } : shape
     );
-    // setRoiShapes(newShapes);
-    // addToHistory(newShapes);
+    setRoiShapes(newShapes);
+    addToHistory(newShapes);
   };
 
   const editFieldRef = useRef<HTMLInputElement | null>(null);
@@ -591,36 +617,91 @@ useEffect(() => {
     }
   }, [editingNameIndex]);
 
+  /* ----------------------------- Render ----------------------------- */
+
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth={false}
+      fullWidth
+      maxWidth="xl"
       PaperProps={{
         sx: {
-          width: '65vw',
-          height: '90vh',
-          maxWidth: '1800px',
-          m: 2,
-          bgcolor: 'white',
-        },
+          width: {
+            xs: '100%',
+            sm: '95%',
+            md: '95%',
+            lg: '90%',
+            xl: '1200px',   // 🔥 reduce max width so canvas touches sidebar with NO GAP
+          },
+          maxWidth: '1300px', // 🔥 previously 1600px — too large
+          height: { xs: '100vh', sm: '95vh', md: '90vh' },
+          m: { xs: 0, sm: 1, md: 2 },
+          bgcolor: 'white'
+        }
       }}
+
     >
-      <DialogContent sx={{ p: 0, height: '100%', display: 'flex' }}>
-        <Box sx={{ flex: 1, p: 2, bgcolor: 'white', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Typography variant="h6" color="black">
+      
+      <DialogContent
+        sx={{
+          p: 0,
+          gap: 0,
+          height: '100%',
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          overflow: 'hidden',
+          
+        }}
+      >
+        {/* Left area: Canvas and toolbar */}
+        <Box
+          sx={{
+            flex: '1 1 auto',
+            p: { xs: 1, sm: 2 },
+            bgcolor: 'white',
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            minWidth: 0, // important to allow shrinking
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 1, sm: 2 } }}>
+            {/* Drawer Toggle Button ON SMALL SCREENS */}
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              sx={{
+                display: { xs: 'inline-flex', md: 'none' },
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+
+            <Typography variant="h6" color="black" sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.125rem' } }}>
               Configure ROI - {useCaseName}
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <Chip label={`${roiShapes.length} ROI(s)`} color={roiShapes.length > 0 ? 'success' : 'default'} size="small" />
-              <IconButton onClick={onClose} size="small">
+
+            <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+              <Chip
+                label={`${roiShapes.length} ROI(s)`}
+                color={roiShapes.length > 0 ? 'success' : 'default'}
+                size="small"
+              />
+              <IconButton onClick={onClose} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
                 <CloseIcon />
               </IconButton>
             </Box>
           </Box>
 
-          <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center', flexWrap: 'wrap' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: { xs: 0.5, sm: 1, md: 2 },
+              mb: { xs: 1, sm: 2 },
+              alignItems: 'center',
+            }}
+          >
             <ToggleButtonGroup
               value={drawingTool}
               exclusive
@@ -632,24 +713,29 @@ useEffect(() => {
                 }
               }}
               size="small"
+              sx={{
+                '& .MuiToggleButton-root': {
+                  fontSize: { xs: '0.7rem', sm: '0.75rem', md: '0.875rem' },
+                  px: { xs: 0.5, sm: 1 },
+                },
+              }}
             >
               <ToggleButton value="rectangle">
-                <RectangleIcon sx={{ mr: 0.5, fontSize: 18 }} />
-                <Typography variant="caption">Rectangle</Typography>
+                <RectangleIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Rectangle</Typography>
               </ToggleButton>
               <ToggleButton value="polygon">
-                <PolygonIcon sx={{ mr: 0.5, fontSize: 18 }} />
-                <Typography variant="caption">Polygon</Typography>
+                <PolygonIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Polygon</Typography>
               </ToggleButton>
               <ToggleButton value="freehand">
-                <FreehandIcon sx={{ mr: 0.5, fontSize: 18 }} />
-                <Typography variant="caption">Freehand</Typography>
+                <FreehandIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Freehand</Typography>
               </ToggleButton>
             </ToggleButtonGroup>
 
-            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300' }} />
+            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }} />
 
-            {/* Mode Dropdown */}
             <Button
               size="small"
               variant="outlined"
@@ -664,6 +750,7 @@ useEffect(() => {
                   borderColor: roiMode === 'include' ? 'success.dark' : 'error.dark',
                   bgcolor: roiMode === 'include' ? 'success.light' : 'error.light',
                 },
+                fontSize: { xs: '0.72rem', sm: '0.8rem' },
               }}
             >
               {roiMode === 'include' ? (
@@ -677,14 +764,22 @@ useEffect(() => {
               )}
             </Button>
 
-            {/* Label Dropdown */}
             <TextField
               select
               size="small"
               value={selectedLabel}
               onChange={(e) => setSelectedLabel(e.target.value)}
               variant="outlined"
-              sx={{ minWidth: 140, '& select': { fontSize: '0.8rem' } }}
+              sx={{
+                minWidth: 100,
+                '& .MuiSelect-select': {
+                  fontSize: { xs: '0.72rem', sm: '0.8rem' }, // 🔥 Match button font size
+                  py: '8px', // 🔥 Adjust padding to match button height
+                },
+                '& .MuiOutlinedInput-root': {
+                  height: '35px', // 🔥 Match button height
+                }
+              }}
             >
               {(USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default).map((labelOption) => (
                 <MenuItem key={labelOption} value={labelOption}>
@@ -693,7 +788,7 @@ useEffect(() => {
               ))}
             </TextField>
 
-            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300' }} />
+            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }} />
 
             <Tooltip title="Undo">
               <span>
@@ -743,67 +838,65 @@ useEffect(() => {
               </IconButton>
             </Tooltip>
           </Box>
+<Box
+  ref={containerRef}
+  sx={{
+    flex: '1 1 auto',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    bgcolor: '#f5f5f5',
+    borderRadius: 1,
+    border: '2px solid #e0e0e0',
+    // 🔥 Dynamic height based on 16:9 aspect ratio
+    height: { xs: '50vh', sm: '60vh', md: '70vh' },
+    maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
+  }}
+>
+  <img
+    ref={imgRef}
+    alt="Camera Feed"
+    style={{
+      display: 'none', // 🔥 Hide instead of visibility hidden
+    }}
+  />
+  
+  <canvas
+    ref={canvasRef}
+    width={canvasWidth}
+    height={canvasHeight}
+    style={{
+      cursor: 'crosshair',
+      // 🔥 Fill the container while maintaining aspect ratio
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain', // This ensures 16:9 ratio without gaps
+      display: 'block', // Remove any inline spacing
+    }}
+    onMouseDown={handleCanvasMouseDown}
+    onMouseMove={handleCanvasMouseMove}
+    onMouseUp={handleCanvasMouseUp}
+    onClick={handleCanvasClick}
+    onContextMenu={handleCanvasContextMenu}
+  />
 
-          <Box
-            ref={containerRef}
-            sx={{
-              flex: 1,
-              position: 'relative',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: '#f5f5f5',
-              borderRadius: 1,
-              border: '2px solid #e0e0e0',
-              overflow: 'hidden',
-            }}
-          >
-            {/* <img ref={imgRef} src="" alt="Camera Feed" style={{ display: 'none' }} /> */}
-            <img
-              ref={imgRef}
-              src="img/siteimage.jpg"
-              
-              // src="https://plus.unsplash.com/premium_photo-1661933050836-3f9e3d7eda61?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFjdG9yeXxlbnwwfHwwfHx8MA%3D%3D&fm=jpg&q=60&w=3000"
-              alt="Camera Feed"
-              onLoad={() => console.log("✅ Direct image loaded")}
-              // style={{ display: 'none' }}
-              style={{
-                visibility: 'hidden',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: 'auto',
-              }}
-            />
-            
-
-            <canvas
-              ref={canvasRef}
-              width={canvasWidth}
-              height={canvasHeight}
-              style={{
-                cursor: 'crosshair',
-                display: 'block',
-                objectFit: 'contain',
-                maxWidth: '100%',
-                maxHeight: '100%',
-              }}
-              onMouseDown={handleCanvasMouseDown}
-              onMouseMove={handleCanvasMouseMove}
-              onMouseUp={handleCanvasMouseUp}
-              onClick={handleCanvasClick}
-              onContextMenu={handleCanvasContextMenu}
-            />
-
-            {!imageLoaded && (
-              <Typography sx={{ position: 'absolute', color: 'grey.500', fontSize: '1rem' }}>
-                Loading camera feed...
-              </Typography>
-            )}
-          </Box>
-
-          <Box sx={{ mt: 2, color: 'grey.700', fontSize: '0.75rem' }}>
+  {!imageLoaded && (
+    <Typography sx={{ 
+      position: 'absolute', 
+      top: '50%', 
+      left: '50%', 
+      transform: 'translate(-50%, -50%)', 
+      color: 'grey.500', 
+      fontSize: '1rem' 
+    }}>
+      Loading camera feed...
+    </Typography>
+  )}
+</Box>
+          <Box sx={{ mt: { xs: 1, sm: 2 }, color: 'grey.700', fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem' } }}>
             <Typography variant="caption">
               <strong>Rectangle:</strong> Click & drag | <strong>Polygon:</strong> Click points, click near start to close |{' '}
               <strong>Freehand:</strong> Click & drag | <strong>Right-click ROI:</strong> Edit menu
@@ -811,18 +904,22 @@ useEffect(() => {
           </Box>
         </Box>
 
+        {/* Persistent sidebar for md+ */}
         <Box
           sx={{
-            width: '180px',
+            width: { xs: '0px', md: '240px' },
+            flex: { xs: '0 0 0px', md: '0 0 240px' },
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'column',
             borderLeft: '1px solid',
             borderColor: 'divider',
-            display: 'flex',
-            flexDirection: 'column',
             bgcolor: 'white',
+            overflow: 'hidden',
           }}
         >
+
           <Box sx={{ p: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
-            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600 }}>
+            <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.78rem' }}>
               <PaletteIcon fontSize="small" />
               Color
             </Typography>
@@ -838,8 +935,8 @@ useEffect(() => {
                     border: selectedColor === color ? '3px solid #0066ff' : '1px solid grey',
                     borderRadius: '4px',
                     cursor: 'pointer',
-                    '&:hover': { transform: 'scale(1.1)' },
-                    transition: 'transform 0.2s',
+                    '&:hover': { transform: 'scale(1.05)' },
+                    transition: 'transform 0.15s',
                   }}
                 />
               ))}
@@ -847,7 +944,7 @@ useEffect(() => {
           </Box>
 
           <Box sx={{ flex: 1, overflow: 'auto', p: 1 }}>
-            <Typography variant="caption" sx={{ fontWeight: 600 }}>
+            <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
               ROIs ({roiShapes.length})
             </Typography>
             <List dense sx={{ p: 0 }}>
@@ -908,12 +1005,12 @@ useEffect(() => {
                           secondary={shape.mode === 'include' ? 'Include' : 'Exclude'}
                           primaryTypographyProps={{
                             variant: 'caption',
-                            sx: { fontWeight: 500, fontSize: '0.7rem' },
+                            sx: { fontWeight: 500, fontSize: '0.75rem' },
                           }}
                           secondaryTypographyProps={{
                             variant: 'caption',
                             sx: {
-                              fontSize: '0.6rem',
+                              fontSize: '0.65rem',
                               color: shape.mode === 'include' ? 'success.main' : 'error.main',
                               fontWeight: 500,
                             },
@@ -941,7 +1038,7 @@ useEffect(() => {
               ))}
             </List>
             {roiShapes.length === 0 && (
-              <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ display: 'block', mt: 2 }}>
+              <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ display: 'block', mt: 2, fontSize: '0.75rem' }}>
                 No ROIs yet
               </Typography>
             )}
@@ -961,16 +1058,201 @@ useEffect(() => {
                 onClose();
               }}
               disabled={roiShapes.length === 0}
-              sx={{ mb: 0.5, fontSize: '0.75rem', py: 0.5 }}
+              sx={{ mb: 0.5, fontSize: '0.85rem', py: 0.5 }}
               size="small"
             >
               Save ({roiShapes.length})
             </Button>
-            <Button fullWidth variant="outlined" onClick={onClose} sx={{ fontSize: '0.75rem', py: 0.5 }} size="small">
+            <Button fullWidth variant="outlined" onClick={onClose} sx={{ fontSize: '0.85rem', py: 0.5 }} size="small">
               Cancel
             </Button>
           </Box>
         </Box>
+
+        {/* Drawer for small screens (opens from right) */}
+        {!isMdUp && (
+ <Drawer
+  anchor="left"
+  open={drawerOpen}
+  onClose={() => setDrawerOpen(false)}
+  ModalProps={{ keepMounted: true }}
+  PaperProps={{
+    sx: {
+      width: { xs: '45vw', sm: '200px' }, // 🔥 Further reduced width
+      maxWidth: '200px',
+      height: '100vh',
+      top: 0,
+      margin: 0,
+      borderRadius: { xs: 0, sm: '0 8px 8px 0' },
+      boxShadow: 6,
+    }
+  }}
+  sx={{ zIndex: 1300 }}
+>
+  <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: 'white', p: 0.5 }}> {/* 🔥 Reduced padding */}
+
+    {/* Header - Even more compact */}
+    <Box sx={{
+      p: 0.75,
+      borderBottom: '1px solid',
+      borderColor: 'divider',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    }}>
+      <Typography variant="subtitle2" sx={{ fontSize: '0.8rem', fontWeight: 600 }}>ROI List</Typography>
+      <IconButton onClick={() => setDrawerOpen(false)} size="small" sx={{ p: 0.25 }}>
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </Box>
+
+    {/* Color Palette - Even more compact */}
+    <Box sx={{ p: 0.75, borderBottom: '1px solid', borderColor: 'divider' }}>
+      <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.7rem' }}>
+        <PaletteIcon fontSize="small" />
+        Color
+      </Typography>
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(5, 20px)', // 🔥 Even smaller color boxes
+        gap: '8px', // 🔥 Further reduced gap
+        mt: 0.75,
+        justifyContent: 'center'
+      }}>
+        {ROI_COLORS.map((color) => (
+          <Box
+            key={color}
+            onClick={() => setSelectedColor(color)}
+            sx={{
+              width: 20,
+              height: 20,
+              bgcolor: color,
+              border: selectedColor === color ? '2px solid #0066ff' : '1px solid grey',
+              borderRadius: '2px',
+              cursor: 'pointer',
+              '&:hover': { transform: 'scale(1.05)' },
+              transition: 'transform 0.12s',
+            }}
+          />
+        ))}
+      </Box>
+    </Box>
+
+    {/* ROIs List - Even more compact */}
+    <Box sx={{ flex: 1, overflow: 'auto', p: 0.75 }}>
+      <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem', display: 'block', mb: 0.75 }}>
+        ROIs ({roiShapes.length})
+      </Typography>
+      <List dense sx={{ p: 0 }}>
+        {roiShapes.map((shape, index) => (
+          <Paper
+            key={index}
+            elevation={selectedROIIndex === index ? 2 : 0}
+            sx={{
+              mb: 0.25,
+              p: 0.25,
+              border: '1px solid',
+              borderColor: selectedROIIndex === index ? 'primary.main' : 'divider',
+              cursor: 'pointer',
+              '&:hover': { bgcolor: 'action.hover' },
+            }}
+            onClick={() => {
+              setSelectedROIIndex(index === selectedROIIndex ? null : index);
+            }}
+          >
+            <ListItem disablePadding sx={{ gap: 0.25 }}>
+              <Box sx={{ display: 'flex', gap: 0.25, alignItems: 'center', width: '100%' }}>
+                <Box
+                  sx={{
+                    width: 12,
+                    height: 12,
+                    bgcolor: shape.color,
+                    borderRadius: '1px',
+                    border: '1px solid grey',
+                    flexShrink: 0,
+                  }}
+                />
+                <ListItemText
+                  primary={shape.name}
+                  secondary={shape.mode === 'include' ? 'Include' : 'Exclude'}
+                  primaryTypographyProps={{
+                    variant: 'caption',
+                    sx: { fontWeight: 500, fontSize: '0.65rem' }, // 🔥 Even smaller
+                  }}
+                  secondaryTypographyProps={{
+                    variant: 'caption',
+                    sx: {
+                      fontSize: '0.55rem', // 🔥 Even smaller
+                      color: shape.mode === 'include' ? 'success.main' : 'error.main',
+                      fontWeight: 500,
+                    },
+                  }}
+                  sx={{ m: 0 }}
+                />
+                <IconButton
+                  size="small"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteROI(index);
+                  }}
+                  sx={{ p: 0.125, minWidth: 'auto' }}
+                >
+                  <DeleteIcon sx={{ fontSize: 10 }} /> {/* 🔥 Even smaller icon */}
+                </IconButton>
+              </Box>
+            </ListItem>
+          </Paper>
+        ))}
+      </List>
+      {roiShapes.length === 0 && (
+        <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ display: 'block', mt: 1.5, fontSize: '0.65rem' }}>
+          No ROIs yet
+        </Typography>
+      )}
+    </Box>
+
+    {/* Buttons - Even more compact */}
+    <Box sx={{ p: 0.75, borderTop: '1px solid', borderColor: 'divider' }}>
+      <Button
+        fullWidth
+        variant="contained"
+        startIcon={<SaveIcon />}
+        onClick={() => {
+          if (roiShapes.length === 0) {
+            alert('Please draw at least one ROI region before saving.');
+            return;
+          }
+          onSave(roiShapes);
+          onClose();
+        }}
+        disabled={roiShapes.length === 0}
+        sx={{ 
+          mb: 0.5, 
+          fontSize: '0.7rem', // 🔥 Even smaller
+          py: 0.375, // 🔥 Reduced padding
+          minHeight: '32px' // 🔥 Smaller button height
+        }}
+        size="small"
+      >
+        Save ({roiShapes.length})
+      </Button>
+      <Button 
+        fullWidth 
+        variant="outlined" 
+        onClick={() => setDrawerOpen(false)} 
+        sx={{ 
+          fontSize: '0.7rem', 
+          py: 0.375,
+          minHeight: '32px'
+        }} 
+        size="small"
+      >
+        Close
+      </Button>
+    </Box>
+  </Box>
+</Drawer>
+        )}
 
         {/* Mode Selection Menu */}
         <Menu anchorEl={modeMenuAnchor} open={Boolean(modeMenuAnchor)} onClose={() => setModeMenuAnchor(null)}>
@@ -1058,7 +1340,7 @@ useEffect(() => {
           </MenuItem>
         </Menu>
 
-        {/* Label Picker Menu (separate, anchored at cursor) */}
+        {/* Label Picker Menu */}
         <Menu
           open={labelMenu !== null}
           onClose={() => setLabelMenu(null)}

@@ -515,7 +515,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   };
 
   const getCameraFeedUrl = () => {
-    return '/img/siteimage.jpg';
+    return 'img/siteimage.jpg';
   };
 
   const handleCloseSnackbar = () => {
