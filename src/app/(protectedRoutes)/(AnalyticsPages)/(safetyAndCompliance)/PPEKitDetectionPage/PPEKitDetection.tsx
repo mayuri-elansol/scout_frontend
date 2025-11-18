@@ -23,7 +23,7 @@ import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
 const PPEDetection: React.FC = () => {
   const detectionCountRef = useRef(0);
-  useRealtimeSocket("ppe_detections", (data) => {
+  useRealtimeSocket("safety.ppe", (data) => {
     detectionCountRef.current++;
     console.log(`🔥 [PPE] Detection #${detectionCountRef.current}`, data);
   });
@@ -45,7 +45,7 @@ const PPEDetection: React.FC = () => {
   // ✅ Listen for SSE events
   useSSEListener(() => {
     console.log("🔁 SSE triggered — refetching KPI data...");
-    fetchKpi({ tenantId: "34769771e3da8efb" })
+    fetchKpi({ tenantId: "0b49972a28f8a982" })
       .unwrap()
       .then((res) => {
         console.log("Updated KPI data from SSE:", res);
@@ -55,7 +55,7 @@ const PPEDetection: React.FC = () => {
 
   // ✅ Initial fetch on mount
   useEffect(() => {
-    fetchKpi({ tenantId: "34769771e3da8efb" });
+    fetchKpi({ tenantId: "0b49972a28f8a982" });
   }, [fetchKpi]);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
