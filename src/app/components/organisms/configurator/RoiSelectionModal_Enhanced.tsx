@@ -593,8 +593,8 @@ setTimeout(() => {
     const newShapes = roiShapes.map((shape, i) =>
       i === index ? { ...shape, mode: shape.mode === 'include' ? 'exclude' : 'include' } : shape
     );
-    setRoiShapes(newShapes);
-    addToHistory(newShapes);
+    // setRoiShapes(newShapes);
+    // addToHistory(newShapes);
   };
 
   const editFieldRef = useRef<HTMLInputElement | null>(null);
