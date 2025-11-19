@@ -202,6 +202,12 @@ const recalcCanvasSize = useCallback(() => {
   const containerRect = container.getBoundingClientRect();
   const containerWidth = containerRect.width;
   const containerHeight = containerRect.height;
+
+  if (containerHeight < 50) {
+  console.warn("Canvas skipped: container not ready yet.");
+  return;
+}
+
   
   // 🔥 Force 16:9 aspect ratio calculation
   const targetAspectRatio = 16 / 9;
@@ -229,70 +235,52 @@ const recalcCanvasSize = useCallback(() => {
   setCanvasHeight(newCanvasHeight);
 }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    const img = imgRef.current;
-    if (!img) return;
+useEffect(() => {
+  if (!open) return;
 
-    const onLoad = () => {
-      setImageLoaded(true);
+  const img = imgRef.current;
+  const canvas = canvasRef.current;
+  if (!img || !canvas) return;
+
+  let freshUrl =
+  cameraFeedUrl && cameraFeedUrl.trim() !== ""
+    ? `${cameraFeedUrl}${cameraFeedUrl.includes("?") ? "&" : "?"}_ts=${Date.now()}`
+    : "/img/siteimage.jpg";   // <-- ensure slash is present
+
+ console.log("🔄 Fresh URL for load:", freshUrl);
+  setImageLoaded(false);
+ 
+
+  img.onload = () => {
+    console.log("✅ Image loaded successfully");
+    setImageLoaded(true);
+
+    setTimeout(() => {
       recalcCanvasSize();
       requestAnimationFrame(() => {
-        const ctx = canvasRef.current?.getContext('2d');
-        if (ctx && img) {
-          try {
-            ctx.drawImage(img, 0, 0, canvasRef.current!.width, canvasRef.current!.height);
-          } catch {}
-        }
+        const ctx = canvas.getContext("2d");
+        if (ctx && img) ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       });
-    };
+    }, 80);
+  };
 
-    const onError = () => setImageLoaded(false);
+  img.onerror = (err) => {
+    console.error("❌ Image failed:", freshUrl, err);
+    setImageLoaded(false);
+  };
 
-    img.onload = onLoad;
-    img.onerror = onError;
-    img.crossOrigin = 'anonymous';
-
-    // set src with cache-buster
-    // const freshUrl = cameraFeedUrl.includes('?') ? `${cameraFeedUrl}&_ts=${Date.now()}` : `${cameraFeedUrl}?_ts=${Date.now()}`;
-    // img.src = '';
-    // setTimeout(() => (img.src = freshUrl), 50);
-
-    // inside the useEffect that runs on open:
-const freshUrl = cameraFeedUrl
-  ? (cameraFeedUrl.includes('?') ? `${cameraFeedUrl}&_ts=${Date.now()}` : `${cameraFeedUrl}?_ts=${Date.now()}`)
-  : '/img/siteimage.jpg';
-
-try {
-  // don't set to '' first — set directly (less race)
+  //  Fixed Reset
+  img.src = "/img/siteimage.jpg";
+setTimeout(() => {
   img.src = freshUrl;
-  console.log('⤵ Setting image src ->', freshUrl);
-} catch (err) {
-  console.error('❌ Failed to set img.src', err);
-  img.src = '/img/siteimage.jpg';
-}
+}, 40);
 
 
-    // recalc on resize while modal is open
-    const onResize = () => {
-      recalcCanvasSize();
-      requestAnimationFrame(() => {
-        const ctx = canvasRef.current?.getContext('2d');
-        if (ctx && img && canvasRef.current) {
-          try {
-            ctx.drawImage(img, 0, 0, canvasRef.current.width, canvasRef.current.height);
-          } catch {}
-        }
-      });
-    };
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [open, cameraFeedUrl, recalcCanvasSize]);
+  return () => {
+    img.onload = null;
+    img.onerror = null;
+  };
+}, );
 
   // Redraw canvas on changes
   useEffect(() => {

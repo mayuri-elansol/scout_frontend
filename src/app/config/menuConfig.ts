@@ -102,11 +102,27 @@ export const settingsMenu: CategoryConfig[] = [
         page: "user-management",
         path: "/UserOverview",
       },
+    ],
+  },
+  // Configurator as a nested category
+  {
+    title: "Configurator",
+    icon: TuneIcon,
+    items: [
       {
-        name: "Configurator",
-        icon: TuneIcon,
-        page: "configurator",
-        path: "/Configurator",
+        name: "Camera Management",
+        page: "camera-management",
+        path: "/Configurator/CameraManagement",
+      },
+      {
+        name: "Use-Case Manager",
+        page: "use-case-manager",
+        path: "/Configurator/UseCaseManager",
+      },
+      {
+        name: "Zone-Location Mapping",
+        page: "zone-location-mapping",
+        path: "/Configurator/ZoneLocationMapping",
       },
     ],
   },

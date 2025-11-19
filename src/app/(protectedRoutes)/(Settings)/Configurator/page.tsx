@@ -1,5 +1,6 @@
-import Configurator from "./Configurator";
+import { redirect } from "next/navigation";
 
 export default function ConfiguratorPage() {
-  return <Configurator />;
+  // Redirect to Camera Management as the default nested route
+  redirect("/Configurator/CameraManagement");
 }
