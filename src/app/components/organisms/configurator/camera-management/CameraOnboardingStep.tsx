@@ -17,6 +17,7 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
+  ButtonGroup,
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -100,6 +101,22 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [leftColumnHeight, setLeftColumnHeight] = useState<number>(0);
   
   const leftColumnRef = useRef<HTMLDivElement>(null);
+  // Toggle mode: 'camera' | 'nvr'
+const [mode, setMode] = useState<'camera' | 'nvr'>('camera');
+
+// NVR Form state
+const [nvrData, setNvrData] = useState({
+  name: '',
+  ip: '',
+  port: '8000',
+  username: '',
+  password: '',
+});
+
+// NVR discovered cameras (mock)
+const [nvrCameras, setNvrCameras] = useState<{id: string; name: string;}[]>([]);
+const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+
 
   useEffect(() => {
     const updateHeight = () => {
@@ -224,180 +241,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsAdding(false);
   };
 
-  const handleCSVUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  
 
-    if (!file.name.endsWith('.csv')) {
-      setUploadStatus({
-        type: 'error',
-        message: 'Please upload a valid CSV file'
-      });
-      return;
-    }
 
-    try {
-      const text = await file.text();
-      const lines = text.split('\n').filter(line => line.trim());
-      
-      if (lines.length < 2) {
-        setUploadStatus({
-          type: 'error',
-          message: 'CSV file must contain header row and at least one data row'
-        });
-        return;
-      }
-
-      const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      const requiredHeaders = ['ip address', 'username', 'password', 'port', 'make', 'position'];
-      
-      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
-      if (missingHeaders.length > 0) {
-        setUploadStatus({
-          type: 'error',
-          message: `Missing required columns: ${missingHeaders.join(', ')}`
-        });
-        return;
-      }
-
-      const validCameras: CameraFormData[] = [];
-      const seenIPs = new Set<string>();
-      let errorCount = 0;
-
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',').map(v => v.trim());
-        
-        if (values.length !== headers.length) {
-          errorCount++;
-          continue;
-        }
-
-        const cameraData = {
-          ipAddress: values[headers.indexOf('ip address')] || '',
-          username: values[headers.indexOf('username')] || '',
-          password: values[headers.indexOf('password')] || '',
-          port: values[headers.indexOf('port')] || '554',
-          make: values[headers.indexOf('make')] || '',
-          position: values[headers.indexOf('position')] || '',
-        };
-
-        // Basic validation
-        if (!cameraData.ipAddress || !cameraData.username || !cameraData.password || !cameraData.position) {
-          errorCount++;
-          continue;
-        }
-
-        // IP validation - check for both IPv4 and IPv6
-        if (!isValidIPv4(cameraData.ipAddress) && !isValidIPv6(cameraData.ipAddress)) {
-          errorCount++;
-          continue;
-        }
-
-        // Check for duplicate IP in existing cameras
-        if (isDuplicateIP(cameraData.ipAddress)) {
-          errorCount++;
-          continue;
-        }
-
-        // Check for duplicate IP within CSV
-        if (seenIPs.has(cameraData.ipAddress)) {
-          errorCount++;
-          continue;
-        }
-
-        seenIPs.add(cameraData.ipAddress);
-        validCameras.push(cameraData);
-      }
-
-      setCsvCameras(validCameras);
-      
-      setUploadStatus({
-        type: validCameras.length > 0 ? 'success' : 'warning',
-        message: `Found ${validCameras.length} valid cameras${errorCount > 0 ? `. ${errorCount} rows had errors and were skipped.` : ''} Click "Import Cameras" to add them.`
-      });
-
-      // Clear the file input
-      event.target.value = '';
-
-    } catch (error) {
-      setUploadStatus({
-        type: 'error',
-        message: 'Error reading CSV file. Please check the file format.'
-      });
-    }
-  };
-
-  const handleImportCameras = async () => {
-    if (csvCameras.length === 0) return;
-    
-    setIsImporting(true);
-    
-    try {
-      console.log('Starting import of', csvCameras.length, 'cameras');
-      console.log('CSV cameras to import:', csvCameras);
-      
-      // Try batch add first if available
-      if (onCameraBatchAdd) {
-        console.log('Using batch add function');
-        onCameraBatchAdd(csvCameras);
-      } else {
-        console.log('Using individual add function');
-        // Fallback to individual adds
-        for (let i = 0; i < csvCameras.length; i++) {
-          const camera = csvCameras[i];
-          console.log(`Adding camera ${i + 1}/${csvCameras.length}:`, camera.position, camera.ipAddress);
-          onCameraAdd(camera);
-          // Small delay between each camera to ensure proper state updates
-          await new Promise(resolve => setTimeout(resolve, 150));
-        }
-      }
-      
-      console.log('Finished importing all cameras');
-      
-      setUploadStatus({
-        type: 'success',
-        message: `Successfully imported ${csvCameras.length} cameras!`
-      });
-      
-      // Clear CSV cameras after import
-      setCsvCameras([]);
-      
-    } catch (error) {
-      console.error('Import error:', error);
-      setUploadStatus({
-        type: 'error',
-        message: 'Failed to import cameras. Please try again.'
-      });
-    } finally {
-      setIsImporting(false);
-    }
-  };
-
-  const handleClearCSV = () => {
-    setCsvCameras([]);
-    setUploadStatus(null);
-  };
-
-  const downloadSampleCSV = () => {
-    const sampleData = [
-      'IP Address,Username,Password,Port,Make,Position',
-      '192.168.1.100,admin,admin123,554,Hikvision,Front Gate',
-      '192.168.1.101,admin,password123,554,Hikvision,Reception Area',
-      '192.168.1.102,user,secure456,8080,Dahua,Parking Lot',
-      '192.168.1.103,admin,cam789,554,Axis,Conference Room',
-      '192.168.1.104,operator,view123,554,Hikvision,Loading Dock'
-    ].join('\n');
-
-    const blob = new Blob([sampleData], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'sample_cameras.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -440,205 +286,277 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
             ref={leftColumnRef}
             sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
           >
-            {/* Upload CSV Section */}
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <UploadIcon color="primary" />
-                  Upload CSV
-                </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                  Upload a CSV file with multiple camera configurations
-                </Typography>
-                
-                <input
-                  accept=".csv"
-                  style={{ display: 'none' }}
-                  id="csv-upload-input"
-                  type="file"
-                  onChange={handleCSVUpload}
-                />
-                <label htmlFor="csv-upload-input">
-                  <Button
-                    variant="outlined"
-                    component="span"
-                    fullWidth
-                    sx={{ mb: 2 }}
-                  >
-                    Browse & Upload CSV
-                  </Button>
-                </label>
-                
-                {uploadStatus && (
-                  <Alert 
-                    severity={uploadStatus.type} 
-                    sx={{ mb: 2 }}
-                    onClose={() => setUploadStatus(null)}
-                  >
-                    {uploadStatus.message}
-                  </Alert>
-                )}
-                
-                {/* CSV Preview */}
-                {csvCameras.length > 0 && (
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" fontWeight={600} gutterBottom>
-                      Preview ({csvCameras.length} cameras):
-                    </Typography>
-                    <Box sx={{ maxHeight: 200, overflow: 'auto', border: '1px solid', borderColor: 'divider', borderRadius: 1, p: 1 }}>
-                      {csvCameras.map((camera, index) => (
-                        <Typography key={index} variant="caption" sx={{ display: 'block', fontFamily: 'monospace' }}>
-                          {camera.position} - {camera.ipAddress} ({camera.make})
-                        </Typography>
-                      ))}
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        onClick={handleImportCameras}
-                        disabled={isImporting}
-                        sx={{ flexGrow: 1 }}
-                      >
-                        {isImporting ? 'Importing...' : 'Import Cameras'}
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        onClick={handleClearCSV}
-                        disabled={isImporting}
-                      >
-                        Clear
-                      </Button>
-                    </Box>
-                  </Box>
-                )}
-                
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                  CSV Format: IP Address, Username, Password, Port, Make, Position
-                </Typography>
-                
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={downloadSampleCSV}
-                  sx={{ textTransform: 'none' }}
-                >
-                  📥 Download Sample CSV
-                </Button>
-              </CardContent>
-            </Card>
+           
+
 
             {/* Add Camera Manually Form */}
-            <Card variant="outlined">
-              <CardContent>
-                <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <AddIcon color="primary" />
-                  Add Camera Manually
-                </Typography>
-                
-                <form onSubmit={handleAddCamera}>
-                  <Grid container spacing={2}>
-                    <Grid size={{xs: 12}}>
-                      <TextField
-                        label="IP Address"
-                        value={formData.ipAddress}
-                        onChange={handleInputChange('ipAddress')}
-                        error={!!errors.ipAddress}
-                        helperText={errors.ipAddress}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="192.168.0.91"
-                      />
-                    </Grid>
+            {/* NEW TOGGLE + CAMERA/NVR FORM SECTION */}
+<Card variant="outlined">
+  <CardContent>
 
-                    <Grid size={{xs: 6}}>
-                      <TextField
-                        label="Username"
-                        value={formData.username}
-                        onChange={handleInputChange('username')}
-                        error={!!errors.username}
-                        helperText={errors.username}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="admin@backoffice.com"
-                      />
-                    </Grid>
+    {/* Toggle Buttons */}
+    <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+      <Button
+        variant={mode === "camera" ? "contained" : "outlined"}
+        onClick={() => setMode("camera")}
+        fullWidth
+      >
+        Add Camera Manually
+      </Button>
 
-                    <Grid size={{xs: 6}}>
-                      <TextField
-                        label="Password"
-                        type="password"
-                        value={formData.password}
-                        onChange={handleInputChange('password')}
-                        error={!!errors.password}
-                        helperText={errors.password}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="••••••••"
-                      />
-                    </Grid>
+      <Button
+        variant={mode === "nvr" ? "contained" : "outlined"}
+        onClick={() => setMode("nvr")}
+        fullWidth
+      >
+        Add NVR
+      </Button>
+    </Box>
 
-                    <Grid size={{xs: 6}}>
-                      <TextField
-                        label="Port"
-                        value={formData.port}
-                        onChange={handleInputChange('port')}
-                        error={!!errors.port}
-                        helperText={errors.port}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="554"
-                      />
-                    </Grid>
+    {/* CAMERA FORM (Existing) */}
+    {mode === "camera" && (
+      <>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          Add Camera Manually
+        </Typography>
 
-                    <Grid size={{xs: 6}}>
-                      <TextField
-                        label="Make"
-                        value={formData.make}
-                        onChange={handleInputChange('make')}
-                        error={!!errors.make}
-                        helperText={errors.make}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="e.g., Hikvision"
-                      />
-                    </Grid>
+        <form onSubmit={handleAddCamera}>
+          <Grid container spacing={2}>
+            <Grid size={{xs: 12}}>
+              <TextField
+                label="IP Address"
+                value={formData.ipAddress}
+                onChange={handleInputChange('ipAddress')}
+                error={!!errors.ipAddress}
+                helperText={errors.ipAddress}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
 
-                    <Grid size={{xs: 12}}>
-                      <TextField
-                        label="Zone"
-                        value={formData.position}
-                        onChange={handleInputChange('position')}
-                        error={!!errors.position}
-                        helperText={errors.position}
-                        required
-                        fullWidth
-                        size="small"
-                        placeholder="e.g., Front Gate"
-                      />
-                    </Grid>
+            <Grid size={{xs: 6}}>
+              <TextField
+                label="Username"
+                value={formData.username}
+                onChange={handleInputChange('username')}
+                error={!!errors.username}
+                helperText={errors.username}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
 
-                    <Grid size={{xs: 12}}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        fullWidth
-                        disabled={isAdding}
-                        startIcon={<AddIcon />}
-                      >
-                        {isAdding ? 'Adding Camera...' : 'Add Camera'}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </form>
-              </CardContent>
-            </Card>
+            <Grid size={{xs: 6}}>
+              <TextField
+                label="Password"
+                type="password"
+                value={formData.password}
+                onChange={handleInputChange('password')}
+                error={!!errors.password}
+                helperText={errors.password}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
+
+            <Grid size={{xs: 6}}>
+              <TextField
+                label="Port"
+                value={formData.port}
+                onChange={handleInputChange('port')}
+                error={!!errors.port}
+                helperText={errors.port}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
+
+            <Grid size={{xs: 6}}>
+              <TextField
+                label="Make"
+                value={formData.make}
+                onChange={handleInputChange('make')}
+                error={!!errors.make}
+                helperText={errors.make}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
+
+            <Grid size={{xs: 12}}>
+              <TextField
+                label="Zone"
+                value={formData.position}
+                onChange={handleInputChange('position')}
+                error={!!errors.position}
+                helperText={errors.position}
+                required
+                fullWidth
+                size="small"
+              />
+            </Grid>
+
+            <Grid size={{xs: 12}}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                disabled={isAdding}
+              >
+                {isAdding ? 'Adding Camera...' : 'Add Camera'}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </>
+    )}
+
+    {/* NVR FORM */}
+    {mode === "nvr" && (
+      <>
+        <Typography variant="h6" gutterBottom>
+          Add NVR
+        </Typography>
+
+        <Grid container spacing={2}>
+          <Grid size={{xs: 12}}>
+            <TextField
+              label="NVR Name"
+              fullWidth
+              size="small"
+              value={nvrData.name}
+              onChange={(e) => setNvrData({ ...nvrData, name: e.target.value })}
+            />
+          </Grid>
+
+          <Grid size={{xs: 12}}>
+            <TextField
+              label="NVR IP Address"
+              required
+              fullWidth
+              size="small"
+              value={nvrData.ip}
+              onChange={(e) => setNvrData({ ...nvrData, ip: e.target.value })}
+            />
+          </Grid>
+
+          <Grid size={{xs: 6}}>
+            <TextField
+              label="Port"
+              required
+              fullWidth
+              size="small"
+              value={nvrData.port}
+              onChange={(e) => setNvrData({ ...nvrData, port: e.target.value })}
+            />
+          </Grid>
+
+          <Grid size={{xs: 6}}>
+            <TextField
+              label="Username"
+              required
+              fullWidth
+              size="small"
+              value={nvrData.username}
+              onChange={(e) => setNvrData({ ...nvrData, username: e.target.value })}
+            />
+          </Grid>
+
+          <Grid size={{xs: 12}}>
+            <TextField
+              label="Password"
+              required
+              type="password"
+              fullWidth
+              size="small"
+              value={nvrData.password}
+              onChange={(e) => setNvrData({ ...nvrData, password: e.target.value })}
+            />
+          </Grid>
+        </Grid>
+
+        {/* Discover Cameras */}
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ mt: 2 }}
+          onClick={() => {
+            // MOCK RESPONSE
+            setNvrCameras([
+              { id: "1", name: "Channel 1 - Front Gate" },
+              { id: "2", name: "Channel 2 - Entrance" },
+              { id: "3", name: "Channel 3 - Parking Area" },
+            ]);
+          }}
+        >
+          Discover Cameras
+        </Button>
+
+        {/* Show discovered cameras */}
+        {nvrCameras.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle1" gutterBottom>
+              Found Cameras:
+            </Typography>
+
+            {nvrCameras.map((cam) => (
+              <Box key={cam.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <input
+                  type="checkbox"
+                  checked={selectedNvrCams.includes(cam.id)}
+                  onChange={() => {
+                    if (selectedNvrCams.includes(cam.id)) {
+                      setSelectedNvrCams(selectedNvrCams.filter((id) => id !== cam.id));
+                    } else {
+                      setSelectedNvrCams([...selectedNvrCams, cam.id]);
+                    }
+                  }}
+                />
+                <Typography>{cam.name}</Typography>
+              </Box>
+            ))}
+
+            {/* Add Selected Cameras */}
+            <Button
+              variant="contained"
+              color="success"
+              fullWidth
+              sx={{ mt: 2 }}
+              onClick={() => {
+                const selected = nvrCameras.filter((cam) =>
+                  selectedNvrCams.includes(cam.id)
+                );
+
+                selected.forEach((cam) => {
+                  onCameraAdd({
+                    ipAddress: nvrData.ip,
+                    username: nvrData.username,
+                    password: nvrData.password,
+                    port: nvrData.port,
+                    make: "NVR",
+                    position: cam.name,
+                  });
+                });
+
+                // Reset states
+                setSelectedNvrCams([]);
+                setNvrCameras([]);
+              }}
+            >
+              Add Selected Cameras
+            </Button>
+          </Box>
+        )}
+      </>
+    )}
+  </CardContent>
+</Card>
+
           </Box>
         </Grid>
 
