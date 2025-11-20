@@ -172,7 +172,7 @@ const PPEDetection: React.FC = () => {
 
   // ✅ Initial fetch on mount
   useEffect(() => {
-    fetchKpi({ tenantId: "34769771e3da8efb" });
+    fetchKpi({ tenantId: "0b49972a28f8a982" });
   }, [fetchKpi]);
 
   // ✅ Cleanup on unmount
