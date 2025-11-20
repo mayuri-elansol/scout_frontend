@@ -1,5 +1,4 @@
 "use client";
-
 import React, {
   useCallback,
   useEffect,
@@ -74,24 +73,24 @@ const PPEDetection: React.FC = () => {
     }
 
     // Schedule refetch after 500ms of inactivity
-    refetchTimeoutRef.current = setTimeout(() => {
-      console.log("🔄 Triggering backend refetch...");
+    // refetchTimeoutRef.current = setTimeout(() => {
+    //   console.log("🔄 Triggering backend refetch...");
 
-      fetchKpi({ tenantId: "34769771e3da8efb" })
-        .unwrap()
-        .then((freshData) => {
-          console.log("✅ Backend sync complete:", freshData);
-          setDisplayKpi(freshData);
-          optimisticVersionRef.current = 0;
-          lastSyncTimestampRef.current = Date.now();
-        })
-        .catch((err) => {
-          console.error("❌ Refetch failed:", err);
-        });
-    }, 500);
+    // }, 500);
+    fetchKpi({ tenantId: "34769771e3da8efb" })
+      .unwrap()
+      .then((freshData) => {
+        console.log("✅ Backend sync complete:", freshData);
+        setDisplayKpi(freshData);
+        optimisticVersionRef.current = 0;
+        lastSyncTimestampRef.current = Date.now();
+      })
+      .catch((err) => {
+        console.error("❌ Refetch failed:", err);
+      });
   }, [fetchKpi]);
 
-  // ✅ Optimistic update handler with deduplication and batching
+  //  Optimistic update handler with deduplication and batching
   const handleNewPPEDetection = useCallback(
     (socketData: any) => {
       // Create unique event ID to prevent duplicates
@@ -127,11 +126,6 @@ const PPEDetection: React.FC = () => {
           const updated = prevKpi.map((item: KpiItem) => {
             const violation = socketData.data;
 
-            // Update Total Violations
-            if (item.title === "Total Violations") {
-              return { ...item, value: Number(item.value) + 1 };
-            }
-
             // Update specific violation types
             if (
               item.title === "Helmet Violations" &&
@@ -148,7 +142,10 @@ const PPEDetection: React.FC = () => {
             ) {
               return { ...item, value: Number(item.value) + 1 };
             }
-
+            // Update Total Violations
+            if (item.title === "Total Violations") {
+              return { ...item, value: Number(item.value) + 1 };
+            }
             return item;
           });
 
