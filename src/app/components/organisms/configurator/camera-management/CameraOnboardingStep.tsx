@@ -27,6 +27,7 @@ import {
   Error as ErrorIcon,
   Upload as UploadIcon,
 } from '@mui/icons-material';
+import { positions } from '@mui/system';
 
 interface CameraData {
   id: string;
@@ -35,7 +36,6 @@ interface CameraData {
   password: string;
   port: string;
   make: string;
-  position: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: {
@@ -63,7 +63,6 @@ interface CameraFormData {
   password: string;
   port: string;
   make: string;
-  position: string;
 }
 
 interface FormErrors {
@@ -72,7 +71,6 @@ interface FormErrors {
   password?: string;
   port?: string;
   make?: string;
-  position?: string;
 }
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
@@ -90,7 +88,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     password: '',
     port: '554',
     make: '',
-    position: '',
   });
   
   const [errors, setErrors] = useState<FormErrors>({});
@@ -188,9 +185,6 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
       newErrors.make = 'Camera make is required';
     }
 
-    if (!formData.position.trim()) {
-      newErrors.position = 'Camera position is required';
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -225,7 +219,7 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
       password: formData.password.trim(),
       port: formData.port.trim(),
       make: formData.make.trim(),
-      position: formData.position.trim(),
+  
     });
 
     // Reset form
@@ -235,7 +229,7 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
       password: '',
       port: '554',
       make: '',
-      position: '',
+     
     });
     
     setIsAdding(false);
@@ -268,7 +262,7 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
   };
 
   return (
-    <Box sx={{ p: 1, minHeight: 400 }}>
+    <Box sx={{ p: 1, minHeight: 400, pb: 12 }}>
       <Typography variant="h6" gutterBottom>
         {isOptional ? 'Camera Setup (Optional)' : 'Camera Onboarding'}
       </Typography>
@@ -388,18 +382,6 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
               />
             </Grid>
 
-            <Grid size={{xs: 12}}>
-              <TextField
-                label="Zone"
-                value={formData.position}
-                onChange={handleInputChange('position')}
-                error={!!errors.position}
-                helperText={errors.position}
-                required
-                fullWidth
-                size="small"
-              />
-            </Grid>
 
             <Grid size={{xs: 12}}>
               <Button
@@ -657,7 +639,23 @@ const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
         </Grid>
       </Grid>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 4 }}>
+      {/* <Box sx={{ display: 'flex', position:'fixed', justifyContent: 'space-between', mt: 4 }}> */}
+<Box
+  sx={{
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    backgroundColor: "white",
+    borderTop: "1px solid #e0e0e0",
+    py: 2,
+    px: 3,
+    display: "flex",
+    justifyContent: "space-between",
+    zIndex: 1000
+  }}
+>
         <Button onClick={onBack} color="inherit">
           Back
         </Button>
