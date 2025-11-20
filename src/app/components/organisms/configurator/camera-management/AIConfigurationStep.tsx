@@ -39,6 +39,7 @@ import {
   RadioButtonUnchecked as ROIIcon,
   CloudUpload as SaveIcon,
 } from '@mui/icons-material';
+import { roiService } from '@/app/services/roiService';
 
 // ROI Shape type for the enhanced modal
 interface Point {
