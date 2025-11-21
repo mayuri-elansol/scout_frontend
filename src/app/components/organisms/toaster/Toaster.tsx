@@ -4,11 +4,17 @@ import { RootState } from "../../../store/store";
 import Alert from "@mui/material/Alert";
 import { hideToast } from "./toasterSlice";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Toaster() {
   const dispatch = useDispatch();
   const toasts = useSelector((state: RootState) => state.toasterGlobal.toasts);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component only renders on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // auto-hide each toast after 4s
   useEffect(() => {
@@ -36,6 +42,11 @@ export default function Toaster() {
         return "#0353a4";
     }
   };
+
+  // Don't render on server
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <Box
