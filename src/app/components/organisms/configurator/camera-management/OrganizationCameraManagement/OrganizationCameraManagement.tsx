@@ -25,8 +25,8 @@ import {
   Error as ErrorIcon,
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
-import CameraOnboardingStep from './CameraOnboardingStep';
-import AIConfigurationStep from './AIConfigurationStep';
+import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
+import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
 
 interface CameraData {
   id: string;

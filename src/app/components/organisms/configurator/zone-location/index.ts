@@ -1,5 +1,5 @@
-export { ZoneCard } from "./ZoneCard";
-export { ZoneTable } from "./ZoneTable";
-export { AddEditZoneDrawer } from "./AddEditZoneDrawer";
-export { AssignLocationsDrawer } from "./AssignLocationsDrawer";
+export { ZoneCard } from "./ZoneCard/ZoneCard";
+export { ZoneTable } from "./ZoneTable/ZoneTable";
+export { AddEditZoneDrawer } from "./AddEditZoneDrawer/AddEditZoneDrawer";
+export { AssignLocationsDrawer } from "./AssignLocationDrawer/AssignLocationsDrawer";
 // export { AssignCamerasDrawer } from "./AssignCamerasDrawer";

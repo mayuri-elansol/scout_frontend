@@ -13,7 +13,7 @@ import {
   Search as SearchIcon,
 } from "@mui/icons-material";
 import { UseCase } from "@/app/types/useCaseManager";
-import { UseCaseListItem } from "./UseCaseListItem";
+import { UseCaseListItem } from "../UseCaseListItem/UseCaseListItem";
 
 interface UseCaseListProps {
   useCases: UseCase[];

@@ -19,7 +19,7 @@ const LoadingComponent = () => (
 );
 
 const OrganizationCameraManagement = dynamic(
-  () => import("@/app/components/organisms/configurator/camera-management/OrganizationCameraManagement"),
+  () => import("@/app/components/organisms/configurator/camera-management/OrganizationCameraManagement/OrganizationCameraManagement"),
   { 
     ssr: false,
     loading: LoadingComponent

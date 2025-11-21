@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import RoiSelectionModal from './RoiSelectionModal_Enhanced';
+import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 // import { roiService } from '@/services/scout/roiService';
 
 import {

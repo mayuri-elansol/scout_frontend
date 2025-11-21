@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 // import { action } from "@storybook/addon-actions";
 import { actions } from "@storybook/addon-actions";
 
-import { AddEditZoneDrawer } from "./AddEditZoneDrawer";
+import { AddEditZoneDrawer } from "./AddEditZoneDrawer/AddEditZoneDrawer";
 import { mockZones } from "@/app/data/mockZones";
 
 const meta: Meta<typeof AddEditZoneDrawer> = {
