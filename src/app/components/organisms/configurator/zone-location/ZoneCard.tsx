@@ -27,7 +27,6 @@ interface ZoneCardProps {
   locationCount: number;
   cameraCount: number;
   onAssignLocations: (zone: Zone) => void;
-  onAssignCameras: (zone: Zone) => void;
   onEdit: (zone: Zone) => void;
   onDelete: (zone: Zone) => void;
 }
@@ -37,7 +36,6 @@ export const ZoneCard: React.FC<ZoneCardProps> = ({
   locationCount,
   cameraCount,
   onAssignLocations,
-  onAssignCameras,
   onEdit,
   onDelete,
 }) => {
@@ -227,7 +225,6 @@ export const ZoneCard: React.FC<ZoneCardProps> = ({
               variant="outlined"
               size="small"
               startIcon={<CameraIcon />}
-              onClick={() => onAssignCameras(zone)}
               sx={{ textTransform: "none", fontWeight: 600 }}
             >
               {hasCameras ? "Manage Cameras" : "Assign Cameras"}

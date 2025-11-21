@@ -1,3 +1,4 @@
+// D:\BackOffice\scout_frontend\src\app\components\organisms\configurator\zone-location\ZoneTable.tsx
 "use client";
 
 import React from "react";
@@ -18,7 +19,6 @@ import {
 } from "@mui/material";
 import {
   LocationOn as LocationIcon,
-  Videocam as CameraIcon,
   MoreVert as MoreVertIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -30,18 +30,11 @@ import { Zone } from "@/app/data/mockZones";
 interface ZoneTableProps {
   zones: Zone[];
   onAssignLocations: (zone: Zone) => void;
-  onAssignCameras: (zone: Zone) => void;
   onEdit: (zone: Zone) => void;
   onDelete: (zone: Zone) => void;
 }
 
-export const ZoneTable: React.FC<ZoneTableProps> = ({
-  zones,
-  onAssignLocations,
-  onAssignCameras,
-  onEdit,
-  onDelete,
-}) => {
+export const ZoneTable: React.FC<ZoneTableProps> = ({ zones, onAssignLocations, onEdit, onDelete }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedZone, setSelectedZone] = React.useState<Zone | null>(null);
 
@@ -82,20 +75,16 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
               <TableCell sx={{ fontWeight: 700, textAlign: "center" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {zones.map((zone) => {
-              const hasLocations = zone.locationIds.length > 0;
-              const hasCameras = zone.cameraIds.length > 0;
+              const locationCount = zone.locations ? zone.locations.length : 0;
+              const hasLocations = locationCount > 0;
+              const cameraCount = zone.cameraIds ? zone.cameraIds.length : 0;
+              const hasCameras = cameraCount > 0;
 
               return (
-                <TableRow
-                  key={zone.id}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "grey.50",
-                    },
-                  }}
-                >
+                <TableRow key={zone.id} sx={{ "&:hover": { backgroundColor: "grey.50" } }}>
                   {/* Zone Name */}
                   <TableCell>
                     <Typography variant="body2" sx={{ fontWeight: 600 }}>
@@ -137,13 +126,9 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
                     >
                       <Typography
                         variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "0.875rem",
-                          color: hasLocations ? "primary.dark" : "text.secondary",
-                        }}
+                        sx={{ fontWeight: 600, fontSize: "0.875rem", color: hasLocations ? "primary.dark" : "text.secondary" }}
                       >
-                        {zone.locationIds.length}
+                        {locationCount}
                       </Typography>
                       {hasLocations ? (
                         <CheckCircleIcon sx={{ fontSize: 16, color: "primary.main" }} />
@@ -153,7 +138,7 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
                     </Box>
                   </TableCell>
 
-                  {/* Cameras */}
+                  {/* Cameras count (read-only) */}
                   <TableCell sx={{ textAlign: "center" }}>
                     <Box
                       sx={{
@@ -170,13 +155,9 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
                     >
                       <Typography
                         variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: "0.875rem",
-                          color: hasCameras ? "success.dark" : "text.secondary",
-                        }}
+                        sx={{ fontWeight: 600, fontSize: "0.875rem", color: hasCameras ? "success.dark" : "text.secondary" }}
                       >
-                        {zone.cameraIds.length}
+                        {cameraCount}
                       </Typography>
                       {hasCameras ? (
                         <CheckCircleIcon sx={{ fontSize: 16, color: "success.main" }} />
@@ -194,29 +175,11 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
                         variant="outlined"
                         startIcon={<LocationIcon />}
                         onClick={() => onAssignLocations(zone)}
-                        sx={{
-                          textTransform: "none",
-                          fontSize: "0.75rem",
-                          minWidth: "auto",
-                          px: 1,
-                        }}
+                        sx={{ textTransform: "none", fontSize: "0.75rem", minWidth: "auto", px: 1 }}
                       >
                         Locations
                       </Button>
-                      <Button
-                        size="small"
-                        variant="outlined"
-                        startIcon={<CameraIcon />}
-                        onClick={() => onAssignCameras(zone)}
-                        sx={{
-                          textTransform: "none",
-                          fontSize: "0.75rem",
-                          minWidth: "auto",
-                          px: 1,
-                        }}
-                      >
-                        Cameras
-                      </Button>
+
                       <IconButton size="small" onClick={(e) => handleMenuOpen(e, zone)}>
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
@@ -243,3 +206,5 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({
     </>
   );
 };
+
+export default ZoneTable;

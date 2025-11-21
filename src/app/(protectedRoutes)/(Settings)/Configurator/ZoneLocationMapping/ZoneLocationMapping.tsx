@@ -1,6 +1,7 @@
+// D:\BackOffice\scout_frontend\src\app\(protectedRoutes)\(Settings)\Configurator\ZoneLocationMapping\ZoneLocationMapping.tsx
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Container,
   Box,
@@ -31,29 +32,64 @@ import {
   ZoneTable,
   AddEditZoneDrawer,
   AssignLocationsDrawer,
-  AssignCamerasDrawer,
 } from "@/app/components/organisms/configurator/zone-location";
-import { Zone, mockZones as initialZones } from "@/app/data/mockZones";
-import { mockLocations } from "@/app/data/mockLocations";
-import { mockCameras } from "@/app/data/mockCameras";
+import { Zone as ZoneType, mockZones as initialZonesFromFile } from "@/app/data/mockZones";
+
+type LocationItem = {
+  id: number;
+  name: string;
+  description?: string;
+};
+
+const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
+  // Convert any legacy locationIds to an actual locations array (if present).
+  return zonesFromFile.map((z) => {
+    // If zone already has locations -> keep them
+    if ((z as any).locations && Array.isArray((z as any).locations)) {
+      return z;
+    }
+
+    // If it has locationIds, convert to empty location placeholders (you can update this later)
+    if ((z as any).locationIds && Array.isArray((z as any).locationIds)) {
+      const locs: LocationItem[] = (z as any).locationIds.map((id: number) => ({
+        id,
+        name: `Location ${id}`,
+      }));
+      return {
+        ...z,
+        // @ts-ignore
+        locations: locs,
+      };
+    }
+
+    // Default to empty locations array
+    return {
+      ...z,
+      // @ts-ignore
+      locations: [],
+    };
+  });
+};
 
 const ZoneLocationMapping: React.FC = () => {
-  const [zones, setZones] = useState<Zone[]>(initialZones);
+  // Normalize first: ensure each zone has .locations array
+  const normalized = useMemo(() => normalizeInitialZones(initialZonesFromFile), [initialZonesFromFile]);
+
+  const [zones, setZones] = useState<typeof normalized>(normalized);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
-  const [zoneToDelete, setZoneToDelete] = useState<Zone | null>(null);
+  const [selectedZone, setSelectedZone] = useState<typeof zones[number] | null>(null);
+  const [zoneToDelete, setZoneToDelete] = useState<typeof zones[number] | null>(null);
 
   // Drawer states
   const [addEditDrawerOpen, setAddEditDrawerOpen] = useState(false);
   const [locationsDrawerOpen, setLocationsDrawerOpen] = useState(false);
-  const [camerasDrawerOpen, setCamerasDrawerOpen] = useState(false);
 
   // Filter zones
   const filteredZones = zones.filter(
     (zone) =>
       zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       zone.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      zone.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      (zone.description || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Add new zone
@@ -63,13 +99,13 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Edit zone
-  const handleEditZone = (zone: Zone) => {
+  const handleEditZone = (zone: typeof zones[number]) => {
     setSelectedZone(zone);
     setAddEditDrawerOpen(true);
   };
 
   // Delete zone
-  const handleDeleteZone = (zone: Zone) => {
+  const handleDeleteZone = (zone: typeof zones[number]) => {
     setZoneToDelete(zone);
   };
 
@@ -81,9 +117,9 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Save zone (add or edit)
-  const handleSaveZone = (zoneData: Omit<Zone, "id" | "createdAt" | "updatedAt"> | Zone) => {
+  const handleSaveZone = (zoneData: Omit<typeof zones[number], "id" | "createdAt" | "updatedAt"> | typeof zones[number]) => {
+    // If incoming has id -> update; else create new.
     if ("id" in zoneData) {
-      // Edit existing zone
       setZones((prev) =>
         prev.map((z) =>
           z.id === zoneData.id
@@ -95,50 +131,33 @@ const ZoneLocationMapping: React.FC = () => {
         )
       );
     } else {
-      // Add new zone
-      const newZone: Zone = {
+      const maxId = zones.length > 0 ? Math.max(...zones.map((z) => z.id)) : 100;
+      const newZone = {
         ...zoneData,
-        id: Math.max(...zones.map((z) => z.id), 100) + 1,
+        id: maxId + 1,
+        locations: (zoneData as any).locations ?? [],
+        cameraIds: (zoneData as any).cameraIds ?? [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      };
+      } as typeof zones[number];
       setZones((prev) => [newZone, ...prev]);
     }
   };
 
-  // Assign locations
-  const handleAssignLocations = (zone: Zone) => {
+  // Assign locations (open drawer)
+  const handleAssignLocations = (zone: typeof zones[number]) => {
     setSelectedZone(zone);
     setLocationsDrawerOpen(true);
   };
 
-  const handleSaveLocations = (zoneId: number, locationIds: number[]) => {
+  // Save locations: adds created locations to zone.locations array
+  const handleSaveLocations = (zoneId: number, locations: LocationItem[]) => {
     setZones((prev) =>
       prev.map((z) =>
         z.id === zoneId
           ? {
               ...z,
-              locationIds,
-              updatedAt: new Date().toISOString(),
-            }
-          : z
-      )
-    );
-  };
-
-  // Assign cameras
-  const handleAssignCameras = (zone: Zone) => {
-    setSelectedZone(zone);
-    setCamerasDrawerOpen(true);
-  };
-
-  const handleSaveCameras = (zoneId: number, cameraIds: number[]) => {
-    setZones((prev) =>
-      prev.map((z) =>
-        z.id === zoneId
-          ? {
-              ...z,
-              cameraIds,
+              locations: [...(z.locations ?? []), ...locations],
               updatedAt: new Date().toISOString(),
             }
           : z
@@ -148,53 +167,25 @@ const ZoneLocationMapping: React.FC = () => {
 
   // Calculate stats
   const totalZones = zones.length;
-  const configuredZones = zones.filter(
-    (z) => z.locationIds.length > 0 || z.cameraIds.length > 0
-  ).length;
-  const totalLocations = zones.reduce((sum, z) => sum + z.locationIds.length, 0);
-  const totalCameras = zones.reduce((sum, z) => sum + z.cameraIds.length, 0);
+  const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
+  const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
+  const totalCameras = zones.reduce((sum, z) => sum + (z.cameraIds?.length ?? 0), 0);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Breadcrumbs */}
       <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
-        <MuiLink
-          component={Link}
-          href="/"
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <HomeIcon fontSize="small" />
-          Home
+        <MuiLink component={Link} href="/" underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <HomeIcon fontSize="small" /> Home
         </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <SettingsIcon fontSize="small" />
-          Settings
+        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <SettingsIcon fontSize="small" /> Settings
         </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <TuneIcon fontSize="small" />
-          Configurator
+        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <TuneIcon fontSize="small" /> Configurator
         </MuiLink>
-        <Typography
-          color="text.primary"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            fontWeight: 600,
-          }}
-        >
-          <MapIcon fontSize="small" />
-          Zone-Location Mapping
+        <Typography color="text.primary" sx={{ display: "flex", alignItems: "center", gap: 0.5, fontWeight: 600 }}>
+          <MapIcon fontSize="small" /> Zone-Location Mapping
         </Typography>
       </Breadcrumbs>
 
@@ -204,166 +195,43 @@ const ZoneLocationMapping: React.FC = () => {
           Zone-Location Mapping
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Manage zones and assign locations and cameras to each zone for organized monitoring.
+          Manage zones and create locations inside zones for organized monitoring.
         </Typography>
       </Box>
 
       {/* Stats Cards */}
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(4, 1fr)",
-          },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <Box
-          sx={{
-            p: 2.5,
-            borderRadius: 2,
-            backgroundColor: "rgba(25, 118, 210, 0.08)",
-            border: "2px solid",
-            borderColor: "primary.main",
-            display: "flex",
-            flexDirection: "column",
-            gap: 0.5,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(25, 118, 210, 0.12)",
-              transform: "translateY(-2px)",
-              boxShadow: 2,
-            },
-          }}
-        >
-          <Typography variant="h3" fontWeight={700} color="primary.main">
-            {totalZones}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            Total Zones
-          </Typography>
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2,1fr)", md: "repeat(4,1fr)" }, gap: 2, mb: 3 }}>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(25,118,210,0.08)", border: "2px solid", borderColor: "primary.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="primary.main">{totalZones}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Total Zones</Typography>
         </Box>
 
-        <Box
-          sx={{
-            p: 2.5,
-            borderRadius: 2,
-            backgroundColor: "rgba(46, 125, 50, 0.08)",
-            border: "2px solid",
-            borderColor: "success.main",
-            display: "flex",
-            flexDirection: "column",
-            gap: 0.5,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(46, 125, 50, 0.12)",
-              transform: "translateY(-2px)",
-              boxShadow: 2,
-            },
-          }}
-        >
-          <Typography variant="h3" fontWeight={700} color="success.main">
-            {configuredZones}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            Configured
-          </Typography>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(46,125,50,0.08)", border: "2px solid", borderColor: "success.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="success.main">{configuredZones}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Configured</Typography>
         </Box>
 
-        <Box
-          sx={{
-            p: 2.5,
-            borderRadius: 2,
-            backgroundColor: "rgba(2, 136, 209, 0.08)",
-            border: "2px solid",
-            borderColor: "info.main",
-            display: "flex",
-            flexDirection: "column",
-            gap: 0.5,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(2, 136, 209, 0.12)",
-              transform: "translateY(-2px)",
-              boxShadow: 2,
-            },
-          }}
-        >
-          <Typography variant="h3" fontWeight={700} color="info.main">
-            {totalLocations}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            Location Assignments
-          </Typography>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(2,136,209,0.08)", border: "2px solid", borderColor: "info.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="info.main">{totalLocations}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Location Assignments</Typography>
         </Box>
 
-        <Box
-          sx={{
-            p: 2.5,
-            borderRadius: 2,
-            backgroundColor: "rgba(237, 108, 2, 0.08)",
-            border: "2px solid",
-            borderColor: "warning.main",
-            display: "flex",
-            flexDirection: "column",
-            gap: 0.5,
-            transition: "all 0.3s ease",
-            "&:hover": {
-              backgroundColor: "rgba(237, 108, 2, 0.12)",
-              transform: "translateY(-2px)",
-              boxShadow: 2,
-            },
-          }}
-        >
-          <Typography variant="h3" fontWeight={700} color="warning.main">
-            {totalCameras}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" fontWeight={500}>
-            Camera Assignments
-          </Typography>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(237,108,2,0.08)", border: "2px solid", borderColor: "warning.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          {/* intentionally left for future camera stats */}
         </Box>
       </Box>
 
       {/* Search and Add */}
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          mb: 3,
-          flexDirection: { xs: "column", sm: "row" },
-        }}
-      >
+      <Box sx={{ display: "flex", gap: 2, mb: 3, flexDirection: { xs: "column", sm: "row" } }}>
         <TextField
           fullWidth
           placeholder="Search zones by name or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            flex: 1,
-            "& .MuiOutlinedInput-root": {
-              backgroundColor: "white",
-            },
-          }}
+          InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
+          sx={{ flex: 1, "& .MuiOutlinedInput-root": { backgroundColor: "white" } }}
         />
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={handleAddZone}
-          sx={{
-            textTransform: "none",
-            fontWeight: 600,
-            whiteSpace: "nowrap",
-          }}
-        >
+        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZone} sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}>
           Add Zone
         </Button>
       </Box>
@@ -371,77 +239,33 @@ const ZoneLocationMapping: React.FC = () => {
       {/* Zone Table */}
       {filteredZones.length === 0 ? (
         <Alert severity="info" sx={{ mt: 2 }}>
-          {searchQuery
-            ? "No zones match your search criteria."
-            : "No zones created yet. Click 'Add Zone' to get started."}
+          {searchQuery ? "No zones match your search criteria." : "No zones created yet. Click 'Add Zone' to get started."}
         </Alert>
       ) : (
         <Box>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Showing <strong>{filteredZones.length}</strong> of{" "}
-            <strong>{zones.length}</strong> zones
+            Showing <strong>{filteredZones.length}</strong> of <strong>{zones.length}</strong> zones
           </Typography>
 
-          <ZoneTable
-            zones={filteredZones}
-            onAssignLocations={handleAssignLocations}
-            onAssignCameras={handleAssignCameras}
-            onEdit={handleEditZone}
-            onDelete={handleDeleteZone}
-          />
+          <ZoneTable zones={filteredZones} onAssignLocations={handleAssignLocations} onEdit={handleEditZone} onDelete={handleDeleteZone} />
         </Box>
       )}
 
       {/* Add/Edit Zone Drawer */}
-      <AddEditZoneDrawer
-        open={addEditDrawerOpen}
-        onClose={() => setAddEditDrawerOpen(false)}
-        zone={selectedZone}
-        onSave={handleSaveZone}
-      />
+      <AddEditZoneDrawer open={addEditDrawerOpen} onClose={() => setAddEditDrawerOpen(false)} zone={selectedZone} onSave={handleSaveZone} />
 
       {/* Assign Locations Drawer */}
-      <AssignLocationsDrawer
-        open={locationsDrawerOpen}
-        onClose={() => setLocationsDrawerOpen(false)}
-        zone={selectedZone}
-        locations={mockLocations}
-        onSave={handleSaveLocations}
-      />
-
-      {/* Assign Cameras Drawer */}
-      <AssignCamerasDrawer
-        open={camerasDrawerOpen}
-        onClose={() => setCamerasDrawerOpen(false)}
-        zone={selectedZone}
-        cameras={mockCameras}
-        onSave={handleSaveCameras}
-      />
+      <AssignLocationsDrawer open={locationsDrawerOpen} onClose={() => setLocationsDrawerOpen(false)} zone={selectedZone} onSave={handleSaveLocations} />
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={Boolean(zoneToDelete)}
-        onClose={() => setZoneToDelete(null)}
-      >
+      <Dialog open={Boolean(zoneToDelete)} onClose={() => setZoneToDelete(null)}>
         <DialogTitle>Delete Zone?</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete <strong>{zoneToDelete?.name}</strong>? This action
-            cannot be undone.
-          </DialogContentText>
+          <DialogContentText>Are you sure you want to delete <strong>{zoneToDelete?.name}</strong>? This action cannot be undone.</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setZoneToDelete(null)} sx={{ textTransform: "none" }}>
-            Cancel
-          </Button>
-          <Button
-            onClick={confirmDelete}
-            color="error"
-            variant="contained"
-            sx={{ textTransform: "none" }}
-          >
-            Delete
-          </Button>
+          <Button onClick={() => setZoneToDelete(null)} sx={{ textTransform: "none" }}>Cancel</Button>
+          <Button onClick={confirmDelete} color="error" variant="contained" sx={{ textTransform: "none" }}>Delete</Button>
         </DialogActions>
       </Dialog>
     </Container>

@@ -151,7 +151,8 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
             value={formData.name}
             onChange={(e) => handleChange("name", e.target.value)}
             error={!!errors.name}
-            helperText={errors.name}
+            sx={{mb:2}}
+           
             placeholder="e.g., Main Entrance, Production Floor"
           />
 
@@ -160,10 +161,11 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
             label="Description"
             fullWidth
             multiline
-            rows={6}
+            minRows={2}
             value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
-            placeholder="Enter zone description (optional)"
+            // placeholder="Enter zone description (optional)"
+            sx={{ mb: 2 }}
           />
         </Box>
       </Box>

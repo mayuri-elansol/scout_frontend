@@ -1,91 +1,88 @@
+// D:\BackOffice\scout_frontend\src\app\components\organisms\configurator\zone-location\AssignLocationsDrawer.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   Box,
   Typography,
   Button,
-  Checkbox,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  ListItemButton,
   IconButton,
   TextField,
-  InputAdornment,
-  Alert,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
 } from "@mui/material";
-import {
-  Close as CloseIcon,
-  Search as SearchIcon,
-  CheckCircle as CheckCircleIcon,
-  Circle as CircleIcon,
-  LocationOn as LocationIcon,
-} from "@mui/icons-material";
+import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
 import { Zone } from "@/app/data/mockZones";
-import { Location } from "@/app/data/mockLocations";
 
-interface AssignLocationsDrawerProps {
+export interface LocationItem {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+interface AddLocationDrawerProps {
   open: boolean;
   onClose: () => void;
   zone: Zone | null;
-  locations: Location[];
-  onSave: (zoneId: number, locationIds: number[]) => void;
+  /**
+   * Accepts (zoneId, locationsArray) where locationsArray is array of LocationItem
+   * Parent should merge these locations into the zone (zone.locations = [...zone.locations, ...locationsArray])
+   */
+  onSave: (zoneId: number, locations: LocationItem[]) => void;
 }
 
-export const AssignLocationsDrawer: React.FC<AssignLocationsDrawerProps> = ({
+export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
   open,
   onClose,
   zone,
-  locations,
   onSave,
 }) => {
-  const [selectedLocationIds, setSelectedLocationIds] = useState<number[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [localLocations, setLocalLocations] = useState<LocationItem[]>([]);
 
+  // Reset local form when drawer opens/closes
   useEffect(() => {
-    if (open && zone) {
-      setSelectedLocationIds(zone.locationIds || []);
-      setSearchQuery("");
+    if (open) {
+      setName("");
+      setDescription("");
+      setLocalLocations([]);
     }
-  }, [open, zone]);
+  }, [open]);
 
-  const handleToggleLocation = (locationId: number) => {
-    setSelectedLocationIds((prev) =>
-      prev.includes(locationId)
-        ? prev.filter((id) => id !== locationId)
-        : [...prev, locationId]
-    );
+  // Add a location to local list (does NOT yet persist to parent)
+  const handleAddLocalLocation = () => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+
+    const newLoc: LocationItem = {
+      id: Date.now() + Math.floor(Math.random() * 1000), // simple unique id
+      name: trimmedName,
+      description: description.trim() || undefined,
+    };
+
+    setLocalLocations((prev) => [...prev, newLoc]);
+    setName("");
+    setDescription("");
   };
 
-  const handleSelectAll = () => {
-    const filteredIds = filteredLocations.map((loc) => loc.id);
-    setSelectedLocationIds(filteredIds);
-  };
-
-  const handleDeselectAll = () => {
-    setSelectedLocationIds([]);
+  const handleRemoveLocalLocation = (id: number) => {
+    setLocalLocations((prev) => prev.filter((l) => l.id !== id));
   };
 
   const handleSave = () => {
-    if (zone) {
-      onSave(zone.id, selectedLocationIds);
+    if (!zone) return;
+    if (localLocations.length === 0) {
+      // nothing to save
       onClose();
+      return;
     }
+    onSave(zone.id, localLocations);
+    onClose();
   };
-
-  const filteredLocations = locations.filter(
-    (location) =>
-      location.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      location.building?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      location.floor?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const hasChanges =
-    JSON.stringify([...(zone?.locationIds || [])].sort()) !==
-    JSON.stringify([...selectedLocationIds].sort());
 
   return (
     <Drawer
@@ -93,221 +90,101 @@ export const AssignLocationsDrawer: React.FC<AssignLocationsDrawerProps> = ({
       open={open}
       onClose={onClose}
       sx={{
-        zIndex: 1400,
-      }}
-      ModalProps={{
-        keepMounted: false,
-        sx: {
-          zIndex: 1400,
-        },
+        zIndex:1400,
       }}
       PaperProps={{
         sx: {
-          width: { xs: "100%", sm: 480, md: 560 },
+          width: { xs: "100%", sm: 420, md: 520 },
           display: "flex",
+          zIndex:1400,
           flexDirection: "column",
-          zIndex: 1400,
         },
       }}
     >
       {/* Header */}
-      <Box
-        sx={{
-          p: 3,
-          borderBottom: "1px solid",
-          borderColor: "divider",
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-        }}
-      >
-        <Box sx={{ flex: 1, pr: 2 }}>
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-            Assign Locations
+      <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "divider", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <Box>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Add Location
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {zone?.name}
+            {zone ? `Zone: ${zone.name}` : "Select a zone first"}
           </Typography>
         </Box>
-        <IconButton onClick={onClose} size="small">
+        <IconButton size="small" onClick={onClose}>
           <CloseIcon />
         </IconButton>
       </Box>
 
-      {/* Content */}
-      <Box sx={{ flex: 1, overflow: "auto", p: 3 }}>
-        {locations.length === 0 ? (
-          <Alert severity="info">
-            <Typography variant="body2" gutterBottom>
-              <strong>No locations available</strong>
-            </Typography>
-            <Typography variant="body2">
-              Please add locations first before assigning them to zones.
-            </Typography>
-          </Alert>
-        ) : (
-          <>
-            {/* Search Bar */}
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Search locations by name, building, or floor..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ mb: 2 }}
-            />
+      {/* Body */}
+      <Box sx={{ p: 3, flex: 1, overflow: "auto" }}>
+        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+          Create a new location for this zone
+        </Typography>
 
-            {/* Selection Summary */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-                pb: 2,
-                borderBottom: "1px solid",
-                borderColor: "divider",
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                {selectedLocationIds.length} of {locations.length} selected
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <Button
-                  size="small"
-                  onClick={handleSelectAll}
-                  disabled={selectedLocationIds.length === filteredLocations.length}
-                  sx={{ textTransform: "none" }}
-                >
-                  Select All
-                </Button>
-                <Button
-                  size="small"
-                  onClick={handleDeselectAll}
-                  disabled={selectedLocationIds.length === 0}
-                  sx={{ textTransform: "none" }}
-                >
-                  Deselect All
-                </Button>
-              </Box>
-            </Box>
+        <TextField
+          label="Location Name"
+          fullWidth
+          size="small"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
 
-            {/* Location List */}
-            {filteredLocations.length === 0 ? (
-              <Alert severity="warning">No locations match your search.</Alert>
-            ) : (
-              <List sx={{ p: 0 }}>
-                {filteredLocations.map((location) => {
-                  const isSelected = selectedLocationIds.includes(location.id);
-                  return (
-                    <ListItem
-                      key={location.id}
-                      disablePadding
-                      sx={{
-                        borderRadius: 1,
-                        mb: 1,
-                        border: "2px solid",
-                        borderColor: isSelected ? "primary.main" : "divider",
-                        backgroundColor: "white",
-                        transition: "all 0.2s",
-                        "&:hover": {
-                          backgroundColor: "grey.50",
-                          borderColor: isSelected ? "primary.main" : "grey.400",
-                        },
-                      }}
-                    >
-                      <ListItemButton
-                        onClick={() => handleToggleLocation(location.id)}
-                        sx={{ py: 1.5 }}
-                      >
-                        <ListItemIcon sx={{ minWidth: 40 }}>
-                          <Checkbox
-                            edge="start"
-                            checked={isSelected}
-                            tabIndex={-1}
-                            disableRipple
-                            icon={<CircleIcon sx={{ color: "grey.400" }} />}
-                            checkedIcon={<CheckCircleIcon sx={{ color: "primary.main" }} />}
-                          />
-                        </ListItemIcon>
-                        <LocationIcon
-                          sx={{
-                            mr: 2,
-                            color: "text.secondary",
-                          }}
-                        />
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                fontWeight: 500,
-                                color: "text.primary",
-                              }}
-                            >
-                              {location.name}
-                            </Typography>
-                          }
-                          secondary={
-                            <Box sx={{ mt: 0.5 }}>
-                              {location.building && (
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  sx={{ fontSize: "0.875rem" }}
-                                >
-                                  🏢 {location.building}
-                                  {location.floor && ` • ${location.floor}`}
-                                </Typography>
-                              )}
-                            </Box>
-                          }
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            )}
-          </>
-        )}
+        <TextField
+          label="Short Description (optional)"
+          fullWidth
+          size="small"
+          multiline
+          minRows={2}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+
+        <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
+          <Button startIcon={<AddIcon />} variant="contained" onClick={handleAddLocalLocation} disabled={!name.trim()}>
+            Add Location
+          </Button>
+          <Button variant="outlined" onClick={() => { setName(""); setDescription(""); }}>
+            Clear
+          </Button>
+        </Box>
+
+        {/* Local list of locations created in this session */}
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          Locations to be created ({localLocations.length})
+        </Typography>
+
+        <List sx={{ p: 0 }}>
+          {localLocations.map((loc) => (
+            <ListItem key={loc.id} sx={{ borderRadius: 1, mb: 1, border: "1px solid", borderColor: "divider", backgroundColor: "white" }}>
+              <ListItemText
+                primary={<Typography sx={{ fontWeight: 600 }}>{loc.name}</Typography>}
+                secondary={loc.description}
+              />
+              <ListItemSecondaryAction>
+                <IconButton edge="end" onClick={() => handleRemoveLocalLocation(loc.id)} size="small">
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+        </List>
       </Box>
 
       {/* Footer */}
-      <Box
-        sx={{
-          p: 3,
-          borderTop: "1px solid",
-          borderColor: "divider",
-          display: "flex",
-          gap: 2,
-        }}
-      >
-        <Button
-          fullWidth
-          variant="outlined"
-          onClick={onClose}
-          sx={{ textTransform: "none" }}
-        >
+      <Box sx={{ p: 3, borderTop: "1px solid", borderColor: "divider", display: "flex", gap: 2 }}>
+        <Button fullWidth variant="outlined" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={handleSave}
-          disabled={!hasChanges || locations.length === 0}
-          sx={{ textTransform: "none" }}
-        >
-          Save Changes
+        <Button fullWidth variant="contained" onClick={handleSave} disabled={localLocations.length === 0}>
+          Save Locations
         </Button>
       </Box>
     </Drawer>
   );
 };
+
+export default AssignLocationsDrawer;
