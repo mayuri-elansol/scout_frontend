@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-// import { action } from "@storybook/addon-actions";
-import { actions } from "@storybook/addon-actions";
-
-import { AddEditZoneDrawer } from "./AddEditZoneDrawer/AddEditZoneDrawer";
+import { AddEditZoneDrawer } from "./AddEditZoneDrawer";
 import { mockZones } from "@/app/data/mockZones";
 
 const meta: Meta<typeof AddEditZoneDrawer> = {
@@ -11,6 +8,13 @@ const meta: Meta<typeof AddEditZoneDrawer> = {
   parameters: {
     layout: "fullscreen",
   },
+
+  // default handlers for all stories
+  args: {
+    onClose: () => console.log("onClose"),
+    onSave: (data) => console.log("onSave", data),
+  },
+
   tags: ["autodocs"],
 };
 
@@ -21,8 +25,6 @@ export const AddMode: Story = {
   args: {
     open: true,
     zone: null,
-    onClose: actions("onClose"),
-    onSave: actions("onSave"),
   },
 };
 
@@ -30,8 +32,6 @@ export const EditMode: Story = {
   args: {
     open: true,
     zone: mockZones[0],
-    onClose: actions("onClose"),
-    onSave: actions("onSave"),
   },
 };
 
@@ -39,7 +39,5 @@ export const Closed: Story = {
   args: {
     open: false,
     zone: null,
-    onClose: actions("onClose"),
-    onSave: actions("onSave"),
   },
 };

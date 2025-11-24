@@ -87,7 +87,7 @@ interface CameraData {
   position: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
-  aiConfig?: AIConfig;
+  aiConfig?:AIConfig
 }
 
 interface AIConfigurationStepProps {

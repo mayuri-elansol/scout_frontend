@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
 import { AssignLocationsDrawer } from "./AssignLocationsDrawer";
 import { mockZones } from "@/app/data/mockZones";
 
@@ -9,6 +8,14 @@ const meta: Meta<typeof AssignLocationsDrawer> = {
   parameters: {
     layout: "fullscreen",
   },
+
+  // Provide safe default handlers
+  args: {
+    onClose: () => console.log("onClose"),
+    onSave: (zoneId, data) =>
+      console.log("onSave", { zoneId, locations: data }),
+  },
+
   tags: ["autodocs"],
 };
 
@@ -19,8 +26,6 @@ export const Open: Story = {
   args: {
     open: true,
     zone: mockZones[0],
-    onClose: action("onClose"),
-    onSave: action("onSave"),
   },
 };
 
@@ -31,8 +36,6 @@ export const AnotherZone: Story = {
       ...mockZones[0],
       name: "Warehouse Zone",
     },
-    onClose: action("onClose"),
-    onSave: action("onSave"),
   },
 };
 
@@ -40,7 +43,5 @@ export const Closed: Story = {
   args: {
     open: false,
     zone: mockZones[0],
-    onClose: action("onClose"),
-    onSave: action("onSave"),
   },
 };

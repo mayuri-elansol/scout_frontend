@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
 import { ZoneCard } from "./ZoneCard";
 import { mockZones } from "@/app/data/mockZones";
 
@@ -10,6 +9,13 @@ const meta: Meta<typeof ZoneCard> = {
     layout: "padded",
   },
   tags: ["autodocs"],
+
+  // 👍 Provide default safe handlers for all stories
+  args: {
+    onAssignLocations: (zone) => console.log("onAssignLocations", zone),
+    onEdit: (zone) => console.log("onEdit", zone),
+    onDelete: (zone) => console.log("onDelete", zone),
+  },
 };
 
 export default meta;
@@ -20,10 +26,6 @@ export const Default: Story = {
     zone: mockZones[0],
     locationCount: mockZones[0].locationIds.length,
     cameraCount: mockZones[0].cameraIds.length,
-    onAssignLocations: action("onAssignLocations"),
-    onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
 
@@ -35,10 +37,6 @@ export const WithoutLocations: Story = {
     },
     locationCount: 0,
     cameraCount: mockZones[0].cameraIds.length,
-    onAssignLocations: action("onAssignLocations"),
-    onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
 
@@ -50,10 +48,6 @@ export const WithoutCameras: Story = {
     },
     locationCount: mockZones[0].locationIds.length,
     cameraCount: 0,
-    onAssignLocations: action("onAssignLocations"),
-    onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
 
@@ -66,9 +60,5 @@ export const Unconfigured: Story = {
     },
     locationCount: 0,
     cameraCount: 0,
-    onAssignLocations: action("onAssignLocations"),
-    onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };

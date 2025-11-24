@@ -1,3 +1,5 @@
+import { LocationItem } from "../components/organisms/configurator/zone-location/AssignLocationDrawer/AssignLocationsDrawer";
+
 // Mock Zones Data
 export interface Zone {
   id: number;
@@ -6,6 +8,7 @@ export interface Zone {
   description?: string;
   locationIds: number[];
   cameraIds: number[];
+  locations?: LocationItem[]; // optional, used only when loading full data
   createdAt: string;
   updatedAt: string;
 }

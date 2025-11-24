@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
 import ZoneTable from "./ZoneTable";
 import { mockZones } from "@/app/data/mockZones";
 
@@ -10,6 +9,13 @@ const meta: Meta<typeof ZoneTable> = {
     layout: "padded",
   },
   tags: ["autodocs"],
+
+  // Default handlers for all stories
+  args: {
+    onAssignLocations: (zone) => console.log("onAssignLocations", zone),
+    onEdit: (zone) => console.log("onEdit", zone),
+    onDelete: (zone) => console.log("onDelete", zone),
+  },
 };
 
 export default meta;
@@ -18,29 +24,17 @@ type Story = StoryObj<typeof ZoneTable>;
 export const Default: Story = {
   args: {
     zones: mockZones,
-    onAssignLocations: action("onAssignLocations"),
-    // onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
 
 export const Empty: Story = {
   args: {
     zones: [],
-    onAssignLocations: action("onAssignLocations"),
-    // onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
 
 export const SingleZone: Story = {
   args: {
     zones: [mockZones[0]],
-    onAssignLocations: action("onAssignLocations"),
-    // onAssignCameras: action("onAssignCameras"),
-    onEdit: action("onEdit"),
-    onDelete: action("onDelete"),
   },
 };
