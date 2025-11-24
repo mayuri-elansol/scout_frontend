@@ -218,34 +218,34 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
         {cameras.length === 0 ? (
           <Box
-    sx={{
-      flexGrow: 1,
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-      p: 4,
-    }}
-  >
-    <VideocamIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              p: 4,
+            }}
+          >
+            <VideocamIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
 
-    <Typography variant="h6" color="text.secondary" gutterBottom>
-      No Cameras Configured
-    </Typography>
+            <Typography variant="h6" color="text.secondary" gutterBottom>
+              No Cameras Configured
+            </Typography>
 
-    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-      Add cameras to start monitoring and analytics.
-    </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              Add cameras to start monitoring and analytics.
+            </Typography>
 
-    <Button
-      variant="contained"
-      startIcon={<AddIcon />}
-      onClick={() => setAddingCamera(true)}
-    >
-      Add Your First Camera
-    </Button>
-  </Box>
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => setAddingCamera(true)}
+            >
+              Add Your First Camera
+            </Button>
+          </Box>
         ) : (
           <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
             <TableContainer>

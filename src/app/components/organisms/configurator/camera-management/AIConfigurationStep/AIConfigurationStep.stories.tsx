@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import AIConfigurationStep from "./AIConfigurationStep";
 
+
 const mockCamera = {
   id: "CAM-001",
   ipAddress: "192.168.1.10",
@@ -12,7 +13,7 @@ const mockCamera = {
   rtspStream: "rtsp://192.168.1.10/stream",
   status: "connected",
   aiConfig: undefined,
-};
+} satisfies CameraData;
 
 const meta: Meta<typeof AIConfigurationStep> = {
   title: "Organisms/Configurator/CameraManagement/AIConfigurationStep",
@@ -28,7 +29,7 @@ type Story = StoryObj<typeof AIConfigurationStep>;
 export const Default: Story = {
   args: {
     camera: mockCamera,
-    onSave: (config) => console.log("Saved AI Config:", config),
-    onBack: () => console.log("Back clicked"),
+    onSave: () => console.log("Saved!"),
+    onBack: () => console.log("Back"),
   },
 };
