@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import { AssignLocationsDrawer } from "./AssignLocationsDrawer";
 import { mockZones } from "@/app/data/mockZones";
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import CameraOnboardingStep from "./CameraOnboardingStep";
 
 // Matches EXACT interface of CameraData in component (no position field)
@@ -11,7 +11,13 @@ interface CameraData {
   make: string;
   rtspStream: string;
   status: "connected" | "failed" | "pending";
-  aiConfig?: any;
+  aiConfig?: {
+    useCases: string[];
+    roiData: Record<string, { configured: boolean }>;
+    fineTuning: Record<string, { tuned: boolean }>;
+    enabled: boolean;
+    viewName?: string;
+  };
 }
 
 const mockCameras: CameraData[] = [

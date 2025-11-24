@@ -157,7 +157,8 @@ const UseCaseManager: React.FC = () => {
           Use-Case Manager
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Configure and assign cameras to AI use cases based on your organization's
+          Configure and assign cameras to AI use cases based on your organization&apos;s
+
           license. Select cameras from Camera Management to enable specific detection
           and monitoring capabilities.
         </Typography>
@@ -227,7 +228,7 @@ const UseCaseManager: React.FC = () => {
           </Typography>
 
           <Typography variant="body1" color="text.secondary" sx={{ mt: 2, mb: 3 }}>
-            Your organization's license doesn't have any use cases configured yet.
+            Your organizations license does not have any use cases configured yet.
             Please contact your administrator or check your license details.
           </Typography>
 

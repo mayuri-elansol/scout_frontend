@@ -20,14 +20,11 @@ import {
   ButtonGroup,
 } from '@mui/material';
 import {
-  Add as AddIcon,
   Delete as DeleteIcon,
   Videocam as VideocamIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
-  Upload as UploadIcon,
 } from '@mui/icons-material';
-import { positions } from '@mui/system';
 
 interface CameraData {
   id: string;
@@ -92,9 +89,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
-  const [uploadStatus, setUploadStatus] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
-  const [csvCameras, setCsvCameras] = useState<CameraFormData[]>([]);
-  const [isImporting, setIsImporting] = useState(false);
   const [leftColumnHeight, setLeftColumnHeight] = useState<number>(0);
 
   const leftColumnRef = useRef<HTMLDivElement>(null);
@@ -130,7 +124,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setTimeout(updateHeight, 100);
 
     return () => window.removeEventListener('resize', updateHeight);
-  }, [csvCameras, uploadStatus, formData]);
+  }, [cameras, formData]);
 
   // IP validation helper functions
   const isValidIPv4 = (ip: string): boolean => {

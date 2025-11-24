@@ -99,24 +99,25 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   };
 
   const handleCameraBatchAdd = (
-    camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
-  ) => {
-    const newCameras = camerasData.map((cameraData, index) => ({
-      ...cameraData,
-      id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-      rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
-      position: cameraData.ipAddress,
-      status: Math.random() > 0.7 ? 'failed' : 'connected',
-    }));
+  camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
+) => {
+  const newCameras = camerasData.map((cameraData, index) => ({
+    ...cameraData,
+    id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+    rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
+    position: cameraData.ipAddress,
+    status: Math.random() > 0.7 ? 'failed' : 'connected',
+  }));
 
-    setCameras((prev) => [...prev, ...newCameras]);
+  setCameras((prev: CameraData[]) => [...prev, ...newCameras]); // ✅ FIXED
 
-    setSnackbar({
-      open: true,
-      message: `${newCameras.length} cameras added successfully!`,
-      severity: 'success',
-    });
-  };
+  setSnackbar({
+    open: true,
+    message: `${newCameras.length} cameras added successfully!`,
+    severity: 'success',
+  });
+};
+
 
   const handleCameraRemove = (cameraId: string) => {
     const camera = cameras.find((c) => c.id === cameraId);

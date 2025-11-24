@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/nextjs";
 import OrganizationCameraManagement from "./OrganizationCameraManagement";
 
 const meta: Meta<typeof OrganizationCameraManagement> = {
@@ -13,8 +13,8 @@ type Story = StoryObj<typeof OrganizationCameraManagement>;
 export const Empty: Story = {
   args: {
     initialCameras: [],
-    forceAddCamera: false,
-    forceConfigureCamera: null,
+    forceAddCamera: true,
+    forceConfigureCamera: undefined,
   },
 };
 

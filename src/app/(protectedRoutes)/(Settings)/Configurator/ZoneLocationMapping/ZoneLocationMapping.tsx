@@ -42,34 +42,32 @@ type LocationItem = {
 };
 
 const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
-  // Convert any legacy locationIds to an actual locations array (if present).
   return zonesFromFile.map((z) => {
-    // If zone already has locations -> keep them
-    if ((z as any).locations && Array.isArray((z as any).locations)) {
+    // If already has a typed locations array
+    if (Array.isArray(z.locations)) {
       return z;
     }
 
-    // If it has locationIds, convert to empty location placeholders (you can update this later)
-    if ((z as any).locationIds && Array.isArray((z as any).locationIds)) {
-      const locs: LocationItem[] = (z as any).locationIds.map((id: number) => ({
+    // Handle legacy data with locationIds
+    if (Array.isArray(z.locationIds)) {
+      const locs: LocationItem[] = z.locationIds.map((id) => ({
         id,
         name: `Location ${id}`,
       }));
+
       return {
         ...z,
-        // @ts-ignore
         locations: locs,
       };
     }
 
-    // Default to empty locations array
     return {
       ...z,
-      // @ts-ignore
       locations: [],
     };
   });
 };
+
 
 const ZoneLocationMapping: React.FC = () => {
   // Normalize first: ensure each zone has .locations array
