@@ -1,9 +1,17 @@
 import { SvgIconComponent } from "@mui/icons-material";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 
+// export interface FilterParams {
+//   status?: string;
+//   employeeName?: string;
+//   startDate?: string;
+//   endDate?: string;
+// }
 export interface FilterParams {
-  status?: string;
-  employeeName?: string;
+  violation?: string;
+  zone?: string;
+  cameraId?: string;
+  alarmTriggered?: string;
   startDate?: string;
   endDate?: string;
 }
@@ -45,4 +53,14 @@ export interface KpiItem {
   title: keyof typeof ppeKpiConfig | string;
   value: number | string;
   colour: string;
+}
+export interface SubViolationInterface {
+  label: string;
+  value: number;
+}
+
+export interface ZoneViolationInteface {
+  zone: string;
+  violations: number;
+  subViolations: SubViolationInterface[];
 }

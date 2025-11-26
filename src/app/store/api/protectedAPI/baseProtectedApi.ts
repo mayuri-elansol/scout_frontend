@@ -7,5 +7,10 @@ export const baseProtectedApi = createApi({
       process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:4001/api/v1",
   }),
   endpoints: () => ({}),
-  tagTypes: ["PPEKpi"],
+  tagTypes: [
+    "PPEKpi",
+    "PpeZoneViolations",
+    "PpeRecentViolations",
+    "PpeDetailedReport",
+  ],
 });
