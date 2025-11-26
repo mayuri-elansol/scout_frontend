@@ -77,7 +77,7 @@ const PPEDetection: React.FC = () => {
     //   console.log("🔄 Triggering backend refetch...");
 
     // }, 500);
-    fetchKpi({ tenantId: "34769771e3da8efb" })
+    fetchKpi({ tenantId: "217505b7082eb5c1" })
       .unwrap()
       .then((freshData) => {
         console.log("✅ Backend sync complete:", freshData);
@@ -166,13 +166,21 @@ const PPEDetection: React.FC = () => {
   );
 
   // ✅ Setup socket listeners
-  useSocketListeners({
-    "ppe_kit_detection-INSERT": handleNewPPEDetection,
-  });
+  // useSocketListeners({
+  //   "ppekit-detection-data": handleNewPPEDetection,
+  // });
+  const socketHandlers = useMemo(
+    () => ({
+      "ppekit-detection-data": handleNewPPEDetection,
+    }),
+    [handleNewPPEDetection]
+  );
+
+  useSocketListeners(socketHandlers);
 
   // ✅ Initial fetch on mount
   useEffect(() => {
-    fetchKpi({ tenantId: "0b49972a28f8a982" });
+    fetchKpi({ tenantId: "217505b7082eb5c1" });
   }, [fetchKpi]);
 
   // ✅ Cleanup on unmount
