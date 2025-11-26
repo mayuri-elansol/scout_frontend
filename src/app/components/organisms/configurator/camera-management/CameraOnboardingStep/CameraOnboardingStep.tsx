@@ -17,7 +17,6 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  ButtonGroup,
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
@@ -46,7 +45,9 @@ interface CameraData {
 
 interface CameraOnboardingStepProps {
   cameras: CameraData[];
-  onCameraAdd: (camera: Omit<CameraData, 'id' | 'rtspStream' | 'status'>) => void;
+  // onCameraAdd: (camera: Omit<CameraData, 'id' | 'rtspStream' | 'status'>) => void;
+  onCameraAdd: (camera: Omit<CameraData, "status" | "id" | "rtspStream" | "position">) => void;
+
   onCameraBatchAdd?: (cameras: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]) => void;
   onCameraRemove: (cameraId: string) => void;
   onNext: () => void;
@@ -480,20 +481,20 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           Found Cameras:
                         </Typography>
 
-                        {nvrCameras.map((cam) => (
-                          <Box key={cam.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        {nvrCameras.map((camera) => (
+                          <Box key={camera.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <input
                               type="checkbox"
-                              checked={selectedNvrCams.includes(cam.id)}
+                              checked={selectedNvrCams.includes(camera.id)}
                               onChange={() => {
-                                if (selectedNvrCams.includes(cam.id)) {
-                                  setSelectedNvrCams(selectedNvrCams.filter((id) => id !== cam.id));
+                                if (selectedNvrCams.includes(camera.id)) {
+                                  setSelectedNvrCams(selectedNvrCams.filter((id) => id !== camera.id));
                                 } else {
-                                  setSelectedNvrCams([...selectedNvrCams, cam.id]);
+                                  setSelectedNvrCams([...selectedNvrCams, camera.id]);
                                 }
                               }}
                             />
-                            <Typography>{cam.name}</Typography>
+                            <Typography>{camera.name}</Typography>
                           </Box>
                         ))}
 
@@ -597,7 +598,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                   
                                 <Chip
                                   label={camera.status}
-                                  color={getStatusColor(camera.status) as any}
+                                  color={getStatusColor(camera.status) as "success" | "error" | "default"}
+
                                   size="small"
                                 />
                               </Box>

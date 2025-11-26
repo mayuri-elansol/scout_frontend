@@ -47,7 +47,7 @@ const UseCaseManager: React.FC = () => {
     setIsLoadingUseCases(true);
     setError(null);
     try {
-      const orgLicense = await useCaseManagerService.getMockOrganizationLicense(
+      const orgLicense = await useCaseManagerService.getOrganizationLicense(
         organizationId
       );
       setUseCases(orgLicense.useCases);

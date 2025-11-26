@@ -67,6 +67,9 @@ export type PageType =
   | "security-breach"
   | "vehicle-tracking"
   | "work-hours"
+  | "camera-management"
+  | 'use-case-manager'
+  | 'zone-location-mapping'
   | "zone-occupancy"
   | "crowd-management"
   | "live-streaming"

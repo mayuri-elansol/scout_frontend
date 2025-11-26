@@ -126,13 +126,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   onSave,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   // Responsive drawer/sidebar state
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const drawerWidth = 200;
+  // const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  // const drawerWidth = 200;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -242,7 +242,7 @@ useEffect(() => {
   const canvas = canvasRef.current;
   if (!img || !canvas) return;
 
-  let freshUrl =
+  const freshUrl =
   cameraFeedUrl && cameraFeedUrl.trim() !== ""
     ? `${cameraFeedUrl}${cameraFeedUrl.includes("?") ? "&" : "?"}_ts=${Date.now()}`
     : "/img/siteimage.jpg";   // <-- ensure slash is present

@@ -1,7 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import CameraOnboardingStep from "./CameraOnboardingStep";
 
-// Matches EXACT interface of CameraData in component (no position field)
+/** Local definition because OrganizationCameraManagement does NOT export it */
+interface AIConfig {
+  useCases: string[];
+  roiData: Record<string, { configured: boolean }>;
+  fineTuning: Record<string, { tuned: boolean }>;
+  enabled: boolean;
+  viewName?: string;
+}
+
+/** Matches EXACT interface of CameraData in component */
 interface CameraData {
   id: string;
   ipAddress: string;
@@ -11,13 +20,7 @@ interface CameraData {
   make: string;
   rtspStream: string;
   status: "connected" | "failed" | "pending";
-  aiConfig?: {
-    useCases: string[];
-    roiData: Record<string, { configured: boolean }>;
-    fineTuning: Record<string, { tuned: boolean }>;
-    enabled: boolean;
-    viewName?: string;
-  };
+  aiConfig?: AIConfig;
 }
 
 const mockCameras: CameraData[] = [
@@ -59,16 +62,21 @@ const meta: Meta<typeof CameraOnboardingStep> = {
   parameters: {
     layout: "fullscreen",
   },
-
-  // Important for fixed footer layout
   decorators: [
     (Story) => (
-      <div style={{ height: "100vh", overflow: "hidden", background: "#f9f9f9" }}>
+      <div
+        style={{
+          height: "100vh",
+          overflow: "hidden",
+          background: "#f9f9f9",
+        }}
+      >
         <Story />
       </div>
     ),
   ],
 };
+
 export default meta;
 
 type Story = StoryObj<typeof CameraOnboardingStep>;

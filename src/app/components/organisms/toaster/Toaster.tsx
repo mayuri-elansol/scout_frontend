@@ -1,6 +1,10 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../../store/store";
+// import { RootState } from "../../../store/store";
+// RootState is not exported, so import store and infer the state
+import { store } from "../../../store/store";
+type RootState = ReturnType<typeof store.getState>;
+
 import Alert from "@mui/material/Alert";
 import { hideToast } from "./toasterSlice";
 import { Box } from "@mui/material";

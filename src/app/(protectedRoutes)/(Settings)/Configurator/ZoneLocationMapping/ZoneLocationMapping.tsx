@@ -71,7 +71,7 @@ const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
 
 const ZoneLocationMapping: React.FC = () => {
   // Normalize first: ensure each zone has .locations array
-  const normalized = useMemo(() => normalizeInitialZones(initialZonesFromFile), [initialZonesFromFile]);
+  const normalized = useMemo(() => normalizeInitialZones(initialZonesFromFile), []);
 
   const [zones, setZones] = useState<typeof normalized>(normalized);
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,32 +115,36 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Save zone (add or edit)
-  const handleSaveZone = (zoneData: Omit<typeof zones[number], "id" | "createdAt" | "updatedAt"> | typeof zones[number]) => {
-    // If incoming has id -> update; else create new.
-    if ("id" in zoneData) {
-      setZones((prev) =>
-        prev.map((z) =>
-          z.id === zoneData.id
-            ? {
-                ...zoneData,
-                updatedAt: new Date().toISOString(),
-              }
-            : z
-        )
-      );
-    } else {
-      const maxId = zones.length > 0 ? Math.max(...zones.map((z) => z.id)) : 100;
-      const newZone = {
-        ...zoneData,
-        id: maxId + 1,
-        locations: (zoneData as any).locations ?? [],
-        cameraIds: (zoneData as any).cameraIds ?? [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } as typeof zones[number];
-      setZones((prev) => [newZone, ...prev]);
-    }
-  };
+  const handleSaveZone = (
+  zoneData:
+    | Omit<ZoneType, "id" | "createdAt" | "updatedAt">
+    | ZoneType
+) => {
+  if ("id" in zoneData) {
+    // editing existing zone
+    setZones((prev) =>
+      prev.map((z) =>
+        z.id === zoneData.id
+          ? { ...zoneData, updatedAt: new Date().toISOString() }
+          : z
+      )
+    );
+  } else {
+    const maxId = zones.length > 0 ? Math.max(...zones.map((z) => z.id)) : 100;
+
+    const newZone: ZoneType = {
+      ...zoneData,
+      id: maxId + 1,
+      locations: zoneData.locations ?? [],
+      cameraIds: zoneData.cameraIds ?? [],
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    setZones((prev) => [newZone, ...prev]);
+  }
+};
+
 
   // Assign locations (open drawer)
   const handleAssignLocations = (zone: typeof zones[number]) => {
@@ -167,7 +171,7 @@ const ZoneLocationMapping: React.FC = () => {
   const totalZones = zones.length;
   const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
   const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
-  const totalCameras = zones.reduce((sum, z) => sum + (z.cameraIds?.length ?? 0), 0);
+  // const totalCameras = zones.reduce((sum, z) => sum + (z.cameraIds?.length ?? 0), 0);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>

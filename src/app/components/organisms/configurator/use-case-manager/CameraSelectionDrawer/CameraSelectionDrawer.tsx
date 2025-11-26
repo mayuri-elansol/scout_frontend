@@ -14,7 +14,6 @@ import {
   ListItemButton,
   Chip,
   IconButton,
-  Divider,
   Alert,
   CircularProgress,
   TextField,
@@ -271,7 +270,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
               <Alert severity="warning">No cameras match your search.</Alert>
             ) : (
               <List sx={{ p: 0 }}>
-                {filteredCameras.map((camera, index) => {
+                {filteredCameras.map((camera) => {
                   const isSelected = selectedCameraIds.includes(camera.id);
                   return (
                     <React.Fragment key={camera.id}>

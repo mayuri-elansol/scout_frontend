@@ -1,6 +1,6 @@
 import {
   UseCase,
-  License,
+  // License,
   Camera,
   UseCaseCameraMapping,
   OrganizationLicense,
@@ -44,6 +44,7 @@ class UseCaseManagerService {
     }
   }
 
+  
   /**
    * Get all use cases for a specific license
    */
@@ -200,99 +201,103 @@ class UseCaseManagerService {
   /**
    * Mock: Get organization license with use cases
    */
-  async getMockOrganizationLicense(organizationId: string): Promise<OrganizationLicense> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
 
-    return {
-      organizationId,
-      licenseId: 'license-001',
-      license: {
-        id: 'license-001',
-        name: 'Enterprise Safety & Compliance',
-        description: 'Complete safety monitoring and compliance suite',
-        useCaseIds: ['uc-001', 'uc-002', 'uc-003', 'uc-004', 'uc-005'],
-        organizationId,
-        startDate: '2024-01-01',
-        endDate: '2025-12-31',
-        isActive: true,
-      },
-      useCases: [
-        {
-          id: 'uc-001',
-          name: 'Personal Protective Equipment (PPE) Detection',
-          description: 'Detect missing or improper use of safety equipment like helmets, vests, gloves, and goggles',
-          category: 'Safety & Compliance',
-          icon: 'safety',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-002',
-          name: 'Object Detection in Walking Bays',
-          description: 'Monitor pedestrian walkways for unauthorized objects, vehicles, or obstructions',
-          category: 'Safety & Compliance',
-          icon: 'visibility',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-003',
-          name: 'Fire, Smoke, Oil and Gas Leak Detection',
-          description: 'Real-time detection of fire, smoke, and hazardous leaks',
-          category: 'Safety & Compliance',
-          icon: 'warning',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-004',
-          name: 'Fall Detection (Person falling on the floor)',
-          description: 'Detect when a person has fallen and alert emergency responders',
-          category: 'Safety & Compliance',
-          icon: 'emergency',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-005',
-          name: 'Intrusion Detection at Premises Perimeter',
-          description: 'Monitor perimeter for unauthorized access or intrusions',
-          category: 'Surveillance',
-          icon: 'security',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-006',
-          name: 'Unauthorized Access in Restricted Areas',
-          description: 'Detect and alert when someone enters restricted zones',
-          category: 'Surveillance',
-          icon: 'block',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-007',
-          name: 'People Presence during Shutdown Hours',
-          description: 'Monitor for unauthorized personnel during non-operational hours',
-          category: 'Surveillance',
-          icon: 'schedule',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-        {
-          id: 'uc-008',
-          name: 'People Count in Factory Premises',
-          description: 'Real-time counting of people in different zones',
-          category: 'Operational Insights',
-          icon: 'people',
-          enabled: true,
-          assignedCameraIds: [],
-        },
-      ],
-    };
-  }
+  
+  // async getMockOrganizationLicense(organizationId: string): Promise<OrganizationLicense> {
+  //   // Simulate API delay
+  //   await new Promise(resolve => setTimeout(resolve, 800));
+
+  //   return {
+  //     organizationId,
+  //     licenseId: 'license-001',
+  //     license: {
+  //       id: 'license-001',
+  //       name: 'Enterprise Safety & Compliance',
+  //       description: 'Complete safety monitoring and compliance suite',
+  //       useCaseIds: ['uc-001', 'uc-002', 'uc-003', 'uc-004', 'uc-005'],
+  //       organizationId,
+  //       startDate: '2024-01-01',
+  //       endDate: '2025-12-31',
+  //       isActive: true,
+  //     },
+  //     useCases: [
+  //       {
+  //         id: 'uc-001',
+  //         name: 'Personal Protective Equipment (PPE) Detection',
+  //         description: 'Detect missing or improper use of safety equipment like helmets, vests, gloves, and goggles',
+  //         category: 'Safety & Compliance',
+  //         icon: 'safety',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-002',
+  //         name: 'Object Detection in Walking Bays',
+  //         description: 'Monitor pedestrian walkways for unauthorized objects, vehicles, or obstructions',
+  //         category: 'Safety & Compliance',
+  //         icon: 'visibility',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-003',
+  //         name: 'Fire, Smoke, Oil and Gas Leak Detection',
+  //         description: 'Real-time detection of fire, smoke, and hazardous leaks',
+  //         category: 'Safety & Compliance',
+  //         icon: 'warning',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-004',
+  //         name: 'Fall Detection (Person falling on the floor)',
+  //         description: 'Detect when a person has fallen and alert emergency responders',
+  //         category: 'Safety & Compliance',
+  //         icon: 'emergency',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-005',
+  //         name: 'Intrusion Detection at Premises Perimeter',
+  //         description: 'Monitor perimeter for unauthorized access or intrusions',
+  //         category: 'Surveillance',
+  //         icon: 'security',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-006',
+  //         name: 'Unauthorized Access in Restricted Areas',
+  //         description: 'Detect and alert when someone enters restricted zones',
+  //         category: 'Surveillance',
+  //         icon: 'block',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-007',
+  //         name: 'People Presence during Shutdown Hours',
+  //         description: 'Monitor for unauthorized personnel during non-operational hours',
+  //         category: 'Surveillance',
+  //         icon: 'schedule',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //       {
+  //         id: 'uc-008',
+  //         name: 'People Count in Factory Premises',
+  //         description: 'Real-time counting of people in different zones',
+  //         category: 'Operational Insights',
+  //         icon: 'people',
+  //         enabled: true,
+  //         assignedCameraIds: [],
+  //       },
+  //     ],
+  //   };
+  // }
+
+  
 
   /**
    * Mock: Get cameras for an organization

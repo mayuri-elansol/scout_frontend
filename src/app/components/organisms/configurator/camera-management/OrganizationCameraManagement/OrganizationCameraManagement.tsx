@@ -28,14 +28,14 @@ import {
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
 
-interface CameraData {
+export interface CameraData {
   id: string;
   ipAddress: string;
   username: string;
   password: string;
   port: string;
   make: string;
-  position: string;
+  position: string;   // <-- FIXED (optional)
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: {
@@ -46,6 +46,7 @@ interface CameraData {
     viewName?: string;
   };
 }
+
 
 interface OrganizationCameraManagementProps {
   initialCameras?: CameraData[];
@@ -79,7 +80,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   // -----------------------
 
   const handleCameraAdd = (
-    cameraData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>
+    cameraData: Omit<CameraData, 'id' | 'rtspStream' | 'status' | 'position'>
   ) => {
     const newCamera: CameraData = {
       ...cameraData,
@@ -99,17 +100,17 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   };
 
   const handleCameraBatchAdd = (
-  camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
+  camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status' | 'position'>[]
 ) => {
-  const newCameras = camerasData.map((cameraData, index) => ({
+  const newCameras: CameraData[] = camerasData.map((cameraData, index) => ({
     ...cameraData,
     id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
     rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
     position: cameraData.ipAddress,
-    status: Math.random() > 0.7 ? 'failed' : 'connected',
+    status: Math.random() > 0.7 ? 'failed' : 'connected', // Ensured correct union type
   }));
 
-  setCameras((prev: CameraData[]) => [...prev, ...newCameras]); // ✅ FIXED
+  setCameras((prev) => [...prev, ...newCameras]);
 
   setSnackbar({
     open: true,
@@ -117,6 +118,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 };
+
 
 
   const handleCameraRemove = (cameraId: string) => {
@@ -134,7 +136,17 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     setSelectedCameraForConfig(cameraId);
   };
 
-  const handleAIConfigSave = (cameraId: string, aiConfig: any) => {
+  interface AICameraConfig {
+  useCases: string[];
+  roiData: Record<string, { configured: boolean }>;
+  fineTuning: Record<string, { tuned: boolean }>;
+  enabled: boolean;
+  viewName?: string;
+  aiConfig?: AICameraConfig;
+}
+
+
+  const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
     setCameras((prev) =>
       prev.map((camera) =>
         camera.id === cameraId ? { ...camera, aiConfig } : camera
