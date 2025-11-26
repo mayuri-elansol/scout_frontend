@@ -4,11 +4,17 @@ import { RootState } from "../../../store/store";
 import Alert from "@mui/material/Alert";
 import { hideToast } from "./toasterSlice";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
+import { useEffect, useState } from "react";
+
 export default function Toaster() {
   const dispatch = useDispatch();
   const toasts = useSelector((state: RootState) => state.toasterGlobal.toasts);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Ensure component only renders on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // auto-hide each toast after 4s
   useEffect(() => {
@@ -37,22 +43,26 @@ export default function Toaster() {
     }
   };
 
+  // Don't render on server
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <Box
       sx={{
         position: "fixed",
         top: "65px",
         right: "10px",
-
         display: "flex",
         flexDirection: "column",
         gap: 1,
         zIndex: 1400,
       }}
     >
-      {toasts.map((toast, index) => (
+      {toasts.map((toast) => (
         <Alert
-          key={uuidv4() + index}
+          key={toast.id}
           severity={toast.severity}
           variant="filled"
           sx={{

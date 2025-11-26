@@ -3,6 +3,7 @@
   "surveillance-monitoring-dashboard": true,
   "vehicle-operational-insights-dashboard": true,
   "workforce-monitoring-dasboard": true,
+  "operational-insights-dashboard": true,
   "alerts": true,
   "reports": true,
   "settings": true,
@@ -32,5 +33,10 @@
   "monitoring-canteen-usage": true,
   "employee-idle-time": true,
   "employee-idle-with-face-recognition": false,
-  "camera-tamparing-dasboard": true
+  "camera-tamparing-dasboard": true,
+  "role-management": true,
+  "user-management": true,
+  "camera-management": true,
+  "use-case-manager": true,
+  "zone-location-mapping": true
 }
