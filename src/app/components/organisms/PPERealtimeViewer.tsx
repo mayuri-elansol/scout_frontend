@@ -38,22 +38,22 @@
 
 //   return (
 //     <div style={{ position: "relative", width: "640px", height: "360px" }}>
-//       {/* <video
+//       <video
 //         ref={videoRef}
-//         //  src="/sample-video.mp4"
-//         src="http://192.168.0.37:8889/cam003"
+//         //   src="/sample-video.mp4"
+//         src="http://192.168.0.37:8088/admin/streaming/list"
 //         width="640"
 //         height="360"
 //         autoPlay
 //         loop
 //         muted
-//       /> */}
-//       <iframe
+//       />
+//       {/* <iframe
 //         src="http://192.168.0.37:8889/cam003"
 //         width={640}
 //         height={360}
 //         style={{ border: 0 }}
-//       />
+//       /> */}
 
 //       <canvas
 //         ref={canvasRef}
@@ -92,7 +92,10 @@ import RoiOverlay from "./RoiOverlay";
 export default function PPERealtimeViewer() {
   const [timestamp, setTimestamp] = useState(0);
 
-  const stableUrl = useMemo(() => "http://192.168.0.37:8889/cam003", []);
+  const stableUrl = useMemo(
+    () => "http://192.168.0.37:8088/admin/streaming/list",
+    []
+  );
   const stableOnFrame = useCallback((frame: { timestamp: number }) => {
     setTimestamp(frame.timestamp);
   }, []);
@@ -115,6 +118,32 @@ export default function PPERealtimeViewer() {
 //   return (
 //     <div>
 //       <video src="http://192.168.0.37:8889/cam003" width={640} height={360} />
+//       <RoiOverlay currentTimestamp={timestamp} />
+//     </div>
+//   );
+// }
+
+//============================================================================
+
+// "use client";
+// import React, { useState, useCallback } from "react";
+// import JanusPlayer from "./WebRTCPlayer";
+// import RoiOverlay from "./RoiOverlay";
+
+// export default function PPERealtimeViewer() {
+//   const [timestamp, setTimestamp] = useState(0);
+
+//   const handleFrame = useCallback((frame: { timestamp: number }) => {
+//     setTimestamp(frame.timestamp);
+//   }, []);
+
+//   return (
+//     <div style={{ position: "relative", width: 640, height: 360 }}>
+//       <JanusPlayer
+//         serverUrl="http://192.168.0.37:8088/janus"
+//         streamId={1} // CHANGE THIS BASED ON /admin/streaming/list
+//         onFrame={handleFrame}
+//       />
 //       <RoiOverlay currentTimestamp={timestamp} />
 //     </div>
 //   );

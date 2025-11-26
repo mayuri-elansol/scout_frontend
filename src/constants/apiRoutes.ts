@@ -46,13 +46,14 @@ export const apiRoutes = {
   },
 
   dashboard: {},
+
   ppeKitDetection: {
     root: "ppeKitDetection",
     getPpeKitDetectionAnalyticsKpi: "get-ppe-kit-detection-analytics-kpi",
-    getPpeKitDetectionAnalyticsRecentVoliations:
-      "get-ppe-kit-detection-analytics-recent-voliations",
-    getPpeKitDetectionAnalyticsCameraStatusByZone:
-      "get-ppe-kit-detection-analytics-camera-status-by-zone",
+    getPpeKitDetectionAnalyticsRecentViolations:
+      "get-ppe-kit-detection-analytics-recent-violations",
+    getPpeKitDetectionAnalyticsZoneViolations:
+      "get-ppe-kit-detection-analytics-camera-status-by-zone-violations",
     getPpeKitDetectionAnalyticsDetailedReport:
       "get-ppe-kit-detection-analytics-details-report",
     getPpeKitDetectionAnalyticsDownloadDetailedReport:

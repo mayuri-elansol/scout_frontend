@@ -11,7 +11,43 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["PPEKpi"],
     }),
+
+    getPPEKitDetectionZoneViolations: builder.query({
+      query: (body: {
+        tenantId: string;
+        startDate?: string;
+        endDate?: string;
+      }) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsZoneViolations}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["PpeZoneViolations"],
+    }),
+
+    getPpeKitDetectionDetailedReport: builder.query({
+      query: (body) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDetailedReport}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["PpeDetailedReport"],
+    }),
+
+    getPpeKitDetectionRecentViolations: builder.query({
+      query: (body) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsRecentViolations}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["PpeRecentViolations"],
+    }),
   }),
 });
 
-export const { useLazyGetPPEKitDetectionKpiDataQuery } = ppeKitDetectionApi;
+export const {
+  useLazyGetPPEKitDetectionKpiDataQuery,
+  useLazyGetPPEKitDetectionZoneViolationsQuery,
+  useLazyGetPpeKitDetectionDetailedReportQuery,
+  useLazyGetPpeKitDetectionRecentViolationsQuery,
+} = ppeKitDetectionApi;

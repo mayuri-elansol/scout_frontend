@@ -91,7 +91,8 @@ export default function RecentViolations({
         </Box>
 
         {/* Violation Cards */}
-        <Box>
+
+        <Box sx={{ minHeight: 200 }}>
           {loading ? (
             <Grid container spacing={2}>
               {Array.from(new Array(4)).map((_, index) => (
@@ -107,6 +108,23 @@ export default function RecentViolations({
                 </Grid>
               ))}
             </Grid>
+          ) : violations.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                padding: 4,
+                textAlign: "center",
+                color: "#808080",
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 500 }}>
+                🚫 No Recent Violations Found
+              </Typography>
+            </Box>
           ) : (
             <Grid container spacing={2}>
               {violations.map((violation, index) => (

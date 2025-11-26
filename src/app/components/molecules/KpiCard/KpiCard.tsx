@@ -150,7 +150,7 @@ const KpiCardComponent: React.FC<KpiCardProps> = ({
         transition: "all 0.3s ease",
         height: "95%",
         width: finalWidth,
-        cursor: "pointer",
+
         "&:hover": {
           boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
           transform: "translateY(-2px)",
@@ -283,7 +283,7 @@ const KpiCard = memo(KpiCardComponent, (prevProps, nextProps) => {
 });
 
 // ✅ Set display name for debugging
-KpiCard.displayName = 'KpiCard';
+KpiCard.displayName = "KpiCard";
 
 // ✅ Export as default
 export default KpiCard;
