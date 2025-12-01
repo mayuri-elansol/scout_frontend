@@ -151,7 +151,13 @@ export default function RecentViolations({
           handleClose={handleClose}
           details={selectedViolation}
           imageKey={imageKey}
-          onDownload={(url) => console.log("Downloading image from:", url)}
+          onDownload={(url) =>
+            console.log(
+              "Downloading image from recent voilations com:",
+              url,
+              selectedViolation
+            )
+          }
         />
       )}
     </Card>

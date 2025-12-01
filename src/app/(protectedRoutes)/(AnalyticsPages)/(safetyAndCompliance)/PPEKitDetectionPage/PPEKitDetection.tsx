@@ -963,7 +963,7 @@ const PPEDetection: React.FC = () => {
           ...prev,
         ];
 
-        return updated.slice(0, 20); // keep only last 20
+        return updated.slice(0, 20);
       });
 
       //==========
@@ -972,8 +972,6 @@ const PPEDetection: React.FC = () => {
         const entries = Array.from(processedEvents.current);
         processedEvents.current = new Set(entries.slice(-100));
       }
-
-      // ✅ Schedule background sync
       scheduleRefetch();
     },
     [scheduleRefetch]
@@ -1022,7 +1020,7 @@ const PPEDetection: React.FC = () => {
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  // ✅ Memoize KPI data to prevent unnecessary re-renders
+  //  Memoize KPI data to prevent unnecessary re-renders
   const ppeKpiData = useMemo(() => {
     return (
       displayKpi?.map((item: KpiItem) => {
@@ -1272,67 +1270,13 @@ const PPEDetection: React.FC = () => {
       <ReportTable
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-        // columns={[
-        //   { id: "violation", label: "Violation" },
-        //   { id: "time", label: "Time" },
-        //   { id: "zone", label: "Zone" },
-        //   { id: "cameraId", label: "Cameras" },
-        //   { id: "alarmTriggered", label: "Alarm Triggered" },
-        // ]}
-        // data={detailedReport || []}
         data={tableData}
-        // filters={[
-        //   {
-        //     id: "violation",
-        //     label: "Violation",
-        //     type: "select",
-        //     options: [
-        //       "Hard hat missing",
-        //       "Safety vest not worn",
-        //       "Safety glasses missing",
-        //     ],
-        //   },
-        //   {
-        //     id: "zone",
-        //     label: "Zone",
-        //     type: "select",
-        //     // options: Array.from(
-        //     //   new Set(
-        //     //     (detailedReport || []).map((v: { zone?: string }) => v.zone)
-        //     //   )
-        //     // ),
-        //     options: detailedReport?.zones || [],
-        //   },
-        //   {
-        //     id: "cameraId",
-        //     label: "Cameras",
-        //     type: "select",
-
-        //     // options: Array.from(
-        //     //   new Set(
-        //     //     (detailedReport || []).map(
-        //     //       (v: { cameraId?: string }) => v.cameraId
-        //     //     )
-        //     //   )
-        //     // ),
-        //     options: detailedReport?.cameras || [],
-        //   },
-        //   {
-        //     id: "alarmTriggered",
-        //     label: "Alarm Triggered",
-        //     type: "select",
-        //     options: ["True", "False"],
-        //   },
-        //   { id: "startDate", label: "Start Date", type: "date" },
-        //   { id: "endDate", label: "End Date", type: "date" },
-        // ]}
         columns={tableColumns}
         filters={tableFilters}
         onSubmit={memoizedHandleSubmitFilter}
         onReset={memoizedHandleReset}
         onExport={memoizedHandleExport}
         onDownload={memoizedHandleDownloadSingle}
-        // onView={handleViewSingle}
         onView={(row) => memoizedHandleViewSingle(row as PPEViolation)}
         downloadFileName="ppe-violations-report"
         loading={detailedReportLoading}
@@ -1343,7 +1287,9 @@ const PPEDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        onDownload={(url) => console.log("Download:", url)}
+        onDownload={(url) =>
+          console.log("Download single popup ppe page:", url, viewPopupData)
+        }
       />
     </Box>
   );

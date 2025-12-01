@@ -38,22 +38,22 @@
 
 //   return (
 //     <div style={{ position: "relative", width: "640px", height: "360px" }}>
-//       <video
+//       {/* <video
 //         ref={videoRef}
-//         //   src="/sample-video.mp4"
-//         src="http://192.168.0.37:8088/admin/streaming/list"
+//         src="/sample-video.mp4"
+//         // src="http://192.168.0.37:8088/admin/streaming/list"
 //         width="640"
 //         height="360"
 //         autoPlay
 //         loop
 //         muted
-//       />
-//       {/* <iframe
+//       /> */}
+//       <iframe
 //         src="http://192.168.0.37:8889/cam003"
 //         width={640}
 //         height={360}
 //         style={{ border: 0 }}
-//       /> */}
+//       />
 
 //       <canvas
 //         ref={canvasRef}
@@ -65,48 +65,48 @@
 //   );
 // }
 
-// "use client";
-// import React, { useState } from "react";
-// import WebRTCPlayer, { WebRTCFrame } from "./WebRTCPlayer";
-// import RoiOverlay from "./RoiOverlay";
-
-// export default function PPERealtimeViewer() {
-//   const [timestamp, setTimestamp] = useState<number>(0);
-
-//   return (
-//     <div style={{ position: "relative", width: 640, height: 360 }}>
-//       <WebRTCPlayer
-//         url="http://192.168.0.37:8889/cam003"
-//         onFrame={(frame: WebRTCFrame) => setTimestamp(frame.timestamp)}
-//       />
-//       <RoiOverlay currentTimestamp={timestamp} />
-//     </div>
-//   );
-// }
-
 "use client";
-import React, { useMemo, useCallback, useState } from "react";
-import WebRTCPlayer from "./WebRTCPlayer";
+import React, { useState } from "react";
+import WebRTCPlayer, { WebRTCFrame } from "./WebRTCPlayer";
 import RoiOverlay from "./RoiOverlay";
 
 export default function PPERealtimeViewer() {
-  const [timestamp, setTimestamp] = useState(0);
-
-  const stableUrl = useMemo(
-    () => "http://192.168.0.37:8088/admin/streaming/list",
-    []
-  );
-  const stableOnFrame = useCallback((frame: { timestamp: number }) => {
-    setTimestamp(frame.timestamp);
-  }, []);
+  const [timestamp, setTimestamp] = useState<number>(0);
 
   return (
     <div style={{ position: "relative", width: 640, height: 360 }}>
-      <WebRTCPlayer url={stableUrl} onFrame={stableOnFrame} />
+      <WebRTCPlayer
+        url="http://192.168.0.37:8889/cam003"
+        onFrame={(frame: WebRTCFrame) => setTimestamp(frame.timestamp)}
+      />
       <RoiOverlay currentTimestamp={timestamp} />
     </div>
   );
 }
+
+// "use client";
+// import React, { useMemo, useCallback, useState } from "react";
+// import WebRTCPlayer from "./WebRTCPlayer";
+// import RoiOverlay from "./RoiOverlay";
+
+// export default function PPERealtimeViewer() {
+//   const [timestamp, setTimestamp] = useState(0);
+
+//   const stableUrl = useMemo(
+//     () => "http://192.168.0.37:8088/admin/streaming/list",
+//     []
+//   );
+//   const stableOnFrame = useCallback((frame: { timestamp: number }) => {
+//     setTimestamp(frame.timestamp);
+//   }, []);
+
+//   return (
+//     <div style={{ position: "relative", width: 640, height: 360 }}>
+//       <WebRTCPlayer url={stableUrl} onFrame={stableOnFrame} />
+//       <RoiOverlay currentTimestamp={timestamp} />
+//     </div>
+//   );
+// }
 
 // "use client";
 // import React, { useState, useMemo } from "react";
