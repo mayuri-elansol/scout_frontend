@@ -38,7 +38,7 @@
 
 //   return (
 //     <div style={{ position: "relative", width: "640px", height: "360px" }}>
-//       {/* <video
+//       <video
 //         ref={videoRef}
 //         src="/sample-video.mp4"
 //         // src="http://192.168.0.37:8088/admin/streaming/list"
@@ -47,13 +47,13 @@
 //         autoPlay
 //         loop
 //         muted
-//       /> */}
-//       <iframe
-//         src="http://192.168.0.37:8889/cam003"
+//       />
+//       {/* <iframe
+//         src="/sample-video.mp4"
 //         width={640}
 //         height={360}
 //         style={{ border: 0 }}
-//       />
+//       /> */}
 
 //       <canvas
 //         ref={canvasRef}

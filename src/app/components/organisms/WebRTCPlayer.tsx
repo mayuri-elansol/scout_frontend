@@ -74,10 +74,19 @@ export default function WebRTCPlayer({ url, onFrame }: WebRTCPlayerProps) {
   }, [url, onFrame]);
 
   return (
-    <video ref={videoRef} autoPlay muted playsInline width={640} height={360} />
+    <video
+      ref={videoRef}
+      autoPlay
+      muted
+      playsInline
+      width={640}
+      height={360}
+      src="/sample-video.mp4"
+    />
     // <iframe
-    //   //   ref={videoRef}
-    //   src="http://192.168.0.37:8889/cam003"
+    //   //ref={videoRef}
+    //   src="/sample-video.mp4"
+    //   //  src="http://192.168.0.37:8889/cam003"
     //   width={640}
     //   height={360}
     //   style={{ border: 0 }}

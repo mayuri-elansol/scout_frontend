@@ -21,6 +21,7 @@ interface RecentViolationsProps {
 
   readonly loading?: boolean;
   readonly imageKey?: string;
+  onDownload?: (url: string, violation: Violation) => void;
 }
 
 export default function RecentViolations({
@@ -29,6 +30,7 @@ export default function RecentViolations({
   violations,
   loading = false,
   imageKey = "imageUrl",
+  onDownload,
 }: RecentViolationsProps) {
   const [selectedViolation, setSelectedViolation] = useState<Violation | null>(
     null
@@ -158,6 +160,13 @@ export default function RecentViolations({
               selectedViolation
             )
           }
+          // onDownload={(url) => {
+          //   console.log("Download clicked from RecentViolations:", url);
+
+          //   if (onDownload && selectedViolation) {
+          //     onDownload(url, selectedViolation);
+          //   }
+          // }}
         />
       )}
     </Card>

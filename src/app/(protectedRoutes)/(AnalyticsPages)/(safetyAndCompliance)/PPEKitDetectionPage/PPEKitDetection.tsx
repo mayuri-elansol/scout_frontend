@@ -480,6 +480,11 @@ const PPEDetection: React.FC = () => {
     (row: PPEViolation) => handleViewSingle(row),
     [handleViewSingle]
   );
+  const handleDownloadViolation = (url: string, violation: any) => {
+    console.log("Download from PPEDetection page:", url, violation);
+
+    // 🔥 HERE YOU CALL YOUR API
+  };
 
   return (
     <Box>
@@ -549,6 +554,7 @@ const PPEDetection: React.FC = () => {
               label="Recent Violations"
               violations={recentViolationsLive}
               loading={recentLoading}
+              onDownload={handleDownloadViolation}
             />
           </Grid>
 

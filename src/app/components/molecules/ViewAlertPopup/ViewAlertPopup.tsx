@@ -110,13 +110,13 @@ function ViewAlertPopup<
           {/* Download Button */}
           {imageUrl && (
             <IconButton
-              onClick={() => {
-                if (onDownload) {
-                  onDownload(imageUrl);
-                } else {
-                  console.log("Download clicked", imageUrl);
-                }
-              }}
+              // onClick={() => {
+              //   if (onDownload) {
+              //     onDownload(imageUrl);
+              //   } else {
+              //     console.log("Download clicked", imageUrl);
+              //   }
+              // }}
               sx={{ color: "#3072b0" }}
             >
               <DownloadForOfflineIcon fontSize="large" />
