@@ -1,7 +1,9 @@
-// D:\BackOffice\scout_frontend\src\app\(protectedRoutes)\(Settings)\Configurator\ZoneLocationMapping\ZoneLocationMapping.tsx
 "use client";
+import { getZones, createZone, updateZone, deleteZone, createLocation } 
+  from "@/app/services/configurator/zoneLocationService";
 
-import React, { useMemo, useState } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Container,
   Box,
@@ -71,12 +73,11 @@ const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
 
 const ZoneLocationMapping: React.FC = () => {
   // Normalize first: ensure each zone has .locations array
-  const normalized = useMemo(() => normalizeInitialZones(initialZonesFromFile), []);
+ const [zones, setZones] = useState<ZoneType[]>([]);
 
-  const [zones, setZones] = useState<typeof normalized>(normalized);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedZone, setSelectedZone] = useState<typeof zones[number] | null>(null);
-  const [zoneToDelete, setZoneToDelete] = useState<typeof zones[number] | null>(null);
+  const [zoneToDelete, setZoneToDelete] = useState<ZoneType | null>(null);
 
   // Drawer states
   const [addEditDrawerOpen, setAddEditDrawerOpen] = useState(false);
@@ -84,11 +85,11 @@ const ZoneLocationMapping: React.FC = () => {
 
   // Filter zones
   const filteredZones = zones.filter(
-    (zone) =>
-      zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      zone.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (zone.description || "").toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  (zone) =>
+    zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (zone.description || "").toLowerCase().includes(searchQuery.toLowerCase())
+);
+
 
   // Add new zone
   const handleAddZone = () => {
@@ -107,42 +108,55 @@ const ZoneLocationMapping: React.FC = () => {
     setZoneToDelete(zone);
   };
 
-  const confirmDelete = () => {
-    if (zoneToDelete) {
-      setZones((prev) => prev.filter((z) => z.id !== zoneToDelete.id));
-      setZoneToDelete(null);
-    }
-  };
+  const confirmDelete = async () => {
+  if (!zoneToDelete?.id) return;
+
+  await deleteZone(zoneToDelete.id);
+  fetchZones();
+  setZoneToDelete(null);
+};
+
+
+
+
+  const fetchZones = async () => {
+  try {
+    const { data } = await getZones();
+
+    setZones(
+      data.zones.map((z: any) => ({
+        id: z.id,
+        name: z.zoneName,
+        description: z.description,
+        locations: z.locations || [],
+        cameraIds: z.cameras || []
+      }))
+    );
+  } catch (err) {
+    console.error("Failed to fetch zones", err);
+  }
+};
+
+useEffect(() => {
+  fetchZones();
+}, []);
+
 
   // Save zone (add or edit)
-  const handleSaveZone = (
-  zoneData:
-    | Omit<ZoneType, "id" | "createdAt" | "updatedAt">
-    | ZoneType
-) => {
-  if ("id" in zoneData) {
-    // editing existing zone
-    setZones((prev) =>
-      prev.map((z) =>
-        z.id === zoneData.id
-          ? { ...zoneData, updatedAt: new Date().toISOString() }
-          : z
-      )
-    );
+  const handleSaveZone = async (zoneData: any) => {
+  if (zoneData.id) {
+    await updateZone(zoneData.id, {
+      zoneName: zoneData.name,
+      description: zoneData.description
+    });
   } else {
-    const maxId = zones.length > 0 ? Math.max(...zones.map((z) => z.id)) : 100;
-
-    const newZone: ZoneType = {
-      ...zoneData,
-      id: maxId + 1,
-      locations: zoneData.locations ?? [],
-      cameraIds: zoneData.cameraIds ?? [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    setZones((prev) => [newZone, ...prev]);
+    await createZone({
+      zoneName: zoneData.name,
+      description: zoneData.description
+    });
   }
+
+  fetchZones();
 };
 
 
@@ -153,19 +167,19 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Save locations: adds created locations to zone.locations array
-  const handleSaveLocations = (zoneId: number, locations: LocationItem[]) => {
-    setZones((prev) =>
-      prev.map((z) =>
-        z.id === zoneId
-          ? {
-              ...z,
-              locations: [...(z.locations ?? []), ...locations],
-              updatedAt: new Date().toISOString(),
-            }
-          : z
-      )
-    );
-  };
+  const handleSaveLocations = async (zoneId: string, locations: LocationItem[]) => {
+  for (const loc of locations) {
+    await createLocation({
+      zoneId,
+      locationName: loc.name,
+      description: loc.description || ""
+    });
+  }
+  fetchZones();
+};
+
+
+
 
   // Calculate stats
   const totalZones = zones.length;

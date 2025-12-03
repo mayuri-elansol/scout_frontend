@@ -18,21 +18,29 @@ import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/i
 import { Zone } from "@/app/data/mockZones";
 
 export interface LocationItem {
-  id: number;
+  id: string;
   name: string;
   description?: string;
 }
+
+// interface AddLocationDrawerProps {
+//   open: boolean;
+//   onClose: () => void;
+//   zone: Zone | null;
+//   /**
+//    * Accepts (zoneId, locationsArray) where locationsArray is array of LocationItem
+//    * Parent should merge these locations into the zone (zone.locations = [...zone.locations, ...locationsArray])
+//    */
+//   onSave: (zoneId: number, locations: LocationItem[]) => void;
+// }
 
 interface AddLocationDrawerProps {
   open: boolean;
   onClose: () => void;
   zone: Zone | null;
-  /**
-   * Accepts (zoneId, locationsArray) where locationsArray is array of LocationItem
-   * Parent should merge these locations into the zone (zone.locations = [...zone.locations, ...locationsArray])
-   */
-  onSave: (zoneId: number, locations: LocationItem[]) => void;
+  onSave: (zoneId: string, locations: LocationItem[]) => void;
 }
+
 
 export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
   open,
@@ -58,20 +66,28 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
+    // const newLoc: LocationItem = {
+    //   id: Date.now() + Math.floor(Math.random() * 1000), // simple unique id
+    //   name: trimmedName,
+    //   description: description.trim() || undefined,
+    // };
+
     const newLoc: LocationItem = {
-      id: Date.now() + Math.floor(Math.random() * 1000), // simple unique id
+      id: crypto.randomUUID(),     // safe unique ID
       name: trimmedName,
       description: description.trim() || undefined,
     };
+
 
     setLocalLocations((prev) => [...prev, newLoc]);
     setName("");
     setDescription("");
   };
 
-  const handleRemoveLocalLocation = (id: number) => {
-    setLocalLocations((prev) => prev.filter((l) => l.id !== id));
-  };
+  const handleRemoveLocalLocation = (id: string) => {
+  setLocalLocations((prev) => prev.filter((l) => l.id !== id));
+};
+
 
   const handleSave = () => {
     if (!zone) return;
