@@ -25,8 +25,11 @@ import {
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
 
+import { getCameras, addCamera, deleteCamera } from "@/app/services/configurator/cameraService";
+
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
+
 
 export interface CameraData {
   id: string;
@@ -59,8 +62,28 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   forceAddCamera = false,
   forceConfigureCamera,
 }) => {
-  // ⭐ FIXED: Missing states — now included and bound to props
-  const [cameras, setCameras] = useState<CameraData[]>(initialCameras);
+
+const [cameras, setCameras] = useState<CameraData[]>(initialCameras || []);
+const [zones, setZones] = useState<{ id: string; name: string }[]>([]);
+const [locations, setLocations] = useState<{ id: string; name: string; zoneId: string }[]>([]);
+
+
+// Temporary mock data to test UI
+React.useEffect(() => {
+  setZones([
+    { id: "zone1", name: "Zone 1" },
+    { id: "zone2", name: "Zone 2" },
+  ]);
+
+  setLocations([
+    { id: "loc1", name: "Location 1", zoneId: "zone1" },
+    { id: "loc2", name: "Location 2", zoneId: "zone1" },
+    { id: "loc3", name: "Location 3", zoneId: "zone2" }
+  ]);
+}, []);
+
+  
+
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera || null
   );
@@ -79,25 +102,194 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   // CAMERA EVENT HANDLERS
   // -----------------------
 
-  const handleCameraAdd = (
-    cameraData: Omit<CameraData, 'id' | 'rtspStream' | 'status' | 'position'>
-  ) => {
-    const newCamera: CameraData = {
-      ...cameraData,
-      id: `camera-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
-      status: Math.random() > 0.7 ? 'failed' : 'connected',
-      position: cameraData.ipAddress, // If no UI field, fallback
-    };
+  // const handleCameraAdd = (
+  //   cameraData: Omit<CameraData, 'id' | 'rtspStream' | 'status' | 'position'>
+  // ) => {
+  //   const newCamera: CameraData = {
+  //     ...cameraData,
+  //     id: `camera-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+  //     rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
+  //     status: Math.random() > 0.7 ? 'failed' : 'connected',
+  //     position: cameraData.ipAddress, // If no UI field, fallback
+  //   };
 
-    setCameras((prev) => [...prev, newCamera]);
+  //   setCameras((prev) => [...prev, newCamera]);
 
-    setSnackbar({
-      open: true,
-      message: `Camera added successfully!`,
-      severity: 'success',
-    });
-  };
+  //   setSnackbar({
+  //     open: true,
+  //     message: `Camera added successfully!`,
+  //     severity: 'success',
+  //   });
+  // };
+
+
+
+
+//   const handleCameraAdd = async (cameraData: any) => {
+//   try {
+//     const res = await addCamera(cameraData);
+
+//     setCameras((prev) => [...prev, res.data.data]);
+
+//     setSnackbar({
+//       open: true,
+//       message: "Camera added successfully!",
+//       severity: "success",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     setSnackbar({
+//       open: true,
+//       message: "Failed to add camera!",
+//       severity: "error",
+//     });
+//   }
+// };
+
+
+// const fetchCameras = async () => {
+//   try {
+//     const res = await getCameras();
+//     setCameras(res.data.data);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+
+const fetchCameras = async () => {
+  try {
+    const res = await getCameras();
+    const mapped = res.data.map((cam: any) => ({
+      id: cam.id,
+      ipAddress: cam.cameraIp,
+      cameraname: cam.cameraName,
+      username: cam.userName,
+      password: cam.password,
+      port: cam.RTSPport,
+      make: cam.connectionType,
+      position: cam.cameraName,
+      rtspStream: cam.rtspStream ?? "",
+      status: "connected",
+    }));
+
+    setCameras(mapped);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+React.useEffect(() => {
+  fetchCameras();
+}, []);
+
+
+// const handleCameraAdd = async (cameraData: any) => {
+//   try {
+//     const response = await addCamera(cameraData);
+
+//     setCameras((prev) => [
+//       ...prev,
+//       {
+//         id: crypto.randomUUID(),
+//         ipAddress: cameraData.cameraIp,
+//         cameraname: cameraData.cameraName,
+//         username: cameraData.userName,
+//         password: cameraData.password,
+//         port: cameraData.RTSPport,
+//         make: cameraData.connectionType,
+//         position: cameraData.cameraName,
+//         rtspStream: `rtsp://${cameraData.userName}:${cameraData.password}@${cameraData.cameraIp}:${cameraData.RTSPport}/Streaming/Channels/101`,
+//         status: "connected",
+//       },
+//     ]);
+
+//     setSnackbar({
+//       open: true,
+//       message: "Camera added successfully!",
+//       severity: "success",
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     setSnackbar({
+//       open: true,
+//       message: "Failed to add camera!",
+//       severity: "error",
+//     });
+//   }
+ 
+// };
+
+
+const handleCameraAdd = async (cameraData: any) => {
+  // try {
+  //   // await addCamera(cameraData);
+  //   await addCamera({
+  //     cameraName: cameraData.cameraname,
+  //     cameraIp: cameraData.ipAddress,
+  //     userName: cameraData.username,
+  //     password: cameraData.password,
+  //     RTSPport: cameraData.port,
+  //     cameraZone: cameraData.zoneId,
+  //     channel: cameraData.locationId,
+  //     connectionType: "DIRECT_TO_CAMERA",
+  //   });
+
+  //   await fetchCameras();  // refresh UI
+
+
+  //   setSnackbar({
+  //     open: true,
+  //     message: "Camera added successfully!",
+  //     severity: "success",
+  //   });
+  // } catch (err: any) {
+  //   console.error("Add Camera Error:", err);
+
+  //   if (err?.response?.data?.message?.includes("already exists")) {
+  //     setSnackbar({
+  //       open: true,
+  //       message: "Camera name already exists. Choose another name.",
+  //       severity: "error",
+  //     });
+  //   } else {
+  //     setSnackbar({
+  //       open: true,
+  //       message: "Failed to add camera!",
+  //       severity: "error",
+  //     });
+  //   }
+  // }
+
+  try {
+  await addCamera({
+    cameraName: cameraData.cameraname,
+    cameraIp: cameraData.ipAddress,
+    userName: cameraData.username,
+    password: cameraData.password,
+    RTSPport: cameraData.port,
+    cameraZone: cameraData.zoneId,
+    channel: cameraData.locationId,
+    connectionType: "DIRECT_TO_CAMERA",
+  });
+
+  await fetchCameras(); // important
+  setSnackbar({ open: true, message: "Camera added successfully!", severity: "success" });
+
+}  catch (err: any) {
+  if (err.response?.status === 409) {
+    // setSnackbar({ open: true, message: "Camera name already exists!", severity: "error" });
+    await fetchCameras();  // refresh anyway because DB insert actually succeeded
+  } else {
+    setSnackbar({ open: true, message: "Failed to add camera!", severity: "error" });
+  }
+}
+
+
+};
+
+
 
   const handleCameraBatchAdd = (
   camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status' | 'position'>[]
@@ -110,7 +302,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     status: Math.random() > 0.7 ? 'failed' : 'connected', // Ensured correct union type
   }));
 
-  setCameras((prev) => [...prev, ...newCameras]);
+  // setCameras((prev) => [...prev, ...newCameras]);
 
   setSnackbar({
     open: true,
@@ -121,16 +313,37 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
 
 
-  const handleCameraRemove = (cameraId: string) => {
-    const camera = cameras.find((c) => c.id === cameraId);
+  // const handleCameraRemove = (cameraId: string) => {
+  //   const camera = cameras.find((c) => c.id === cameraId);
+  //   setCameras((prev) => prev.filter((c) => c.id !== cameraId));
+
+  //   setSnackbar({
+  //     open: true,
+  //     message: `Camera "${camera?.position}" removed successfully!`,
+  //     severity: 'warning',
+  //   });
+  // };
+
+  const handleCameraRemove = async (cameraId: string) => {
+  try {
+    await deleteCamera(cameraId);
+
     setCameras((prev) => prev.filter((c) => c.id !== cameraId));
 
     setSnackbar({
       open: true,
-      message: `Camera "${camera?.position}" removed successfully!`,
-      severity: 'warning',
+      message: "Camera removed successfully!",
+      severity: "warning",
     });
-  };
+  } catch (error) {
+    setSnackbar({
+      open: true,
+      message: "Failed to delete camera!",
+      severity: "error",
+    });
+  }
+};
+
 
   const handleCameraConfigureClick = (cameraId: string) => {
     setSelectedCameraForConfig(cameraId);
@@ -197,6 +410,8 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
         <CameraOnboardingStep
           cameras={cameras}
+          zones={zones}          
+          locations={locations}
           onCameraAdd={handleCameraAdd}
           onCameraBatchAdd={handleCameraBatchAdd}
           onCameraRemove={handleCameraRemove}
@@ -217,19 +432,20 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6" fontWeight={600}>
-              Camera Status
+              All Cameras
             </Typography>
             <Button
               variant="contained"
-              startIcon={<AddIcon />}
+              // startIcon={<AddIcon />}
               onClick={() => setAddingCamera(true)}
             >
-              Add Camera
+              Add / Delete Camera
             </Button>
           </Box>
         </Box>
-
-        {cameras.length === 0 ? (
+        
+        
+        {!cameras || cameras.length === 0 ? (
           <Box
             sx={{
               flexGrow: 1,

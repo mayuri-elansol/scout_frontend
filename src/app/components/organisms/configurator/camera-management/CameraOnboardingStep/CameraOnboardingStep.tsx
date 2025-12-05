@@ -25,13 +25,18 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 
+import { addCamera } from "@/app/services/configurator/cameraService";  
+
 interface CameraData {
   id: string;
   ipAddress: string;
+  cameraname: string;
   username: string;
   password: string;
   port: string;
-  make: string;
+  zoneId: string;
+  locationId: string;
+
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: {
@@ -45,6 +50,8 @@ interface CameraData {
 
 interface CameraOnboardingStepProps {
   cameras: CameraData[];
+  zones: { id: string; name: string }[];
+  locations: { id: string; name: string; zoneId: string }[];
   // onCameraAdd: (camera: Omit<CameraData, 'id' | 'rtspStream' | 'status'>) => void;
   onCameraAdd: (camera: Omit<CameraData, "status" | "id" | "rtspStream" | "position">) => void;
 
@@ -58,21 +65,26 @@ interface CameraOnboardingStepProps {
 interface CameraFormData {
   ipAddress: string;
   username: string;
+  cameraname: string;
   password: string;
   port: string;
-  make: string;
+  // zoneId: string;
+  // locationId: string;
+
 }
 
 interface FormErrors {
   ipAddress?: string;
+  cameraname?: string;
   username?: string;
   password?: string;
   port?: string;
-  make?: string;
 }
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
+  zones = [],
+  locations = [],
   onCameraAdd,
   onCameraBatchAdd,
   onCameraRemove,
@@ -83,10 +95,13 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [formData, setFormData] = useState<CameraFormData>({
     ipAddress: '',
     username: '',
+    cameraname: '',
     password: '',
     port: '554',
-    make: '',
   });
+
+  const [selectedZone, setSelectedZone] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -140,11 +155,18 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   };
 
   const isDuplicateIP = (ip: string): boolean => {
-    return cameras.some(camera => camera.ipAddress === ip.trim());
+    return cameras?.some(camera => camera.ipAddress === ip.trim());
   };
 
+  const isDuplicateName = (name: string): boolean => {
+  // return cameras?.some(camera => camera.cameraname.trim() === name.trim());
+  return cameras?.some(camera => camera.cameraname.trim() === name.trim()) ?? false;
+
+};
+
+
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: FormErrors = {}; 
 
     // IP Address validation
     if (!formData.ipAddress.trim()) {
@@ -170,16 +192,18 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       newErrors.password = 'Password is required';
     }
 
+    if (!formData.cameraname.trim()) {
+  newErrors.cameraname = "Camera name is required";
+} else if (isDuplicateName(formData.cameraname.trim())) {
+  newErrors.cameraname = "This camera name already exists";
+}
+
+
     if (!formData.port.trim()) {
       newErrors.port = 'Port is required';
     } else if (isNaN(Number(formData.port)) || Number(formData.port) < 1 || Number(formData.port) > 65535) {
       newErrors.port = 'Port must be a number between 1 and 65535';
     }
-
-    if (!formData.make.trim()) {
-      newErrors.make = 'Camera make is required';
-    }
-
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -196,40 +220,109 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     }
   };
 
-  const handleAddCamera = async (event: React.FormEvent) => {
-    event.preventDefault();
+  // const handleAddCamera = async (event: React.FormEvent) => {
+  //   event.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+  //   if (!validateForm()) {
+  //     return;
+  //   }
 
-    setIsAdding(true);
+  //   setIsAdding(true);
 
-    // Simulate camera connection test
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  //   // Simulate camera connection test
+  //   await new Promise(resolve => setTimeout(resolve, 1000));
 
-    onCameraAdd({
-      ipAddress: formData.ipAddress.trim(),
-      username: formData.username.trim(),
-      password: formData.password.trim(),
-      port: formData.port.trim(),
-      make: formData.make.trim(),
 
-    });
+  //   onCameraAdd({
+  //     ipAddress: formData.ipAddress.trim(),
+  //     cameraname: formData.cameraname.trim(),
+  //     username: formData.username.trim(),
+  //     password: formData.password.trim(),
+  //     port: formData.port.trim(),
+  //     zoneId: selectedZone,
+  //     locationId: selectedLocation,
+  //   });
 
-    // Reset form
-    setFormData({
-      ipAddress: '',
-      username: '',
-      password: '',
-      port: '554',
-      make: '',
 
-    });
+  //   // Reset form
+  //   setFormData({
+  //     ipAddress: '',
+  //     username: '',
+  //     cameraname: '',
+  //     password: '',
+  //     port: '554',
 
-    setIsAdding(false);
-  };
+  //   });
+  //   setSelectedZone("");
+  //   setSelectedLocation("");
 
+
+  //   setIsAdding(false);
+  // };
+
+  
+const handleAddCamera = async (event: React.FormEvent) => {
+  event.preventDefault();
+  if (!validateForm()) return;
+
+  setIsAdding(true);
+
+  try {
+//   const response = await addCamera({
+//   cameraIp: formData.ipAddress.trim(),
+//   cameraName: formData.cameraname.trim(),
+//   userName: formData.username.trim(),
+//   password: formData.password.trim(),
+//   RTSPport: formData.port.trim(),
+//   cameraZone: selectedZone,
+//   channel: selectedLocation,
+//   refreshRate: 10,
+//   connectionType: "DIRECT_TO_CAMERA",
+// });
+
+const response = await addCamera({
+  cameraIp: formData.ipAddress.trim(),
+  cameraName: formData.cameraname.trim(),
+  userName: formData.username.trim(),
+  password: formData.password.trim(),
+  RTSPport: formData.port.trim(),
+  cameraZone: selectedZone,
+  channel: selectedLocation,
+  refreshRate: 10,
+  connectionType: "DIRECT_TO_CAMERA",
+});
+
+
+// instead of passing response
+onCameraAdd({
+  ipAddress: formData.ipAddress.trim(),
+  cameraname: formData.cameraname.trim(),
+  username: formData.username.trim(),
+  password: formData.password.trim(),
+  port: formData.port.trim(),
+  zoneId: selectedZone,
+  locationId: selectedLocation,
+  // status: "pending",
+});
+
+setFormData({
+  ipAddress: "",
+  cameraname: "",
+  username: "",
+  password: "",
+  port: "554",
+});
+setSelectedZone("");
+setSelectedLocation("");
+
+
+
+  } catch (error) {
+    console.error("Add camera error:", error);
+  }
+
+  setIsAdding(false);
+};
 
 
 
@@ -311,13 +404,26 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                     <form onSubmit={handleAddCamera}>
                       <Grid container spacing={2}>
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={{ xs: 6 }}>
                           <TextField
                             label="IP Address"
                             value={formData.ipAddress}
                             onChange={handleInputChange('ipAddress')}
                             error={!!errors.ipAddress}
                             helperText={errors.ipAddress}
+                            required
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid size={{ xs: 6 }}>
+                          <TextField
+                            label="Camera name"
+                            value={formData.cameraname}
+                            onChange={handleInputChange('cameraname')}
+                            error={!!errors.cameraname}
+                            helperText={errors.cameraname}
                             required
                             fullWidth
                             size="small"
@@ -366,16 +472,46 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                         <Grid size={{ xs: 6 }}>
                           <TextField
-                            label="Make"
-                            value={formData.make}
-                            onChange={handleInputChange('make')}
-                            error={!!errors.make}
-                            helperText={errors.make}
-                            required
+                            select
+                            // label="Select Zone"
+                            value={selectedZone}
+                            onChange={(e) => {
+                              setSelectedZone(e.target.value);
+                              setSelectedLocation("");
+                            }}
                             fullWidth
                             size="small"
-                          />
+                            SelectProps={{ native: true }}
+                          >
+                            <option value="">Select Zone</option>
+                            {zones.map((zone) => (
+                              <option key={zone.id} value={zone.id}>
+                                {zone.name}
+                              </option>
+                            ))}
+                          </TextField>
                         </Grid>
+
+                        <Grid size={{ xs: 6 }}>
+                          <TextField
+                            select
+                            // label="Select Location"
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.target.value)}
+                            fullWidth
+                            size="small"
+                            SelectProps={{ native: true }}
+                            disabled={!selectedZone}
+                          >
+                            <option value="">Select Location</option>
+                            {locations.filter((loc) => loc.zoneId === selectedZone).map((loc) => (
+                              <option key={loc.id} value={loc.id}>
+                                {loc.name}
+                              </option>
+                            ))}
+                          </TextField>
+                        </Grid>
+
 
 
                         <Grid size={{ xs: 12 }}>
@@ -386,10 +522,12 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             disabled={isAdding}
                           >
                             {isAdding ? 'Adding Camera...' : 'Add Camera'}
+                            
                           </Button>
                         </Grid>
                       </Grid>
                     </form>
+                    
                   </>
                 )}
 
@@ -444,7 +582,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 12 }}>
+                      <Grid size={{ xs: 6 }}>
                         <TextField
                           label="Password"
                           required
@@ -455,6 +593,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           onChange={(e) => setNvrData({ ...nvrData, password: e.target.value })}
                         />
                       </Grid>
+
+                     
                     </Grid>
 
                     {/* Discover Cameras */}
@@ -555,10 +695,10 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
             }}>
               <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
                 <VideocamIcon color="primary" />
-                Onboarded Cameras ({cameras.length})
+                Onboarded Cameras ({cameras?.length || 0})
               </Typography>
 
-              {cameras.length === 0 ? (
+              {(!cameras || cameras.length === 0) ? (
                 <Alert severity="info" variant="outlined" sx={{ mt: 1 }}>
                   {isOptional
                     ? 'No cameras added yet. You can skip this step and add cameras later, or add cameras now using the form or CSV upload.'
@@ -606,7 +746,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             }
                             secondary={
                               <Typography variant="caption" color="text.secondary">
-                                {camera.ipAddress}:{camera.port} ({camera.make})
+                                {camera.ipAddress}:{camera.port} ({camera.cameraname})
                               </Typography>
                             }
                           />
@@ -621,7 +761,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             </IconButton>
                           </ListItemSecondaryAction>
                         </ListItem>
-                        {index < cameras.length - 1 && <Divider component="li" />}
+                        {index < cameras?.length || 0 - 1 && <Divider component="li" />}
                       </React.Fragment>
                     ))}
                   </List>
@@ -664,7 +804,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           <Button
             onClick={onNext}
             variant="contained"
-            disabled={!isOptional && cameras.length === 0}
+            // disabled={!isOptional && cameras?.length || 0 === 0}
           >
             {isOptional ? 'Continue with Cameras' : 'Next: AI Configuration'}
           </Button>
