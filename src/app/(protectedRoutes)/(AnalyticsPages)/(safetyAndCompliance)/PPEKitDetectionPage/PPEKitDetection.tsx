@@ -481,7 +481,11 @@ const PPEDetection: React.FC = () => {
     [handleViewSingle]
   );
   const handleDownloadViolation = (url: string, violation: any) => {
-    console.log("Download from PPEDetection page:", url, violation);
+    console.log(
+      "Download from PPEDetection page form handledownloadvoiltion function:",
+      url,
+      violation
+    );
 
     // 🔥 HERE YOU CALL YOUR API
   };
@@ -590,9 +594,7 @@ const PPEDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        onDownload={(url) =>
-          console.log("Download single popup ppe page:", url, viewPopupData)
-        }
+        onDownload={(url) => handleDownloadViolation(url, viewPopupData)}
       />
     </Box>
   );
