@@ -27,6 +27,7 @@ import {
 
 import { addCamera } from "@/app/services/configurator/cameraService";  
 import { detectNvrChannels } from "@/app/services/configurator/cameraService";
+import { fetchZones, fetchLocations } from "@/app/services/configurator/cameraService";
 
 interface CameraData {
   id: string;
@@ -104,6 +105,11 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [selectedZone, setSelectedZone] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
 
+  const [zoneList, setZoneList] = useState<any[]>([]);
+  const [locationList, setLocationList] = useState<any[]>([]);
+
+  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
   const [leftColumnHeight, setLeftColumnHeight] = useState<number>(0);
@@ -129,6 +135,36 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
 const [nvrCameras, setNvrCameras] = useState<any[]>([]);
 const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+
+
+useEffect(() => {
+  const loadZones = async () => {
+    try {
+      const res = await fetchZones();  
+      setZoneList(res.data);
+    } catch (err) {
+      console.error("Error loading zones", err);
+    }
+  };
+  loadZones();
+}, []);
+
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      if (!selectedZone) return;
+      try {
+        const res = await fetchLocations(selectedZone);  // backend service call
+        setLocationList(res.data);
+      } catch (err) {
+        console.error("Error loading locations", err);
+      }
+    };
+
+    loadLocations();
+  }, [selectedZone]);
+
+
 
 
   useEffect(() => {
@@ -439,12 +475,11 @@ setSelectedLocation("");
                             size="small"
                             SelectProps={{ native: true }}
                           >
-                            <option value="">Select Zone</option>
-                            {zones.map((zone) => (
-                              <option key={zone.id} value={zone.id}>
-                                {zone.name}
-                              </option>
+                            {zoneList.map(zone => (
+                              <option key={zone.id} value={zone.id}>{zone.zoneName}</option>
                             ))}
+
+
                           </TextField>
                         </Grid>
 
@@ -459,12 +494,11 @@ setSelectedLocation("");
                             SelectProps={{ native: true }}
                             disabled={!selectedZone}
                           >
-                            <option value="">Select Location</option>
-                            {locations.filter((loc) => loc.zoneId === selectedZone).map((loc) => (
-                              <option key={loc.id} value={loc.id}>
-                                {loc.name}
-                              </option>
+                            {locationList.map(loc => (
+                              <option key={loc.id} value={loc.id}>{loc.locationName}</option>
                             ))}
+
+
                           </TextField>
                         </Grid>
 
@@ -834,3 +868,4 @@ setSelectedLocation("");
 };
 
 export default CameraOnboardingStep;
+

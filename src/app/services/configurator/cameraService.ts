@@ -11,6 +11,30 @@ export const getCameras = async () => {
   });
 };
 
+// export const fetchZones = async () => {
+//   return axios.get(`${API_BASE}/configurator/camera-manager/zones`, {
+//     headers: { "x-tenant-id": TENANT_ID },
+//   });
+// };
+
+// export const fetchLocations = async(zoneId: string) =>{
+//   return axios.delete(`${API_BASE}/configurator/camera-manager/locations/${zoneId}`, {
+//     headers: { "x-tenant-id": TENANT_ID },
+//   });
+// };
+ 
+
+export const fetchZones = async () => {
+  return axios.get(`${API_BASE}/configurator/camera-manager/zones`, {
+    headers: { "x-tenant-id": TENANT_ID },
+  });
+};
+
+export const fetchLocations = async (zoneId: string) => {
+  return axios.get(`${API_BASE}/configurator/camera-manager/locations/${zoneId}`, {
+    headers: { "x-tenant-id": TENANT_ID },
+  });
+};
 export const addCamera = async (cameraData: any) => {
   return axios.post(`${API_BASE}/configurator/camera-manager`, cameraData, {
     headers: { "x-tenant-id": TENANT_ID },
@@ -28,6 +52,9 @@ export const detectNvrChannels = async (data: any) => {
     headers: { "x-tenant-id": TENANT_ID },
   });
 };
+
+
+
 
 
 // export const detectNvrChannels = (payload: {

@@ -485,7 +485,7 @@ const handleCameraAdd = async (cameraData: any) => {
                     <TableCell>Camera Name</TableCell>
                     <TableCell>IP Address</TableCell>
                     <TableCell>Port</TableCell>
-                    <TableCell>Make</TableCell>
+                    <TableCell>Connection Type</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>
