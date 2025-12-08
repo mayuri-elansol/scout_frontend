@@ -22,3 +22,25 @@ export const deleteCamera = async (cameraId: string) => {
     headers: { "x-tenant-id": TENANT_ID },
   });
 };
+
+export const detectNvrChannels = async (data: any) => {
+  return axios.post(`${API_BASE}/configurator/camera-manager/detect-nvr-channels`, data, {
+    headers: { "x-tenant-id": TENANT_ID },
+  });
+};
+
+
+// export const detectNvrChannels = (payload: {
+//   nvrName: string;
+//   ip: string;
+//   port: number;
+//   username: string;
+//   password: string;
+//   numberofchannels: number;
+//   rtsplink?: string;
+// }) => {
+//   return apiClient.post(
+//     "/configurator/camera-manager/detect-nvr-channels",
+//     payload
+//   );
+// };

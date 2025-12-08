@@ -26,6 +26,7 @@ import {
 } from '@mui/icons-material';
 
 import { addCamera } from "@/app/services/configurator/cameraService";  
+import { detectNvrChannels } from "@/app/services/configurator/cameraService";
 
 interface CameraData {
   id: string;
@@ -118,11 +119,16 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     port: '8000',
     username: '',
     password: '',
+    numberofchannels: '',
+    rtsplink: '',
   });
 
-  // NVR discovered cameras (mock)
-  const [nvrCameras, setNvrCameras] = useState<{ id: string; name: string; }[]>([]);
-  const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+  // // NVR discovered cameras (mock)
+  // const [nvrCameras, setNvrCameras] = useState<{ id: string; name: string; }[]>([]);
+  // const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+
+const [nvrCameras, setNvrCameras] = useState<any[]>([]);
+const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
 
 
   useEffect(() => {
@@ -220,45 +226,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     }
   };
 
-  // const handleAddCamera = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-
-  //   if (!validateForm()) {
-  //     return;
-  //   }
-
-  //   setIsAdding(true);
-
-  //   // Simulate camera connection test
-  //   await new Promise(resolve => setTimeout(resolve, 1000));
-
-
-  //   onCameraAdd({
-  //     ipAddress: formData.ipAddress.trim(),
-  //     cameraname: formData.cameraname.trim(),
-  //     username: formData.username.trim(),
-  //     password: formData.password.trim(),
-  //     port: formData.port.trim(),
-  //     zoneId: selectedZone,
-  //     locationId: selectedLocation,
-  //   });
-
-
-  //   // Reset form
-  //   setFormData({
-  //     ipAddress: '',
-  //     username: '',
-  //     cameraname: '',
-  //     password: '',
-  //     port: '554',
-
-  //   });
-  //   setSelectedZone("");
-  //   setSelectedLocation("");
-
-
-  //   setIsAdding(false);
-  // };
 
   
 const handleAddCamera = async (event: React.FormEvent) => {
@@ -268,17 +235,6 @@ const handleAddCamera = async (event: React.FormEvent) => {
   setIsAdding(true);
 
   try {
-//   const response = await addCamera({
-//   cameraIp: formData.ipAddress.trim(),
-//   cameraName: formData.cameraname.trim(),
-//   userName: formData.username.trim(),
-//   password: formData.password.trim(),
-//   RTSPport: formData.port.trim(),
-//   cameraZone: selectedZone,
-//   channel: selectedLocation,
-//   refreshRate: 10,
-//   connectionType: "DIRECT_TO_CAMERA",
-// });
 
 const response = await addCamera({
   cameraIp: formData.ipAddress.trim(),
@@ -594,6 +550,28 @@ setSelectedLocation("");
                         />
                       </Grid>
 
+                       <Grid size={{ xs: 6 }}>
+                        <TextField
+                          label="No of channels"
+                          required
+                          fullWidth
+                          size="small"
+                          value={nvrData.numberofchannels}
+                          onChange={(e) => setNvrData({ ...nvrData, numberofchannels: e.target.value })}
+                        />
+                      </Grid>
+
+                      <Grid size={{ xs: 12 }}>
+                        <TextField
+                          label="rstp link"
+                          required
+                          fullWidth
+                          size="small"
+                          value={nvrData.rtsplink}
+                          onChange={(e) => setNvrData({ ...nvrData, rtsplink: e.target.value })}
+                        />
+                      </Grid>
+
                      
                     </Grid>
 
@@ -602,14 +580,33 @@ setSelectedLocation("");
                       variant="contained"
                       fullWidth
                       sx={{ mt: 2 }}
-                      onClick={() => {
-                        // MOCK RESPONSE
-                        setNvrCameras([
-                          { id: "1", name: "Channel 1 - Front Gate" },
-                          { id: "2", name: "Channel 2 - Entrance" },
-                          { id: "3", name: "Channel 3 - Parking Area" },
-                        ]);
+                      // onClick={() => {
+                      //   // MOCK RESPONSE
+                      //   setNvrCameras([
+                      //     { id: "1", name: "Channel 1 - Front Gate" },
+                      //     { id: "2", name: "Channel 2 - Entrance" },
+                      //     { id: "3", name: "Channel 3 - Parking Area" },
+                      //   ]);
+                      // }}
+
+                      onClick={async () => {
+                        try {
+                          const response = await detectNvrChannels({
+                            nvrName: nvrData.name,
+                            ip: nvrData.ip,
+                            port: Number(nvrData.port),
+                            username: nvrData.username,
+                            password: nvrData.password,
+                            numberofchannels: Number(nvrData.numberofchannels),
+                            rtsplink: nvrData.rtsplink,
+                          });
+
+                          setNvrCameras(response.data.activeChannels);  // from backend
+                        } catch (error) {
+                          console.error("Detect NVR Error:", error);
+                        }
                       }}
+
                     >
                       Discover Cameras
                     </Button>
@@ -622,19 +619,19 @@ setSelectedLocation("");
                         </Typography>
 
                         {nvrCameras.map((camera) => (
-                          <Box key={camera.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                          <Box key={camera.channel} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <input
                               type="checkbox"
-                              checked={selectedNvrCams.includes(camera.id)}
+                              checked={selectedNvrCams.includes(camera.channel)}
                               onChange={() => {
-                                if (selectedNvrCams.includes(camera.id)) {
-                                  setSelectedNvrCams(selectedNvrCams.filter((id) => id !== camera.id));
+                                if (selectedNvrCams.includes(camera.channel)) {
+                                  setSelectedNvrCams((prev) => prev.filter(ch => ch !== camera.channel));
                                 } else {
-                                  setSelectedNvrCams([...selectedNvrCams, camera.id]);
+                                  setSelectedNvrCams((prev) => [...prev, camera.channel]);
                                 }
                               }}
                             />
-                            <Typography>{camera.name}</Typography>
+                            <Typography>{`${nvrData.ip} - ${camera.channel}`}</Typography>
                           </Box>
                         ))}
 
@@ -644,24 +641,46 @@ setSelectedLocation("");
                           color="success"
                           fullWidth
                           sx={{ mt: 2 }}
-                          onClick={() => {
+                          onClick={async () => {
+                            // const selected = nvrCameras.filter((cam) =>
+                            //   selectedNvrCams.includes(cam.id)
+                            // );
                             const selected = nvrCameras.filter((cam) =>
-                              selectedNvrCams.includes(cam.id)
+                              selectedNvrCams.includes(cam.channel)
                             );
 
-                            selected.forEach((cam) => {
+                            for (let cam of selected) {
+                              await addCamera({
+                                // cameraName: `${nvrData.name}-${cam.channel}`,
+                                cameraName: `${nvrData.name}-${cam.channel}`,
+                                // cameraIp: nvrData.ip,
+                                cameraIp: `${nvrData.ip}-${cam.channel}`,
+                                userName: nvrData.username,
+                                password: nvrData.password,
+                                RTSPport: nvrData.port,
+                                cameraZone: selectedZone,
+                                channel: cam.channel,
+                                connectionType: "NVR",
+                                refreshRate: 10,
+                              });
+
                               onCameraAdd({
-                                ipAddress: nvrData.ip,
+                                // ipAddress: nvrData.ip,
+                                ipAddress:`${nvrData.ip}-${cam.channel}`,
+                                cameraname: `${nvrData.name}-${cam.channel}`,
+                                // cameraname: `${nvrData.name}-${cam.channel}-${Date.now()}`,
                                 username: nvrData.username,
                                 password: nvrData.password,
                                 port: nvrData.port,
-                                make: "NVR",
+                                zoneId: selectedZone,
+                                locationId: selectedLocation,
                               });
-                            });
+                            }
 
-                            // Reset states
+                            // Reset after submit
                             setSelectedNvrCams([]);
                             setNvrCameras([]);
+
                           }}
                         >
                           Add Selected Cameras

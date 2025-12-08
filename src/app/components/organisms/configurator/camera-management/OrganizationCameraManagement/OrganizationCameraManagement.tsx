@@ -268,10 +268,10 @@ const handleCameraAdd = async (cameraData: any) => {
     cameraIp: cameraData.ipAddress,
     userName: cameraData.username,
     password: cameraData.password,
-    RTSPport: cameraData.port,
     cameraZone: cameraData.zoneId,
     channel: cameraData.locationId,
     connectionType: "DIRECT_TO_CAMERA",
+    RTSPport: cameraData.port,
   });
 
   await fetchCameras(); // important
@@ -343,6 +343,7 @@ const handleCameraAdd = async (cameraData: any) => {
     });
   }
 };
+
 
 
   const handleCameraConfigureClick = (cameraId: string) => {
