@@ -107,13 +107,13 @@ const UseCaseManager: React.FC = () => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Breadcrumbs */}
-      <Breadcrumbs
+      {/* <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         sx={{ mb: 3 }}
       >
         <MuiLink
           component={Link}
-          href="/"
+          href="/LiveStreamingPage"
           underline="hover"
           color="inherit"
           sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
@@ -149,7 +149,7 @@ const UseCaseManager: React.FC = () => {
           <CategoryIcon fontSize="small" />
           Use-Case Manager
         </Typography>
-      </Breadcrumbs>
+      </Breadcrumbs> */}
 
       {/* Page Header */}
       <Box sx={{ mb: 4 }}>

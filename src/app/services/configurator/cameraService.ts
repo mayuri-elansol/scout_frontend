@@ -3,7 +3,9 @@ import axios from "axios";
 const API_BASE = "http://localhost:4001/api/v1"; 
 
 // 🔥 Hard-coded tenant ID for now (use header later from Auth)
-const TENANT_ID = "acc3018d4650c195";
+// const TENANT_ID = "acc3018d4650c195";
+const TENANT_ID = "47a996e22a6ff828";
+
 
 export const getCameras = async () => {
   return axios.get(`${API_BASE}/configurator/camera-manager`, {

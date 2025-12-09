@@ -190,7 +190,7 @@ useEffect(() => {
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Breadcrumbs */}
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
+      {/* <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
         <MuiLink component={Link} href="/" underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <HomeIcon fontSize="small" /> Home
         </MuiLink>
@@ -203,7 +203,7 @@ useEffect(() => {
         <Typography color="text.primary" sx={{ display: "flex", alignItems: "center", gap: 0.5, fontWeight: 600 }}>
           <MapIcon fontSize="small" /> Zone-Location Mapping
         </Typography>
-      </Breadcrumbs>
+      </Breadcrumbs> */}
 
       {/* Header */}
       <Box sx={{ mb: 4 }}>
