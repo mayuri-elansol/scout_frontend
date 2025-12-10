@@ -31,8 +31,8 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
   // Filter use cases based on search
   const filteredUseCases = useCases.filter((useCase) => {
     const matchesSearch =
-      useCase.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      useCase.description.toLowerCase().includes(searchQuery.toLowerCase());
+      useCase.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      useCase.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesSearch;
   });

@@ -29,6 +29,15 @@ import {
 } from "@mui/icons-material";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 
+// interface CameraSelectionDrawerProps {
+//   open: boolean;
+//   onClose: () => void;
+//   useCase: UseCase | null;
+//   cameras: Camera[];
+//   onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
+//   isLoading?: boolean;
+// }
+
 interface CameraSelectionDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -37,6 +46,7 @@ interface CameraSelectionDrawerProps {
   onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
   isLoading?: boolean;
 }
+
 
 export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
   open,
@@ -349,6 +359,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
                                 </Box>
                               </Box>
                             }
+                            secondaryTypographyProps={{ component: "div" }} 
                           />
                         </ListItemButton>
                       </ListItem>

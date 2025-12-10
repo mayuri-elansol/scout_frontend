@@ -20,7 +20,9 @@ import {
 } from "@mui/icons-material";
 import Link from "next/link";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
-import { useCaseManagerService } from "@/app/services/useCaseManagerService";
+import { getUsecases, getCameras, assignCameras, getAssignments }
+  from "@/app/services/configurator/usecaseService";
+
 import {
   UseCaseList,
   CameraSelectionDrawer,
@@ -30,6 +32,8 @@ const UseCaseManager: React.FC = () => {
   const [useCases, setUseCases] = useState<UseCase[]>([]);
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
+  const [selectedCameraIds, setSelectedCameraIds] = useState<string[]>([]);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoadingUseCases, setIsLoadingUseCases] = useState(true);
   const [isLoadingCameras, setIsLoadingCameras] = useState(false);
@@ -45,13 +49,25 @@ const UseCaseManager: React.FC = () => {
 
   const loadUseCases = async () => {
     setIsLoadingUseCases(true);
-    setError(null);
     try {
-      const orgLicense = await useCaseManagerService.getOrganizationLicense(
-        organizationId
-      );
-      setUseCases(orgLicense.useCases);
+      const res = await getUsecases();         // <-- real backend call
+      const usecases = res.data.map((uc: any) => ({
+        id: uc.id,
+        name: uc.usecaseName,
+        description: uc.description,
+        category: "AI",
+        enabled: true,
+        assignedCameraIds: [],
+      }));
+      console.log("UseCases API Response", res.data);
+      for (const uc of usecases) {
+        const assignments = await getAssignments(uc.id);
+        uc.assignedCameraIds = assignments.data.map((m: any) => m.cameraId);
+      }
+
+      setUseCases(usecases);
     } catch (err) {
+
       console.error("Error loading use cases:", err);
       setError("Failed to load use cases. Please try again later.");
     } finally {
@@ -59,11 +75,23 @@ const UseCaseManager: React.FC = () => {
     }
   };
 
+
   const loadCameras = async () => {
     setIsLoadingCameras(true);
     try {
-      const cameraData = await useCaseManagerService.getMockCameras(organizationId);
-      setCameras(cameraData);
+      const res = await getCameras();
+      setCameras(
+        res.data.map((cam: any) => ({
+          id: cam.id,
+          name: cam.cameraName,
+          position: cam.cameraZone,
+          location: cam.cameraZone,
+          ipAddress: cam.cameraIp,
+          port: cam.RTSPport,
+          make: cam.connectionType,
+          status: "connected",
+        }))
+      );
     } catch (err) {
       console.error("Error loading cameras:", err);
     } finally {
@@ -71,19 +99,39 @@ const UseCaseManager: React.FC = () => {
     }
   };
 
-  const handleConfigureCameras = async (useCase: UseCase) => {
-    setSelectedUseCase(useCase);
-    setDrawerOpen(true);
-    if (cameras.length === 0) {
-      await loadCameras();
-    }
-  };
 
-  const handleSaveCameraAssignments = async (
-    useCaseId: string,
-    selectedCameraIds: string[]
-  ) => {
+  // const handleConfigureCameras = async (useCase: UseCase) => {
+  //   setSelectedUseCase(useCase);
+  //   setDrawerOpen(true);
+  //   if (cameras.length === 0) {
+  //     await loadCameras();
+  //   }
+  // };
+
+  // const handleSaveCameraAssignments = async (
+  //   useCaseId: string,
+  //   selectedCameraIds: string[]
+  // ) => {
+  //   try {
+  //     setUseCases((prev) =>
+  //       prev.map((uc) =>
+  //         uc.id === useCaseId ? { ...uc, assignedCameraIds: selectedCameraIds } : uc
+  //       )
+  //     );
+  //     console.log("Saved camera assignments:", {
+  //       useCaseId,
+  //       selectedCameraIds,
+  //     });
+  //   } catch (err) {
+  //     console.error("Error saving camera assignments:", err);
+  //     throw err;
+  //   }
+  // };
+
+  const handleSaveCameraAssignments = async (useCaseId: string, selectedCameraIds: string[]) => {
     try {
+      await assignCameras(useCaseId, selectedCameraIds);   // call backend
+
       setUseCases((prev) =>
         prev.map((uc) =>
           uc.id === useCaseId ? { ...uc, assignedCameraIds: selectedCameraIds } : uc
@@ -94,10 +142,20 @@ const UseCaseManager: React.FC = () => {
         selectedCameraIds,
       });
     } catch (err) {
-      console.error("Error saving camera assignments:", err);
-      throw err;
+      console.error("Error saving Camera Assignment", err);
     }
   };
+
+  const handleConfigureCameras = async (useCase: UseCase) => {
+  setSelectedUseCase(useCase);
+  setDrawerOpen(true);
+
+  const res = await getAssignments(useCase.id);
+  setSelectedCameraIds(res.data.map((m: any) => m.cameraId));
+
+  if (cameras.length === 0) await loadCameras();
+};
+
 
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
@@ -252,6 +310,8 @@ const UseCaseManager: React.FC = () => {
         onClose={handleCloseDrawer}
         useCase={selectedUseCase}
         cameras={cameras}
+        // selectedCameraIds={selectedCameraIds}
+        // setSelectedCameraIds={setSelectedCameraIds}
         onSave={handleSaveCameraAssignments}
         isLoading={isLoadingCameras}
       />
