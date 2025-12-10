@@ -26,6 +26,8 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
+  useGetPpeKitDetectionDetailedCsvReportMutation,
+  useGetPpeKitDetectionSingleReportPdfMutation,
   useLazyGetPpeKitDetectionDetailedReportQuery,
   useLazyGetPPEKitDetectionKpiDataQuery,
   useLazyGetPpeKitDetectionRecentViolationsQuery,
@@ -34,19 +36,25 @@ import {
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 import { useSocketListeners } from "@/hooks/useSocketListeners";
 import dayjs, { Dayjs } from "dayjs";
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 const PPEDetection: React.FC = () => {
   // ✅ Add deduplication ref at the top
   const processedEvents = useRef(new Set<string>());
 
-  interface PPEViolation {
-    voilation: string;
-    zone: string;
-    time: string;
-    imageUrl: string;
+  // interface PPEViolation {
+  //   voilation: string;
+  //   zone: string;
+  //   time: string;
+  //   imageUrl: string;
+  //   cameraId: string;
+  //   alarmTriggered: boolean;
+  //   [key: string]: string | number | boolean;
+  // }
+  interface PPEViolation extends Violation {
     cameraId: string;
     alarmTriggered: boolean;
-    [key: string]: string | number | boolean;
   }
+
   const [dateFilter, setDateFilter] = useState<{
     start: string;
     end: string;
@@ -66,7 +74,10 @@ const PPEDetection: React.FC = () => {
     fetchDetailedReport,
     { data: detailedReport, isLoading: detailedReportLoading },
   ] = useLazyGetPpeKitDetectionDetailedReportQuery();
-
+  const [downloadSinglePdf, { isLoading: isSinglePdfDownloading }] =
+    useGetPpeKitDetectionSingleReportPdfMutation();
+  const [downloadCsvReport, { isLoading: isCsvDownloading }] =
+    useGetPpeKitDetectionDetailedCsvReportMutation();
   // ✅ Single source of truth for KPI data
   const [displayKpi, setDisplayKpi] = useState<KpiItem[] | null>(null);
   const [recentViolationsLive, setRecentViolationsLive] = useState<
@@ -76,6 +87,13 @@ const PPEDetection: React.FC = () => {
   const [displayZoneViolations, setDisplayZoneViolations] = useState<
     ZoneViolationInteface[]
   >([]);
+  //function to convert the date-time  into indian standards
+  const formatLocalDateTime = (dt: string | Dayjs | undefined): string => {
+    if (!dt) return "";
+    const parsed = typeof dt === "string" ? dayjs(dt) : dt;
+    return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
+  };
+
   // ✅ Track optimistic updates with version control
   const optimisticVersionRef = useRef<number>(0);
   const lastSyncTimestampRef = useRef<number>(0);
@@ -359,11 +377,11 @@ const PPEDetection: React.FC = () => {
 
   const handleSubmitFilter = async (filters: FilterParams) => {
     console.log("filter params", filters);
-    const formatLocalDateTime = (dt: string | Dayjs | undefined): string => {
-      if (!dt) return "";
-      const parsed = typeof dt === "string" ? dayjs(dt) : dt;
-      return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
-    };
+    // const formatLocalDateTime = (dt: string | Dayjs | undefined): string => {
+    //   if (!dt) return "";
+    //   const parsed = typeof dt === "string" ? dayjs(dt) : dt;
+    //   return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
+    // };
 
     const body = {
       tenantId: "c2bf4995e1bf3ce1",
@@ -388,13 +406,54 @@ const PPEDetection: React.FC = () => {
 
   const handleReset = () => {
     console.log("reset button clicked");
+
     fetchDetailedReport({
       tenantId: "c2bf4995e1bf3ce1",
     });
   };
 
-  const handleExport = (format: "csv" | "pdf") => {
+  const handleExport = async (format: "csv" | "pdf", filters: FilterParams) => {
     console.log("Export requested:", format);
+    if (format === "csv") {
+      console.log("Export requested:", format, filters);
+      try {
+        console.log("✅ Export CSV with filters:", filters);
+
+        const payload = {
+          tenantId: "c2bf4995e1bf3ce1",
+
+          violation: filters.violation || undefined,
+          zone: filters.zone || undefined,
+          cameraId: filters.cameraId || undefined,
+
+          alarmTriggered:
+            filters.alarmTriggered !== undefined
+              ? filters.alarmTriggered === "True"
+              : undefined,
+
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
+        };
+
+        // ✅ Call backend
+        const csvBlob = await downloadCsvReport(payload).unwrap();
+
+        // ✅ Trigger browser download
+        const blobUrl = window.URL.createObjectURL(csvBlob);
+        const a = document.createElement("a");
+
+        a.href = blobUrl;
+        a.download = `ppe-violations-report-${Date.now()}.csv`;
+
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error("❌ CSV export failed:", error);
+      }
+    }
   };
 
   const handleDownloadSingle = () => {
@@ -467,7 +526,8 @@ const PPEDetection: React.FC = () => {
   const memoizedHandleReset = useCallback(() => handleReset(), [handleReset]);
 
   const memoizedHandleExport = useCallback(
-    (format: "csv" | "pdf") => handleExport(format),
+    (format: "csv" | "pdf", filters: FilterParams) =>
+      handleExport(format, filters),
     [handleExport]
   );
 
@@ -480,14 +540,38 @@ const PPEDetection: React.FC = () => {
     (row: PPEViolation) => handleViewSingle(row),
     [handleViewSingle]
   );
-  const handleDownloadViolation = (url: string, violation: any) => {
-    console.log(
-      "Download from PPEDetection page form handledownloadvoiltion function:",
-      url,
-      violation
-    );
 
-    // 🔥 HERE YOU CALL YOUR API
+  const handleDownloadViolation = async (url: string, violation: Violation) => {
+    if (!violation) return;
+    const ppeViolation = violation as PPEViolation;
+    try {
+      const payload = {
+        tenantId: "c2bf4995e1bf3ce1",
+        violation: ppeViolation.voilation,
+        zone: ppeViolation.zone,
+        time: ppeViolation.time,
+        cameraId: ppeViolation.cameraId,
+        alarmTriggered: ppeViolation.alarmTriggered,
+        imageUrl: url,
+      };
+
+      const pdfBlob = await downloadSinglePdf(payload).unwrap();
+
+      // ✅ Create browser download
+      const blobUrl = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+
+      a.href = blobUrl;
+      a.download = `ppe-single-report-${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+
+      // ✅ Cleanup
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("PDF download failed", err);
+    }
   };
 
   return (
@@ -556,7 +640,7 @@ const PPEDetection: React.FC = () => {
             <RecentViolations
               tooltipMessage="Latest 20 detected PPE violations with details."
               label="Recent Violations"
-              violations={recentViolationsLive}
+              violations={recentViolationsLive as PPEViolation[]}
               loading={recentLoading}
               onDownload={handleDownloadViolation}
             />
@@ -594,7 +678,10 @@ const PPEDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        onDownload={(url) => handleDownloadViolation(url, viewPopupData)}
+        onDownload={(url) => {
+          if (!viewPopupData) return;
+          handleDownloadViolation(url, viewPopupData);
+        }}
       />
     </Box>
   );

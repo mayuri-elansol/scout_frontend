@@ -58,29 +58,69 @@ export default function PPERealtimeViewer() {
       );
     });
   }, []);
+  const drawLiveFrame = useCallback((frameMsg: any) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const base64 = frameMsg.frameData;
+    if (!base64) return;
+
+    const img = new Image();
+    img.src = `data:image/jpeg;base64,${base64}`;
+
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+  }, []);
 
   // ✅ Correct usage — call hook at top level
-  useRealtimeSocket("http://192.168.0.5:3001", "safety.ppe", (msg) => {
-    drawDetection(msg);
-    console.log("ppe detection socket io", msg);
+  // useRealtimeSocket("http://192.168.0.5:3001", "safety.ppe", (msg) => {
+  //   drawDetection(msg);
+  //   console.log("ppe detection socket io", msg);
+  // });
+  useRealtimeSocket("http://192.168.0.5:3001", {
+    topic: "safety.ppe",
+    onData: (msg) => {
+      drawDetection(msg); // ROI overlay
+      console.log("✅ PPE detection:", msg);
+    },
+    onLiveFrame: (frame) => {
+      drawLiveFrame(frame);
+      console.log("🎥 LIVE FRAME RECEIVED:", frame);
+    },
   });
 
   return (
-    <div style={{ position: "relative", width: "640px", height: "360px" }}>
-      <video
-        ref={videoRef}
-        src="/sample-video.mp4"
-        width="640"
-        height="360"
-        autoPlay
-        loop
-        muted
-      />
+    // <div style={{ position: "relative", width: "640px", height: "360px" }}>
+    //   <video
+    //     ref={videoRef}
+    //     src="/sample-video.mp4"
+    //     width="640"
+    //     height="360"
+    //     autoPlay
+    //     loop
+    //     muted
+    //   />
+    //   <canvas
+    //     ref={canvasRef}
+    //     width="640"
+    //     height="360"
+    //     style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
+    //   />
+    // </div>
+    <div style={{ position: "relative", width: 640, height: 360 }}>
       <canvas
         ref={canvasRef}
-        width="640"
-        height="360"
-        style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
+        width={640}
+        height={360}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          background: "#000",
+        }}
       />
     </div>
   );

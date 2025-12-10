@@ -42,6 +42,22 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["PpeRecentViolations"],
     }),
+    getPpeKitDetectionSingleReportPdf: builder.mutation<Blob, any>({
+      query: (body) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedReportForSingleId}`,
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(), // ✅ IMPORTANT
+      }),
+    }),
+    getPpeKitDetectionDetailedCsvReport: builder.mutation<Blob, any>({
+      query: (body) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedCsvReport}`,
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(), // ✅ KEY
+      }),
+    }),
   }),
 });
 
@@ -50,4 +66,6 @@ export const {
   useLazyGetPPEKitDetectionZoneViolationsQuery,
   useLazyGetPpeKitDetectionDetailedReportQuery,
   useLazyGetPpeKitDetectionRecentViolationsQuery,
+  useGetPpeKitDetectionSingleReportPdfMutation,
+  useGetPpeKitDetectionDetailedCsvReportMutation,
 } = ppeKitDetectionApi;

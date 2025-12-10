@@ -1,5 +1,6 @@
 import { SvgIconComponent } from "@mui/icons-material";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 
 // export interface FilterParams {
 //   status?: string;
@@ -14,6 +15,11 @@ export interface FilterParams {
   alarmTriggered?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface ReportParams extends Violation {
+  cameraId: string;
+  alarmTriggered: boolean;
 }
 export interface TableData {
   id: number;
