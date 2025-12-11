@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState} from 'react';
+import React, { useEffect, useState } from 'react';
 // import React, { useState, useEffect, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
+import { getUsecases } from '@/app/services/configurator/usecaseService';
 
 // import { roiService } from '@/services/scout/roiService';
 
@@ -84,7 +85,7 @@ interface CameraData {
   position: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
-  aiConfig?:AIConfig
+  aiConfig?: AIConfig
 }
 
 interface AIConfigurationStepProps {
@@ -109,242 +110,276 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   onSave,
   onBack,
 }) => {
-  const [useCases, setUseCases] = useState<UseCaseData[]>([
-    {
-      id: 'ppe-detection',
-      name: 'Personal Protective Equipment (PPE) Detection',
-      description: 'Detect personal protective equipment compliance',
+  // const [useCases, setUseCases] = useState<UseCaseData[]>([
+  //   {
+  //     id: 'ppe-detection',
+  //     name: 'Personal Protective Equipment (PPE) Detection',
+  //     description: 'Detect personal protective equipment compliance',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'object-detection-walking-bays',
+  //     name: 'Object Detection in Walking Bays',
+  //     description: 'Detect objects blocking walking paths and bays',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'fire-smoke-gas-leak',
+  //     name: 'Fire, Smoke, Oil and Gas Leak Detection',
+  //     description: 'Detect fire, smoke, oil and gas leak incidents',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'vehicle-speed-monitoring',
+  //     name: 'Vehicle Speed Monitoring inside premises',
+  //     description: 'Monitor vehicle speed within facility premises',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'fall-detection',
+  //     name: 'Fall Detection (Person falling on the floor)',
+  //     description: 'Detect when a person falls on the floor',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'laydown-sleeping-detection',
+  //     name: 'Laydown/Sleeping Detection in Work Areas',
+  //     description: 'Detect people laying down or sleeping in work areas',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'equipment-gangway-detection',
+  //     name: 'Stacker, Forklift or Equipment in Gangway',
+  //     description: 'Detect equipment blocking gangways',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'stp-etp-overflow',
+  //     name: 'STP/ETP Overflow Detection',
+  //     description: 'Detect sewage/effluent treatment plant overflow',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'emergency-exit-blockage',
+  //     name: 'Emergency Exit Blockage Detection',
+  //     description: 'Detect blockages at emergency exit points',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'crowd-gathering-hazardous',
+  //     name: 'Crowd Gathering in Hazardous Zones',
+  //     description: 'Detect crowd gathering in dangerous areas',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'intrusion-detection-perimeter',
+  //     name: 'Intrusion Detection at Premises Perimeter',
+  //     description: 'Detect unauthorized entry at facility perimeter',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'unauthorized-access-restricted',
+  //     name: 'Unauthorized Access in Restricted Areas',
+  //     description: 'Detect unauthorized access to restricted zones',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'camera-tampering-offline',
+  //     name: 'Camera Tampering or Offline Detection',
+  //     description: 'Detect camera tampering or offline status',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'people-presence-shutdown',
+  //     name: 'People Presence during Shutdown Hours',
+  //     description: 'Detect people presence during non-operational hours',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'employee-presence-critical',
+  //     name: 'Employee Presence Detection in Critical Areas',
+  //     description: 'Monitor employee presence in critical work areas',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'face-recognition-entry-exit',
+  //     name: 'Face Recognition for Entry/Exit Logging',
+  //     description: 'Face recognition for access control and logging',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'employee-idle-time',
+  //     name: 'Employee Idle Time Monitoring',
+  //     description: 'Monitor employee idle time and productivity',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'mobile-phone-usage',
+  //     name: 'Mobile Phone Usage in Restricted Areas',
+  //     description: 'Detect mobile phone usage in restricted zones',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'security-personnel-sleeping',
+  //     name: 'Sleeping or Absence of Security Personnel',
+  //     description: 'Monitor security personnel alertness and presence',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'people-count-factory',
+  //     name: 'People Count in Factory Premises',
+  //     description: 'Count people in designated factory areas',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'vehicle-count-anpr',
+  //     name: 'Vehicle Count & ANPR at Entry/Exit Gates',
+  //     description: 'Vehicle counting and number plate recognition',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'canteen-usage-monitoring',
+  //     name: 'Monitoring Canteen Usage & Timings',
+  //     description: 'Monitor canteen occupancy and usage patterns',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'vehicle-loading-time',
+  //     name: 'Tracking Vehicle Unloading/Loading Time',
+  //     description: 'Track time taken for vehicle loading/unloading',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'unauthorized-parking',
+  //     name: 'Unauthorized Parking or Equipment Blocking Aisles',
+  //     description: 'Detect unauthorized parking and aisle blockages',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  //   {
+  //     id: 'ocr-detection',
+  //     name: 'OCR Detection',
+  //     description: 'Optical character recognition for text detection',
+  //     selected: false,
+  //     roiConfigured: false,
+  //     fineTuned: false,
+  //     enabled: false,
+  //   },
+  // ]);
+
+  const [useCases, setUseCases] = useState<UseCaseData[]>([]);
+const [loadingUseCases, setLoadingUseCases] = useState(true);
+useEffect(() => {
+  loadUseCases();
+}, []);
+
+const loadUseCases = async () => {
+  try {
+    setLoadingUseCases(true);
+
+    const response = await getUsecases();
+    const apiUseCases = response.data;
+
+    // Map DB → Component structure
+    const mapped = apiUseCases.map((uc: any) => ({
+      id: uc.id,
+      name: uc.usecaseName,
+      description: uc.description,
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
-    },
-    {
-      id: 'object-detection-walking-bays',
-      name: 'Object Detection in Walking Bays',
-      description: 'Detect objects blocking walking paths and bays',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'fire-smoke-gas-leak',
-      name: 'Fire, Smoke, Oil and Gas Leak Detection',
-      description: 'Detect fire, smoke, oil and gas leak incidents',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'vehicle-speed-monitoring',
-      name: 'Vehicle Speed Monitoring inside premises',
-      description: 'Monitor vehicle speed within facility premises',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'fall-detection',
-      name: 'Fall Detection (Person falling on the floor)',
-      description: 'Detect when a person falls on the floor',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'laydown-sleeping-detection',
-      name: 'Laydown/Sleeping Detection in Work Areas',
-      description: 'Detect people laying down or sleeping in work areas',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'equipment-gangway-detection',
-      name: 'Stacker, Forklift or Equipment in Gangway',
-      description: 'Detect equipment blocking gangways',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'stp-etp-overflow',
-      name: 'STP/ETP Overflow Detection',
-      description: 'Detect sewage/effluent treatment plant overflow',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'emergency-exit-blockage',
-      name: 'Emergency Exit Blockage Detection',
-      description: 'Detect blockages at emergency exit points',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'crowd-gathering-hazardous',
-      name: 'Crowd Gathering in Hazardous Zones',
-      description: 'Detect crowd gathering in dangerous areas',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'intrusion-detection-perimeter',
-      name: 'Intrusion Detection at Premises Perimeter',
-      description: 'Detect unauthorized entry at facility perimeter',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'unauthorized-access-restricted',
-      name: 'Unauthorized Access in Restricted Areas',
-      description: 'Detect unauthorized access to restricted zones',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'camera-tampering-offline',
-      name: 'Camera Tampering or Offline Detection',
-      description: 'Detect camera tampering or offline status',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'people-presence-shutdown',
-      name: 'People Presence during Shutdown Hours',
-      description: 'Detect people presence during non-operational hours',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'employee-presence-critical',
-      name: 'Employee Presence Detection in Critical Areas',
-      description: 'Monitor employee presence in critical work areas',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'face-recognition-entry-exit',
-      name: 'Face Recognition for Entry/Exit Logging',
-      description: 'Face recognition for access control and logging',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'employee-idle-time',
-      name: 'Employee Idle Time Monitoring',
-      description: 'Monitor employee idle time and productivity',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'mobile-phone-usage',
-      name: 'Mobile Phone Usage in Restricted Areas',
-      description: 'Detect mobile phone usage in restricted zones',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'security-personnel-sleeping',
-      name: 'Sleeping or Absence of Security Personnel',
-      description: 'Monitor security personnel alertness and presence',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'people-count-factory',
-      name: 'People Count in Factory Premises',
-      description: 'Count people in designated factory areas',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'vehicle-count-anpr',
-      name: 'Vehicle Count & ANPR at Entry/Exit Gates',
-      description: 'Vehicle counting and number plate recognition',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'canteen-usage-monitoring',
-      name: 'Monitoring Canteen Usage & Timings',
-      description: 'Monitor canteen occupancy and usage patterns',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'vehicle-loading-time',
-      name: 'Tracking Vehicle Unloading/Loading Time',
-      description: 'Track time taken for vehicle loading/unloading',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'unauthorized-parking',
-      name: 'Unauthorized Parking or Equipment Blocking Aisles',
-      description: 'Detect unauthorized parking and aisle blockages',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-    {
-      id: 'ocr-detection',
-      name: 'OCR Detection',
-      description: 'Optical character recognition for text detection',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-    },
-  ]);
+      roiShapes: [],
+    }));
+
+    setUseCases(mapped);
+  } catch (error) {
+    console.error("❌ Failed to load use cases:", error);
+  } finally {
+    setLoadingUseCases(false);
+  }
+};
+
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
   const [showCameraView, setShowCameraView] = useState(false);
-  
+
   // ROI Modal state
   const [roiModalOpen, setRoiModalOpen] = useState(false);
   const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<string | null>(null);
-  
+
   // Loading and notification states
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -353,37 +388,6 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
-//   // Load existing ROI data when component mounts or camera changes
-//   useEffect(() => {
-//     loadAllROIData();
-//   }, [camera.id]);
-
-
-//   const loadAllROIData = useCallback(async () => {
-//   try {
-//     console.log('📥 Loading ROI data for camera:', camera.id);
-//     const roiData = await roiService.getRoi(camera.id);
-
-//     if (roiData.roi) {
-//       setUseCases(prev =>
-//         prev.map(useCase => {
-//           const roiForUseCase = roiData.roi[useCase.name];
-//           if (roiForUseCase && roiForUseCase.length > 0) {
-//             return {
-//               ...useCase,
-//               roiConfigured: true,
-//               roiShapes: roiForUseCase,
-//               selected: true,
-//             };
-//           }
-//           return useCase;
-//         })
-//       );
-//     }
-//   } catch (error) {
-//     console.error('❌ Error loading ROI data:', error);
-//   }
-// }, [camera.id]);
 
 
   const handleUseCaseSelect = (useCaseId: string) => {
@@ -426,10 +430,10 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         prev.map(uc =>
           uc.id === currentUseCaseForROI
             ? {
-                ...uc,
-                roiConfigured: true,
-                roiShapes: roiShapes,
-              }
+              ...uc,
+              roiConfigured: true,
+              roiShapes: roiShapes,
+            }
             : uc
         )
       );
@@ -468,7 +472,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       )
     );
   };
- 
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleToggleEnable = (useCaseId: string) => {
     setUseCases(prev =>
@@ -546,8 +550,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
       <Grid container spacing={1.5}>
         {/* Left Panel - Camera Info and Controls */}
-      
-        <Grid size={{xs: 12, lg: 5}}>
+
+        <Grid size={{ xs: 12, lg: 5 }}>
           <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
               <Typography
@@ -626,8 +630,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         </Grid>
 
         {/* Right Panel - Use Cases Configuration */}
-        
-        <Grid size={{xs: 12, lg: 7}}>
+
+        <Grid size={{ xs: 12, lg: 7 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
             <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" gutterBottom>
@@ -648,107 +652,114 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                   mb: 2,
                 }}
               >
-                <TableContainer sx={{ height: '480px', overflow: 'auto' }}>
-                  <Table stickyHeader size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
-                          Select
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>
-                          Use Case
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
-                          Add ROI
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
-                          Fine Tune
-                        </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
-                          View
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {useCases.map((useCase) => (
-                        <TableRow key={useCase.id} hover>
-                          <TableCell>
-                            <FormControlLabel
-                              control={
-                                <Switch
-                                  checked={useCase.selected}
-                                  onChange={() => handleUseCaseSelect(useCase.id)}
-                                  size="small"
-                                />
-                              }
-                              label=""
-                            />
+                {loadingUseCases ? (
+                  <Box sx={{ textAlign: "center", p: 4 }}>
+                    <CircularProgress />
+                    <Typography sx={{ mt: 2 }}>Loading use cases...</Typography>
+                  </Box>
+                ) : (
+                  <TableContainer sx={{ height: '480px', overflow: 'auto' }}>
+                    <Table stickyHeader size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
+                            Select
                           </TableCell>
-                          <TableCell>
-                            <Box>
-                              <Typography variant="body2" fontWeight={500}>
-                                {useCase.name}
-                              </Typography>
-                              <Typography variant="caption" color="text.secondary">
-                                {useCase.description}
-                              </Typography>
-                              {useCase.roiConfigured && useCase.roiShapes && (
-                                <Box sx={{ mt: 0.5 }}>
-                                  <Chip
-                                    label={`${useCase.roiShapes.length} ROI(s) in DB`}
-                                    size="small"
-                                    color="success"
-                                    variant="outlined"
-                                  />
-                                </Box>
-                              )}
-                            </Box>
+                          <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>
+                            Use Case
                           </TableCell>
-                          <TableCell>
-                            <Button
-                              size="small"
-                              variant={useCase.roiConfigured ? 'contained' : 'outlined'}
-                              onClick={() => handleAddROI(useCase.id)}
-                              disabled={!useCase.selected}
-                              startIcon={useCase.roiConfigured ? <CheckCircleIcon /> : <ROIIcon />}
-                              color={useCase.roiConfigured ? 'success' : 'primary'}
-                              sx={{ minWidth: '90px' }}
-                            >
-                              {useCase.roiConfigured ? 'Edit ROI' : 'Add ROI'}
-                            </Button>
+                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
+                            Add ROI
                           </TableCell>
-                          <TableCell>
-                            <Button
-                              size="small"
-                              variant={useCase.fineTuned ? 'contained' : 'outlined'}
-                              onClick={() => handleFineTune(useCase.id)}
-                              disabled={!useCase.selected}
-                              startIcon={useCase.fineTuned ? <CheckCircleIcon /> : <TuneIcon />}
-                              color={useCase.fineTuned ? 'success' : 'primary'}
-                              sx={{ minWidth: '90px' }}
-                            >
-                              {useCase.fineTuned ? 'Tuned' : 'Fine Tune'}
-                            </Button>
+                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
+                            Fine Tune
                           </TableCell>
-                          <TableCell>
-                            <FormControlLabel
-                              control={
-                                <Radio
-                                  checked={selectedViewCase === useCase.id}
-                                  onChange={() => setSelectedViewCase(useCase.id)}
-                                  disabled={!useCase.selected}
-                                  size="small"
-                                  color="primary"
-                                />
-                              }
-                              label=""
-                            />
+                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
+                            View
                           </TableCell>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                      </TableHead>
+                      <TableBody>
+                        {useCases.map((useCase) => (
+                          <TableRow key={useCase.id} hover>
+                            <TableCell>
+                              <FormControlLabel
+                                control={
+                                  <Switch
+                                    checked={useCase.selected}
+                                    onChange={() => handleUseCaseSelect(useCase.id)}
+                                    size="small"
+                                  />
+                                }
+                                label=""
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Box>
+                                <Typography variant="body2" fontWeight={540}>
+                                  {useCase.name}
+                                </Typography>
+                                <Typography variant="caption" color="text.secondary">
+                                  {useCase.description}
+                                </Typography>
+                                {useCase.roiConfigured && useCase.roiShapes && (
+                                  <Box sx={{ mt: 0.5 }}>
+                                    <Chip
+                                      label={`${useCase.roiShapes.length} ROI(s) in DB`}
+                                      size="small"
+                                      color="success"
+                                      variant="outlined"
+                                    />
+                                  </Box>
+                                )}
+                              </Box>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                size="small"
+                                variant={useCase.roiConfigured ? 'contained' : 'outlined'}
+                                onClick={() => handleAddROI(useCase.id)}
+                                disabled={!useCase.selected}
+                                startIcon={useCase.roiConfigured ? <CheckCircleIcon /> : <ROIIcon />}
+                                color={useCase.roiConfigured ? 'success' : 'primary'}
+                                sx={{ minWidth: '90px' }}
+                              >
+                                {useCase.roiConfigured ? 'Edit ROI' : 'Add ROI'}
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                size="small"
+                                variant={useCase.fineTuned ? 'contained' : 'outlined'}
+                                onClick={() => handleFineTune(useCase.id)}
+                                disabled={!useCase.selected}
+                                startIcon={useCase.fineTuned ? <CheckCircleIcon /> : <TuneIcon />}
+                                color={useCase.fineTuned ? 'success' : 'primary'}
+                                sx={{ minWidth: '90px' }}
+                              >
+                                {useCase.fineTuned ? 'Tuned' : 'Fine Tune'}
+                              </Button>
+                            </TableCell>
+                            <TableCell>
+                              <FormControlLabel
+                                control={
+                                  <Radio
+                                    checked={selectedViewCase === useCase.id}
+                                    onChange={() => setSelectedViewCase(useCase.id)}
+                                    disabled={!useCase.selected}
+                                    size="small"
+                                    color="primary"
+                                  />
+                                }
+                                label=""
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                )}
               </Box>
 
               <Box
@@ -801,7 +812,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
         open={roiModalOpen}
         onClose={handleROIClose}
-        cameraFeedUrl={getCameraFeedUrl()} 
+        cameraFeedUrl={getCameraFeedUrl()}
         useCaseName={getCurrentUseCaseName()}
         existingROI={getExistingROI()}
         onSave={handleROISave}

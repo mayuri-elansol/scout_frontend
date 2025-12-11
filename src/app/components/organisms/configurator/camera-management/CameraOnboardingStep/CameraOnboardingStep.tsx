@@ -337,6 +337,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       // onCameraAdd(response.data);
       onCameraAdd({
         ipAddress: formData.ipAddress.trim(),
+        // ipAddress:response.data.id,
         cameraname: formData.cameraname.trim(),
         username: formData.username.trim(),
         password: formData.password.trim(),
