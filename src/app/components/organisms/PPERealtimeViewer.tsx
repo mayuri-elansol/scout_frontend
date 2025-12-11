@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useRef, useCallback } from "react";
 import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
 
 export default function PPERealtimeViewer() {
@@ -75,11 +75,6 @@ export default function PPERealtimeViewer() {
     };
   }, []);
 
-  // ✅ Correct usage — call hook at top level
-  // useRealtimeSocket("http://192.168.0.5:3001", "safety.ppe", (msg) => {
-  //   drawDetection(msg);
-  //   console.log("ppe detection socket io", msg);
-  // });
   useRealtimeSocket("http://192.168.0.5:3001", {
     topic: "safety.ppe",
     onData: (msg) => {

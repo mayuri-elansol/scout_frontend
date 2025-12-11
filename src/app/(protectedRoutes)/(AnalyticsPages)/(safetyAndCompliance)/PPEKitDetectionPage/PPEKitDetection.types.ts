@@ -70,3 +70,22 @@ export interface ZoneViolationInteface {
   violations: number;
   subViolations: SubViolationInterface[];
 }
+export type PpeSingleReportRequest = {
+  tenantId: string;
+  violation?: string;
+  zone?: string;
+  alarmTriggered?: boolean;
+  cameraId?: string;
+  imageUrl?: string;
+  time?: string;
+};
+
+export type PpeCsvReportRequest = {
+  tenantId: string;
+  startDate: string;
+  endDate: string;
+  violation?: string;
+  zone?: string;
+  cameraId?: string;
+  alarmTriggered?: boolean;
+};

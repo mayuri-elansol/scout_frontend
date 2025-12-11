@@ -173,9 +173,9 @@ const CameraFeedCard: React.FC<CameraFeedCardProps> = ({
       </Box>
 
       {/* Zone Metrics */}
-      <CardContent sx={{ pt: 1 }}>
+      {/* <CardContent sx={{ pt: 1 }}>
         <ZoneMetricsPanel metrics={metrics} />
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 };
