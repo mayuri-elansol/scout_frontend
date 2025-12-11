@@ -50,13 +50,28 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         responseHandler: (response) => response.blob(), // ✅ IMPORTANT
       }),
     }),
-    getPpeKitDetectionDetailedCsvReport: builder.mutation<Blob, any>({
+    // getPpeKitDetectionDetailedCsvReport: builder.mutation<Blob, any>({
+    //   query: (body) => ({
+    //     url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedCsvReport}`,
+    //     method: "POST",
+    //     body,
+    //     responseHandler: (response) => response.blob(), // ✅ KEY
+    //   }),
+    // }),
+    getPpeKitDetectionDetailedCsvReport: builder.mutation<any, any>({
       query: (body) => ({
         url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedCsvReport}`,
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(), // ✅ KEY
+        responseHandler: (response) => response.blob(), // browser receives blob
       }),
+
+      transformResponse: async (blob: Blob) => {
+        return {
+          blob, // actual blob for download
+          cacheSafe: "csv_downloaded", // serializable placeholder stored in Redux
+        };
+      },
     }),
   }),
 });
