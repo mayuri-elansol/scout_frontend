@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 // import React, { useState, useEffect, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
-import { getUsecases } from '@/app/services/configurator/usecaseService';
+import { assignCameras, getCameraAssignments, getUsecases, unassignCamera } from '@/app/services/configurator/usecaseService';
 
 // import { roiService } from '@/services/scout/roiService';
 
@@ -38,6 +38,7 @@ import {
   // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
 import { roiService } from '@/app/services/roiService';
+import axios from 'axios';
 
 // ROI Shape type for the enhanced modal
 interface Point {
@@ -372,6 +373,35 @@ const loadUseCases = async () => {
 };
 
 
+// useEffect(() => {
+//   loadAssignedUsecases();
+// }, [useCases]);
+
+useEffect(() => {
+  if (!loadingUseCases) {
+    loadAssignedUsecases();
+  }
+}, [loadingUseCases]);
+
+
+const loadAssignedUsecases = async () => {
+  try {
+    const res = await getCameraAssignments(camera.id);
+    const assigned = res.data; 
+
+    setUseCases(prev =>
+      prev.map(uc => ({
+        ...uc,
+        selected: assigned.some((a: { usecaseId: string; }) => a.usecaseId === uc.id)
+      }))
+    );
+  } catch (e) {
+    console.error("Failed to load assignments", e);
+  }
+};
+
+
+
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
   const [showCameraView, setShowCameraView] = useState(false);
@@ -390,13 +420,43 @@ const loadUseCases = async () => {
 
 
 
-  const handleUseCaseSelect = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === useCaseId ? { ...useCase, selected: !useCase.selected } : useCase
-      )
-    );
-  };
+  const handleUseCaseSelect = async (usecaseId: string) => {
+  const useCase = useCases.find(uc => uc.id === usecaseId);
+  const isSelected = !useCase?.selected;
+
+  setUseCases(prev =>
+    prev.map(uc =>
+      uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
+    )
+  );
+
+  try {
+    if (isSelected) {
+      // ASSIGN
+      await assignCameras(usecaseId, [camera.id]);
+    } else {
+      // UNASSIGN
+      await unassignCamera(usecaseId, camera.id);
+    }
+
+    setSnackbar({
+      open: true,
+      severity: "success",
+      message: isSelected
+        ? "Camera assigned to usecase"
+        : "Camera unassigned",
+    });
+  } catch (error) {
+    console.error(error);
+    setSnackbar({
+      open: true,
+      severity: "error",
+      message: "Failed to update assignment",
+    });
+  }
+};
+
+
 
   const handleAddROI = (useCaseId: string) => {
     const useCase = useCases.find(uc => uc.id === useCaseId);

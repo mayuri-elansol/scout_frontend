@@ -28,3 +28,18 @@ export const assignCameras = async (usecaseId: string, cameraIds: string[]) => {
     { headers: { "x-tenant-id": TENANT_ID } }
   );
 };
+
+export const getCameraAssignments = async (cameraId: string) => {
+  return axios.get(`${API_BASE}/configurator/use-case-manager/camera-assignments/${cameraId}`, {
+    headers: { "x-tenant-id": TENANT_ID }
+  });
+};
+
+export const unassignCamera = async (usecaseId: string, cameraId: string) => {
+  return axios.delete(`${API_BASE}/configurator/use-case-manager/unassign`, {
+    data: { usecaseId, cameraId },
+    headers: { "x-tenant-id": TENANT_ID },
+  });
+};
+
+
