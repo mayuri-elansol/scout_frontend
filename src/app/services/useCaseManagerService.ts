@@ -1,6 +1,6 @@
 import {
   UseCase,
-  License,
+  // License,
   Camera,
   UseCaseCameraMapping,
   OrganizationLicense,
@@ -297,7 +297,7 @@ class UseCaseManagerService {
   /**
    * Mock: Get cameras for an organization
    */
-  async getMockCameras(organizationId: string): Promise<Camera[]> {
+  async getMockCameras(): Promise<Camera[]> {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 500));
 

@@ -12,17 +12,13 @@ import {
   CardContent,
   Button,
   Radio,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+ 
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Switch,
   FormControlLabel,
   Chip,
@@ -37,9 +33,10 @@ import {
   Settings as SettingsIcon,
   Tune as TuneIcon,
   RadioButtonUnchecked as ROIIcon,
-  CloudUpload as SaveIcon,
+  // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
 import { roiService } from '@/app/services/roiService';
+
 
 // ROI Shape type for the enhanced modal
 interface Point {
@@ -89,6 +86,8 @@ interface CameraData {
   status: 'connected' | 'failed' | 'pending';
   aiConfig?:AIConfig
 }
+
+
 
 interface AIConfigurationStepProps {
   camera: CameraData;
@@ -474,13 +473,13 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     );
   };
 
-  const handleToggleEnable = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === useCaseId ? { ...useCase, enabled: !useCase.enabled } : useCase
-      )
-    );
-  };
+  // const handleToggleEnable = (useCaseId: string) => {
+  //   setUseCases(prev =>
+  //     prev.map(useCase =>
+  //       useCase.id === useCaseId ? { ...useCase, enabled: !useCase.enabled } : useCase
+  //     )
+  //   );
+  // };
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {

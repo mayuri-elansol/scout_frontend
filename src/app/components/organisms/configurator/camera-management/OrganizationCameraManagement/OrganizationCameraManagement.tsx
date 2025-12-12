@@ -99,24 +99,38 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   };
 
   const handleCameraBatchAdd = (
-  camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
-) => {
-  const newCameras = camerasData.map((cameraData, index) => ({
-    ...cameraData,
-    id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-    rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
-    position: cameraData.ipAddress,
-    status: Math.random() > 0.7 ? 'failed' : 'connected',
-  }));
+    camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
+  ) => {
+    // const newCameras = camerasData.map((cameraData, index) => ({
+    //   ...cameraData,
+    //   id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+    //   rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
+    //   position: cameraData.ipAddress,
+    //   status: Math.random() > 0.7 ? 'failed' : 'connected',
+    // }));
 
-  setCameras((prev: CameraData[]) => [...prev, ...newCameras]); // ✅ FIXED
+    const newCameras: CameraData[] = camerasData.map((cam, index) => ({
+      ...cam,
+      id: `camera-${Date.now()}-${index}-${Math.random()
+        .toString(36)
+        .substr(2, 9)}`,
+      rtspStream: `rtsp://${cam.username}:${cam.password}@${cam.ipAddress}:${cam.port}/Streaming/Channels/101`,
+      position: cam.ipAddress,
+      make: cam.make,
+      status: "pending",
+      aiConfig: undefined,
+    }));
 
-  setSnackbar({
-    open: true,
-    message: `${newCameras.length} cameras added successfully!`,
-    severity: 'success',
-  });
-};
+    setCameras((prev) => [...prev, ...newCameras]);
+
+    // setCameras((prev: CameraData[]) => [...prev, ...newCameras]); // ✅ FIXED
+
+    setSnackbar({
+      open: true,
+      message: `${newCameras.length} cameras added successfully!`,
+      severity: 'success',
+    });
+  };
 
 
   const handleCameraRemove = (cameraId: string) => {
@@ -134,7 +148,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     setSelectedCameraForConfig(cameraId);
   };
 
-  const handleAIConfigSave = (cameraId: string, aiConfig: any) => {
+  type AICameraConfig = NonNullable<CameraData["aiConfig"]>;
+
+  const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
     setCameras((prev) =>
       prev.map((camera) =>
         camera.id === cameraId ? { ...camera, aiConfig } : camera

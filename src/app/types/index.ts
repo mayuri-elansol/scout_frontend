@@ -91,6 +91,9 @@ export type PageType =
   | "role-management"
   | "user-management"
   | "configurator"
+  | "use-case-manager"
+  | "zone-location-mapping"
+  | "camera-management"
   | "camera-tamparing-dasboard";
 // Component Props Types
 export interface SidebarProps {

@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import RoiSelectionModal from "./RoiSelectionModal";
+import type { ROIShape, DrawingTool } from "./RoiSelectionModal";
 
 // ---------------------------------------------
-// SHARED MOCK DATA
+// SHARED MOCK DATA (TYPED)
 // ---------------------------------------------
-const mockExistingROI = [
+const mockExistingROI: ROIShape[] = [
   {
-    type: "rectangle",
+    type: "rectangle" as DrawingTool,
     points: [
       { x: 100, y: 100 },
       { x: 300, y: 250 },
@@ -17,7 +18,7 @@ const mockExistingROI = [
     mode: "include",
   },
   {
-    type: "polygon",
+    type: "polygon" as DrawingTool,
     points: [
       { x: 400, y: 150 },
       { x: 500, y: 150 },
@@ -76,7 +77,7 @@ export const IntrusionDetection: Story = {
     useCaseName: "Intrusion Detection at Premises Perimeter",
     existingROI: [
       {
-        type: "freehand",
+        type: "freehand" as DrawingTool,
         points: [
           { x: 50, y: 400 },
           { x: 100, y: 380 },
@@ -98,7 +99,7 @@ export const WithExcludeZone: Story = {
     useCaseName: "Fall Detection (Person falling on the floor)",
     existingROI: [
       {
-        type: "rectangle",
+        type: "rectangle" as DrawingTool,
         points: [
           { x: 100, y: 100 },
           { x: 400, y: 300 },
@@ -109,7 +110,7 @@ export const WithExcludeZone: Story = {
         mode: "include",
       },
       {
-        type: "rectangle",
+        type: "rectangle" as DrawingTool,
         points: [
           { x: 450, y: 100 },
           { x: 600, y: 200 },
