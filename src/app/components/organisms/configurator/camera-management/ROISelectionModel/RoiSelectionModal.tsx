@@ -134,6 +134,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const isDrawingRef = useRef(false);
+
+
   const [drawingTool, setDrawingTool] = useState<DrawingTool>('rectangle');
   const [roiMode, setRoiMode] = useState<'include' | 'exclude'>('include');
   const [roiShapes, setRoiShapes] = useState<ROIShape[]>([]);
@@ -192,6 +195,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
   // Calculate canvas size based on container
    const recalcCanvasSize = useCallback(() => {
+     if (isDrawingRef.current) return;
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -226,35 +230,12 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   }, []);
 
 
-// useEffect(() => {
-//   if (open) {
-//     const roiToLoad = existingROI || [];
-    
-//     // ✅ Check if use case changed
-//     const useCaseChanged = prevUseCaseRef.current !== useCaseName;
-//     prevUseCaseRef.current = useCaseName;
-    
-//     setRoiShapes(roiToLoad);
-//     setHistory([roiToLoad]);
-//     setHistoryIndex(0);
-//     setCurrentShape(null);
-//     setIsDrawing(false);
-//     setSelectedROIIndex(null);
-//     setEditingNameIndex(null);
-//     setImageLoaded(false); // ✅ Always reset this
-    
-//     const first = (USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default)[0];
-//     setSelectedLabel(first);
-    
-//     // ✅ If use case changed, force canvas recalc
-//     if (useCaseChanged) {
-//       setTimeout(() => {
-//         recalcCanvasSize();
-//       }, 50);
-//     }
-//   }
-// }, [open, useCaseName, existingROI]);
+useEffect(() => {
+  if (!open || !imageLoaded) return;
+  if (isDrawingRef.current) return;
 
+  drawCanvas();
+}, [roiShapes, selectedROIIndex, selectedColor, imageLoaded]);
 
   // Helper function to draw shapes  
   const drawShape = (ctx: CanvasRenderingContext2D, shape: ROIShape, color: string, label: number | null, _isActive: boolean, isSelected: boolean) => {
@@ -360,7 +341,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       drawShape(ctx, currentShape, selectedColor, null, true, false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageLoaded, roiShapes, currentShape, selectedROIIndex, selectedColor]);
+  }, [imageLoaded, roiShapes, selectedROIIndex, selectedColor]);
 
 
 
@@ -471,11 +452,11 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     if (!open) return;
 
     const handleResize = () => {
-      recalcCanvasSize();
-      setTimeout(() => {
-        drawCanvas();
-      }, 100);
-    };
+  if (isDrawingRef.current) return;
+  recalcCanvasSize();
+  setTimeout(drawCanvas, 50);
+};
+
 
     window.addEventListener('resize', handleResize);
     
@@ -537,7 +518,10 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     return false;
   };
 
+  
+
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    isDrawingRef.current = true;
     const point = getCanvasCoordinates(e);
 
     if (drawingTool === 'rectangle') {
@@ -568,6 +552,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   };
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    // isDrawingRef.current = true;
     if (!isDrawing || !currentShapeRef.current) return;
     const point = getCanvasCoordinates(e);
 
@@ -621,6 +606,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   };
 
   const handleCanvasMouseUp = () => {
+    isDrawingRef.current = false;
+
     if (!currentShapeRef.current) return;
 
     if (drawingTool === 'rectangle' || drawingTool === 'freehand') {
@@ -687,8 +674,26 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
           points: [...currentShapeRef.current.points, point],
         };
         currentShapeRef.current = updatedShape;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext("2d");
+
+        if (canvas && ctx && imageRef.current) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+
+          // Draw existing ROI shapes
+          roiShapes.forEach((shape, index) => {
+            drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
+          });
+
+          // Draw PREVIEW polygon (the new updated shape)
+          drawShape(ctx, updatedShape, selectedColor, null, true, false);
+        }
+
         setCurrentShape(updatedShape);
       }
+
     }
   };
 
