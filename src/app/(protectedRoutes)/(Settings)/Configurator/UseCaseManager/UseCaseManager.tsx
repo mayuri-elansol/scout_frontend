@@ -7,18 +7,17 @@ import {
   Typography,
   Paper,
   Alert,
-  Breadcrumbs,
   Link as MuiLink,
   Skeleton,
 } from "@mui/material";
 import {
-  Home as HomeIcon,
-  Settings as SettingsIcon,
-  Tune as TuneIcon,
+  // Home as HomeIcon,
+  // Settings as SettingsIcon,
+  // Tune as TuneIcon,
   Category as CategoryIcon,
-  NavigateNext as NavigateNextIcon,
+  // NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
-import Link from "next/link";
+// import Link from "next/link";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 import { getUsecases, getCameras, assignCameras, getAssignments }
   from "@/app/services/configurator/usecaseService";
@@ -40,7 +39,7 @@ const UseCaseManager: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Assume organization ID is available from context or session
-  const organizationId = "org-001";
+  // const organizationId = "org-001";
 
   // Load use cases on mount
   useEffect(() => {
@@ -100,34 +99,6 @@ const UseCaseManager: React.FC = () => {
   };
 
 
-  // const handleConfigureCameras = async (useCase: UseCase) => {
-  //   setSelectedUseCase(useCase);
-  //   setDrawerOpen(true);
-  //   if (cameras.length === 0) {
-  //     await loadCameras();
-  //   }
-  // };
-
-  // const handleSaveCameraAssignments = async (
-  //   useCaseId: string,
-  //   selectedCameraIds: string[]
-  // ) => {
-  //   try {
-  //     setUseCases((prev) =>
-  //       prev.map((uc) =>
-  //         uc.id === useCaseId ? { ...uc, assignedCameraIds: selectedCameraIds } : uc
-  //       )
-  //     );
-  //     console.log("Saved camera assignments:", {
-  //       useCaseId,
-  //       selectedCameraIds,
-  //     });
-  //   } catch (err) {
-  //     console.error("Error saving camera assignments:", err);
-  //     throw err;
-  //   }
-  // };
-
   const handleSaveCameraAssignments = async (useCaseId: string, selectedCameraIds: string[]) => {
     try {
       await assignCameras(useCaseId, selectedCameraIds);   // call backend
@@ -164,50 +135,6 @@ const UseCaseManager: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Breadcrumbs */}
-      {/* <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        sx={{ mb: 3 }}
-      >
-        <MuiLink
-          component={Link}
-          href="/LiveStreamingPage"
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <HomeIcon fontSize="small" />
-          Home
-        </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <SettingsIcon fontSize="small" />
-          Settings
-        </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <TuneIcon fontSize="small" />
-          Configurator
-        </MuiLink>
-        <Typography
-          color="text.primary"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            fontWeight: 600,
-          }}
-        >
-          <CategoryIcon fontSize="small" />
-          Use-Case Manager
-        </Typography>
-      </Breadcrumbs> */}
 
       {/* Page Header */}
       <Box sx={{ mb: 4 }}>

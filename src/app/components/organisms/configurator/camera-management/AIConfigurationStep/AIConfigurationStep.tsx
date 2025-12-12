@@ -111,233 +111,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   onSave,
   onBack,
 }) => {
-  // const [useCases, setUseCases] = useState<UseCaseData[]>([
-  //   {
-  //     id: 'ppe-detection',
-  //     name: 'Personal Protective Equipment (PPE) Detection',
-  //     description: 'Detect personal protective equipment compliance',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'object-detection-walking-bays',
-  //     name: 'Object Detection in Walking Bays',
-  //     description: 'Detect objects blocking walking paths and bays',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'fire-smoke-gas-leak',
-  //     name: 'Fire, Smoke, Oil and Gas Leak Detection',
-  //     description: 'Detect fire, smoke, oil and gas leak incidents',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'vehicle-speed-monitoring',
-  //     name: 'Vehicle Speed Monitoring inside premises',
-  //     description: 'Monitor vehicle speed within facility premises',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'fall-detection',
-  //     name: 'Fall Detection (Person falling on the floor)',
-  //     description: 'Detect when a person falls on the floor',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'laydown-sleeping-detection',
-  //     name: 'Laydown/Sleeping Detection in Work Areas',
-  //     description: 'Detect people laying down or sleeping in work areas',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'equipment-gangway-detection',
-  //     name: 'Stacker, Forklift or Equipment in Gangway',
-  //     description: 'Detect equipment blocking gangways',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'stp-etp-overflow',
-  //     name: 'STP/ETP Overflow Detection',
-  //     description: 'Detect sewage/effluent treatment plant overflow',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'emergency-exit-blockage',
-  //     name: 'Emergency Exit Blockage Detection',
-  //     description: 'Detect blockages at emergency exit points',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'crowd-gathering-hazardous',
-  //     name: 'Crowd Gathering in Hazardous Zones',
-  //     description: 'Detect crowd gathering in dangerous areas',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'intrusion-detection-perimeter',
-  //     name: 'Intrusion Detection at Premises Perimeter',
-  //     description: 'Detect unauthorized entry at facility perimeter',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'unauthorized-access-restricted',
-  //     name: 'Unauthorized Access in Restricted Areas',
-  //     description: 'Detect unauthorized access to restricted zones',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'camera-tampering-offline',
-  //     name: 'Camera Tampering or Offline Detection',
-  //     description: 'Detect camera tampering or offline status',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'people-presence-shutdown',
-  //     name: 'People Presence during Shutdown Hours',
-  //     description: 'Detect people presence during non-operational hours',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'employee-presence-critical',
-  //     name: 'Employee Presence Detection in Critical Areas',
-  //     description: 'Monitor employee presence in critical work areas',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'face-recognition-entry-exit',
-  //     name: 'Face Recognition for Entry/Exit Logging',
-  //     description: 'Face recognition for access control and logging',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'employee-idle-time',
-  //     name: 'Employee Idle Time Monitoring',
-  //     description: 'Monitor employee idle time and productivity',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'mobile-phone-usage',
-  //     name: 'Mobile Phone Usage in Restricted Areas',
-  //     description: 'Detect mobile phone usage in restricted zones',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'security-personnel-sleeping',
-  //     name: 'Sleeping or Absence of Security Personnel',
-  //     description: 'Monitor security personnel alertness and presence',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'people-count-factory',
-  //     name: 'People Count in Factory Premises',
-  //     description: 'Count people in designated factory areas',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'vehicle-count-anpr',
-  //     name: 'Vehicle Count & ANPR at Entry/Exit Gates',
-  //     description: 'Vehicle counting and number plate recognition',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'canteen-usage-monitoring',
-  //     name: 'Monitoring Canteen Usage & Timings',
-  //     description: 'Monitor canteen occupancy and usage patterns',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'vehicle-loading-time',
-  //     name: 'Tracking Vehicle Unloading/Loading Time',
-  //     description: 'Track time taken for vehicle loading/unloading',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'unauthorized-parking',
-  //     name: 'Unauthorized Parking or Equipment Blocking Aisles',
-  //     description: 'Detect unauthorized parking and aisle blockages',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  //   {
-  //     id: 'ocr-detection',
-  //     name: 'OCR Detection',
-  //     description: 'Optical character recognition for text detection',
-  //     selected: false,
-  //     roiConfigured: false,
-  //     fineTuned: false,
-  //     enabled: false,
-  //   },
-  // ]);
+
+  const [roiModalKey, setRoiModalKey] = useState(0);
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
 const [loadingUseCases, setLoadingUseCases] = useState(true);
@@ -373,15 +148,17 @@ const loadUseCases = async () => {
 };
 
 
-// useEffect(() => {
-//   loadAssignedUsecases();
-// }, [useCases]);
-
 useEffect(() => {
-  if (!loadingUseCases) {
-    loadAssignedUsecases();
-  }
-}, [loadingUseCases]);
+  loadAssignedUsecases();
+}, [useCases]);
+
+
+
+// useEffect(() => {
+//   if (!loadingUseCases) {
+//     loadAssignedUsecases();
+//   }
+// }, [loadingUseCases]);
 
 
 const loadAssignedUsecases = async () => {
@@ -458,13 +235,22 @@ const loadAssignedUsecases = async () => {
 
 
 
-  const handleAddROI = (useCaseId: string) => {
-    const useCase = useCases.find(uc => uc.id === useCaseId);
-    if (!useCase) return;
+  // const handleAddROI = (useCaseId: string) => {
+  //   const useCase = useCases.find(uc => uc.id === useCaseId);
+  //   if (!useCase) return;
 
-    setCurrentUseCaseForROI(useCaseId);
-    setRoiModalOpen(true);
-  };
+  //   setCurrentUseCaseForROI(useCaseId);
+  //   setRoiModalOpen(true);
+  // };
+
+  const handleAddROI = (useCaseId: string) => {
+  const useCase = useCases.find(uc => uc.id === useCaseId);
+  if (!useCase) return;
+
+  setCurrentUseCaseForROI(useCaseId);
+  setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
+  setRoiModalOpen(true);
+};
 
   const handleROISave = async (roiShapes: ROIShape[]) => {
     if (!currentUseCaseForROI) return;
@@ -474,16 +260,13 @@ const loadAssignedUsecases = async () => {
 
     try {
       setLoading(true);
-      console.log('💾 Saving ROI to backend...');
+      console.log('💾 Saving ROI locally...');
 
-      // Save to backend
-      const response = await roiService.saveRoi(
-        camera.id,
-        useCase.name,
-        roiShapes
-      );
+      // ✅ TEMPORARY: Save only to local state (no backend call)
+      // TODO: Implement backend save later
+      // const response = await roiService.saveRoi(camera.id, useCase.name, roiShapes);
 
-      console.log('✅ ROI saved successfully:', response);
+      console.log('✅ ROI saved to local state:', roiShapes);
 
       // Update local state
       setUseCases(prev =>
@@ -501,7 +284,7 @@ const loadAssignedUsecases = async () => {
       // Show success message
       setSnackbar({
         open: true,
-        message: `✅ ROI saved successfully for ${useCase.name}!`,
+        message: `✅ ROI configured successfully for ${useCase.name}!`,
         severity: 'success',
       });
 
@@ -576,7 +359,7 @@ const loadAssignedUsecases = async () => {
   };
 
   const getCameraFeedUrl = () => {
-    return 'img/siteimage.jpg';
+    return '/img/siteimage.jpg';
   };
 
   const handleCloseSnackbar = () => {
@@ -603,7 +386,7 @@ const loadAssignedUsecases = async () => {
         >
           <Box sx={{ textAlign: 'center' }}>
             <CircularProgress />
-            <Typography sx={{ mt: 2 }}>Saving ROI to database...</Typography>
+            <Typography sx={{ mt: 2 }}>Saving ROI configuration...</Typography>
           </Box>
         </Box>
       )}
@@ -869,7 +652,9 @@ const loadAssignedUsecases = async () => {
 
       {/* ROI Selection Modal */}
       <RoiSelectionModal
-        key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
+        // key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
+        // key={`${currentUseCaseForROI}-${roiModalOpen}`} 
+        // key={roiModalKey}
         open={roiModalOpen}
         onClose={handleROIClose}
         cameraFeedUrl={getCameraFeedUrl()}
