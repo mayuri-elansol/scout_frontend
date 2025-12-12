@@ -53,7 +53,7 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
             }}
           >
             {violations.incident ??
-              violations.voilation ??
+              violations.violation ??
               violations.usage ??
               violations.eventMessage ??
               "Unknown Violation"}

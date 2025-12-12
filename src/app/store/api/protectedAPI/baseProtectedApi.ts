@@ -12,5 +12,6 @@ export const baseProtectedApi = createApi({
     "PpeZoneViolations",
     "PpeRecentViolations",
     "PpeDetailedReport",
+    "PpeReportCsv",
   ],
 });

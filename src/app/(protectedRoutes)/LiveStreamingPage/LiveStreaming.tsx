@@ -32,7 +32,7 @@ const LiveStreaming: React.FC = () => {
       name: "Production Zone A",
       status: "LIVE",
       roiDetection: "ROI DETECTION",
-      worker: <>{"Worker #2"}</>, // wrap as React element
+      worker: <>{"Worker #2"}</>,
       compliance: "87.5%",
       people: "24",
       violations: "3",
@@ -144,37 +144,6 @@ const LiveStreaming: React.FC = () => {
           />
         </Box>
       </Box>
-
-      {/* Top Metrics */}
-      {/* <Grid container spacing={3} sx={{ mb: 0.6 }}>
-        {topMetrics.map((metric, index) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={uuidv4() + index}>
-            <Paper
-              sx={{
-                p: 0.5,
-                textAlign: "center",
-                border: `2px solid ${metric.borderColor}`,
-                borderRadius: 2,
-                backgroundColor: "white",
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "32px",
-                  fontWeight: "bold",
-                  color: metric.color,
-                  mb: 0.5,
-                }}
-              >
-                {metric.value}
-              </Typography>
-              <Typography sx={{ fontSize: "14px", color: "#666" }}>
-                {metric.label}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid> */}
 
       {/* Camera Feeds Grid */}
 

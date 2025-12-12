@@ -159,7 +159,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
           </Typography>
 
           {/* Video Controls */}
-          <Box
+          {/* <Box
             sx={{
               position: "absolute",
               bottom: 12,
@@ -194,7 +194,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
                 <VolumeUp sx={{ fontSize: 18 }} />
               )}
             </IconButton>
-          </Box>
+          </Box> */}
 
           <IconButton
             size="small"
@@ -212,7 +212,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
         </Box>
 
         {/* Zone Metrics */}
-        <CardContent sx={{ p: "5px" }}>
+        {/* <CardContent sx={{ p: "5px" }}>
           <Box
             sx={{ display: "flex", justifyContent: "space-between", gap: 0 }}
           >
@@ -257,7 +257,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
               </Typography>
             </Box>
           </Box>
-        </CardContent>
+        </CardContent> */}
       </Box>
     </Card>
   );
