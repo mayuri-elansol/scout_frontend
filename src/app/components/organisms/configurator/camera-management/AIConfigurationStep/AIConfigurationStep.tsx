@@ -104,6 +104,7 @@ interface UseCaseData {
   roiShapes?: ROIShape[];
   fineTuned: boolean;
   enabled: boolean;
+  labels: string[]; 
 }
 
 const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
@@ -137,6 +138,7 @@ const loadUseCases = async () => {
       fineTuned: false,
       enabled: false,
       roiShapes: [],
+      labels: uc.labels || [],
     }));
 
     setUseCases(mapped);
@@ -661,6 +663,7 @@ const loadAssignedUsecases = async () => {
         useCaseName={getCurrentUseCaseName()}
         existingROI={getExistingROI()}
         onSave={handleROISave}
+        labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels || []}
       />
 
       {/* Success/Error Snackbar */}

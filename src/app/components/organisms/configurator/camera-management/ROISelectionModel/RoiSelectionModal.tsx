@@ -67,6 +67,7 @@ interface RoiSelectionModalProps {
   useCaseName: string;
   existingROI?: ROIShape[];
   onSave: (roiShapes: ROIShape[]) => void;
+  labels: string[];
 }
 
 /* ----------------------------- Constants ----------------------------- */
@@ -86,36 +87,7 @@ const ROI_COLORS = [
   '#ff1493', // Deep Pink
 ];
 
-const USE_CASE_LABELS: Record<string, string[]> = {
-  'Personal Protective Equipment (PPE) Detection': ['Helmet', 'Vest', 'Gloves', 'Goggles', 'Shoes'],
-  'Object Detection in Walking Bays': ['Person', 'Object', 'Forklift', 'Obstacle'],
-  'Fire, Smoke, Oil and Gas Leak Detection': ['Fire', 'Smoke', 'Oil Leak', 'Gas Leak'],
-  'Vehicle Speed Monitoring inside premises': ['Vehicle', 'Speed Limit', 'Overspeed', 'Zone'],
-  'Fall Detection (Person falling on the floor)': ['Standing Person', 'Fallen Person'],
-  'Laydown/Sleeping Detection in Work Areas': ['Active Worker', 'Lying Down', 'Sleeping'],
-  'Stacker, Forklift or Equipment in Gangway': ['Forklift', 'Stacker', 'Person', 'Gangway'],
-  'STP/ETP Overflow Detection': ['Water Level', 'Overflow', 'Normal'],
-  'Emergency Exit Blockage Detection': ['Exit Door', 'Blocked Area', 'Open Path'],
-  'Crowd Gathering in Hazardous Zones': ['Person', 'Crowd', 'Hazard Zone'],
-  'Intrusion Detection at Premises Perimeter': ['Person', 'Vehicle', 'Animal', 'Intruder'],
-  'Unauthorized Access in Restricted Areas': ['Authorized', 'Unauthorized', 'Restricted Zone'],
-  'Camera Tampering or Offline Detection': ['Normal View', 'Tampered', 'Offline'],
-  'People Presence during Shutdown Hours': ['Person', 'No Presence', 'Restricted Zone'],
-  'Employee Presence Detection in Critical Areas': ['Authorized Employee', 'Unauthorized', 'Critical Zone'],
-  'Face Recognition for Entry/Exit Logging': ['Recognized', 'Unrecognized', 'Employee', 'Visitor'],
-  'Face recognition for access control and logging': ['Authorized', 'Unauthorized', 'Visitor', 'Blocked Access'],
-  'Employee Idle Time Monitoring': ['Active', 'Idle', 'Away'],
-  'Monitor employee idle time and productivity': ['Working', 'Idle', 'Break'],
-  'Mobile Phone Usage in Restricted Areas': ['Person', 'Using Phone', 'Restricted Zone'],
-  'Sleeping or Absence of Security Personnel': ['Awake', 'Sleeping', 'Absent'],
-  'People Count in Factory Premises': ['Person', 'Crowd', 'Entry', 'Exit'],
-  'Vehicle Count & ANPR at Entry/Exit Gates': ['Car', 'Truck', 'Bike', 'License Plate'],
-  'Monitoring Canteen Usage & Timings': ['Person', 'Canteen Queue', 'Dining Area'],
-  'Tracking Vehicle Unloading/Loading Time': ['Truck', 'Container', 'Dock', 'Worker'],
-  'Unauthorized Parking or Equipment Blocking Aisles': ['Parked Vehicle', 'Blocked Aisle', 'Forklift'],
-  'OCR Detection': ['Text', 'Document', 'License Plate', 'Board'],
-  default: ['ROI Zone 1', 'ROI Zone 2', 'ROI Zone 3'],
-};
+
 
 /* ----------------------------- Component ----------------------------- */
 
@@ -126,6 +98,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   useCaseName,
   existingROI,
   onSave,
+  labels
 }) => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
@@ -167,10 +140,21 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const [historyIndex, setHistoryIndex] = useState(0);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selectedLabel, setSelectedLabel] = useState<string>(
-    (USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default)[0]
-  );
+  const [selectedLabel, setSelectedLabel] = useState<string>('');
 
+
+  useEffect(() => {
+  if (!open) return;
+
+  if (labels && labels.length > 0) {
+    setSelectedLabel(labels[0]);
+  } else {
+    setSelectedLabel('ROI');
+  }
+}, [labels, open]);
+
+
+  
   // Image ref for loading
   const imageRef = useRef<HTMLImageElement | null>(null);
 
@@ -188,7 +172,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       setEditingNameIndex(null);
       // Don't reset imageLoaded - let the image loading effect handle it
 
-      const first = (USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default)[0];
+      const first = labels.length > 0 ? labels[0] : 'ROI';
       setSelectedLabel(first);
     }
   }, [open, useCaseName, existingROI]);
@@ -912,7 +896,8 @@ useEffect(() => {
                 }
               }}
             >
-              {(USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default).map((labelOption) => (
+              {(labels.length > 0 ? labels : ['ROI']).map((labelOption) => (
+
                 <MenuItem key={labelOption} value={labelOption}>
                   {labelOption}
                 </MenuItem>
@@ -1117,7 +1102,8 @@ useEffect(() => {
                               '& select': { fontSize: '0.75rem', padding: '2px 4px' },
                             }}
                           >
-                            {(USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default).map((labelOption) => (
+                            {(labels.length > 0 ? labels : ['ROI']).map((labelOption) => (
+
                             <option key={labelOption} value={labelOption}>
                               {labelOption}
                             </option>
@@ -1464,7 +1450,8 @@ useEffect(() => {
         anchorReference="anchorPosition"
         anchorPosition={labelMenu ? { top: labelMenu.y, left: labelMenu.x } : undefined}
       >
-        {(USE_CASE_LABELS[useCaseName] || USE_CASE_LABELS.default).map((opt) => (
+        {(labels.length > 0 ? labels : ['ROI']).map((opt) => (
+
           <MenuItem
             key={opt}
             selected={labelMenu !== null && roiShapes[labelMenu.roiIndex]?.name === opt}
