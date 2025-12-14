@@ -729,6 +729,7 @@ const loadAssignedUsecases = async () => {
         // key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
         // key={`${currentUseCaseForROI}-${roiModalOpen}`} 
         // key={roiModalKey}
+        key={`${camera.id}-${currentUseCaseForROI}`}
         open={roiModalOpen}
         onClose={handleROIClose}
         cameraFeedUrl={getCameraFeedUrl()}
