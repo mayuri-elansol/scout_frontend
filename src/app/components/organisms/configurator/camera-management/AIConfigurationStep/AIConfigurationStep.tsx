@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // import React, { useState, useEffect, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 import { assignCameras, getCameraAssignments, getUsecases, unassignCamera } from '@/app/services/configurator/usecaseService';
+// import { roiService, ROIShape } from '@/app/services/roiService';
 
 // import { roiService } from '@/services/scout/roiService';
 
@@ -37,24 +38,29 @@ import {
   RadioButtonUnchecked as ROIIcon,
   // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
-import { roiService } from '@/app/services/roiService';
+
+import { roiService} from '@/app/services/roiService';
+
+import { ROIShape } from '@/app/types/roi';
+
+
 import axios from 'axios';
 
 // ROI Shape type for the enhanced modal
-interface Point {
-  x: number;
-  y: number;
-}
+// interface Point {
+//   x: number;
+//   y: number;
+// }
 
-interface ROIShape {
-  id?: string;
-  type: 'rectangle' | 'polygon' | 'freehand';
-  points: Point[];
-  completed: boolean;
-  color: string;
-  name: string;
-  mode: 'include' | 'exclude';
-}
+// interface ROIShape {
+//   id?: string;
+//   type: 'rectangle' | 'polygon' | 'freehand';
+//   points: Point[];
+//   completed: boolean;
+//   color: string;
+//   name: string;
+//   mode: 'include' | 'exclude';
+// }
 
 interface ROIData {
   configured: boolean;
@@ -120,6 +126,7 @@ const [loadingUseCases, setLoadingUseCases] = useState(true);
 useEffect(() => {
   loadUseCases();
 }, []);
+
 
 const loadUseCases = async () => {
   try {
@@ -245,65 +252,130 @@ const loadAssignedUsecases = async () => {
   //   setRoiModalOpen(true);
   // };
 
-  const handleAddROI = (useCaseId: string) => {
-  const useCase = useCases.find(uc => uc.id === useCaseId);
-  if (!useCase) return;
+//   const handleAddROI = (useCaseId: string) => {
+//   const useCase = useCases.find(uc => uc.id === useCaseId);
+//   if (!useCase) return;
 
+//   setCurrentUseCaseForROI(useCaseId);
+//   setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
+//   setRoiModalOpen(true);
+// };
+
+  const handleAddROI = async (useCaseId: string) => {
   setCurrentUseCaseForROI(useCaseId);
-  setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
+
+  try {
+    const shapes = await roiService.getRoi(camera.id, useCaseId);
+
+    setUseCases(prev =>
+      prev.map(uc =>
+        uc.id === useCaseId
+          ? { ...uc, roiShapes: shapes, roiConfigured: true }
+          : uc
+      )
+    );
+  } catch {
+    // No ROI exists yet → open empty canvas
+  }
+
   setRoiModalOpen(true);
 };
 
+
+  // const handleROISave = async (roiShapes: ROIShape[]) => {
+  //   if (!currentUseCaseForROI) return;
+
+  //   const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
+  //   if (!useCase) return;
+
+  //   try {
+  //     setLoading(true);
+  //     console.log('💾 Saving ROI locally...');
+
+  //     console.log('✅ ROI saved to local state:', roiShapes);
+
+  //     // Update local state
+  //     setUseCases(prev =>
+  //       prev.map(uc =>
+  //         uc.id === currentUseCaseForROI
+  //           ? {
+  //             ...uc,
+  //             roiConfigured: true,
+  //             roiShapes: roiShapes,
+  //           }
+  //           : uc
+  //       )
+  //     );
+
+  //     // Show success message
+  //     setSnackbar({
+  //       open: true,
+  //       message: `✅ ROI configured successfully for ${useCase.name}!`,
+  //       severity: 'success',
+  //     });
+
+  //     // Close modal
+  //     setRoiModalOpen(false);
+  //     setCurrentUseCaseForROI(null);
+  //   } catch (error) {
+  //     console.error('❌ Error saving ROI:', error);
+  //     setSnackbar({
+  //       open: true,
+  //       message: '❌ Failed to save ROI. Please try again.',
+  //       severity: 'error',
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
   const handleROISave = async (roiShapes: ROIShape[]) => {
-    if (!currentUseCaseForROI) return;
+  if (!currentUseCaseForROI) return;
 
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    if (!useCase) return;
+  try {
+    setLoading(true);
 
-    try {
-      setLoading(true);
-      console.log('💾 Saving ROI locally...');
+    // 🔥 SAVE TO BACKEND
+    await roiService.saveRoi(
+      camera.id,
+      currentUseCaseForROI,
+      roiShapes
+    );
 
-      // ✅ TEMPORARY: Save only to local state (no backend call)
-      // TODO: Implement backend save later
-      // const response = await roiService.saveRoi(camera.id, useCase.name, roiShapes);
-
-      console.log('✅ ROI saved to local state:', roiShapes);
-
-      // Update local state
-      setUseCases(prev =>
-        prev.map(uc =>
-          uc.id === currentUseCaseForROI
-            ? {
+    // 🔁 Update local UI state
+    setUseCases(prev =>
+      prev.map(uc =>
+        uc.id === currentUseCaseForROI
+          ? {
               ...uc,
               roiConfigured: true,
-              roiShapes: roiShapes,
+              roiShapes,
             }
-            : uc
-        )
-      );
+          : uc
+      )
+    );
 
-      // Show success message
-      setSnackbar({
-        open: true,
-        message: `✅ ROI configured successfully for ${useCase.name}!`,
-        severity: 'success',
-      });
+    setSnackbar({
+      open: true,
+      message: 'ROI saved successfully',
+      severity: 'success',
+    });
 
-      // Close modal
-      setRoiModalOpen(false);
-      setCurrentUseCaseForROI(null);
-    } catch (error) {
-      console.error('❌ Error saving ROI:', error);
-      setSnackbar({
-        open: true,
-        message: '❌ Failed to save ROI. Please try again.',
-        severity: 'error',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (err) {
+    console.error(err);
+    setSnackbar({
+      open: true,
+      message: 'Failed to save ROI',
+      severity: 'error',
+    });
+  } finally {
+    setLoading(false);
+    setRoiModalOpen(false);
+    setCurrentUseCaseForROI(null);
+  }
+};
+
 
   const handleROIClose = () => {
     setRoiModalOpen(false);

@@ -43,6 +43,7 @@ import {
   ArrowDropDown as ArrowDropDownIcon,
   Menu as MenuIcon,
 } from '@mui/icons-material';
+import { ROIShape } from '@/app/types/roi';
 
 type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
 
@@ -51,14 +52,14 @@ interface Point {
   y: number;
 }
 
-interface ROIShape {
-  type: DrawingTool;
-  points: Point[];
-  completed: boolean;
-  color: string;
-  name: string;
-  mode: 'include' | 'exclude';
-}
+// interface ROIShape {
+//   type: DrawingTool;
+//   points: Point[];
+//   completed: boolean;
+//   color: string;
+//   name: string;
+//   mode: 'include' | 'exclude';
+// }
 
 interface RoiSelectionModalProps {
   open: boolean;
@@ -126,6 +127,19 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     return ROI_COLORS[idx];
   }, []);
 
+  const normalizeROI = (shapes: ROIShape[], canvas: HTMLCanvasElement) => {
+  return shapes.map(shape => ({
+    ...shape,
+    points: shape.points.map(p => ({
+      x: +(p.x / canvas.width).toFixed(6),
+      y: +(p.y / canvas.height).toFixed(6)
+    }))
+  }));
+
+ 
+
+};
+
   const [selectedROIIndex, setSelectedROIIndex] = useState<number | null>(null);
   const [editingNameIndex, setEditingNameIndex] = useState<number | null>(null);
 
@@ -141,6 +155,20 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState<string>('');
+
+   const denormalizeROI = (
+  shapes: ROIShape[],
+  canvas: HTMLCanvasElement
+): ROIShape[] => {
+  return shapes.map(shape => ({
+    ...shape,
+    points: shape.points.map(p => ({
+      x: +(p.x * canvas.width).toFixed(2),
+      y: +(p.y * canvas.height).toFixed(2),
+    })),
+    completed: true,
+  }));
+};
 
 
   useEffect(() => {
@@ -159,27 +187,55 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   // Load existing ROI when modal opens
-  useEffect(() => {
-    if (open) {
-      const roiToLoad = existingROI || [];
-      setRoiShapes(roiToLoad);
-      setHistory([roiToLoad]);
-      setHistoryIndex(0);
-      setCurrentShape(null);
-      currentShapeRef.current = null;
-      setIsDrawing(false);
-      setSelectedROIIndex(null);
-      setEditingNameIndex(null);
-      // Don't reset imageLoaded - let the image loading effect handle it
+  // useEffect(() => {
+  //   if (open) {
+  //     const roiToLoad = existingROI || [];
+  //     setRoiShapes(roiToLoad);
+  //     setHistory([roiToLoad]);
+  //     setHistoryIndex(0);
+  //     setCurrentShape(null);
+  //     currentShapeRef.current = null;
+  //     setIsDrawing(false);
+  //     setSelectedROIIndex(null);
+  //     setEditingNameIndex(null);
+  //     // Don't reset imageLoaded - let the image loading effect handle it
 
-      const first = labels.length > 0 ? labels[0] : 'ROI';
-      setSelectedLabel(first);
-    }
-  }, [open, useCaseName, existingROI]);
+  //     const first = labels.length > 0 ? labels[0] : 'ROI';
+  //     setSelectedLabel(first);
+  //   }
+  // }, [open, useCaseName, existingROI]);
+
+   
+  useEffect(() => {
+  if (!open) return;
+
+  const canvas = canvasRef.current;
+  if (!canvas || !imageLoaded) return;
+
+  if (existingROI && existingROI.length > 0) {
+    const denormalized = denormalizeROI(existingROI, canvas);
+    setRoiShapes(denormalized);
+    setHistory([denormalized]);
+  } else {
+    setRoiShapes([]);
+    setHistory([[]]);
+  }
+
+  setHistoryIndex(0);
+  setCurrentShape(null);
+  currentShapeRef.current = null;
+  setIsDrawing(false);
+  setSelectedROIIndex(null);
+  setEditingNameIndex(null);
+   // 🔥 FORCE REDRAW AFTER ROI LOAD
+  requestAnimationFrame(() => drawCanvas());
+}, [open, existingROI, imageLoaded]);
+
+  
 
   // Calculate canvas size based on container
    const recalcCanvasSize = useCallback(() => {
-     if (isDrawingRef.current) return;
+    //  if (isDrawingRef.current) return;
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
@@ -373,14 +429,27 @@ useEffect(() => {
     imageRef.current = img;
     img.crossOrigin = 'anonymous';
     
-    img.onload = () => {
-      console.log('✅ Image loaded successfully');
-      recalcCanvasSize();
+    // img.onload = () => {
+    //   console.log('✅ Image loaded successfully');
+    //   recalcCanvasSize();
       
-      // Wait for canvas size to be set, then mark as loaded
-      setTimeout(() => {
+    //   // Wait for canvas size to be set, then mark as loaded
+    //   setTimeout(() => {
+    //     setImageLoaded(true);
+    //   }, 50);
+    // };
+
+    img.onload = () => {
+      recalcCanvasSize();
+
+      requestAnimationFrame(() => {
         setImageLoaded(true);
-      }, 50);
+
+        // 🔥 FORCE DRAW IMAGE IMMEDIATELY
+        requestAnimationFrame(() => {
+          drawCanvas();
+        });
+      });
     };
 
     img.onerror = (error) => {
@@ -1164,7 +1233,10 @@ useEffect(() => {
                   alert('Please draw at least one ROI region before saving.');
                   return;
                 }
-                onSave(roiShapes);
+                // onSave(roiShapes);
+                const canvas = canvasRef.current!;
+                const normalizedShapes = normalizeROI(roiShapes, canvas);
+                onSave(normalizedShapes);
                 onClose();
               }}
               disabled={roiShapes.length === 0}
@@ -1327,7 +1399,10 @@ useEffect(() => {
                   alert('Please draw at least one ROI region before saving.');
                   return;
                 }
-                onSave(roiShapes);
+                // onSave(roiShapes);
+                const canvas = canvasRef.current!;
+                const normalizedShapes = normalizeROI(roiShapes, canvas);
+                onSave(normalizedShapes);
                 onClose();
               }}
               disabled={roiShapes.length === 0}

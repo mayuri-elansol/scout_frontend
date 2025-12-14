@@ -1,0 +1,15 @@
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
+
+export interface ROIShape {
+  type: DrawingTool;
+  name: string;               // 👈 UI uses name
+  mode: 'include' | 'exclude';
+  points: Point[];
+  completed: boolean;
+  color: string;
+}
