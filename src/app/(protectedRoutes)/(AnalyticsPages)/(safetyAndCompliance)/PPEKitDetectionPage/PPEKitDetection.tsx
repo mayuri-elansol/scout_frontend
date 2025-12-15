@@ -23,6 +23,28 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+export const getOneHourBefore = (): {
+  fullDate: string;
+  time: string;
+} => {
+  const date = new Date();
+
+  // subtract exactly 1 hour
+  date.setTime(date.getTime() - 60 * 60 * 1000);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+
+  return {
+    fullDate: `${day}-${month}-${year} ${hours}:${minutes}`,
+    time: `${hours}:${minutes}`,
+  };
+};
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
     voilation: string;
@@ -56,7 +78,7 @@ const PPEDetection: React.FC = () => {
     },
     {
       title: "Last Detection Time",
-      value: "10:35 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage: "The time when the last PPE violation was detected.",
     },
@@ -90,10 +112,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: false,
       zone: "Production Floor A",
-      snapshot: "/img/site1.jpg",
+      snapshot: "/img/p1.jpg",
       cameraid: "CAM-01",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:42",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 102,
@@ -101,10 +123,10 @@ const PPEDetection: React.FC = () => {
       vest: false,
       glasses: false,
       zone: "Welding Station",
-      snapshot: "/img/site2.jpg",
+      snapshot: "/img/p2.png",
       cameraid: "CAM-02",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:28",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 103,
@@ -112,10 +134,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: false,
       zone: "Chemical Storage",
-      snapshot: "/img/site3.jpg",
+      snapshot: "/img/p3.avif",
       cameraid: "CAM-03",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:15",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 104,
@@ -123,10 +145,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: false,
       zone: "Assembly Line B",
-      snapshot: "/img/site4.jpg",
+      snapshot: "/img/p2.png",
       cameraid: "CAM-04",
       alarmTriggered: false,
-      createdAt: "2025-09-23 14:58",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 105,
@@ -134,10 +156,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: true,
       zone: "Maintenance Area",
-      snapshot: "/img/site5.jpg",
+      snapshot: "/img/p1.jpg",
       cameraid: "CAM-05",
       alarmTriggered: true,
-      createdAt: "2025-09-23 14:32",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 106,
@@ -145,10 +167,10 @@ const PPEDetection: React.FC = () => {
       vest: false,
       glasses: false,
       zone: "Welding Station",
-      snapshot: "/img/site2.jpg",
+      snapshot: "/img/p2.png",
       cameraid: "CAM-02",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:28",
+      createdAt: getOneHourBefore().fullDate,
     },
 
     {
@@ -157,10 +179,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: false,
       zone: "Production Floor A",
-      snapshot: "/img/site1.jpg",
+      snapshot: "/img/p1.jpg",
       cameraid: "CAM-01",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:42",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 109,
@@ -168,10 +190,10 @@ const PPEDetection: React.FC = () => {
       vest: false,
       glasses: false,
       zone: "Welding Station",
-      snapshot: "/img/site2.jpg",
+      snapshot: "/img/p3.avif",
       cameraid: "CAM-02",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:28",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 107,
@@ -179,10 +201,10 @@ const PPEDetection: React.FC = () => {
       vest: true,
       glasses: false,
       zone: "Chemical Storage",
-      snapshot: "/img/site3.jpg",
+      snapshot: "/img/p2.png",
       cameraid: "CAM-03",
       alarmTriggered: true,
-      createdAt: "2025-09-23 15:15",
+      createdAt: getOneHourBefore().fullDate,
     },
   ];
   const recentViolations = backendData.map((item) => {
@@ -296,6 +318,7 @@ const PPEDetection: React.FC = () => {
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
+
   return (
     <Box>
       {/* KPI Cards */}

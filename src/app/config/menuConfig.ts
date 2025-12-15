@@ -30,6 +30,7 @@ export interface MenuItemConfig {
 export interface CategoryConfig {
   title: string;
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
+  path?: string;
   items: MenuItemConfig[];
 }
 
@@ -48,6 +49,7 @@ export const dashboardMenu: CategoryConfig[] = [
   {
     title: "Dashboard",
     icon: SpaceDashboardIcon,
+    path: "/Dashboard",
     items: [
       {
         name: "Safety And Compliance ",

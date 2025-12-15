@@ -35,6 +35,8 @@ import {
 import { PageType } from "@/app/types";
 import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
 import theme from "../../../theme/theme";
+import { useRouter } from "next/navigation";
+
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
@@ -224,7 +226,7 @@ CategorySection.displayName = "CategorySection";
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
   const drawerWidth: string = "315px";
-
+  const router = useRouter();
   const pathname = usePathname();
   const featureFlag = useFeatureFlags();
 
@@ -343,24 +345,22 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                   <ListItem disablePadding>
                     <ListItemButton
-                      onClick={() => handleCategoryToggle(category.title)}
-                      selected={
-                        isCategoryActive &&
-                        !Object.values(openCategories).some(Boolean)
-                      }
+                      // selected={isCategoryActive}
                       sx={{
                         borderRadius: 1,
                         py: 1,
-                        "&.Mui-selected": {
-                          backgroundColor: theme.palette.primary.main,
-                          color: "white",
-                          "&:hover": {
-                            backgroundColor: theme.palette.primary.dark,
-                          },
-                        },
+                        backgroundColor: "transparent", // ⛔ no blue bg
                         color: isCategoryActive
-                          ? theme.palette.primary.main
+                          ? theme.palette.primary.main // 🔵 text only
                           : "#5c6b7d",
+                        "&:hover": {
+                          backgroundColor: "rgba(25,118,210,0.08)",
+                        },
+                      }}
+                      onClick={() => {
+                        if (category.path) {
+                          router.push(category.path); // ✅ navigate to dashboard
+                        }
                       }}
                     >
                       {category.icon && (
@@ -376,7 +376,15 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         </ListItemIcon>
                       )}
                       <ListItemText primary={category.title} />
-                      {isOpen ? <ExpandLess /> : <ExpandMore />}
+                      <Box
+                        onClick={(e) => {
+                          e.stopPropagation(); // ⛔ prevent navigation
+                          handleCategoryToggle(category.title);
+                        }}
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        {isOpen ? <ExpandLess /> : <ExpandMore />}
+                      </Box>
                     </ListItemButton>
                   </ListItem>
 

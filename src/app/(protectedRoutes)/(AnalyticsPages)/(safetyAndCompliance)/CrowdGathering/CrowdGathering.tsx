@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
 
 const CrowdGathering: React.FC = () => {
   interface ViolationRow {
@@ -39,7 +40,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c1.jpg",
       zone: "Hazard Zone A",
       camera: "CAM-21",
-      createdAt: "2025-09-23 20:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
     },
     {
@@ -47,10 +48,10 @@ const CrowdGathering: React.FC = () => {
       gatheredMore: true,
       alarmTriggered: false,
       mobCount: 12,
-      snapshot: "/img/c2.jpg",
+      snapshot: "/img/c5.jpg",
       zone: "Hazard Zone B",
       camera: "CAM-22",
-      createdAt: "2025-09-23 20:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
     },
     {
@@ -61,7 +62,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c3.jpg",
       zone: "Hazard Zone A",
       camera: "CAM-21",
-      createdAt: "2025-09-23 20:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
     },
     {
@@ -72,7 +73,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c4.jpg",
       zone: "Hazard Zone A",
       camera: "CAM-21",
-      createdAt: "2025-09-23 20:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
     },
     {
@@ -83,7 +84,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c5.jpg",
       zone: "Hazard Zone B",
       camera: "CAM-22",
-      createdAt: "2025-09-23 20:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
     },
     {
@@ -94,7 +95,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c3.jpg",
       zone: "Hazard Zone A",
       camera: "CAM-21",
-      createdAt: "2025-09-23 20:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
     },
     {
@@ -105,7 +106,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c5.jpg",
       zone: "Hazard Zone B",
       camera: "CAM-22",
-      createdAt: "2025-09-23 20:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
     },
     {
@@ -116,7 +117,7 @@ const CrowdGathering: React.FC = () => {
       snapshot: "/img/c1.jpg",
       zone: "Hazard Zone B",
       camera: "CAM-22",
-      createdAt: "2025-09-23 20:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
     },
   ];
@@ -151,7 +152,7 @@ const CrowdGathering: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "09:45 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "Displays the timestamp of the most recent crowd gathering incident detected.",

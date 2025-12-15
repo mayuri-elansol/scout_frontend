@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
 
 const EmergencyExitBlockage: React.FC = () => {
   interface ReportData extends Record<string, string | number | boolean> {
@@ -62,7 +63,7 @@ const EmergencyExitBlockage: React.FC = () => {
       snapshot: "/img/e1.jpg",
       zone: "Emergency Exit A",
       camera: "CAM-14",
-      createdAt: "2025-09-23 19:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
     },
 
@@ -73,7 +74,7 @@ const EmergencyExitBlockage: React.FC = () => {
       snapshot: "/img/e2.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
     {
@@ -83,7 +84,7 @@ const EmergencyExitBlockage: React.FC = () => {
       snapshot: "/img/e3.jpg",
       zone: "Emergency Exit A",
       camera: "CAM-14",
-      createdAt: "2025-09-23 19:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
     },
 
@@ -91,20 +92,20 @@ const EmergencyExitBlockage: React.FC = () => {
       id: 505,
       blockage: true,
       alarmTriggered: true,
-      snapshot: "/img/e4.jpg",
+      snapshot: "/img/e1.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
     {
       id: 503,
       blockage: true,
       alarmTriggered: true,
-      snapshot: "/img/e5.jpg",
+      snapshot: "/img/e2.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
 
@@ -115,27 +116,27 @@ const EmergencyExitBlockage: React.FC = () => {
       snapshot: "/img/e3.jpg",
       zone: "Emergency Exit A",
       camera: "CAM-14",
-      createdAt: "2025-09-23 19:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
     },
     {
       id: 505,
       blockage: true,
       alarmTriggered: true,
-      snapshot: "/img/e5.jpg",
+      snapshot: "/img/e2.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
     {
       id: 503,
       blockage: true,
       alarmTriggered: true,
-      snapshot: "/img/e4.jpg",
+      snapshot: "/img/e3.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
     {
@@ -145,7 +146,7 @@ const EmergencyExitBlockage: React.FC = () => {
       snapshot: "/img/e1.jpg",
       zone: "Assembly Line Exit",
       camera: "CAM-16",
-      createdAt: "2025-09-23 19:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
     },
   ];

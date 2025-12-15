@@ -19,6 +19,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ForkliftIcon from "@mui/icons-material/Forklift";
+import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
 const ObjectDetection: React.FC = () => {
   interface ForkliftDetectionEvent {
     voilation: string;
@@ -68,22 +69,22 @@ const ObjectDetection: React.FC = () => {
       id: 201,
       detected: true,
       objectName: "Forklift",
-      snapshot: "/img/v1.jpg",
+      snapshot: "/img/v3.jpg",
       zone: "Walkway Zone A",
       camera: "CAM-101",
       alarmTriggered: true,
-      createdAt: "2025-10-08 09:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 09:20",
     },
     {
       id: 202,
       detected: true,
       objectName: "Vehicle",
-      snapshot: "/img/v2.jpg",
+      snapshot: "/img/v5.jpg",
       zone: "Walkway Zone B",
       camera: "CAM-102",
       alarmTriggered: false,
-      createdAt: "2025-10-08 09:30",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 09:32",
     },
     {
@@ -94,18 +95,18 @@ const ObjectDetection: React.FC = () => {
       zone: "Walkway Zone C",
       camera: "CAM-103",
       alarmTriggered: true,
-      createdAt: "2025-10-08 10:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 10:10",
     },
     {
       id: 204,
       detected: true,
       objectName: "Vehicle",
-      snapshot: "/img/v4.jpg",
+      snapshot: "/img/v5.jpg",
       zone: "Walkway Zone A",
       camera: "CAM-104",
       alarmTriggered: true,
-      createdAt: "2025-10-08 10:25",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 10:30",
     },
     {
@@ -116,7 +117,7 @@ const ObjectDetection: React.FC = () => {
       zone: "Walkway Zone B",
       camera: "CAM-105",
       alarmTriggered: false,
-      createdAt: "2025-10-08 11:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 11:05",
     },
     {
@@ -127,7 +128,7 @@ const ObjectDetection: React.FC = () => {
       zone: "Walkway Zone C",
       camera: "CAM-103",
       alarmTriggered: true,
-      createdAt: "2025-10-08 10:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 10:10",
     },
     {
@@ -138,7 +139,7 @@ const ObjectDetection: React.FC = () => {
       zone: "Walkway Zone A",
       camera: "CAM-104",
       alarmTriggered: true,
-      createdAt: "2025-10-08 10:25",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 10:30",
     },
     {
@@ -149,7 +150,7 @@ const ObjectDetection: React.FC = () => {
       zone: "Walkway Zone B",
       camera: "CAM-105",
       alarmTriggered: false,
-      createdAt: "2025-10-08 11:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 11:05",
     },
   ];

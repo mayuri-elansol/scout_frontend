@@ -16,6 +16,7 @@ import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
 
 const FireSmokeOilLeakDetection: React.FC = () => {
   interface RecentViolationData {
@@ -41,7 +42,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-06",
       timestamp: "2025-09-23 16:00",
       alarmTriggered: true,
-      createdAt: "2025-09-23 16:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:01",
     },
     {
@@ -53,7 +54,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
-      createdAt: "2025-09-23 16:10",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:12",
     },
     {
@@ -65,19 +66,19 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
-      createdAt: "2025-09-23 16:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:21",
     },
     {
       id: 202,
       detection: true,
       objectname: "smoke",
-      snapshot: "/img/f4.jpg",
+      snapshot: "/img/f1.jpg",
       zone: "Welding Station",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
-      createdAt: "2025-09-23 16:10",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:12",
     },
 
@@ -90,7 +91,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
-      createdAt: "2025-09-23 16:10",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:12",
     },
 
@@ -103,19 +104,19 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
-      createdAt: "2025-09-23 16:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:21",
     },
     {
       id: 202,
       detection: true,
       objectname: "smoke",
-      snapshot: "/img/f4.jpg",
+      snapshot: "/img/f1.jpg",
       zone: "Welding Station",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
-      createdAt: "2025-09-23 16:10",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:12",
     },
     {
@@ -127,7 +128,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
-      createdAt: "2025-09-23 16:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 16:21",
     },
   ];
@@ -160,7 +161,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     },
     {
       title: "Last Detection Time",
-      value: "10:42 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "The time when the last fire or smoke detection was recorded.",
