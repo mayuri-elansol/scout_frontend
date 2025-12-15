@@ -14,7 +14,6 @@ interface DashboardKpiCardProps {
   icon: SvgIconComponent;
   tooltipMessage?: string;
 
-  // Optional custom colors
   color?: string;
   bgColor?: string;
   borderColor?: string;
