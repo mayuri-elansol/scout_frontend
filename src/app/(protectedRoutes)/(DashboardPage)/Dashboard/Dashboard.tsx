@@ -17,12 +17,17 @@ import {
   LocalShipping,
   Block,
   Smartphone,
+  VideocamOutlined,
+  WifiTethering,
+  WifiOff,
+  Domain,
 } from "@mui/icons-material";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
 
 const Dashboard: React.FC = () => {
   const kpiData = [
@@ -173,7 +178,7 @@ const Dashboard: React.FC = () => {
     },
 
     {
-      title: "Vehicle Loading/Unloading Monitoring",
+      title: "Vehicle Loading Unloading Monitoring",
       violationsCount: 8,
       lastDetection: "Loading Bay A",
       lastDetectionTime: "10:10 PM",
@@ -220,7 +225,7 @@ const Dashboard: React.FC = () => {
         "Shows employee presence in areas that require special clearance.",
     },
     {
-      title: "Mobile Phone Usage in Critical Area",
+      title: "Mobile Usage in Critical Area",
       value: "3",
       violationsCount: 3,
       lastDetection: "Critical Zone C",
@@ -236,7 +241,7 @@ const Dashboard: React.FC = () => {
     },
 
     {
-      title: "Sleeping / Absence of Security Personnel",
+      title: "Sleeping / Absence  Security Personnel",
       value: "2",
       violationsCount: 2,
       lastDetection: "Gate 2 - Shift B",
@@ -247,216 +252,394 @@ const Dashboard: React.FC = () => {
         "Shows detected cases of security personnel sleeping or absent from their post.",
     },
   ];
-
+  const CamerakpiData = [
+    {
+      title: "Total Cameras",
+      violationsCount: 120,
+      lastDetection: "System Overview",
+      lastDetectionTime: "—",
+      icon: VideocamOutlined,
+      tooltipMessage:
+        "Total number of surveillance cameras connected to the system.",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "#bbdefb",
+    },
+    {
+      title: "Cameras Online",
+      violationsCount: 105,
+      lastDetection: "Last Updated",
+      lastDetectionTime: "10:15 AM",
+      icon: WifiTethering,
+      tooltipMessage:
+        "Number of cameras currently active and transmitting data.",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "#c8e6c9",
+    },
+    {
+      title: "Cameras Offline",
+      violationsCount: 15,
+      lastDetection: "Zone C - Entry Gate",
+      lastDetectionTime: "09:45 AM",
+      icon: WifiOff,
+      tooltipMessage: "Shows cameras currently not transmitting video feed.",
+    },
+    {
+      title: "Tampering Incidents Today",
+      violationsCount: 12,
+      lastDetection: "Zone B - Warehouse",
+      lastDetectionTime: "09:58 AM",
+      icon: WarningAmber,
+      tooltipMessage:
+        "Number of tampering incidents (blurred, covered, or offline) detected today.",
+    },
+    {
+      title: "Zones Affected",
+      violationsCount: 4,
+      lastDetection: "Zones B, C, D",
+      lastDetectionTime: "—",
+      icon: Domain,
+      tooltipMessage:
+        "Total number of zones currently affected by camera issues.",
+    },
+  ];
   return (
-    // <Box
+    // <Paper
     //   sx={{
     //     display: "flex",
     //     flexDirection: "column",
-    //     minHeight: "100vh",
-    //     backgroundColor: "#f5f7fa",
-    //     pt: 2,
+    //     //pt: 2,
+    //     px: 2,
+    //     backgroundColor: "#ffffff",
+    //     //borderRadius: 2,
+    //     gap: 1.5,
+    //     height: "auto",
     //   }}
     // >
+    //   {/* Top Right Time Filter */}
     //   <Box
     //     sx={{
     //       display: "flex",
     //       alignItems: "center",
     //       justifyContent: "end",
     //       flexWrap: "wrap",
-    //       mb: 3,
+    //       mt: 1,
     //     }}
     //   >
-    //     {/* Right: Time Filter */}
     //     <TimeFilter />
     //   </Box>
-
-    //   {/* KPI Cards Grid */}
-    //   <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-    //     {kpiData.map((kpi, index) => (
-    //       <Grid
-    //         size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-    //         key={uuidv4() + index}
-    //       >
-    //         <KpiCard {...kpi} route="/PPEKitDetectionPage" />
-    //       </Grid>
-    //     ))}
-    //     {/* <DashboardKpiCard
-    //       title="PPE Kit Violations"
-    //       violationsCount={2}
-    //       lastDetection="2025-10-07 13:45"
-    //       lastDetectionTime=""
-    //       icon={Shield}
-    //       tooltipMessage="Shows total PPE violations and last detection time"
-    //       route="/PPEKitDetectionPage"
-    //     /> */}
-    //   </Grid>
-    // </Box>
+    //   <Paper
+    //     sx={{
+    //       display: "flex",
+    //       flexDirection: "column",
+    //       padding: 1,
+    //       backgroundColor: "#ffffff",
+    //       borderRadius: 2,
+    //     }}
+    //   >
+    //     <Typography
+    //       variant="h6"
+    //       sx={{
+    //         fontWeight: "bold",
+    //         fontSize: 18,
+    //         mb: 1,
+    //         display: "flex",
+    //         alignItems: "center",
+    //         gap: 1,
+    //       }}
+    //     >
+    //       <Shield sx={{ color: "#1976d2", fontSize: 23 }} />
+    //       Safety And Compliance
+    //     </Typography>
+    //     {/* KPI Cards Grid */}
+    //     <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
+    //       {kpiData.map((kpi, index) => (
+    //         <Grid
+    //           size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+    //           key={uuidv4() + index}
+    //         >
+    //           <DashboardKpiCardMain {...kpi} />
+    //         </Grid>
+    //       ))}
+    //     </Grid>
+    //   </Paper>
+    //   <Paper
+    //     sx={{
+    //       display: "flex",
+    //       flexDirection: "column",
+    //       padding: 1,
+    //       backgroundColor: "#ffffff",
+    //       borderRadius: 2,
+    //     }}
+    //   >
+    //     <Typography
+    //       variant="h6"
+    //       sx={{
+    //         fontWeight: "bold",
+    //         fontSize: 18,
+    //         mb: 1,
+    //         display: "flex",
+    //         alignItems: "center",
+    //         gap: 1,
+    //       }}
+    //     >
+    //       <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />
+    //       Surveillance Monitoring
+    //     </Typography>
+    //     {/* KPI Cards Grid */}
+    //     <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
+    //       {surveillanceDashboradkpiData.map((kpi, index) => (
+    //         <Grid
+    //           size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+    //           key={uuidv4() + index}
+    //         >
+    //           <DashboardKpiCard {...kpi} />
+    //         </Grid>
+    //       ))}
+    //     </Grid>
+    //   </Paper>
+    //   <Paper
+    //     sx={{
+    //       display: "flex",
+    //       flexDirection: "column",
+    //       padding: 1,
+    //       backgroundColor: "#ffffff",
+    //       borderRadius: 2,
+    //     }}
+    //   >
+    //     <Typography
+    //       variant="h6"
+    //       sx={{
+    //         fontWeight: "bold",
+    //         fontSize: 18,
+    //         mb: 1,
+    //         display: "flex",
+    //         alignItems: "center",
+    //         gap: 1,
+    //       }}
+    //     >
+    //       <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />
+    //       Operational Insights
+    //     </Typography>
+    //     {/* KPI Cards Grid */}
+    //     <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
+    //       {operationalDashboardkpiData.map((kpi, index) => (
+    //         <Grid
+    //           size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+    //           key={uuidv4() + index}
+    //         >
+    //           <DashboardKpiCard {...kpi} />
+    //         </Grid>
+    //       ))}
+    //     </Grid>
+    //   </Paper>
+    //   <Paper
+    //     sx={{
+    //       display: "flex",
+    //       flexDirection: "column",
+    //       padding: 1,
+    //       backgroundColor: "#ffffff",
+    //       borderRadius: 2,
+    //       mb: 2,
+    //     }}
+    //   >
+    //     <Typography
+    //       variant="h6"
+    //       sx={{
+    //         fontWeight: "bold",
+    //         fontSize: 18,
+    //         mb: 1,
+    //         display: "flex",
+    //         alignItems: "center",
+    //         gap: 1,
+    //       }}
+    //     >
+    //       <People sx={{ color: "#1976d2", fontSize: 23 }} />
+    //       Workforce Monitoring
+    //     </Typography>
+    //     {/* KPI Cards Grid */}
+    //     <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
+    //       {WorkForcekpiData.map((kpi, index) => (
+    //         <Grid
+    //           size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+    //           key={uuidv4() + index}
+    //         >
+    //           <DashboardKpiCard {...kpi} />
+    //         </Grid>
+    //       ))}
+    //     </Grid>
+    //   </Paper>
+    // </Paper>
     <Paper
       sx={{
         display: "flex",
         flexDirection: "column",
-        //pt: 2,
         px: 2,
         backgroundColor: "#ffffff",
-        //borderRadius: 2,
         gap: 1.5,
         height: "auto",
       }}
     >
       {/* Top Right Time Filter */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "end",
-          flexWrap: "wrap",
-          mt: 1,
-        }}
-      >
+      <Box sx={{ display: "flex", justifyContent: "end", mt: 0.5 }}>
         <TimeFilter />
       </Box>
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 1,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            fontSize: 18,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <Shield sx={{ color: "#1976d2", fontSize: 23 }} />
-          Safety And Compliance
-        </Typography>
-        {/* KPI Cards Grid */}
-        <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
-          {kpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              key={uuidv4() + index}
+
+      <Grid container spacing={1.5}>
+        {CamerakpiData.map((kpi, index) => (
+          <Grid key={uuidv4() + index} size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
+            <DashboardKpiCardMain {...kpi} />
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Dashboard Sections Grid */}
+      <Grid container spacing={2} sx={{ mb: 1.3 }}>
+        {/* Row 1 - Safety & Compliance */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: 1,
+              backgroundColor: "#ffffff",
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                fontSize: 18,
+                mb: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
             >
-              <DashboardKpiCard {...kpi} />
+              <Shield sx={{ color: "#1976d2", fontSize: 23 }} /> Safety And
+              Compliance
+            </Typography>
+            <Grid container spacing={1.5}>
+              {kpiData.map((kpi, index) => (
+                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                  <DashboardKpiCardMain {...kpi} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Paper>
         </Grid>
-      </Paper>
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 1,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            fontSize: 18,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />
-          Surveillance Monitoring
-        </Typography>
-        {/* KPI Cards Grid */}
-        <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
-          {surveillanceDashboradkpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              key={uuidv4() + index}
+
+        {/* Row 1 - Surveillance Monitoring */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: 1,
+              backgroundColor: "#ffffff",
+              borderRadius: 2,
+              minHeight: 280,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                fontSize: 18,
+                mb: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
             >
-              <DashboardKpiCard {...kpi} />
+              <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
+              Surveillance Monitoring
+            </Typography>
+            <Grid container spacing={1.5}>
+              {surveillanceDashboradkpiData.map((kpi, index) => (
+                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                  <DashboardKpiCardMain {...kpi} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Paper>
         </Grid>
-      </Paper>
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 1,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            fontSize: 18,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />
-          Operational Insights
-        </Typography>
-        {/* KPI Cards Grid */}
-        <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
-          {operationalDashboardkpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              key={uuidv4() + index}
+
+        {/* Row 2 - Operational Insights */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: 1,
+              backgroundColor: "#ffffff",
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                fontSize: 18,
+                mb: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
             >
-              <DashboardKpiCard {...kpi} />
+              <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
+              Operational Insights
+            </Typography>
+            <Grid container spacing={1.5}>
+              {operationalDashboardkpiData.map((kpi, index) => (
+                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                  <DashboardKpiCardMain {...kpi} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Paper>
         </Grid>
-      </Paper>
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: 1,
-          backgroundColor: "#ffffff",
-          borderRadius: 2,
-          mb: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: "bold",
-            fontSize: 18,
-            mb: 1,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <People sx={{ color: "#1976d2", fontSize: 23 }} />
-          Workforce Monitoring
-        </Typography>
-        {/* KPI Cards Grid */}
-        <Grid container spacing={1.5} sx={{ mb: 0 }} alignItems="stretch">
-          {WorkForcekpiData.map((kpi, index) => (
-            <Grid
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              key={uuidv4() + index}
+
+        {/* Row 2 - Workforce Monitoring */}
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Paper
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: 1,
+              backgroundColor: "#ffffff",
+              borderRadius: 2,
+              minHeight: 280,
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: "bold",
+                fontSize: 18,
+                mb: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+              }}
             >
-              <DashboardKpiCard {...kpi} />
+              <People sx={{ color: "#1976d2", fontSize: 23 }} /> Workforce
+              Monitoring
+            </Typography>
+            <Grid container spacing={1.5}>
+              {WorkForcekpiData.map((kpi, index) => (
+                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                  <DashboardKpiCardMain {...kpi} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
+          </Paper>
         </Grid>
-      </Paper>
+      </Grid>
     </Paper>
   );
 };

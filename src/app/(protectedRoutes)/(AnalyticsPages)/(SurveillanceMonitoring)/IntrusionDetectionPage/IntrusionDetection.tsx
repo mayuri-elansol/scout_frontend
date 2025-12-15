@@ -13,6 +13,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
 const IntrusionDetection: React.FC = () => {
   interface IntrusionViolation {
@@ -47,7 +48,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Recent Intrusion Time",
-      value: "11:20 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
 
       tooltipMessage:
@@ -68,7 +69,7 @@ const IntrusionDetection: React.FC = () => {
       zone: "Perimeter Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
-      createdAt: "2025-09-23 18:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:06",
     },
     {
