@@ -220,6 +220,9 @@ interface DashboardKpiCardProps {
   bgColor?: string;
   borderColor?: string;
   iconBg?: string;
+  
+  // Optional shape variant
+  variant?: "rectangle" | "square";
 }
 
 const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
@@ -236,6 +239,9 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
   bgColor,
   borderColor,
   iconBg,
+  
+  // shape variant - default to rectangle
+  variant = "rectangle",
 }) => {
   const router = useRouter();
 
@@ -279,6 +285,9 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
     iconBg: iconBg || auto.iconBg,
   };
 
+  // Determine if square variant
+  const isSquare = variant === "square";
+
   return (
     <Card
       onClick={() => route && router.push(route)}
@@ -288,10 +297,17 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
         borderRadius: 2,
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         transition: "all 0.3s ease",
-        height: "94%",
+        height: isSquare ? "100%" : "auto",
+        minHeight: isSquare ? "85px" : "50px",
+        aspectRatio: isSquare ? "1" : "auto",
         cursor: route ? "pointer" : "default",
         position: "relative",
         display: "flex",
+        flexDirection: isSquare ? "column" : "row",
+        alignItems: "center",
+        justifyContent: "center",
+        px: isSquare ? 0.75 : 1.5,
+        py: isSquare ? 1.25 : 0.75,
         "&:hover": {
           boxShadow: route
             ? "0 4px 16px rgba(0,0,0,0.12)"
@@ -301,29 +317,19 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
         },
       }}
     >
-      {/* Left Section */}
+      {/* Number Section */}
       <Box
         sx={{
-          backgroundColor: variantStyles.iconBg,
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          justifyContent: "space-around",
-          px: 1,
-          py: 2,
-          minWidth: "90px",
+          justifyContent: "center",
+          minWidth: isSquare ? "auto" : "40px",
+          mb: isSquare ? 0.5 : 0,
         }}
       >
-        <IconComponent
-          sx={{
-            fontSize: 28,
-            color: variantStyles.color,
-            mb: 1.5,
-          }}
-        />
         <Typography
           sx={{
-            fontSize: "36px",
+            fontSize: isSquare ? "30px" : "24px",
             fontWeight: "bold",
             color: variantStyles.color,
             lineHeight: 1,
@@ -333,36 +339,28 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
         </Typography>
       </Box>
 
-      {/* Right Section */}
-      <CardContent
+      {/* Title Section */}
+      <Box
         sx={{
-          flex: 1,
-          p: "10px !important",
-          pr: "35px !important",
+          flex: isSquare ? 0 : 1,
+          ml: isSquare ? 0 : 1.5,
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
           justifyContent: "center",
+          textAlign: isSquare ? "center" : "left",
         }}
       >
         <Typography
           sx={{
-            fontSize: "16px",
+            fontSize: isSquare ? "12px" : "13px",
             fontWeight: 600,
             color: variantStyles.color,
-            mb: 0.5,
+            lineHeight: 1.3,
           }}
         >
           {title}
         </Typography>
-
-        <Typography sx={{ fontSize: 14, color: "#6b7280" }}>
-          last detection location: {lastDetection}
-        </Typography>
-
-        <Typography sx={{ fontSize: 14, color: "#9ca3af" }}>
-          last detection time: {lastDetectionTime}
-        </Typography>
-      </CardContent>
+      </Box>
 
       {/* Tooltip icon */}
       {tooltipMessage && (
@@ -371,10 +369,10 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
             onClick={(e) => e.stopPropagation()}
             sx={{
               position: "absolute",
-              top: 12,
-              right: 12,
-              width: 24,
-              height: 24,
+              top: 8,
+              right: 8,
+              width: 18,
+              height: 18,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -383,7 +381,7 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
               "&:hover": { color: "#6b7280" },
             }}
           >
-            <InfoOutlinedIcon sx={{ fontSize: 18 }} />
+            <InfoOutlinedIcon sx={{ fontSize: 16 }} />
           </Box>
         </Tooltip>
       )}

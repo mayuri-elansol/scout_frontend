@@ -17,6 +17,8 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const VehicleCount: React.FC = () => {
   interface VehicleCountEvent {
@@ -103,7 +105,7 @@ const VehicleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       zone: "Main Gate A",
       camera: "CAM-ENTRY-01",
-      createdAt: "2025-09-23 09:42",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 09:43",
       alarmTriggered: false,
     },
@@ -115,7 +117,7 @@ const VehicleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       zone: "Exit Gate B",
       camera: "CAM-EXIT-02",
-      createdAt: "2025-09-23 09:58",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 10:00",
       alarmTriggered: true,
     },
@@ -127,7 +129,7 @@ const VehicleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       zone: "Warehouse Entry",
       camera: "CAM-ENTRY-03",
-      createdAt: "2025-09-23 10:12",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 10:14",
       alarmTriggered: false,
     },
@@ -139,7 +141,7 @@ const VehicleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=14",
       zone: "Service Exit",
       camera: "CAM-EXIT-04",
-      createdAt: "2025-09-23 10:30",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 10:32",
       alarmTriggered: true,
     },
@@ -151,7 +153,7 @@ const VehicleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=15",
       zone: "Visitor Gate",
       camera: "CAM-ENTRY-05",
-      createdAt: "2025-09-23 11:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 11:02",
       alarmTriggered: false,
     },

@@ -15,6 +15,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
 const MonitoringCanteenUsageTimings: React.FC = () => {
   interface CanteenUsage {
@@ -55,7 +56,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
     },
     {
       title: "Last Canteen Usage",
-      value: "10.23 pm",
+      value: getOneHourBefore().time,
       icon: AccessTimeIcon,
       tooltipMessage: "Most recent canteen usage record.",
     },
@@ -67,7 +68,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       count: 50,
       zone: "Main Canteen",
       snapshot: "https://picsum.photos/400/200?random=11",
-      createdAt: "2025-10-09 08:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 08:20",
     },
     {
@@ -76,7 +77,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       count: 80,
       zone: "Main Canteen",
       snapshot: "https://picsum.photos/400/200?random=12",
-      createdAt: "2025-10-09 12:30",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 12:35",
     },
     {
@@ -85,7 +86,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       count: 60,
       zone: "Main Canteen",
       snapshot: "https://picsum.photos/400/200?random=13",
-      createdAt: "2025-10-09 19:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 19:05",
     },
     {
@@ -94,7 +95,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       count: 30,
       zone: "Secondary Canteen",
       snapshot: "https://picsum.photos/400/200?random=14",
-      createdAt: "2025-10-09 08:45",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 08:50",
     },
     {
@@ -103,7 +104,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       count: 70,
       zone: "Secondary Canteen",
       snapshot: "https://picsum.photos/400/200?random=15",
-      createdAt: "2025-10-09 12:45",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 12:50",
     },
   ];

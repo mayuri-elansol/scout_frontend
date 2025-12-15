@@ -11,6 +11,8 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+
 const EmployeePresence: React.FC = () => {
   interface EmployeePresenceViolation {
     voilation: string;
@@ -43,7 +45,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "Most recent time employees were detected in critical zones.",
@@ -55,7 +57,7 @@ const EmployeePresence: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       zone: "Critical Zone A",
       camera: "CAM-11",
-      createdAt: "2025-09-25 09:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:16",
       alarmTriggered: true,
     },
@@ -64,7 +66,7 @@ const EmployeePresence: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       zone: "Critical Zone B",
       camera: "CAM-12",
-      createdAt: "2025-09-25 09:25",
+      createdAt:getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:26",
       alarmTriggered: true,
     },
@@ -73,7 +75,7 @@ const EmployeePresence: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       zone: "Critical Zone C",
       camera: "CAM-13",
-      createdAt: "2025-09-25 09:40",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:41",
       alarmTriggered: true,
     },

@@ -13,6 +13,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import PeopleIcon from "@mui/icons-material/People";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
 const PeopleCount: React.FC = () => {
   interface PeopleCountViolation {
@@ -39,7 +40,7 @@ const PeopleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       cameraid: "CAM-11",
       alarmTriggered: true,
-      createdAt: "2025-09-30 09:42",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:45",
     },
     {
@@ -50,7 +51,7 @@ const PeopleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       cameraid: "CAM-12",
       alarmTriggered: false,
-      createdAt: "2025-09-30 09:28",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:30",
     },
     {
@@ -61,7 +62,7 @@ const PeopleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       cameraid: "CAM-13",
       alarmTriggered: false,
-      createdAt: "2025-09-30 09:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:20",
     },
     {
@@ -72,7 +73,7 @@ const PeopleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=14",
       cameraid: "CAM-14",
       alarmTriggered: true,
-      createdAt: "2025-09-30 08:58",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:05",
     },
     {
@@ -83,7 +84,7 @@ const PeopleCount: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=15",
       cameraid: "CAM-15",
       alarmTriggered: true,
-      createdAt: "2025-09-30 08:32",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 08:40",
     },
   ];
