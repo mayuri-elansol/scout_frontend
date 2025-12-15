@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
+import React, { useState, useEffect } from "react";
+import RoiSelectionModal from "../ROISelectionModel/RoiSelectionModal";
 // import { roiService } from '@/services/scout/roiService';
 
 import {
@@ -12,7 +12,6 @@ import {
   CardContent,
   Button,
   Radio,
- 
   Table,
   TableBody,
   TableCell,
@@ -27,16 +26,15 @@ import {
   Alert,
   CircularProgress,
   Snackbar,
-} from '@mui/material';
+} from "@mui/material";
 import {
   CheckCircle as CheckCircleIcon,
   Settings as SettingsIcon,
   Tune as TuneIcon,
   RadioButtonUnchecked as ROIIcon,
   // CloudUpload as SaveIcon,
-} from '@mui/icons-material';
-import { roiService } from '@/app/services/roiService';
-
+} from "@mui/icons-material";
+import { roiService } from "@/app/services/roiService";
 
 // ROI Shape type for the enhanced modal
 interface Point {
@@ -46,12 +44,12 @@ interface Point {
 
 interface ROIShape {
   id?: string;
-  type: 'rectangle' | 'polygon' | 'freehand';
+  type: "rectangle" | "polygon" | "freehand";
   points: Point[];
   completed: boolean;
   color: string;
   name: string;
-  mode: 'include' | 'exclude';
+  mode: "include" | "exclude";
 }
 
 interface ROIData {
@@ -83,11 +81,9 @@ interface CameraData {
   make: string;
   position: string;
   rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
-  aiConfig?:AIConfig
+  status: "connected" | "failed" | "pending";
+  aiConfig?: AIConfig;
 }
-
-
 
 interface AIConfigurationStepProps {
   camera: CameraData;
@@ -113,225 +109,225 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 }) => {
   const [useCases, setUseCases] = useState<UseCaseData[]>([
     {
-      id: 'ppe-detection',
-      name: 'Personal Protective Equipment (PPE) Detection',
-      description: 'Detect personal protective equipment compliance',
+      id: "ppe-detection",
+      name: "Personal Protective Equipment (PPE) Detection",
+      description: "Detect personal protective equipment compliance",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'object-detection-walking-bays',
-      name: 'Object Detection in Walking Bays',
-      description: 'Detect objects blocking walking paths and bays',
+      id: "object-detection-walking-bays",
+      name: "Object Detection in Walking Bays",
+      description: "Detect objects blocking walking paths and bays",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'fire-smoke-gas-leak',
-      name: 'Fire, Smoke, Oil and Gas Leak Detection',
-      description: 'Detect fire, smoke, oil and gas leak incidents',
+      id: "fire-smoke-gas-leak",
+      name: "Fire, Smoke, Oil and Gas Leak Detection",
+      description: "Detect fire, smoke, oil and gas leak incidents",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'vehicle-speed-monitoring',
-      name: 'Vehicle Speed Monitoring inside premises',
-      description: 'Monitor vehicle speed within facility premises',
+      id: "vehicle-speed-monitoring",
+      name: "Vehicle Speed Monitoring inside premises",
+      description: "Monitor vehicle speed within facility premises",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'fall-detection',
-      name: 'Fall Detection (Person falling on the floor)',
-      description: 'Detect when a person falls on the floor',
+      id: "fall-detection",
+      name: "Fall Detection (Person falling on the floor)",
+      description: "Detect when a person falls on the floor",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'laydown-sleeping-detection',
-      name: 'Laydown/Sleeping Detection in Work Areas',
-      description: 'Detect people laying down or sleeping in work areas',
+      id: "laydown-sleeping-detection",
+      name: "Laydown/Sleeping Detection in Work Areas",
+      description: "Detect people laying down or sleeping in work areas",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'equipment-gangway-detection',
-      name: 'Stacker, Forklift or Equipment in Gangway',
-      description: 'Detect equipment blocking gangways',
+      id: "equipment-gangway-detection",
+      name: "Stacker, Forklift or Equipment in Gangway",
+      description: "Detect equipment blocking gangways",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'stp-etp-overflow',
-      name: 'STP/ETP Overflow Detection',
-      description: 'Detect sewage/effluent treatment plant overflow',
+      id: "stp-etp-overflow",
+      name: "STP/ETP Overflow Detection",
+      description: "Detect sewage/effluent treatment plant overflow",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'emergency-exit-blockage',
-      name: 'Emergency Exit Blockage Detection',
-      description: 'Detect blockages at emergency exit points',
+      id: "emergency-exit-blockage",
+      name: "Emergency Exit Blockage Detection",
+      description: "Detect blockages at emergency exit points",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'crowd-gathering-hazardous',
-      name: 'Crowd Gathering in Hazardous Zones',
-      description: 'Detect crowd gathering in dangerous areas',
+      id: "crowd-gathering-hazardous",
+      name: "Crowd Gathering in Hazardous Zones",
+      description: "Detect crowd gathering in dangerous areas",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'intrusion-detection-perimeter',
-      name: 'Intrusion Detection at Premises Perimeter',
-      description: 'Detect unauthorized entry at facility perimeter',
+      id: "intrusion-detection-perimeter",
+      name: "Intrusion Detection at Premises Perimeter",
+      description: "Detect unauthorized entry at facility perimeter",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'unauthorized-access-restricted',
-      name: 'Unauthorized Access in Restricted Areas',
-      description: 'Detect unauthorized access to restricted zones',
+      id: "unauthorized-access-restricted",
+      name: "Unauthorized Access in Restricted Areas",
+      description: "Detect unauthorized access to restricted zones",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'camera-tampering-offline',
-      name: 'Camera Tampering or Offline Detection',
-      description: 'Detect camera tampering or offline status',
+      id: "camera-tampering-offline",
+      name: "Camera Tampering or Offline Detection",
+      description: "Detect camera tampering or offline status",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'people-presence-shutdown',
-      name: 'People Presence during Shutdown Hours',
-      description: 'Detect people presence during non-operational hours',
+      id: "people-presence-shutdown",
+      name: "People Presence during Shutdown Hours",
+      description: "Detect people presence during non-operational hours",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'employee-presence-critical',
-      name: 'Employee Presence Detection in Critical Areas',
-      description: 'Monitor employee presence in critical work areas',
+      id: "employee-presence-critical",
+      name: "Employee Presence Detection in Critical Areas",
+      description: "Monitor employee presence in critical work areas",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'face-recognition-entry-exit',
-      name: 'Face Recognition for Entry/Exit Logging',
-      description: 'Face recognition for access control and logging',
+      id: "face-recognition-entry-exit",
+      name: "Face Recognition for Entry/Exit Logging",
+      description: "Face recognition for access control and logging",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'employee-idle-time',
-      name: 'Employee Idle Time Monitoring',
-      description: 'Monitor employee idle time and productivity',
+      id: "employee-idle-time",
+      name: "Employee Idle Time Monitoring",
+      description: "Monitor employee idle time and productivity",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'mobile-phone-usage',
-      name: 'Mobile Phone Usage in Restricted Areas',
-      description: 'Detect mobile phone usage in restricted zones',
+      id: "mobile-phone-usage",
+      name: "Mobile Phone Usage in Restricted Areas",
+      description: "Detect mobile phone usage in restricted zones",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'security-personnel-sleeping',
-      name: 'Sleeping or Absence of Security Personnel',
-      description: 'Monitor security personnel alertness and presence',
+      id: "security-personnel-sleeping",
+      name: "Sleeping or Absence of Security Personnel",
+      description: "Monitor security personnel alertness and presence",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'people-count-factory',
-      name: 'People Count in Factory Premises',
-      description: 'Count people in designated factory areas',
+      id: "people-count-factory",
+      name: "People Count in Factory Premises",
+      description: "Count people in designated factory areas",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'vehicle-count-anpr',
-      name: 'Vehicle Count & ANPR at Entry/Exit Gates',
-      description: 'Vehicle counting and number plate recognition',
+      id: "vehicle-count-anpr",
+      name: "Vehicle Count & ANPR at Entry/Exit Gates",
+      description: "Vehicle counting and number plate recognition",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'canteen-usage-monitoring',
-      name: 'Monitoring Canteen Usage & Timings',
-      description: 'Monitor canteen occupancy and usage patterns',
+      id: "canteen-usage-monitoring",
+      name: "Monitoring Canteen Usage & Timings",
+      description: "Monitor canteen occupancy and usage patterns",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'vehicle-loading-time',
-      name: 'Tracking Vehicle Unloading/Loading Time',
-      description: 'Track time taken for vehicle loading/unloading',
+      id: "vehicle-loading-time",
+      name: "Tracking Vehicle Unloading/Loading Time",
+      description: "Track time taken for vehicle loading/unloading",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'unauthorized-parking',
-      name: 'Unauthorized Parking or Equipment Blocking Aisles',
-      description: 'Detect unauthorized parking and aisle blockages',
+      id: "unauthorized-parking",
+      name: "Unauthorized Parking or Equipment Blocking Aisles",
+      description: "Detect unauthorized parking and aisle blockages",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
       enabled: false,
     },
     {
-      id: 'ocr-detection',
-      name: 'OCR Detection',
-      description: 'Optical character recognition for text detection',
+      id: "ocr-detection",
+      name: "OCR Detection",
+      description: "Optical character recognition for text detection",
       selected: false,
       roiConfigured: false,
       fineTuned: false,
@@ -340,19 +336,21 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   ]);
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
-  const [viewName, setViewName] = useState('');
+  const [viewName, setViewName] = useState("");
   const [showCameraView, setShowCameraView] = useState(false);
-  
+
   // ROI Modal state
   const [roiModalOpen, setRoiModalOpen] = useState(false);
-  const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<string | null>(null);
-  
+  const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<
+    string | null
+  >(null);
+
   // Loading and notification states
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error' | 'info',
+    message: "",
+    severity: "success" as "success" | "error" | "info",
   });
 
   // Load existing ROI data when component mounts or camera changes
@@ -362,15 +360,15 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
   const loadAllROIData = async () => {
     try {
-      console.log('📥 Loading ROI data for camera:', camera.id);
+      console.log("📥 Loading ROI data for camera:", camera.id);
       const roiData = await roiService.getRoi(camera.id);
-      
-      console.log('✅ ROI data loaded:', roiData);
-      
+
+      console.log("✅ ROI data loaded:", roiData);
+
       // Update use cases with loaded ROI data
       if (roiData.roi) {
-        setUseCases(prev =>
-          prev.map(useCase => {
+        setUseCases((prev) =>
+          prev.map((useCase) => {
             const roiForUseCase = roiData.roi[useCase.name];
             if (roiForUseCase && roiForUseCase.length > 0) {
               return {
@@ -385,21 +383,23 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         );
       }
     } catch (error) {
-      console.error('❌ Error loading ROI data:', error);
+      console.error("❌ Error loading ROI data:", error);
       // Don't show error to user on initial load
     }
   };
 
   const handleUseCaseSelect = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === useCaseId ? { ...useCase, selected: !useCase.selected } : useCase
+    setUseCases((prev) =>
+      prev.map((useCase) =>
+        useCase.id === useCaseId
+          ? { ...useCase, selected: !useCase.selected }
+          : useCase
       )
     );
   };
 
   const handleAddROI = (useCaseId: string) => {
-    const useCase = useCases.find(uc => uc.id === useCaseId);
+    const useCase = useCases.find((uc) => uc.id === useCaseId);
     if (!useCase) return;
 
     setCurrentUseCaseForROI(useCaseId);
@@ -409,12 +409,12 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const handleROISave = async (roiShapes: ROIShape[]) => {
     if (!currentUseCaseForROI) return;
 
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
+    const useCase = useCases.find((uc) => uc.id === currentUseCaseForROI);
     if (!useCase) return;
 
     try {
       setLoading(true);
-      console.log('💾 Saving ROI to backend...');
+      console.log("💾 Saving ROI to backend...");
 
       // Save to backend
       const response = await roiService.saveRoi(
@@ -423,11 +423,11 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         roiShapes
       );
 
-      console.log('✅ ROI saved successfully:', response);
+      console.log("✅ ROI saved successfully:", response);
 
       // Update local state
-      setUseCases(prev =>
-        prev.map(uc =>
+      setUseCases((prev) =>
+        prev.map((uc) =>
           uc.id === currentUseCaseForROI
             ? {
                 ...uc,
@@ -442,18 +442,18 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       setSnackbar({
         open: true,
         message: `✅ ROI saved successfully for ${useCase.name}!`,
-        severity: 'success',
+        severity: "success",
       });
 
       // Close modal
       setRoiModalOpen(false);
       setCurrentUseCaseForROI(null);
     } catch (error) {
-      console.error('❌ Error saving ROI:', error);
+      console.error("❌ Error saving ROI:", error);
       setSnackbar({
         open: true,
-        message: '❌ Failed to save ROI. Please try again.',
-        severity: 'error',
+        message: "❌ Failed to save ROI. Please try again.",
+        severity: "error",
       });
     } finally {
       setLoading(false);
@@ -466,8 +466,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   };
 
   const handleFineTune = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
+    setUseCases((prev) =>
+      prev.map((useCase) =>
         useCase.id === useCaseId ? { ...useCase, fineTuned: true } : useCase
       )
     );
@@ -483,7 +483,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
-      useCases: useCases.filter(uc => uc.selected).map(uc => uc.id),
+      useCases: useCases.filter((uc) => uc.selected).map((uc) => uc.id),
       roiData: useCases.reduce((acc, uc) => {
         if (uc.roiConfigured) {
           acc[uc.id] = {
@@ -497,50 +497,50 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         if (uc.fineTuned) acc[uc.id] = { tuned: true };
         return acc;
       }, {} as Record<string, FineTuningData>),
-      enabled: useCases.some(uc => uc.selected),
-      viewName: viewName || selectedViewCase || '',
+      enabled: useCases.some((uc) => uc.selected),
+      viewName: viewName || selectedViewCase || "",
     };
 
     onSave(aiConfig);
   };
 
   const getCurrentUseCaseName = () => {
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    return useCase?.name || '';
+    const useCase = useCases.find((uc) => uc.id === currentUseCaseForROI);
+    return useCase?.name || "";
   };
 
   const getExistingROI = () => {
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
+    const useCase = useCases.find((uc) => uc.id === currentUseCaseForROI);
     return useCase?.roiShapes || [];
   };
 
   const getCameraFeedUrl = () => {
-    return 'img/siteimage.jpg';
+    return "img/siteimage.jpg";
   };
 
   const handleCloseSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
+    setSnackbar((prev) => ({ ...prev, open: false }));
   };
 
   return (
-    <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>
+    <Box sx={{ p: 1, minHeight: 500, position: "relative" }}>
       {/* Loading Overlay */}
       {loading && (
         <Box
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            bgcolor: 'rgba(255, 255, 255, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            bgcolor: "rgba(255, 255, 255, 0.8)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             zIndex: 9999,
           }}
         >
-          <Box sx={{ textAlign: 'center' }}>
+          <Box sx={{ textAlign: "center" }}>
             <CircularProgress />
             <Typography sx={{ mt: 2 }}>Saving ROI to database...</Typography>
           </Box>
@@ -549,14 +549,14 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
       <Grid container spacing={1.5}>
         {/* Left Panel - Camera Info and Controls */}
-      
-        <Grid size={{xs: 12, lg: 5}}>
+
+        <Grid size={{ xs: 12, lg: 5 }}>
           <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
               <Typography
                 variant="h6"
                 gutterBottom
-                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
                 <SettingsIcon color="primary" />
                 Camera Configuration
@@ -580,7 +580,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
               <TextField
                 label="View Name"
                 value={viewName}
-                onChange={e => setViewName(e.target.value)}
+                onChange={(e) => setViewName(e.target.value)}
                 fullWidth
                 size="small"
                 placeholder="Enter view name for this camera"
@@ -593,23 +593,23 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                 fullWidth
                 sx={{ mb: 2 }}
               >
-                {showCameraView ? 'Hide' : 'Show'} Camera View
+                {showCameraView ? "Hide" : "Show"} Camera View
               </Button>
             </CardContent>
           </Card>
 
           {/* Camera View Placeholder */}
-          <Card variant="outlined" sx={{ bgcolor: 'grey.900', minHeight: 350 }}>
+          <Card variant="outlined" sx={{ bgcolor: "grey.900", minHeight: 350 }}>
             <CardContent
               sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 minHeight: 320,
               }}
             >
               {showCameraView ? (
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+                <Box sx={{ textAlign: "center", color: "grey.500" }}>
                   <Typography variant="h6" gutterBottom>
                     Live Camera Feed
                   </Typography>
@@ -618,7 +618,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                   </Typography>
                 </Box>
               ) : (
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+                <Box sx={{ textAlign: "center", color: "grey.500" }}>
                   <Typography variant="body2">
                     Click &apos;Show Camera View&apos; to display feed
                   </Typography>
@@ -629,45 +629,78 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         </Grid>
 
         {/* Right Panel - Use Cases Configuration */}
-        
-        <Grid size={{xs: 12, lg: 7}}>
-          <Card variant="outlined" sx={{ height: '100%' }}>
-            <CardContent sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+
+        <Grid size={{ xs: 12, lg: 7 }}>
+          <Card variant="outlined" sx={{ height: "100%" }}>
+            <CardContent
+              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+            >
               <Typography variant="h6" gutterBottom>
                 AI Use Cases Configuration
               </Typography>
 
               <Alert severity="info" sx={{ mb: 2 }}>
-                Select use cases, configure ROI (saved to database), fine-tune settings, and enable/disable detection.
+                Select use cases, configure ROI (saved to database), fine-tune
+                settings, and enable/disable detection.
               </Alert>
 
               <Box
                 sx={{
                   flex: 1,
-                  overflow: 'hidden',
-                  border: '1px solid',
-                  borderColor: 'divider',
+                  overflow: "hidden",
+                  border: "1px solid",
+                  borderColor: "divider",
                   borderRadius: 1,
                   mb: 2,
                 }}
               >
-                <TableContainer sx={{ height: '480px', overflow: 'auto' }}>
+                <TableContainer sx={{ height: "480px", overflow: "auto" }}>
                   <Table stickyHeader size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 600,
+                            width: "80px",
+                            bgcolor: "background.paper",
+                          }}
+                        >
                           Select
                         </TableCell>
-                        <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 600,
+                            minWidth: "300px",
+                            bgcolor: "background.paper",
+                          }}
+                        >
                           Use Case
                         </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 600,
+                            width: "120px",
+                            bgcolor: "background.paper",
+                          }}
+                        >
                           Add ROI
                         </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 600,
+                            width: "120px",
+                            bgcolor: "background.paper",
+                          }}
+                        >
                           Fine Tune
                         </TableCell>
-                        <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
+                        <TableCell
+                          sx={{
+                            fontWeight: 600,
+                            width: "80px",
+                            bgcolor: "background.paper",
+                          }}
+                        >
                           View
                         </TableCell>
                       </TableRow>
@@ -680,7 +713,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                               control={
                                 <Switch
                                   checked={useCase.selected}
-                                  onChange={() => handleUseCaseSelect(useCase.id)}
+                                  onChange={() =>
+                                    handleUseCaseSelect(useCase.id)
+                                  }
                                   size="small"
                                 />
                               }
@@ -692,7 +727,10 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                               <Typography variant="body2" fontWeight={500}>
                                 {useCase.name}
                               </Typography>
-                              <Typography variant="caption" color="text.secondary">
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                              >
                                 {useCase.description}
                               </Typography>
                               {useCase.roiConfigured && useCase.roiShapes && (
@@ -710,27 +748,45 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                           <TableCell>
                             <Button
                               size="small"
-                              variant={useCase.roiConfigured ? 'contained' : 'outlined'}
+                              variant={
+                                useCase.roiConfigured ? "contained" : "outlined"
+                              }
                               onClick={() => handleAddROI(useCase.id)}
                               disabled={!useCase.selected}
-                              startIcon={useCase.roiConfigured ? <CheckCircleIcon /> : <ROIIcon />}
-                              color={useCase.roiConfigured ? 'success' : 'primary'}
-                              sx={{ minWidth: '90px' }}
+                              startIcon={
+                                useCase.roiConfigured ? (
+                                  <CheckCircleIcon />
+                                ) : (
+                                  <ROIIcon />
+                                )
+                              }
+                              color={
+                                useCase.roiConfigured ? "success" : "primary"
+                              }
+                              sx={{ minWidth: "90px" }}
                             >
-                              {useCase.roiConfigured ? 'Edit ROI' : 'Add ROI'}
+                              {useCase.roiConfigured ? "Edit ROI" : "Add ROI"}
                             </Button>
                           </TableCell>
                           <TableCell>
                             <Button
                               size="small"
-                              variant={useCase.fineTuned ? 'contained' : 'outlined'}
+                              variant={
+                                useCase.fineTuned ? "contained" : "outlined"
+                              }
                               onClick={() => handleFineTune(useCase.id)}
                               disabled={!useCase.selected}
-                              startIcon={useCase.fineTuned ? <CheckCircleIcon /> : <TuneIcon />}
-                              color={useCase.fineTuned ? 'success' : 'primary'}
-                              sx={{ minWidth: '90px' }}
+                              startIcon={
+                                useCase.fineTuned ? (
+                                  <CheckCircleIcon />
+                                ) : (
+                                  <TuneIcon />
+                                )
+                              }
+                              color={useCase.fineTuned ? "success" : "primary"}
+                              sx={{ minWidth: "90px" }}
                             >
-                              {useCase.fineTuned ? 'Tuned' : 'Fine Tune'}
+                              {useCase.fineTuned ? "Tuned" : "Fine Tune"}
                             </Button>
                           </TableCell>
                           <TableCell>
@@ -738,7 +794,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                               control={
                                 <Radio
                                   checked={selectedViewCase === useCase.id}
-                                  onChange={() => setSelectedViewCase(useCase.id)}
+                                  onChange={() =>
+                                    setSelectedViewCase(useCase.id)
+                                  }
                                   disabled={!useCase.selected}
                                   size="small"
                                   color="primary"
@@ -756,21 +814,22 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   px: 2,
                   py: 1,
-                  bgcolor: 'action.hover',
+                  bgcolor: "action.hover",
                   borderRadius: 1,
                   mb: 2,
                 }}
               >
                 <Typography variant="body2" color="text.secondary">
-                  Selected: {useCases.filter(uc => uc.selected).length} of {useCases.length} use cases
+                  Selected: {useCases.filter((uc) => uc.selected).length} of{" "}
+                  {useCases.length} use cases
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  ROI in DB: {useCases.filter(uc => uc.roiConfigured).length}
+                  ROI in DB: {useCases.filter((uc) => uc.roiConfigured).length}
                 </Typography>
               </Box>
             </CardContent>
@@ -780,19 +839,19 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
       <Divider sx={{ my: 3 }} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Button onClick={onBack} color="inherit" variant="outlined">
           Back to Camera List
         </Button>
 
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
           <Button variant="outlined" color="inherit">
             Save Configuration
           </Button>
           <Button
             variant="contained"
             onClick={handleSubmit}
-            disabled={!useCases.some(uc => uc.selected)}
+            disabled={!useCases.some((uc) => uc.selected)}
           >
             Submit
           </Button>
@@ -804,7 +863,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
         open={roiModalOpen}
         onClose={handleROIClose}
-        cameraFeedUrl={getCameraFeedUrl()} 
+        cameraFeedUrl={getCameraFeedUrl()}
         useCaseName={getCurrentUseCaseName()}
         existingROI={getExistingROI()}
         onSave={handleROISave}
@@ -815,12 +874,12 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         open={snackbar.open}
         autoHideDuration={4000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
         <Alert
           onClose={handleCloseSnackbar}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbar.message}
         </Alert>
