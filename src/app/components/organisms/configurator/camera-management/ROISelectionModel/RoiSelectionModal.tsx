@@ -44,14 +44,14 @@ import {
   Menu as MenuIcon,
 } from '@mui/icons-material';
 
-type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
+export type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
 
-interface Point {
+export interface Point {
   x: number;
   y: number;
 }
 
-interface ROIShape {
+export interface ROIShape {
   type: DrawingTool;
   points: Point[];
   completed: boolean;
@@ -126,13 +126,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   onSave,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  // const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
 
   // Responsive drawer/sidebar state
-  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const drawerWidth = 200;
+  // const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  // const drawerWidth = 200;
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -242,7 +242,7 @@ useEffect(() => {
   const canvas = canvasRef.current;
   if (!img || !canvas) return;
 
-  let freshUrl =
+  const freshUrl =
   cameraFeedUrl && cameraFeedUrl.trim() !== ""
     ? `${cameraFeedUrl}${cameraFeedUrl.includes("?") ? "&" : "?"}_ts=${Date.now()}`
     : "/img/siteimage.jpg";   // <-- ensure slash is present
@@ -589,13 +589,13 @@ setTimeout(() => {
     addToHistory(newShapes);
   };
 
-  const handleROIModeToggle = (index: number) => {
-    const newShapes = roiShapes.map((shape, i) =>
-      i === index ? { ...shape, mode: shape.mode === 'include' ? 'exclude' : 'include' } : shape
-    );
+  // const handleROIModeToggle = (index: number) => {
+    // const newShapes = roiShapes.map((shape, i) =>
+    //   i === index ? { ...shape, mode: shape.mode === 'include' ? 'exclude' : 'include' } : shape
+    // );
     // setRoiShapes(newShapes);
     // addToHistory(newShapes);
-  };
+  // };
 
   const editFieldRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => {
@@ -1292,7 +1292,7 @@ setTimeout(() => {
           <MenuItem
             onClick={() => {
               if (contextMenu !== null) {
-                handleROIModeToggle(contextMenu.roiIndex);
+                // handleROIModeToggle(contextMenu.roiIndex);
                 setTimeout(() => setContextMenu(null), 50);
               }
               setTimeout(() => redrawCanvas(), 100);

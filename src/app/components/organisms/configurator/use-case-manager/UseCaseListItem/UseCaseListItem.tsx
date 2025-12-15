@@ -6,12 +6,12 @@ import {
   Paper,
   Typography,
   Button,
-  IconButton,
-  Tooltip,
+  // IconButton,
+  // Tooltip,
 } from "@mui/material";
 import {
   Settings as SettingsIcon,
-  Videocam as VideocamIcon,
+  // Videocam as VideocamIcon,
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
   ChevronRight as ChevronRightIcon,

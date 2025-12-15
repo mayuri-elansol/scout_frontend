@@ -62,7 +62,7 @@ const UseCaseManager: React.FC = () => {
   const loadCameras = async () => {
     setIsLoadingCameras(true);
     try {
-      const cameraData = await useCaseManagerService.getMockCameras(organizationId);
+      const cameraData = await useCaseManagerService.getMockCameras();
       setCameras(cameraData);
     } catch (err) {
       console.error("Error loading cameras:", err);

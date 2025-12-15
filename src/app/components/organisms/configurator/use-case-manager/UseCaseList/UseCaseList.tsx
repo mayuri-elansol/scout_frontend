@@ -24,7 +24,7 @@ interface UseCaseListProps {
 export const UseCaseList: React.FC<UseCaseListProps> = ({
   useCases,
   onConfigureCameras,
-  isLoading = false,
+  // isLoading = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
 

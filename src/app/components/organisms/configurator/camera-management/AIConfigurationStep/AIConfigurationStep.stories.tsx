@@ -1,19 +1,19 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import AIConfigurationStep from "./AIConfigurationStep";
+import type { CameraData } from "../CameraOnboardingStep/CameraOnboardingStep";
 
-
-const mockCamera = {
-  id: "CAM-001",
+const mockCamera: CameraData = {
+  id: "camera-1",
   ipAddress: "192.168.1.10",
   username: "admin",
-  password: "admin123",
+  password: "123456",
   port: "554",
   make: "Hikvision",
-  position: "Main Gate",
-  rtspStream: "rtsp://192.168.1.10/stream",
+  position: "Front Gate",
+  rtspStream: "rtsp://admin:123456@192.168.1.10:554/Streaming/Channels/101",
   status: "connected",
   aiConfig: undefined,
-} satisfies CameraData;
+};
 
 const meta: Meta<typeof AIConfigurationStep> = {
   title: "Organisms/Configurator/CameraManagement/AIConfigurationStep",

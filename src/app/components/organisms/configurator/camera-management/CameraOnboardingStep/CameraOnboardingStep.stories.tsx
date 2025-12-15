@@ -1,14 +1,17 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import CameraOnboardingStep from "./CameraOnboardingStep";
+// import type { CameraData } from "./CameraOnboardingStep";
+
 
 // Matches EXACT interface of CameraData in component (no position field)
-interface CameraData {
+export interface CameraData {
   id: string;
   ipAddress: string;
   username: string;
   password: string;
   port: string;
   make: string;
+  position: string;
   rtspStream: string;
   status: "connected" | "failed" | "pending";
   aiConfig?: {
@@ -20,6 +23,7 @@ interface CameraData {
   };
 }
 
+
 const mockCameras: CameraData[] = [
   {
     id: "cam-1",
@@ -28,6 +32,7 @@ const mockCameras: CameraData[] = [
     password: "admin123",
     port: "554",
     make: "Hikvision",
+    position: "Front Gate",   // ✅ REQUIRED
     rtspStream: "rtsp://192.168.1.10/stream",
     status: "connected",
   },
@@ -38,6 +43,7 @@ const mockCameras: CameraData[] = [
     password: "admin123",
     port: "554",
     make: "Dahua",
+    position: "Entrance",      // ✅ REQUIRED
     rtspStream: "rtsp://192.168.1.11/stream",
     status: "connected",
   },
@@ -48,10 +54,12 @@ const mockCameras: CameraData[] = [
     password: "admin123",
     port: "554",
     make: "Axis",
+    position: "Parking",       // ✅ REQUIRED
     rtspStream: "rtsp://192.168.1.12/stream",
     status: "failed",
   },
 ];
+
 
 const meta: Meta<typeof CameraOnboardingStep> = {
   title: "Organisms/Configurator/CameraManagement/CameraOnboardingStep",
@@ -119,6 +127,7 @@ export const WithMixedStatus: Story = {
         password: "admin123",
         port: "554",
         make: "Hikvision",
+        position: "Lobby",
         rtspStream: "rtsp://192.168.1.13/stream",
         status: "pending",
       },

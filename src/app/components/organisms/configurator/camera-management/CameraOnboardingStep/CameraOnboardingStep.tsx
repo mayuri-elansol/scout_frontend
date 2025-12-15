@@ -17,7 +17,7 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
-  ButtonGroup,
+  
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
@@ -26,15 +26,16 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 
-interface CameraData {
+export interface CameraData {
   id: string;
   ipAddress: string;
   username: string;
   password: string;
   port: string;
   make: string;
+  position: string;
   rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
+  status: "connected" | "failed" | "pending";
   aiConfig?: {
     useCases: string[];
     roiData: Record<string, { configured: boolean }>;
@@ -43,6 +44,7 @@ interface CameraData {
     viewName?: string;
   };
 }
+
 
 interface CameraOnboardingStepProps {
   cameras: CameraData[];
@@ -73,7 +75,7 @@ interface FormErrors {
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
   onCameraAdd,
-  onCameraBatchAdd,
+  // onCameraBatchAdd,
   onCameraRemove,
   onNext,
   onBack,
@@ -213,6 +215,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       password: formData.password.trim(),
       port: formData.port.trim(),
       make: formData.make.trim(),
+      position: formData.ipAddress.trim(),
 
     });
 
@@ -244,16 +247,27 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'connected':
-        return 'success';
-      case 'failed':
-        return 'error';
-      default:
-        return 'default';
-    }
-  };
+  type ChipColor =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'error'
+  | 'info'
+  | 'success'
+  | 'warning';
+
+
+  const getStatusColor = (status: string): ChipColor => {
+  switch (status) {
+    case 'connected':
+      return 'success';
+    case 'failed':
+      return 'error';
+    default:
+      return 'default';
+  }
+};
+
 
   return (
     <Box sx={{ p: 1, minHeight: 400, pb: 12 }}>
@@ -515,6 +529,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                                 password: nvrData.password,
                                 port: nvrData.port,
                                 make: "NVR",
+                                position: cam.name,
                               });
                             });
 
@@ -597,7 +612,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                   
                                 <Chip
                                   label={camera.status}
-                                  color={getStatusColor(camera.status) as any}
+                                  color={getStatusColor(camera.status)}
                                   size="small"
                                 />
                               </Box>
