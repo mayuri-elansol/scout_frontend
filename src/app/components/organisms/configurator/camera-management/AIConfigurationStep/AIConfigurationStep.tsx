@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 // import { roiService } from '@/services/scout/roiService';
+
 
 import {
   Box,
@@ -355,40 +356,40 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
+
+  const loadAllROIData = useCallback(async () => {
+  try {
+    console.log('📥 Loading ROI data for camera:', camera.id);
+    const roiData = await roiService.getRoi(camera.id);
+
+    console.log('✅ ROI data loaded:', roiData);
+
+    if (roiData.roi) {
+      setUseCases(prev =>
+        prev.map(useCase => {
+          const roiForUseCase = roiData.roi[useCase.name];
+          if (roiForUseCase && roiForUseCase.length > 0) {
+            return {
+              ...useCase,
+              roiConfigured: true,
+              roiShapes: roiForUseCase,
+              selected: true,
+            };
+          }
+          return useCase;
+        })
+      );
+    }
+  } catch (error) {
+    console.error('❌ Error loading ROI data:', error);
+  }
+}, [camera.id]);
+
+
   // Load existing ROI data when component mounts or camera changes
   useEffect(() => {
     loadAllROIData();
-  }, [camera.id]);
-
-  const loadAllROIData = async () => {
-    try {
-      console.log('📥 Loading ROI data for camera:', camera.id);
-      const roiData = await roiService.getRoi(camera.id);
-      
-      console.log('✅ ROI data loaded:', roiData);
-      
-      // Update use cases with loaded ROI data
-      if (roiData.roi) {
-        setUseCases(prev =>
-          prev.map(useCase => {
-            const roiForUseCase = roiData.roi[useCase.name];
-            if (roiForUseCase && roiForUseCase.length > 0) {
-              return {
-                ...useCase,
-                roiConfigured: true,
-                roiShapes: roiForUseCase,
-                selected: true, // Auto-select if ROI exists
-              };
-            }
-            return useCase;
-          })
-        );
-      }
-    } catch (error) {
-      console.error('❌ Error loading ROI data:', error);
-      // Don't show error to user on initial load
-    }
-  };
+  }, [loadAllROIData]);
 
   const handleUseCaseSelect = (useCaseId: string) => {
     setUseCases(prev =>
