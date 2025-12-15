@@ -557,6 +557,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       handleCategoryToggle,
       isAnalyticsActive,
       isSettingsActive,
+      router,
     ]
   );
 

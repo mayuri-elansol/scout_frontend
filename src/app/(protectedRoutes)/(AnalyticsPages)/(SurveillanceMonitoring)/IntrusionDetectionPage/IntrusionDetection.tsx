@@ -78,7 +78,7 @@ const IntrusionDetection: React.FC = () => {
       zone: "Perimeter Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
-      createdAt: "2025-09-23 18:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:16",
     },
     {
@@ -87,7 +87,7 @@ const IntrusionDetection: React.FC = () => {
       zone: "Perimeter Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
-      createdAt: "2025-09-23 18:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:06",
     },
     {
@@ -96,7 +96,7 @@ const IntrusionDetection: React.FC = () => {
       zone: "Perimeter Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
-      createdAt: "2025-09-23 18:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:16",
     },
   ];

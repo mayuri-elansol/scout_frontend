@@ -26,7 +26,6 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
 
 const Dashboard: React.FC = () => {
@@ -525,7 +524,7 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={1.5}>
               {kpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
                   <DashboardKpiCardMain {...kpi} />
                 </Grid>
               ))}
@@ -561,7 +560,7 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={1.5}>
               {surveillanceDashboradkpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
                   <DashboardKpiCardMain {...kpi} />
                 </Grid>
               ))}
@@ -596,7 +595,7 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={1.5}>
               {operationalDashboardkpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
                   <DashboardKpiCardMain {...kpi} />
                 </Grid>
               ))}
@@ -632,7 +631,7 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={1.5}>
               {WorkForcekpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 3, sm: 6 }} key={uuidv4() + index}>
+                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
                   <DashboardKpiCardMain {...kpi} />
                 </Grid>
               ))}

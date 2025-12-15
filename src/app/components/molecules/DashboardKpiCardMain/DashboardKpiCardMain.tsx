@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, Box, Typography, Tooltip } from "@mui/material";
+import { Card, CardContent, Box, Typography } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 interface DashboardKpiCardProps {
   title: string;
@@ -25,11 +24,8 @@ interface DashboardKpiCardProps {
 const DashboardKpiCardMain: React.FC<DashboardKpiCardProps> = ({
   title,
   violationsCount,
-  lastDetection,
-  lastDetectionTime,
-  icon: IconComponent,
+
   route,
-  tooltipMessage,
 
   // custom optional colors
   color,
@@ -153,30 +149,6 @@ const DashboardKpiCardMain: React.FC<DashboardKpiCardProps> = ({
           {title}
         </Typography>
       </CardContent>
-
-      {/* Tooltip icon */}
-      {/* {tooltipMessage && (
-        <Tooltip title={tooltipMessage} arrow placement="top">
-          <Box
-            onClick={(e) => e.stopPropagation()}
-            sx={{
-              position: "absolute",
-              top: 12,
-              right: 12,
-              width: 24,
-              height: 24,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              color: "#9ca3af",
-              "&:hover": { color: "#6b7280" },
-            }}
-          >
-            <InfoOutlinedIcon sx={{ fontSize: 18 }} />
-          </Box>
-        </Tooltip>
-      )} */}
     </Card>
   );
 };

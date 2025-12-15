@@ -11,6 +11,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import PeopleIcon from "@mui/icons-material/People";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 const PeoplePresence: React.FC = () => {
   interface PeoplePresenceViolation {
     incident: string;
@@ -44,7 +45,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:25 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "Shows the time when the most recent people presence was detected.",
@@ -58,7 +59,7 @@ const PeoplePresence: React.FC = () => {
       camera: "CAM-31",
       count: 15,
       alarmTriggered: true,
-      createdAt: "2025-09-23 21:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
     },
     {
@@ -68,7 +69,67 @@ const PeoplePresence: React.FC = () => {
       camera: "CAM-32",
       count: 7,
       alarmTriggered: true,
-      createdAt: "2025-09-23 21:15",
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:16",
+    },
+    {
+      id: 801,
+      snapshot: "https://picsum.photos/400/200?random=31",
+      zone: "Production Floor",
+      camera: "CAM-31",
+      count: 15,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:06",
+    },
+    {
+      id: 802,
+      snapshot: "https://picsum.photos/400/200?random=32",
+      zone: "Loading Dock",
+      camera: "CAM-32",
+      count: 7,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:16",
+    },
+    {
+      id: 801,
+      snapshot: "https://picsum.photos/400/200?random=31",
+      zone: "Production Floor",
+      camera: "CAM-31",
+      count: 15,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:06",
+    },
+    {
+      id: 802,
+      snapshot: "https://picsum.photos/400/200?random=32",
+      zone: "Loading Dock",
+      camera: "CAM-32",
+      count: 7,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:16",
+    },
+    {
+      id: 801,
+      snapshot: "https://picsum.photos/400/200?random=31",
+      zone: "Production Floor",
+      camera: "CAM-31",
+      count: 15,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 21:06",
+    },
+    {
+      id: 802,
+      snapshot: "https://picsum.photos/400/200?random=32",
+      zone: "Loading Dock",
+      camera: "CAM-32",
+      count: 7,
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
     },
   ];

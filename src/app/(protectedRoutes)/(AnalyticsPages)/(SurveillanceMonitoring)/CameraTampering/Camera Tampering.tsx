@@ -12,6 +12,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 const CameraTampering: React.FC = () => {
   interface CameraTamperingViolation {
     voilation: string;
@@ -76,7 +77,7 @@ const CameraTampering: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       cameraid: "CAM-T01",
       alarmTriggered: true,
-      createdAt: "2025-10-08 14:12",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 202,
@@ -85,7 +86,7 @@ const CameraTampering: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       cameraid: "CAM-T02",
       alarmTriggered: true,
-      createdAt: "2025-10-08 13:58",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 203,
@@ -94,7 +95,7 @@ const CameraTampering: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       cameraid: "CAM-T03",
       alarmTriggered: true,
-      createdAt: "2025-10-08 13:45",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 204,
@@ -103,7 +104,7 @@ const CameraTampering: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=14",
       cameraid: "CAM-T04",
       alarmTriggered: false,
-      createdAt: "2025-10-08 13:30",
+      createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 205,
@@ -112,7 +113,34 @@ const CameraTampering: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=15",
       cameraid: "CAM-T05",
       alarmTriggered: true,
-      createdAt: "2025-10-08 13:15",
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 202,
+      tamperingType: "Blur Vision",
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      cameraid: "CAM-T02",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 203,
+      tamperingType: "Disconnected",
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      cameraid: "CAM-T03",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 204,
+      tamperingType: "Offline",
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      cameraid: "CAM-T04",
+      alarmTriggered: false,
+      createdAt: getOneHourBefore().fullDate,
     },
   ];
 

@@ -11,6 +11,7 @@ import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   interface UnauthorizedAccess {
     voilation: string;
@@ -49,7 +50,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "Most recent time unauthorized people were detected in restricted zones.",
@@ -62,7 +63,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       zone: "Chemical Storage",
       camera: "CAM-11",
-      createdat: "2025-09-23 15:42",
+      createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:45",
       alarmTriggered: true,
     },
@@ -71,7 +72,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       zone: "Zone A",
       camera: "CAM-12",
-      createdat: "2025-09-23 15:28",
+      createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:30",
       alarmTriggered: true,
     },
@@ -80,7 +81,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       zone: "Restricted Lab",
       camera: "CAM-13",
-      createdat: "2025-09-23 15:15",
+      createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:18",
       alarmTriggered: true,
     },
@@ -89,7 +90,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=14",
       zone: "Warehouse Entry",
       camera: "CAM-14",
-      createdat: "2025-09-23 14:58",
+      createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:00",
       alarmTriggered: true,
     },
@@ -98,8 +99,35 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=15",
       zone: "Zone C",
       camera: "CAM-15",
-      createdat: "2025-09-23 14:32",
+      createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 14:36",
+      alarmTriggered: true,
+    },
+    {
+      id: 201,
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Chemical Storage",
+      camera: "CAM-11",
+      createdat: getOneHourBefore().fullDate,
+      updatedat: "2025-09-23 15:45",
+      alarmTriggered: true,
+    },
+    {
+      id: 202,
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Zone A",
+      camera: "CAM-12",
+      createdat: getOneHourBefore().fullDate,
+      updatedat: "2025-09-23 15:30",
+      alarmTriggered: true,
+    },
+    {
+      id: 203,
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Restricted Lab",
+      camera: "CAM-13",
+      createdat: getOneHourBefore().fullDate,
+      updatedat: "2025-09-23 15:18",
       alarmTriggered: true,
     },
   ];
