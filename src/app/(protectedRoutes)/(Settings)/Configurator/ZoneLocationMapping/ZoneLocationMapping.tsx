@@ -171,21 +171,7 @@ const ZoneLocationMapping: React.FC = () => {
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Breadcrumbs */}
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
-        <MuiLink component={Link} href="/" underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <HomeIcon fontSize="small" /> Home
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <SettingsIcon fontSize="small" /> Settings
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <TuneIcon fontSize="small" /> Configurator
-        </MuiLink>
-        <Typography color="text.primary" sx={{ display: "flex", alignItems: "center", gap: 0.5, fontWeight: 600 }}>
-          <MapIcon fontSize="small" /> Zone-Location Mapping
-        </Typography>
-      </Breadcrumbs>
+    
 
       {/* Header */}
       <Box sx={{ mb: 4 }}>
@@ -214,7 +200,7 @@ const ZoneLocationMapping: React.FC = () => {
           <Typography variant="body2" color="text.secondary" fontWeight={500}>Location Assignments</Typography>
         </Box>
 
-        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(237,108,2,0.08)", border: "2px solid", borderColor: "warning.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(81, 84, 82, 0.08)", border: "2px solid", borderColor: "grey", display: "flex", flexDirection: "column", gap: 0.5 }}>
           {/* intentionally left for future camera stats */}
         </Box>
       </Box>

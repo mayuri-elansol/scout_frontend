@@ -13,6 +13,8 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
     incident: string;
@@ -60,7 +62,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Loading Bay A",
       camera: "CAM-21",
       alarmTriggered: true,
-      createdAt: "2025-10-09 08:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 08:20",
     },
     {
@@ -71,7 +73,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Loading Bay B",
       camera: "CAM-22",
       alarmTriggered: false,
-      createdAt: "2025-10-09 09:30",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 09:35",
     },
     {
@@ -82,7 +84,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Unloading Bay A",
       camera: "CAM-23",
       alarmTriggered: true,
-      createdAt: "2025-10-09 10:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 10:05",
     },
     {
@@ -93,7 +95,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Unloading Bay B",
       camera: "CAM-24",
       alarmTriggered: false,
-      createdAt: "2025-10-09 11:00",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 11:05",
     },
     {
@@ -104,7 +106,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Loading Bay C",
       camera: "CAM-25",
       alarmTriggered: true,
-      createdAt: "2025-10-09 12:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 12:20",
     },
   ];

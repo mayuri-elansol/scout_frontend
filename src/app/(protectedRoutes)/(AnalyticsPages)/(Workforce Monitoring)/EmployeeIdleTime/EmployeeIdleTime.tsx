@@ -13,6 +13,8 @@ import PersonOffIcon from "@mui/icons-material/PersonOff";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+
 const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   interface EmployeeIdleEvent {
@@ -25,6 +27,7 @@ const EmployeeIdleTime: React.FC = () => {
     [key: string]: string | number | boolean;
   }
 
+  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
     null
@@ -39,7 +42,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       title: "Last Idle Detection Time",
-      value: "10:45 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage: "The most recent idle detection timestamp.",
     },
@@ -60,7 +63,7 @@ const EmployeeIdleTime: React.FC = () => {
       zone: "Production Floor A",
       snapshot: "https://picsum.photos/400/200?random=21",
       cameraid: "CAM-I01",
-      createdAt: "2025-10-08 14:50",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:55",
     },
     {
@@ -72,7 +75,7 @@ const EmployeeIdleTime: React.FC = () => {
       zone: "Welding Station",
       snapshot: "https://picsum.photos/400/200?random=22",
       cameraid: "CAM-I02",
-      createdAt: "2025-10-08 14:40",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:45",
     },
     {
@@ -84,7 +87,7 @@ const EmployeeIdleTime: React.FC = () => {
       zone: "Chemical Storage",
       snapshot: "https://picsum.photos/400/200?random=23",
       cameraid: "CAM-I03",
-      createdAt: "2025-10-08 14:30",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:35",
     },
     {
@@ -96,7 +99,7 @@ const EmployeeIdleTime: React.FC = () => {
       zone: "Assembly Line B",
       snapshot: "https://picsum.photos/400/200?random=24",
       cameraid: "CAM-I04",
-      createdAt: "2025-10-08 14:20",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:25",
     },
     {
@@ -108,7 +111,7 @@ const EmployeeIdleTime: React.FC = () => {
       zone: "Maintenance Area",
       snapshot: "https://picsum.photos/400/200?random=25",
       cameraid: "CAM-I05",
-      createdAt: "2025-10-08 14:10",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:15",
     },
   ];

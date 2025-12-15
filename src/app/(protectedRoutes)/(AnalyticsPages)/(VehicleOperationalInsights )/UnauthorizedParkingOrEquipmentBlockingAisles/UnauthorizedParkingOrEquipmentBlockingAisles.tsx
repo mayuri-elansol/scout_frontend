@@ -14,6 +14,8 @@ import EquipmentIcon from "@mui/icons-material/Build";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
   interface UnauthorizedParkingEvent {
@@ -66,7 +68,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=11",
       zone: "Loading Bay A",
       camera: "CAM-11",
-      createdAt: "2025-10-09 08:42",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 08:45",
     },
     {
@@ -75,7 +77,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=12",
       zone: "Warehouse Zone B",
       camera: "CAM-12",
-      createdAt: "2025-10-09 09:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 09:18",
     },
     {
@@ -84,7 +86,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=13",
       zone: "Assembly Area C",
       camera: "CAM-13",
-      createdAt: "2025-10-09 10:05",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 10:08",
     },
     {
@@ -93,7 +95,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=14",
       zone: "Maintenance Area",
       camera: "CAM-14",
-      createdAt: "2025-10-09 11:25",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 11:28",
     },
     {
@@ -102,7 +104,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=15",
       zone: "Parking Zone D",
       camera: "CAM-15",
-      createdAt: "2025-10-09 12:40",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 12:45",
     },
   ];
