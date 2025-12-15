@@ -1,25 +1,28 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-
+import {
+  Shield,
+  Visibility,
+  LocationOn,
+  AccessTime,
+  Checkroom,
+} from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 
-import { FilterParams, KpiItem, PPEKpi } from "./PPEKitDetection.types";
+import { FilterParams } from "./PPEKitDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { useSSEListener } from "@/hooks/useSSEListener";
-import { useLazyGetPPEKitDetectionKpiDataQuery } from "./PPEKitDetectionApi";
-import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
     voilation: string;
@@ -33,40 +36,61 @@ const PPEDetection: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
-  const [fetchKpi, { data: kpiData, isLoading }] =
-    useLazyGetPPEKitDetectionKpiDataQuery();
-
-  // ✅ Listen for SSE events
-  useSSEListener(() => {
-    console.log("🔁 SSE triggered — refetching KPI data...");
-    fetchKpi({ tenantId: "0b49972a28f8a982" });
-  });
-
-  // ✅ Initial fetch on mount
-  useEffect(() => {
-    fetchKpi({ tenantId: "0b49972a28f8a982" });
-  }, [fetchKpi]);
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  const ppeKpiData =
-    kpiData?.map((item: KpiItem) => {
-      const config =
-        ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
-      return {
-        ...item,
-        icon: config.icon,
-        tooltipMessage: config.tooltipMessage,
-      };
-    }) || [];
+  const ppeKpiData = [
+    {
+      title: "Total Violations",
+      value: "87",
+      icon: Shield,
+      tooltipMessage:
+        "Total number of PPE violations detected across all monitored zones.",
+    },
+    {
+      title: "Current Unsafe Zone",
+      value: "2",
+      icon: LocationOn,
+      tooltipMessage:
+        "Number of zones where unsafe PPE compliance was detected.",
+    },
+    {
+      title: "Last Detection Time",
+      value: "10:35 AM",
+      icon: AccessTime,
+      tooltipMessage: "The time when the last PPE violation was detected.",
+    },
+    {
+      title: "Missing Helmet",
+      value: "12",
+      icon: EngineeringIcon,
+      tooltipMessage:
+        "Number of detected instances where workers were missing helmets.",
+    },
+    {
+      title: "Missing Vest",
+      value: "12",
+      icon: Checkroom,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety vests.",
+    },
+    {
+      title: "Missing Glasses",
+      value: "9",
+      icon: Visibility,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety glasses.",
+    },
+  ];
+
   const backendData = [
     {
       id: 101,
-      helmet: true,
+      helmet: false,
       vest: true,
       glasses: false,
       zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=1",
+      snapshot: "/img/site1.jpg",
       cameraid: "CAM-01",
       alarmTriggered: true,
       createdAt: "2025-09-23 15:42",
@@ -74,32 +98,32 @@ const PPEDetection: React.FC = () => {
     {
       id: 102,
       helmet: true,
-      vest: true,
+      vest: false,
       glasses: false,
       zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=2",
+      snapshot: "/img/site2.jpg",
       cameraid: "CAM-02",
       alarmTriggered: true,
       createdAt: "2025-09-23 15:28",
     },
     {
       id: 103,
-      helmet: true,
+      helmet: false,
       vest: true,
       glasses: false,
       zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=3",
+      snapshot: "/img/site3.jpg",
       cameraid: "CAM-03",
       alarmTriggered: true,
       createdAt: "2025-09-23 15:15",
     },
     {
       id: 104,
-      helmet: true,
+      helmet: false,
       vest: true,
       glasses: false,
       zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=4",
+      snapshot: "/img/site4.jpg",
       cameraid: "CAM-04",
       alarmTriggered: false,
       createdAt: "2025-09-23 14:58",
@@ -107,13 +131,58 @@ const PPEDetection: React.FC = () => {
     {
       id: 105,
       helmet: false,
-      vest: false,
+      vest: true,
       glasses: true,
       zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=5",
+      snapshot: "/img/site5.jpg",
       cameraid: "CAM-05",
       alarmTriggered: true,
       createdAt: "2025-09-23 14:32",
+    },
+    {
+      id: 106,
+      helmet: true,
+      vest: false,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "/img/site2.jpg",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:28",
+    },
+
+    {
+      id: 108,
+      helmet: false,
+      vest: true,
+      glasses: false,
+      zone: "Production Floor A",
+      snapshot: "/img/site1.jpg",
+      cameraid: "CAM-01",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:42",
+    },
+    {
+      id: 109,
+      helmet: true,
+      vest: false,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "/img/site2.jpg",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:28",
+    },
+    {
+      id: 107,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Chemical Storage",
+      snapshot: "/img/site3.jpg",
+      cameraid: "CAM-03",
+      alarmTriggered: true,
+      createdAt: "2025-09-23 15:15",
     },
   ];
   const recentViolations = backendData.map((item) => {
@@ -199,17 +268,34 @@ const PPEDetection: React.FC = () => {
   };
 
   const handleExport = (format: "csv" | "pdf") => {
-    console.log("Export requested clikcedd:", format);
+    console.log("Export requested:", format);
+
+    const fileName = format === "pdf" ? "ppe-report.pdf" : "ppe-report.csv";
+
+    const fileUrl = `/reports/${fileName}`;
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    link.click();
   };
   const handleDownloadSingle = () => {
     console.log("download single row");
+    const fileName = "ppe-single-report.pdf";
+
+    const fileUrl = `/reports/${fileName}`;
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    link.click();
   };
   const handleViewSingle = (row: PPEViolation) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
   };
-  const KpiCardLoading = isLoading;
+  const KpiCardLoading = false;
   return (
     <Box>
       {/* KPI Cards */}
@@ -245,7 +331,7 @@ const PPEDetection: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              ppeKpiData.map((kpi: PPEKpi, index: number) => (
+              ppeKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}

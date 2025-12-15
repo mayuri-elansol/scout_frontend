@@ -105,8 +105,19 @@ const SystemAlerts: React.FC = () => {
 
   // 🔹 Common handlers
   const handleReset = () => console.log("Reset clicked");
-  const handleExport = (format: "csv" | "pdf") =>
-    console.log("Export:", format);
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested:", format);
+
+    const fileName =
+      format === "pdf" ? "alerts-report.pdf" : "alerts-report.csv";
+
+    const fileUrl = `/reports/${fileName}`;
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    link.click();
+  };
 
   // 🔹 Define all tab contents
   const tabs: TabConfig[] = alertTables.map((t) => ({

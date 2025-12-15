@@ -295,7 +295,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     if (filter.type === "select")
       return (
         <TextField {...commonProps} select>
-          <MenuItem value="">All</MenuItem>
           {filter.options?.map((opt, index) => (
             <MenuItem key={uuidv4() + index} value={opt.toString()}>
               {opt.toString()}

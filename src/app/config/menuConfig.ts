@@ -69,6 +69,11 @@ export const dashboardMenu: CategoryConfig[] = [
         page: "workforce-monitoring-dasboard",
         path: "/WorkforceMonitoringDashboard",
       },
+      {
+        name: "Camera Tamparing ",
+        page: "camera-tamparing-dasboard",
+        path: "/CameraTamperingDashboard",
+      },
     ],
   },
 ];
@@ -130,17 +135,17 @@ export const settingsMenu: CategoryConfig[] = [
 
 // Analytics categories
 export const analyticsMenu: CategoryConfig[] = [
-  {
-    title: "Camera Tamparing",
-    icon: VideocamIcon,
-    items: [
-      {
-        name: "Camera Tamparing Dashboard",
-        page: "camera-tamparing-dasboard",
-        path: "/CameraTamperingDashboard",
-      },
-    ],
-  },
+  // {
+  //   title: "Camera Tamparing",
+  //   icon: VideocamIcon,
+  //   items: [
+  // {
+  //   name: "Camera Tamparing Dashboard",
+  //   page: "camera-tamparing-dasboard",
+  //   path: "/CameraTamperingDashboard",
+  // },
+  //   ],
+  // },
   {
     title: "Safety and Compliance",
     icon: Shield,

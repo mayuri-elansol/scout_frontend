@@ -37,7 +37,7 @@ const FallDetection: React.FC = () => {
   const fallKpiData = [
     {
       title: "Total Fall Incidents",
-      value: "24",
+      value: "9",
       icon: ReportProblem,
       tooltipMessage:
         "Total number of fall, laydown, or sleeping incidents detected across all monitored zones.",
@@ -80,7 +80,7 @@ const FallDetection: React.FC = () => {
   const backendLaydownData = [
     {
       id: 401,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/fall1.jpg",
       zone: "Production Floor A",
       camera: "CAM-11",
       createdAt: "2025-09-23 18:05",
@@ -89,7 +89,7 @@ const FallDetection: React.FC = () => {
     },
     {
       id: 402,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/fall2.jpg",
       zone: "Warehouse",
       camera: "CAM-12",
       createdAt: "2025-09-23 18:12",
@@ -98,7 +98,7 @@ const FallDetection: React.FC = () => {
     },
     {
       id: 403,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/fall3.jpg",
       zone: "Maintenance Area",
       camera: "CAM-13",
       createdAt: "2025-09-23 18:18",
@@ -107,7 +107,7 @@ const FallDetection: React.FC = () => {
     },
     {
       id: 404,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/fall4.jpg",
       zone: "Production Floor A",
       camera: "CAM-11",
       createdAt: "2025-09-23 18:05",
@@ -116,7 +116,7 @@ const FallDetection: React.FC = () => {
     },
     {
       id: 405,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/fall5.jpg",
       zone: "Warehouse",
       camera: "CAM-12",
       createdAt: "2025-09-23 18:12",
@@ -125,12 +125,39 @@ const FallDetection: React.FC = () => {
     },
     {
       id: 406,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/fall4.jpg",
       zone: "Maintenance Area",
       camera: "CAM-13",
       createdAt: "2025-09-23 18:18",
       updatedAt: "2025-09-23 18:19",
       alarmTriggered: true,
+    },
+    {
+      id: 403,
+      snapshot: "/img/fall3.jpg",
+      zone: "Maintenance Area",
+      camera: "CAM-13",
+      createdAt: "2025-09-23 18:18",
+      updatedAt: "2025-09-23 18:19",
+      alarmTriggered: true,
+    },
+    {
+      id: 404,
+      snapshot: "/img/fall1.jpg",
+      zone: "Production Floor A",
+      camera: "CAM-11",
+      createdAt: "2025-09-23 18:05",
+      updatedAt: "2025-09-23 18:06",
+      alarmTriggered: true,
+    },
+    {
+      id: 405,
+      snapshot: "/img/fall2.jpg",
+      zone: "Warehouse",
+      camera: "CAM-12",
+      createdAt: "2025-09-23 18:12",
+      updatedAt: "2025-09-23 18:13",
+      alarmTriggered: false,
     },
   ];
 
@@ -151,15 +178,15 @@ const FallDetection: React.FC = () => {
   const zoneViolationsData = [
     {
       zone: "Production Floor A",
-      violations: 2,
+      violations: 3,
     },
     {
       zone: "Warehouse",
-      violations: 2,
+      violations: 3,
     },
     {
       zone: "Maintenance Area",
-      violations: 2,
+      violations: 3,
     },
   ];
   interface FilterParams {

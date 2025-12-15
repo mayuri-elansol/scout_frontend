@@ -504,7 +504,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
               <List sx={{ pl: 2 }}>
                 {filteredMenus.settingsFlags.map((category, catIndex) => {
                   // Check if this category has nested items (like Configurator)
-                  if (category.items.length > 0 && category.title !== "Settings") {
+                  if (
+                    category.items.length > 0 &&
+                    category.title !== "Settings"
+                  ) {
                     return (
                       <CategorySection
                         key={uuidv4() + catIndex}
@@ -516,7 +519,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                       />
                     );
                   }
-                  
+
                   // Regular Settings items (Role Management, User Management)
                   return category.items.map((item, itemIndex) => (
                     <SubMenuItem

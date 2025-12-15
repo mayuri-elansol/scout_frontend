@@ -77,7 +77,6 @@ const OperationalInsightsDashboard: React.FC = () => {
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
     },
   ];
-
   const times = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00"];
   const series: VehicleChartData[] = [
     { label: "Entry", data: [5, 8, 3, 12, 7, 8], color: "#A8E6CF" },

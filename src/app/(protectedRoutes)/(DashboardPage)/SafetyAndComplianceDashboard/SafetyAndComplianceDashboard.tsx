@@ -637,7 +637,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Zone A",
       lastDetectionTime: "09:58 AM",
       icon: HealthAndSafety,
-      route: "/PPEDetectionPage",
+      route: "/PPEKitDetectionPage",
       tooltipMessage: "Shows total PPE rule violations detected today.",
     },
     {
@@ -656,7 +656,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Parking Zone",
       lastDetectionTime: "10:58 AM",
       icon: DirectionsCar,
-      route: "/VehicalSpeedMonitoring",
+      route: "/ObjectDetection",
       tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
     },
     {
