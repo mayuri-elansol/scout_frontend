@@ -13,61 +13,62 @@ import { v4 as uuidv4 } from "uuid";
 import DynamicTabs, {
   TabConfig,
 } from "../../components/organisms/DashboardTabs/DashboardTabs";
+import { getOneHourBefore } from "../(AnalyticsPages)/(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
 const sampleData = [
   {
     id: "SC-001",
     useCaseType: "PPE Detection",
-    detectionTime: "2025-09-24 08:15",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Zone A",
     camera: "Camera-01",
   },
   {
     id: "SC-002",
     useCaseType: "Object Detection",
-    detectionTime: "2025-09-24 09:20",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Walking Bay 3",
     camera: "Camera-04",
   },
   {
     id: "SC-003",
     useCaseType: "Fire/Smoke/Oil/Gas",
-    detectionTime: "2025-09-24 10:05",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Zone C",
     camera: "Camera-02",
   },
   {
     id: "SC-004",
     useCaseType: "Vehicle Speed Monitoring",
-    detectionTime: "2025-09-24 10:45",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Entry Gate 2",
     camera: "Camera-07",
   },
   {
     id: "SC-005",
     useCaseType: "Fall Detection",
-    detectionTime: "2025-09-24 11:30",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Zone B",
     camera: "Camera-05",
   },
   {
     id: "SC-006",
     useCaseType: "STP/ETP Overflow Detection",
-    detectionTime: "2025-09-24 12:15",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "STP Area",
     camera: "Camera-08",
   },
   {
     id: "SC-007",
     useCaseType: "Emergency Exit Blockage",
-    detectionTime: "2025-09-24 12:50",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Exit Zone 1",
     camera: "Camera-03",
   },
   {
     id: "SC-008",
     useCaseType: "Crowd Gathering",
-    detectionTime: "2025-09-24 13:20",
+    detectionTime: getOneHourBefore().fullDate,
     zone: "Hazard Zone 4",
     camera: "Camera-09",
   },

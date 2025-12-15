@@ -280,7 +280,7 @@ setTimeout(() => {
     img.onload = null;
     img.onerror = null;
   };
-}, );
+}, [open, cameraFeedUrl, recalcCanvasSize]);
 
   // Redraw canvas on changes
   useEffect(() => {
@@ -844,6 +844,7 @@ setTimeout(() => {
     maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
   }}
 >
+  {/* eslint-disable-next-line @next/next/no-img-element */}
   <img
     ref={imgRef}
     alt="Camera Feed"

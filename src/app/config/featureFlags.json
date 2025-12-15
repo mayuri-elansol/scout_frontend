@@ -7,7 +7,7 @@
   "alerts": true,
   "reports": true,
   "settings": true,
-  "live-streaming": true,
+  "live-streaming": false,
   "ppe-detection": true,
   "object-detection": true,
   "fire-smoke-oil-leak-detection": true,
