@@ -135,34 +135,54 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   };
 
 
+const loadAssignedUsecases = async () => {
+  try {
+    const res = await getCameraAssignments(camera.id);
+    const assigned = res.data;
 
-  // useEffect(() => {
-  //   if (!loadingUseCases) {
-  //     loadAssignedUsecases();
-  //   }
-  // }, [loadingUseCases]);
+    // Step 1: mark selected use cases
+    const withSelection = useCases.map(uc => ({
+      ...uc,
+      selected: assigned.some(
+        (a: { usecaseId: string }) => a.usecaseId === uc.id
+      ),
+    }));
+
+    // Step 2: load ROI ONLY for selected use cases
+    const withROI = await Promise.all(
+      withSelection.map(async (uc) => {
+        if (!uc.selected) return uc;
+
+        try {
+          const shapes = await roiService.getRoi(camera.id, uc.id);
+          return {
+            ...uc,
+            roiConfigured: shapes.length > 0,
+            roiShapes: shapes,
+          };
+        } catch {
+          return uc;
+        }
+      })
+    );
+
+    // ✅ ONE setState only
+    setUseCases(withROI);
+
+  } catch (e) {
+    console.error('Failed to load assignments', e);
+  }
+};
 
 
-  const loadAssignedUsecases = React.useCallback(async () => {
-    try {
-      const res = await getCameraAssignments(camera.id);
-      const assigned = res.data;
 
-      setUseCases(prev =>
-        prev.map(uc => ({
-          ...uc,
-          selected: assigned.some((a: { usecaseId: string; }) => a.usecaseId === uc.id)
-        }))
-      );
-    } catch (e) {
-      console.error("Failed to load assignments", e);
-    }
-  }, [camera.id]);
-
-
-  useEffect(() => {
+ useEffect(() => {
+  if (!loadingUseCases && useCases.length > 0) {
     loadAssignedUsecases();
-  }, [loadAssignedUsecases, useCases.length]);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [loadingUseCases]);
+
 
 
 
@@ -222,22 +242,6 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
 
 
-  // const handleAddROI = (useCaseId: string) => {
-  //   const useCase = useCases.find(uc => uc.id === useCaseId);
-  //   if (!useCase) return;
-
-  //   setCurrentUseCaseForROI(useCaseId);
-  //   setRoiModalOpen(true);
-  // };
-
-  //   const handleAddROI = (useCaseId: string) => {
-  //   const useCase = useCases.find(uc => uc.id === useCaseId);
-  //   if (!useCase) return;
-
-  //   setCurrentUseCaseForROI(useCaseId);
-  //   setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
-  //   setRoiModalOpen(true);
-  // };
 
   const handleAddROI = async (useCaseId: string) => {
     setCurrentUseCaseForROI(useCaseId);
@@ -258,54 +262,6 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
     setRoiModalOpen(true);
   };
-
-
-  // const handleROISave = async (roiShapes: ROIShape[]) => {
-  //   if (!currentUseCaseForROI) return;
-
-  //   const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-  //   if (!useCase) return;
-
-  //   try {
-  //     setLoading(true);
-  //     console.log('💾 Saving ROI locally...');
-
-  //     console.log('✅ ROI saved to local state:', roiShapes);
-
-  //     // Update local state
-  //     setUseCases(prev =>
-  //       prev.map(uc =>
-  //         uc.id === currentUseCaseForROI
-  //           ? {
-  //             ...uc,
-  //             roiConfigured: true,
-  //             roiShapes: roiShapes,
-  //           }
-  //           : uc
-  //       )
-  //     );
-
-  //     // Show success message
-  //     setSnackbar({
-  //       open: true,
-  //       message: `✅ ROI configured successfully for ${useCase.name}!`,
-  //       severity: 'success',
-  //     });
-
-  //     // Close modal
-  //     setRoiModalOpen(false);
-  //     setCurrentUseCaseForROI(null);
-  //   } catch (error) {
-  //     console.error('❌ Error saving ROI:', error);
-  //     setSnackbar({
-  //       open: true,
-  //       message: '❌ Failed to save ROI. Please try again.',
-  //       severity: 'error',
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
 
   const handleROISave = async (roiShapes: ROIShape[]) => {
