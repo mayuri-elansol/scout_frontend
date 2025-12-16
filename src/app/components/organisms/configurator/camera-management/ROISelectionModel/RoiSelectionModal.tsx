@@ -275,7 +275,7 @@ useEffect(() => {
   if (isDrawingRef.current) return;
 
   drawCanvas();
-}, [roiShapes, selectedROIIndex, selectedColor, imageLoaded]);
+}, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open]);
 
   // Helper function to draw shapes  
   const drawShape = (ctx: CanvasRenderingContext2D, shape: ROIShape, color: string, label: number | null, _isActive: boolean, isSelected: boolean) => {

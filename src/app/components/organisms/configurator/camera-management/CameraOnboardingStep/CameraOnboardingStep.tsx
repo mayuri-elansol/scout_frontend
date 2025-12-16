@@ -34,31 +34,34 @@ import { detectNvrChannels } from "@/app/services/configurator/cameraService";
 import { fetchZones, fetchLocations } from "@/app/services/configurator/cameraService";
 import { CircularProgress } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { Snackbar, AlertTitle } from "@mui/material";
-import { channel } from 'diagnostics_channel';
+import { Snackbar } from "@mui/material";
 
+import type { OnboardingCamera } from "@/app/types/camera";
+// interface CameraData {
+//   id: string;
+//   ipAddress: string;
+//   cameraname: string;
+//   username: string;
+//   password: string;
+//   port: string;
+//   zoneId: string;
+//   locationId: string;
 
-interface CameraData {
+//   rtspStream: string;
+//   status: 'connected' | 'failed' | 'pending';
+//   aiConfig?: {
+//     useCases: string[];
+//     roiData: Record<string, { configured: boolean }>;
+//     fineTuning: Record<string, { tuned: boolean }>;
+//     enabled: boolean;
+//     viewName?: string;
+//   };
+// }
+
+interface LocationOption {
   id: string;
-  ipAddress: string;
-  cameraname: string;
-  username: string;
-  password: string;
-  port: string;
-  zoneId: string;
-  locationId: string;
-
-  rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
-  aiConfig?: {
-    useCases: string[];
-    roiData: Record<string, { configured: boolean }>;
-    fineTuning: Record<string, { tuned: boolean }>;
-    enabled: boolean;
-    viewName?: string;
-  };
+  locationName: string;
 }
-
 interface AssignmentItem {
   channel: string;
   cameraName: string;
@@ -68,23 +71,23 @@ interface AssignmentItem {
   port: string;
   zoneId: string;
   locationId: string;
-  locationOptions: any[]; // list of locations for selected zone
+  locationOptions: LocationOption[]; // list of locations for selected zone
 }
 
-
 interface CameraOnboardingStepProps {
-  cameras: CameraData[];
+  cameras: OnboardingCamera[];
   zones: { id: string; name: string }[];
   locations: { id: string; name: string; zoneId: string }[];
-  // onCameraAdd: (camera: Omit<CameraData, 'id' | 'rtspStream' | 'status'>) => void;
-  onCameraAdd: (camera: Omit<CameraData, "status" | "id" | "rtspStream" | "position">) => void;
 
-  onCameraBatchAdd?: (cameras: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]) => void;
+  onCameraAdd: (camera: OnboardingCamera) => void;
+  onCameraBatchAdd?: (cameras: OnboardingCamera[]) => void;
   onCameraRemove: (cameraId: string) => void;
+
   onNext: () => void;
   onBack: () => void;
   isOptional?: boolean;
 }
+
 
 interface CameraFormData {
   ipAddress: string;
@@ -131,8 +134,18 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [selectedZone, setSelectedZone] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
 
-  const [zoneList, setZoneList] = useState<any[]>([]);
-  const [locationList, setLocationList] = useState<any[]>([]);
+  type ZoneItem = {
+    id: string;
+    zoneName: string;
+  };
+
+  type LocationItem = {
+    id: string;
+    locationName: string;
+  };
+
+  const [zoneList, setZoneList] = useState<ZoneItem[]>([]);
+  const [locationList, setLocationList] = useState<LocationItem[]>([]);
 
 
 
@@ -156,14 +169,17 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
 
   const [toast, setToast] = useState({
-  open: false,
-  message: "",
-  severity: "success", // success | error | info | warning
-});
+    open: false,
+    message: "",
+    severity: "success", // success | error | info | warning
+  });
 
-  const showToast = (message: string, severity: any = "success") => {
-    setToast({ open: true, message, severity });
-  };
+  type ToastSeverity = "success" | "error" | "info" | "warning";
+
+const showToast = (message: string, severity: ToastSeverity = "success") => {
+  setToast({ open: true, message, severity });
+};
+
 
   // NVR Form state
   const [nvrData, setNvrData] = useState({
@@ -176,11 +192,12 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     rtsplink: '',
   });
 
-  // // NVR discovered cameras (mock)
-  // const [nvrCameras, setNvrCameras] = useState<{ id: string; name: string; }[]>([]);
-  // const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+ type NvrCamera = {
+  channel: string;
+};
 
-  const [nvrCameras, setNvrCameras] = useState<any[]>([]);
+const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
+
   const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
 
 
@@ -331,22 +348,37 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         channel: locationList.find(l => l.id === selectedLocation)?.locationName || "",
 
         refreshRate: 10,
-        connectionType: "DIRECT_TO_CAMERA",
+        // connectionType: "DIRECT_TO_CAMERA",
+        connectionType: "DIRECT_TO_CAMERA" as const,
+
       });
 
       // onCameraAdd(response.data);
+      // onCameraAdd({
+      //   ipAddress: formData.ipAddress.trim(),
+      //   // ipAddress:response.data.id,
+      //   cameraname: formData.cameraname.trim(),
+      //   username: formData.username.trim(),
+      //   password: formData.password.trim(),
+      //   port: formData.port.trim(),
+      //   zoneId: selectedZone,
+      //   locationId: selectedLocation,
+      //   // status: "pending",
+      //   // rtspStream: "",
+      // });
+
       onCameraAdd({
-        ipAddress: formData.ipAddress.trim(),
-        // ipAddress:response.data.id,
+        id: crypto.randomUUID(),
         cameraname: formData.cameraname.trim(),
+        ipAddress: formData.ipAddress.trim(),
         username: formData.username.trim(),
         password: formData.password.trim(),
         port: formData.port.trim(),
         zoneId: selectedZone,
         locationId: selectedLocation,
-        // status: "pending",
-        // rtspStream: "",
+        status: "pending",
       });
+
 
 
 
@@ -398,7 +430,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const handleSaveAssignments = async () => {
     setIsSavingAssignments(true);
     try {
-      for (let cam of pendingAssignments) {
+      for (const cam of pendingAssignments) {
         if (!cam.zoneId) {
           alert(`Please select zone for ${cam.cameraName}`);
           return;
@@ -413,14 +445,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           // cameraName: `${cam.cameraName}-${cam.channel}`,
           cameraName: `${cam.cameraName}`,
           // cameraIp: `${nvrData.ip}-${cam.channel}`,
-          cameraIp:`${nvrData.ip}`,
-         // do NOT add channel here
+          cameraIp: `${nvrData.ip}`,
+          // do NOT add channel here
           userName: cam.username,
           password: cam.password,
           RTSPport: cam.port,
           cameraZone: zoneList.find(z => z.id === cam.zoneId)?.zoneName || "",
           channel: cam.locationOptions.find(l => l.id === cam.locationId)?.locationName || "",
-          connectionType: "NVR",
+          connectionType: "NVR" as const,
           refreshRate: 10,
         };
 
@@ -436,7 +468,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           port: response.data.RTSPport,
           zoneId: cam.zoneId,
           locationId: cam.locationId,
-          // status: "pending",
+          id: '',
+          status: 'connected'
         });
       }
 
@@ -456,7 +489,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         rtsplink: "",
       });
 
- 
+
 
     } catch (error) {
       console.error("Error saving NVR assignments:", error);
@@ -640,9 +673,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           </Button>
                         </Grid>
                       </Grid>
-                      
+
                     </form>
-                    
+
 
                   </>
                 )}
@@ -834,45 +867,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             setPendingAssignments(mapped);
                             setAssignDialogOpen(true);
                           }}
-
-                        // onClick={async () => {
-                        //   const selected = nvrCameras.filter((cam) =>
-                        //     selectedNvrCams.includes(cam.channel)
-                        //   );
-
-                        //   for (let cam of selected) {
-                        //     await addCamera({
-                        //       // cameraName: `${nvrData.name}-${cam.channel}`,
-                        //       cameraName: `${nvrData.name}-${cam.channel}`,
-                        //       // cameraIp: nvrData.ip,
-                        //       cameraIp: `${nvrData.ip}-${cam.channel}`,
-                        //       userName: nvrData.username,
-                        //       password: nvrData.password,
-                        //       RTSPport: nvrData.port,
-                        //       cameraZone: selectedZone,
-                        //       channel: cam.channel,
-                        //       connectionType: "NVR",
-                        //       refreshRate: 10,
-                        //     });
-
-                        //     onCameraAdd({
-                        //       // ipAddress: nvrData.ip,
-                        //       ipAddress:`${nvrData.ip}-${cam.channel}`,
-                        //       cameraname: `${nvrData.name}-${cam.channel}`,
-                        //       // cameraname: `${nvrData.name}-${cam.channel}-${Date.now()}`,
-                        //       username: nvrData.username,
-                        //       password: nvrData.password,
-                        //       port: nvrData.port,
-                        //       zoneId: selectedZone,
-                        //       locationId: selectedLocation,
-                        //     });
-                        //   }
-
-                        //   // Reset after submit
-                        //   setSelectedNvrCams([]);
-                        //   setNvrCameras([]);
-
-                        // }}
                         >
                           Add Selected Cameras
                         </Button>
@@ -1011,7 +1005,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
               variant="contained"
               color="error"
               // color="#c71e1eff"
-              sx={{ borderRadius: 1,  }}
+              sx={{ borderRadius: 1, }}
               onClick={() => {
                 if (cameraToDelete) {
                   onCameraRemove(cameraToDelete);
@@ -1036,7 +1030,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         >
           <Alert
             onClose={() => setToast({ ...toast, open: false })}
-            severity={toast.severity as any}
+            severity={toast.severity as "success" | "error" | "info" | "warning"}
             variant="filled"
             sx={{ width: "100%", borderRadius: "8px" }}
           >

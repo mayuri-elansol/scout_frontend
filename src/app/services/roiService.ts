@@ -155,6 +155,14 @@ import { ROIShape } from '@/app/types/roi';
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api/v1';
 
+  type BackendRoi = {
+  type: ROIShape["type"];
+  label: string;
+  mode: ROIShape["mode"];
+  points: ROIShape["points"];
+};
+
+
 class RoiService {
   private axiosInstance: AxiosInstance;
 
@@ -202,14 +210,15 @@ class RoiService {
       `/configurator/camera-roi/${cameraId}/${usecaseId}`
     );
 
-    return res.data.rois.map((r: any) => ({
+    return (res.data.rois as BackendRoi[]).map((r) => ({
       type: r.type,
-      name: r.label,          // 🔁 DB → UI mapping
+      name: r.label,          
       mode: r.mode,
       points: r.points,
       completed: true,
       color: '#00ff00',
     }));
+
   }
 }
 

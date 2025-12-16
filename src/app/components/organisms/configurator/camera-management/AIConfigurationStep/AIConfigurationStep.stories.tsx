@@ -2,10 +2,18 @@ import type { Meta, StoryObj } from "@storybook/nextjs";
 import AIConfigurationStep from "./AIConfigurationStep";
 
 // ✅ Import the real CameraData type
-import type { CameraData } from "../OrganizationCameraManagement/OrganizationCameraManagement";
+
+import type { OrgCamera } from "@/app/types/camera";
+
+// interface AIConfigurationStepProps {
+//   camera: OrgCamera;
+//   onSave: (aiConfig: any) => void;
+//   onBack: () => void;
+// }
+
 
 // ---- MOCK CAMERA ----
-const mockCamera: CameraData = {
+const mockCamera: OrgCamera = {
   id: "CAM-001",
   ipAddress: "192.168.1.10",
   username: "admin",
@@ -20,6 +28,7 @@ const mockCamera: CameraData = {
     roiData: {},
     fineTuning: {},
     enabled: true,
+    
   },
 };
 

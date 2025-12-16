@@ -1,5 +1,28 @@
 import axios from "axios";
 
+type AddCameraPayload = {
+  cameraName: string;
+  cameraIp: string;
+  userName: string;
+  password: string;
+  RTSPport: string | number;
+  cameraZone?: string;
+  channel?: string;
+  connectionType: "DIRECT_TO_CAMERA" | "NVR";
+  refreshRate?: number;
+};
+
+type DetectNvrChannelsPayload = {
+  nvrName: string;
+  ip: string;
+  port: number;
+  username: string;
+  password: string;
+  numberofchannels: number;
+  rtsplink?: string;
+};
+
+
 const API_BASE = "http://localhost:4001/api/v1"; 
 
 // 🔥 Hard-coded tenant ID for now (use header later from Auth)
@@ -37,7 +60,7 @@ export const fetchLocations = async (zoneId: string) => {
     headers: { "x-tenant-id": TENANT_ID },
   });
 };
-export const addCamera = async (cameraData: any) => {
+export const addCamera = async (cameraData: AddCameraPayload) => {
   return axios.post(`${API_BASE}/configurator/camera-manager`, cameraData, {
     headers: { "x-tenant-id": TENANT_ID },
   });
@@ -49,7 +72,7 @@ export const deleteCamera = async (cameraId: string) => {
   });
 };
 
-export const detectNvrChannels = async (data: any) => {
+export const detectNvrChannels = async (data: DetectNvrChannelsPayload) => {
   return axios.post(`${API_BASE}/configurator/camera-manager/detect-nvr-channels`, data, {
     headers: { "x-tenant-id": TENANT_ID },
   });

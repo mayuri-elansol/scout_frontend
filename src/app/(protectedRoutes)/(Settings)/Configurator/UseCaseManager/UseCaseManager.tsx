@@ -7,7 +7,7 @@ import {
   Typography,
   Paper,
   Alert,
-  Link as MuiLink,
+  // Link as MuiLink,
   Skeleton,
 } from "@mui/material";
 import {
@@ -50,7 +50,7 @@ const UseCaseManager: React.FC = () => {
     setIsLoadingUseCases(true);
     try {
       const res = await getUsecases();         // <-- real backend call
-      const usecases = res.data.map((uc: any) => ({
+      const usecases = res.data.map((uc: Record<string, unknown>) => ({
         id: uc.id,
         name: uc.usecaseName,
         description: uc.description,
@@ -61,7 +61,7 @@ const UseCaseManager: React.FC = () => {
       console.log("UseCases API Response", res.data);
       for (const uc of usecases) {
         const assignments = await getAssignments(uc.id);
-        uc.assignedCameraIds = assignments.data.map((m: any) => m.cameraId);
+        uc.assignedCameraIds = assignments.data.map((m: Record<string, unknown>) => String(m.cameraId));
       }
 
       setUseCases(usecases);
@@ -80,7 +80,7 @@ const UseCaseManager: React.FC = () => {
     try {
       const res = await getCameras();
       setCameras(
-        res.data.map((cam: any) => ({
+        res.data.map((cam: Record<string, unknown>) => ({
           id: cam.id,
           name: cam.cameraName,
           position: cam.cameraZone,
@@ -122,7 +122,7 @@ const UseCaseManager: React.FC = () => {
   setDrawerOpen(true);
 
   const res = await getAssignments(useCase.id);
-  setSelectedCameraIds(res.data.map((m: any) => m.cameraId));
+  setSelectedCameraIds(res.data.map((m: Record<string, unknown>) => String(m.cameraId)));
 
   if (cameras.length === 0) await loadCameras();
 };

@@ -3,7 +3,7 @@ import { getZones, createZone, updateZone, deleteZone, createLocation }
   from "@/app/services/configurator/zoneLocationService";
 
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -11,8 +11,6 @@ import {
   Button,
   TextField,
   InputAdornment,
-  Breadcrumbs,
-  Link as MuiLink,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -23,52 +21,49 @@ import {
 import {
   Add as AddIcon,
   Search as SearchIcon,
-  Home as HomeIcon,
-  Settings as SettingsIcon,
-  Tune as TuneIcon,
-  Map as MapIcon,
-  NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
-import Link from "next/link";
+
 import {
   ZoneTable,
   AddEditZoneDrawer,
   AssignLocationsDrawer,
 } from "@/app/components/organisms/configurator/zone-location";
-import { Zone as ZoneType, mockZones as initialZonesFromFile } from "@/app/data/mockZones";
+import { Zone as ZoneType } from "@/app/data/mockZones";
 
 type LocationItem = {
-  id: number;
+  id: string;
   name: string;
   description?: string;
 };
 
-const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
-  return zonesFromFile.map((z) => {
-    // If already has a typed locations array
-    if (Array.isArray(z.locations)) {
-      return z;
-    }
 
-    // Handle legacy data with locationIds
-    if (Array.isArray(z.locationIds)) {
-      const locs: LocationItem[] = z.locationIds.map((id) => ({
-        id,
-        name: `Location ${id}`,
-      }));
+// const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
+//   return zonesFromFile.map((z) => {
+//     // If already has a typed locations array
+//     if (Array.isArray(z.locations)) {
+//       return z;
+//     }
 
-      return {
-        ...z,
-        locations: locs,
-      };
-    }
+//     // Handle legacy data with locationIds
+//     if (Array.isArray(z.locationIds)) {
+//       const locs: LocationItem[] = z.locationIds.map((id) => ({
+//         id: String(id),
+//         name: `Location ${id}`,
+//       }));
 
-    return {
-      ...z,
-      locations: [],
-    };
-  });
-};
+
+//       return {
+//         ...z,
+//         locations: locs,
+//       };
+//     }
+
+//     return {
+//       ...z,
+//       locations: [],
+//     };
+//   });
+// };
 
 
 const ZoneLocationMapping: React.FC = () => {
@@ -124,8 +119,8 @@ const ZoneLocationMapping: React.FC = () => {
     const { data } = await getZones();
 
     setZones(
-      data.zones.map((z: any) => ({
-        id: z.id,
+      data.zones.map((z: Record<string, unknown>) => ({
+        id: String(z.id), 
         name: z.zoneName,
         description: z.description,
         locations: z.locations || [],
@@ -141,18 +136,22 @@ useEffect(() => {
   fetchZones();
 }, []);
 
-
+type ZoneFormData = {
+  id?: string;
+  name: string;
+  description?: string;
+};
   // Save zone (add or edit)
-  const handleSaveZone = async (zoneData: any) => {
+  const handleSaveZone = async (zoneData: ZoneFormData) => {
   if (zoneData.id) {
     await updateZone(zoneData.id, {
       zoneName: zoneData.name,
-      description: zoneData.description
+      description: zoneData.description || ""
     });
   } else {
     await createZone({
       zoneName: zoneData.name,
-      description: zoneData.description
+      description: zoneData.description || ""
     });
   }
 

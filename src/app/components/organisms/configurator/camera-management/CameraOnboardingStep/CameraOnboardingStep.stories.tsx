@@ -14,44 +14,57 @@ interface AIConfig {
 interface CameraData {
   id: string;
   ipAddress: string;
+  cameraname: string;
   username: string;
   password: string;
   port: string;
   make: string;
   rtspStream: string;
+  zoneId: string;       // 🔴 REQUIRED
+  locationId: string; 
   status: "connected" | "failed" | "pending";
   aiConfig?: AIConfig;
 }
+
 
 const mockCameras: CameraData[] = [
   {
     id: "cam-1",
     ipAddress: "192.168.1.10",
+    cameraname: "Front Gate",
     username: "admin",
     password: "admin123",
     port: "554",
     make: "Hikvision",
     rtspStream: "rtsp://192.168.1.10/stream",
+    zoneId: "zone-1",
+    locationId: "loc-1",
     status: "connected",
   },
   {
     id: "cam-2",
     ipAddress: "192.168.1.11",
+    cameraname: "Front Gate 2",
     username: "admin",
     password: "admin123",
     port: "554",
     make: "Dahua",
     rtspStream: "rtsp://192.168.1.11/stream",
+    zoneId: "zone-2",
+    locationId: "loc-2",
     status: "connected",
   },
   {
     id: "cam-3",
     ipAddress: "192.168.1.12",
+    cameraname: "Front Gate 3",
     username: "admin",
     password: "admin123",
     port: "554",
     make: "Axis",
     rtspStream: "rtsp://192.168.1.12/stream",
+    zoneId: "zone-3",
+    locationId: "loc-3",
     status: "failed",
   },
 ];
@@ -123,10 +136,13 @@ export const WithMixedStatus: Story = {
       {
         id: "cam-4",
         ipAddress: "192.168.1.13",
+        cameraname: "Front Gate 4",
         username: "admin",
         password: "admin123",
         port: "554",
         make: "Hikvision",
+        zoneId: "zone-1",
+        locationId: "loc-1",
         rtspStream: "rtsp://192.168.1.13/stream",
         status: "pending",
       },

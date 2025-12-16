@@ -1,6 +1,6 @@
 import {
   UseCase,
-  License,
+  // License,
   Camera,
   UseCaseCameraMapping,
   OrganizationLicense,
@@ -297,64 +297,65 @@ class UseCaseManagerService {
   /**
    * Mock: Get cameras for an organization
    */
-  async getMockCameras(organizationId: string): Promise<Camera[]> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
 
-    return [
-      {
-        id: 'cam-001',
-        name: 'Camera 1',
-        position: 'Main Entrance',
-        location: 'Building A - Ground Floor',
-        ipAddress: '192.168.1.101',
-        port: '554',
-        make: 'Hikvision',
-        status: 'connected',
-        rtspStream: 'rtsp://192.168.1.101:554/stream1',
-      },
-      {
-        id: 'cam-002',
-        name: 'Camera 2',
-        position: 'Production Floor - Zone A',
-        location: 'Building A - First Floor',
-        ipAddress: '192.168.1.102',
-        port: '554',
-        make: 'Dahua',
-        status: 'connected',
-      },
-      {
-        id: 'cam-003',
-        name: 'Camera 3',
-        position: 'Warehouse Entry',
-        location: 'Building B - Ground Floor',
-        ipAddress: '192.168.1.103',
-        port: '554',
-        make: 'Hikvision',
-        status: 'connected',
-      },
-      {
-        id: 'cam-004',
-        name: 'Camera 4',
-        position: 'Loading Dock',
-        location: 'Building B - Loading Area',
-        ipAddress: '192.168.1.104',
-        port: '554',
-        make: 'Axis',
-        status: 'offline',
-      },
-      {
-        id: 'cam-005',
-        name: 'Camera 5',
-        position: 'Parking Lot',
-        location: 'Outdoor - North',
-        ipAddress: '192.168.1.105',
-        port: '554',
-        make: 'Hikvision',
-        status: 'connected',
-      },
-    ];
-  }
+//   async getMockCameras(organizationId: string): Promise<Camera[]> {
+//     // Simulate API delay
+//     await new Promise(resolve => setTimeout(resolve, 500));
+
+//     return [
+//       {
+//         id: 'cam-001',
+//         name: 'Camera 1',
+//         position: 'Main Entrance',
+//         location: 'Building A - Ground Floor',
+//         ipAddress: '192.168.1.101',
+//         port: '554',
+//         make: 'Hikvision',
+//         status: 'connected',
+//         rtspStream: 'rtsp://192.168.1.101:554/stream1',
+//       },
+//       {
+//         id: 'cam-002',
+//         name: 'Camera 2',
+//         position: 'Production Floor - Zone A',
+//         location: 'Building A - First Floor',
+//         ipAddress: '192.168.1.102',
+//         port: '554',
+//         make: 'Dahua',
+//         status: 'connected',
+//       },
+//       {
+//         id: 'cam-003',
+//         name: 'Camera 3',
+//         position: 'Warehouse Entry',
+//         location: 'Building B - Ground Floor',
+//         ipAddress: '192.168.1.103',
+//         port: '554',
+//         make: 'Hikvision',
+//         status: 'connected',
+//       },
+//       {
+//         id: 'cam-004',
+//         name: 'Camera 4',
+//         position: 'Loading Dock',
+//         location: 'Building B - Loading Area',
+//         ipAddress: '192.168.1.104',
+//         port: '554',
+//         make: 'Axis',
+//         status: 'offline',
+//       },
+//       {
+//         id: 'cam-005',
+//         name: 'Camera 5',
+//         position: 'Parking Lot',
+//         location: 'Outdoor - North',
+//         ipAddress: '192.168.1.105',
+//         port: '554',
+//         make: 'Hikvision',
+//         status: 'connected',
+//       },
+//     ];
+//   }
 }
 
 // Export singleton instance

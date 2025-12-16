@@ -1,12 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-// import React, { useState, useEffect, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 import { assignCameras, getCameraAssignments, getUsecases, unassignCamera } from '@/app/services/configurator/usecaseService';
-// import { roiService, ROIShape } from '@/app/services/roiService';
-
-// import { roiService } from '@/services/scout/roiService';
 
 import {
   Box,
@@ -39,28 +35,10 @@ import {
   // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
 
-import { roiService} from '@/app/services/roiService';
+import { roiService } from '@/app/services/roiService';
 
 import { ROIShape } from '@/app/types/roi';
 
-
-import axios from 'axios';
-
-// ROI Shape type for the enhanced modal
-// interface Point {
-//   x: number;
-//   y: number;
-// }
-
-// interface ROIShape {
-//   id?: string;
-//   type: 'rectangle' | 'polygon' | 'freehand';
-//   points: Point[];
-//   completed: boolean;
-//   color: string;
-//   name: string;
-//   mode: 'include' | 'exclude';
-// }
 
 interface ROIData {
   configured: boolean;
@@ -110,7 +88,7 @@ interface UseCaseData {
   roiShapes?: ROIShape[];
   fineTuned: boolean;
   enabled: boolean;
-  labels: string[]; 
+  labels: string[];
 }
 
 const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
@@ -119,72 +97,72 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   onBack,
 }) => {
 
-  const [roiModalKey, setRoiModalKey] = useState(0);
+  // const [roiModalKey, setRoiModalKey] = useState(0);
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
-const [loadingUseCases, setLoadingUseCases] = useState(true);
-useEffect(() => {
-  loadUseCases();
-}, []);
+  const [loadingUseCases, setLoadingUseCases] = useState(true);
+  useEffect(() => {
+    loadUseCases();
+  }, []);
 
 
-const loadUseCases = async () => {
-  try {
-    setLoadingUseCases(true);
+  const loadUseCases = async () => {
+    try {
+      setLoadingUseCases(true);
 
-    const response = await getUsecases();
-    const apiUseCases = response.data;
+      const response = await getUsecases();
+      const apiUseCases = response.data;
 
-    // Map DB → Component structure
-    const mapped = apiUseCases.map((uc: any) => ({
-      id: uc.id,
-      name: uc.usecaseName,
-      description: uc.description,
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-      roiShapes: [],
-      labels: uc.labels || [],
-    }));
+      // Map DB → Component structure
+      const mapped = apiUseCases.map((uc: Record<string, unknown>) => ({
+        id: uc.id,
+        name: uc.usecaseName,
+        description: uc.description,
+        selected: false,
+        roiConfigured: false,
+        fineTuned: false,
+        enabled: false,
+        roiShapes: [],
+        labels: uc.labels || [],
+      }));
 
-    setUseCases(mapped);
-  } catch (error) {
-    console.error("❌ Failed to load use cases:", error);
-  } finally {
-    setLoadingUseCases(false);
-  }
-};
-
-
-useEffect(() => {
-  loadAssignedUsecases();
-}, [useCases]);
+      setUseCases(mapped);
+    } catch (error) {
+      console.error("❌ Failed to load use cases:", error);
+    } finally {
+      setLoadingUseCases(false);
+    }
+  };
 
 
 
-// useEffect(() => {
-//   if (!loadingUseCases) {
-//     loadAssignedUsecases();
-//   }
-// }, [loadingUseCases]);
+  // useEffect(() => {
+  //   if (!loadingUseCases) {
+  //     loadAssignedUsecases();
+  //   }
+  // }, [loadingUseCases]);
 
 
-const loadAssignedUsecases = async () => {
-  try {
-    const res = await getCameraAssignments(camera.id);
-    const assigned = res.data; 
+  const loadAssignedUsecases = React.useCallback(async () => {
+    try {
+      const res = await getCameraAssignments(camera.id);
+      const assigned = res.data;
 
-    setUseCases(prev =>
-      prev.map(uc => ({
-        ...uc,
-        selected: assigned.some((a: { usecaseId: string; }) => a.usecaseId === uc.id)
-      }))
-    );
-  } catch (e) {
-    console.error("Failed to load assignments", e);
-  }
-};
+      setUseCases(prev =>
+        prev.map(uc => ({
+          ...uc,
+          selected: assigned.some((a: { usecaseId: string; }) => a.usecaseId === uc.id)
+        }))
+      );
+    } catch (e) {
+      console.error("Failed to load assignments", e);
+    }
+  }, [camera.id]);
+
+
+  useEffect(() => {
+    loadAssignedUsecases();
+  }, [loadAssignedUsecases, useCases.length]);
 
 
 
@@ -207,40 +185,40 @@ const loadAssignedUsecases = async () => {
 
 
   const handleUseCaseSelect = async (usecaseId: string) => {
-  const useCase = useCases.find(uc => uc.id === usecaseId);
-  const isSelected = !useCase?.selected;
+    const useCase = useCases.find(uc => uc.id === usecaseId);
+    const isSelected = !useCase?.selected;
 
-  setUseCases(prev =>
-    prev.map(uc =>
-      uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
-    )
-  );
+    setUseCases(prev =>
+      prev.map(uc =>
+        uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
+      )
+    );
 
-  try {
-    if (isSelected) {
-      // ASSIGN
-      await assignCameras(usecaseId, [camera.id]);
-    } else {
-      // UNASSIGN
-      await unassignCamera(usecaseId, camera.id);
+    try {
+      if (isSelected) {
+        // ASSIGN
+        await assignCameras(usecaseId, [camera.id]);
+      } else {
+        // UNASSIGN
+        await unassignCamera(usecaseId, camera.id);
+      }
+
+      setSnackbar({
+        open: true,
+        severity: "success",
+        message: isSelected
+          ? "Camera assigned to usecase"
+          : "Camera unassigned",
+      });
+    } catch (error) {
+      console.error(error);
+      setSnackbar({
+        open: true,
+        severity: "error",
+        message: "Failed to update assignment",
+      });
     }
-
-    setSnackbar({
-      open: true,
-      severity: "success",
-      message: isSelected
-        ? "Camera assigned to usecase"
-        : "Camera unassigned",
-    });
-  } catch (error) {
-    console.error(error);
-    setSnackbar({
-      open: true,
-      severity: "error",
-      message: "Failed to update assignment",
-    });
-  }
-};
+  };
 
 
 
@@ -252,34 +230,34 @@ const loadAssignedUsecases = async () => {
   //   setRoiModalOpen(true);
   // };
 
-//   const handleAddROI = (useCaseId: string) => {
-//   const useCase = useCases.find(uc => uc.id === useCaseId);
-//   if (!useCase) return;
+  //   const handleAddROI = (useCaseId: string) => {
+  //   const useCase = useCases.find(uc => uc.id === useCaseId);
+  //   if (!useCase) return;
 
-//   setCurrentUseCaseForROI(useCaseId);
-//   setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
-//   setRoiModalOpen(true);
-// };
+  //   setCurrentUseCaseForROI(useCaseId);
+  //   setRoiModalKey(prev => prev + 1); // ✅ Force remount by changing key
+  //   setRoiModalOpen(true);
+  // };
 
   const handleAddROI = async (useCaseId: string) => {
-  setCurrentUseCaseForROI(useCaseId);
+    setCurrentUseCaseForROI(useCaseId);
 
-  try {
-    const shapes = await roiService.getRoi(camera.id, useCaseId);
+    try {
+      const shapes = await roiService.getRoi(camera.id, useCaseId);
 
-    setUseCases(prev =>
-      prev.map(uc =>
-        uc.id === useCaseId
-          ? { ...uc, roiShapes: shapes, roiConfigured: true }
-          : uc
-      )
-    );
-  } catch {
-    // No ROI exists yet → open empty canvas
-  }
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === useCaseId
+            ? { ...uc, roiShapes: shapes, roiConfigured: true }
+            : uc
+        )
+      );
+    } catch {
+      // No ROI exists yet → open empty canvas
+    }
 
-  setRoiModalOpen(true);
-};
+    setRoiModalOpen(true);
+  };
 
 
   // const handleROISave = async (roiShapes: ROIShape[]) => {
@@ -331,50 +309,50 @@ const loadAssignedUsecases = async () => {
 
 
   const handleROISave = async (roiShapes: ROIShape[]) => {
-  if (!currentUseCaseForROI) return;
+    if (!currentUseCaseForROI) return;
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    // 🔥 SAVE TO BACKEND
-    await roiService.saveRoi(
-      camera.id,
-      currentUseCaseForROI,
-      roiShapes
-    );
+      // 🔥 SAVE TO BACKEND
+      await roiService.saveRoi(
+        camera.id,
+        currentUseCaseForROI,
+        roiShapes
+      );
 
-    // 🔁 Update local UI state
-    setUseCases(prev =>
-      prev.map(uc =>
-        uc.id === currentUseCaseForROI
-          ? {
+      // 🔁 Update local UI state
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === currentUseCaseForROI
+            ? {
               ...uc,
               roiConfigured: true,
               roiShapes,
             }
-          : uc
-      )
-    );
+            : uc
+        )
+      );
 
-    setSnackbar({
-      open: true,
-      message: 'ROI saved successfully',
-      severity: 'success',
-    });
+      setSnackbar({
+        open: true,
+        message: 'ROI saved successfully',
+        severity: 'success',
+      });
 
-  } catch (err) {
-    console.error(err);
-    setSnackbar({
-      open: true,
-      message: 'Failed to save ROI',
-      severity: 'error',
-    });
-  } finally {
-    setLoading(false);
-    setRoiModalOpen(false);
-    setCurrentUseCaseForROI(null);
-  }
-};
+    } catch (err) {
+      console.error(err);
+      setSnackbar({
+        open: true,
+        message: 'Failed to save ROI',
+        severity: 'error',
+      });
+    } finally {
+      setLoading(false);
+      setRoiModalOpen(false);
+      setCurrentUseCaseForROI(null);
+    }
+  };
 
 
   const handleROIClose = () => {
