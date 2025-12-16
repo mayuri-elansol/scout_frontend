@@ -186,25 +186,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   // Image ref for loading
   const imageRef = useRef<HTMLImageElement | null>(null);
 
-  // Load existing ROI when modal opens
-  // useEffect(() => {
-  //   if (open) {
-  //     const roiToLoad = existingROI || [];
-  //     setRoiShapes(roiToLoad);
-  //     setHistory([roiToLoad]);
-  //     setHistoryIndex(0);
-  //     setCurrentShape(null);
-  //     currentShapeRef.current = null;
-  //     setIsDrawing(false);
-  //     setSelectedROIIndex(null);
-  //     setEditingNameIndex(null);
-  //     // Don't reset imageLoaded - let the image loading effect handle it
-
-  //     const first = labels.length > 0 ? labels[0] : 'ROI';
-  //     setSelectedLabel(first);
-  //   }
-  // }, [open, useCaseName, existingROI]);
-
 
   useEffect(() => {
     if (!open) return;
@@ -265,6 +246,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
     canvas.width = newCanvasWidth;
     canvas.height = newCanvasHeight;
+
+    
 
     setCanvasWidth(newCanvasWidth);
     setCanvasHeight(newCanvasHeight);
@@ -1055,8 +1038,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
               height={canvasHeight}
               style={{
                 cursor: 'crosshair',
-                width: '100%',
-                height: '100%',
+                // width: '100%',
+                // height: '100%',
                 objectFit: 'contain',
                 display: 'block',
               }}
