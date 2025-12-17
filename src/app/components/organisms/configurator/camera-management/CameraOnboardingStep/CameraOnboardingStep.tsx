@@ -110,10 +110,10 @@ interface FormErrors {
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
-  zones = [],
-  locations = [],
+  // zones = [],
+  // locations = [],
   onCameraAdd,
-  onCameraBatchAdd,
+  // onCameraBatchAdd,
   onCameraRemove,
   onNext,
   onBack,
@@ -265,7 +265,6 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
   };
 
   const isDuplicateName = (name: string): boolean => {
-    // return cameras?.some(camera => camera.cameraname.trim() === name.trim());
     return cameras?.some(camera => camera.cameraname.trim() === name.trim()) ?? false;
 
   };
@@ -352,20 +351,6 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
         connectionType: "DIRECT_TO_CAMERA" as const,
 
       });
-
-      // onCameraAdd(response.data);
-      // onCameraAdd({
-      //   ipAddress: formData.ipAddress.trim(),
-      //   // ipAddress:response.data.id,
-      //   cameraname: formData.cameraname.trim(),
-      //   username: formData.username.trim(),
-      //   password: formData.password.trim(),
-      //   port: formData.port.trim(),
-      //   zoneId: selectedZone,
-      //   locationId: selectedLocation,
-      //   // status: "pending",
-      //   // rtspStream: "",
-      // });
 
       onCameraAdd({
         id: crypto.randomUUID(),

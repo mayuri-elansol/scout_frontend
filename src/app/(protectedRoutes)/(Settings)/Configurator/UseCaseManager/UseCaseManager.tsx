@@ -7,17 +7,11 @@ import {
   Typography,
   Paper,
   Alert,
-  // Link as MuiLink,
   Skeleton,
 } from "@mui/material";
 import {
-  // Home as HomeIcon,
-  // Settings as SettingsIcon,
-  // Tune as TuneIcon,
   Category as CategoryIcon,
-  // NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
-// import Link from "next/link";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 import { getUsecases, getCameras, assignCameras, getAssignments }
   from "@/app/services/configurator/usecaseService";
