@@ -37,27 +37,6 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { Snackbar } from "@mui/material";
 
 import type { OnboardingCamera } from "@/app/types/camera";
-// interface CameraData {
-//   id: string;
-//   ipAddress: string;
-//   cameraname: string;
-//   username: string;
-//   password: string;
-//   port: string;
-//   zoneId: string;
-//   locationId: string;
-
-//   rtspStream: string;
-//   status: 'connected' | 'failed' | 'pending';
-//   aiConfig?: {
-//     useCases: string[];
-//     roiData: Record<string, { configured: boolean }>;
-//     fineTuning: Record<string, { tuned: boolean }>;
-//     enabled: boolean;
-//     viewName?: string;
-//   };
-// }
-
 interface LocationOption {
   id: string;
   locationName: string;
@@ -95,8 +74,8 @@ interface CameraFormData {
   cameraname: string;
   password: string;
   port: string;
-  // zoneId: string;
-  // locationId: string;
+  zoneId: string;
+  locationId: string;
 
 }
 
@@ -125,6 +104,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     cameraname: '',
     password: '',
     port: '554',
+    zoneId: '',
+    locationId: '',
   });
 
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
@@ -319,9 +300,9 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
     setFormData(prev => ({ ...prev, [field]: event.target.value }));
 
     // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
+    // if (errors[field]) {
+    //   setErrors(prev => ({ ...prev, [field]: undefined }));
+    // }
   };
 
 
@@ -375,6 +356,8 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
         username: "",
         password: "",
         port: "554",
+        zoneId: "",
+        locationId: "",
       });
       setSelectedZone("");
       setSelectedLocation("");

@@ -149,8 +149,8 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
   };
 
   const hasChanges =
-    JSON.stringify([...(useCase?.assignedCameraIds || [])].sort()) !==
-    JSON.stringify([...selectedCameraIds].sort());
+    JSON.stringify([...(useCase?.assignedCameraIds || [])].sort((a, b) => a.localeCompare(b))) !==
+    JSON.stringify([...selectedCameraIds].sort((a, b) => a.localeCompare(b)));
 
   return (
     <Drawer

@@ -37,34 +37,6 @@ type LocationItem = {
 };
 
 
-// const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
-//   return zonesFromFile.map((z) => {
-//     // If already has a typed locations array
-//     if (Array.isArray(z.locations)) {
-//       return z;
-//     }
-
-//     // Handle legacy data with locationIds
-//     if (Array.isArray(z.locationIds)) {
-//       const locs: LocationItem[] = z.locationIds.map((id) => ({
-//         id: String(id),
-//         name: `Location ${id}`,
-//       }));
-
-
-//       return {
-//         ...z,
-//         locations: locs,
-//       };
-//     }
-
-//     return {
-//       ...z,
-//       locations: [],
-//     };
-//   });
-// };
-
 
 const ZoneLocationMapping: React.FC = () => {
   // Normalize first: ensure each zone has .locations array
@@ -184,25 +156,9 @@ type ZoneFormData = {
   const totalZones = zones.length;
   const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
   const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
-  // const totalCameras = zones.reduce((sum, z) => sum + (z.cameraIds?.length ?? 0), 0);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Breadcrumbs */}
-      {/* <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
-        <MuiLink component={Link} href="/" underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <HomeIcon fontSize="small" /> Home
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <SettingsIcon fontSize="small" /> Settings
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <TuneIcon fontSize="small" /> Configurator
-        </MuiLink>
-        <Typography color="text.primary" sx={{ display: "flex", alignItems: "center", gap: 0.5, fontWeight: 600 }}>
-          <MapIcon fontSize="small" /> Zone-Location Mapping
-        </Typography>
-      </Breadcrumbs> */}
 
       {/* Header */}
       <Box sx={{ mb: 4 }}>
