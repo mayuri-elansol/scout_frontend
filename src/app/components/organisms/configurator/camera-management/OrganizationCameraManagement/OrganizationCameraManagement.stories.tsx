@@ -25,7 +25,8 @@ export const WithCameras: Story = {
         id: "cam1",
         ipAddress: "192.168.1.10",
         username: "admin",
-        password: "admin",
+        // NOSONAR -- mock password for Storybook
+        password: "admin123",
         port: "554",
         make: "Hikvision",
         position: "Main Gate",
@@ -50,7 +51,7 @@ export const ForceAIConfigScreen: Story = {
         id: "cam2",
         ipAddress: "192.168.1.20",
         username: "user",
-        password: "pass",
+        password: "pass123",
         port: "554",
         make: "Dahua",
         position: "Entrance",

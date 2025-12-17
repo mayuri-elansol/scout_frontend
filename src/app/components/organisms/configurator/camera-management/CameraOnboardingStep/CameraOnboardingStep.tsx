@@ -128,7 +128,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   });
 
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
-  // const [pendingAssignments, setPendingAssignments] = useState<any[]>([]);
   const [pendingAssignments, setPendingAssignments] = useState<AssignmentItem[]>([]);
 
   const [selectedZone, setSelectedZone] = useState("");

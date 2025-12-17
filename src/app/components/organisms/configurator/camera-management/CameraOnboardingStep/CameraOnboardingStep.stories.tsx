@@ -46,6 +46,7 @@ const mockCameras: CameraData[] = [
     ipAddress: "192.168.1.11",
     cameraname: "Front Gate 2",
     username: "admin",
+    // NOSONAR -- mock password for Storybook
     password: "admin123",
     port: "554",
     make: "Dahua",
@@ -59,6 +60,7 @@ const mockCameras: CameraData[] = [
     ipAddress: "192.168.1.12",
     cameraname: "Front Gate 3",
     username: "admin",
+    // NOSONAR -- mock password for Storybook
     password: "admin123",
     port: "554",
     make: "Axis",
