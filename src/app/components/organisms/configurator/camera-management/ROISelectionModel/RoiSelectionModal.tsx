@@ -52,15 +52,6 @@ interface Point {
   y: number;
 }
 
-// interface ROIShape {
-//   type: DrawingTool;
-//   points: Point[];
-//   completed: boolean;
-//   color: string;
-//   name: string;
-//   mode: 'include' | 'exclude';
-// }
-
 interface RoiSelectionModalProps {
   open: boolean;
   onClose: () => void;
@@ -136,8 +127,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       }))
     }));
 
-
-
   };
 
   const [selectedROIIndex, setSelectedROIIndex] = useState<number | null>(null);
@@ -185,95 +174,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
   // Image ref for loading
   const imageRef = useRef<HTMLImageElement | null>(null);
-
-
-  useEffect(() => {
-    if (!open) return;
-
-    const canvas = canvasRef.current;
-    if (!canvas || !imageLoaded) return;
-
-    if (existingROI && existingROI.length > 0) {
-      const denormalized = denormalizeROI(existingROI, canvas);
-      setRoiShapes(denormalized);
-      setHistory([denormalized]);
-    } else {
-      setRoiShapes([]);
-      setHistory([[]]);
-    }
-
-    setHistoryIndex(0);
-    setCurrentShape(null);
-    currentShapeRef.current = null;
-    setIsDrawing(false);
-    setSelectedROIIndex(null);
-    setEditingNameIndex(null);
-    // 🔥 FORCE REDRAW AFTER ROI LOAD
-    requestAnimationFrame(() => drawCanvas());
-
-  }, [open, existingROI, imageLoaded]);
-
-
-
-  // Calculate canvas size based on container
-  const recalcCanvasSize = useCallback(() => {
-    //  if (isDrawingRef.current) return;
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    if (!canvas || !container) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const containerWidth = containerRect.width;
-    const containerHeight = containerRect.height;
-
-    if (containerHeight < 50) return;
-
-    const targetAspectRatio = 16 / 9;
-    const containerAspectRatio = containerWidth / containerHeight;
-
-    let newCanvasWidth, newCanvasHeight;
-
-    if (containerAspectRatio > targetAspectRatio) {
-      newCanvasHeight = containerHeight;
-      newCanvasWidth = containerHeight * targetAspectRatio;
-    } else {
-      newCanvasWidth = containerWidth;
-      newCanvasHeight = containerWidth / targetAspectRatio;
-    }
-
-    newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
-    newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
-
-    canvas.width = newCanvasWidth;
-    canvas.height = newCanvasHeight;
-
-    
-
-    setCanvasWidth(newCanvasWidth);
-    setCanvasHeight(newCanvasHeight);
-  }, []);
-
-
-  // 🔥 CRITICAL FIX: ensure canvas gets size AFTER dialog opens
-  useEffect(() => {
-    if (!open) return;
-
-    // wait for Dialog + container layout to finish
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        recalcCanvasSize();
-      });
-    });
-  }, [open, recalcCanvasSize]);
-
-
-
-  useEffect(() => {
-    if (!open || !imageLoaded) return;
-    if (isDrawingRef.current) return;
-
-    drawCanvas();
-  }, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open]);
 
   // Helper function to draw shapes  
   const drawShape = (ctx: CanvasRenderingContext2D, shape: ROIShape, color: string, label: number | null, _isActive: boolean, isSelected: boolean) => {
@@ -379,7 +279,134 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       drawShape(ctx, currentShape, selectedColor, null, true, false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageLoaded, roiShapes, selectedROIIndex, selectedColor]);
+  }, [imageLoaded, roiShapes, selectedROIIndex, selectedColor, currentShape]);
+
+
+  useEffect(() => {
+    if (!open) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas || !imageLoaded) return;
+
+    if (existingROI && existingROI.length > 0) {
+      const denormalized = denormalizeROI(existingROI, canvas);
+      setRoiShapes(denormalized);
+      setHistory([denormalized]);
+    } else {
+      setRoiShapes([]);
+      setHistory([[]]);
+    }
+
+    setHistoryIndex(0);
+    setCurrentShape(null);
+    currentShapeRef.current = null;
+    setIsDrawing(false);
+    setSelectedROIIndex(null);
+    setEditingNameIndex(null);
+    // 🔥 FORCE REDRAW AFTER ROI LOAD
+    requestAnimationFrame(() => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      if (imageRef.current) {
+        ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+      }
+    });
+
+  }, [open, existingROI, imageLoaded]);
+
+
+
+  // Calculate canvas size based on container
+  const recalcCanvasSize = useCallback(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const containerWidth = containerRect.width;
+    const containerHeight = containerRect.height;
+
+    if (containerHeight < 50) return;
+
+    const targetAspectRatio = 16 / 9;
+    const containerAspectRatio = containerWidth / containerHeight;
+
+    let newCanvasWidth, newCanvasHeight;
+
+    if (containerAspectRatio > targetAspectRatio) {
+      newCanvasHeight = containerHeight;
+      newCanvasWidth = containerHeight * targetAspectRatio;
+    } else {
+      newCanvasWidth = containerWidth;
+      newCanvasHeight = containerWidth / targetAspectRatio;
+    }
+
+    newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
+    newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
+
+    canvas.width = newCanvasWidth;
+    canvas.height = newCanvasHeight;
+
+    
+
+    setCanvasWidth(newCanvasWidth);
+    setCanvasHeight(newCanvasHeight);
+  }, []);
+
+
+  // 🔥 CRITICAL FIX: ensure canvas gets size AFTER dialog opens
+  useEffect(() => {
+    if (!open) return;
+
+    console.log('⏰ Dialog opened, waiting for canvas...');
+    
+    // wait for Dialog + container layout to finish
+    const timeoutId = setTimeout(() => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const canvas = canvasRef.current;
+          if (canvas) {
+            console.log('✅ Canvas is ready, calculating size...');
+            recalcCanvasSize();
+          } else {
+            console.log('❌ Canvas still not ready after delay');
+          }
+        });
+      });
+    }, 150); // Give more time for dialog animation
+
+    return () => clearTimeout(timeoutId);
+  }, [open, recalcCanvasSize]);
+
+
+
+  useEffect(() => {
+    if (!open || !imageLoaded) return;
+    if (isDrawingRef.current) return;
+
+    // Call drawCanvas directly without adding it to dependencies
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (imageRef.current) {
+      ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+    }
+
+    roiShapes.forEach((shape, index) => {
+      const isSelected = index === selectedROIIndex;
+      drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
+    });
+
+    if (currentShape && currentShape.points.length > 0) {
+      drawShape(ctx, currentShape, selectedColor, null, true, false);
+    }
+  }, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open, currentShape]);
 
 
 
@@ -392,104 +419,69 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       if (useCaseChanged) {
         setTimeout(() => {
           recalcCanvasSize();
-          // Redraw with existing image if already loaded
-          if (imageLoaded) {
-            drawCanvas();
+          // Don't reload image, just redraw if already loaded
+          if (imageLoaded && imageRef.current) {
+            const canvas = canvasRef.current;
+            const ctx = canvas?.getContext('2d');
+            if (canvas && ctx) {
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+            }
           }
         }, 50);
       }
     }
-  }, [open, useCaseName, recalcCanvasSize, imageLoaded, drawCanvas]);
+  }, [open, useCaseName, recalcCanvasSize, imageLoaded]);
 
-  // ✅ FIX: Image loading useEffect - only reload when modal opens, not on use case change
-  useEffect(() => {
-    if (!open) {
-      // Reset when modal closes
-      setImageLoaded(false);
-      return;
-    }
+ useEffect(() => {
+  if (!open) return;
 
-    // If image is already loaded and use case changes, don't reload
-    if (imageLoaded && imageRef.current) {
-      requestAnimationFrame(() => {
-        drawCanvas();
-      });
-      return;
-    }
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+  if (canvas.width === 0 || canvas.height === 0) return;
 
+  const img = new Image();
+  imageRef.current = img;
+  img.crossOrigin = 'anonymous';
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  img.onload = () => {
+    setImageLoaded(true);
 
-    console.log('🔄 Starting image load for:', useCaseName);
-    setImageLoaded(false);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const img = new Image();
-    imageRef.current = img;
-    img.crossOrigin = 'anonymous';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  };
 
+  img.onerror = () => {
+    console.error('Image failed to load:', cameraFeedUrl);
+  };
 
-    img.onload = () => {
-      // ensure canvas has size
-      recalcCanvasSize();
+  const url =
+    cameraFeedUrl && cameraFeedUrl.trim() !== ''
+      ? cameraFeedUrl
+      : '/img/siteimage.jpg';
 
-      // Mark image loaded
-      setImageLoaded(true);
-
-      // Draw AFTER size is stable
-      requestAnimationFrame(() => {
-        drawCanvas();
-      });
-    };
-
-
-    img.onerror = (error) => {
-      console.error('❌ Failed to load image:', cameraFeedUrl, error);
-      setImageLoaded(false);
-
-      // Draw error state
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#2c2c2c';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fff';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Failed to load image', canvas.width / 2, canvas.height / 2);
-        ctx.fillText('Path: ' + cameraFeedUrl, canvas.width / 2, canvas.height / 2 + 25);
-      }
-    };
-
-    // Construct image URL
-    let imageUrl = cameraFeedUrl;
-    if (!imageUrl || imageUrl.trim() === '') {
-      imageUrl = '/img/siteimage.jpg';
-    } else if (!imageUrl.startsWith('/') && !imageUrl.startsWith('http')) {
-      imageUrl = '/' + imageUrl;
-    }
-
-    // Add cache buster only on first load
-    const timestamp = Date.now();
-    const separator = imageUrl.includes('?') ? '&' : '?';
-    const cacheBuster = `${separator}_t=${timestamp}`;
-
-    console.log('📸 Loading image from:', imageUrl + cacheBuster);
-    img.src = imageUrl + cacheBuster;
-
-    return () => {
-      img.onload = null;
-      img.onerror = null;
-    };
-  }, [open, cameraFeedUrl, recalcCanvasSize, imageLoaded, useCaseName, drawCanvas]);
-
+  img.src = url + `?_t=${Date.now()}`;
+}, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
 
   // ✅ FIX: Redraw canvas when image loads or shapes change (excluding currentShape to avoid flicker)
   useEffect(() => {
     if (open && imageLoaded) {
-      drawCanvas();
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext('2d');
+      if (!canvas || !ctx || !imageRef.current) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+
+      roiShapes.forEach((shape, index) => {
+        const isSelected = index === selectedROIIndex;
+        drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
+      });
     }
-  }, [open, imageLoaded, roiShapes, selectedROIIndex, selectedColor, drawCanvas]);
+  }, [open, imageLoaded, roiShapes, selectedROIIndex, selectedColor]);
 
   // Handle window and container resize
   useEffect(() => {
@@ -596,7 +588,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   };
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    // isDrawingRef.current = true;
     if (!isDrawing || !currentShapeRef.current) return;
     const point = getCanvasCoordinates(e);
 
@@ -1224,7 +1215,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                     alert('Please draw at least one ROI region before saving.');
                     return;
                   }
-                  // onSave(roiShapes);
+
                   const canvas = canvasRef.current!;
                   const normalizedShapes = normalizeROI(roiShapes, canvas);
                   onSave(normalizedShapes);
@@ -1390,7 +1381,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                     alert('Please draw at least one ROI region before saving.');
                     return;
                   }
-                  // onSave(roiShapes);
+
                   const canvas = canvasRef.current!;
                   const normalizedShapes = normalizeROI(roiShapes, canvas);
                   onSave(normalizedShapes);

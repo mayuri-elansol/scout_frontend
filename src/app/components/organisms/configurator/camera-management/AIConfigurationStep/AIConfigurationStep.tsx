@@ -97,7 +97,6 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   onBack,
 }) => {
 
-  // const [roiModalKey, setRoiModalKey] = useState(0);
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
   const [loadingUseCases, setLoadingUseCases] = useState(true);
@@ -324,14 +323,6 @@ const loadAssignedUsecases = async () => {
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleToggleEnable = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === useCaseId ? { ...useCase, enabled: !useCase.enabled } : useCase
-      )
-    );
-  };
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
@@ -367,6 +358,41 @@ const loadAssignedUsecases = async () => {
   };
 
   const getCameraFeedUrl = () => {
+    // Try to use camera snapshot/feed URL if available
+    // Priority: rtspStream > specific snapshot URL > fallback image
+    if (camera.rtspStream && camera.rtspStream.trim() !== '') {
+      // Convert RTSP to HTTP snapshot if needed
+      // Example: rtsp://192.168.1.100:554/stream -> http://192.168.1.100/snapshot.jpg
+      const rtspUrl = camera.rtspStream;
+      
+      // If it's already an HTTP URL, use it directly
+      if (rtspUrl.startsWith('http')) {
+        return rtspUrl;
+      }
+      
+      // Try to construct snapshot URL from camera IP
+      if (camera.ipAddress) {
+        // Common snapshot endpoints for different camera makes
+        const snapshotPaths: Record<string, string> = {
+          'hikvision': '/ISAPI/Streaming/channels/101/picture',
+          'dahua': '/cgi-bin/snapshot.cgi',
+          'axis': '/axis-cgi/jpg/image.cgi',
+          'default': '/snapshot.jpg'
+        };
+        
+        const make = camera.make?.toLowerCase() || 'default';
+        const path = snapshotPaths[make] || snapshotPaths['default'];
+        
+        // Construct HTTP URL with authentication if needed
+        if (camera.username && camera.password) {
+          return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port || '80'}${path}`;
+        } else {
+          return `http://${camera.ipAddress}:${camera.port || '80'}${path}`;
+        }
+      }
+    }
+    
+    // Fallback to default image
     return '/img/siteimage.jpg';
   };
 
