@@ -175,80 +175,116 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   // Image ref for loading
   const imageRef = useRef<HTMLImageElement | null>(null);
 
+  const drawBaseShape = (
+  ctx: CanvasRenderingContext2D,
+  shape: ROIShape,
+  color: string,
+  isSelected: boolean
+) => {
+  const points = shape.points;
+  const isExclude = shape.mode === 'exclude';
+
+  ctx.strokeStyle = isSelected ? '#0066ff' : color;
+  ctx.lineWidth = isSelected ? 4 : 2;
+  ctx.setLineDash(isExclude ? [8, 4] : []);
+
+  if (shape.type === 'rectangle' && points.length === 2) {
+    const width = points[1].x - points[0].x;
+    const height = points[1].y - points[0].y;
+    ctx.strokeRect(points[0].x, points[0].y, width, height);
+    ctx.fillRect(points[0].x, points[0].y, width, height);
+    return;
+  }
+
+  if ((shape.type === 'polygon' || shape.type === 'freehand') && points.length > 1) {
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+    if (shape.completed) ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+};
+
+
+const drawPolygonHandles = (
+  ctx: CanvasRenderingContext2D,
+  shape: ROIShape,
+  color: string
+) => {
+  if (shape.type !== 'polygon' || shape.completed) return;
+
+  shape.points.forEach((point, index) => {
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+    ctx.fillStyle = index === 0 ? '#ffffff' : color;
+    ctx.fill();
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  });
+};
+
+
+const drawShapeLabel = (
+  ctx: CanvasRenderingContext2D,
+  shape: ROIShape,
+  label: number | null
+) => {
+  if (shape.points.length === 0) return;
+
+  const centerX = shape.points.reduce((s, p) => s + p.x, 0) / shape.points.length;
+  const centerY = shape.points.reduce((s, p) => s + p.y, 0) / shape.points.length;
+
+  const fallbackLabel = `ROI ${label ?? ''}`;
+  const text = `${shape.mode === 'exclude' ? '❌' : '✓'} ${shape.name || fallbackLabel}`;
+
+  ctx.setLineDash([]);
+  ctx.font = 'bold 12px Arial';
+
+  const padding = 8;
+  const width = ctx.measureText(text).width + padding;
+
+  ctx.fillStyle = shape.mode === 'exclude'
+    ? 'rgba(255,0,0,0.9)'
+    : 'rgba(0,0,0,0.7)';
+
+  ctx.fillRect(centerX - width / 2, centerY - 12, width, 24);
+  ctx.fillStyle = '#fff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, centerX, centerY);
+};
+
+
+
   // Helper function to draw shapes  
-  const drawShape = (ctx: CanvasRenderingContext2D, shape: ROIShape, color: string, label: number | null, _isActive: boolean, isSelected: boolean) => {
-    const points = shape.points;
-    if (points.length === 0) return;
+  
+const drawShape = (
+  ctx: CanvasRenderingContext2D,
+  shape: ROIShape,
+  color: string,
+  label: number | null,
+  _isActive: boolean,
+  isSelected: boolean
+) => {
+  if (shape.points.length === 0) return;
 
-    ctx.save();
+  ctx.save();
 
-    const hexToRgba = (hex: string, alpha: number) => {
-      const r = parseInt(hex.slice(1, 3), 16);
-      const g = parseInt(hex.slice(3, 5), 16);
-      const b = parseInt(hex.slice(5, 7), 16);
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-    };
+  ctx.fillStyle = (() => {
+    const r = Number.parseInt(color.slice(1, 3), 16);
+    const g = Number.parseInt(color.slice(3, 5), 16);
+    const b = Number.parseInt(color.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${shape.mode === 'exclude' ? 0.18 : 0.25})`;
+  })();
 
-    const isExclude = shape.mode === 'exclude';
+  drawBaseShape(ctx, shape, color, isSelected);
+  drawPolygonHandles(ctx, shape, color);
+  drawShapeLabel(ctx, shape, label);
 
-    ctx.strokeStyle = isSelected ? '#0066ff' : color;
-    ctx.lineWidth = isSelected ? 4 : 2;
-    ctx.setLineDash(isExclude ? [8, 4] : []);
-    ctx.fillStyle = hexToRgba(color, isExclude ? 0.18 : 0.25);
-
-    if (shape.type === 'rectangle' && points.length === 2) {
-      const width = points[1].x - points[0].x;
-      const height = points[1].y - points[0].y;
-      ctx.strokeRect(points[0].x, points[0].y, width, height);
-      ctx.fillRect(points[0].x, points[0].y, width, height);
-    } else if ((shape.type === 'polygon' || shape.type === 'freehand') && points.length > 1) {
-      ctx.beginPath();
-      ctx.moveTo(points[0].x, points[0].y);
-      points.forEach((point, index) => {
-        if (index > 0) ctx.lineTo(point.x, point.y);
-      });
-      if (shape.completed) {
-        ctx.closePath();
-        ctx.fill();
-      }
-      ctx.stroke();
-    }
-
-    // Draw polygon points if not completed
-    if (shape.type === 'polygon' && !shape.completed) {
-      points.forEach((point, index) => {
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = index === 0 ? '#ffffff' : color;
-        ctx.fill();
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      });
-    }
-
-    // Draw label
-    if (points.length > 0) {
-      const centerX = points.reduce((sum, p) => sum + p.x, 0) / points.length;
-      const centerY = points.reduce((sum, p) => sum + p.y, 0) / points.length;
-
-      ctx.setLineDash([]);
-      ctx.font = 'bold 12px Arial';
-      const labelText = `${isExclude ? '❌' : '✓'} ${shape.name || `ROI ${label ?? ''}`}`;
-      const padding = 8;
-      const textWidth = ctx.measureText(labelText).width + padding;
-
-      ctx.fillStyle = isExclude ? 'rgba(255, 0, 0, 0.9)' : 'rgba(0, 0, 0, 0.7)';
-      ctx.fillRect(centerX - textWidth / 2, centerY - 12, textWidth, 24);
-
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(labelText, centerX, centerY);
-    }
-
-    ctx.restore();
-  };
+  ctx.restore();
+};
 
   // ✅ FIX: Separate function to draw canvas content
   const drawCanvas = useCallback(() => {
@@ -307,9 +343,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     requestAnimationFrame(() => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-      
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       if (imageRef.current) {
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
       }
@@ -350,7 +386,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     canvas.width = newCanvasWidth;
     canvas.height = newCanvasHeight;
 
-    
+
 
     setCanvasWidth(newCanvasWidth);
     setCanvasHeight(newCanvasHeight);
@@ -359,24 +395,33 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
   // 🔥 CRITICAL FIX: ensure canvas gets size AFTER dialog opens
   useEffect(() => {
-    if (!open) return;
+    if (open === false) return;
 
     console.log('⏰ Dialog opened, waiting for canvas...');
-    
+
     // wait for Dialog + container layout to finish
-    const timeoutId = setTimeout(() => {
+    // const timeoutId = setTimeout(() => {
+    //   requestAnimationFrame(() => {
+    //     requestAnimationFrame(() => {
+    //       const canvas = canvasRef.current;
+    //       if (canvas) {
+    //         console.log('✅ Canvas is ready, calculating size...');
+    //         recalcCanvasSize();
+    //       } else {
+    //         console.log('❌ Canvas still not ready after delay');
+    //       }
+    //     });
+    //   });
+    // }, 150); // Give more time for dialog animation
+
+    const delayedCanvasResize = () => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const canvas = canvasRef.current;
-          if (canvas) {
-            console.log('✅ Canvas is ready, calculating size...');
-            recalcCanvasSize();
-          } else {
-            console.log('❌ Canvas still not ready after delay');
-          }
-        });
+        requestAnimationFrame(recalcCanvasSize);
       });
-    }, 150); // Give more time for dialog animation
+    };
+
+    const timeoutId = setTimeout(delayedCanvasResize, 150);
+
 
     return () => clearTimeout(timeoutId);
   }, [open, recalcCanvasSize]);
@@ -433,38 +478,38 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   }, [open, useCaseName, recalcCanvasSize, imageLoaded]);
 
- useEffect(() => {
-  if (!open) return;
+  useEffect(() => {
+    if (!open) return;
 
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-  if (canvas.width === 0 || canvas.height === 0) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (canvas.width === 0 || canvas.height === 0) return;
 
-  const img = new Image();
-  imageRef.current = img;
-  img.crossOrigin = 'anonymous';
+    const img = new Image();
+    imageRef.current = img;
+    img.crossOrigin = 'anonymous';
 
-  img.onload = () => {
-    setImageLoaded(true);
+    img.onload = () => {
+      setImageLoaded(true);
 
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
 
-  img.onerror = () => {
-    console.error('Image failed to load:', cameraFeedUrl);
-  };
+    img.onerror = () => {
+      console.error('Image failed to load:', cameraFeedUrl);
+    };
 
-  const url =
-    cameraFeedUrl && cameraFeedUrl.trim() !== ''
-      ? cameraFeedUrl
-      : '/img/siteimage.jpg';
+    const url =
+      cameraFeedUrl && cameraFeedUrl.trim() !== ''
+        ? cameraFeedUrl
+        : '/img/siteimage.jpg';
 
-  img.src = url + `?_t=${Date.now()}`;
-}, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
+    img.src = url + `?_t=${Date.now()}`;
+  }, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
 
   // ✅ FIX: Redraw canvas when image loads or shapes change (excluding currentShape to avoid flicker)
   useEffect(() => {
@@ -613,7 +658,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
         drawShape(ctx, updatedShape, selectedColor, null, true, false);
       }
     } else if (drawingTool === 'freehand') {
-      const lastPoint = currentShapeRef.current.points[currentShapeRef.current.points.length - 1];
+      const lastPoint = currentShapeRef.current.points.at(-1);
+      if (!lastPoint) return;
+
       const distance = Math.hypot(point.x - lastPoint.x, point.y - lastPoint.y);
       if (distance >= 3) {
         const updatedShape = {
@@ -658,78 +705,103 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   };
 
+
+  const selectROIAtPoint = (point: Point) => {
+    for (let i = roiShapes.length - 1; i >= 0; i--) {
+      if (isPointInShape(point, roiShapes[i])) {
+        setSelectedROIIndex(i);
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const startPolygon = (point: Point) => {
+    const newShape = {
+      type: 'polygon' as DrawingTool,
+      points: [point],
+      completed: false,
+      color: getNextColor(),
+      name: selectedLabel,
+      mode: roiMode,
+    };
+    currentShapeRef.current = newShape;
+    setCurrentShape(newShape);
+  };
+
+  const handlePolygonProgress = (point: Point) => {
+    if (!currentShapeRef.current) return;
+
+    const firstPoint = currentShapeRef.current.points[0];
+    const distance = Math.hypot(point.x - firstPoint.x, point.y - firstPoint.y);
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / (rect.width || 1);
+    const closeThreshold = 15 * scaleX;
+
+    // ✅ Close polygon
+    if (distance < closeThreshold && currentShapeRef.current.points.length >= 3) {
+      const completedShape: ROIShape = {
+        ...currentShapeRef.current,
+        completed: true,
+      };
+
+      const newShapes = [...roiShapes, completedShape];
+      setRoiShapes(newShapes);
+      addToHistory(newShapes);
+
+      currentShapeRef.current = null;
+      setCurrentShape(null);
+      return;
+    }
+
+    // ➕ Add new point
+    const updatedShape: ROIShape = {
+      ...currentShapeRef.current,
+      points: [...currentShapeRef.current.points, point],
+    };
+
+    currentShapeRef.current = updatedShape;
+    setCurrentShape(updatedShape);
+
+    // 🔥 Draw preview immediately (no flicker)
+    const ctx = canvas.getContext('2d');
+    if (!ctx || !imageRef.current) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
+
+    roiShapes.forEach((shape, index) => {
+      drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
+    });
+
+    drawShape(ctx, updatedShape, selectedColor, null, true, false);
+  };
+
+
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (isDrawing) return;
 
     const point = getCanvasCoordinates(e);
 
     if (drawingTool !== 'polygon' && !currentShapeRef.current) {
-      for (let i = roiShapes.length - 1; i >= 0; i--) {
-        if (isPointInShape(point, roiShapes[i])) {
-          setSelectedROIIndex(i);
-          return;
-        }
+      if (!selectROIAtPoint(point)) {
+        setSelectedROIIndex(null);
       }
-      setSelectedROIIndex(null);
       return;
     }
 
     if (drawingTool !== 'polygon') return;
 
     if (!currentShapeRef.current) {
-      const newShape = {
-        type: 'polygon' as DrawingTool,
-        points: [point],
-        completed: false,
-        color: getNextColor(),
-        name: selectedLabel,
-        mode: roiMode,
-      };
-      currentShapeRef.current = newShape;
-      setCurrentShape(newShape);
-    } else {
-      const firstPoint = currentShapeRef.current.points[0];
-      const distance = Math.hypot(point.x - firstPoint.x, point.y - firstPoint.y);
-
-      const canvas = canvasRef.current;
-      const rect = canvas?.getBoundingClientRect();
-      const scaleX = canvas ? canvas.width / (rect!.width || 1) : 1;
-      const closeThreshold = 15 * scaleX;
-
-      if (distance < closeThreshold && currentShapeRef.current.points.length >= 3) {
-        const completedShape = { ...currentShapeRef.current, completed: true };
-        const newShapes: ROIShape[] = [...roiShapes, completedShape];
-        setRoiShapes(newShapes);
-        addToHistory(newShapes);
-        currentShapeRef.current = null;
-        setCurrentShape(null);
-      } else {
-        const updatedShape = {
-          ...currentShapeRef.current,
-          points: [...currentShapeRef.current.points, point],
-        };
-        currentShapeRef.current = updatedShape;
-
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext("2d");
-
-        if (canvas && ctx && imageRef.current) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-
-          // Draw existing ROI shapes
-          roiShapes.forEach((shape, index) => {
-            drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
-          });
-
-          // Draw PREVIEW polygon (the new updated shape)
-          drawShape(ctx, updatedShape, selectedColor, null, true, false);
-        }
-
-        setCurrentShape(updatedShape);
-      }
-
+      startPolygon(point);
+      return;
     }
+
+    handlePolygonProgress(point);
   };
 
   const handleCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -795,19 +867,21 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       onClose={onClose}
       fullWidth
       maxWidth="xl"
-      PaperProps={{
-        sx: {
-          width: {
-            xs: '100%',
-            sm: '95%',
-            md: '95%',
-            lg: '90%',
-            xl: '1200px',
-          },
-          maxWidth: '1300px',
-          height: { xs: '100vh', sm: '95vh', md: '90vh' },
-          m: { xs: 0, sm: 1, md: 2 },
-          bgcolor: 'white'
+      slotProps={{
+        paper: {
+          sx: {
+            width: {
+              xs: '100%',
+              sm: '95%',
+              md: '95%',
+              lg: '90%',
+              xl: '1200px',
+            },
+            maxWidth: '1300px',
+            height: { xs: '100vh', sm: '95vh', md: '90vh' },
+            m: { xs: 0, sm: 1, md: 2 },
+            bgcolor: 'white'
+          }
         }
       }}
     >
@@ -1110,7 +1184,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={index}
+                    key={`${shape.color} - ${shape.name}`}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.5,
@@ -1144,7 +1218,10 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                               setEditingNameIndex(null);
                             }}
                             onBlur={() => setEditingNameIndex(null)}
-                            SelectProps={{ native: true }}
+                            slotProps={{
+                              select: { native: true }
+                            }}
+
                             size="small"
                             fullWidth
                             variant="standard"
@@ -1162,26 +1239,33 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                           </TextField>
                         ) : (
                           <ListItemText
-                            primary={shape.name}
-                            secondary={shape.mode === 'include' ? 'Include' : 'Exclude'}
-                            primaryTypographyProps={{
-                              variant: 'caption',
-                              sx: { fontWeight: 500, fontSize: '0.75rem' },
-                            }}
-                            secondaryTypographyProps={{
-                              variant: 'caption',
-                              sx: {
-                                fontSize: '0.65rem',
-                                color: shape.mode === 'include' ? 'success.main' : 'error.main',
-                                fontWeight: 500,
-                              },
-                            }}
+                            primary={
+                              <Typography
+                                variant="caption"
+                                sx={{ fontWeight: 500, fontSize: '0.75rem' }}
+                              >
+                                {shape.name}
+                              </Typography>
+                            }
+                            secondary={
+                              <Typography
+                                variant="caption"
+                                sx={{
+                                  fontSize: '0.65rem',
+                                  color: shape.mode === 'include' ? 'success.main' : 'error.main',
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {shape.mode === 'include' ? 'Include' : 'Exclude'}
+                              </Typography>
+                            }
                             sx={{ m: 0 }}
                             onClick={(e) => {
                               e.stopPropagation();
                               setEditingNameIndex(index);
                             }}
                           />
+
                         )}
                         <IconButton
                           size="small"
@@ -1240,15 +1324,17 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
           open={drawerOpen}
           onClose={() => setDrawerOpen(false)}
           ModalProps={{ keepMounted: true }}
-          PaperProps={{
-            sx: {
-              width: { xs: '45vw', sm: '200px' },
-              maxWidth: '200px',
-              height: '100vh',
-              top: 0,
-              margin: 0,
-              borderRadius: { xs: 0, sm: '0 8px 8px 0' },
-              boxShadow: 6,
+          slotProps={{
+            paper: {
+              sx: {
+                width: { xs: '45vw', sm: '200px' },
+                maxWidth: '200px',
+                height: '100vh',
+                top: 0,
+                margin: 0,
+                borderRadius: { xs: 0, sm: '0 8px 8px 0' },
+                boxShadow: 6,
+              }
             }
           }}
           sx={{ zIndex: 1300 }}
@@ -1306,7 +1392,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={index}
+                    key={`${shape.color} - ${shape.name}`}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.25,
@@ -1333,22 +1419,29 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                           }}
                         />
                         <ListItemText
-                          primary={shape.name}
-                          secondary={shape.mode === 'include' ? 'Include' : 'Exclude'}
-                          primaryTypographyProps={{
-                            variant: 'caption',
-                            sx: { fontWeight: 500, fontSize: '0.65rem' },
-                          }}
-                          secondaryTypographyProps={{
-                            variant: 'caption',
-                            sx: {
-                              fontSize: '0.55rem',
-                              color: shape.mode === 'include' ? 'success.main' : 'error.main',
-                              fontWeight: 500,
-                            },
-                          }}
+                          primary={
+                            <Typography
+                              variant="caption"
+                              sx={{ fontWeight: 500, fontSize: '0.65rem' }}
+                            >
+                              {shape.name}
+                            </Typography>
+                          }
+                          secondary={
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                fontSize: '0.55rem',
+                                color: shape.mode === 'include' ? 'success.main' : 'error.main',
+                                fontWeight: 500,
+                              }}
+                            >
+                              {shape.mode === 'include' ? 'Include' : 'Exclude'}
+                            </Typography>
+                          }
                           sx={{ m: 0 }}
                         />
+
                         <IconButton
                           size="small"
                           onClick={(e) => {
