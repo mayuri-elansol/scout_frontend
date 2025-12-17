@@ -243,8 +243,8 @@ const UseCaseManager: React.FC = () => {
         onClose={handleCloseDrawer}
         useCase={selectedUseCase}
         cameras={cameras}
-        // selectedCameraIds={selectedCameraIds}
-        // setSelectedCameraIds={setSelectedCameraIds}
+        selectedCameraIds={selectedCameraIds}
+        setSelectedCameraIds={setSelectedCameraIds}
         onSave={handleSaveCameraAssignments}
         isLoading={isLoadingCameras}
       />

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
 import {
   Box,
   Typography,
@@ -102,7 +103,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 
-  const fetchCameras = async () => {
+  const fetchCameras = useCallback(async () => {
   const res = await getCameras();
 
   setCameras(
@@ -118,7 +119,8 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       status: "connected",
     }))
   );
-};
+}, []);
+
 
 
   React.useEffect(() => {
@@ -154,12 +156,12 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       await fetchCameras(); // important
       setSnackbar({ open: true, message: "Camera added successfully!", severity: "success" });
 
-    } catch (err) {
-      // if (err.response?.status === 409) {
-      //   await fetchCameras();  // refresh anyway because DB insert actually succeeded
-      // } else {
-      //   setSnackbar({ open: true, message: "Failed to add camera!", severity: "error" });
-      // }
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Failed to add camera!",
+        severity: "error",
+      });
     }
 
   };
@@ -189,7 +191,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         message: "Camera removed successfully!",
         severity: "warning",
       });
-    } catch (error) {
+    } catch {
       setSnackbar({
         open: true,
         message: "Failed to delete camera!",

@@ -293,7 +293,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
     }
 
     if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
+      // newErrors.password = 'Password is required';
     }
 
     if (!formData.cameraname.trim()) {
@@ -350,6 +350,9 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
         connectionType: "DIRECT_TO_CAMERA" as const,
 
       });
+
+      console.log(response); // or setState(response.data)
+
 
       onCameraAdd({
         id: crypto.randomUUID(),

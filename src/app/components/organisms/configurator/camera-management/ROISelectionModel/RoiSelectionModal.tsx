@@ -260,7 +260,7 @@ const drawShapeLabel = (
 
   // Helper function to draw shapes  
   
-const drawShape = (
+const drawShape = useCallback((
   ctx: CanvasRenderingContext2D,
   shape: ROIShape,
   color: string,
@@ -284,7 +284,8 @@ const drawShape = (
   drawShapeLabel(ctx, shape, label);
 
   ctx.restore();
-};
+}, []);
+
 
   // ✅ FIX: Separate function to draw canvas content
   const drawCanvas = useCallback(() => {
@@ -451,7 +452,7 @@ const drawShape = (
     if (currentShape && currentShape.points.length > 0) {
       drawShape(ctx, currentShape, selectedColor, null, true, false);
     }
-  }, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open, currentShape]);
+  }, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open, currentShape, drawShape]);
 
 
 
@@ -526,7 +527,7 @@ const drawShape = (
         drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
       });
     }
-  }, [open, imageLoaded, roiShapes, selectedROIIndex, selectedColor]);
+  }, [open, imageLoaded, roiShapes, selectedROIIndex, selectedColor, drawShape]);
 
   // Handle window and container resize
   useEffect(() => {

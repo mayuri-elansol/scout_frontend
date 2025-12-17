@@ -29,15 +29,25 @@ import {
 } from "@mui/icons-material";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 
-interface CameraSelectionDrawerProps {
+// interface CameraSelectionDrawerProps {
+//   open: boolean;
+//   onClose: () => void;
+//   useCase: UseCase | null;
+//   cameras: Camera[];
+//   onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
+//   isLoading?: boolean;
+// }
+
+export interface CameraSelectionDrawerProps {
   open: boolean;
   onClose: () => void;
   useCase: UseCase | null;
   cameras: Camera[];
-  onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
-  isLoading?: boolean;
+  selectedCameraIds: string[];
+  setSelectedCameraIds: React.Dispatch<React.SetStateAction<string[]>>;
+  onSave: (useCaseId: string, selectedCameraIds: string[]) => void;
+  isLoading: boolean;
 }
-
 
 export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
   open,
