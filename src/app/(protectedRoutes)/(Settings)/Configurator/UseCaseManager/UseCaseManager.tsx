@@ -127,31 +127,9 @@ const UseCaseManager: React.FC = () => {
     setSelectedUseCase(null);
   };
 
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-
-      {/* Page Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
-          Use-Case Manager
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Configure and assign cameras to AI use cases based on your organization&apos;s
-
-          license. Select cameras from Camera Management to enable specific detection
-          and monitoring capabilities.
-        </Typography>
-      </Box>
-
-      {/* Error State */}
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Loading State */}
-      {isLoadingUseCases ? (
+  const renderContent = () => {
+    if (isLoadingUseCases) {
+      return (
         <Box>
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             {[1, 2, 3].map((i) => (
@@ -174,7 +152,11 @@ const UseCaseManager: React.FC = () => {
             ))}
           </Box>
         </Box>
-      ) : useCases.length === 0 ? (
+      );
+    }
+
+    if (useCases.length === 0) {
+      return (
         /* Empty State */
         <Paper
           elevation={0}
@@ -216,14 +198,44 @@ const UseCaseManager: React.FC = () => {
             selected license tier. Contact support for more information.
           </Alert>
         </Paper>
-      ) : (
-        /* Use Case List */
-        <UseCaseList
-          useCases={useCases}
-          onConfigureCameras={handleConfigureCameras}
-          isLoading={isLoadingUseCases}
-        />
+      );
+    }
+
+    return (
+      /* Use Case List */
+      <UseCaseList
+        useCases={useCases}
+        onConfigureCameras={handleConfigureCameras}
+        isLoading={isLoadingUseCases}
+      />
+    );
+  };
+
+  return (
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+
+      {/* Page Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom fontWeight={700}>
+          Use-Case Manager
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Configure and assign cameras to AI use cases based on your organization&apos;s
+
+          license. Select cameras from Camera Management to enable specific detection
+          and monitoring capabilities.
+        </Typography>
+      </Box>
+
+      {/* Error State */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
       )}
+
+      {/* Content */}
+      {renderContent()}
 
       {/* Camera Selection Drawer */}
       <CameraSelectionDrawer

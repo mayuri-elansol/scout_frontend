@@ -29,15 +29,6 @@ import {
 } from "@mui/icons-material";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 
-// interface CameraSelectionDrawerProps {
-//   open: boolean;
-//   onClose: () => void;
-//   useCase: UseCase | null;
-//   cameras: Camera[];
-//   onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
-//   isLoading?: boolean;
-// }
-
 interface CameraSelectionDrawerProps {
   open: boolean;
   onClose: () => void;

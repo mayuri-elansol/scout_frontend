@@ -51,6 +51,7 @@ export const ForceAIConfigScreen: Story = {
         id: "cam2",
         ipAddress: "192.168.1.20",
         username: "user",
+        // NOSONAR -- mock password for Storybook
         password: "pass123",
         port: "554",
         make: "Dahua",

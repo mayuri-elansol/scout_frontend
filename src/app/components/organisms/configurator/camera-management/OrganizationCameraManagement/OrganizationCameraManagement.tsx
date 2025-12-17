@@ -102,32 +102,6 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 
-  // const fetchCameras = async () => {
-  //   try {
-  //     const res = await getCameras();
-  //     setCameras(
-  //       (res.data as CameraApiResponse[]).map((cam) => ({
-  //         id: cam.id,
-  //         ipAddress: cam.cameraIp,
-  //         cameraname: cam.cameraName,
-  //         username: cam.userName,
-  //         password: cam.password,
-  //         port: String(cam.RTSPport),
-  //         make: cam.connectionType,
-  //         position: cam.cameraName,
-  //         rtspStream: cam.rtspStream ?? "",
-  //         status: "connected" as const,
-  //       }))
-  //     );
-
-
-
-  //     // setCameras(mapped);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const fetchCameras = async () => {
   const res = await getCameras();
 
