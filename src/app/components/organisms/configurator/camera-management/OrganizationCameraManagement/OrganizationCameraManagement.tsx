@@ -32,27 +32,6 @@ import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
 import { OrgCamera, OnboardingCamera, CameraApiResponse } from "@/app/types/camera";
 
-
-// export interface CameraData {
-//   id: string;
-//   ipAddress: string;
-//   username: string;
-//   password: string;
-//   port: string;
-//   make: string;
-//   position: string;   // <-- FIXED (optional)
-//   rtspStream: string;
-//   status: 'connected' | 'failed' | 'pending';
-//   aiConfig?: {
-//     useCases: string[];
-//     roiData: Record<string, { configured: boolean }>;
-//     fineTuning: Record<string, { tuned: boolean }>;
-//     enabled: boolean;
-//     viewName?: string;
-//   };
-// }
-
-
 interface OrganizationCameraManagementProps {
   initialCameras?: OrgCamera[];
   forceAddCamera?: boolean;
@@ -66,7 +45,6 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   forceConfigureCamera,
 }) => {
 
-  // const [cameras, setCameras] = useState<CameraData[]>(initialCameras || []);
   const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
 
   const [zones, setZones] = useState<{ id: string; name: string }[]>([]);

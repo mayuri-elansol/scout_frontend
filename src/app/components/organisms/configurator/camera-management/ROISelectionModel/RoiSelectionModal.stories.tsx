@@ -88,6 +88,7 @@ export const IntrusionDetection: Story = {
         color: "#ff00ff",
         name: "Perimeter",
         mode: "include",
+        id: ""
       },
     ],
   },
@@ -107,6 +108,7 @@ export const WithExcludeZone: Story = {
         color: "#00ff00",
         name: "Standing Person",
         mode: "include",
+        id: ""
       },
       {
         type: "rectangle",
@@ -118,6 +120,7 @@ export const WithExcludeZone: Story = {
         color: "#ff0000",
         name: "Fallen Person",
         mode: "exclude",
+        id: ""
       },
     ],
   },

@@ -151,6 +151,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   ): ROIShape[] => {
     return shapes.map(shape => ({
       ...shape,
+       id: shape.id ?? crypto.randomUUID(),
       points: shape.points.map(p => ({
         x: +(p.x * canvas.width).toFixed(2),
         y: +(p.y * canvas.height).toFixed(2),
@@ -608,6 +609,7 @@ const drawShape = useCallback((
 
     if (drawingTool === 'rectangle') {
       const newShape = {
+        id: crypto.randomUUID(),
         type: 'rectangle' as DrawingTool,
         points: [point],
         completed: false,
@@ -620,6 +622,7 @@ const drawShape = useCallback((
       setIsDrawing(true);
     } else if (drawingTool === 'freehand') {
       const newShape = {
+        id: crypto.randomUUID(),
         type: 'freehand' as DrawingTool,
         points: [point],
         completed: false,
@@ -719,6 +722,7 @@ const drawShape = useCallback((
 
   const startPolygon = (point: Point) => {
     const newShape = {
+      id: crypto.randomUUID(),
       type: 'polygon' as DrawingTool,
       points: [point],
       completed: false,
@@ -1185,7 +1189,7 @@ const drawShape = useCallback((
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={`${shape.color} - ${shape.name}`}
+                    key={`${shape.id}`}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.5,
@@ -1393,7 +1397,7 @@ const drawShape = useCallback((
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={`${shape.color} - ${shape.name}`}
+                    key={`${shape.id}`}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.25,
@@ -1428,6 +1432,7 @@ const drawShape = useCallback((
                               {shape.name}
                             </Typography>
                           }
+                          
                           secondary={
                             <Typography
                               variant="caption"

@@ -5,6 +5,7 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4001/api/v1';
 
   type BackendRoi = {
+  id: string;
   type: ROIShape["type"];
   label: string;
   mode: ROIShape["mode"];
@@ -59,7 +60,8 @@ class RoiService {
       `/configurator/camera-roi/${cameraId}/${usecaseId}`
     );
 
-    return (res.data.rois as BackendRoi[]).map((r) => ({
+    return (res.data.rois as BackendRoi[]).map((r, index) => ({
+      id: r.id || `roi-${index}`,
       type: r.type,
       name: r.label,          
       mode: r.mode,

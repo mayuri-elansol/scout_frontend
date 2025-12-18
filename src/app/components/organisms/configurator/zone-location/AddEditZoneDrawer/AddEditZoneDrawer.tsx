@@ -112,13 +112,15 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
           zIndex: 1400,
         },
       }}
-      PaperProps={{
+    slotProps={{
+      paper: {
         sx: {
           width: { xs: "100%", sm: 480, md: 560 },
           display: "flex",
           flexDirection: "column",
           zIndex: 1400,
         },
+      },
       }}
     >
       {/* Header */}

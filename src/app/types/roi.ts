@@ -6,6 +6,7 @@ export interface Point {
 export type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
 
 export interface ROIShape {
+  id:string
   type: DrawingTool;
   name: string;               // 👈 UI uses name
   mode: 'include' | 'exclude';

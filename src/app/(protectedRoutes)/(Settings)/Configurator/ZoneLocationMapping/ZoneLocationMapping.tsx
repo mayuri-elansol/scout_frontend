@@ -199,7 +199,7 @@ type ZoneFormData = {
           placeholder="Search zones by name or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
+          slotProps={{ input: { startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) } }}
           sx={{ flex: 1, "& .MuiOutlinedInput-root": { backgroundColor: "white" } }}
         />
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZone} sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}>

@@ -1,0 +1,247 @@
+[33m7d0aefb[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mconfigurator-update[m[33m)[m sonar errors
+[33m6a66618[m[33m ([m[1;31morigin/configurator-update[m[33m)[m changes || to ??
+[33m183b3ab[m sonar errors
+[33mcd9a159[m sonar err
+[33m923efe5[m change in mockcamera.ts
+[33m1249dd3[m change in mockcamera.ts
+[33mcdd5c09[m warning solved
+[33m6c20cde[m change in sonar-properties
+[33m3218a3f[m sonar errors
+[33m60a68ba[m sonar errors 2
+[33m2acd334[m sonar errors solved
+[33m1396e74[m image loading in canvas
+[33mc798544[m roi done just image loading not working properly
+[33mfcefa64[m roi set to use case retrive from db
+[33m39f95e1[m  errors resolved
+[33m21a992f[m roi update2
+[33mbaa10d0[m roi canvas update
+[33mdd276d5[m roi update
+[33m2ab3480[m labels per use cases added
+[33mcd74c22[m image loading properly
+[33mfede46c[m ROI canvas edited
+[33m77a3822[m AI use cases assigned
+[33ma586ade[m ai use case edit
+[33m6352960[m added dialog boxfor zones and other update
+[33m74b80f4[m use case manager update
+[33mcdfd12a[m use-case-manager
+[33m25826bd[m zone-location added to camera manager
+[33md0c930f[m nvr added
+[33m69fc32e[m camera management integration
+[33m98db2f3[m zone-location-integration done
+[33m3a9c3b4[m build errors resolved
+[33m959b828[m storybook update
+[33meebe70f[m error-remove in story
+[33md6c4618[m configurator stories updated
+[33mcf7cf68[m folder structure update
+[33mbd6690b[m zones edited
+[33m5d8ca0c[m zone-location mapping
+[33m3878407[m zone removed
+[33m05cb065[m zone removed from form
+[33m0011c3a[m nvr added
+[33m37cadb8[m use case manager-configurator latest
+[33md2b33c1[m use case manager-configurator
+[33mbb09166[m sub-option of configurator added
+[33m20b5a17[m[33m ([m[1;31morigin/configurator[m[33m, [m[1;32mconfigurator[m[33m)[m ROI page  responsiveness
+[33mf8a7894[m AIConfigurator-responsive
+[33m5f6f48f[m Configurator Added
+[33m36047e9[m Merge pull request 'feature/chart-responsivness' (#16) from feature/chart-responsivness into development
+[33m8e58283[m Merge branch 'feature/chart-responsivness' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/chart-responsivness
+[33mb0ff638[m added api for kpi card
+[33m9789d61[m sonar error solved
+[33m8882788[m Merge branch 'feature/chart-responsivness' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/chart-responsivness
+[33mfc45a1b[m pull commit
+[33md36d14d[m make the charts and piecharts responsive for the phone view
+[33m8fef207[m Merge branch 'feature/chart-responsivness' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/chart-responsivness
+[33m94d373c[m added the piechart in the dashbord
+[33mefe7e51[m fix loading issue of y axis from canteen line chart
+[33m4bb9ea5[m Merge branch 'feature/chart-responsivness' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/chart-responsivness
+[33me7861ac[m fix initial loaidng isuue of barhchart
+[33ma940567[m update the piechart component
+[33maee9cf1[m added the camera tamparing dashbord in the analytics section
+[33m315a391[m added storybook for the barchart,pichart,barchartwiththreshould,jountbarchart,scatterchart component
+[33ma14a628[m resolved sonar error
+[33me78a748[m added the graphs in the camera tampring dashboard
+[33m361ea44[m build and sonar error resolved
+[33mcfeeaf3[m update the charts in oprational,surveilance,workforce monitoring dashboard
+[33m2137116[m push commit
+[33m75fd958[m Merge pull request 'feature/dashboard-zone-popup' (#15) from feature/dashboard-zone-popup into development
+[33m4b9108e[m[33m ([m[1;31morigin/feature/dashboard-zone-popup[m[33m)[m added  ?? instead of ||
+[33m2731d5b[m push commit
+[33mb639c30[m ppe chart responsiness
+[33m076792b[m mac responsivness completed
+[33m35a0672[m chart responsivness
+[33mcf531d9[m remove any from barchart
+[33m9b6d180[m remove comment from piechart
+[33m705a17a[m added all charts in all pages
+[33m993edad[m update the stories for the resetpassword
+[33mdedcb61[m push commit
+[33mbb6252f[m resolved the build and sonar errors
+[33m47c4e85[m added scatter chart
+[33mb01808b[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m8c09e84[m added SCATTER CHART FOR MOVEMENT DURING SHUTDOWN
+[33ma59ed56[m added SCATTER CHART FOR MOVEMENT DURING SHUTDOWN
+[33m06ba41c[m added the colours in the carts for the safty and compliance dashboard
+[33m9f09646[m added mb:2 below time filter
+[33m82e2903[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m16f9ea7[m adde livestreaming at top of sidebar
+[33mf98fd21[m changed the login page data
+[33m45dc66e[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33mb51d742[m added icons in kpi cards for the dashboard
+[33m03deea9[m addec colro for chart in dashboard
+[33m3535aea[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33m0375933[m chnage the layout for dashboard kpi cards
+[33md3a7c92[m pull commit
+[33m3e71416[m adde pie chart in safety and compilance
+[33mad19296[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33mcb842d9[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33ma435882[m Save my local changes
+[33m227e828[m push commit
+[33mfc5dfa3[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m74f5a15[m added pie chart for ppe in safety and compilance dashboard
+[33me9da6af[m changed the ui for the dashboard kpi card
+[33m90c7d3f[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33mb50cfb5[m pull commit
+[33m53ff599[m push commit
+[33m58ee696[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33m5cac876[m added customer logo
+[33m16f620e[m added chart for all dashboards
+[33mecbf2c8[m added the kpi cards in the oparation insite dashboard
+[33m181ee90[m Merge branch 'feature/route-redifine' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m318505a[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33mb916801[m remove the page header title from all the usecases
+[33mbde5045[m added chart in SurveillanceMonitoringDashboard
+[33m6677f35[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/route-redifine
+[33mbd3bfb9[m redifne the sidebar routes
+[33m0fcaea2[m added chart in safetu and compilances
+[33mfcd9e3e[m Merge pull request 'feature/kpi-cards' (#14) from feature/kpi-cards into development
+[33meb32204[m push commit
+[33mec47ef4[m delete the unwanted files
+[33m6e87aa5[m update tooltip message for all usecases
+[33mf1dd6d4[m added the kpi cards into usecases
+[33ma795d5f[m Merge pull request 'feature/edit-zonevoilation' (#13) from feature/edit-zonevoilation into development
+[33m546a4ee[m Merge branch 'feature/edit-zonevoilation' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m17da476[m pull commit
+[33m01d6522[m update the ui for the zonevoilation
+[33me9f7db0[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/edit-zonevoilation
+[33mc115da0[m Merge branch 'feature/edit-zonevoilation' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m26654be[m pull commit
+[33mc43cdc1[m push commit
+[33m1f3689e[m push commit
+[33m524e328[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/edit-zonevoilation
+[33me026132[m pull commit
+[33mee8ce75[m added the kpi card in all the dashboard page
+[33m9958bef[m change camera status zone from dashboard
+[33m89263e2[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/edit-zonevoilation
+[33m26d1bbf[m create dashoardkpicard component
+[33m3e33ff6[m added 4 dashboard for 4 category
+[33m2e05208[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/edit-zonevoilation
+[33m4248f47[m Merge branch 'feature/edit-zonevoilation' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m27a1d81[m update the recentvoilation,voilationcard,alertvoilationpopup component
+[33m2e84df1[m Merge branch 'development' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33mca2cceb[m added use details for profile section in header
+[33md5cb6ae[m update the report table component
+[33m19634f4[m update the zonevoilation component by adding the subvoilations section
+[33m2c532ce[m Merge branch 'development' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into development
+[33m251692d[m Merge pull request 'feature/working-on-build' (#12) from feature/working-on-build into development
+[33m266f731[m push commit
+[33mc6fd0e3[m changed the keys by adding uuidv4()
+[33m1bf3165[m creating new pr
+[33m7ec93ae[m push commit
+[33m7140bc7[m solved sonar error
+[33m740c0a6[m add  ?? instaed of ||
+[33m76d63ad[m merge working on build feature
+[33m344c9d2[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33mc9e8df5[m remove all sonarqube error
+[33mda34823[m sonar error
+[33m6c2f203[m Merge branch 'development' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into development
+[33m22934cd[m resolved build error
+[33m6934a5d[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/working-on-build
+[33m8b8ce17[m pull commit
+[33maa23348[m remove sonarqube error
+[33mf790d1a[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33me59d08a[m pull commit
+[33m355de90[m camera stutus component update
+[33m7e5ba2e[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/working-on-build
+[33m823aa41[m pull commit
+[33md1f730f[m push commit
+[33ma3f1e73[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m536fa9c[m pull commit
+[33m2d9ff50[m system alerts page chnages
+[33me4867be[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33me9ef427[m pull commit
+[33m7c9a7a5[m push commit
+[33ma800e70[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33mcef368a[m added customer logo in sidebar
+[33md8c6da1[m added the recent voilaiton data
+[33m96a35bd[m resolved build error
+[33mf65a2af[m Merge branch 'feature/dashboard-zone-popup' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/working-on-build
+[33mb745534[m chnaged the report table component
+[33m09397b6[m Merge branch 'feature/working-on-build' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-zone-popup
+[33m47557af[m push commit
+[33mb39713e[m adding role management page
+[33m4ca95fe[m added the filter for all the usecases
+[33m2d7741d[m pull commit
+[33m2e4451b[m added the zonevoilation component in all usecases
+[33m9725bd1[m User management flow added in setting with all necessary pages
+[33mfccac4d[m Merge pull request 'feature/Sidebar&Usecases-Changes' (#9) from feature/Sidebar&Usecases-Changes into development
+[33maf14483[m Merge branch 'feature/setting-page' into development
+[33mbd29bde[m remove unused variable issubmitted from reset and forget page
+[33m8a5bc36[m remove build error
+[33m4827d81[m remove sonarqube error
+[33maf9c065[m added seeting route in sidebar
+[33m9d7daff[m Merge branch 'feature/setting-page' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/working-on-build
+[33m000a677[m added the info icon in each component with component specific message
+[33mc6bc947[m adde paper in ppe
+[33mbe64e90[m Git lens
+[33m7d64399[m added tabs in alert
+[33m36a00d3[m push commit
+[33m5421626[m update the kpi card component
+[33mbdc33c0[m added the final kpi cards in safety and complince,security monitoring,workforce monitoring
+[33m267c0a7[m added the report table
+[33me944806[m added kpi title for all use cases
+[33me05c0b3[m added the table data in all category
+[33me60a056[m added the table data in security and compliances category
+[33m5ae6f80[m added the date picker in the table component
+[33m1db6365[m pull commit
+[33maffd93d[m added the date picker in the date filter
+[33m0e640f0[m pull commit
+[33m29b9a2e[m pull commit
+[33m48dd142[m Merge branch 'feature/setting-page' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/working-on-build
+[33m271d532[m added the icons in the pages
+[33m29db9ce[m working on build
+[33m9ca9571[m added correct alignment for tooltip in header
+[33mbabc7ee[m Merge pull request 'feature/dashboard-ui-changes' (#7) from feature/dashboard-ui-changes into development
+[33m89db826[m Merge branch 'feature/ui-chnges' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-ui-changes
+[33me69dd86[m push commit
+[33md7180c0[m added the form validation in the reset password,forgot password and login page
+[33md3ba187[m solved the sonar error in forget and reset password
+[33m1726466[m created forgot passwordpage
+[33m4c703fd[m Merge branch 'feature/ui-chnges' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-ui-changes
+[33m3acd1d8[m created the reset password page
+[33mf90e341[m push commit
+[33m948aabe[m remove unused component
+[33m42994cf[m pull commit
+[33m73b9a87[m Merge branch 'feature/ui-chnges' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-ui-changes
+[33mfe69749[m add skeleton for real time activity component, chnaged the ui for the view button , make the dashboard responsive
+[33m2df567b[m added modular css files
+[33mf1e6b71[m Merge branch 'feature/ui-chnges' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/dashboard-ui-changes
+[33m871c9f0[m pull commit
+[33mabac0f3[m Merge branch 'feature/dashboard-ui-changes' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/ui-chnges
+[33m4fb151c[m added login and resetPassword page
+[33mbd79eef[m added the popup on image click in recent voilations
+[33m52f743f[m added pegination in the table component
+[33mf3e4f93[m Merge branch 'feature/dashboard-ui-changes' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/ui-chnges
+[33m18bf3af[m pull commit
+[33mc6c7447[m resolved the build errors
+[33mb8ef5f2[m remover login header from login page
+[33m8ce80bf[m pull commit
+[33mf2f8a3f[m created toster component
+[33m27ea064[m build error resolved
+[33mce0dd3b[m changed the table report from report table to detailed report in all pages
+[33m055c510[m Merge branch 'feature/dashboard-ui-changes' of ssh://cicd.elansoltech.in:222/elansol/scout_frontend into feature/ui-chnges
+[33mbdfdf41[m added collapsible sidebar
+[33m52294b8[m changed the layout for the recent voilation cards
+[33mbc213cb[m update the camera by zone component
+[33mc931ff4[m update table report component
+[33mf19ebd8[m update the kpi cards also add the view buttons
+[33mdd416e5[m update the camera status by zone component also added component in all the pages

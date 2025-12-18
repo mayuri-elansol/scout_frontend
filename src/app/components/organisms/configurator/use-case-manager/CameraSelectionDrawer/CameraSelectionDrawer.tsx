@@ -29,6 +29,46 @@ import {
 } from "@mui/icons-material";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 
+// Status indicator component
+const StatusIndicator = ({ status }: { status: Camera["status"] }) => {
+  const getStatusColor = () => {
+    switch (status) {
+      case "connected":
+        return "success.main";
+      case "offline":
+        return "error.main";
+      case "pending":
+        return "warning.main";
+      case "failed":
+        return "error.dark";
+      default:
+        return "grey.500";
+    }
+  };
+
+  const getStatusLabel = () => {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
+  return (
+    <Chip
+      icon={<StatusIcon sx={{ fontSize: 12 }} />}
+      label={getStatusLabel()}
+      size="small"
+      sx={{
+        backgroundColor: getStatusColor(),
+        color: "white",
+        fontWeight: 500,
+        fontSize: "0.7rem",
+        height: 20,
+        "& .MuiChip-icon": {
+          color: "white",
+        },
+      }}
+    />
+  );
+};
+
 export interface CameraSelectionDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -82,7 +122,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
 
     setSaving(true);
     try {
-      await onSave(useCase.id, selectedCameraIds);
+      onSave(useCase.id, selectedCameraIds);
       onClose();
     } catch (error) {
       console.error("Error saving camera assignments:", error);
@@ -98,46 +138,6 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
       camera.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       camera.position.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Status indicator component
-  const StatusIndicator = ({ status }: { status: Camera["status"] }) => {
-    const getStatusColor = () => {
-      switch (status) {
-        case "connected":
-          return "success.main";
-        case "offline":
-          return "error.main";
-        case "pending":
-          return "warning.main";
-        case "failed":
-          return "error.dark";
-        default:
-          return "grey.500";
-      }
-    };
-
-    const getStatusLabel = () => {
-      return status.charAt(0).toUpperCase() + status.slice(1);
-    };
-
-    return (
-      <Chip
-        icon={<StatusIcon sx={{ fontSize: 12 }} />}
-        label={getStatusLabel()}
-        size="small"
-        sx={{
-          backgroundColor: getStatusColor(),
-          color: "white",
-          fontWeight: 500,
-          fontSize: "0.7rem",
-          height: 20,
-          "& .MuiChip-icon": {
-            color: "white",
-          },
-        }}
-      />
-    );
-  };
 
   const hasChanges =
     JSON.stringify([...(useCase?.assignedCameraIds || [])].sort((a, b) => a.localeCompare(b))) !==
@@ -340,13 +340,15 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
           zIndex: 1400, // Ensure modal backdrop is also above other elements
         },
       }}
-      PaperProps={{
+      slotProps={{
+        paper: {
         sx: {
           width: { xs: "100%", sm: 480, md: 560 },
           display: "flex",
           flexDirection: "column",
           zIndex: 1400, // Ensure the drawer paper is also above
         },
+      },
       }}
     >
       {/* Header */}

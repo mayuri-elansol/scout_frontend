@@ -16,7 +16,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   DialogContent,
   DialogActions,
   Dialog,
@@ -31,9 +30,8 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 
-import { addCamera } from "@/app/services/configurator/cameraService";
-import { detectNvrChannels } from "@/app/services/configurator/cameraService";
-import { fetchZones, fetchLocations } from "@/app/services/configurator/cameraService";
+
+import {addCamera, detectNvrChannels, fetchZones, fetchLocations} from '@/app/services/configurator/cameraService';
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 
@@ -229,17 +227,18 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
     return () => window.removeEventListener('resize', updateHeight);
   }, [cameras, formData]);
 
-  // IP validation helper functions
   const isValidIPv4 = (ip: string): boolean => {
-    const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-    return ipv4Regex.test(ip);
-  };
+  const octet = '(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)';
+  const ipv4Regex = new RegExp(`^${octet}(\\.${octet}){3}$`);
+  return ipv4Regex.test(ip);
+};
+
 
   const isValidIPv6 = (ip: string): boolean => {
-    // Full IPv6 regex pattern
-    const ipv6Regex = /^(?:(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
-    return ipv6Regex.test(ip);
-  };
+  const ipv6Regex = /^([a-fA-F0-9]{1,4}:){2,7}[a-fA-F0-9]{1,4}$/;
+  return ipv6Regex.test(ip);
+};
+
 
   const isDuplicateIP = (ip: string): boolean => {
     return cameras?.some(camera => camera.ipAddress === ip.trim());
@@ -275,7 +274,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
     }
 
     if (!formData.password.trim()) {
-      // newErrors.password = 'Password is required';
+      newErrors.password = 'Password is required';
     }
 
     if (!formData.cameraname.trim()) {
@@ -936,8 +935,10 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
           onClose={() => setDeleteDialogOpen(false)}
           maxWidth="xs"
           fullWidth
-          PaperProps={{
+          slotProps={{
+            paper: {
             sx: { borderRadius: 1, p: 1 }
+            },
           }}
         >
           <DialogTitle
@@ -1069,7 +1070,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
                                 <Chip
                                   label={camera.status}
-                                  color={getStatusColor(camera.status) as "success" | "error" | "default"}
+                                  color={getStatusColor(camera.status)}
 
                                   size="small"
                                 />
@@ -1081,7 +1082,8 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                               </Typography>
                             }
                           />
-                          <ListItemSecondaryAction>
+                          <ListItem>
+                            secondaryAction={
                             <IconButton
                               edge="end"
                               // onClick={() => onCameraRemove(camera.id)}
@@ -1094,7 +1096,8 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             >
                               <DeleteIcon fontSize="small" />
                             </IconButton>
-                          </ListItemSecondaryAction>
+                          }
+                          </ListItem>
                         </ListItem>
                         {index < (cameras?.length ?? 0) - 1 && <Divider component="li" />}
                       </React.Fragment>
