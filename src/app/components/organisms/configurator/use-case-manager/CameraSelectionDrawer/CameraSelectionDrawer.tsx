@@ -74,8 +74,6 @@ export interface CameraSelectionDrawerProps {
   onClose: () => void;
   useCase: UseCase | null;
   cameras: Camera[];
-  selectedCameraIds: string[];
-  setSelectedCameraIds: React.Dispatch<React.SetStateAction<string[]>>;
   onSave: (useCaseId: string, selectedCameraIds: string[]) => void;
   isLoading: boolean;
 }

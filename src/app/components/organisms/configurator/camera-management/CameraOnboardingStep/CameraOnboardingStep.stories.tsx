@@ -100,7 +100,7 @@ export const Default: Story = {
   args: {
     cameras: [],
     onCameraAdd: (camera) => console.log("Camera added:", camera),
-    onCameraBatchAdd: (cameras) => console.log("Batch added:", cameras),
+
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -112,7 +112,7 @@ export const WithCameras: Story = {
   args: {
     cameras: mockCameras,
     onCameraAdd: (camera) => console.log("Camera added:", camera),
-    onCameraBatchAdd: (cameras) => console.log("Batch added:", cameras),
+    
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -123,7 +123,7 @@ export const Optional: Story = {
   args: {
     cameras: [],
     onCameraAdd: (camera) => console.log("Camera added:", camera),
-    onCameraBatchAdd: (cameras) => console.log("Batch added:", cameras),
+   
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -150,7 +150,7 @@ export const WithMixedStatus: Story = {
       },
     ],
     onCameraAdd: (camera) => console.log("Camera added:", camera),
-    onCameraBatchAdd: (cameras) => console.log("Batch added:", cameras),
+   
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),

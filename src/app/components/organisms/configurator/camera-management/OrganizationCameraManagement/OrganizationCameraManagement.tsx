@@ -26,7 +26,7 @@ import {
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
 
-import { getCameras, addCamera, deleteCamera } from "@/app/services/configurator/cameraService";
+import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
 
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
@@ -46,27 +46,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 }) => {
 
   const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
-
-  const [zones, setZones] = useState<{ id: string; name: string }[]>([]);
-  const [locations, setLocations] = useState<{ id: string; name: string; zoneId: string }[]>([]);
-
-
-  // Temporary mock data to test UI
-  React.useEffect(() => {
-    setZones([
-      { id: "zone1", name: "Zone 1" },
-      { id: "zone2", name: "Zone 2" },
-    ]);
-
-    setLocations([
-      { id: "loc1", name: "Location 1", zoneId: "zone1" },
-      { id: "loc2", name: "Location 2", zoneId: "zone1" },
-      { id: "loc3", name: "Location 3", zoneId: "zone2" }
-    ]);
-  }, []);
-
-
-
+  
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera || null
   );
@@ -82,22 +62,22 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   });
 
   const fetchCameras = useCallback(async () => {
-  const res = await getCameras();
+    const res = await getCameras();
 
-  setCameras(
-    (res.data as CameraApiResponse[]).map((cam) => ({
-      id: cam.id,
-      ipAddress: cam.cameraIp,
-      username: cam.userName,
-      password: cam.password,
-      port: String(cam.RTSPport),
-      make: cam.connectionType,
-      position: cam.cameraName,
-      rtspStream: cam.rtspStream ?? "",
-      status: "connected",
-    }))
-  );
-}, []);
+    setCameras(
+      (res.data as CameraApiResponse[]).map((cam) => ({
+        id: cam.id,
+        ipAddress: cam.cameraIp,
+        username: cam.userName,
+        password: cam.password,
+        port: String(cam.RTSPport),
+        make: cam.connectionType,
+        position: cam.cameraName,
+        rtspStream: cam.rtspStream ?? "",
+        status: "connected",
+      }))
+    );
+  }, []);
 
 
 
@@ -105,54 +85,29 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     fetchCameras();
   }, [fetchCameras]);
 
-  type CameraAddPayload = {
-    cameraname: string;
-    ipAddress: string;
-    username: string;
-    password: string;
-    port: string;
-    zoneId: string;
-    locationId: string;
+
+  const handleCameraAdd = (camera: OnboardingCamera) => {
+    setCameras((prev) => [
+      ...prev,
+      {
+        id: camera.id,
+        ipAddress: camera.ipAddress,
+        username: camera.username,
+        password: camera.password,
+        port: camera.port,
+        make: "DIRECT_TO_CAMERA",
+        position: camera.cameraname,
+        rtspStream: "",
+        status: camera.status,
+      },
+    ]);
+
+    setSnackbar({
+      open: true,
+      message: "Camera added successfully!",
+      severity: "success",
+    });
   };
-
-
-  const handleCameraAdd = async (cameraData: CameraAddPayload) => {
-
-
-    try {
-      await addCamera({
-        cameraName: cameraData.cameraname,
-        cameraIp: cameraData.ipAddress,
-        userName: cameraData.username,
-        password: cameraData.password,
-        cameraZone: cameraData.zoneId,
-        channel: cameraData.locationId,
-        connectionType: "DIRECT_TO_CAMERA",
-        RTSPport: cameraData.port,
-      });
-
-      await fetchCameras(); // important
-      setSnackbar({ open: true, message: "Camera added successfully!", severity: "success" });
-
-    } catch {
-      setSnackbar({
-        open: true,
-        message: "Failed to add camera!",
-        severity: "error",
-      });
-    }
-
-  };
-
-
-
-  const handleCameraBatchAdd = (camerasData: OnboardingCamera[]) => {
-  setSnackbar({
-    open: true,
-    message: `${camerasData.length} cameras added successfully!`,
-    severity: 'success',
-  });
-};
 
 
 
@@ -242,16 +197,16 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   // 2) CAMERA ONBOARDING SCREEN
 
   const onboardingCameras: OnboardingCamera[] = cameras.map((cam) => ({
-  id: cam.id,
-  cameraname: cam.position,
-  ipAddress: cam.ipAddress,
-  username: cam.username,
-  password: cam.password,
-  port: cam.port,
-  zoneId: "",
-  locationId: "",
-  status: cam.status,
-}));
+    id: cam.id,
+    cameraname: cam.position,
+    ipAddress: cam.ipAddress,
+    username: cam.username,
+    password: cam.password,
+    port: cam.port,
+    zoneId: "",
+    locationId: "",
+    status: cam.status,
+  }));
 
 
   if (addingCamera) {
@@ -259,11 +214,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
         <CameraOnboardingStep
           cameras={onboardingCameras}
-          zones={zones}
-          
-          locations={locations}
+
           onCameraAdd={handleCameraAdd}
-          onCameraBatchAdd={handleCameraBatchAdd}
+
           onCameraRemove={handleCameraRemove}
           onNext={() => setAddingCamera(false)}
           onBack={() => setAddingCamera(false)}

@@ -31,7 +31,7 @@ import {
 } from '@mui/icons-material';
 
 
-import {addCamera, detectNvrChannels, fetchZones, fetchLocations} from '@/app/services/configurator/cameraService';
+import { addCamera, detectNvrChannels, fetchZones, fetchLocations } from '@/app/services/configurator/cameraService';
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 
@@ -54,11 +54,9 @@ interface AssignmentItem {
 
 interface CameraOnboardingStepProps {
   cameras: OnboardingCamera[];
-  zones: { id: string; name: string }[];
-  locations: { id: string; name: string; zoneId: string }[];
 
   onCameraAdd: (camera: OnboardingCamera) => void;
-  onCameraBatchAdd?: (cameras: OnboardingCamera[]) => void;
+
   onCameraRemove: (cameraId: string) => void;
 
   onNext: () => void;
@@ -155,9 +153,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   type ToastSeverity = "success" | "error" | "info" | "warning";
 
-const showToast = (message: string, severity: ToastSeverity = "success") => {
-  setToast({ open: true, message, severity });
-};
+  const showToast = (message: string, severity: ToastSeverity = "success") => {
+    setToast({ open: true, message, severity });
+  };
 
 
   // NVR Form state
@@ -171,11 +169,11 @@ const showToast = (message: string, severity: ToastSeverity = "success") => {
     rtsplink: '',
   });
 
- type NvrCamera = {
-  channel: string;
-};
+  type NvrCamera = {
+    channel: string;
+  };
 
-const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
+  const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
   const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
 
@@ -228,16 +226,16 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
   }, [cameras, formData]);
 
   const isValidIPv4 = (ip: string): boolean => {
-  const octet = '(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)';
-  const ipv4Regex = new RegExp(`^${octet}(\\.${octet}){3}$`);
-  return ipv4Regex.test(ip);
-};
+    const octet = '(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)';
+    const ipv4Regex = new RegExp(`^${octet}(\\.${octet}){3}$`);
+    return ipv4Regex.test(ip);
+  };
 
 
   const isValidIPv6 = (ip: string): boolean => {
-  const ipv6Regex = /^([a-fA-F0-9]{1,4}:){2,7}[a-fA-F0-9]{1,4}$/;
-  return ipv6Regex.test(ip);
-};
+    const ipv6Regex = /^([a-fA-F0-9]{1,4}:){2,7}[a-fA-F0-9]{1,4}$/;
+    return ipv6Regex.test(ip);
+  };
 
 
   const isDuplicateIP = (ip: string): boolean => {
@@ -273,9 +271,6 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
       newErrors.username = 'Username is required';
     }
 
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
-    }
 
     if (!formData.cameraname.trim()) {
       newErrors.cameraname = "Camera name is required";
@@ -333,19 +328,20 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
       });
 
       console.log(response); // or setState(response.data)
-
+      const createdCamera = response.data;
 
       onCameraAdd({
-        id: crypto.randomUUID(),
-        cameraname: formData.cameraname.trim(),
-        ipAddress: formData.ipAddress.trim(),
-        username: formData.username.trim(),
-        password: formData.password.trim(),
-        port: formData.port.trim(),
+        id: createdCamera.id,
+        cameraname: createdCamera.cameraName,
+        ipAddress: createdCamera.cameraIp,
+        username: createdCamera.userName,
+        password: formData.password, // backend usually doesn’t return this
+        port: createdCamera.RTSPport,
         zoneId: selectedZone,
         locationId: selectedLocation,
-        status: "pending",
+        status: "connected", // or pending if you want
       });
+
 
 
 
@@ -431,6 +427,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
         // 🔥 This updates UI instantly
         onCameraAdd({
+          id: response.data.id,
           ipAddress: response.data.cameraIp,
           cameraname: response.data.cameraName,
           username: response.data.userName,
@@ -438,7 +435,6 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
           port: response.data.RTSPport,
           zoneId: cam.zoneId,
           locationId: cam.locationId,
-          id: '',
           status: 'connected'
         });
       }
@@ -467,6 +463,34 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
     setIsSavingAssignments(false);
   };
+
+
+  const handleAssignmentZoneChange = async (
+  index: number,
+  zoneId: string
+) => {
+  const updated = [...pendingAssignments];
+  updated[index].zoneId = zoneId;
+  updated[index].locationId = "";
+  setPendingAssignments(updated);
+
+  try {
+    const res = await fetchLocations(zoneId);
+    updated[index].locationOptions = res.data;
+    setPendingAssignments([...updated]);
+  } catch (err) {
+    console.error("Failed to load locations", err);
+  }
+};
+
+const handleNvrCameraToggle = (channel: string) => {
+  setSelectedNvrCams(prev =>
+    prev.includes(channel)
+      ? prev.filter(ch => ch !== channel)
+      : [...prev, channel]
+  );
+};
+
 
   return (
     <Box sx={{ p: 1, minHeight: 400, pb: 12 }}>
@@ -592,7 +616,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             select
-                            label="Select Zone"
+
                             value={selectedZone}
                             onChange={(e) => {
                               setSelectedZone(e.target.value);
@@ -600,7 +624,10 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             }}
                             fullWidth
                             size="small"
-                            SelectProps={{ native: true }}
+                            slotProps={{
+                              select: { native: true }
+                            }}
+
                           >
                             <option value="">Select Zone</option>
                             {zoneList.map(zone => (
@@ -612,12 +639,15 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             select
-                            label="Select Location"
+
                             value={selectedLocation}
                             onChange={(e) => setSelectedLocation(e.target.value)}
                             fullWidth
                             size="small"
-                            SelectProps={{ native: true }}
+                            slotProps={{
+                              select: { native: true }
+                            }}
+
                             disabled={!selectedZone}
                           >
                             <option value="">Select Location</option>
@@ -793,13 +823,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             <input
                               type="checkbox"
                               checked={selectedNvrCams.includes(camera.channel)}
-                              onChange={() => {
-                                if (selectedNvrCams.includes(camera.channel)) {
-                                  setSelectedNvrCams((prev) => prev.filter(ch => ch !== camera.channel));
-                                } else {
-                                  setSelectedNvrCams((prev) => [...prev, camera.channel]);
-                                }
-                              }}
+                              onChange={() => handleNvrCameraToggle(camera.channel)}
                             />
                             <Typography>{`${nvrData.ip} - ${camera.channel}`}</Typography>
                           </Box>
@@ -868,22 +892,13 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                   <TextField
                     select
                     value={cam.zoneId}
-                    onChange={async (e) => {
-                      const zoneId = e.target.value;
-                      const updated = [...pendingAssignments];
-                      updated[index].zoneId = zoneId;
-                      updated[index].locationId = "";
-                      setPendingAssignments(updated);
-
-                      try {
-                        const res = await fetchLocations(zoneId);
-                        updated[index].locationOptions = res.data;
-                        setPendingAssignments([...updated]);
-                      } catch (err) {
-                        console.error("Failed to load locations", err);
-                      }
+                    onChange={(e) =>
+    handleAssignmentZoneChange(index, e.target.value)
+  }
+                    slotProps={{
+                      select: { native: true }
                     }}
-                    SelectProps={{ native: true }}
+
                     sx={{ width: "30%" }}
                   >
                     <option value="">Select Zone</option>
@@ -900,7 +915,10 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                       updated[index].locationId = e.target.value;
                       setPendingAssignments(updated);
                     }}
-                    SelectProps={{ native: true }}
+                    slotProps={{
+                      select: { native: true }
+                    }}
+
                     sx={{ width: "30%" }}
                     disabled={!cam.zoneId}
                   >
@@ -937,7 +955,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
           fullWidth
           slotProps={{
             paper: {
-            sx: { borderRadius: 1, p: 1 }
+              sx: { borderRadius: 1, p: 1 }
             },
           }}
         >
@@ -1060,45 +1078,41 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                   <List dense disablePadding>
                     {cameras.map((camera, index) => (
                       <React.Fragment key={camera.id}>
-                        <ListItem>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
-                            {getStatusIcon(camera.status)}
-                          </Box>
-                          <ListItemText
-                            primary={
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <ListItem
+  secondaryAction={
+    <IconButton
+      edge="end"
+      onClick={() => {
+        setCameraToDelete(camera.id);
+        setDeleteDialogOpen(true);
+      }}
+      size="small"
+      color="error"
+    >
+      <DeleteIcon fontSize="small" />
+    </IconButton>
+  }
+>
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+    {getStatusIcon(camera.status)}
+  </Box>
 
-                                <Chip
-                                  label={camera.status}
-                                  color={getStatusColor(camera.status)}
+  <ListItemText
+    primary={
+      <Chip
+        label={camera.status}
+        color={getStatusColor(camera.status)}
+        size="small"
+      />
+    }
+    secondary={
+      <Typography variant="caption" color="text.secondary">
+        {camera.ipAddress}:{camera.port} ({camera.cameraname})
+      </Typography>
+    }
+  />
+</ListItem>
 
-                                  size="small"
-                                />
-                              </Box>
-                            }
-                            secondary={
-                              <Typography variant="caption" color="text.secondary">
-                                {camera.ipAddress}:{camera.port} ({camera.cameraname})
-                              </Typography>
-                            }
-                          />
-                          <ListItem>
-                            secondaryAction={
-                            <IconButton
-                              edge="end"
-                              // onClick={() => onCameraRemove(camera.id)}
-                              onClick={() => {
-                                setCameraToDelete(camera.id);
-                                setDeleteDialogOpen(true);
-                              }}
-                              size="small"
-                              color="error"
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          }
-                          </ListItem>
-                        </ListItem>
                         {index < (cameras?.length ?? 0) - 1 && <Divider component="li" />}
                       </React.Fragment>
                     ))}

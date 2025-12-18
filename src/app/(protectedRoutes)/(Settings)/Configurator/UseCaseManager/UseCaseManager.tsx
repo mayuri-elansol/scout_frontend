@@ -25,7 +25,6 @@ const UseCaseManager: React.FC = () => {
   const [useCases, setUseCases] = useState<UseCase[]>([]);
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
-  const [selectedCameraIds, setSelectedCameraIds] = useState<string[]>([]);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoadingUseCases, setIsLoadingUseCases] = useState(true);
@@ -114,9 +113,6 @@ const UseCaseManager: React.FC = () => {
   const handleConfigureCameras = async (useCase: UseCase) => {
   setSelectedUseCase(useCase);
   setDrawerOpen(true);
-
-  const res = await getAssignments(useCase.id);
-  setSelectedCameraIds(res.data.map((m: Record<string, unknown>) => String(m.cameraId)));
 
   if (cameras.length === 0) await loadCameras();
 };
@@ -243,8 +239,6 @@ const UseCaseManager: React.FC = () => {
         onClose={handleCloseDrawer}
         useCase={selectedUseCase}
         cameras={cameras}
-        selectedCameraIds={selectedCameraIds}
-        setSelectedCameraIds={setSelectedCameraIds}
         onSave={handleSaveCameraAssignments}
         isLoading={isLoadingCameras}
       />
