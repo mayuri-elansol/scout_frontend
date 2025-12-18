@@ -93,7 +93,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
   // Initialize selected cameras when drawer opens
   useEffect(() => {
     if (open && useCase) {
-      setSelectedCameraIds(useCase.assignedCameraIds || []);
+      setSelectedCameraIds(useCase.assignedCameraIds ?? []);
       setSearchQuery("");
     }
   }, [open, useCase]);
@@ -132,13 +132,13 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
   // Filter cameras based on search query
   const filteredCameras = cameras.filter(
     (camera) =>
-      camera.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      camera.location?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      camera.name.toLowerCase().includes(searchQuery.toLowerCase()) ??
+      camera.location?.toLowerCase().includes(searchQuery.toLowerCase()) ??
       camera.position.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const hasChanges =
-    JSON.stringify([...(useCase?.assignedCameraIds || [])].sort((a, b) => a.localeCompare(b))) !==
+    JSON.stringify([...(useCase?.assignedCameraIds ?? [])].sort((a, b) => a.localeCompare(b))) !==
     JSON.stringify([...selectedCameraIds].sort((a, b) => a.localeCompare(b)));
 
   const renderContent = () => {
@@ -290,7 +290,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
                               color="text.secondary"
                               sx={{ fontSize: "0.875rem" }}
                             >
-                              📍 {camera.location || camera.position}
+                              📍 {camera.location ?? camera.position}
                             </Typography>
                             <Box
                               sx={{
@@ -401,7 +401,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
           fullWidth
           variant="contained"
           onClick={handleSave}
-          disabled={!hasChanges || saving || cameras.length === 0}
+          disabled={!hasChanges || (saving ?? cameras.length === 0)}
           sx={{ textTransform: "none" }}
         >
           {saving ? <CircularProgress size={24} /> : "Save Changes"}

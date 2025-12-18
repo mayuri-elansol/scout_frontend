@@ -46,9 +46,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 }) => {
 
   const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
-  
+
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
-    forceConfigureCamera || null
+    forceConfigureCamera ?? null
   );
   const [addingCamera, setAddingCamera] = useState(forceAddCamera);
   const [snackbar, setSnackbar] = useState<{
