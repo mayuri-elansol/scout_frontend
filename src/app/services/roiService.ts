@@ -1,159 +1,8 @@
-// // src/app/services/roiService.ts
-// import axios, { AxiosInstance } from 'axios';
-
-// const API_BASE_URL =
-//   process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api/v1';
-
-// /* -------------------- Types -------------------- */
-
-// export interface Point {
-//   x: number;
-//   y: number;
-// }
-
-// export type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
-
-// export interface ROIShape {
-//   type: DrawingTool;
-//   label: string;
-//   mode: 'include' | 'exclude';
-//   // color?: string;
-//   points: Point[];
-// }
-
-// export interface SaveRoiPayload {
-//   cameraId: string;
-//   usecaseId: string;
-//   rois: ROIShape[];
-// }
-
-// export interface RoiResponse {
-//   version: number;
-//   canvasAspectRatio: string;
-//   rois: ROIShape[];
-// }
-
-// /* -------------------- Service -------------------- */
-
-// class RoiService {
-//   private axiosInstance: AxiosInstance;
-
-//   constructor() {
-//     this.axiosInstance = axios.create({
-//       baseURL: API_BASE_URL,
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//     });
-
-//     // Attach tenant header
-//     this.axiosInstance.interceptors.request.use((config) => {
-//       const tenantId =
-//         typeof window !== 'undefined'
-//           ? localStorage.getItem('tenantId') || '47a996e22a6ff828'
-//           : '47a996e22a6ff828';
-
-//       config.headers['x-tenant-id'] = tenantId;
-//       return config;
-//     });
-//   }
-
-
-//   async saveRoi(
-//     cameraId: string,
-//     usecaseId: string,
-//     rois: ROIShape[]
-//   ) {
-//     return this.axiosInstance.post('/configurator/camera-roi', {
-//       cameraId,
-//       usecaseId,
-//       rois: rois.map(r => ({
-//         type: r.type,
-//         label: r.label,      // frontend → backend
-//         mode: r.mode,
-//         points: r.points,
-//       })),
-//     });
-//   }
-
-//   async getRoi(cameraId: string, usecaseId: string): Promise<ROIShape[]> {
-//     const res = await this.axiosInstance.get(
-//       `/configurator/camera-roi/${cameraId}/${usecaseId}`
-//     );
-
-//     return res.data.rois.map((r: any) => ({
-//       type: r.type,
-//       name: r.label,       // backend → frontend
-//       mode: r.mode,
-//       points: r.points,
-//       completed: true,
-//       color: '#00ff00',
-//     }));
-//   }
-// }
-
-//   export const roiService = new RoiService();
-
-
-
-
-
-
-// //   /* ---------- SAVE ROI ---------- */
-
-// //   async saveRoi(
-// //   cameraId: string,
-// //   usecaseId: string,
-// //   rois: {
-// //     type: DrawingTool;
-// //     name: string;
-// //     mode: 'include' | 'exclude';
-// //     points: Point[];
-// //   }[]
-// // ) {
-// //   return this.axiosInstance.post('/configurator/camera-roi', {
-// //     cameraId,
-// //     usecaseId,
-// //     rois: rois.map(r => ({
-// //       type: r.type,
-// //       label: r.name, // ✅ mapped explicitly
-// //       mode: r.mode,
-// //       points: r.points,
-// //     })),
-// //   });
-// // }
-
-
-
-
-// //   /* ---------- GET ROI ---------- */
- 
-// //   async getRoi(cameraId: string, usecaseId: string) {
-// //   const res = await this.axiosInstance.get(
-// //     `/configurator/camera-roi/${cameraId}/${usecaseId}`
-// //   );
-
-// //   return res.data.rois.map((r: any) => ({
-// //     type: r.type,
-// //     name: r.label,   // ✅ backend → frontend
-// //     mode: r.mode,
-// //     points: r.points,
-// //     completed: true,
-// //     color: '#00ff00',
-// //   }));
-// // }
-
-
-// // }
-
-// // export const roiService = new RoiService();
-
-
 import axios, { AxiosInstance } from 'axios';
 import { ROIShape } from '@/app/types/roi';
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4001/api/v1';
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4001/api/v1';
 
   type BackendRoi = {
   type: ROIShape["type"];
@@ -164,7 +13,7 @@ const API_BASE_URL =
 
 
 class RoiService {
-  private axiosInstance: AxiosInstance;
+  private readonly axiosInstance: AxiosInstance;
 
   constructor() {
     this.axiosInstance = axios.create({
@@ -175,7 +24,7 @@ class RoiService {
     this.axiosInstance.interceptors.request.use((config) => {
       const tenantId =
         typeof window !== 'undefined'
-          ? localStorage.getItem('tenantId') || '47a996e22a6ff828'
+          ? localStorage.getItem('tenantId') ?? '47a996e22a6ff828'
           : '47a996e22a6ff828';
 
       config.headers['x-tenant-id'] = tenantId;

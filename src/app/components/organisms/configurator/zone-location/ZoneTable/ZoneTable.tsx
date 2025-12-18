@@ -105,7 +105,7 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({ zones, onAssignLocations, 
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {zone.description || "-"}
+                      {zone.description ?? "-"}
                     </Typography>
                   </TableCell>
 

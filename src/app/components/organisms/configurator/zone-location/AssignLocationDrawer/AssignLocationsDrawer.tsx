@@ -1,4 +1,3 @@
-// D:\BackOffice\scout_frontend\src\app\components\organisms\configurator\zone-location\AssignLocationsDrawer.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -22,17 +21,6 @@ export interface LocationItem {
   name: string;
   description?: string;
 }
-
-// interface AddLocationDrawerProps {
-//   open: boolean;
-//   onClose: () => void;
-//   zone: Zone | null;
-//   /**
-//    * Accepts (zoneId, locationsArray) where locationsArray is array of LocationItem
-//    * Parent should merge these locations into the zone (zone.locations = [...zone.locations, ...locationsArray])
-//    */
-//   onSave: (zoneId: number, locations: LocationItem[]) => void;
-// }
 
 interface AddLocationDrawerProps {
   open: boolean;
@@ -66,16 +54,10 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
     const trimmedName = name.trim();
     if (!trimmedName) return;
 
-    // const newLoc: LocationItem = {
-    //   id: Date.now() + Math.floor(Math.random() * 1000), // simple unique id
-    //   name: trimmedName,
-    //   description: description.trim() || undefined,
-    // };
-
     const newLoc: LocationItem = {
       id: crypto.randomUUID(),     // safe unique ID
       name: trimmedName,
-      description: description.trim() || undefined,
+      description: description.trim() ?? undefined,
     };
 
 

@@ -40,7 +40,7 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
         // Edit mode
         setFormData({
           name: zone.name,
-          description: zone.description || "",
+          description: zone.description ?? "",
         });
       } else {
         // Add mode

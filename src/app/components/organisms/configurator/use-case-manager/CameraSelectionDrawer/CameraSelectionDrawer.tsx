@@ -29,15 +29,6 @@ import {
 } from "@mui/icons-material";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
 
-// interface CameraSelectionDrawerProps {
-//   open: boolean;
-//   onClose: () => void;
-//   useCase: UseCase | null;
-//   cameras: Camera[];
-//   onSave: (useCaseId: string, selectedCameraIds: string[]) => Promise<void>;
-//   isLoading?: boolean;
-// }
-
 export interface CameraSelectionDrawerProps {
   open: boolean;
   onClose: () => void;
@@ -152,6 +143,189 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
     JSON.stringify([...(useCase?.assignedCameraIds || [])].sort((a, b) => a.localeCompare(b))) !==
     JSON.stringify([...selectedCameraIds].sort((a, b) => a.localeCompare(b)));
 
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 200,
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    if (cameras.length === 0) {
+      return (
+        <Alert severity="info" sx={{ mb: 2 }}>
+          <Typography variant="body2" gutterBottom>
+            <strong>No cameras available</strong>
+          </Typography>
+          <Typography variant="body2">
+            Please add cameras in Camera Management first before assigning them to use
+            cases.
+          </Typography>
+        </Alert>
+      );
+    }
+
+    return (
+      <>
+        {/* Search Bar */}
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Search cameras by name, location, or position..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{ mb: 2 }}
+        />
+
+        {/* Selection Summary */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+            pb: 2,
+            borderBottom: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            {selectedCameraIds.length} of {cameras.length} selected
+          </Typography>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Button
+              size="small"
+              onClick={handleSelectAll}
+              disabled={selectedCameraIds.length === filteredCameras.length}
+              sx={{ textTransform: "none" }}
+            >
+              Select All
+            </Button>
+            <Button
+              size="small"
+              onClick={handleDeselectAll}
+              disabled={selectedCameraIds.length === 0}
+              sx={{ textTransform: "none" }}
+            >
+              Deselect All
+            </Button>
+          </Box>
+        </Box>
+
+        {/* Camera List */}
+        {filteredCameras.length === 0 ? (
+          <Alert severity="warning">No cameras match your search.</Alert>
+        ) : (
+          <List sx={{ p: 0 }}>
+            {filteredCameras.map((camera) => {
+              const isSelected = selectedCameraIds.includes(camera.id);
+              return (
+                <React.Fragment key={camera.id}>
+                  <ListItem
+                    disablePadding
+                    sx={{
+                      borderRadius: 1,
+                      mb: 1,
+                      border: "2px solid",
+                      borderColor: isSelected ? "primary.main" : "divider",
+                      backgroundColor: "white",
+                      transition: "all 0.2s",
+                      "&:hover": {
+                        backgroundColor: "grey.50",
+                        borderColor: isSelected ? "primary.main" : "grey.400",
+                      },
+                    }}
+                  >
+                    <ListItemButton
+                      onClick={() => handleToggleCamera(camera.id)}
+                      sx={{ py: 1.5 }}
+                    >
+                      <ListItemIcon sx={{ minWidth: 40 }}>
+                        <Checkbox
+                          edge="start"
+                          checked={isSelected}
+                          tabIndex={-1}
+                          disableRipple
+                          icon={<CircleIcon sx={{ color: "grey.400" }} />}
+                          checkedIcon={<CheckCircleIcon sx={{ color: "primary.main" }} />}
+                        />
+                      </ListItemIcon>
+                      <VideocamIcon
+                        sx={{
+                          mr: 2,
+                          color: "text.secondary",
+                        }}
+                      />
+                      <ListItemText
+                        primary={
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              fontWeight: 500,
+                              color: "text.primary",
+                            }}
+                          >
+                            {camera.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Box sx={{ mt: 0.5 }}>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ fontSize: "0.875rem" }}
+                            >
+                              📍 {camera.location || camera.position}
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                                mt: 0.5,
+                              }}
+                            >
+                              <StatusIndicator status={camera.status} />
+                              <Typography
+                                variant="caption"
+                                color="text.secondary"
+                                sx={{ fontSize: "0.75rem" }}
+                              >
+                                {camera.make} • {camera.ipAddress}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        }
+                        slotProps={{ secondary: { component: "div" } }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </React.Fragment>
+              );
+            })}
+          </List>
+        )}
+      </>
+    );
+  };
+
   return (
     <Drawer
       anchor="right"
@@ -201,176 +375,7 @@ export const CameraSelectionDrawer: React.FC<CameraSelectionDrawerProps> = ({
 
       {/* Content */}
       <Box sx={{ flex: 1, overflow: "auto", p: 3 }}>
-        {isLoading ? (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: 200,
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : cameras.length === 0 ? (
-          <Alert severity="info" sx={{ mb: 2 }}>
-            <Typography variant="body2" gutterBottom>
-              <strong>No cameras available</strong>
-            </Typography>
-            <Typography variant="body2">
-              Please add cameras in Camera Management first before assigning them to use
-              cases.
-            </Typography>
-          </Alert>
-        ) : (
-          <>
-            {/* Search Bar */}
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Search cameras by name, location, or position..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-              sx={{ mb: 2 }}
-            />
-
-            {/* Selection Summary */}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-                pb: 2,
-                borderBottom: "1px solid",
-                borderColor: "divider",
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                {selectedCameraIds.length} of {cameras.length} selected
-              </Typography>
-              <Box sx={{ display: "flex", gap: 1 }}>
-                <Button
-                  size="small"
-                  onClick={handleSelectAll}
-                  disabled={selectedCameraIds.length === filteredCameras.length}
-                  sx={{ textTransform: "none" }}
-                >
-                  Select All
-                </Button>
-                <Button
-                  size="small"
-                  onClick={handleDeselectAll}
-                  disabled={selectedCameraIds.length === 0}
-                  sx={{ textTransform: "none" }}
-                >
-                  Deselect All
-                </Button>
-              </Box>
-            </Box>
-
-            {/* Camera List */}
-            {filteredCameras.length === 0 ? (
-              <Alert severity="warning">No cameras match your search.</Alert>
-            ) : (
-              <List sx={{ p: 0 }}>
-                {filteredCameras.map((camera) => {
-                  const isSelected = selectedCameraIds.includes(camera.id);
-                  return (
-                    <React.Fragment key={camera.id}>
-                      <ListItem
-                        disablePadding
-                        sx={{
-                          borderRadius: 1,
-                          mb: 1,
-                          border: "2px solid",
-                          borderColor: isSelected ? "primary.main" : "divider",
-                          backgroundColor: "white",
-                          transition: "all 0.2s",
-                          "&:hover": {
-                            backgroundColor: "grey.50",
-                            borderColor: isSelected ? "primary.main" : "grey.400",
-                          },
-                        }}
-                      >
-                        <ListItemButton
-                          onClick={() => handleToggleCamera(camera.id)}
-                          sx={{ py: 1.5 }}
-                        >
-                          <ListItemIcon sx={{ minWidth: 40 }}>
-                            <Checkbox
-                              edge="start"
-                              checked={isSelected}
-                              tabIndex={-1}
-                              disableRipple
-                              icon={<CircleIcon sx={{ color: "grey.400" }} />}
-                              checkedIcon={<CheckCircleIcon sx={{ color: "primary.main" }} />}
-                            />
-                          </ListItemIcon>
-                          <VideocamIcon
-                            sx={{
-                              mr: 2,
-                              color: "text.secondary",
-                            }}
-                          />
-                          <ListItemText
-                            primary={
-                              <Typography
-                                variant="body1"
-                                sx={{
-                                  fontWeight: 500,
-                                  color: "text.primary",
-                                }}
-                              >
-                                {camera.name}
-                              </Typography>
-                            }
-                            secondary={
-                              <Box sx={{ mt: 0.5 }}>
-                                <Typography
-                                  variant="body2"
-                                  color="text.secondary"
-                                  sx={{ fontSize: "0.875rem" }}
-                                >
-                                  📍 {camera.location || camera.position}
-                                </Typography>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 1,
-                                    mt: 0.5,
-                                  }}
-                                >
-                                  <StatusIndicator status={camera.status} />
-                                  <Typography
-                                    variant="caption"
-                                    color="text.secondary"
-                                    sx={{ fontSize: "0.75rem" }}
-                                  >
-                                    {camera.make} • {camera.ipAddress}
-                                  </Typography>
-                                </Box>
-                              </Box>
-                            }
-                            secondaryTypographyProps={{ component: "div" }} 
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    </React.Fragment>
-                  );
-                })}
-              </List>
-            )}
-          </>
-        )}
+        {renderContent()}
       </Box>
 
       {/* Footer */}

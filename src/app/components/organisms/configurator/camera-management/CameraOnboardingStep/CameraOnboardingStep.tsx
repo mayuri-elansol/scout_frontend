@@ -21,6 +21,8 @@ import {
   DialogActions,
   Dialog,
   DialogTitle,
+  Snackbar,
+  CircularProgress,
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
@@ -32,9 +34,8 @@ import {
 import { addCamera } from "@/app/services/configurator/cameraService";
 import { detectNvrChannels } from "@/app/services/configurator/cameraService";
 import { fetchZones, fetchLocations } from "@/app/services/configurator/cameraService";
-import { CircularProgress } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { Snackbar } from "@mui/material";
+
 
 import type { OnboardingCamera } from "@/app/types/camera";
 interface LocationOption {
@@ -1097,7 +1098,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             </IconButton>
                           </ListItemSecondaryAction>
                         </ListItem>
-                        {index < cameras?.length || 0 - 1 && <Divider component="li" />}
+                        {index < (cameras?.length ?? 0) - 1 && <Divider component="li" />}
                       </React.Fragment>
                     ))}
                   </List>
