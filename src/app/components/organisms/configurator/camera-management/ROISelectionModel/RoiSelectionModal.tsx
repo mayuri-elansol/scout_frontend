@@ -744,7 +744,7 @@ const drawShape = useCallback((
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / (rect.width || 1);
+    const scaleX = canvas.width / (rect.width ?? 1);
     const closeThreshold = 15 * scaleX;
 
     // ✅ Close polygon
