@@ -122,7 +122,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         fineTuned: false,
         enabled: false,
         roiShapes: [],
-        labels: uc.labels || [],
+        labels: uc.labels ?? [],
       }));
 
       setUseCases(mapped);
@@ -341,7 +341,7 @@ const loadAssignedUsecases = async () => {
         return acc;
       }, {} as Record<string, FineTuningData>),
       enabled: useCases.some(uc => uc.selected),
-      viewName: viewName || selectedViewCase || '',
+      viewName: viewName ?? selectedViewCase ?? '',
     };
 
     onSave(aiConfig);
@@ -349,12 +349,12 @@ const loadAssignedUsecases = async () => {
 
   const getCurrentUseCaseName = () => {
     const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    return useCase?.name || '';
+    return useCase?.name ?? '';
   };
 
   const getExistingROI = () => {
     const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    return useCase?.roiShapes || [];
+    return useCase?.roiShapes ?? [];
   };
 
   const getCameraFeedUrl = () => {
@@ -380,14 +380,14 @@ const loadAssignedUsecases = async () => {
           'default': '/snapshot.jpg'
         };
         
-        const make = camera.make?.toLowerCase() || 'default';
-        const path = snapshotPaths[make] || snapshotPaths['default'];
+        const make = camera.make?.toLowerCase() ?? 'default';
+        const path = snapshotPaths[make] ?? snapshotPaths['default'];
         
         // Construct HTTP URL with authentication if needed
         if (camera.username && camera.password) {
-          return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port || '80'}${path}`;
+          return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
         } else {
-          return `http://${camera.ipAddress}:${camera.port || '80'}${path}`;
+          return `http://${camera.ipAddress}:${camera.port ?? '80'}${path}`;
         }
       }
     }
@@ -696,7 +696,7 @@ const loadAssignedUsecases = async () => {
         useCaseName={getCurrentUseCaseName()}
         existingROI={getExistingROI()}
         onSave={handleROISave}
-        labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels || []}
+        labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels ?? []}
       />
 
       {/* Success/Error Snackbar */}

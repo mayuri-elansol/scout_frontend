@@ -324,8 +324,8 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
         RTSPport: formData.port.trim(),
         // cameraZone: selectedZone,
         // channel: selectedLocation,
-        cameraZone: zoneList.find(z => z.id === selectedZone)?.zoneName || "",
-        channel: locationList.find(l => l.id === selectedLocation)?.locationName || "",
+        cameraZone: zoneList.find(z => z.id === selectedZone)?.zoneName ?? "",
+        channel: locationList.find(l => l.id === selectedLocation)?.locationName ?? "",
 
         refreshRate: 10,
         // connectionType: "DIRECT_TO_CAMERA",
@@ -421,8 +421,8 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
           userName: cam.username,
           password: cam.password,
           RTSPport: cam.port,
-          cameraZone: zoneList.find(z => z.id === cam.zoneId)?.zoneName || "",
-          channel: cam.locationOptions.find(l => l.id === cam.locationId)?.locationName || "",
+          cameraZone: zoneList.find(z => z.id === cam.zoneId)?.zoneName ?? "",
+          channel: cam.locationOptions.find(l => l.id === cam.locationId)?.locationName ?? "",
           connectionType: "NVR" as const,
           refreshRate: 10,
         };
@@ -593,7 +593,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             select
-                            // label="Select Zone"
+                            label="Select Zone"
                             value={selectedZone}
                             onChange={(e) => {
                               setSelectedZone(e.target.value);
@@ -603,18 +603,17 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             size="small"
                             SelectProps={{ native: true }}
                           >
+                            <option value="">Select Zone</option>
                             {zoneList.map(zone => (
                               <option key={zone.id} value={zone.id}>{zone.zoneName}</option>
                             ))}
-
-
                           </TextField>
                         </Grid>
 
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             select
-                            // label="Select Location"
+                            label="Select Location"
                             value={selectedLocation}
                             onChange={(e) => setSelectedLocation(e.target.value)}
                             fullWidth
@@ -622,11 +621,10 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
                             SelectProps={{ native: true }}
                             disabled={!selectedZone}
                           >
+                            <option value="">Select Location</option>
                             {locationList.map(loc => (
                               <option key={loc.id} value={loc.id}>{loc.locationName}</option>
                             ))}
-
-
                           </TextField>
                         </Grid>
 
@@ -1028,7 +1026,7 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
             }}>
               <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
                 <VideocamIcon color="primary" />
-                Onboarded Cameras ({cameras?.length || 0})
+                Onboarded Cameras ({cameras?.length ?? 0})
               </Typography>
 
               {(!cameras || cameras.length === 0) ? (
@@ -1141,7 +1139,6 @@ const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
           <Button
             onClick={onNext}
             variant="contained"
-          // disabled={!isOptional && cameras?.length || 0 === 0}
           >
             {isOptional ? 'Continue with Cameras' : 'Next: AI Configuration'}
           </Button>

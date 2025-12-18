@@ -95,8 +95,8 @@ const ZoneLocationMapping: React.FC = () => {
         id: String(z.id), 
         name: z.zoneName,
         description: z.description,
-        locations: z.locations || [],
-        cameraIds: z.cameras || []
+        locations: z.locations ?? [],
+        cameraIds: z.cameras ?? []
       }))
     );
   } catch (err) {
@@ -118,12 +118,12 @@ type ZoneFormData = {
   if (zoneData.id) {
     await updateZone(zoneData.id, {
       zoneName: zoneData.name,
-      description: zoneData.description || ""
+      description: zoneData.description ?? ""
     });
   } else {
     await createZone({
       zoneName: zoneData.name,
-      description: zoneData.description || ""
+      description: zoneData.description ?? ""
     });
   }
 
@@ -143,7 +143,7 @@ type ZoneFormData = {
     await createLocation({
       zoneId,
       locationName: loc.name,
-      description: loc.description || ""
+      description: loc.description ?? ""
     });
   }
   fetchZones();
