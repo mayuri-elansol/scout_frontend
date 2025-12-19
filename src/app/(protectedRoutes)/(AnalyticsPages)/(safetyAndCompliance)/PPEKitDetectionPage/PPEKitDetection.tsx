@@ -52,13 +52,13 @@ const PPEDetection: React.FC = () => {
   const ppeKpiData =
     kpiData?.map((item: KpiItem) => {
       const config =
-        ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
+        ppeKpiConfig[item.title] || {};
       return {
         ...item,
         icon: config.icon,
         tooltipMessage: config.tooltipMessage,
       };
-    }) || [];
+    }) ?? [];
   const backendData = [
     {
       id: 101,

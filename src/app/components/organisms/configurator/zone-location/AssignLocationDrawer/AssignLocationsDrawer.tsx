@@ -11,7 +11,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
 } from "@mui/material";
 import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
 import { Zone } from "@/app/data/mockZones";
@@ -90,12 +89,14 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
       sx={{
         zIndex:1400,
       }}
-      PaperProps={{
+    slotProps={{
+        paper: {
         sx: {
           width: { xs: "100%", sm: 420, md: 520 },
           display: "flex",
           zIndex:1400,
           flexDirection: "column",
+        },
         },
       }}
     >
@@ -162,11 +163,13 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
                 primary={<Typography sx={{ fontWeight: 600 }}>{loc.name}</Typography>}
                 secondary={loc.description}
               />
-              <ListItemSecondaryAction>
+              <ListItem>
+                secondaryAction={
                 <IconButton edge="end" onClick={() => handleRemoveLocalLocation(loc.id)} size="small">
                   <DeleteIcon fontSize="small" />
                 </IconButton>
-              </ListItemSecondaryAction>
+}
+              </ListItem>
             </ListItem>
           ))}
         </List>
