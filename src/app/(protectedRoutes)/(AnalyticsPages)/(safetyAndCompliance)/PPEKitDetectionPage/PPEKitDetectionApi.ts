@@ -76,7 +76,7 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedPdfReport}`,
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(), // 🔑 VERY IMPORTANT
+        responseHandler: (response) => response.blob(),
       }),
     }),
   }),
