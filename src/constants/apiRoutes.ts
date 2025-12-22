@@ -65,6 +65,8 @@ export const apiRoutes = {
 
     getPpeKitDetectionAnalyticsDownloadDetailedCsvReport:
       "get-ppe-kit-detection-analytics-download-details-csv-report",
+    getPpeKitDetectionAnalyticsDownloadDetailedPdfReport:
+      "get-ppe-kit-detection-analytics-download-details-pdf-report",
   },
   objectDetectionInWalkingBays: {
     root: "objectDetectionInWalkingBays",
