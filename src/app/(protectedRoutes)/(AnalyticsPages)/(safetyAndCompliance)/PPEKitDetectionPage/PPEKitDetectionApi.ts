@@ -68,6 +68,17 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         responseHandler: (response) => response.blob(),
       }),
     }),
+    getPpeKitDetectionDetailedPdfReport: builder.mutation<
+      Blob,
+      PpeCsvReportRequest
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedPdfReport}`,
+        method: "POST",
+        body,
+        responseHandler: (response) => response.blob(), // 🔑 VERY IMPORTANT
+      }),
+    }),
   }),
 });
 
@@ -78,4 +89,5 @@ export const {
   useLazyGetPpeKitDetectionRecentViolationsQuery,
   useGetPpeKitDetectionSingleReportPdfMutation,
   useGetPpeKitDetectionDetailedCsvReportMutation,
+  useGetPpeKitDetectionDetailedPdfReportMutation,
 } = ppeKitDetectionApi;

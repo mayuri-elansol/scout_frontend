@@ -27,6 +27,7 @@ import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   useGetPpeKitDetectionDetailedCsvReportMutation,
+  useGetPpeKitDetectionDetailedPdfReportMutation,
   useGetPpeKitDetectionSingleReportPdfMutation,
   useLazyGetPpeKitDetectionDetailedReportQuery,
   useLazyGetPPEKitDetectionKpiDataQuery,
@@ -79,6 +80,10 @@ const PPEDetection: React.FC = () => {
     useGetPpeKitDetectionSingleReportPdfMutation();
   const [downloadCsvReport, { isLoading: isCsvDownloading }] =
     useGetPpeKitDetectionDetailedCsvReportMutation();
+
+  const [downloadPdfReport, { isLoading: isPdfDownloading }] =
+    useGetPpeKitDetectionDetailedPdfReportMutation();
+
   // ✅ Single source of truth for KPI data
   const [displayKpi, setDisplayKpi] = useState<KpiItem[] | null>(null);
   const [recentViolationsLive, setRecentViolationsLive] = useState<
@@ -408,50 +413,106 @@ const PPEDetection: React.FC = () => {
     });
   };
 
+  // const handleExport = async (format: "csv" | "pdf", filters: FilterParams) => {
+  //   console.log("Export requested:", format);
+  //   if (format === "csv") {
+  //     console.log("Export requested:", format, filters);
+  //     try {
+  //       console.log("✅ Export CSV with filters:", filters);
+
+  //       const payload = {
+  //         tenantId: "c2bf4995e1bf3ce1",
+
+  //         violation: filters.violation || undefined,
+  //         zone: filters.zone || undefined,
+  //         cameraId: filters.cameraId || undefined,
+
+  //         alarmTriggered:
+  //           filters.alarmTriggered !== undefined
+  //             ? filters.alarmTriggered === "True"
+  //             : undefined,
+
+  //         startDate: formatLocalDateTime(filters.startDate),
+  //         endDate: formatLocalDateTime(filters.endDate),
+  //       };
+
+  //       // ✅ Call backend
+  //       const csvBlob = await downloadCsvReport(payload).unwrap();
+
+  //       // ✅ Trigger browser download
+  //       const blobUrl = window.URL.createObjectURL(csvBlob);
+  //       const a = document.createElement("a");
+
+  //       a.href = blobUrl;
+  //       a.download = `ppe-violations-report-${Date.now()}.csv`;
+
+  //       document.body.appendChild(a);
+  //       a.click();
+
+  //       a.remove();
+  //       window.URL.revokeObjectURL(blobUrl);
+  //     } catch (error) {
+  //       console.error("❌ CSV export failed:", error);
+  //     }
+  //   }
+  // };
+
   const handleExport = async (format: "csv" | "pdf", filters: FilterParams) => {
-    console.log("Export requested:", format);
-    if (format === "csv") {
-      console.log("Export requested:", format, filters);
-      try {
-        console.log("✅ Export CSV with filters:", filters);
+    try {
+      const payload = {
+        tenantId: "c2bf4995e1bf3ce1",
 
-        const payload = {
-          tenantId: "c2bf4995e1bf3ce1",
+        violation: filters.violation || undefined,
+        zone: filters.zone || undefined,
+        cameraId: filters.cameraId || undefined,
 
-          violation: filters.violation || undefined,
-          zone: filters.zone || undefined,
-          cameraId: filters.cameraId || undefined,
+        alarmTriggered:
+          filters.alarmTriggered !== undefined
+            ? filters.alarmTriggered === "True"
+            : undefined,
 
-          alarmTriggered:
-            filters.alarmTriggered !== undefined
-              ? filters.alarmTriggered === "True"
-              : undefined,
+        startDate: formatLocalDateTime(filters.startDate),
+        endDate: formatLocalDateTime(filters.endDate),
+      };
 
-          startDate: formatLocalDateTime(filters.startDate),
-          endDate: formatLocalDateTime(filters.endDate),
-        };
-
-        // ✅ Call backend
+      // ================= CSV =================
+      if (format === "csv") {
         const csvBlob = await downloadCsvReport(payload).unwrap();
 
-        // ✅ Trigger browser download
-        const blobUrl = window.URL.createObjectURL(csvBlob);
+        const url = window.URL.createObjectURL(csvBlob);
         const a = document.createElement("a");
 
-        a.href = blobUrl;
+        a.href = url;
         a.download = `ppe-violations-report-${Date.now()}.csv`;
+        document.body.appendChild(a);
+        a.click();
+
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      }
+
+      // ================= PDF =================
+      if (format === "pdf") {
+        const pdfBlob = await downloadPdfReport(payload).unwrap();
+
+        const url = window.URL.createObjectURL(
+          new Blob([pdfBlob], { type: "application/pdf" })
+        );
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ppe-violations-report-${Date.now()}.pdf`;
 
         document.body.appendChild(a);
         a.click();
 
         a.remove();
-        window.URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error("❌ CSV export failed:", error);
+        window.URL.revokeObjectURL(url);
       }
+    } catch (error) {
+      console.error("❌ Export failed:", error);
     }
   };
-
   const handleDownloadSingle = async (row: PPEViolation) => {
     console.log("download single row", row);
     try {
