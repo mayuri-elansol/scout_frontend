@@ -1,16 +1,17 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const publicApi = createApi({
-  reducerPath: 'basePublicApi',
+export const basePublicApi = createApi({
+  reducerPath: "basePublicApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || '/api/v1', 
-   
-    credentials: 'include',
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem('accessToken');
-      if (token) headers.set('Authorization', token);
-      return headers;
-    },
+    baseUrl:
+      process.env.NEXT_PUBLIC_BACKEND_URL ||
+      "http://localhost:4001/api/v1",
+
+    // ✅ Public APIs do NOT send auth headers
+    credentials: "include",
   }),
   endpoints: () => ({}),
+  tagTypes: ["Login",
+    "ResetPassword"
+  ],
 });

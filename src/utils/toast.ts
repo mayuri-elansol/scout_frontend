@@ -2,7 +2,7 @@ import { store } from "../../src/app/store/store";
 import {
   showToast,
   hideToast,
-} from "../app/components/organisms/toaster/toasterSlice";
+} from "../app/store/slices/toasterSlice";
 import { v4 as uuidv4 } from "uuid";
 
 /**

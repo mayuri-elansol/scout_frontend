@@ -1,100 +1,226 @@
+// "use client";
+// import { useEffect, useState } from "react";
+// import { useRouter } from "next/navigation";
+// import { jwtDecode } from "jwt-decode";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState } from "@/app/store/store";
+// import { setUserFromToken, clearUser, restoreUser } from "@/app/store/slices/authSlice";
+// import { JwtPayload, StoredUser } from "@/app/(unprotectedRoutes)/Login/Login.types";
 
+// const STORAGE_USER_KEY = "scout_user";
+// const STORAGE_TOKEN_KEY = "scout_access_token";
 
-'use client';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// export const useAuth = () => {
+//   const dispatch = useDispatch();
+//   const router = useRouter();
 
-export interface User {
-  username: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  email: string;
-  lastLogin: string;
-}
+//   const { user, features, isAuthenticated } = useSelector(
+//     (state: RootState) => state.auth
+//   );
+
+//   const [isLoading, setIsLoading] = useState(true);
+
+//   // 🔁 Restore auth on refresh
+//   useEffect(() => {
+//     const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+//     const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+
+//     if (storedUser && token) {
+//       try {
+//         const parsedUser: StoredUser = JSON.parse(storedUser);
+
+//         // Restore minimal user to Redux (identity only)
+//         dispatch(restoreUser(parsedUser));
+
+//         // Decode token to restore full Redux state including features/licenses
+//         const decoded = jwtDecode<JwtPayload>(token);
+//         dispatch(setUserFromToken(decoded));
+//       } catch {
+//         localStorage.removeItem(STORAGE_USER_KEY);
+//         localStorage.removeItem(STORAGE_TOKEN_KEY);
+//         dispatch(clearUser());
+//       }
+//     }
+
+//     setIsLoading(false);
+//   }, [dispatch]);
+
+//   // ✅ LOGIN: store token + minimal user, Redux gets full payload
+//   const login = (token: string) => {
+//     try {
+//       const decoded = jwtDecode<JwtPayload>(token);
+
+//       const userForState: JwtPayload = {
+//         userId: decoded.userId,
+//         userName: decoded.userName,
+//         roles: decoded.roles,
+//         licenses: decoded.licenses,        // ✅ Redux only
+//         features: decoded.features ?? [],  // ✅ Redux only
+//         org_id: decoded.org_id,
+//       };
+
+//       const userForStorage: StoredUser = {
+//         userId: decoded.userId,
+//         userName: decoded.userName,
+//         roles: decoded.roles,
+//         org_id: decoded.org_id,
+//       };
+
+//       // Store minimal user + token in localStorage
+//       localStorage.setItem(STORAGE_TOKEN_KEY, token);
+//       localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
+
+//       // Set Redux state (features/licenses included)
+//       dispatch(setUserFromToken(userForState));
+
+//       return userForState;
+//     } catch (error) {
+//       console.error("Invalid token", error);
+//     }
+//   };
+
+//   // 🚪 LOGOUT
+//   const logout = () => {
+//     localStorage.removeItem(STORAGE_USER_KEY);
+//     localStorage.removeItem(STORAGE_TOKEN_KEY);
+//     dispatch(clearUser());
+//     router.push("/Login");
+//   };
+
+//   // 🔒 Client guard
+//   const requireAuth = (redirectTo = "/Login") => {
+//     if (!isLoading && !isAuthenticated) {
+//       router.push(redirectTo);
+//       return false;
+//     }
+//     return true;
+//   };
+
+//   return {
+//     user,
+//     features, // ✅ always from decoded token
+//     isAuthenticated,
+//     isLoading,
+//     login,
+//     logout,
+//     requireAuth,
+//   };
+// };
+
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { setUserFromToken, clearUser, restoreUser } from "@/app/store/slices/authSlice";
+import { JwtPayload, StoredUser } from "@/app/(unprotectedRoutes)/Login/Login.types";
+
+const STORAGE_USER_KEY = "scout_user";
+const STORAGE_TOKEN_KEY = "scout_access_token";
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dispatch = useDispatch();
   const router = useRouter();
 
+  const { user, features, isAuthenticated } = useSelector(
+    (state: RootState) => state.auth
+  );
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 🔁 Restore auth on page refresh
   useEffect(() => {
-    checkAuthStatus();
-  }, []);
+    const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+    const token = localStorage.getItem(STORAGE_TOKEN_KEY);
 
-  const checkAuthStatus = () => {
+    if (storedUser && token) {
+      try {
+        const parsedUser: StoredUser = JSON.parse(storedUser);
+
+        // Step 1: Restore minimal user from localStorage
+        dispatch(restoreUser(parsedUser));
+
+        // Step 2: Decode token to restore full state including features/licenses
+        const decoded = jwtDecode<JwtPayload>(token);
+        dispatch(setUserFromToken(decoded));
+      } catch (err) {
+        console.error("Failed to restore auth from storage", err);
+        localStorage.removeItem(STORAGE_USER_KEY);
+        localStorage.removeItem(STORAGE_TOKEN_KEY);
+        dispatch(clearUser());
+      }
+    }
+
+    setIsLoading(false);
+  }, [dispatch]);
+
+  // ✅ LOGIN: store token + minimal user, Redux gets full payload
+  const login = (token: string) => {
     try {
-      if (typeof window === 'undefined') {
-        setIsLoading(false);
-        return;
-      }
+      const decoded = jwtDecode<JwtPayload>(token);
 
-      const token = localStorage.getItem('scout_auth_token');
+      // Full state for Redux
+      const userForState: JwtPayload = {
+        userId: decoded.userId,
+        userName: decoded.userName,
+        roles: decoded.roles,
+        licenses: decoded.licenses,        // Redux only
+        features: decoded.features ?? [],  // Redux only
+        org_id: decoded.org_id,
+        sid: decoded.sid,
+      };
 
+      // Minimal user for localStorage
+      const userForStorage: StoredUser = {
+        userId: decoded.userId,
+        userName: decoded.userName,
+        roles: decoded.roles,
+        org_id: decoded.org_id,
+      };
 
-      const userDataStr = localStorage.getItem('scout_user');
-      if (token && userDataStr) {
-        const parsedUser = JSON.parse(userDataStr);
-        setUser({
-          username: parsedUser.username,
-          firstName: parsedUser.firstName,
-          lastName: parsedUser.lastName,
-          role: parsedUser.role,
-          email: parsedUser.email,
-          lastLogin: parsedUser.lastLogin,
-        });
-        setIsAuthenticated(true);
-      } else {
-        setUser(null);
-        setIsAuthenticated(false);
-      }
+      // Save to localStorage
+      localStorage.setItem(STORAGE_TOKEN_KEY, token);
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
 
-
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-      setUser(null);
-      setIsAuthenticated(false);
-    } finally {
-      setIsLoading(false);
+      // Set Redux state
+      dispatch(setUserFromToken(userForState));
+   if (decoded.sid) {
+      router.push(`/ResetPassword/${decoded.sid}`);
+    } else {
+      router.push("/SafetyAndComplianceDashboard");
+    }
+      return userForState;
+    } catch (err) {
+      console.error("Invalid token", err);
     }
   };
-const login = (userData: User, token: string) => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('scout_auth_token', token);
-    localStorage.setItem('scout_user', JSON.stringify(userData));
-  }
 
-  setUser(userData);
-  setIsAuthenticated(true);
-};
+  // 🚪 LOGOUT
+  const logout = () => {
+    localStorage.removeItem(STORAGE_USER_KEY);
+    localStorage.removeItem(STORAGE_TOKEN_KEY);
+    dispatch(clearUser());
+    router.push("/Login");
+  };
 
-
- const logout = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('scout_auth_token');
-    localStorage.removeItem('scout_user'); 
-  }
-  setUser(null);
-  setIsAuthenticated(false);
-  router.push('/LoginPage');
-};
-
-  const requireAuth = (redirectTo = '/LoginPage') => {
+  // 🔒 Client-side auth guard
+  const requireAuth = (redirectTo = "/Login") => {
     if (!isLoading && !isAuthenticated) {
       router.push(redirectTo);
       return false;
     }
-    return isAuthenticated;
+    return true;
   };
 
   return {
     user,
-    isLoading,
+    features,       // always from decoded token
     isAuthenticated,
+    isLoading,
     login,
     logout,
     requireAuth,
-    checkAuthStatus,
   };
 };

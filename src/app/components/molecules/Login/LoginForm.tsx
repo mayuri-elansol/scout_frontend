@@ -70,9 +70,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
             variant="outlined"
             placeholder="Enter your username"
             disabled={isLoading}
-            error={!!errors.username}
-            helperText={errors.username?.message}
-            {...register("username", {
+            error={!!errors.userName}
+            helperText={errors.userName?.message}
+            {...register("userName", {
               required: "Username is required",
             })}
             slotProps={{

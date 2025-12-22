@@ -17,6 +17,7 @@ import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
 
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+import { FEATURE } from "./featureRegistry";
 
 export interface MenuItemConfig {
   path: string;
@@ -25,12 +26,14 @@ export interface MenuItemConfig {
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   badge?: string;
   featureFlag?: boolean;
+  featureId?: string;
 }
 
 export interface CategoryConfig {
   title: string;
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   items: MenuItemConfig[];
+  featureId?: string;
 }
 
 // Live Streaming menu (at the top)
@@ -40,6 +43,7 @@ export const liveStreamingMenu: MenuItemConfig[] = [
     icon: VideoCall,
     page: "live-streaming",
     path: "/LiveStreamingPage",
+    featureId: FEATURE.LIVE_STREAMING,
   },
 ];
 
@@ -53,21 +57,25 @@ export const dashboardMenu: CategoryConfig[] = [
         name: "Safety And Compliance ",
         page: "safety-compliance-dashboard",
         path: "/SafetyAndComplianceDashboard",
+        featureId: FEATURE.SAFETY_COMPLIANCE,
       },
       {
         name: "Surveillance Monitoring ",
         page: "surveillance-monitoring-dashboard",
         path: "/SurveillanceMonitoringDashboard",
+        featureId: FEATURE.SURVEILLANCE_MONITORING,
       },
       {
         name: " Operational Insights ",
         page: "operational-insights-dashboard",
         path: "/OperationalInsightsDashboard",
+        featureId: FEATURE.OPERATIONAL_INSIGHTS,
       },
       {
         name: "Workforce Monitoring ",
-        page: "workforce-monitoring-dasboard",
+        page: "workforce-monitoring-dashboard",
         path: "/WorkforceMonitoringDashboard",
+        featureId: FEATURE.WORKFORCE_MONITORING,
       },
     ],
   },
@@ -81,6 +89,7 @@ export const alertMenu: MenuItemConfig[] = [
     badge: "12",
     page: "alerts",
     path: "/AlertsPage",
+    featureId: FEATURE.ALERTS,
   },
 ];
 
@@ -95,18 +104,21 @@ export const settingsMenu: CategoryConfig[] = [
         icon: ManageAccountsIcon,
         page: "role-management",
         path: "/RoleManagement",
+        featureId: FEATURE.ROLE_MANAGEMENT,
       },
       {
         name: "User Management",
         icon: PeopleIcon,
         page: "user-management",
         path: "/UserOverview",
+        featureId: FEATURE.USER_MANAGEMENT,
       },
       {
         name: "Configurator",
         icon: TuneIcon,
         page: "configurator",
         path: "/Configurator",
+        featureId: FEATURE.CONFIGURATOR,
       },
     ],
   },
@@ -122,6 +134,7 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "Camera Tamparing Dashboard",
         page: "camera-tamparing-dasboard",
         path: "/CameraTamperingDashboard",
+        featureId: FEATURE.CAMERA_TAMPERING,        
       },
     ],
   },
@@ -133,31 +146,38 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
         page: "ppe-detection",
         path: "/PPEKitDetectionPage",
+        featureId: FEATURE.PPE_DETECTION,
+
       },
       {
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
         page: "fire-smoke-oil-leak-detection",
         path: "/FireSmokeOilLeakDetection",
+        featureId: FEATURE.FIRE_SMOKE,
       },
       {
         name: "Fall / Laydown Detection",
         page: "fall-detection",
         path: "/FallDetection",
+        featureId: FEATURE.FALL_DETECTION,
       },
       {
         name: "Forklift / Vehicle In Walkways",
         page: "object-detection",
         path: "/ObjectDetection",
+        featureId: FEATURE.OBJECT_DETECTION,
       },
       {
         name: "Emergency Exit Blockage Detection",
         page: "emergency-exit-blockage-detection",
         path: "/EmergencyExitBlockage",
+        featureId: FEATURE.EMERGENCY_EXIT_BLOCKAGE,
       },
       {
         name: "Crowd Detection In Hazardous Zones",
         page: "crowd-gathering-in-hazardous-zones-detection",
         path: "/CrowdGathering",
+        featureId: FEATURE.CROWD_DETECTION,
       },
     ],
   },
@@ -169,21 +189,25 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "Intrusion Detection At Perimeter",
         page: "intrusion-detection",
         path: "/IntrusionDetectionPage",
+        featureId: FEATURE.INTRUSION_DETECTION,
       },
       {
         name: "Unauthorized Access In Restricted Areas",
         page: "unauthorized-access",
         path: "/UnauthorizedAccessInRestrictedAreas",
+        featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
       {
         name: "Camera Tampering Detection",
         page: "camera-tampering",
         path: "/CameraTampering",
+        featureId: FEATURE.CAMERA_TAMPERING,
       },
       {
         name: "Movement During Shutdown Hours",
         page: "people-presence",
         path: "/PeoplePresence",
+        featureId: FEATURE.PEOPLE_PRESENCE,
       },
     ],
   },
@@ -195,26 +219,31 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "Employee Presence In Critical Areas",
         page: "employee-presence-critical-area",
         path: "/EmployeePresenceCriticalArea",
+        featureId: FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA,
       },
       {
         name: "Employee Presence In Restricted Areas",
         page: "employee-presence-restricted-area",
         path: "/EmployeePresenceRestrictedArea",
+        featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
       {
         name: "Employee Idle Time Monitoring",
         page: "employee-idle-time",
         path: "/EmployeeIdleTime",
+        featureId: FEATURE.EMPLOYEE_IDLE_TIME,
       },
       {
         name: "Mobile Phone Usage In Restricted Zones",
         page: "mobile-phone-usage",
         path: "/MobilePhoneUsage",
+        featureId: FEATURE.MOBILE_PHONE_USAGE,
       },
       {
         name: "Sleeping / Absence Of Security Guards",
         page: "sleeping-absence-security-personnel",
         path: "/SleepingSecurityPersonnel",
+        featureId: FEATURE.SLEEPING_SECURITY_PERSONNEL,
       },
     ],
   },
@@ -226,26 +255,31 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "People Count In Factory Premises ",
         page: "people-count",
         path: "/PeopleCountPage",
+        featureId: FEATURE.PEOPLE_COUNT,
       },
       {
         name: "Vehicle Count & ANPR At Gates",
         page: "vehicle-count",
         path: "/VehicleCount",
+        featureId: FEATURE.VEHICLE_COUNT,
       },
       {
         name: "Canteen Usage Monitoring",
         page: "monitoring-canteen-usage",
         path: "/MonitoringCanteenUsage&Timings",
+        featureId: FEATURE.CANTEEN_USAGE,
       },
       {
         name: "Vehicle Unloading / Loading Monitoring",
         page: "tracking-vehicle",
         path: "/VehicleUnloadingLoading",
+        featureId: FEATURE.VEHICLE_UNLOADING_LOADING,
       },
       {
         name: "Unauthorized Parking / Blocking Aisles",
         page: "unauthorized-parking",
         path: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+        featureId: FEATURE.UNAUTHORIZED_PARKING,
       },
     ],
   },
@@ -257,12 +291,22 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "Face Recognition for Entry/Exit Logging",
         page: "face-recognition",
         path: "/FaceRecognition",
+        featureId: FEATURE.FACE_RECOGNITION,
       },
       {
         name: "Employee Idle Time Monitoring with Face Recognition",
         page: "employee-idle-with-face-recognition",
         path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
+        featureId: FEATURE.FACE_IDLE_MONITORING,
       },
     ],
   },
 ];
+//  ADD THIS AT THE BOTTOM
+export const menuConfig = {
+  liveStreamingMenu,
+  dashboardMenu,
+  alertMenu,
+  analyticsMenu,
+  settingsMenu,
+};
