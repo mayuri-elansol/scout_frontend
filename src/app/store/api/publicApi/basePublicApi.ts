@@ -12,6 +12,8 @@ export const basePublicApi = createApi({
   }),
   endpoints: () => ({}),
   tagTypes: ["Login",
-    "ResetPassword"
+    "ResetPassword",
+    "ForgotPassword",
+    "validateToken"
   ],
 });

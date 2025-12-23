@@ -8,6 +8,7 @@ import {
   InputAdornment,
   Typography,
   Box,
+  Link,
 } from "@mui/material";
 import {
   Visibility,
@@ -20,6 +21,7 @@ import {
   LoginFormData,
   LoginFormProps,
 } from "@/app/components/molecules/Login/Login.types";
+import { useRouter } from "next/navigation";
 
 const LoginForm: React.FC<LoginFormProps> = ({
   showPassword,
@@ -34,6 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   } = useForm<LoginFormData>({
     mode: "onChange",
   });
+  const router = useRouter();
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -159,6 +162,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
           {isLoading ? "Signing In..." : "Sign In"}
         </button>
       </form>
+      {/*  Forgot Password link */}
+      <Box textAlign="right" mb={3} mt={2}>
+        <Link
+          component="button"
+          variant="body2"
+          onClick={() => router.push("/ForgotPassword")}
+          sx={{
+            cursor: "pointer",
+            fontWeight: 500,
+          }}
+        >
+          Forgot password?
+        </Link>
+      </Box>
     </CardContent>
   );
 };
