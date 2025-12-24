@@ -103,7 +103,7 @@ export const settingsMenu: CategoryConfig[] = [
         name: "Role Management",
         icon: ManageAccountsIcon,
         page: "role-management",
-        path: "/RoleManagement",
+        path: "/AddRole",
         featureId: FEATURE.ROLE_MANAGEMENT,
       },
       {
