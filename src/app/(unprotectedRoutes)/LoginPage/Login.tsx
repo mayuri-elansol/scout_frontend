@@ -52,7 +52,7 @@ const Login: React.FC = () => {
         login(userData, token);
 
         setTimeout(() => {
-          router.push("/LiveStreamingPage");
+          router.push("/LiveStreamingPage-new");
         }, 100);
       } else {
         setError("Invalid username or password");

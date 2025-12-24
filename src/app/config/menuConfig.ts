@@ -39,7 +39,7 @@ export const liveStreamingMenu: MenuItemConfig[] = [
     name: "Live Streaming",
     icon: VideoCall,
     page: "live-streaming",
-    path: "/LiveStreamingPage",
+    path: "/LiveStreamingPage-new",  // Updated to use new implementation
   },
 ];
 
