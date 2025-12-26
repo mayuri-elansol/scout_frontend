@@ -118,9 +118,9 @@ const EmployeePresence: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: EmployeePresenceViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as EmployeePresenceViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
 
@@ -151,7 +151,7 @@ const EmployeePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
 

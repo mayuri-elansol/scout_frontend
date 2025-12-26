@@ -336,7 +336,7 @@ export default function CameraTamperingDashboard() {
           mb: 2,
         }}
       >
-        <TimeFilter />
+        <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
       </Box>
 
       {/* KPI Cards */}

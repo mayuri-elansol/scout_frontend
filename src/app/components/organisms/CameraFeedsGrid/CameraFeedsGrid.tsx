@@ -41,7 +41,6 @@ const CameraFeedsGrid: React.FC<CameraFeedsGridProps> = ({
         <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={uuidv4() + index}>
           <CameraFeedCard
             zone={zone}
-            metrics={zone.metrics}
             aiProcessingEnabled={aiProcessingEnabled}
             onPlayPause={() => onPlayPause?.(zone.id)}
             onMuteToggle={() => onMuteToggle?.(zone.id)}

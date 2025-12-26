@@ -14,18 +14,6 @@ const LiveStreaming: React.FC = () => {
   const [aiProcessingEnabled, setAiProcessingEnabled] = useState(true);
   type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
 
-  interface VideoState {
-    playing: boolean;
-    muted: boolean;
-  }
-
-  const [videoStates, setVideoStates] = useState<Record<ZoneId, VideoState>>({
-    "zone-a": { playing: false, muted: true },
-    "zone-b": { playing: false, muted: true },
-    "zone-c": { playing: false, muted: true },
-    "zone-d": { playing: false, muted: true },
-  });
-
   const cameraZones = [
     {
       id: "zone-a" as ZoneId,
@@ -72,26 +60,6 @@ const LiveStreaming: React.FC = () => {
       noHelmet: <>0</>,
     },
   ];
-
-  const toggleVideo = (zoneId: ZoneId) => {
-    setVideoStates((prev) => ({
-      ...prev,
-      [zoneId]: {
-        ...prev[zoneId],
-        playing: !prev[zoneId].playing,
-      },
-    }));
-  };
-
-  const toggleMute = (zoneId: ZoneId) => {
-    setVideoStates((prev) => ({
-      ...prev,
-      [zoneId]: {
-        ...prev[zoneId],
-        muted: !prev[zoneId].muted,
-      },
-    }));
-  };
 
   return (
     <Box>
@@ -150,13 +118,7 @@ const LiveStreaming: React.FC = () => {
       <Grid container spacing={2}>
         {cameraZones.map((zone, index) => (
           <Grid size={{ xs: 12, lg: 6, xl: 6 }} key={uuidv4() + index}>
-            <CameraFeed
-              zone={zone}
-              videoState={videoStates[zone.id]}
-              toggleVideo={toggleVideo}
-              toggleMute={toggleMute}
-              aiProcessingEnabled={aiProcessingEnabled}
-            />
+            <CameraFeed zone={zone} aiProcessingEnabled={aiProcessingEnabled} />
           </Grid>
         ))}
       </Grid>

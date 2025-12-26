@@ -147,7 +147,7 @@ const FaceRecognition: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on chnaged click")} />
         </Box>
         {/* KPI Cards */}
 

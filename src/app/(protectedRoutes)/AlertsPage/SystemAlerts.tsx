@@ -209,7 +209,7 @@ const SystemAlerts: React.FC = () => {
             System Alerts & Notifications
           </Typography>
         </Box>
-        <TimeFilter />
+        <TimeFilter onRangeChange={() => console.log("on ranged changed")} />
       </Box>
 
       {/* Alert Stats */}

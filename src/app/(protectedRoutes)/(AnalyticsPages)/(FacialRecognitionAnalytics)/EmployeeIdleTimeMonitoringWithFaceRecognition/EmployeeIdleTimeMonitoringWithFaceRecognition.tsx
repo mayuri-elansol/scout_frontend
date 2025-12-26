@@ -137,7 +137,9 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter
+            onRangeChange={() => console.log("on range chnaged clicked")}
+          />
         </Box>
         {/* KPI Cards */}
 

@@ -178,9 +178,9 @@ const PeopleCount: React.FC = () => {
     },
   ];
   const KpiCardLoading = false;
-  const handleViewSingle = (row: PeopleCountViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as PeopleCountViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -210,7 +210,7 @@ const PeopleCount: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">

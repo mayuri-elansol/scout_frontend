@@ -180,9 +180,9 @@ const FallDetection: React.FC = () => {
     console.log("Export requested clikcedd:", format);
   };
 
-  const handleViewSingle = (row: RecentViolationData) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as RecentViolationData;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -212,7 +212,7 @@ const FallDetection: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnged")} />
         </Box>
         {/* KPI Cards */}
 
