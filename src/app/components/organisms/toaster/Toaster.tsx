@@ -2,13 +2,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
 import Alert from "@mui/material/Alert";
-import { hideToast } from "./toasterSlice";
+import { hideToast } from "../../../store/slices/toasterSlice";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 export default function Toaster() {
   const dispatch = useDispatch();
-  const toasts = useSelector((state: RootState) => state.toasterGlobal.toasts);
+const toasts = useSelector((state: RootState) => state.toaster.toasts);
 
   // auto-hide each toast after 4s
   useEffect(() => {

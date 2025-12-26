@@ -53,7 +53,7 @@ export type PageType =
   | "safety-compliance-dashboard"
   | "surveillance-monitoring-dashboard"
   | "operational-insights-dashboard"
-  | "workforce-monitoring-dasboard"
+  | "workforce-monitoring-dashboard"
   | "ppe-detection"
   | "intrusion-detection"
   | "employee-presence-critical-area"

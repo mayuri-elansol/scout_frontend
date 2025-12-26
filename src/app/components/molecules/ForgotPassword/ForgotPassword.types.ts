@@ -1,6 +1,5 @@
 export interface ForgotPasswordFormData {
-  password: string;
-  confirmPassword: string;
+  userName: string;
 }
 
 export interface ForgotPasswordFormProps {

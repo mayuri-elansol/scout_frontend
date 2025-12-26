@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { setLanguage } from "@/app/store/languageSlice";
+import { setLanguage } from "@/app/store/slices/languageSlice";
 import i18n from "@/i18n";
 
 const supportedLanguages = ["en", "hi", "mr"];

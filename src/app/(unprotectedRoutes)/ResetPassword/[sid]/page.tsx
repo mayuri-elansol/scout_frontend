@@ -1,4 +1,4 @@
-import ResetPassword from "./ResetPasswordPage";
+import ResetPassword from "../ResetPassword";
 
 export default function ResetPasswordPage() {
   return <ResetPassword />;

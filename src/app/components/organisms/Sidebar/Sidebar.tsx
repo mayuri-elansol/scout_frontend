@@ -33,7 +33,8 @@ import {
   liveStreamingMenu,
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
-import { useFeatureFlags } from "@/customhooks/useFeatureFlag";
+import { useAuth } from "@/customhooks/useAuth";
+import { hasFeature } from "@/utils/hasFeature";
 import theme from "../../../theme/theme";
 interface SidebarProps {
   currentPage: PageType;
@@ -152,17 +153,15 @@ SubMenuItem.displayName = "SubMenuItem";
 // Memoized category component
 const CategorySection = React.memo<{
   category: CategoryConfig & {
-    items: (MenuItemConfig & { featureFlag: boolean })[];
+items: MenuItemConfig[];
   };
   openCategories: Record<string, boolean>;
   onToggle: (title: string) => void;
   pathname: string;
   theme: typeof theme;
 }>(({ category, openCategories, onToggle, pathname, theme }) => {
-  const filteredItems = useMemo(
-    () => category.items.filter((i) => i.featureFlag),
-    [category.items]
-  );
+ const filteredItems = category.items;
+
 
   const handleToggle = useCallback(() => {
     onToggle(category.title);
@@ -226,7 +225,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const drawerWidth: string = "315px";
 
   const pathname = usePathname();
-  const featureFlag = useFeatureFlags();
+const { features } = useAuth();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -246,60 +245,48 @@ const Sidebar: React.FC<SidebarProps> = () => {
     setSettingsOpen((prev) => !prev);
   }, []);
 
-  const filteredMenus = useMemo(() => {
-    const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu
-      .map((item) => ({
-        ...item,
-        featureFlag: featureFlag[item.page!] ?? true,
-      }))
-      .filter((item) => item.featureFlag);
-    const dashboardFlags: (CategoryConfig & {
-      items: (MenuItemConfig & { featureFlag: boolean })[];
-    })[] = dashboardMenu.map((category) => ({
+ const filteredMenus = useMemo(() => {
+  const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu
+    .filter(item => hasFeature(features, item.featureId));
+
+  const dashboardFlags = dashboardMenu
+    .map(category => ({
       ...category,
-      items: category.items
-        .map((item) => ({
-          ...item,
-          featureFlag: featureFlag[item.page!] ?? true,
-        }))
-        .filter((item) => item.featureFlag),
-    }));
+      items: category.items.filter(item =>
+        hasFeature(features, item.featureId)
+      ),
+    }))
+    .filter(category => category.items.length > 0);
 
-    const alertFlags: MenuItemConfig[] = alertMenu
-      .map((item) => ({
-        ...item,
-        featureFlag: featureFlag[item.page!] ?? false,
-      }))
-      .filter((item) => item.featureFlag);
+  const alertFlags: MenuItemConfig[] = alertMenu
+    .filter(item => hasFeature(features, item.featureId));
 
-    const analyticsFlags: (CategoryConfig & {
-      items: (MenuItemConfig & { featureFlag: boolean })[];
-    })[] = analyticsMenu.map((category) => ({
+  const analyticsFlags = analyticsMenu
+    .map(category => ({
       ...category,
-      items: category.items.map((item) => ({
-        ...item,
-        featureFlag: featureFlag[item.page!] ?? false,
-      })),
-    }));
+      items: category.items.filter(item =>
+        hasFeature(features, item.featureId)
+      ),
+    }))
+    .filter(category => category.items.length > 0);
 
-    const settingsFlags: (CategoryConfig & {
-      items: (MenuItemConfig & { featureFlag: boolean })[];
-    })[] = settingsMenu.map((category) => ({
+  const settingsFlags = settingsMenu
+    .map(category => ({
       ...category,
-      items: category.items.map((item) => ({
-        ...item,
-        featureFlag: featureFlag[item.page!] ?? false,
-      })),
-    }));
+      items: category.items.filter(item =>
+        hasFeature(features, item.featureId)
+      ),
+    }))
+    .filter(category => category.items.length > 0);
 
-    return {
-      liveStreamingFlags,
-      dashboardFlags,
-      alertFlags,
-      analyticsFlags,
-      settingsFlags,
-    };
-  }, [featureFlag]);
+  return {
+    liveStreamingFlags,
+    dashboardFlags,
+    alertFlags,
+    analyticsFlags,
+    settingsFlags,
+  };
+}, [features]);
 
   const isAnalyticsActive = useMemo(() => {
     return filteredMenus.analyticsFlags.some((category) =>
@@ -333,9 +320,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
         {filteredMenus.dashboardFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.dashboardFlags.map((category, index) => {
-              const isCategoryActive = category.items.some(
-                (item) => item.featureFlag && pathname === item.path
-              );
+            const isCategoryActive = category.items.some(
+  (item) => pathname === item.path
+);
+
 
               const isOpen = openCategories[category.title] ?? false;
 
@@ -382,9 +370,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
                   <Collapse in={isOpen} timeout="auto" unmountOnExit>
                     <List sx={{ pl: 2 }}>
-                      {category.items
-                        .filter((item) => item.featureFlag)
-                        .map((item, idx) => (
+                 {category.items.map((item, idx) => (
+
                           <SubMenuItem
                             key={uuidv4() + idx}
                             item={item}
