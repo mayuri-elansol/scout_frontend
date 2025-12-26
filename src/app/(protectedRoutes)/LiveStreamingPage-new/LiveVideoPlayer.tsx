@@ -280,7 +280,7 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
         >
           <Box
             component="img"
-            src="/siteimage.jpg"
+            src="/siteimage.png"
             alt="Live Feed"
             sx={{
               width: "100%",
