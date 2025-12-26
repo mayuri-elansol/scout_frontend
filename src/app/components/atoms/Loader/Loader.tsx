@@ -43,18 +43,20 @@ const Loader: React.FC<LoaderProps> = ({
   sx,
 }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        width: "100vw",
-        gap: 1.5,
-        ...sx,
-      }}
-    >
+<Box
+  sx={{
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "600px",
+    height: "100%",
+    width: "100%",
+    gap: 1.5,
+    ...sx,
+  }}
+>
+
       <CircularProgress
         size={size}
         color={color}

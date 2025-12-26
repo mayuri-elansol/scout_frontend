@@ -22,8 +22,8 @@ export default function RouteLoader({ children }: RouteLoaderProps) {
     return (
       <div
         style={{
-          position: "fixed",
-          top: 0,
+          // position: "fixed",
+          top: 500,
           left: 50,
           right: 0,
           bottom: 0,

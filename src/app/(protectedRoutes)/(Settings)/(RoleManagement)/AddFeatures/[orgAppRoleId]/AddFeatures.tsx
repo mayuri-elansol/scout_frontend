@@ -1,0 +1,303 @@
+"use client";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  FormGroup,
+  Checkbox,
+  Button,
+  Grid,
+  Divider,
+  Paper,
+  Chip,
+} from "@mui/material";
+import { Security } from "@mui/icons-material";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { useParams, useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+
+import { RootState } from "@/app/store/store";
+
+import { showToast } from "@/app/store/slices/toasterSlice";
+import {
+  useAssignFeatureToRoleMutation,
+  useGetFeaturesByOrgIdMutation,
+} from "./AddFeaturesApi";
+import Loader from "@/app/components/atoms/Loader/Loader";
+
+/* ---------------- Types ---------------- */
+
+interface Feature {
+  feature_id: string;
+  name: string;
+  description: string;
+}
+
+/* ---------------- Component ---------------- */
+
+const AddFeatures: React.FC = () => {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  //  Route param
+  const orgAppRoleId =
+    typeof params?.orgAppRoleId === "string" ? params.orgAppRoleId : undefined;
+  // Global auth state
+  const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
+  const userId = useSelector((state: RootState) => state.auth.user?.userId);
+
+  // 🔄 API hooks
+  const [getFeaturesByOrgId, { isLoading }] = useGetFeaturesByOrgIdMutation();
+
+  const [assignFeatureToRole, { isLoading: isAssigning }] =
+    useAssignFeatureToRoleMutation();
+
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [selectedFeatureIds, setSelectedFeatureIds] = useState<string[]>([]);
+const isPageLoading = isLoading && features.length === 0;
+
+  /* ---------------- Fetch features on load ---------------- */
+
+  useEffect(() => {
+    if (!tenantId || !userId) return;
+
+    getFeaturesByOrgId({
+      userId,
+      orgId: tenantId,
+    })
+      .unwrap()
+      .then((res) => {
+        const featureList = res?.data?.data;
+
+        if (Array.isArray(featureList)) {
+          setFeatures(featureList);
+        } else {
+          setFeatures([]);
+        }
+      })
+      .catch(() => {
+        dispatch(
+          showToast({
+            id: crypto.randomUUID(),
+            message: "Failed to load features",
+            severity: "error",
+          })
+        );
+      });
+  }, [tenantId, userId]);
+
+  /* ---------------- Handlers ---------------- */
+
+  const toggleFeature = (featureId: string) => {
+    setSelectedFeatureIds((prev) =>
+      prev.includes(featureId)
+        ? prev.filter((id) => id !== featureId)
+        : [...prev, featureId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selectedFeatureIds.length === features.length) {
+      setSelectedFeatureIds([]);
+    } else {
+      setSelectedFeatureIds(features.map((f) => f.feature_id));
+    }
+  };
+
+  const handleAssignFeatures = async () => {
+    if (!tenantId || !orgAppRoleId || selectedFeatureIds.length === 0) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "Missing required data",
+          severity: "error",
+        })
+      );
+      return;
+    }
+
+    try {
+      const res = await assignFeatureToRole({
+        tenantId,
+        orgAppRoleId,
+        featureIds: selectedFeatureIds,
+      }).unwrap();
+
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: res.message || "Features assigned successfully",
+          severity: "success",
+        })
+      );
+
+      router.push("/RoleOverview"); 
+    } catch (err: any) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: err?.data?.message || "Failed to assign features",
+          severity: "error",
+        })
+      );
+    }
+  };
+
+  /* ---------------- UI ---------------- */
+
+  return (
+
+    <Box sx={{ py: 2, px: { xs: 2, sm: 3, md: 4 } }}>
+      {isPageLoading ? (
+        <Loader />
+      ) : (
+        <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 3 }}>
+          {/* Header */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: 3,
+            }}
+          >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                background: "#3072b0",
+                borderRadius: "50%",
+                width: 40,
+                height: 40,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "white",
+                mr: 2,
+              }}
+            >
+              <Security sx={{ fontSize: 20 }} />
+            </Box>
+            <Box>
+              <Typography variant="h5" fontWeight={600}>
+                Permissions
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Select permissions to assign
+              </Typography>
+            </Box>
+          </Box>
+
+          <Chip
+            label={`${selectedFeatureIds.length} / ${features.length} Selected`}
+            sx={{
+              background: "#3072b0",
+              color: "white",
+              fontWeight: 600,
+            }}
+          />
+        </Box>
+
+        <Divider sx={{ mb: 3 }} />
+
+        {/* Select All */}
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 3 }}>
+          <Button variant="outlined" size="small" onClick={handleSelectAll}>
+            {selectedFeatureIds.length === features.length
+              ? "Deselect All"
+              : "Select All"}
+          </Button>
+        </Box>
+
+        {/* Feature Grid */}
+        <FormGroup>
+           
+          <Grid container spacing={2}>
+            {Array.isArray(features) &&
+              features.map((feature) => {
+                const checked = selectedFeatureIds.includes(feature.feature_id);
+
+                return (
+                  <Grid
+                    size={{ xs: 12, sm: 6, md: 4 }}
+                    key={feature.feature_id}
+                  >
+                    <Paper
+                      sx={{
+                        p: 2,
+                        border: "2px solid",
+                        borderColor: checked ? "#3072b0" : "#e2e8f0",
+                        borderRadius: 2,
+                        cursor: "pointer",
+                        transition: "0.2s",
+                        "&:hover": {
+                          borderColor: "#3072b0",
+                          boxShadow: "0 4px 12px rgba(48,114,176,0.15)",
+                        },
+                      }}
+                      onClick={() => toggleFeature(feature.feature_id)}
+                    >
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        {/* Left side: Checkbox + Name */}
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                          }}
+                        >
+                          <Checkbox
+                            checked={checked}
+                            onChange={() => toggleFeature(feature.feature_id)}
+                            sx={{
+                              "&.Mui-checked": { color: "#3072b0" },
+                            }}
+                          />
+                          <Typography fontWeight={checked ? 600 : 500}>
+                            {feature.name}
+                          </Typography>
+                        </Box>
+
+                        {/* Right side: Tick */}
+                        {checked && (
+                          <TaskAltIcon
+                            sx={{
+                              color: "#3072b0",
+                              fontSize: 22,
+                            }}
+                          />
+                        )}
+                      </Box>
+                    </Paper>
+                  </Grid>
+                );
+              })}
+          </Grid>
+           
+        </FormGroup>
+
+        {/* Save */}
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={handleAssignFeatures}
+            disabled={isAssigning}
+            sx={{ px: 8, py: 1.5 }}
+          >
+            {isAssigning ? "Saving..." : "Save Permissions"}
+          </Button>
+        </Box>
+      </Paper>
+      )}
+    </Box>
+     
+  );
+};
+
+export default AddFeatures;

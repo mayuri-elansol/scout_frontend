@@ -13,5 +13,9 @@ export const baseProtectedApi = createApi({
     "PpeRecentViolations",
     "PpeDetailedReport",
     "PpeReportCsv",
+    'CreateRole',
+    'AddFeatures',
+    'AssignFeatureToRole',
+    'RoleOverview'
   ],
 });

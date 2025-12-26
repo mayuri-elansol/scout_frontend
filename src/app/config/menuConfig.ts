@@ -46,6 +46,36 @@ export const liveStreamingMenu: MenuItemConfig[] = [
     featureId: FEATURE.LIVE_STREAMING,
   },
 ];
+export const Permission= [
+  {
+    name: "Add Features",
+    page: "Add-Features",
+    path: "/AddFeatures",
+    featureId: FEATURE.ADD_FEATURES,
+  },
+  {
+    name: "View Role",
+    page: "View-Role",
+    path: "/ViewRole",
+    featureId: FEATURE.VIEW_ROLE,
+  },
+  {
+    name: "Edit Role",
+    page: "Edit-Role",
+    path: "/EditRole",
+    featureId: FEATURE.EDIT_ROLE,
+  },
+  {
+    name: "Delete Role",
+    page: "Delete-Role",    
+    featureId: FEATURE.DELETE_ROLE,
+  },
+  {
+    name: "Role Overview",
+    page: "Role-Overview",
+    featureId: FEATURE.ROLE_OVERVIEW,
+  }
+];
 
 // Dashboard menu
 export const dashboardMenu: CategoryConfig[] = [
@@ -197,12 +227,12 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/UnauthorizedAccessInRestrictedAreas",
         featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
-      {
-        name: "Camera Tampering Detection",
-        page: "camera-tampering",
-        path: "/CameraTampering",
-        featureId: FEATURE.CAMERA_TAMPERING,
-      },
+      // {
+      //   name: "Camera Tampering Detection",
+      //   page: "camera-tampering",
+      //   path: "/CameraTampering",
+      //   featureId: FEATURE.CAMERA_TAMPERING,
+      // },
       {
         name: "Movement During Shutdown Hours",
         page: "people-presence",

@@ -28,7 +28,7 @@ const AddRole: React.FC = () => {
   elevation={0}
   sx={{
     boxShadow: "none !important",
-    backgroundColor: "transparent", // optional
+    backgroundColor: "transparent", 
     maxWidth: 520,
     width: "100%",
     p: { xs: 4, md: 6 },

@@ -10,7 +10,7 @@ export default function UnauthorizedAccess() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        minHeight="100vh"
+        minHeight="80vh"
         textAlign="center"
       >
         <Typography variant="h3" color="error" gutterBottom>
