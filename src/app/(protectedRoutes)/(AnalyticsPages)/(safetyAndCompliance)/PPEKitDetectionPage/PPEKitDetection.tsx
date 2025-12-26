@@ -38,28 +38,15 @@ import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 import { useSocketListeners } from "@/hooks/useSocketListeners";
 import dayjs, { Dayjs } from "dayjs";
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
+import { SvgIconComponent } from "@mui/icons-material";
 const PPEDetection: React.FC = () => {
   // ✅ Add deduplication ref at the top
   const processedEvents = useRef(new Set<string>());
 
-  // interface PPEViolation {
-  //   voilation: string;
-  //   zone: string;
-  //   time: string;
-  //   imageUrl: string;
-  //   cameraId: string;
-  //   alarmTriggered: boolean;
-  //   [key: string]: string | number | boolean;
-  // }
   interface PPEViolation extends Violation {
     cameraId: string;
     alarmTriggered: boolean;
   }
-
-  const [dateFilter, setDateFilter] = useState<{
-    start: string;
-    end: string;
-  } | null>(null);
 
   const [isLiveMode, setIsLiveMode] = useState(true);
 
@@ -76,13 +63,10 @@ const PPEDetection: React.FC = () => {
     fetchDetailedReport,
     { data: detailedReport, isLoading: detailedReportLoading },
   ] = useLazyGetPpeKitDetectionDetailedReportQuery();
-  const [downloadSinglePdf, { isLoading: isSinglePdfDownloading }] =
-    useGetPpeKitDetectionSingleReportPdfMutation();
-  const [downloadCsvReport, { isLoading: isCsvDownloading }] =
-    useGetPpeKitDetectionDetailedCsvReportMutation();
+  const [downloadSinglePdf] = useGetPpeKitDetectionSingleReportPdfMutation();
+  const [downloadCsvReport] = useGetPpeKitDetectionDetailedCsvReportMutation();
 
-  const [downloadPdfReport, { isLoading: isPdfDownloading }] =
-    useGetPpeKitDetectionDetailedPdfReportMutation();
+  const [downloadPdfReport] = useGetPpeKitDetectionDetailedPdfReportMutation();
 
   // ✅ Single source of truth for KPI data
   const [displayKpi, setDisplayKpi] = useState<KpiItem[] | null>(null);
@@ -94,12 +78,14 @@ const PPEDetection: React.FC = () => {
     ZoneViolationInteface[]
   >([]);
   //function to convert the date-time  into indian standards
-  const formatLocalDateTime = (dt: string | Dayjs | undefined): string => {
-    if (!dt) return "";
-    const parsed = typeof dt === "string" ? dayjs(dt) : dt;
-    return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
-  };
-
+  const formatLocalDateTime = useCallback(
+    (dt: string | Dayjs | undefined): string => {
+      if (!dt) return "";
+      const parsed = typeof dt === "string" ? dayjs(dt) : dt;
+      return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
+    },
+    [] // dayjs import is stable
+  );
   // ✅ Track optimistic updates with version control
   const optimisticVersionRef = useRef<number>(0);
   const lastSyncTimestampRef = useRef<number>(0);
@@ -187,7 +173,6 @@ const PPEDetection: React.FC = () => {
       }
 
       processedEvents.current.add(eventId);
-      const timestamp = socketData.serverTimestamp || Date.now();
 
       // Increment version
       optimisticVersionRef.current += 1;
@@ -300,7 +285,7 @@ const PPEDetection: React.FC = () => {
       }
       scheduleRefetch();
     },
-    [scheduleRefetch]
+    [scheduleRefetch, isLiveMode]
   );
 
   //api call on the timefilter selection
@@ -342,9 +327,11 @@ const PPEDetection: React.FC = () => {
 
   // ✅ Cleanup on unmount
   useEffect(() => {
+    const timeoutId = refetchTimeoutRef.current;
+
     return () => {
-      if (refetchTimeoutRef.current) {
-        clearTimeout(refetchTimeoutRef.current);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
       processedEvents.current.clear();
     };
@@ -367,7 +354,7 @@ const PPEDetection: React.FC = () => {
     );
   }, [displayKpi]);
   const zoneViolationsForUi = useMemo(() => {
-    const iconMap: Record<string, any> = {
+    const iconMap: Record<string, SvgIconComponent> = {
       Helmet: EngineeringIcon,
       Vest: CheckroomIcon,
       Glasses: VisibilityOffIcon,
@@ -381,85 +368,11 @@ const PPEDetection: React.FC = () => {
     }));
   }, [displayZoneViolations]);
 
-  const handleSubmitFilter = async (filters: FilterParams) => {
-    console.log("filter params", filters);
+  const handleSubmitFilter = useCallback(
+    async (filters: FilterParams) => {
+      console.log("filter params", filters);
 
-    const body = {
-      tenantId: "c2bf4995e1bf3ce1",
-
-      violation: filters.violation || undefined,
-      zone: filters.zone || undefined,
-      cameraId: filters.cameraId || undefined,
-
-      alarmTriggered:
-        filters.alarmTriggered !== undefined
-          ? filters.alarmTriggered === "True"
-          : undefined,
-
-      startDate: formatLocalDateTime(filters.startDate),
-      endDate: formatLocalDateTime(filters.endDate),
-    };
-
-    console.log("🚀 Sending payload:", body);
-
-    fetchDetailedReport(body);
-  };
-
-  const handleReset = () => {
-    console.log("reset button clicked");
-
-    fetchDetailedReport({
-      tenantId: "c2bf4995e1bf3ce1",
-    });
-  };
-
-  // const handleExport = async (format: "csv" | "pdf", filters: FilterParams) => {
-  //   console.log("Export requested:", format);
-  //   if (format === "csv") {
-  //     console.log("Export requested:", format, filters);
-  //     try {
-  //       console.log("✅ Export CSV with filters:", filters);
-
-  //       const payload = {
-  //         tenantId: "c2bf4995e1bf3ce1",
-
-  //         violation: filters.violation || undefined,
-  //         zone: filters.zone || undefined,
-  //         cameraId: filters.cameraId || undefined,
-
-  //         alarmTriggered:
-  //           filters.alarmTriggered !== undefined
-  //             ? filters.alarmTriggered === "True"
-  //             : undefined,
-
-  //         startDate: formatLocalDateTime(filters.startDate),
-  //         endDate: formatLocalDateTime(filters.endDate),
-  //       };
-
-  //       // ✅ Call backend
-  //       const csvBlob = await downloadCsvReport(payload).unwrap();
-
-  //       // ✅ Trigger browser download
-  //       const blobUrl = window.URL.createObjectURL(csvBlob);
-  //       const a = document.createElement("a");
-
-  //       a.href = blobUrl;
-  //       a.download = `ppe-violations-report-${Date.now()}.csv`;
-
-  //       document.body.appendChild(a);
-  //       a.click();
-
-  //       a.remove();
-  //       window.URL.revokeObjectURL(blobUrl);
-  //     } catch (error) {
-  //       console.error("❌ CSV export failed:", error);
-  //     }
-  //   }
-  // };
-
-  const handleExport = async (format: "csv" | "pdf", filters: FilterParams) => {
-    try {
-      const payload = {
+      const body = {
         tenantId: "c2bf4995e1bf3ce1",
 
         violation: filters.violation || undefined,
@@ -475,81 +388,124 @@ const PPEDetection: React.FC = () => {
         endDate: formatLocalDateTime(filters.endDate),
       };
 
-      // ================= CSV =================
-      if (format === "csv") {
-        const csvBlob = await downloadCsvReport(payload).unwrap();
+      console.log("🚀 Sending payload:", body);
 
-        const url = window.URL.createObjectURL(csvBlob);
+      fetchDetailedReport(body);
+    },
+    [fetchDetailedReport, formatLocalDateTime] // ✅ add only what is used
+  );
+
+  const handleReset = useCallback(() => {
+    console.log("reset button clicked");
+
+    fetchDetailedReport({
+      tenantId: "c2bf4995e1bf3ce1",
+    });
+  }, [fetchDetailedReport]);
+
+  const handleExport = useCallback(
+    async (format: "csv" | "pdf", filters: FilterParams) => {
+      try {
+        const payload = {
+          tenantId: "c2bf4995e1bf3ce1",
+
+          violation: filters.violation || undefined,
+          zone: filters.zone || undefined,
+          cameraId: filters.cameraId || undefined,
+
+          alarmTriggered:
+            filters.alarmTriggered !== undefined
+              ? filters.alarmTriggered === "True"
+              : undefined,
+
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
+        };
+
+        // ================= CSV =================
+        if (format === "csv") {
+          const csvBlob = await downloadCsvReport(payload).unwrap();
+
+          const url = window.URL.createObjectURL(csvBlob);
+          const a = document.createElement("a");
+
+          a.href = url;
+          a.download = `ppe-violations-report-${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        }
+
+        // ================= PDF =================
+        if (format === "pdf") {
+          const pdfBlob = await downloadPdfReport(payload).unwrap();
+
+          const url = window.URL.createObjectURL(
+            new Blob([pdfBlob], { type: "application/pdf" })
+          );
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `ppe-violations-report-${Date.now()}.pdf`;
+
+          document.body.appendChild(a);
+          a.click();
+
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        }
+      } catch (error) {
+        console.error("❌ Export failed:", error);
+      }
+    },
+    [downloadCsvReport, downloadPdfReport, formatLocalDateTime]
+  );
+
+  const handleDownloadSingle = useCallback(
+    async (row: PPEViolation) => {
+      console.log("download single row", row);
+      try {
+        const payload = {
+          tenantId: "c2bf4995e1bf3ce1",
+          violation: String(row.violation),
+          zone: row.zone,
+          time: row.time,
+          cameraId: row.cameraId,
+          alarmTriggered: row.alarmTriggered,
+          imageUrl: row.imageUrl,
+        };
+
+        const pdfBlob = await downloadSinglePdf(payload).unwrap();
+
+        // ✅ Create browser download
+        const blobUrl = window.URL.createObjectURL(pdfBlob);
         const a = document.createElement("a");
 
-        a.href = url;
-        a.download = `ppe-violations-report-${Date.now()}.csv`;
+        a.href = blobUrl;
+        a.download = `ppe-single-report-${Date.now()}.pdf`;
         document.body.appendChild(a);
         a.click();
 
+        // ✅ Cleanup
         a.remove();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        console.error("PDF download failed", err);
       }
+    },
+    [downloadSinglePdf]
+  );
 
-      // ================= PDF =================
-      if (format === "pdf") {
-        const pdfBlob = await downloadPdfReport(payload).unwrap();
-
-        const url = window.URL.createObjectURL(
-          new Blob([pdfBlob], { type: "application/pdf" })
-        );
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `ppe-violations-report-${Date.now()}.pdf`;
-
-        document.body.appendChild(a);
-        a.click();
-
-        a.remove();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error("❌ Export failed:", error);
-    }
-  };
-  const handleDownloadSingle = async (row: PPEViolation) => {
-    console.log("download single row", row);
-    try {
-      const payload = {
-        tenantId: "c2bf4995e1bf3ce1",
-        violation: String(row.violation),
-        zone: row.zone,
-        time: row.time,
-        cameraId: row.cameraId,
-        alarmTriggered: row.alarmTriggered,
-        imageUrl: row.imageUrl,
-      };
-
-      const pdfBlob = await downloadSinglePdf(payload).unwrap();
-
-      // ✅ Create browser download
-      const blobUrl = window.URL.createObjectURL(pdfBlob);
-      const a = document.createElement("a");
-
-      a.href = blobUrl;
-      a.download = `ppe-single-report-${Date.now()}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-
-      // ✅ Cleanup
-      a.remove();
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (err) {
-      console.error("PDF download failed", err);
-    }
-  };
-
-  const handleViewSingle = (row: PPEViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
-    setViewPopupOpen(true);
-  };
+  const handleViewSingle = useCallback(
+    (row: PPEViolation) => {
+      console.log("view single row", row);
+      setViewPopupData(row);
+      setViewPopupOpen(true);
+    },
+    [] // setState functions are stable
+  );
 
   const KpiCardLoading = isLoading;
   const tableColumns = useMemo(
@@ -694,7 +650,7 @@ const PPEDetection: React.FC = () => {
 
               console.log("Custom Time Selected:", range);
               setIsLiveMode(false);
-              setDateFilter(range);
+
               fetchAllWithTime(range);
             }}
           />
@@ -725,7 +681,7 @@ const PPEDetection: React.FC = () => {
             <RecentViolations
               tooltipMessage="Latest 20 detected PPE violations with details."
               label="Recent Violations"
-              violations={recentViolationsLive as PPEViolation[]}
+              violations={recentViolationsLive}
               loading={recentLoading}
               onDownload={handleDownloadViolation}
             />

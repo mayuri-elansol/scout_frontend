@@ -121,9 +121,9 @@ const PeoplePresence: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: PeoplePresenceViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as PeoplePresenceViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -153,7 +153,7 @@ const PeoplePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
 

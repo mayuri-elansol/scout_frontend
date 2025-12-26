@@ -134,9 +134,9 @@ const IntrusionDetection: React.FC = () => {
 
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  const handleViewSingle = (row: IntrusionViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as IntrusionViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   return (
@@ -166,7 +166,7 @@ const IntrusionDetection: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
 

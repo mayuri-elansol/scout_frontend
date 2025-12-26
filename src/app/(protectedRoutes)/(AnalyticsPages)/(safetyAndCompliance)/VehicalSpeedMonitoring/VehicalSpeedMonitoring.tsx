@@ -145,9 +145,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
   ];
 
   const KpiCardLoading = false;
-  const handleViewSingle = (row: VehicleViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as VehicleViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -178,7 +178,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading

@@ -275,7 +275,7 @@ const OperationalInsightsDashboard: React.FC = () => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter />
+        <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
       </Box>
 
       {/* KPI Cards Grid */}

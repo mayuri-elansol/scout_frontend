@@ -169,9 +169,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: SleepingSecurityViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as SleepingSecurityViolation;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -202,7 +202,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
 

@@ -156,9 +156,9 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: UnauthorizedAccess) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+    const violation = row as UnauthorizedAccess;
+    setViewPopupData(violation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -188,7 +188,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
         </Box>
         {/* KPI Cards */}
 

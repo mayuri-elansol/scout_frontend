@@ -1,27 +1,8 @@
 import React, { ReactNode } from "react";
-import {
-  Card,
-  Box,
-  Typography,
-  Chip,
-  IconButton,
-  CardContent,
-} from "@mui/material";
-import {
-  VideoCall,
-  PlayArrow,
-  VolumeUp,
-  VolumeOff,
-  Fullscreen,
-  Circle,
-} from "@mui/icons-material";
+import { Card, Box, Typography, Chip, IconButton } from "@mui/material";
+import { VideoCall, Fullscreen, Circle } from "@mui/icons-material";
 
 type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
-
-interface VideoState {
-  playing: boolean;
-  muted: boolean;
-}
 
 interface ZoneData {
   id: ZoneId;
@@ -37,17 +18,12 @@ interface ZoneData {
 
 interface CameraFeedProps {
   zone: ZoneData;
-  videoState: VideoState;
-  toggleVideo: (zoneId: ZoneId) => void;
-  toggleMute: (zoneId: ZoneId) => void;
+
   aiProcessingEnabled: boolean;
 }
 
 export const CameraFeed: React.FC<CameraFeedProps> = ({
   zone,
-  videoState,
-  toggleVideo,
-  toggleMute,
   aiProcessingEnabled,
 }) => {
   return (

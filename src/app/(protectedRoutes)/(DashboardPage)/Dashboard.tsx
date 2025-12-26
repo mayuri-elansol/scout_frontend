@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter />
+        <TimeFilter onRangeChange={() => console.log("on ranged changed")} />
       </Box>
 
       {/* KPI Cards Grid */}
