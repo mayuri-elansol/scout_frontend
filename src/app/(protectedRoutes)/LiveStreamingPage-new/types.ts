@@ -7,7 +7,7 @@ export interface Camera {
   name: string;
   zone?: string;
   streamUrl?: string;
-  status?: 'online' | 'offline' | 'maintenance';
+  status?: "online" | "offline" | "maintenance";
 }
 
 export interface UseCase {
@@ -46,7 +46,7 @@ export interface DetectionEvent {
   id: string;
   type: string;
   timestamp: Date;
-  severity: 'info' | 'warning' | 'critical';
+  severity: "info" | "warning" | "critical";
   message: string;
   cameraId: string;
   metadata?: Record<string, unknown>;
