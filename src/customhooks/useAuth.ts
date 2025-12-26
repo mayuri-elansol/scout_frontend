@@ -48,46 +48,7 @@ export const useAuth = () => {
     setIsLoading(false);
   }, [dispatch]);
 
-  // ✅ LOGIN: store token + minimal user, Redux gets full payload
-  // const login = (token: string) => {
-  //   try {
-  //     const decoded = jwtDecode<JwtPayload>(token);
-
-  //     // Full state for Redux
-  //     const userForState: JwtPayload = {
-  //       userId: decoded.userId,
-  //       userName: decoded.userName,
-  //       roles: decoded.roles,
-  //       licenses: decoded.licenses,        // Redux only
-  //       features: decoded.features ?? [],  // Redux only
-  //       org_id: decoded.org_id,
-  //       sid: decoded.sid,
-  //     };
-
-  //     // Minimal user for localStorage
-  //     const userForStorage: StoredUser = {
-  //       userId: decoded.userId,
-  //       userName: decoded.userName,
-  //       roles: decoded.roles,
-  //       org_id: decoded.org_id,
-  //     };
-
-  //     // Save to localStorage
-  //     localStorage.setItem(STORAGE_TOKEN_KEY, token);
-  //     localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
-
-  //     // Set Redux state
-  //     dispatch(setUserFromToken(userForState));
-  //  if (decoded.sid) {
-  //     router.push(`/ResetPassword/${decoded.sid}`);
-  //   } else {
-  //     router.push("/SafetyAndComplianceDashboard");
-  //   }
-  //     return userForState;
-  //   } catch (err) {
-  //     console.error("Invalid token", err);
-  //   }
-  // };
+ 
 const login = (token: string) => {
   try {
     const decoded = jwtDecode<JwtPayload>(token);

@@ -1,5 +1,144 @@
-"use client";
+// "use client";
+// import React, { useState } from "react";
+// import {
+//   Box,
+//   TextField,
+//   Typography,
+//   Button,
+//   Paper,
+//   Stack,
+// } from "@mui/material";
+// import { Badge } from "@mui/icons-material";
+// import { useRouter } from "next/navigation";
+// import { useSelector, useDispatch } from "react-redux";
+// import { RootState } from "@/app/store/store";
+// import { useCreateRoleMutation } from "./CreateRoleApi";
+// import { showToast } from "@/app/store/slices/toasterSlice";
 
+// const CreateRole: React.FC = () => {
+//   const router = useRouter();
+//   const dispatch = useDispatch();
+
+//   const [roleName, setRoleName] = useState("");
+
+//   // Pull tenantId and userId from auth slice
+//   const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
+//   const userId = useSelector((state: RootState) => state.auth.user?.userId);
+
+//   const [createRole, { isLoading }] = useCreateRoleMutation();
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+
+//     if (!roleName || !tenantId || !userId) {
+//       dispatch(showToast({ message: "Missing role name or user info", severity: "error", id: crypto.randomUUID() }));
+//       return;
+//     }
+
+//     try {
+//       const response = await createRole({
+//         tenantId,
+//         userId,
+//         roleName,
+//       }).unwrap();
+
+//       dispatch(showToast({ message: response.message, severity: "success", id: crypto.randomUUID() }));
+//       router.push("/AddFeatures");
+//     } catch (err: any) {
+//       dispatch(showToast({
+//         message: err?.data?.message || "Failed to create role",
+//         severity: "error",
+//         id: crypto.randomUUID(),
+//       }));
+//     }
+//   };
+
+//   return (
+//     <Box>
+//       <Box sx={{ mx: "auto", mt: 4, maxWidth: 600 }}>
+//         <form onSubmit={handleSubmit}>
+//           <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+//             <Stack spacing={3}>
+//               {/* Header */}
+//               <Box sx={{ display: "flex", alignItems: "center" }}>
+//                 <Box
+//                   sx={{
+//                     background: "#3072b0",
+//                     borderRadius: "50%",
+//                     width: 40,
+//                     height: 40,
+//                     display: "flex",
+//                     alignItems: "center",
+//                     justifyContent: "center",
+//                     color: "white",
+//                     mr: 2,
+//                   }}
+//                 >
+//                   <Badge sx={{ fontSize: 20 }} />
+//                 </Box>
+//                 <Typography variant="h5" sx={{ fontWeight: 600, color: "#2d3748" }}>
+//                   Role Details
+//                 </Typography>
+//               </Box>
+
+//               {/* Role Name */}
+//               <TextField
+//                 label="Role Name"
+//                 placeholder="e.g. Admin, Manager"
+//                 fullWidth
+//                 required
+//                 value={roleName}
+//                 onChange={(e) => setRoleName(e.target.value)}
+//               />
+
+//               {/* Buttons */}
+//               <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}>
+//                 <Button
+//                   onClick={() => router.back()}
+//                   variant="contained"
+//                   size="large"
+//                   sx={{
+//                     px: 4,
+//                     py: 1.2,
+//                     textTransform: "none",
+//                     fontWeight: 600,
+//                     background: "#3072b0",
+//                     borderRadius: 2,
+//                     "&:hover": { background: "#265d8f" },
+//                   }}
+//                 >
+//                   Back
+//                 </Button>
+
+//                 <Button
+//                   type="submit"
+//                   variant="contained"
+//                   size="large"
+//                   disabled={isLoading}
+//                   sx={{
+//                     px: 4,
+//                     py: 1.2,
+//                     textTransform: "none",
+//                     fontWeight: 600,
+//                     background: "#3072b0",
+//                     borderRadius: 2,
+//                     "&:hover": { background: "#265d8f" },
+//                   }}
+//                 >
+//                   {isLoading ? "Creating..." : "Create"}
+//                 </Button>
+//               </Box>
+//             </Stack>
+//           </Paper>
+//         </form>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default CreateRole;
+
+"use client";
 import React, { useState } from "react";
 import {
   Box,
@@ -11,44 +150,76 @@ import {
 } from "@mui/material";
 import { Badge } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useCreateRoleMutation } from "./CreateRoleApi";
+import { showToast } from "@/app/store/slices/toasterSlice";
 
 const CreateRole: React.FC = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const [form, setForm] = useState({
-    name: "",
-    description: "",
-  });
+  const [roleName, setRoleName] = useState("");
+  const [roleDescription, setRoleDescription] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Pull tenantId and userId from auth slice
+  const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
+  const userId = useSelector((state: RootState) => state.auth.user?.userId);
+
+  const [createRole, { isLoading }] = useCreateRoleMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("Role Data:", form);
-    alert("Role created successfully ✅");
+    if (!roleName || !tenantId || !userId) {
+      dispatch(
+        showToast({
+          message: "Missing role name or user info",
+          severity: "error",
+          id: crypto.randomUUID(),
+        })
+      );
+      return;
+    }
 
-    // Redirect later if needed
-    router.push("/AddFeatures");
+    try {
+      const response = await createRole({
+        tenantId,
+        userId,
+        roleName,
+        description: roleDescription,
+      }).unwrap();
+
+      const orgAppRoleId = response.data.data.org_app_role_id;
+
+      dispatch(
+        showToast({
+          message: response.message,
+          severity: "success",
+          id: crypto.randomUUID(),
+        })
+      );
+
+      // ✅ pass real ID
+      router.push(`/AddFeatures/${orgAppRoleId}`);
+    } catch (err: any) {
+      dispatch(
+        showToast({
+          message: err?.data?.message || "Failed to create role",
+          severity: "error",
+          id: crypto.randomUUID(),
+        })
+      );
+    }
   };
 
   return (
     <Box>
-      <Box
-        sx={{
-        //   maxWidth: 900,
-          mx: "auto",
-          mt: 4,
-        }}
-      >
+      <Box sx={{ mx: "auto", mt: 4, maxWidth: 600 }}>
         <form onSubmit={handleSubmit}>
-          <Paper
-            elevation={3}
-            sx={{
-              p: 4,
-              borderRadius: 3,
-            }}
-          >
+          <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
             <Stack spacing={3}>
-              {/* Section Header */}
+              {/* Header */}
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Box
                   sx={{
@@ -79,8 +250,8 @@ const CreateRole: React.FC = () => {
                 placeholder="e.g. Admin, Manager"
                 fullWidth
                 required
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
               />
 
               {/* Role Description */}
@@ -89,22 +260,15 @@ const CreateRole: React.FC = () => {
                 placeholder="Describe the role's purpose"
                 fullWidth
                 required
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
+                value={roleDescription}
+                onChange={(e) => setRoleDescription(e.target.value)}
               />
+
+              {/* Buttons */}
               <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mt: 3,
-                }}
+                sx={{ display: "flex", justifyContent: "space-between", mt: 3 }}
               >
-                {/* Back Button */}
                 <Button
-                  // startIcon={<ArrowBackIcon />}
                   onClick={() => router.back()}
                   variant="contained"
                   size="large"
@@ -115,19 +279,17 @@ const CreateRole: React.FC = () => {
                     fontWeight: 600,
                     background: "#3072b0",
                     borderRadius: 2,
-                    "&:hover": {
-                      background: "#265d8f",
-                    },
+                    "&:hover": { background: "#265d8f" },
                   }}
                 >
                   Back
                 </Button>
 
-                {/* Submit Button */}
                 <Button
                   type="submit"
                   variant="contained"
                   size="large"
+                  disabled={isLoading}
                   sx={{
                     px: 4,
                     py: 1.2,
@@ -135,12 +297,10 @@ const CreateRole: React.FC = () => {
                     fontWeight: 600,
                     background: "#3072b0",
                     borderRadius: 2,
-                    "&:hover": {
-                      background: "#265d8f",
-                    },
+                    "&:hover": { background: "#265d8f" },
                   }}
                 >
-                  Create
+                  {isLoading ? "Creating..." : "Create"}
                 </Button>
               </Box>
             </Stack>
