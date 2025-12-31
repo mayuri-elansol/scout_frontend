@@ -1,7 +1,7 @@
 
 // 'use client';
 
-// import React, { useEffect, useMemo, useState } from 'react';
+// import React, {  useMemo, useState } from 'react';
 // import {
 //   Box,
 //   Table,
@@ -10,32 +10,32 @@
 //   TableContainer,
 //   TableHead,
 //   TableRow,
-//   TableSortLabel,
 //   Paper,
 //   IconButton,
 //   TextField,
 //   TablePagination,
 //   Button,
+  
 // } from '@mui/material';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 // import EditIcon from '@mui/icons-material/Edit';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import { useRouter } from 'next/navigation';
 // import { useSelector } from 'react-redux';
-
 // import { RootState } from '@/app/store/store';
-// import { formatDate } from '@/utils/dateUtils';
+// import { useRoleOverviewQuery } from './RoleOverviewApi';
 // import { FEATURE } from '@/app/config/featureRegistry';
+// import { formatDate } from '@/utils/dateUtils';
+// import Loader from '@/app/components/atoms/Loader/Loader';
+// import AddRole from '../AddRole/AddRole';
 
 // /* ---------------- TYPES ---------------- */
 
 // interface RoleIdData {
-//   createdAt: string;
-//   updatedAt: string;
 //   role_id: string;
 //   name: string;
 //   can_delete: boolean;
-//   roleFeatures: string[];
+//   roleFeatures: any[];
 // }
 
 // interface RowData {
@@ -45,28 +45,37 @@
 //   role_id: RoleIdData;
 // }
 
-// interface RoleOverviewTableProps {
-//   roleTableData?: RowData[];
-// }
-
 // /* ---------------- COMPONENT ---------------- */
 
-// export default function RoleOverview({
-//   roleTableData = [],
-// }: Readonly<RoleOverviewTableProps>) {
+// export default function RoleOverview() {
 //   const router = useRouter();
 
-//   /* ---------- FEATURES FROM AUTH SLICE ---------- */
-//   const features = useSelector((state: RootState) => state.auth.features);
+//   /* ---------- AUTH ---------- */
+//   const { user, features } = useSelector((state: RootState) => state.auth);
+//   const tenantId = user?.org_id;
+//   const userId = user?.userId;
 
+//   /* ---------- PERMISSIONS ---------- */
 //   const canAddRole = features.includes(FEATURE.ROLE_MANAGEMENT);
 //   const canViewRole = features.includes(FEATURE.VIEW_ROLE);
 //   const canEditRole = features.includes(FEATURE.EDIT_ROLE);
 //   const canDeleteRole = features.includes(FEATURE.DELETE_ROLE);
 
-//   /* ---------- STATE ---------- */
+//   /* ---------- API ---------- */
 
-//   const [rows, setRows] = useState<RowData[]>([]);
+// const {
+//   data,
+//   isLoading,
+//   isFetching,
+// } = useRoleOverviewQuery(
+//   { tenantId: tenantId!, userId: userId! },
+//   {
+//     skip: !tenantId || !userId,
+//   }
+// );
+// const rows: RowData[] = data?.data?.data ?? [];
+
+//   /* ---------- STATE ---------- */
 //   const [orderBy, setOrderBy] =
 //     useState<'name' | 'role_id' | 'createdAt' | 'updatedAt'>('name');
 //   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -74,96 +83,94 @@
 //   const [page, setPage] = useState(0);
 //   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-//   useEffect(() => {
-//     setRows(roleTableData);
-//   }, [roleTableData]);
 
-//   /* ---------- SORTING ---------- */
-
+//   /* ---------- SORT ---------- */
 //   const sortedRows = useMemo(() => {
 //     return [...rows].sort((a, b) => {
-//       let aValue = '';
-//       let bValue = '';
+//       let aVal = '';
+//       let bVal = '';
 
 //       switch (orderBy) {
 //         case 'name':
-//           aValue = a.role_id?.name ?? '';
-//           bValue = b.role_id?.name ?? '';
+//           aVal = a.role_id?.name ?? '';
+//           bVal = b.role_id?.name ?? '';
 //           break;
 //         case 'role_id':
-//           aValue = a.role_id?.role_id ?? '';
-//           bValue = b.role_id?.role_id ?? '';
+//           aVal = a.role_id?.role_id ?? '';
+//           bVal = b.role_id?.role_id ?? '';
 //           break;
 //         case 'createdAt':
-//           aValue = a.createdAt ?? '';
-//           bValue = b.createdAt ?? '';
+//           aVal = a.createdAt;
+//           bVal = b.createdAt;
 //           break;
 //         case 'updatedAt':
-//           aValue = a.updatedAt ?? '';
-//           bValue = b.updatedAt ?? '';
+//           aVal = a.updatedAt;
+//           bVal = b.updatedAt;
 //           break;
 //       }
 
 //       return order === 'asc'
-//         ? aValue.localeCompare(bValue)
-//         : bValue.localeCompare(aValue);
+//         ? aVal.localeCompare(bVal)
+//         : bVal.localeCompare(aVal);
 //     });
 //   }, [rows, order, orderBy]);
 
 //   /* ---------- SEARCH ---------- */
-
 //   const filteredRows = useMemo(() => {
 //     const q = searchQuery.toLowerCase();
-//     return sortedRows.filter((row) =>
-//       row.role_id?.name?.toLowerCase().includes(q) ||
-//       row.role_id?.role_id?.toLowerCase().includes(q)
+//     return sortedRows.filter(
+//       (r) =>
+//         r.role_id?.name?.toLowerCase().includes(q) ||
+//         r.role_id?.role_id?.toLowerCase().includes(q)
 //     );
 //   }, [sortedRows, searchQuery]);
 
 //   /* ---------- PAGINATION ---------- */
-
-//   const paginatedRows = useMemo(() => {
-//     return filteredRows.slice(
-//       page * rowsPerPage,
-//       page * rowsPerPage + rowsPerPage
-//     );
-//   }, [filteredRows, page, rowsPerPage]);
+//   const paginatedRows = filteredRows.slice(
+//     page * rowsPerPage,
+//     page * rowsPerPage + rowsPerPage
+//   );
 
 //   /* ---------- HANDLERS ---------- */
+//   const handleView = (orgAppRoleId: string, roleId: string) =>
+//     router.push(`/ViewRole/${orgAppRoleId}/${roleId}`);
 
-//   const handleView = (orgAppRoleId: string, roleId: string) => {
-//     router.push(`/viewRole/${orgAppRoleId}/${roleId}`);
-//   };
+//   const handleEdit = (orgAppRoleId: string, roleId: string) =>
+//     router.push(`/EditRole/${orgAppRoleId}/${roleId}`);
 
-//   const handleEdit = (orgAppRoleId: string, roleId: string) => {
-//     router.push(`/editRole/editPermissionsForRole/${orgAppRoleId}/${roleId}`);
-//   };
 
-//   const handleDelete = (roleId: string) => {
-//     console.log('Delete clicked:', roleId);
-//   };
+//   /* ---------- LOADING ---------- */
+//   if (isLoading ) {
+//     return (
+//       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+//         <Loader />
+//       </Box>
+//     );
+//   }
 
-//   /* ---------- RENDER ---------- */
+//   /* ---------- EMPTY STATE ---------- */
+//   if (!isLoading && rows.length === 0) {
+//     return <AddRole />;
+//   }
 
+//   /* ---------- UI ---------- */
 //   return (
 //     <Box sx={{ p: 2 }}>
 //       {/* Header */}
 //       <Box display="flex" justifyContent="space-between" mb={2}>
-//         {canAddRole && (
-//           <Button
-//             variant="contained"
-//             onClick={() => router.push('/CreateRole')}
-//           >
-//             Add Role
-//           </Button>
-//         )}
-
-//         <TextField
+//          <TextField
 //           label="Search"
 //           size="small"
 //           value={searchQuery}
 //           onChange={(e) => setSearchQuery(e.target.value)}
 //         />
+//         {canAddRole && (
+//           <Button variant="contained" onClick={() => router.push('/CreateRole')}>
+//             Add Role
+//           </Button>
+//         )}
+
+       
 //       </Box>
 
 //       {/* Table */}
@@ -171,24 +178,8 @@
 //         <Table>
 //           <TableHead>
 //             <TableRow sx={{ background: 'rgba(169,177,184,0.2)' }}>
-//               {[
-//                 { label: 'NAME', prop: 'name' as const },
-//                 { label: 'ROLE ID', prop: 'role_id' as const },
-//                 { label: 'CREATED AT', prop: 'createdAt' as const },
-//                 { label: 'UPDATED AT', prop: 'updatedAt' as const },
-//               ].map((col) => (
-//                 <TableCell key={col.label}>
-//                   <TableSortLabel
-//                     active={orderBy === col.prop}
-//                     direction={orderBy === col.prop ? order : 'asc'}
-//                     onClick={() => {
-//                       setOrder(orderBy === col.prop && order === 'asc' ? 'desc' : 'asc');
-//                       setOrderBy(col.prop);
-//                     }}
-//                   >
-//                     {col.label}
-//                   </TableSortLabel>
-//                 </TableCell>
+//               {['ROLE NAME', 'ROLE ID', 'CREATED AT', 'UPDATED AT'].map((h) => (
+//                 <TableCell key={h}>{h}</TableCell>
 //               ))}
 //               <TableCell>ACTIONS</TableCell>
 //             </TableRow>
@@ -197,11 +188,11 @@
 //           <TableBody>
 //             {paginatedRows.map((row) => (
 //               <TableRow key={row.org_app_role_id}>
-//                 <TableCell>{row.role_id?.name ?? '-'}</TableCell>
-//                 <TableCell>{row.role_id?.role_id ?? '-'}</TableCell>
+//                 <TableCell>{row.role_id.name}</TableCell>
+//                 <TableCell>{row.role_id.role_id}</TableCell>
 //                 <TableCell>{formatDate(row.createdAt)}</TableCell>
 //                 <TableCell>{formatDate(row.updatedAt)}</TableCell>
-//                 <TableCell sx={{ display: 'flex' }}>
+//                 <TableCell>
 //                   {canViewRole && (
 //                     <IconButton
 //                       color="primary"
@@ -225,10 +216,7 @@
 //                   )}
 
 //                   {canDeleteRole && row.role_id.can_delete && (
-//                     <IconButton
-//                       color="error"
-//                       onClick={() => handleDelete(row.role_id.role_id)}
-//                     >
+//                     <IconButton color="error">
 //                       <DeleteIcon />
 //                     </IconButton>
 //                   )}
@@ -256,7 +244,7 @@
 // }
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Table,
@@ -265,45 +253,33 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableSortLabel,
   Paper,
   IconButton,
   TextField,
   TablePagination,
   Button,
-  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store/store';
-import { useRoleOverviewMutation } from './RoleOverviewApi';
+import { useRoleOverviewQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
 import { FEATURE } from '@/app/config/featureRegistry';
 import { formatDate } from '@/utils/dateUtils';
-
-/* ---------------- TYPES ---------------- */
-
-interface RoleIdData {
-  role_id: string;
-  name: string;
-  can_delete: boolean;
-  roleFeatures: any[];
-}
-
-interface RowData {
-  createdAt: string;
-  updatedAt: string;
-  org_app_role_id: string;
-  role_id: RoleIdData;
-}
-
-/* ---------------- COMPONENT ---------------- */
+import Loader from '@/app/components/atoms/Loader/Loader';
+import { showToast } from '@/app/store/slices/toasterSlice';
+import AddRole from '../AddRole/AddRole';
 
 export default function RoleOverview() {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   /* ---------- AUTH ---------- */
   const { user, features } = useSelector((state: RootState) => state.auth);
@@ -317,10 +293,15 @@ export default function RoleOverview() {
   const canDeleteRole = features.includes(FEATURE.DELETE_ROLE);
 
   /* ---------- API ---------- */
-  const [fetchRoles, { isLoading }] = useRoleOverviewMutation();
+  const { data, isLoading } = useRoleOverviewQuery(
+    { tenantId: tenantId!, userId: userId! },
+    { skip: !tenantId || !userId }
+  );
+  const rows = data?.data?.data ?? [];
+
+  const [deleteRoleById, { isLoading: isDeleting }] = useDeleteRoleByIdMutation();
 
   /* ---------- STATE ---------- */
-  const [rows, setRows] = useState<RowData[]>([]);
   const [orderBy, setOrderBy] =
     useState<'name' | 'role_id' | 'createdAt' | 'updatedAt'>('name');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
@@ -328,18 +309,8 @@ export default function RoleOverview() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  /* ---------- FETCH DATA ---------- */
-  useEffect(() => {
-    if (!tenantId || !userId) return;
-
-    fetchRoles({ tenantId, userId })
-      .unwrap()
-      .then((res) => {
-        const list = res?.data?.data;
-        setRows(Array.isArray(list) ? list : []);
-      })
-      .catch(() => setRows([]));
-  }, [tenantId, userId, fetchRoles]);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 
   /* ---------- SORT ---------- */
   const sortedRows = useMemo(() => {
@@ -390,18 +361,59 @@ export default function RoleOverview() {
 
   /* ---------- HANDLERS ---------- */
   const handleView = (orgAppRoleId: string, roleId: string) =>
-    router.push(`/viewRole/${orgAppRoleId}/${roleId}`);
+    router.push(`/ViewRole/${orgAppRoleId}/${roleId}`);
 
   const handleEdit = (orgAppRoleId: string, roleId: string) =>
-    router.push(`/editRole/editPermissionsForRole/${orgAppRoleId}/${roleId}`);
+    router.push(`/EditRole/${orgAppRoleId}/${roleId}`);
+
+  const handleOpenConfirm = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    setSelectedRoleId(null);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!tenantId || !userId || !selectedRoleId) return;
+
+    try {
+      const res = await deleteRoleById({ tenantId, userId, roleId: selectedRoleId }).unwrap();
+
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: res.message || 'Role deleted successfully',
+          severity: 'success',
+        })
+      );
+
+      handleCloseConfirm();
+    } catch (err: any) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: err?.data?.message || 'Failed to delete role',
+          severity: 'error',
+        })
+      );
+    }
+  };
 
   /* ---------- LOADING ---------- */
-  if (isLoading && rows.length === 0) {
+  if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
-        <CircularProgress />
+        <Loader />
       </Box>
     );
+  }
+
+  /* ---------- EMPTY STATE ---------- */
+  if (!isLoading && rows.length === 0) {
+    return <AddRole />;
   }
 
   /* ---------- UI ---------- */
@@ -409,18 +421,17 @@ export default function RoleOverview() {
     <Box sx={{ p: 2 }}>
       {/* Header */}
       <Box display="flex" justifyContent="space-between" mb={2}>
-        {canAddRole && (
-          <Button variant="contained" onClick={() => router.push('/CreateRole')}>
-            Add Role
-          </Button>
-        )}
-
         <TextField
           label="Search"
           size="small"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        {canAddRole && (
+          <Button variant="contained" onClick={() => router.push('/CreateRole')}>
+            Add Role
+          </Button>
+        )}
       </Box>
 
       {/* Table */}
@@ -428,7 +439,7 @@ export default function RoleOverview() {
         <Table>
           <TableHead>
             <TableRow sx={{ background: 'rgba(169,177,184,0.2)' }}>
-              {['NAME', 'ROLE ID', 'CREATED AT', 'UPDATED AT'].map((h) => (
+              {['ROLE NAME', 'ROLE ID', 'CREATED AT', 'UPDATED AT'].map((h) => (
                 <TableCell key={h}>{h}</TableCell>
               ))}
               <TableCell>ACTIONS</TableCell>
@@ -466,7 +477,11 @@ export default function RoleOverview() {
                   )}
 
                   {canDeleteRole && row.role_id.can_delete && (
-                    <IconButton color="error">
+                    <IconButton
+                      color="error"
+                      onClick={() => handleOpenConfirm(row.role_id.role_id)}
+                      disabled={isDeleting}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   )}
@@ -489,6 +504,24 @@ export default function RoleOverview() {
           }}
         />
       </TableContainer>
+
+      {/* ---------- CONFIRM DIALOG ---------- */}
+      <Dialog open={openConfirm} onClose={handleCloseConfirm}>
+        <DialogTitle>Confirm Delete </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this role? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirm} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirm} color="error" disabled={isDeleting}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

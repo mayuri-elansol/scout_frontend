@@ -3,7 +3,9 @@ import { apiRoutes } from "@/constants/apiRoutes";
 
 export const featuresApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    getFeaturesByOrgId: builder.mutation<
+
+    /* ---------- FETCH FEATURES (QUERY) ---------- */
+    getFeaturesByOrgId: builder.query<
       { status: string; message: string; data?: any; error?: string },
       { userId: string; orgId: string }
     >({
@@ -12,10 +14,11 @@ export const featuresApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["AddFeatures"], 
+      providesTags: ["AddFeatures"],
     }),
 
-   assignFeatureToRole: builder.mutation<
+    /* ---------- ASSIGN FEATURES (MUTATION) ---------- */
+    assignFeatureToRole: builder.mutation<
       { status: string; message: string; data?: any; error?: string },
       {
         tenantId: string;
@@ -28,10 +31,13 @@ export const featuresApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["AssignFeatureToRole"],
+      invalidatesTags: ["AddFeatures"],
     }),
-    
+
   }),
 });
 
-export const { useGetFeaturesByOrgIdMutation ,useAssignFeatureToRoleMutation} = featuresApi;
+export const {
+  useGetFeaturesByOrgIdQuery,
+  useAssignFeatureToRoleMutation,
+} = featuresApi;

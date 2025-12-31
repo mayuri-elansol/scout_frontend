@@ -121,7 +121,7 @@ const PPEDetection: React.FC = () => {
       clearTimeout(refetchTimeoutRef.current);
     }
 
-    fetchKpi({ tenantId: "c2bf4995e1bf3ce1" })
+    fetchKpi({ tenantId: "71ffbe151ed71603" })
       .unwrap()
       .then((freshData) => {
         setDisplayKpi(freshData);
@@ -133,14 +133,14 @@ const PPEDetection: React.FC = () => {
         console.error("❌ Refetch failed:", err);
       });
     // fetch Zone Violations
-    fetchZoneViolations({ tenantId: "c2bf4995e1bf3ce1" })
+    fetchZoneViolations({ tenantId: "71ffbe151ed71603" })
       .unwrap()
       .then((zones) => {
         setDisplayZoneViolations(zones || []);
       })
       .catch((err) => console.error("❌ Zone refetch failed", err));
     //fetch zone violations
-    fetchRecent({ tenantId: "c2bf4995e1bf3ce1" })
+    fetchRecent({ tenantId: "71ffbe151ed71603" })
       .unwrap()
       .then((res) => {
         setRecentViolationsLive(res);
@@ -292,7 +292,7 @@ const PPEDetection: React.FC = () => {
   const fetchAllWithTime = useCallback(
     (range: { start: string; end: string }) => {
       const payload = {
-        tenantId: "c2bf4995e1bf3ce1",
+        tenantId: "71ffbe151ed71603",
         startDate: range.start,
         endDate: range.end,
       };
@@ -317,12 +317,12 @@ const PPEDetection: React.FC = () => {
 
   // ✅ Initial fetch on mount
   useEffect(() => {
-    fetchKpi({ tenantId: "c2bf4995e1bf3ce1" });
-    fetchZoneViolations({ tenantId: "c2bf4995e1bf3ce1" });
+    fetchKpi({ tenantId: "71ffbe151ed71603" });
+    fetchZoneViolations({ tenantId: "71ffbe151ed71603" });
     fetchDetailedReport({
-      tenantId: "c2bf4995e1bf3ce1",
+      tenantId: "71ffbe151ed71603",
     });
-    fetchRecent({ tenantId: "c2bf4995e1bf3ce1" });
+    fetchRecent({ tenantId: "71ffbe151ed71603" });
   }, [fetchKpi, fetchZoneViolations, fetchDetailedReport, fetchRecent]);
 
   // ✅ Cleanup on unmount
@@ -399,7 +399,7 @@ const PPEDetection: React.FC = () => {
     console.log("reset button clicked");
 
     fetchDetailedReport({
-      tenantId: "c2bf4995e1bf3ce1",
+      tenantId: "71ffbe151ed71603",
     });
   }, [fetchDetailedReport]);
 
@@ -407,7 +407,7 @@ const PPEDetection: React.FC = () => {
     async (format: "csv" | "pdf", filters: FilterParams) => {
       try {
         const payload = {
-          tenantId: "c2bf4995e1bf3ce1",
+          tenantId: "71ffbe151ed71603",
 
           violation: filters.violation || undefined,
           zone: filters.zone || undefined,
