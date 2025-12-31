@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { Box, Typography, IconButton, Tooltip, Paper } from "@mui/material";
 import {
   PlayArrow,
@@ -9,6 +9,7 @@ import {
   FullscreenExit,
   Videocam,
 } from "@mui/icons-material";
+import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
 
 interface Camera {
   id: string;
@@ -37,6 +38,34 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   useCases,
   aiProcessingEnabled,
 }) => {
+  const useCasesArray = [
+    {
+      id: "safety.ppe",
+      kafkaKey: "PPE",
+      name: "PPE Detection (Helmet, Vest, Gloves, Mask)",
+    },
+    {
+      id: "safety.fire",
+      kafkaKey: "FIRE",
+      name: "Fire, Smoke, Oil & Gas Leak Detection",
+    },
+    {
+      id: "safety.fall",
+      kafkaKey: "FALL",
+      name: "Fall / Laydown Detection",
+    },
+    {
+      id: "forklift-detection",
+      kafkaKey: "FORKLIFT",
+      name: "Forklift / Vehicle in Walkways Detection",
+    },
+  ];
+
+  const selectedUseCaseKafkaKey = useCasesArray.find(
+    (uc) => uc.id === selectedUseCase
+  )?.kafkaKey;
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -67,6 +96,183 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const getUseCaseName = () => {
     return useCases.find((uc) => uc.id === selectedUseCase)?.name || "";
   };
+  // ============================
+  // DRAW FRAME (ALWAYS)
+  // ============================
+  // const drawLiveFrame = useCallback(
+  //   (msg: any) => {
+  //     // if (msg.cameraId !== selectedCamera || msg.useCase !== selectedUseCase) {
+  //     //   return; // ❌ Not selected stream
+  //     // }
+
+  //     const canvas = canvasRef.current;
+  //     const ctx = canvas?.getContext("2d");
+  //     if (!canvas || !ctx) return;
+
+  //     const img = new Image();
+  //     img.src = `data:image/jpeg;base64,${msg.frameData}`;
+
+  //     img.onload = () => {
+  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  //     };
+  //   },
+  //   [selectedCamera, selectedUseCase]
+  // );
+
+  // ============================
+  // DRAW ROI (ONLY IF AI ON)
+  // ============================
+  // const drawDetection = useCallback(
+  //   (msg: any) => {
+  //     if (!aiProcessingEnabled) return;
+
+  //     if (
+  //       msg.camera_id !== selectedCamera ||
+  //       msg.use_case !== selectedUseCase
+  //     ) {
+  //       return;
+  //     }
+
+  //     const canvas = canvasRef.current;
+  //     const ctx = canvas?.getContext("2d");
+  //     if (!canvas || !ctx) return;
+  //     console.log("inside the drawdetection function", msg);
+  //     msg.detections?.forEach((det: any) => {
+  //       const { bbox, object, confidence } = det;
+  //       if (!bbox) return;
+
+  //       const { x1, y1, x2, y2 } = bbox;
+
+  //       ctx.strokeStyle = "lime";
+  //       ctx.lineWidth = 2;
+  //       ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+  //       ctx.fillStyle = "yellow";
+  //       ctx.font = "14px Arial";
+  //       ctx.fillText(
+  //         `${object} ${(confidence * 100).toFixed(1)}%`,
+  //         x1 + 5,
+  //         y1 + 15
+  //       );
+  //     });
+  //   },
+  //   [selectedCamera, selectedUseCase, aiProcessingEnabled]
+  // );
+
+  // const drawDetection = useCallback((data: any) => {
+  //   if (!aiProcessingEnabled) return;
+
+  //   const canvas = canvasRef.current;
+  //   const ctx = canvas?.getContext("2d");
+  //   if (!canvas || !ctx) return;
+
+  //   const detections = data?.detections;
+  //   if (!detections || detections.length === 0) return;
+
+  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  //   detections.forEach((det: any) => {
+  //     const { object, confidence, bbox } = det;
+  //     if (!bbox) return;
+
+  //     const { x1, y1, x2, y2 } = bbox;
+
+  //     ctx.strokeStyle = "lime";
+  //     ctx.lineWidth = 2;
+  //     ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+  //     ctx.font = "14px Arial";
+  //     ctx.fillStyle = "yellow";
+  //     ctx.fillText(
+  //       `${object} ${(confidence * 100).toFixed(1)}%`,
+  //       x1 + 5,
+  //       y1 + 15
+  //     );
+  //   });
+  // }, []);
+
+  const drawDetection = useCallback(
+    (data: any) => {
+      if (!aiProcessingEnabled) return;
+
+      // ✅ FILTER BY CAMERA
+      if (
+        data.camera_id !== selectedCamera ||
+        data.use_case !== selectedUseCaseKafkaKey
+      ) {
+        return; // ❌ Ignore other cameras
+      }
+
+      const canvas = canvasRef.current;
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx) return;
+
+      const detections = data?.detections;
+      if (!detections || detections.length === 0) return;
+
+      // ❌ DO NOT clear frame here if frame is drawn separately
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      detections.forEach((det: any) => {
+        const { object, confidence, bbox } = det;
+        if (!bbox) return;
+
+        const { x1, y1, x2, y2 } = bbox;
+
+        ctx.strokeStyle = "lime";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+
+        ctx.font = "14px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText(
+          `${object} ${(confidence * 100).toFixed(1)}%`,
+          x1 + 5,
+          y1 - 6
+        );
+      });
+
+      console.log("🎯 ROI drawn for camera:", data.camera_id, data.use_case);
+    },
+    [selectedCamera, aiProcessingEnabled, selectedUseCaseKafkaKey]
+  );
+
+  const drawLiveFrame = useCallback((frameMsg: any) => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    const base64 = frameMsg.frameData;
+    if (!base64) return;
+
+    const img = new Image();
+    img.src = `data:image/jpeg;base64,${base64}`;
+
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+  }, []);
+  // ============================
+  // WEBSOCKET CONNECTION
+  // ============================
+  // useRealtimeSocket("http://192.168.0.5:3001", {
+  //   topic: selectedUseCase,
+  //   onLiveFrame: drawLiveFrame,
+  //   onData: drawDetection,
+  // });
+  useRealtimeSocket("http://192.168.0.5:4006", {
+    topic: selectedUseCase,
+    onData: (msg) => {
+      drawDetection(msg); // ROI overlay
+      console.log(" PPE detection:", msg);
+    },
+    onLiveFrame: (frame) => {
+      drawLiveFrame(frame);
+      console.log("🎥 LIVE FRAME RECEIVED :", frame);
+    },
+  });
 
   // Placeholder state - showing message before going live
   if (!isLive) {
@@ -278,14 +484,14 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
             backgroundColor: "#000000",
           }}
         >
-          <Box
-            component="img"
-            src="/siteimage.png"
-            alt="Live Feed"
-            sx={{
+          <canvas
+            ref={canvasRef}
+            width={1280}
+            height={720}
+            style={{
               width: "100%",
               height: "100%",
-              objectFit: "contain",
+              background: "#000",
             }}
           />
         </Box>

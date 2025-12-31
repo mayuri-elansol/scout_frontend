@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import LiveVideoPlayer from "./LiveVideoPlayer";
 
 const meta: Meta<typeof LiveVideoPlayer> = {
-  title: "Components/LiveVideoPlayer",
+  title: "Components/Molecules/LiveVideoPlayer",
   component: LiveVideoPlayer,
   parameters: {
     layout: "fullscreen",

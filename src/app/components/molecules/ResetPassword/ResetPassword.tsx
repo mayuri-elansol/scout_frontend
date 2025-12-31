@@ -329,11 +329,11 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           <TextField
             fullWidth
             variant="outlined"
-            placeholder="Enter your email"
+            placeholder="Enter your username"
             disabled={isLoading}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            {...register("email", {
+            error={!!errors.userName}
+            helperText={errors.userName?.message}
+            {...register("userName", {
               required: "Email is required",
             })}
             slotProps={{
@@ -445,11 +445,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
                       edge="end"
                       disabled={isLoading}
                     >
-                      {showConfirmPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -468,14 +464,14 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fontWeight: 600,
             backgroundColor:
               isLoading ||
-              !watch("email") ||
+              !watch("userName") ||
               !watch("password") ||
               !watch("confirmPassword")
                 ? "#e5e7eb"
                 : "#1976d2",
             color:
               isLoading ||
-              !watch("email") ||
+              !watch("userName") ||
               !watch("password") ||
               !watch("confirmPassword")
                 ? "#9ca3af"
@@ -484,7 +480,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             borderRadius: "8px",
             cursor:
               isLoading ||
-              !watch("email") ||
+              !watch("userName") ||
               !watch("password") ||
               !watch("confirmPassword")
                 ? "not-allowed"
@@ -494,7 +490,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
           }}
           disabled={
             isLoading ||
-            !watch("email") ||
+            !watch("userName") ||
             !watch("password") ||
             !watch("confirmPassword")
           }

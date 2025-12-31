@@ -54,11 +54,11 @@ export default function PPERealtimeViewer() {
     topic: "safety.ppe",
     onData: (msg) => {
       drawDetection(msg); // ROI overlay
-      console.log("✅ PPE detection:", msg);
+      console.log("✅ PPE detection from realtime viewer:", msg);
     },
     onLiveFrame: (frame) => {
       drawLiveFrame(frame);
-      console.log("🎥 LIVE FRAME RECEIVED:", frame);
+      console.log("🎥 LIVE FRAME RECEIVED from realtime viewer:", frame);
     },
   });
 

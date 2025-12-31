@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  Typography,
   FormControl,
   InputLabel,
   Select,
@@ -9,23 +8,23 @@ import {
   Button,
   SelectChangeEvent,
 } from "@mui/material";
-import { VideoCall, PlayArrow } from "@mui/icons-material";
+import { PlayArrow } from "@mui/icons-material";
 import AiToggleSwitch from "../../components/atoms/AiToggleSwitch/AiToggleSwitch";
-import LiveVideoPlayer from "./LiveVideoPlayer";
+import LiveVideoPlayer from "../../components/molecules/LiveVideoPlayer/LiveVideoPlayer";
 
 // Mock data for cameras
 const cameras = [
-  { id: "cam-1", name: "Production Zone A - Camera 1" },
-  { id: "cam-2", name: "Warehouse Zone B - Camera 2" },
-  { id: "cam-3", name: "Assembly Zone C - Camera 3" },
-  { id: "cam-4", name: "Loading Dock Zone D - Camera 4" },
+  { id: "21c4ac6c-2767-41ad-9ed1-d4e9b2eb3e32", name: "Camera 1" },
+  { id: "a5171a72-24ba-41c1-bfd3-7599cd00c82d", name: "Camera 2" },
+  { id: "02a7d929-c661-4365-abd7-840251b563f9", name: "Camera 3" },
+  { id: "CAM004", name: "Camera 4" },
 ];
 
 // Mock data for use cases
 const useCases = [
-  { id: "ppe-detection", name: "PPE Detection (Helmet, Vest, Gloves, Mask)" },
-  { id: "fire-smoke-detection", name: "Fire, Smoke, Oil & Gas Leak Detection" },
-  { id: "fall-detection", name: "Fall / Laydown Detection" },
+  { id: "safety.ppe", name: "PPE Detection (Helmet, Vest, Gloves, Mask)" },
+  { id: "safety.fire", name: "Fire, Smoke, Oil & Gas Leak Detection" },
+  { id: "safety.fall", name: "Fall / Laydown Detection" },
   {
     id: "forklift-detection",
     name: "Forklift / Vehicle in Walkways Detection",
@@ -59,12 +58,12 @@ const LiveStreamingPage: React.FC = () => {
     setSelectedCamera(event.target.value);
     // Don't reset live state - allow camera switching during live stream
   };
-
+  console.log("selected cameras", selectedCamera);
   const handleUseCaseChange = (event: SelectChangeEvent) => {
     setSelectedUseCase(event.target.value);
     // Don't reset live state - allow use case switching during live stream
   };
-
+  console.log("selected usecases", selectedUseCase);
   const handleGoLive = () => {
     if (selectedCamera && selectedUseCase) {
       setIsLive(true);
@@ -88,17 +87,13 @@ const LiveStreamingPage: React.FC = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "end",
             mb: 1,
             flexWrap: "wrap",
             gap: 2,
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            {/* <VideoCall sx={{ fontSize: 28, color: '#1976d2' }} />
-            <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#1c2025' }}>
-              Live Streaming
-            </Typography> */}
+          {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <VideoCall sx={{ fontSize: 28, color: "#1976d2" }} />
             <Typography
               variant="body1"
@@ -106,7 +101,7 @@ const LiveStreamingPage: React.FC = () => {
             >
               Real-time monitoring with AI-powered analytics
             </Typography>
-          </Box>
+          </Box> */}
 
           {/* AI Processing Toggle */}
           <AiToggleSwitch
@@ -155,9 +150,9 @@ const LiveStreamingPage: React.FC = () => {
               label="Select Camera"
               onChange={handleCameraChange}
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>None</em>
-              </MenuItem>
+              </MenuItem> */}
               {cameras.map((camera) => (
                 <MenuItem key={camera.id} value={camera.id}>
                   {camera.name}
@@ -179,9 +174,9 @@ const LiveStreamingPage: React.FC = () => {
               onChange={handleUseCaseChange}
               disabled={!selectedCamera} // Disable until camera is selected
             >
-              <MenuItem value="">
+              {/* <MenuItem value="">
                 <em>None</em>
-              </MenuItem>
+              </MenuItem> */}
               {useCases.map((useCase) => (
                 <MenuItem key={useCase.id} value={useCase.id}>
                   {useCase.name}
