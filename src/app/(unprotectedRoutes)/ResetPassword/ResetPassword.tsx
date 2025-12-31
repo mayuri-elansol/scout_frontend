@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from "react";
@@ -30,7 +29,7 @@ const ResetPassword: React.FC = () => {
 
     try {
       await resetPassword({
-        email: data.email,
+        userName: data.userName,
         password: data.password,
         sid,
       }).unwrap();

@@ -6,7 +6,7 @@ export const resetPasswordApi = basePublicApi.injectEndpoints({
   endpoints: (builder) => ({
     getResetPasswordData: builder.mutation<
       { data: { tokenOrError: string } },
-      { email: string; password: string; sid: string }
+      { userName: string; password: string; sid: string }
     >({
       query: (body) => ({
         url: `${apiRoutes.authentication.root}${apiRoutes.authentication.resetPassword}`,

@@ -42,11 +42,11 @@ export const liveStreamingMenu: MenuItemConfig[] = [
     name: "Live Streaming",
     icon: VideoCall,
     page: "live-streaming",
-    path: "/LiveStreamingPage",
+    path: "/LiveStreamingPage-new",
     featureId: FEATURE.LIVE_STREAMING,
   },
 ];
-export const Permission= [
+export const Permission = [
   {
     name: "Add Features",
     page: "Add-Features",
@@ -67,14 +67,14 @@ export const Permission= [
   },
   {
     name: "Delete Role",
-    page: "Delete-Role",    
+    page: "Delete-Role",
     featureId: FEATURE.DELETE_ROLE,
   },
   {
     name: "Role Overview",
     page: "Role-Overview",
     featureId: FEATURE.ROLE_OVERVIEW,
-  }
+  },
 ];
 
 // Dashboard menu
@@ -164,7 +164,7 @@ export const analyticsMenu: CategoryConfig[] = [
         name: "Camera Tamparing Dashboard",
         page: "camera-tamparing-dasboard",
         path: "/CameraTamperingDashboard",
-        featureId: FEATURE.CAMERA_TAMPERING,        
+        featureId: FEATURE.CAMERA_TAMPERING,
       },
     ],
   },
@@ -177,7 +177,6 @@ export const analyticsMenu: CategoryConfig[] = [
         page: "ppe-detection",
         path: "/PPEKitDetectionPage",
         featureId: FEATURE.PPE_DETECTION,
-
       },
       {
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
