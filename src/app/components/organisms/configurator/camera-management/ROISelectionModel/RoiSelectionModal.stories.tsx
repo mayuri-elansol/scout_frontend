@@ -4,32 +4,32 @@ import RoiSelectionModal from "./RoiSelectionModal";
 // ---------------------------------------------
 // SHARED MOCK DATA
 // ---------------------------------------------
-const mockExistingROI = [
-  {
-    type: "rectangle",
-    points: [
-      { x: 100, y: 100 },
-      { x: 300, y: 250 },
-    ],
-    completed: true,
-    color: "#00ff00",
-    name: "Person",
-    mode: "include",
-  },
-  {
-    type: "polygon",
-    points: [
-      { x: 400, y: 150 },
-      { x: 500, y: 150 },
-      { x: 550, y: 300 },
-      { x: 350, y: 300 },
-    ],
-    completed: true,
-    color: "#ff0000",
-    name: "Object",
-    mode: "include",
-  },
-];
+// const mockExistingROI = [
+//   {
+//     type: "rectangle",
+//     points: [
+//       { x: 100, y: 100 },
+//       { x: 300, y: 250 },
+//     ],
+//     completed: true,
+//     color: "#00ff00",
+//     name: "Person",
+//     mode: "include",
+//   },
+//   {
+//     type: "polygon",
+//     points: [
+//       { x: 400, y: 150 },
+//       { x: 500, y: 150 },
+//       { x: 550, y: 300 },
+//       { x: 350, y: 300 },
+//     ],
+//     completed: true,
+//     color: "#ff0000",
+//     name: "Object",
+//     mode: "include",
+//   },
+// ];
 
 const meta: Meta<typeof RoiSelectionModal> = {
   title: "Organisms/Configurator/CameraManagement/RoiSelectionModal",
@@ -61,7 +61,7 @@ export const Default: Story = {};
 export const WithExistingROI: Story = {
   args: {
     useCaseName: "Object Detection in Walking Bays",
-    existingROI: mockExistingROI,
+    // existingROI: mockExistingROI,
   },
 };
 
@@ -88,6 +88,7 @@ export const IntrusionDetection: Story = {
         color: "#ff00ff",
         name: "Perimeter",
         mode: "include",
+        id: ""
       },
     ],
   },
@@ -107,6 +108,7 @@ export const WithExcludeZone: Story = {
         color: "#00ff00",
         name: "Standing Person",
         mode: "include",
+        id: ""
       },
       {
         type: "rectangle",
@@ -118,6 +120,7 @@ export const WithExcludeZone: Story = {
         color: "#ff0000",
         name: "Fallen Person",
         mode: "exclude",
+        id: ""
       },
     ],
   },

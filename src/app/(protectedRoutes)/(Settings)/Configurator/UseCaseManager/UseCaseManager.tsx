@@ -7,20 +7,15 @@ import {
   Typography,
   Paper,
   Alert,
-  Breadcrumbs,
-  Link as MuiLink,
   Skeleton,
 } from "@mui/material";
 import {
-  Home as HomeIcon,
-  Settings as SettingsIcon,
-  Tune as TuneIcon,
   Category as CategoryIcon,
-  NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
-import Link from "next/link";
 import { UseCase, Camera } from "@/app/types/useCaseManager";
-import { useCaseManagerService } from "@/app/services/useCaseManagerService";
+import { getUsecases, getCameras, assignCameras, getAssignments }
+  from "@/app/services/configurator/usecaseService";
+
 import {
   UseCaseList,
   CameraSelectionDrawer,
@@ -30,13 +25,14 @@ const UseCaseManager: React.FC = () => {
   const [useCases, setUseCases] = useState<UseCase[]>([]);
   const [cameras, setCameras] = useState<Camera[]>([]);
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isLoadingUseCases, setIsLoadingUseCases] = useState(true);
   const [isLoadingCameras, setIsLoadingCameras] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Assume organization ID is available from context or session
-  const organizationId = "org-001";
+  // const organizationId = "org-001";
 
   // Load use cases on mount
   useEffect(() => {
@@ -45,13 +41,25 @@ const UseCaseManager: React.FC = () => {
 
   const loadUseCases = async () => {
     setIsLoadingUseCases(true);
-    setError(null);
     try {
-      const orgLicense = await useCaseManagerService.getMockOrganizationLicense(
-        organizationId
-      );
-      setUseCases(orgLicense.useCases);
+      const res = await getUsecases();         // <-- real backend call
+      const usecases = res.data.map((uc: Record<string, unknown>) => ({
+        id: uc.id,
+        name: uc.usecaseName,
+        description: uc.description,
+        category: "AI",
+        enabled: true,
+        assignedCameraIds: [],
+      }));
+      console.log("UseCases API Response", res.data);
+      for (const uc of usecases) {
+        const assignments = await getAssignments(uc.id);
+        uc.assignedCameraIds = assignments.data.map((m: Record<string, unknown>) => String(m.cameraId));
+      }
+
+      setUseCases(usecases);
     } catch (err) {
+
       console.error("Error loading use cases:", err);
       setError("Failed to load use cases. Please try again later.");
     } finally {
@@ -59,11 +67,23 @@ const UseCaseManager: React.FC = () => {
     }
   };
 
+
   const loadCameras = async () => {
     setIsLoadingCameras(true);
     try {
-      const cameraData = await useCaseManagerService.getMockCameras(organizationId);
-      setCameras(cameraData);
+      const res = await getCameras();
+      setCameras(
+        res.data.map((cam: Record<string, unknown>) => ({
+          id: cam.id,
+          name: cam.cameraName,
+          position: cam.cameraZone,
+          location: cam.cameraZone,
+          ipAddress: cam.cameraIp,
+          port: cam.RTSPport,
+          make: cam.connectionType,
+          status: "connected",
+        }))
+      );
     } catch (err) {
       console.error("Error loading cameras:", err);
     } finally {
@@ -71,19 +91,11 @@ const UseCaseManager: React.FC = () => {
     }
   };
 
-  const handleConfigureCameras = async (useCase: UseCase) => {
-    setSelectedUseCase(useCase);
-    setDrawerOpen(true);
-    if (cameras.length === 0) {
-      await loadCameras();
-    }
-  };
 
-  const handleSaveCameraAssignments = async (
-    useCaseId: string,
-    selectedCameraIds: string[]
-  ) => {
+  const handleSaveCameraAssignments = async (useCaseId: string, selectedCameraIds: string[]) => {
     try {
+      await assignCameras(useCaseId, selectedCameraIds);   // call backend
+
       setUseCases((prev) =>
         prev.map((uc) =>
           uc.id === useCaseId ? { ...uc, assignedCameraIds: selectedCameraIds } : uc
@@ -94,85 +106,26 @@ const UseCaseManager: React.FC = () => {
         selectedCameraIds,
       });
     } catch (err) {
-      console.error("Error saving camera assignments:", err);
-      throw err;
+      console.error("Error saving Camera Assignment", err);
     }
   };
+
+  const handleConfigureCameras = async (useCase: UseCase) => {
+  setSelectedUseCase(useCase);
+  setDrawerOpen(true);
+
+  if (cameras.length === 0) await loadCameras();
+};
+
 
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
     setSelectedUseCase(null);
   };
 
-  return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Breadcrumbs */}
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        sx={{ mb: 3 }}
-      >
-        <MuiLink
-          component={Link}
-          href="/"
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <HomeIcon fontSize="small" />
-          Home
-        </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <SettingsIcon fontSize="small" />
-          Settings
-        </MuiLink>
-        <MuiLink
-          underline="hover"
-          color="inherit"
-          sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-        >
-          <TuneIcon fontSize="small" />
-          Configurator
-        </MuiLink>
-        <Typography
-          color="text.primary"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            fontWeight: 600,
-          }}
-        >
-          <CategoryIcon fontSize="small" />
-          Use-Case Manager
-        </Typography>
-      </Breadcrumbs>
-
-      {/* Page Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom fontWeight={700}>
-          Use-Case Manager
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Configure and assign cameras to AI use cases based on your organization&apos;s
-
-          license. Select cameras from Camera Management to enable specific detection
-          and monitoring capabilities.
-        </Typography>
-      </Box>
-
-      {/* Error State */}
-      {error && (
-        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Loading State */}
-      {isLoadingUseCases ? (
+  const renderContent = () => {
+    if (isLoadingUseCases) {
+      return (
         <Box>
           <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
             {[1, 2, 3].map((i) => (
@@ -195,7 +148,11 @@ const UseCaseManager: React.FC = () => {
             ))}
           </Box>
         </Box>
-      ) : useCases.length === 0 ? (
+      );
+    }
+
+    if (useCases.length === 0) {
+      return (
         /* Empty State */
         <Paper
           elevation={0}
@@ -237,14 +194,44 @@ const UseCaseManager: React.FC = () => {
             selected license tier. Contact support for more information.
           </Alert>
         </Paper>
-      ) : (
-        /* Use Case List */
-        <UseCaseList
-          useCases={useCases}
-          onConfigureCameras={handleConfigureCameras}
-          isLoading={isLoadingUseCases}
-        />
+      );
+    }
+
+    return (
+      /* Use Case List */
+      <UseCaseList
+        useCases={useCases}
+        onConfigureCameras={handleConfigureCameras}
+        isLoading={isLoadingUseCases}
+      />
+    );
+  };
+
+  return (
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+
+      {/* Page Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom fontWeight={700}>
+          Use-Case Manager
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Configure and assign cameras to AI use cases based on your organization&apos;s
+
+          license. Select cameras from Camera Management to enable specific detection
+          and monitoring capabilities.
+        </Typography>
+      </Box>
+
+      {/* Error State */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
+          {error}
+        </Alert>
       )}
+
+      {/* Content */}
+      {renderContent()}
 
       {/* Camera Selection Drawer */}
       <CameraSelectionDrawer

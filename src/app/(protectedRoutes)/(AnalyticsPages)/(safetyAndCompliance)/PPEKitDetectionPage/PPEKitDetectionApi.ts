@@ -1,5 +1,4 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
-// import { rtkAPIToast } from "@/app/utils/rtkAPIToast";
 import { apiRoutes } from "@/constants/apiRoutes";
 export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({

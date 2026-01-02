@@ -18,7 +18,8 @@ import { UseCaseListItem } from "../UseCaseListItem/UseCaseListItem";
 interface UseCaseListProps {
   useCases: UseCase[];
   onConfigureCameras: (useCase: UseCase) => void;
-  isLoading?: boolean;
+   isLoading?: boolean;
+  
 }
 
 export const UseCaseList: React.FC<UseCaseListProps> = ({
@@ -27,24 +28,26 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
   isLoading = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  
 
   // Filter use cases based on search
   const filteredUseCases = useCases.filter((useCase) => {
     const matchesSearch =
-      useCase.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      useCase.description.toLowerCase().includes(searchQuery.toLowerCase());
+      useCase.name?.toLowerCase().includes(searchQuery.toLowerCase()) ??
+      useCase.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesSearch;
   });
 
   const totalCameras = useCases.reduce(
-    (sum, uc) => sum + (uc.assignedCameraIds?.length || 0),
+    (sum, uc) => sum + (uc.assignedCameraIds?.length ?? 0),
     0
   );
   const configuredUseCases = useCases.filter(
     (uc) => uc.assignedCameraIds && uc.assignedCameraIds.length > 0
   ).length;
 
+  
   return (
     <Box>
       {/* Stats Summary */}
@@ -171,17 +174,20 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
 
       {/* Search Bar */}
       <Box sx={{ mb: 3 }}>
+        disabled={isLoading}
         <TextField
           fullWidth
           placeholder="Search use cases by name or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            },
           }}
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -217,7 +223,7 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
             <UseCaseListItem
               key={useCase.id}
               useCase={useCase}
-              assignedCameraCount={useCase.assignedCameraIds?.length || 0}
+            assignedCameraCount={useCase.assignedCameraIds?.length ?? 0}
               onConfigureCameras={onConfigureCameras}
             />
           ))}
@@ -226,3 +232,4 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
     </Box>
   );
 };
+  

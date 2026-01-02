@@ -42,7 +42,7 @@ export interface PPEKpi {
 }
 
 export interface KpiItem {
-  title: keyof typeof ppeKpiConfig | string;
+  title: keyof typeof ppeKpiConfig;
   value: number | string;
   colour: string;
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
 import {
   Box,
   Typography,
@@ -25,43 +26,29 @@ import {
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
 
+import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
+
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
-
-interface CameraData {
-  id: string;
-  ipAddress: string;
-  username: string;
-  password: string;
-  port: string;
-  make: string;
-  position: string;
-  rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
-  aiConfig?: {
-    useCases: string[];
-    roiData: Record<string, { configured: boolean }>;
-    fineTuning: Record<string, { tuned: boolean }>;
-    enabled: boolean;
-    viewName?: string;
-  };
-}
+import { OrgCamera, OnboardingCamera, CameraApiResponse } from "@/app/types/camera";
 
 interface OrganizationCameraManagementProps {
-  initialCameras?: CameraData[];
+  initialCameras?: OrgCamera[];
   forceAddCamera?: boolean;
   forceConfigureCamera?: string;
 }
+
 
 const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> = ({
   initialCameras = [],
   forceAddCamera = false,
   forceConfigureCamera,
 }) => {
-  // ⭐ FIXED: Missing states — now included and bound to props
-  const [cameras, setCameras] = useState<CameraData[]>(initialCameras);
+
+  const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
+
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
-    forceConfigureCamera || null
+    forceConfigureCamera ?? null
   );
   const [addingCamera, setAddingCamera] = useState(forceAddCamera);
   const [snackbar, setSnackbar] = useState<{
@@ -74,67 +61,95 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 
-  // -----------------------
-  // CAMERA EVENT HANDLERS
-  // -----------------------
+  const fetchCameras = useCallback(async () => {
+    const res = await getCameras();
 
-  const handleCameraAdd = (
-    cameraData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>
-  ) => {
-    const newCamera: CameraData = {
-      ...cameraData,
-      id: `camera-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
-      status: Math.random() > 0.7 ? 'failed' : 'connected',
-      position: cameraData.ipAddress, // If no UI field, fallback
-    };
-
-    setCameras((prev) => [...prev, newCamera]);
-
-    setSnackbar({
-      open: true,
-      message: `Camera added successfully!`,
-      severity: 'success',
-    });
-  };
-
-  const handleCameraBatchAdd = (
-  camerasData: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]
-) => {
-  const newCameras = camerasData.map((cameraData, index) => ({
-    ...cameraData,
-    id: `camera-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-    rtspStream: `rtsp://${cameraData.username}:${cameraData.password}@${cameraData.ipAddress}:${cameraData.port}/Streaming/Channels/101`,
-    position: cameraData.ipAddress,
-    status: Math.random() > 0.7 ? 'failed' : 'connected',
-  }));
-
-  setCameras((prev: CameraData[]) => [...prev, ...newCameras]); // ✅ FIXED
-
-  setSnackbar({
-    open: true,
-    message: `${newCameras.length} cameras added successfully!`,
-    severity: 'success',
-  });
-};
+    setCameras(
+      (res.data as CameraApiResponse[]).map((cam) => ({
+        id: cam.id,
+        ipAddress: cam.cameraIp,
+        username: cam.userName,
+        password: cam.password,
+        port: String(cam.RTSPport),
+        make: cam.connectionType,
+        position: cam.cameraName,
+        rtspStream: cam.rtspStream ?? "",
+        status: "connected",
+      }))
+    );
+  }, []);
 
 
-  const handleCameraRemove = (cameraId: string) => {
-    const camera = cameras.find((c) => c.id === cameraId);
-    setCameras((prev) => prev.filter((c) => c.id !== cameraId));
+
+  React.useEffect(() => {
+    fetchCameras();
+  }, [fetchCameras]);
+
+
+  const handleCameraAdd = (camera: OnboardingCamera) => {
+    setCameras((prev) => [
+      ...prev,
+      {
+        id: camera.id,
+        ipAddress: camera.ipAddress,
+        username: camera.username,
+        password: camera.password,
+        port: camera.port,
+        make: "DIRECT_TO_CAMERA",
+        position: camera.cameraname,
+        rtspStream: "",
+        status: camera.status,
+      },
+    ]);
 
     setSnackbar({
       open: true,
-      message: `Camera "${camera?.position}" removed successfully!`,
-      severity: 'warning',
+      message: "Camera added successfully!",
+      severity: "success",
     });
   };
+
+
+
+
+  const handleCameraRemove = async (cameraId: string) => {
+    try {
+      await deleteCamera(cameraId);
+
+
+      setCameras((prev) => prev.filter((c) => c.id !== cameraId));
+
+      setSnackbar({
+        open: true,
+        message: "Camera removed successfully!",
+        severity: "warning",
+      });
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Failed to delete camera!",
+        severity: "error",
+      });
+    }
+  };
+
+
 
   const handleCameraConfigureClick = (cameraId: string) => {
     setSelectedCameraForConfig(cameraId);
   };
 
-  const handleAIConfigSave = (cameraId: string, aiConfig: any) => {
+  interface AICameraConfig {
+    useCases: string[];
+    roiData: Record<string, { configured: boolean }>;
+    fineTuning: Record<string, { tuned: boolean }>;
+    enabled: boolean;
+    viewName?: string;
+    aiConfig?: AICameraConfig;
+  }
+
+
+  const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
     setCameras((prev) =>
       prev.map((camera) =>
         camera.id === cameraId ? { ...camera, aiConfig } : camera
@@ -180,13 +195,28 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   }
 
   // 2) CAMERA ONBOARDING SCREEN
+
+  const onboardingCameras: OnboardingCamera[] = cameras.map((cam) => ({
+    id: cam.id,
+    cameraname: cam.position,
+    ipAddress: cam.ipAddress,
+    username: cam.username,
+    password: cam.password,
+    port: cam.port,
+    zoneId: "",
+    locationId: "",
+    status: cam.status,
+  }));
+
+
   if (addingCamera) {
     return (
       <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
         <CameraOnboardingStep
-          cameras={cameras}
+          cameras={onboardingCameras}
+
           onCameraAdd={handleCameraAdd}
-          onCameraBatchAdd={handleCameraBatchAdd}
+
           onCameraRemove={handleCameraRemove}
           onNext={() => setAddingCamera(false)}
           onBack={() => setAddingCamera(false)}
@@ -205,19 +235,20 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography variant="h6" fontWeight={600}>
-              Camera Status
+              All Cameras
             </Typography>
             <Button
               variant="contained"
-              startIcon={<AddIcon />}
+              // startIcon={<AddIcon />}
               onClick={() => setAddingCamera(true)}
             >
-              Add Camera
+              Add / Delete Camera
             </Button>
           </Box>
         </Box>
 
-        {cameras.length === 0 ? (
+
+        {!cameras || cameras.length === 0 ? (
           <Box
             sx={{
               flexGrow: 1,
@@ -256,7 +287,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
                     <TableCell>Camera Name</TableCell>
                     <TableCell>IP Address</TableCell>
                     <TableCell>Port</TableCell>
-                    <TableCell>Make</TableCell>
+                    <TableCell>Connection Type</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell align="center">Actions</TableCell>
                   </TableRow>

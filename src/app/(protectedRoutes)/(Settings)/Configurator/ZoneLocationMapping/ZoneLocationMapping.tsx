@@ -1,7 +1,9 @@
-// D:\BackOffice\scout_frontend\src\app\(protectedRoutes)\(Settings)\Configurator\ZoneLocationMapping\ZoneLocationMapping.tsx
 "use client";
+import { getZones, createZone, updateZone, deleteZone, createLocation } 
+  from "@/app/services/configurator/zoneLocationService";
 
-import React, { useMemo, useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -9,8 +11,6 @@ import {
   Button,
   TextField,
   InputAdornment,
-  Breadcrumbs,
-  Link as MuiLink,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -21,62 +21,30 @@ import {
 import {
   Add as AddIcon,
   Search as SearchIcon,
-  Home as HomeIcon,
-  Settings as SettingsIcon,
-  Tune as TuneIcon,
-  Map as MapIcon,
-  NavigateNext as NavigateNextIcon,
 } from "@mui/icons-material";
-import Link from "next/link";
+
 import {
   ZoneTable,
   AddEditZoneDrawer,
   AssignLocationsDrawer,
 } from "@/app/components/organisms/configurator/zone-location";
-import { Zone as ZoneType, mockZones as initialZonesFromFile } from "@/app/data/mockZones";
+import { Zone as ZoneType } from "@/app/data/mockZones";
 
 type LocationItem = {
-  id: number;
+  id: string;
   name: string;
   description?: string;
 };
 
-const normalizeInitialZones = (zonesFromFile: ZoneType[]): ZoneType[] => {
-  return zonesFromFile.map((z) => {
-    // If already has a typed locations array
-    if (Array.isArray(z.locations)) {
-      return z;
-    }
-
-    // Handle legacy data with locationIds
-    if (Array.isArray(z.locationIds)) {
-      const locs: LocationItem[] = z.locationIds.map((id) => ({
-        id,
-        name: `Location ${id}`,
-      }));
-
-      return {
-        ...z,
-        locations: locs,
-      };
-    }
-
-    return {
-      ...z,
-      locations: [],
-    };
-  });
-};
 
 
 const ZoneLocationMapping: React.FC = () => {
   // Normalize first: ensure each zone has .locations array
-  const normalized = useMemo(() => normalizeInitialZones(initialZonesFromFile), [initialZonesFromFile]);
+ const [zones, setZones] = useState<ZoneType[]>([]);
 
-  const [zones, setZones] = useState<typeof normalized>(normalized);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedZone, setSelectedZone] = useState<typeof zones[number] | null>(null);
-  const [zoneToDelete, setZoneToDelete] = useState<typeof zones[number] | null>(null);
+  const [zoneToDelete, setZoneToDelete] = useState<ZoneType | null>(null);
 
   // Drawer states
   const [addEditDrawerOpen, setAddEditDrawerOpen] = useState(false);
@@ -84,11 +52,11 @@ const ZoneLocationMapping: React.FC = () => {
 
   // Filter zones
   const filteredZones = zones.filter(
-    (zone) =>
-      zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      zone.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (zone.description || "").toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  (zone) =>
+    zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ?? 
+    (zone.description ?? "").toLowerCase().includes(searchQuery.toLowerCase())
+);
+
 
   // Add new zone
   const handleAddZone = () => {
@@ -107,40 +75,61 @@ const ZoneLocationMapping: React.FC = () => {
     setZoneToDelete(zone);
   };
 
-  const confirmDelete = () => {
-    if (zoneToDelete) {
-      setZones((prev) => prev.filter((z) => z.id !== zoneToDelete.id));
-      setZoneToDelete(null);
-    }
-  };
+  const confirmDelete = async () => {
+  if (!zoneToDelete?.id) return;
 
+  await deleteZone(zoneToDelete.id);
+  fetchZones();
+  setZoneToDelete(null);
+};
+
+
+
+
+  const fetchZones = async () => {
+  try {
+    const { data } = await getZones();
+
+    setZones(
+      data.zones.map((z: Record<string, unknown>) => ({
+        id: String(z.id), 
+        name: z.zoneName,
+        description: z.description,
+        locations: z.locations ?? [],
+        cameraIds: z.cameras ?? []
+      }))
+    );
+  } catch (err) {
+    console.error("Failed to fetch zones", err);
+  }
+};
+
+useEffect(() => {
+  fetchZones();
+}, []);
+
+type ZoneFormData = {
+  id?: string;
+  name: string;
+  description?: string;
+};
   // Save zone (add or edit)
-  const handleSaveZone = (zoneData: Omit<typeof zones[number], "id" | "createdAt" | "updatedAt"> | typeof zones[number]) => {
-    // If incoming has id -> update; else create new.
-    if ("id" in zoneData) {
-      setZones((prev) =>
-        prev.map((z) =>
-          z.id === zoneData.id
-            ? {
-                ...zoneData,
-                updatedAt: new Date().toISOString(),
-              }
-            : z
-        )
-      );
-    } else {
-      const maxId = zones.length > 0 ? Math.max(...zones.map((z) => z.id)) : 100;
-      const newZone = {
-        ...zoneData,
-        id: maxId + 1,
-        locations: (zoneData as any).locations ?? [],
-        cameraIds: (zoneData as any).cameraIds ?? [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      } as typeof zones[number];
-      setZones((prev) => [newZone, ...prev]);
-    }
-  };
+  const handleSaveZone = async (zoneData: ZoneFormData) => {
+  if (zoneData.id) {
+    await updateZone(zoneData.id, {
+      zoneName: zoneData.name,
+      description: zoneData.description ?? ""
+    });
+  } else {
+    await createZone({
+      zoneName: zoneData.name,
+      description: zoneData.description ?? ""
+    });
+  }
+
+  fetchZones();
+};
+
 
   // Assign locations (open drawer)
   const handleAssignLocations = (zone: typeof zones[number]) => {
@@ -149,43 +138,27 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Save locations: adds created locations to zone.locations array
-  const handleSaveLocations = (zoneId: number, locations: LocationItem[]) => {
-    setZones((prev) =>
-      prev.map((z) =>
-        z.id === zoneId
-          ? {
-              ...z,
-              locations: [...(z.locations ?? []), ...locations],
-              updatedAt: new Date().toISOString(),
-            }
-          : z
-      )
-    );
-  };
+  const handleSaveLocations = async (zoneId: string, locations: LocationItem[]) => {
+  for (const loc of locations) {
+    await createLocation({
+      zoneId,
+      locationName: loc.name,
+      description: loc.description ?? ""
+    });
+  }
+  fetchZones();
+};
+
+
+
 
   // Calculate stats
   const totalZones = zones.length;
   const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
   const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
-  const totalCameras = zones.reduce((sum, z) => sum + (z.cameraIds?.length ?? 0), 0);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      {/* Breadcrumbs */}
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} sx={{ mb: 3 }}>
-        <MuiLink component={Link} href="/" underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <HomeIcon fontSize="small" /> Home
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <SettingsIcon fontSize="small" /> Settings
-        </MuiLink>
-        <MuiLink underline="hover" color="inherit" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <TuneIcon fontSize="small" /> Configurator
-        </MuiLink>
-        <Typography color="text.primary" sx={{ display: "flex", alignItems: "center", gap: 0.5, fontWeight: 600 }}>
-          <MapIcon fontSize="small" /> Zone-Location Mapping
-        </Typography>
-      </Breadcrumbs>
 
       {/* Header */}
       <Box sx={{ mb: 4 }}>
@@ -226,7 +199,7 @@ const ZoneLocationMapping: React.FC = () => {
           placeholder="Search zones by name or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          InputProps={{ startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) }}
+          slotProps={{ input: { startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) } }}
           sx={{ flex: 1, "& .MuiOutlinedInput-root": { backgroundColor: "white" } }}
         />
         <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZone} sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}>

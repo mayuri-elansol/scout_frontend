@@ -16,8 +16,12 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
-  ButtonGroup,
+  DialogContent,
+  DialogActions,
+  Dialog,
+  DialogTitle,
+  Snackbar,
+  CircularProgress,
 } from '@mui/material';
 import {
   Delete as DeleteIcon,
@@ -26,54 +30,66 @@ import {
   Error as ErrorIcon,
 } from '@mui/icons-material';
 
-interface CameraData {
+
+import { addCamera, detectNvrChannels, fetchZones, fetchLocations } from '@/app/services/configurator/cameraService';
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
+
+import type { OnboardingCamera } from "@/app/types/camera";
+interface LocationOption {
   id: string;
-  ipAddress: string;
+  locationName: string;
+}
+interface AssignmentItem {
+  channel: string;
+  cameraName: string;
+  cameraIp: string;
   username: string;
   password: string;
   port: string;
-  make: string;
-  rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
-  aiConfig?: {
-    useCases: string[];
-    roiData: Record<string, { configured: boolean }>;
-    fineTuning: Record<string, { tuned: boolean }>;
-    enabled: boolean;
-    viewName?: string;
-  };
+  zoneId: string;
+  locationId: string;
+  locationOptions: LocationOption[]; // list of locations for selected zone
 }
 
 interface CameraOnboardingStepProps {
-  cameras: CameraData[];
-  onCameraAdd: (camera: Omit<CameraData, 'id' | 'rtspStream' | 'status'>) => void;
-  onCameraBatchAdd?: (cameras: Omit<CameraData, 'id' | 'rtspStream' | 'status'>[]) => void;
+  cameras: OnboardingCamera[];
+
+  onCameraAdd: (camera: OnboardingCamera) => void;
+
   onCameraRemove: (cameraId: string) => void;
+
   onNext: () => void;
   onBack: () => void;
   isOptional?: boolean;
 }
 
+
 interface CameraFormData {
   ipAddress: string;
   username: string;
+  cameraname: string;
   password: string;
   port: string;
-  make: string;
+  zoneId: string;
+  locationId: string;
+
 }
 
 interface FormErrors {
   ipAddress?: string;
+  cameraname?: string;
   username?: string;
   password?: string;
   port?: string;
-  make?: string;
 }
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
+  // zones = [],
+  // locations = [],
   onCameraAdd,
-  onCameraBatchAdd,
+  // onCameraBatchAdd,
   onCameraRemove,
   onNext,
   onBack,
@@ -82,10 +98,33 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [formData, setFormData] = useState<CameraFormData>({
     ipAddress: '',
     username: '',
+    cameraname: '',
     password: '',
     port: '554',
-    make: '',
+    zoneId: '',
+    locationId: '',
   });
+
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [pendingAssignments, setPendingAssignments] = useState<AssignmentItem[]>([]);
+
+  const [selectedZone, setSelectedZone] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+
+  type ZoneItem = {
+    id: string;
+    zoneName: string;
+  };
+
+  type LocationItem = {
+    id: string;
+    locationName: string;
+  };
+
+  const [zoneList, setZoneList] = useState<ZoneItem[]>([]);
+  const [locationList, setLocationList] = useState<LocationItem[]>([]);
+
+
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -95,6 +134,30 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   // Toggle mode: 'camera' | 'nvr'
   const [mode, setMode] = useState<'camera' | 'nvr'>('camera');
 
+  //camera discovering
+  const [isDiscovering, setIsDiscovering] = useState(false);
+
+  const [isSavingAssignments, setIsSavingAssignments] = useState(false);
+
+
+  // Delete confirmation dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [cameraToDelete, setCameraToDelete] = useState<string | null>(null);
+
+
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success", // success | error | info | warning
+  });
+
+  type ToastSeverity = "success" | "error" | "info" | "warning";
+
+  const showToast = (message: string, severity: ToastSeverity = "success") => {
+    setToast({ open: true, message, severity });
+  };
+
+
   // NVR Form state
   const [nvrData, setNvrData] = useState({
     name: '',
@@ -102,11 +165,47 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     port: '8000',
     username: '',
     password: '',
+    numberofchannels: '',
+    rtsplink: '',
   });
 
-  // NVR discovered cameras (mock)
-  const [nvrCameras, setNvrCameras] = useState<{ id: string; name: string; }[]>([]);
+  type NvrCamera = {
+    channel: string;
+  };
+
+  const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
+
   const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+
+
+  useEffect(() => {
+    const loadZones = async () => {
+      try {
+        const res = await fetchZones();
+        setZoneList(res.data);
+      } catch (err) {
+        console.error("Error loading zones", err);
+      }
+    };
+    loadZones();
+  }, []);
+
+
+  useEffect(() => {
+    const loadLocations = async () => {
+      if (!selectedZone) return;
+      try {
+        const res = await fetchLocations(selectedZone);  // backend service call
+        setLocationList(res.data);
+      } catch (err) {
+        console.error("Error loading locations", err);
+      }
+    };
+
+    loadLocations();
+  }, [selectedZone]);
+
+
 
 
   useEffect(() => {
@@ -126,21 +225,28 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     return () => window.removeEventListener('resize', updateHeight);
   }, [cameras, formData]);
 
-  // IP validation helper functions
   const isValidIPv4 = (ip: string): boolean => {
-    const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    const octet = '(25[0-5]|2[0-4]\\d|[01]?\\d\\d?)';
+    const ipv4Regex = new RegExp(`^${octet}(\\.${octet}){3}$`);
     return ipv4Regex.test(ip);
   };
 
+
   const isValidIPv6 = (ip: string): boolean => {
-    // Full IPv6 regex pattern
-    const ipv6Regex = /^(?:(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,7}:|(?:[0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|(?:[0-9a-fA-F]{1,4}:){1,5}(?::[0-9a-fA-F]{1,4}){1,2}|(?:[0-9a-fA-F]{1,4}:){1,4}(?::[0-9a-fA-F]{1,4}){1,3}|(?:[0-9a-fA-F]{1,4}:){1,3}(?::[0-9a-fA-F]{1,4}){1,4}|(?:[0-9a-fA-F]{1,4}:){1,2}(?::[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:(?:(?::[0-9a-fA-F]{1,4}){1,6})|:(?:(?::[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(?::[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(?:ffff(?::0{1,4}){0,1}:){0,1}(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])|(?:[0-9a-fA-F]{1,4}:){1,4}:(?:(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(?:25[0-5]|(?:2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+    const ipv6Regex = /^([a-fA-F0-9]{1,4}:){2,7}[a-fA-F0-9]{1,4}$/;
     return ipv6Regex.test(ip);
   };
 
+
   const isDuplicateIP = (ip: string): boolean => {
-    return cameras.some(camera => camera.ipAddress === ip.trim());
+    return cameras?.some(camera => camera.ipAddress === ip.trim());
   };
+
+  const isDuplicateName = (name: string): boolean => {
+    return cameras?.some(camera => camera.cameraname.trim() === name.trim()) ?? false;
+
+  };
+
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -165,20 +271,19 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       newErrors.username = 'Username is required';
     }
 
-    if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
+
+    if (!formData.cameraname.trim()) {
+      newErrors.cameraname = "Camera name is required";
+    } else if (isDuplicateName(formData.cameraname.trim())) {
+      newErrors.cameraname = "This camera name already exists";
     }
+
 
     if (!formData.port.trim()) {
       newErrors.port = 'Port is required';
     } else if (isNaN(Number(formData.port)) || Number(formData.port) < 1 || Number(formData.port) > 65535) {
       newErrors.port = 'Port must be a number between 1 and 65535';
     }
-
-    if (!formData.make.trim()) {
-      newErrors.make = 'Camera make is required';
-    }
-
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -190,45 +295,78 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setFormData(prev => ({ ...prev, [field]: event.target.value }));
 
     // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
+    // if (errors[field]) {
+    //   setErrors(prev => ({ ...prev, [field]: undefined }));
+    // }
   };
+
+
 
   const handleAddCamera = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsAdding(true);
 
-    // Simulate camera connection test
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
 
-    onCameraAdd({
-      ipAddress: formData.ipAddress.trim(),
-      username: formData.username.trim(),
-      password: formData.password.trim(),
-      port: formData.port.trim(),
-      make: formData.make.trim(),
+      const response = await addCamera({
+        cameraIp: formData.ipAddress.trim(),
+        cameraName: formData.cameraname.trim(),
+        userName: formData.username.trim(),
+        password: formData.password.trim(),
+        RTSPport: formData.port.trim(),
+        // cameraZone: selectedZone,
+        // channel: selectedLocation,
+        cameraZone: zoneList.find(z => z.id === selectedZone)?.zoneName ?? "",
+        channel: locationList.find(l => l.id === selectedLocation)?.locationName ?? "",
 
-    });
+        refreshRate: 10,
+        // connectionType: "DIRECT_TO_CAMERA",
+        connectionType: "DIRECT_TO_CAMERA" as const,
 
-    // Reset form
-    setFormData({
-      ipAddress: '',
-      username: '',
-      password: '',
-      port: '554',
-      make: '',
+      });
 
-    });
+      console.log(response); // or setState(response.data)
+      const createdCamera = response.data;
+
+      onCameraAdd({
+        id: createdCamera.id,
+        cameraname: createdCamera.cameraName,
+        ipAddress: createdCamera.cameraIp,
+        username: createdCamera.userName,
+        password: formData.password, // backend usually doesn’t return this
+        port: createdCamera.RTSPport,
+        zoneId: selectedZone,
+        locationId: selectedLocation,
+        status: "connected", // or pending if you want
+      });
+
+
+
+
+
+      setFormData({
+        ipAddress: "",
+        cameraname: "",
+        username: "",
+        password: "",
+        port: "554",
+        zoneId: "",
+        locationId: "",
+      });
+      setSelectedZone("");
+      setSelectedLocation("");
+      showToast("Camera added successfully!", "success");
+
+
+
+    } catch (error) {
+      console.error("Add camera error:", error);
+    }
 
     setIsAdding(false);
   };
-
 
 
 
@@ -254,6 +392,105 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         return 'default';
     }
   };
+
+  const handleSaveAssignments = async () => {
+    setIsSavingAssignments(true);
+    try {
+      for (const cam of pendingAssignments) {
+        if (!cam.zoneId) {
+          alert(`Please select zone for ${cam.cameraName}`);
+          return;
+        }
+        if (!cam.locationId) {
+          alert(`Please select location for ${cam.cameraName}`);
+          return;
+        }
+
+
+        const payload = {
+          // cameraName: `${cam.cameraName}-${cam.channel}`,
+          cameraName: `${cam.cameraName}`,
+          // cameraIp: `${nvrData.ip}-${cam.channel}`,
+          cameraIp: `${nvrData.ip}`,
+          // do NOT add channel here
+          userName: cam.username,
+          password: cam.password,
+          RTSPport: cam.port,
+          cameraZone: zoneList.find(z => z.id === cam.zoneId)?.zoneName ?? "",
+          channel: cam.locationOptions.find(l => l.id === cam.locationId)?.locationName ?? "",
+          connectionType: "NVR" as const,
+          refreshRate: 10,
+        };
+
+        console.log("Final payload:", payload);
+        const response = await addCamera(payload);
+
+        // 🔥 This updates UI instantly
+        onCameraAdd({
+          id: response.data.id,
+          ipAddress: response.data.cameraIp,
+          cameraname: response.data.cameraName,
+          username: response.data.userName,
+          password: response.data.password,
+          port: response.data.RTSPport,
+          zoneId: cam.zoneId,
+          locationId: cam.locationId,
+          status: 'connected'
+        });
+      }
+
+      showToast("NVR cameras added successfully!", "success");
+      setPendingAssignments([]);
+      setAssignDialogOpen(false);
+      setSelectedNvrCams([]);
+      setNvrCameras([]);
+
+      setNvrData({
+        name: "",
+        ip: "",
+        port: "8000",
+        username: "",
+        password: "",
+        numberofchannels: "",
+        rtsplink: "",
+      });
+
+
+
+    } catch (error) {
+      console.error("Error saving NVR assignments:", error);
+    }
+
+    setIsSavingAssignments(false);
+  };
+
+
+  const handleAssignmentZoneChange = async (
+  index: number,
+  zoneId: string
+) => {
+  const updated = [...pendingAssignments];
+  updated[index].zoneId = zoneId;
+  updated[index].locationId = "";
+  setPendingAssignments(updated);
+
+  try {
+    const res = await fetchLocations(zoneId);
+    updated[index].locationOptions = res.data;
+    setPendingAssignments([...updated]);
+  } catch (err) {
+    console.error("Failed to load locations", err);
+  }
+};
+
+const handleNvrCameraToggle = (channel: string) => {
+  setSelectedNvrCams(prev =>
+    prev.includes(channel)
+      ? prev.filter(ch => ch !== channel)
+      : [...prev, channel]
+  );
+};
+
 
   return (
     <Box sx={{ p: 1, minHeight: 400, pb: 12 }}>
@@ -310,13 +547,26 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                     <form onSubmit={handleAddCamera}>
                       <Grid container spacing={2}>
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={{ xs: 6 }}>
                           <TextField
                             label="IP Address"
                             value={formData.ipAddress}
                             onChange={handleInputChange('ipAddress')}
                             error={!!errors.ipAddress}
                             helperText={errors.ipAddress}
+                            required
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
+                        <Grid size={{ xs: 6 }}>
+                          <TextField
+                            label="Camera name"
+                            value={formData.cameraname}
+                            onChange={handleInputChange('cameraname')}
+                            error={!!errors.cameraname}
+                            helperText={errors.cameraname}
                             required
                             fullWidth
                             size="small"
@@ -365,16 +615,48 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                         <Grid size={{ xs: 6 }}>
                           <TextField
-                            label="Make"
-                            value={formData.make}
-                            onChange={handleInputChange('make')}
-                            error={!!errors.make}
-                            helperText={errors.make}
-                            required
+                            select
+
+                            value={selectedZone}
+                            onChange={(e) => {
+                              setSelectedZone(e.target.value);
+                              setSelectedLocation("");
+                            }}
                             fullWidth
                             size="small"
-                          />
+                            slotProps={{
+                              select: { native: true }
+                            }}
+
+                          >
+                            <option value="">Select Zone</option>
+                            {zoneList.map(zone => (
+                              <option key={zone.id} value={zone.id}>{zone.zoneName}</option>
+                            ))}
+                          </TextField>
                         </Grid>
+
+                        <Grid size={{ xs: 6 }}>
+                          <TextField
+                            select
+
+                            value={selectedLocation}
+                            onChange={(e) => setSelectedLocation(e.target.value)}
+                            fullWidth
+                            size="small"
+                            slotProps={{
+                              select: { native: true }
+                            }}
+
+                            disabled={!selectedZone}
+                          >
+                            <option value="">Select Location</option>
+                            {locationList.map(loc => (
+                              <option key={loc.id} value={loc.id}>{loc.locationName}</option>
+                            ))}
+                          </TextField>
+                        </Grid>
+
 
 
                         <Grid size={{ xs: 12 }}>
@@ -385,10 +667,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             disabled={isAdding}
                           >
                             {isAdding ? 'Adding Camera...' : 'Add Camera'}
+
                           </Button>
                         </Grid>
                       </Grid>
+
                     </form>
+
+
                   </>
                 )}
 
@@ -443,7 +729,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 12 }}>
+                      <Grid size={{ xs: 6 }}>
                         <TextField
                           label="Password"
                           required
@@ -454,6 +740,30 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           onChange={(e) => setNvrData({ ...nvrData, password: e.target.value })}
                         />
                       </Grid>
+
+                      <Grid size={{ xs: 6 }}>
+                        <TextField
+                          label="No of channels"
+                          required
+                          fullWidth
+                          size="small"
+                          value={nvrData.numberofchannels}
+                          onChange={(e) => setNvrData({ ...nvrData, numberofchannels: e.target.value })}
+                        />
+                      </Grid>
+
+                      <Grid size={{ xs: 12 }}>
+                        <TextField
+                          label="rstp link"
+                          required
+                          fullWidth
+                          size="small"
+                          value={nvrData.rtsplink}
+                          onChange={(e) => setNvrData({ ...nvrData, rtsplink: e.target.value })}
+                        />
+                      </Grid>
+
+
                     </Grid>
 
                     {/* Discover Cameras */}
@@ -461,16 +771,44 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                       variant="contained"
                       fullWidth
                       sx={{ mt: 2 }}
-                      onClick={() => {
-                        // MOCK RESPONSE
-                        setNvrCameras([
-                          { id: "1", name: "Channel 1 - Front Gate" },
-                          { id: "2", name: "Channel 2 - Entrance" },
-                          { id: "3", name: "Channel 3 - Parking Area" },
-                        ]);
+                      // onClick={() => {
+                      //   // MOCK RESPONSE
+                      //   setNvrCameras([
+                      //     { id: "1", name: "Channel 1 - Front Gate" },
+                      //     { id: "2", name: "Channel 2 - Entrance" },
+                      //     { id: "3", name: "Channel 3 - Parking Area" },
+                      //   ]);
+                      // }}
+
+                      onClick={async () => {
+                        try {
+                          setIsDiscovering(true);
+                          const response = await detectNvrChannels({
+                            nvrName: nvrData.name,
+                            ip: nvrData.ip,
+                            port: Number(nvrData.port),
+                            username: nvrData.username,
+                            password: nvrData.password,
+                            numberofchannels: Number(nvrData.numberofchannels),
+                            rtsplink: nvrData.rtsplink,
+                          });
+
+                          setNvrCameras(response.data.activeChannels);  // from backend
+                        } catch (error) {
+                          console.error("Detect NVR Error:", error);
+                        } finally {
+                          setIsDiscovering(false);
+                        }
                       }}
+
                     >
-                      Discover Cameras
+                      {isDiscovering ? (
+                        <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                          <CircularProgress size={22} sx={{ color: "white" }} />
+                        </Box>
+                      ) : (
+                        "Discover Cameras"
+                      )}
                     </Button>
 
                     {/* Show discovered cameras */}
@@ -480,20 +818,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           Found Cameras:
                         </Typography>
 
-                        {nvrCameras.map((cam) => (
-                          <Box key={cam.id} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                        {nvrCameras.map((camera) => (
+                          <Box key={camera.channel} sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                             <input
                               type="checkbox"
-                              checked={selectedNvrCams.includes(cam.id)}
-                              onChange={() => {
-                                if (selectedNvrCams.includes(cam.id)) {
-                                  setSelectedNvrCams(selectedNvrCams.filter((id) => id !== cam.id));
-                                } else {
-                                  setSelectedNvrCams([...selectedNvrCams, cam.id]);
-                                }
-                              }}
+                              checked={selectedNvrCams.includes(camera.channel)}
+                              onChange={() => handleNvrCameraToggle(camera.channel)}
                             />
-                            <Typography>{cam.name}</Typography>
+                            <Typography>{`${nvrData.ip} - ${camera.channel}`}</Typography>
                           </Box>
                         ))}
 
@@ -504,23 +836,28 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           fullWidth
                           sx={{ mt: 2 }}
                           onClick={() => {
-                            const selected = nvrCameras.filter((cam) =>
-                              selectedNvrCams.includes(cam.id)
+                            const selected = nvrCameras.filter(cam =>
+                              selectedNvrCams.includes(cam.channel)
                             );
 
-                            selected.forEach((cam) => {
-                              onCameraAdd({
-                                ipAddress: nvrData.ip,
-                                username: nvrData.username,
-                                password: nvrData.password,
-                                port: nvrData.port,
-                                make: "NVR",
-                              });
-                            });
+                            const mapped = selected.map(cam => ({
+                              channel: cam.channel,
+                              // cameraName: `${nvrData.name}-Channel-${cam.channel}`,
+                              cameraName: `${nvrData.name}-${cam.channel}-${Date.now()}`,
+                              // cameraIp: `${nvrData.ip}-${cam.channel}`,
+                              cameraIp: nvrData.ip,
+                              // channel: cam.channel,
 
-                            // Reset states
-                            setSelectedNvrCams([]);
-                            setNvrCameras([]);
+                              username: nvrData.username,
+                              password: nvrData.password,
+                              port: nvrData.port,
+                              zoneId: "",
+                              locationId: "",
+                              locationOptions: [],
+                            }));
+
+                            setPendingAssignments(mapped);
+                            setAssignDialogOpen(true);
                           }}
                         >
                           Add Selected Cameras
@@ -533,7 +870,161 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
             </Card>
 
           </Box>
+
+
+
+          <Dialog open={assignDialogOpen} onClose={() => setAssignDialogOpen(false)} maxWidth="md" fullWidth>
+            <DialogTitle>Assign Zone & Location</DialogTitle>
+
+            <DialogContent dividers>
+              {pendingAssignments.map((cam, index) => (
+                <Box key={cam.channel} sx={{ display: "flex", gap: 2, my: 1 }}>
+
+                  <Typography sx={{
+                    width: "25%",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis"
+                  }}>
+                    {cam.cameraName}
+                  </Typography>
+
+                  <TextField
+                    select
+                    value={cam.zoneId}
+                    onChange={(e) =>
+    handleAssignmentZoneChange(index, e.target.value)
+  }
+                    slotProps={{
+                      select: { native: true }
+                    }}
+
+                    sx={{ width: "30%" }}
+                  >
+                    <option value="">Select Zone</option>
+                    {zoneList.map(z => (
+                      <option key={z.id} value={z.id}>{z.zoneName}</option>
+                    ))}
+                  </TextField>
+
+                  <TextField
+                    select
+                    value={cam.locationId}
+                    onChange={(e) => {
+                      const updated = [...pendingAssignments];
+                      updated[index].locationId = e.target.value;
+                      setPendingAssignments(updated);
+                    }}
+                    slotProps={{
+                      select: { native: true }
+                    }}
+
+                    sx={{ width: "30%" }}
+                    disabled={!cam.zoneId}
+                  >
+                    <option value="">Select Location</option>
+                    {(cam.locationOptions ?? []).map(loc => (
+                      <option key={loc.id} value={loc.id}>{loc.locationName}</option>
+                    ))}
+                  </TextField>
+
+                </Box>
+
+              ))}
+            </DialogContent>
+
+            <DialogActions>
+              <Button onClick={() => setAssignDialogOpen(false)}>Cancel</Button>
+              <Button variant="contained" onClick={handleSaveAssignments}>
+                {isSavingAssignments ? (
+                  <CircularProgress size={22} sx={{ color: "white" }} />
+                ) : (
+                  "Save & Add Cameras"
+                )}
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Grid>
+
+
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          maxWidth="xs"
+          fullWidth
+          slotProps={{
+            paper: {
+              sx: { borderRadius: 1, p: 1 }
+            },
+          }}
+        >
+          <DialogTitle
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              fontWeight: 600,
+              fontSize: "1.1rem",
+              pb: 1
+            }}
+          >
+            <WarningAmberIcon color="warning" />
+            Confirm Delete
+          </DialogTitle>
+
+          <DialogContent sx={{ py: 1 }}>
+            <Typography sx={{ color: "#444", fontSize: ".9rem" }}>
+              Are you sure you want to delete this camera?
+              This action <b>cannot be undone</b>.
+            </Typography>
+          </DialogContent>
+
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button
+              variant="outlined"
+              onClick={() => setDeleteDialogOpen(false)}
+              sx={{ borderRadius: 1 }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="contained"
+              color="error"
+              // color="#c71e1eff"
+              sx={{ borderRadius: 1, }}
+              onClick={() => {
+                if (cameraToDelete) {
+                  onCameraRemove(cameraToDelete);
+                  showToast("Camera deleted successfully!", "success");
+                }
+                setDeleteDialogOpen(false);
+                setCameraToDelete(null);
+              }}
+            >
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+
+
+        <Snackbar
+          open={toast.open}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          onClose={() => setToast({ ...toast, open: false })}
+        >
+          <Alert
+            onClose={() => setToast({ ...toast, open: false })}
+            severity={toast.severity as "success" | "error" | "info" | "warning"}
+            variant="filled"
+            sx={{ width: "100%", borderRadius: "8px" }}
+          >
+            {toast.message}
+          </Alert>
+        </Snackbar>
 
         {/* Right Column - Onboarded Cameras List */}
         <Grid size={{ xs: 12, lg: 6 }}>
@@ -554,10 +1045,10 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
             }}>
               <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, flexShrink: 0 }}>
                 <VideocamIcon color="primary" />
-                Onboarded Cameras ({cameras.length})
+                Onboarded Cameras ({cameras?.length ?? 0})
               </Typography>
 
-              {cameras.length === 0 ? (
+              {(!cameras || cameras.length === 0) ? (
                 <Alert severity="info" variant="outlined" sx={{ mt: 1 }}>
                   {isOptional
                     ? 'No cameras added yet. You can skip this step and add cameras later, or add cameras now using the form or CSV upload.'
@@ -587,39 +1078,42 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                   <List dense disablePadding>
                     {cameras.map((camera, index) => (
                       <React.Fragment key={camera.id}>
-                        <ListItem>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
-                            {getStatusIcon(camera.status)}
-                          </Box>
-                          <ListItemText
-                            primary={
-                              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  
-                                <Chip
-                                  label={camera.status}
-                                  color={getStatusColor(camera.status) as any}
-                                  size="small"
-                                />
-                              </Box>
-                            }
-                            secondary={
-                              <Typography variant="caption" color="text.secondary">
-                                {camera.ipAddress}:{camera.port} ({camera.make})
-                              </Typography>
-                            }
-                          />
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              edge="end"
-                              onClick={() => onCameraRemove(camera.id)}
-                              size="small"
-                              color="error"
-                            >
-                              <DeleteIcon fontSize="small" />
-                            </IconButton>
-                          </ListItemSecondaryAction>
-                        </ListItem>
-                        {index < cameras.length - 1 && <Divider component="li" />}
+                        <ListItem
+  secondaryAction={
+    <IconButton
+      edge="end"
+      onClick={() => {
+        setCameraToDelete(camera.id);
+        setDeleteDialogOpen(true);
+      }}
+      size="small"
+      color="error"
+    >
+      <DeleteIcon fontSize="small" />
+    </IconButton>
+  }
+>
+  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mr: 2 }}>
+    {getStatusIcon(camera.status)}
+  </Box>
+
+  <ListItemText
+    primary={
+      <Chip
+        label={camera.status}
+        color={getStatusColor(camera.status)}
+        size="small"
+      />
+    }
+    secondary={
+      <Typography variant="caption" color="text.secondary">
+        {camera.ipAddress}:{camera.port} ({camera.cameraname})
+      </Typography>
+    }
+  />
+</ListItem>
+
+                        {index < (cameras?.length ?? 0) - 1 && <Divider component="li" />}
                       </React.Fragment>
                     ))}
                   </List>
@@ -662,14 +1156,16 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           <Button
             onClick={onNext}
             variant="contained"
-            disabled={!isOptional && cameras.length === 0}
           >
             {isOptional ? 'Continue with Cameras' : 'Next: AI Configuration'}
           </Button>
         </Box>
       </Box>
     </Box>
+
+
   );
 };
 
 export default CameraOnboardingStep;
+
