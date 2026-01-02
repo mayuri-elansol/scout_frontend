@@ -61,11 +61,11 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   };
 
   const getCameraName = () => {
-    return cameras.find((cam) => cam.id === selectedCamera)?.name || '';
+    return cameras.find((cam) => cam.id === selectedCamera)?.name ?? '';
   };
 
   const getUseCaseName = () => {
-    return useCases.find((uc) => uc.id === selectedUseCase)?.name || '';
+    return useCases.find((uc) => uc.id === selectedUseCase)?.name ?? '';
   };
 
   // Placeholder state - showing message before going live
