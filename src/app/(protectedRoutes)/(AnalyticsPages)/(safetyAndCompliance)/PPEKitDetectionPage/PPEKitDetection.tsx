@@ -86,6 +86,46 @@ const PPEDetection: React.FC = () => {
     },
     [] // dayjs import is stable
   );
+  function formatDateTime(date: Date): string {
+    // Convert to IST
+    const istDate = new Date(
+      date.toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+    );
+
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const day = pad(istDate.getDate());
+    const month = pad(istDate.getMonth() + 1);
+    const year = istDate.getFullYear();
+
+    const hours = pad(istDate.getHours());
+    const minutes = pad(istDate.getMinutes());
+
+    return `${day}-${month}-${year} ${hours}:${minutes}`;
+  }
+  function getImagePublicUrl(snapshotPath: string): string {
+    if (!snapshotPath) return "";
+
+    const FILE_BASE_URL = "http://localhost:4001";
+    const STATIC_PREFIX = "/files";
+
+    // Ensure no double slashes
+    const cleanedPath = snapshotPath.startsWith("/")
+      ? snapshotPath.slice(1)
+      : snapshotPath;
+
+    return `${FILE_BASE_URL}${STATIC_PREFIX}/${cleanedPath}`;
+  }
+
+  const getViolationTitle = (detection: any): string => {
+    const violations: string[] = [];
+
+    if (detection.helmet === false) violations.push("Hard hat missing");
+    if (detection.vest === false) violations.push("Safety vest not worn");
+    if (detection.glasses === false) violations.push("Safety glasses missing");
+
+    return violations.length ? violations.join(", ") : "Unknown Violation";
+  };
   // ✅ Track optimistic updates with version control
   const optimisticVersionRef = useRef<number>(0);
   const lastSyncTimestampRef = useRef<number>(0);
@@ -157,10 +197,11 @@ const PPEDetection: React.FC = () => {
       }
       console.log(
         "📡 Socket Event received:",
-        socketData.data?.ppe_kit_detection_id,
+        socketData.data,
         "timestamp:",
         Date.now()
       );
+
       // Create unique event ID to prevent duplicates
       const eventId = `${socketData.data?.id || "unknown"}-${
         socketData.serverTimestamp || Date.now()
@@ -262,18 +303,23 @@ const PPEDetection: React.FC = () => {
       });
 
       setRecentViolationsLive((prev) => {
+        console.log("recent voaiton soketdata", socketData.data);
         const updated = [
           {
-            voilation: socketData.data?.violationType,
+            // violation: socketData.data?.violationType,
+            violation: getViolationTitle(socketData.data),
+
             zone: socketData.data?.zone,
-            time: socketData.serverTimestamp || new Date(),
-            imageUrl: socketData.data?.snapshot,
+            // time: socketData.serverTimestamp || new Date(),
+            time: formatDateTime(socketData.data?.createdAt),
+            // imageUrl: socketData.data?.snapshot,
+            imageUrl: getImagePublicUrl(socketData.data?.snapshot),
             cameraId: socketData.data?.cameraid,
             alarmTriggered: socketData.data?.alarmTriggered,
           },
           ...prev,
         ];
-
+        console.log("updates sent to the recent voilations", updated);
         return updated.slice(0, 20);
       });
 

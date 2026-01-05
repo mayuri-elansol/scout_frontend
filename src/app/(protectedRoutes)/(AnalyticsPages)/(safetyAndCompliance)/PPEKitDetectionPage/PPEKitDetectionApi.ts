@@ -4,6 +4,7 @@ import {
   PpeCsvReportRequest,
   PpeSingleReportRequest,
 } from "./PPEKitDetection.types";
+import { rtkAPIToast } from "@/utils/rtkAPIToast";
 export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     getPPEKitDetectionKpiData: builder.query({
@@ -55,6 +56,16 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         body,
         responseHandler: (response) => response.blob(),
       }),
+
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        await rtkAPIToast(queryFulfilled, dispatch, {
+          successMessage:
+            "PPE detection single report PDF downloaded successfully.",
+          errorMessage:
+            "Failed to download the PPE detection single report PDF.",
+          duration: 4000,
+        });
+      },
     }),
     getPpeKitDetectionDetailedCsvReport: builder.mutation<
       Blob,
@@ -66,6 +77,16 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         body,
         responseHandler: (response) => response.blob(),
       }),
+
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        await rtkAPIToast(queryFulfilled, dispatch, {
+          successMessage:
+            "PPE detection detailed CSV report downloaded successfully.",
+          errorMessage:
+            "Failed to download the PPE detection detailed CSV report.",
+          duration: 4000,
+        });
+      },
     }),
     getPpeKitDetectionDetailedPdfReport: builder.mutation<
       Blob,
@@ -77,6 +98,15 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         body,
         responseHandler: (response) => response.blob(),
       }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        await rtkAPIToast(queryFulfilled, dispatch, {
+          successMessage:
+            "PPE detailed report has been downloaded successfully.",
+          errorMessage:
+            "Failed to download the PPE detailed report. Please try again.",
+          duration: 4000,
+        });
+      },
     }),
   }),
 });
