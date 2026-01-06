@@ -39,6 +39,7 @@ import { useSocketListeners } from "@/hooks/useSocketListeners";
 import dayjs, { Dayjs } from "dayjs";
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 import { SvgIconComponent } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 const PPEDetection: React.FC = () => {
   // ✅ Add deduplication ref at the top
   const processedEvents = useRef(new Set<string>());
@@ -47,14 +48,13 @@ const PPEDetection: React.FC = () => {
     cameraId: string;
     alarmTriggered: boolean;
   }
-
+  const { t } = useTranslation();
   const [isLiveMode, setIsLiveMode] = useState(true);
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
   const [fetchRecent, { data: recentApiData, isLoading: recentLoading }] =
     useLazyGetPpeKitDetectionRecentViolationsQuery();
-
   const [fetchZoneViolations, { data: zoneData, isLoading: zoneLoading }] =
     useLazyGetPPEKitDetectionZoneViolationsQuery();
   const [fetchKpi, { data: kpiData, isLoading }] =
@@ -65,7 +65,6 @@ const PPEDetection: React.FC = () => {
   ] = useLazyGetPpeKitDetectionDetailedReportQuery();
   const [downloadSinglePdf] = useGetPpeKitDetectionSingleReportPdfMutation();
   const [downloadCsvReport] = useGetPpeKitDetectionDetailedCsvReportMutation();
-
   const [downloadPdfReport] = useGetPpeKitDetectionDetailedPdfReportMutation();
 
   // ✅ Single source of truth for KPI data
@@ -393,6 +392,7 @@ const PPEDetection: React.FC = () => {
           ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
         return {
           ...item,
+          title: t(item.title),
           icon: config.icon,
           tooltipMessage: config.tooltipMessage,
         };
@@ -556,11 +556,11 @@ const PPEDetection: React.FC = () => {
   const KpiCardLoading = isLoading;
   const tableColumns = useMemo(
     () => [
-      { id: "violation", label: "Violation" },
-      { id: "time", label: "Time" },
-      { id: "zone", label: "Zone" },
-      { id: "cameraId", label: "Cameras" },
-      { id: "alarmTriggered", label: "Alarm Triggered" },
+      { id: "violation", label: t("Violation") },
+      { id: "time", label: t("Time") },
+      { id: "zone", label: t("Zone") },
+      { id: "cameraId", label: t("Cameras") },
+      { id: "alarmTriggered", label: t("Alarm Triggered") },
     ],
     []
   );
@@ -569,7 +569,7 @@ const PPEDetection: React.FC = () => {
     () => [
       {
         id: "violation",
-        label: "Violation",
+        label: t("Violation"),
         type: "select" as const,
         options: [
           "Hard hat missing",
@@ -579,26 +579,26 @@ const PPEDetection: React.FC = () => {
       },
       {
         id: "zone",
-        label: "Zone",
+        label: t("Zone"),
         type: "select" as const,
 
         options: detailedReport?.zones || [],
       },
       {
         id: "cameraId",
-        label: "Cameras",
+        label: t("Cameras"),
         type: "select" as const,
 
         options: detailedReport?.cameras || [],
       },
       {
         id: "alarmTriggered",
-        label: "Alarm Triggered",
+        label: t("Alarm Triggered"),
         type: "select" as const,
         options: ["True", "False"],
       },
-      { id: "startDate", label: "Start Date", type: "date" as const },
-      { id: "endDate", label: "End Date", type: "date" as const },
+      { id: "startDate", label: t("Start Date"), type: "date" as const },
+      { id: "endDate", label: t("End Date"), type: "date" as const },
     ],
     [detailedReport?.zones, detailedReport?.cameras]
   );
@@ -676,7 +676,7 @@ const PPEDetection: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
-                📊 Overview
+                📊 {t("Overview")}
               </Box>
             </Typography>
           </Box>
@@ -726,7 +726,7 @@ const PPEDetection: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               tooltipMessage="Latest 20 detected PPE violations with details."
-              label="Recent Violations"
+              label={t("Recent Violations")}
               violations={recentViolationsLive}
               loading={recentLoading}
               onDownload={handleDownloadViolation}
@@ -735,6 +735,7 @@ const PPEDetection: React.FC = () => {
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
+              label={t("Zone Violations")}
               violationsZone={zoneViolationsForUi}
               loading={zoneLoading}
               tooltipMessage="Shows PPE violations per zone"
@@ -746,7 +747,7 @@ const PPEDetection: React.FC = () => {
       {/* PPE Violations Report */}
 
       <ReportTable
-        title="Detailed Report"
+        title={t("Detailed Report")}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         data={tableData}
         columns={tableColumns}

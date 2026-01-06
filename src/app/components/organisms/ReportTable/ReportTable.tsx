@@ -27,6 +27,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 
+import { useTranslation } from "react-i18next";
 /** Filter Types */
 type FilterType = "text" | "select" | "date" | "datetime";
 
@@ -87,6 +88,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const [filterValues, setFilterValues] = useState<Record<keyof T, string>>(
     {} as Record<keyof T, string>
   );
+
+  const { t } = useTranslation();
   const [dateTimeValues, setDateTimeValues] = useState<
     Record<string, Dayjs | null>
   >({});
@@ -477,7 +480,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                     minWidth: 100,
                   }}
                 >
-                  Actions
+                  {t("Actions")}
                 </TableCell>
               </TableRow>
             </TableHead>
