@@ -1,7 +1,25 @@
 {
   "hello": "नमस्कार",
-  "welcome": "माझ्या अ‍ॅपमध्ये आपले स्वागत आहे",
-   "dashboard": "डॅशबोर्ड",
-  "ppe_compliance": "पीपीई अनुपालन",
-  "fire_incidents": "आग घटना"
+  "Overview": "आढावा",
+  "Recent Violations": "अलीकडील उल्लंघने",
+  "Zone Violations": "क्षेत्रातील उल्लंघने",
+  "Detailed Report": "सविस्तर अहवाल",
+  "Zone": "विभाग",
+  "Violation": "उल्लंघन",
+  "Time": "वेळ",
+  "Cameras": "कॅमेरा",
+  "Alarm Triggered": "अलार्म सक्रिय",
+  "Start Date": "सुरुवातीची तारीख",
+  "End Date": "शेवटची तारीख",
+  "Actions": "कृती",
+
+  "Total Violations": "एकूण उल्लंघने",
+  "Current Unsafe Zone": "सध्याचा असुरक्षित विभाग",
+  "Last Detection Time": "शेवटचा शोध वेळ",
+  "Missing Helmet": "हेल्मेट नाही",
+  "Missing Vest": "जॅकेट नाही",
+  "Missing Glasses": "सुरक्षा चष्मा नाही",
+  "Hard hat missing": "हेल्मेट घातलेले नाही",
+  "Safety vest not worn": "सुरक्षा जॅकेट घातलेले नाही",
+  "Safety glasses missing": "सुरक्षा चष्मा घातलेले नाही"
 }

@@ -1,4 +1,25 @@
 {
-"hello": "नमस्ते",
-"welcome": "हमारे ऐप में आपका स्वागत है"
+  "hello": "नमस्ते",
+  "Overview": "अवलोकन",
+  "Recent Violations": "हाल की उल्लंघन",
+  "Zone Violations": "क्षेत्रवार उल्लंघन",
+  "Detailed Report": "विस्तृत रिपोर्ट",
+  "Zone": "क्षेत्र",
+  "Violation": "उल्लंघन",
+  "Time": "समय",
+  "Cameras": "कैमरा",
+  "Alarm Triggered": "अलार्म सक्रिय",
+  "Start Date": "प्रारंभ तिथि",
+  "End Date": "समाप्ति तिथि",
+  "Actions": "क्रियाएँ",
+
+  "Total Violations": "कुल उल्लंघन",
+  "Current Unsafe Zone": "वर्तमान असुरक्षित क्षेत्र",
+  "Last Detection Time": "अंतिम पहचान समय",
+  "Missing Helmet": "हेलमेट नहीं पहना",
+  "Missing Vest": "सुरक्षा जैकेट नहीं पहनी",
+  "Missing Glasses": "सुरक्षा चश्मा नहीं पहना",
+  "Hard hat missing": "हेलमेट नहीं पहना",
+  "Safety vest not worn": "सुरक्षा जैकेट नहीं पहनी",
+  "Safety glasses missing": "सुरक्षा चश्मा नहीं पहना"
 }

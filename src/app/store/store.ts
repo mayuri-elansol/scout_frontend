@@ -8,7 +8,7 @@ import authReducer from "./slices/authSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    toaster: toasterReducer,
+    toasterGlobal: toasterReducer,
     language: languageReducer,
 
     // ✅ RTK Query reducers

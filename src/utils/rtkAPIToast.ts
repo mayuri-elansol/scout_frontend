@@ -1,0 +1,50 @@
+import { AppDispatch } from "../../src/app/store/store";
+import { showToast, hideToast } from "@/app/store/slices/toasterSlice";
+
+export interface rtkInbuilt {
+  data: {
+    success: boolean;
+    message: string;
+    error?: string;
+    accessToken: string;
+  };
+}
+
+export async function rtkAPIToast<T>(
+  queryFulfilled: Promise<T>,
+  dispatch: AppDispatch,
+  {
+    successMessage,
+    errorMessage,
+    duration = 5000,
+  }: {
+    successMessage: string;
+    errorMessage?: string;
+    duration?: number;
+  }
+) {
+  try {
+    const result = (await queryFulfilled) as rtkInbuilt;
+
+    const message = result?.data?.message ?? successMessage;
+
+    const dynamicMessage = message || successMessage;
+
+    dispatch(showToast({ message: dynamicMessage, severity: "success" }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    dispatch(
+      showToast({
+        message:
+          error?.error?.data?.message ||
+          errorMessage ||
+          "Something went wrong!",
+        severity: "error",
+      })
+    );
+  } finally {
+    setTimeout(() => {
+      dispatch(hideToast());
+    }, duration);
+  }
+}

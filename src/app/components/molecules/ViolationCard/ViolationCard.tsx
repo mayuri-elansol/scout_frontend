@@ -4,7 +4,8 @@ import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
 
 export interface Violation {
-  voilation?: string;
+  // voilation?: string;
+  violation?: string;
   zone: string;
   time: string;
   imageUrl?: string;
@@ -52,11 +53,15 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               mb: 0.5,
             }}
           >
-            {violations.incident ??
+            {/* {
+              //violations.incident ??
               violations.violation ??
-              violations.usage ??
-              violations.eventMessage ??
-              "Unknown Violation"}
+                // violations.usage ??
+                // violations.eventMessage ??
+                "Unknown Violation"
+            } */}
+
+            {violations.violation || "Unknown Violation"}
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
             {violations.zone}

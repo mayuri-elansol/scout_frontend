@@ -1,31 +1,59 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-export interface Toast {
-  id: string;
+/**
+ * Redux slice for managing global toast notifications.
+ *
+ * - Controls the visibility, message, and severity of toast alerts.
+ * - Provides actions to show and hide toast messages across the app.
+ *
+ * @author Prachi Jamgaonkar
+ * @date 2025-06-11
+ */
+
+type AlertSeverity = "success" | "info" | "warning" | "error";
+
+type toasterValues = {
+  open: boolean;
   message: string;
-  severity: "success" | "info" | "warning" | "error";
-}
+  severity: AlertSeverity;
+};
 
-interface ToasterState {
-  toasts: Toast[];
-}
-
-const initialState: ToasterState = {
-  toasts: [],
+const initialState: toasterValues = {
+  open: false,
+  message: "",
+  severity: "success",
 };
 
 const toasterSlice = createSlice({
-  name: "toaster",
+  name: "toasterState",
   initialState,
   reducers: {
-    showToast: (state, action: PayloadAction<Toast>) => {
-      // ✅ latest toast always on top
-      state.toasts.unshift(action.payload);
+    /**
+     * Displays a toast message.
+     *
+     * - Sets `open` to true.
+     * - Updates `message` and `severity` based on the payload.
+     *
+     * @param {Object} action.payload - Toast content
+     * @param {string} action.payload.message - The message to display
+     * @param {AlertSeverity} [action.payload.severity="success"] - Type of alert (success, info, warning, error)
+     */
+
+    showToast: (state, action) => {
+      state.open = true;
+      state.message = action.payload.message;
+      state.severity = action.payload.severity || "success";
     },
-    hideToast: (state, action: PayloadAction<string>) => {
-      state.toasts = state.toasts.filter(
-        (toast) => toast.id !== action.payload
-      );
+    /**
+     * Hides the toast message.
+     *
+     * - Sets `open` to false.
+     * - Clears the message.
+     */
+
+    hideToast: (state) => {
+      state.open = false;
+      state.message = "";
     },
   },
 });
