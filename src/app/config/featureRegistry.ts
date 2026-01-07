@@ -11,7 +11,7 @@ export const FEATURE = {
   ROLE_MANAGEMENT: "SF006",
   USER_MANAGEMENT: "SF007",
 
-  CONFIGURATOR: "SF009",
+  CONFIGURATOR: "SF008",
 
   // Analytics – Safety & Compliance
   PPE_DETECTION: "SF009",
