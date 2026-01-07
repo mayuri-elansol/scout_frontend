@@ -489,17 +489,32 @@ const { features } = useAuth();
 
             <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
-                {filteredMenus.settingsFlags.map((category) =>
-                  category.items.map((item, index) => (
+                {filteredMenus.settingsFlags.map((category, catIndex) => {
+                  // Check if this category has nested items (like Configurator)
+                  if (category.items.length > 0 && category.title !== "Settings") {
+                    return (
+                      <CategorySection
+                        key={uuidv4() + catIndex}
+                        category={category}
+                        openCategories={openCategories}
+                        onToggle={handleCategoryToggle}
+                        pathname={pathname}
+                        theme={theme}
+                      />
+                    );
+                  }
+                  
+                  // Regular Settings items (Role Management, User Management)
+                  return category.items.map((item, itemIndex) => (
                     <SubMenuItem
-                      key={uuidv4() + index}
+                      key={uuidv4() + itemIndex}
                       item={item}
                       pathname={pathname}
                       theme={theme}
                       categoryTitle={category.title}
                     />
-                  ))
-                )}
+                  ));
+                })}
               </List>
             </Collapse>
           </List>
