@@ -435,7 +435,9 @@ const Header: React.FC = () => {
             loading="lazy"
           />
         </Box>
-        <Sidebar/>
+        <Sidebar currentPage={"safety-compliance-dashboard"} onPageChange={function (page: PageType): void {
+          throw new Error("Function not implemented.");
+        } }/>
       </Drawer>
     </>
   );

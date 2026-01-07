@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { setUserFromToken, clearUser, restoreUser } from "@/app/store/slices/authSlice";
 import { JwtPayload, StoredUser } from "@/app/(unprotectedRoutes)/Login/Login.types";
+import { useValidateTokenMutation } from "@/app/(unprotectedRoutes)/Login/LoginApi";
 
 const STORAGE_USER_KEY = "scout_user";
 const STORAGE_TOKEN_KEY = "scout_access_token";
@@ -15,45 +16,112 @@ const STORAGE_TOKEN_KEY = "scout_access_token";
 export const useAuth = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [validateToken] = useValidateTokenMutation();
 
   const { user, features, isAuthenticated } = useSelector(
     (state: RootState) => state.auth
   );
 
   const [isLoading, setIsLoading] = useState(true);
-
   // 🔁 Restore auth on page refresh
-  useEffect(() => {
-    const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+  //   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+
+  //   if (storedUser && token) {
+  //     try {
+  //       const parsedUser: StoredUser = JSON.parse(storedUser);
+
+        
+  //       // Step 1: Restore minimal user from localStorage
+  //       dispatch(restoreUser(parsedUser));
+
+  //       // Step 2: Decode token to restore full state including features/licenses
+  //       const decoded = jwtDecode<JwtPayload>(token);
+  //       dispatch(setUserFromToken(decoded));
+  //     } catch (err) {
+  //       console.error("Failed to restore auth from storage", err);
+  //       localStorage.removeItem(STORAGE_USER_KEY);
+  //       localStorage.removeItem(STORAGE_TOKEN_KEY);
+  //       dispatch(clearUser());
+  //     }
+  //   }
+
+  //   setIsLoading(false);
+  // }, [dispatch]);
+
+//  useEffect(() => {
+//   const bootstrapAuth = async () => {
+//   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+//   const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+
+//   if (!token || !storedUser) {
+//     setIsLoading(false);
+//     return;
+//   }
+
+//   try {
+//     const parsedUser: StoredUser = JSON.parse(storedUser);
+
+//     // ✅ Use org_id from localStorage instead of redux
+//     await validateToken({
+//       token,
+//       orgId: parsedUser.org_id,
+//     }).unwrap();
+
+//     // Restore user in redux
+//     dispatch(restoreUser(parsedUser));
+//     dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+//   } catch (err) {
+//     console.error("Auth restore failed", err);
+//     localStorage.removeItem(STORAGE_USER_KEY);
+//     localStorage.removeItem(STORAGE_TOKEN_KEY);
+//     dispatch(clearUser());
+//     router.push("/Login");
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };
+
+
+//     bootstrapAuth();
+//    }, [dispatch, router, validateToken]);
+
+useEffect(() => {
+  const bootstrapAuth = async () => {
     const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+    const storedUser = localStorage.getItem(STORAGE_USER_KEY);
 
-    if (storedUser && token) {
-      try {
-        const parsedUser: StoredUser = JSON.parse(storedUser);
-
-        // Step 1: Restore minimal user from localStorage
-        dispatch(restoreUser(parsedUser));
-
-        // Step 2: Decode token to restore full state including features/licenses
-        const decoded = jwtDecode<JwtPayload>(token);
-        dispatch(setUserFromToken(decoded));
-      } catch (err) {
-        console.error("Failed to restore auth from storage", err);
-        localStorage.removeItem(STORAGE_USER_KEY);
-        localStorage.removeItem(STORAGE_TOKEN_KEY);
-        dispatch(clearUser());
-      }
+    if (!token || !storedUser) {
+      setIsLoading(false);
+      return;
     }
 
-    setIsLoading(false);
-  }, [dispatch]);
+    try {
+      const parsedUser: StoredUser = JSON.parse(storedUser);
 
- 
+      // ✅ Do not validate token here; just restore state
+      dispatch(restoreUser(parsedUser));
+      dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+    } catch (err) {
+      console.error("Auth restore failed", err);
+      localStorage.removeItem(STORAGE_USER_KEY);
+      localStorage.removeItem(STORAGE_TOKEN_KEY);
+      dispatch(clearUser());
+      router.push("/Login");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  bootstrapAuth();
+}, [dispatch, router]);
+
 const login = (token: string) => {
   try {
     const decoded = jwtDecode<JwtPayload>(token);
 
-    // 🚨 FORCE RESET FLOW
+    //  FORCE RESET FLOW
     if (decoded.sid) {
       router.push(`/ResetPassword/${decoded.sid}`);
     return { type: "RESET_REQUIRED" as const };
@@ -111,7 +179,7 @@ return { type: "LOGIN_SUCCESS" as const, user: userForState };
 
   return {
     user,
-    features,       // always from decoded token
+    features,       
     isAuthenticated,
     isLoading,
     login,

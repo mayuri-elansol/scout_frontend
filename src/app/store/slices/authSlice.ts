@@ -21,22 +21,22 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     // 🔐 Login or restore from token (trusted token)
-    setUserFromToken: (state, action: PayloadAction<JwtPayload>) => {
-      state.user = action.payload;
-      state.features = action.payload.features ?? [];
-      state.isAuthenticated = true;
-    },
+setUserFromToken: (state, action: PayloadAction<JwtPayload>) => {
+  state.user = action.payload;
+  state.features = action.payload.features ?? [];
+  state.isAuthenticated = true;
+},
 
-    // 🔁 Restore minimal user from localStorage (no features)
-    restoreUser: (state, action: PayloadAction<StoredUser>) => {
-      state.user = {
-        ...action.payload,
-        features: [],     // features remain empty until token decoded
-        licenses: null,   // licenses not stored in localStorage
-      } as JwtPayload;
-      state.features = [];
-      state.isAuthenticated = true;
-    },
+restoreUser: (state, action: PayloadAction<StoredUser>) => {
+  state.user = {
+    ...action.payload,
+    features: [],
+    licenses: null,
+  } as JwtPayload;
+  state.features = [];
+  state.isAuthenticated = true;
+},
+
 
     // 🚪 Logout
     clearUser: (state) => {

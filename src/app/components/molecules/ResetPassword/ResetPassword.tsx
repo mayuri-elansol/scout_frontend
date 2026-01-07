@@ -323,7 +323,7 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
               display: "block",
             }}
           >
-            Email
+            Username
           </Typography>
 
           <TextField

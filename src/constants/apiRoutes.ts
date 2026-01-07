@@ -11,6 +11,8 @@ export const apiRoutes = {
     forgotPassword: "/forgot-password",
     getNewPassword: "/get-new-password",
     resetPassword: "/reset-password",
+        validateToken: '/validate-token'
+
   },
 
   organisation: {

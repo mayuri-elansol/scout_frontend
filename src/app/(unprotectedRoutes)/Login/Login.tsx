@@ -8,6 +8,7 @@ import { useAuth } from "@/customhooks/useAuth";
 import { useGetLoginDataMutation } from "./LoginApi";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { triggerToast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   userName: string;
@@ -16,7 +17,7 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const { login } = useAuth();
-
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +34,10 @@ const Login: React.FC = () => {
       const token = response.data.tokenOrError;
 
       ///with sid
-      //   const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjoiZjcwYTY1YTg0NzRkMDM1NyIsImZlYXR1cmVzIjpbIkYwMDUiLCJGMDA2IiwiRjAwNyIsIkYwMDgiLCJGMDA5IiwiRjAxMCIsIkYwMTEiLCJGMDEyIiwiRjAxMyIsIkYwMTQiLCJGMDE1IiwiRjAxNiIsIkYwMTciLCJGMDE4IiwiRjAxOSIsIkYwMjAiLCJGMDIxIiwiRjAyMiIsIkYwMjMiXSwib3JnX2lkIjoiYzhiMDI5OTc1ZjRmZjIxOCIsImlhdCI6MTc2NjQ5NTQ4OSwiZXhwIjoxNzY2NDk5MDg5LCJpc3MiOiJ5b3VyLWFwcC1uYW1lIn0.MAHoS-eF2_lu_CjlBIeiRuG9KpvBx0f8fNsLxqVWdFY";
+        //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjoiZjcwYTY1YTg0NzRkMDM1NyIsImZlYXR1cmVzIjpbIkYwMDUiLCJGMDA2IiwiRjAwNyIsIkYwMDgiLCJGMDA5IiwiRjAxMCIsIkYwMTEiLCJGMDEyIiwiRjAxMyIsIkYwMTQiLCJGMDE1IiwiRjAxNiIsIkYwMTciLCJGMDE4IiwiRjAxOSIsIkYwMjAiLCJGMDIxIiwiRjAyMiIsIkYwMjMiXSwib3JnX2lkIjoiYzhiMDI5OTc1ZjRmZjIxOCIsImlhdCI6MTc2NjQ5NTQ4OSwiZXhwIjoxNzY2NDk5MDg5LCJpc3MiOiJ5b3VyLWFwcC1uYW1lIn0.MAHoS-eF2_lu_CjlBIeiRuG9KpvBx0f8fNsLxqVWdFY";
 
       //without sid
-      //   const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjpudWxsLCJmZWF0dXJlcyI6WyJGMDA1IiwiRjAwNiIsIkYwMDciLCJGMDA4IiwiRjAwOSIsIkYwMTAiLCJGMDExIiwiRjAxMiIsIkYwMTMiLCJGMDE0IiwiRjAxNSIsIkYwMTYiLCJGMDE3IiwiRjAxOCIsIkYwMTkiLCJGMDIwIiwiRjAyMSIsIkYwMjIiLCJGMDIzIl0sIm9yZ19pZCI6ImM4YjAyOTk3NWY0ZmYyMTgiLCJpYXQiOjE3NjY0OTU0ODksImV4cCI6MTc2NjQ5OTA4OSwiaXNzIjoieW91ci1hcHAtbmFtZSJ9.33e628JSBgJyAQ_ImAOi5yPLuNrrnRM0IsokehNWWlM"
+     //  const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjpudWxsLCJmZWF0dXJlcyI6WyJTRjAwOSIsIkYwMDYiLCJGMDA3IiwiRjAwOCIsIkYwMDkiLCJGMDEwIiwiRjAxMSIsIkYwMTIiLCJGMDEzIiwiRjAxNCIsIkYwMTUiLCJGMDE2IiwiRjAxNyIsIkYwMTgiLCJGMDE5IiwiRjAyMCIsIkYwMjEiLCJGMDIyIiwiRjAyMyJdLCJvcmdfaWQiOiJjOGIwMjk5NzVmNGZmMjE4IiwiaWF0IjoxNzY2NDk1NDg5LCJleHAiOjE3NjY0OTkwODksImlzcyI6InlvdXItYXBwLW5hbWUifQ.quuczyJMaOL7Eeby04rfu2LMtTDPPgJ0eQhgle8Vz-I"
       const result = login(token);
 
       if (result?.type === "LOGIN_SUCCESS") {
@@ -46,6 +47,7 @@ const Login: React.FC = () => {
       if (result?.type === "RESET_REQUIRED") {
         triggerToast("Please reset your password", "info");
       }
+//router.push("PPEKitDetectionPage");
     } catch (err) {
       const fetchError = err as FetchBaseQueryError & {
         data?: { details?: string; error?: string };
