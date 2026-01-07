@@ -30,7 +30,7 @@ export const addUserApi = baseProtectedApi.injectEndpoints({
         }
 
         return {
-          url: `${apiRoutes.userInformation.root}/${apiRoutes.authentication.addUser}`,
+          url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.addUser}`,
           method: "POST",
           body: formData,
         };

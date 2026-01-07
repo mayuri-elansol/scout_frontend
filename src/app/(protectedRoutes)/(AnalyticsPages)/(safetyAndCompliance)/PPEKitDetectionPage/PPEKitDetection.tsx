@@ -38,7 +38,7 @@ import {
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 
-const tenantId = "c8b029975f4ff218";
+const tenantId = "4f3e2f80e5574111";
 
 /* ================= TYPES ================= */
 
