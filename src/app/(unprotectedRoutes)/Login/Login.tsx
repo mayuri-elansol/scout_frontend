@@ -31,14 +31,14 @@ const Login: React.FC = () => {
     try {
       const response = await triggerLogin(data).unwrap();
 
-      const token = response.data.tokenOrError;
+     // const token = response.data.tokenOrError;
 
       ///with sid
         //const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjoiZjcwYTY1YTg0NzRkMDM1NyIsImZlYXR1cmVzIjpbIkYwMDUiLCJGMDA2IiwiRjAwNyIsIkYwMDgiLCJGMDA5IiwiRjAxMCIsIkYwMTEiLCJGMDEyIiwiRjAxMyIsIkYwMTQiLCJGMDE1IiwiRjAxNiIsIkYwMTciLCJGMDE4IiwiRjAxOSIsIkYwMjAiLCJGMDIxIiwiRjAyMiIsIkYwMjMiXSwib3JnX2lkIjoiYzhiMDI5OTc1ZjRmZjIxOCIsImlhdCI6MTc2NjQ5NTQ4OSwiZXhwIjoxNzY2NDk5MDg5LCJpc3MiOiJ5b3VyLWFwcC1uYW1lIn0.MAHoS-eF2_lu_CjlBIeiRuG9KpvBx0f8fNsLxqVWdFY";
 
       //without sid
-     //  const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJiZGY5NThlNjJkNTViMWE5IiwidXNlck5hbWUiOiJtYXl1cmlfZGV2Iiwicm9sZXMiOiJPcmdhbml6YXRpb25fQWRtaW5fU2NvdXQiLCJsaWNlbnNlcyI6bnVsbCwic2lkIjpudWxsLCJmZWF0dXJlcyI6WyJTRjAwOSIsIkYwMDYiLCJGMDA3IiwiRjAwOCIsIkYwMDkiLCJGMDEwIiwiRjAxMSIsIkYwMTIiLCJGMDEzIiwiRjAxNCIsIkYwMTUiLCJGMDE2IiwiRjAxNyIsIkYwMTgiLCJGMDE5IiwiRjAyMCIsIkYwMjEiLCJGMDIyIiwiRjAyMyJdLCJvcmdfaWQiOiJjOGIwMjk5NzVmNGZmMjE4IiwiaWF0IjoxNzY2NDk1NDg5LCJleHAiOjE3NjY0OTkwODksImlzcyI6InlvdXItYXBwLW5hbWUifQ.quuczyJMaOL7Eeby04rfu2LMtTDPPgJ0eQhgle8Vz-I"
-      const result = login(token);
+     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI4M2IyZTVlMTNhN2IzMWQ1IiwidXNlck5hbWUiOiJzaHlhbWpvc2hpIiwiZmlyc3ROYW1lIjoiU2h5YW0iLCJsYXN0TmFtZSI6Ikpvc2hpIiwic2lkIjpudWxsLCJyb2xlcyI6Ik9yZ2FuaXNhdGlvbl9BZG1pbl9TY291dCIsImxpY2Vuc2VzIjpudWxsLCJmZWF0dXJlcyI6WyJTRjAwMSIsIlNGMDAyIiwiU0YwMDMiLCJTRjAwNCIsIlNGMDA1IiwiU0YwMDYiLCJTRjAwNyIsIlNGMDA4IiwiU0YwMDkiLCJTRjAxMCIsIlNGMDExIiwiU0YwMTIiLCJTRjAxMyIsIlNGMDE0IiwiU0YwMTUiLCJTRjAxNiIsIlNGMDE3IiwiU0YwMTgiLCJTRjAxOSIsIlNGMDIwIiwiU0YwMjEiLCJTRjAyMiIsIlNGMDIzIiwiU0YwMjQiLCJTRjAyNSIsIlNGMDI2IiwiU0YwMjciLCJTRjAyOCIsIlNGMDI5IiwiU0YwMzAiLCJTRjAzMSIsIlNGMDMyIiwiU0YwMzMiLCJTRjAzNCIsIlNGMDM1IiwiU0YwMzYiLCJTRjAzNyIsIlNGMDM4IiwiU0YwMzkiLCJTRjA0MCIsIlNGMDQxIl0sIm9yZ19pZCI6IjRmM2UyZjgwZTU1NzQxMTEiLCJpYXQiOjE3Njc3ODI1MDAsImV4cCI6MTc2Nzc4NjEwMCwiaXNzIjoieW91ci1hcHAtbmFtZSJ9.YsUgZdzOmPPhFYzDd1kqoQ72FJ7WA00x8XI4LyrVSTU" 
+     const result = login(token);
 
       if (result?.type === "LOGIN_SUCCESS") {
         triggerToast("Login successful!", "success");
@@ -47,7 +47,6 @@ const Login: React.FC = () => {
       if (result?.type === "RESET_REQUIRED") {
         triggerToast("Please reset your password", "info");
       }
-//router.push("PPEKitDetectionPage");
     } catch (err) {
       const fetchError = err as FetchBaseQueryError & {
         data?: { details?: string; error?: string };
