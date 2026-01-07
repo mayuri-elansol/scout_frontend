@@ -1,0 +1,219 @@
+'use client';
+
+
+import { Avatar, Box, Typography, Grid, Button } from '@mui/material';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EventIcon from '@mui/icons-material/Event';
+import UpdateIcon from '@mui/icons-material/Update';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+
+
+import { useDispatch, useSelector } from 'react-redux';
+import { formatDate } from '@/utils/dateUtils';
+import Loader from '@/app/components/atoms/Loader/Loader';
+import { useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from './ViewUserApi';
+import { RootState } from '@/app/store/store';
+import { showToast } from '@/app/store/slices/toasterSlice';
+import { DropdownOption, ViewUserPageProps } from './viewUser.types';
+import CardForSettings from '@/app/components/molecules/CardForSettings/CardForSettings';
+
+export default function ViewUserPage({ userInformationData }: Readonly<ViewUserPageProps>) {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const params = useParams();
+ const { user: authUser } = useSelector((state: RootState) => state.auth);
+
+const tenantId = authUser?.org_id;
+const userId = authUser?.userId;
+
+ 
+
+const userIdFromParams =
+  typeof params?.targetUserId === "string"
+    ? params.targetUserId
+    : "";
+
+  // role list query
+  const {
+    data: roleListData,
+    isLoading: roleListLoading,
+    isError: roleListError,
+    error: roleListApiError,
+  } = useGetUserRoleQuery(
+    { tenantId: tenantId!, userId: userId! },
+    { skip: !tenantId || !userId },
+  );
+
+  const roleList = roleListData?.data.data.map((role: DropdownOption) => ({
+    id: role.org_app_role_id,
+    name: role.role_id.name,
+    label: role.role_id.name,
+  }));
+
+  const isRoleListReady = !!roleListData && !roleListLoading && !roleListError;
+
+
+const {
+  data: userData,
+  isLoading: userLoading,
+  isError: userOrgRoleIdError,
+  error: userOrgRoleApiError,
+} = useGetUserDetailsByUserIdQuery(
+  {
+    tenantId: tenantId!,
+    userId: userId!,
+    targetUserId: userIdFromParams as string,
+  },
+  {
+    skip: !tenantId || !userId || !userIdFromParams,
+  }
+);
+
+
+
+  // Handle errors globally with toast
+  useEffect(() => {
+    if (roleListError) {
+      dispatch(showToast({         id: crypto.randomUUID(),
+message: 'Failed to fetch role .', severity: 'error' }));
+    }
+    if (userOrgRoleIdError) {
+      dispatch(showToast({         id: crypto.randomUUID(),
+message: 'Failed to fetch user information.', severity: 'error' }));
+    }
+
+
+  }, [
+    // roleListError,
+    // roleListApiError,
+   
+    userOrgRoleIdError,
+    userOrgRoleApiError,
+    dispatch,
+  ]);
+
+  const fullName =
+    `${userInformationData?.first_name ?? ''} ${userInformationData?.last_name ?? ''}`.trim();
+
+
+
+  const selectedRole = roleList?.find(
+    (r: { id: string }) => r.id === roleListData?.data?.data[0]?.orgAppRole?.org_app_role_id,
+  )?.name;
+
+const viewUser = {
+  name:
+    (userInformationData?.first_name ?? "") +
+      " " +
+      (userInformationData?.last_name ?? "") ||
+    "-",
+  email: userInformationData?.email ?? "-",
+  phone: userInformationData?.phoneNumber ?? "-",
+  status: "Active",
+  createdAt: formatDate(userInformationData?.createdAt) ?? "-",
+  updatedAt: formatDate(userInformationData?.updatedAt) ?? "-",
+  role: selectedRole ?? "-",
+};
+
+
+
+  const handleEdit = () => {
+    router.push(`/EditUser/${userIdFromParams}`);
+  };
+
+  // if (roleListLoading || userLoading) {
+  //   return <Loader />;
+  // }
+
+  return (
+    <Box sx={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', gap: 5 }}>
+      <Box className="viewOrganisation">
+        <Box
+          sx={{
+            borderColor: 'divider',
+            pb: 2,
+            px: 2,
+            mt: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar
+              alt={viewUser.name}
+              src="/static/images/avatar/1.jpg"
+              sx={{ width: 56, height: 56, borderRadius: '8px' }}
+              variant="square"
+            />
+            <Box>
+              <Typography variant="h5" fontWeight={600}>
+                {viewUser.name}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: viewUser.status === 'Active' ? 'green' : 'red',
+                  fontWeight: 500,
+                }}
+              >
+                {viewUser.status}
+              </Typography>
+            </Box>
+          </Box>
+<Button variant="contained" onClick={handleEdit}>
+  Edit User
+</Button>
+        </Box>
+        <Box sx={{ px: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* User Information */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+            <Typography variant="h6">User Information</Typography>
+            <Grid container spacing={{ xs: 2, md: 3 }}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Name" text={viewUser.name} icon={<PersonIcon />} />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Email" text={viewUser.email} icon={<EmailIcon />} />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Phone" text={viewUser.phone} icon={<PhoneIcon />} />
+              </Grid>
+                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Role" text={viewUser.role} icon={<ManageAccountsIcon />} />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Status"
+                  text={viewUser.status}
+                  icon={viewUser.status === 'Active' ? <CheckCircleIcon /> : <CancelIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Created At" text={viewUser.createdAt} icon={<EventIcon />} />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings title="Updated At" text={viewUser.updatedAt} icon={<UpdateIcon />} />
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Organisation Hierarchy */}
+          {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1, mb: 2 }}>
+            <Typography variant="h6">Organisation Hierarchy</Typography>
+            <Grid container spacing={{ xs: 2, md: 3 }}>
+            
+             
+            </Grid>
+          </Box> */}
+        </Box>
+      </Box>
+    </Box>
+  );
+}

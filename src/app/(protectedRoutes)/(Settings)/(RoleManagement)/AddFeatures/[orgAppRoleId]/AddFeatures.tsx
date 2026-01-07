@@ -21,7 +21,7 @@ import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import {
   useAssignFeatureToRoleMutation,
-  useGetFeaturesByOrgIdMutation,
+  useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
 import Loader from "@/app/components/atoms/Loader/Loader";
 
@@ -40,52 +40,34 @@ const AddFeatures: React.FC = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  //  Route param
   const orgAppRoleId =
     typeof params?.orgAppRoleId === "string" ? params.orgAppRoleId : undefined;
-  // Global auth state
+
   const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
   const userId = useSelector((state: RootState) => state.auth.user?.userId);
 
-  // 🔄 API hooks
-  const [getFeaturesByOrgId, { isLoading }] = useGetFeaturesByOrgIdMutation();
+  // ✅ ALL HOOKS FIRST
+  const {
+    data: featuresRes,
+    isLoading,
+    isFetching,
+  } = useGetFeaturesByOrgIdQuery(
+    { userId: userId!, orgId: tenantId! },
+    { skip: !userId || !tenantId }
+  );
 
   const [assignFeatureToRole, { isLoading: isAssigning }] =
     useAssignFeatureToRoleMutation();
 
-  const [features, setFeatures] = useState<Feature[]>([]);
   const [selectedFeatureIds, setSelectedFeatureIds] = useState<string[]>([]);
-const isPageLoading = isLoading && features.length === 0;
 
-  /* ---------------- Fetch features on load ---------------- */
+  const features: Feature[] = featuresRes?.data?.data ?? [];
 
-  useEffect(() => {
-    if (!tenantId || !userId) return;
-
-    getFeaturesByOrgId({
-      userId,
-      orgId: tenantId,
-    })
-      .unwrap()
-      .then((res) => {
-        const featureList = res?.data?.data;
-
-        if (Array.isArray(featureList)) {
-          setFeatures(featureList);
-        } else {
-          setFeatures([]);
-        }
-      })
-      .catch(() => {
-        dispatch(
-          showToast({
-            id: crypto.randomUUID(),
-            message: "Failed to load features",
-            severity: "error",
-          })
-        );
-      });
-  }, [tenantId, userId]);
+  //  CONDITIONAL RENDER AFTER HOOKS
+  if (isLoading) {
+    return <Loader />;
+  }
+  
 
   /* ---------------- Handlers ---------------- */
 
@@ -149,9 +131,9 @@ const isPageLoading = isLoading && features.length === 0;
   return (
 
     <Box sx={{ py: 2, px: { xs: 2, sm: 3, md: 4 } }}>
-      {isPageLoading ? (
+      {/* {isPageLoading ? (
         <Loader />
-      ) : (
+      ) : ( */}
         <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 3 }}>
           {/* Header */}
           <Box
@@ -294,7 +276,7 @@ const isPageLoading = isLoading && features.length === 0;
           </Button>
         </Box>
       </Paper>
-      )}
+      {/* )} */}
     </Box>
      
   );

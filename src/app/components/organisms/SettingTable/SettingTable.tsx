@@ -8,86 +8,68 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Avatar,
   IconButton,
   Box,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, Visibility } from "@mui/icons-material";
 import styles from "./SettingTable.module.css";
-import Appbar from "../AppBar/AppBar";
-import { v4 as uuidv4 } from "uuid";
-// Define a User type
+
 export interface User {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
-  role:
-    | "Organisation Admin"
-    | "Site Manager"
-    | "Department Head"
-    | "Team Lead"
-    | "Employee";
-  site?: string;
-  department?: string;
-  profileImage?: string;
 }
 
 interface UserHistoryTableProps {
   users: User[];
+  onView: (index: number) => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
 }
 
 const SettingTable: React.FC<UserHistoryTableProps> = ({
   users,
+  onView,
   onEdit,
   onDelete,
 }) => {
   if (users.length === 0) return null;
 
   return (
-    <>
-      <Appbar title="User Overview" />
+    
+
       <Box mt={5} className={styles.section}>
-        <TableContainer component={Paper} className={styles.historyTable}>
+        <TableContainer component={Paper}>
           <Table>
-            <TableHead
-              sx={{
-                backgroundColor: "#f9fafc",
-                boxShadow: "0px 2px 5px rgba(0,0,0,0.1)",
-              }}
-            >
+            <TableHead sx={{ backgroundColor: "#f9fafc" }}>
               <TableRow>
-                <TableCell>Profile</TableCell>
+                {/* ✅ Sr No column */}
+                <TableCell>Sr No</TableCell>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
-                <TableCell>Role</TableCell>
-                <TableCell>Site</TableCell>
-                <TableCell>Department</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {users.map((user, index) => (
-                <TableRow key={uuidv4() + index}>
+                <TableRow key={index +1}>
+                  {/* ✅ Sr No value */}
+                  <TableCell>{index + 1} .</TableCell>
+
                   <TableCell>
-                    <Avatar
-                      src={user.profileImage ?? ""}
-                      sx={{
-                        "& img": {
-                          objectFit: "contain",
-                        },
-                      }}
-                    />
+                    {user.firstName} {user.lastName}
                   </TableCell>
-                  <TableCell>{user.name}</TableCell>
+
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.role}</TableCell>
-                  <TableCell>{user.site ?? "-"}</TableCell>
-                  <TableCell>{user.department ?? "-"}</TableCell>
+
                   <TableCell align="center">
+                    <IconButton color="info" onClick={() => onView(index)}>
+                      <Visibility />
+                    </IconButton>
                     <IconButton color="primary" onClick={() => onEdit(index)}>
                       <Edit />
                     </IconButton>
@@ -101,7 +83,7 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
           </Table>
         </TableContainer>
       </Box>
-    </>
+    
   );
 };
 
