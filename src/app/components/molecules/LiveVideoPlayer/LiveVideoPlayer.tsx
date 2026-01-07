@@ -9,7 +9,7 @@ import {
   FullscreenExit,
   Videocam,
 } from "@mui/icons-material";
-import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
+import { useRealtimeSocket } from "@/customhooks/useRealtimeSocket";
 
 interface Camera {
   id: string;
