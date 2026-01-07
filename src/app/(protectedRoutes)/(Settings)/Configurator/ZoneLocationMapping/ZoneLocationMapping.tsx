@@ -1,0 +1,246 @@
+"use client";
+import { getZones, createZone, updateZone, deleteZone, createLocation } 
+  from "@/app/services/configurator/zoneLocationService";
+
+
+import React, { useEffect, useState } from "react";
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  TextField,
+  InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Alert,
+} from "@mui/material";
+import {
+  Add as AddIcon,
+  Search as SearchIcon,
+} from "@mui/icons-material";
+
+import {
+  ZoneTable,
+  AddEditZoneDrawer,
+  AssignLocationsDrawer,
+} from "@/app/components/organisms/configurator/zone-location";
+import { Zone as ZoneType } from "@/app/data/mockZones";
+
+type LocationItem = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
+
+
+const ZoneLocationMapping: React.FC = () => {
+  // Normalize first: ensure each zone has .locations array
+ const [zones, setZones] = useState<ZoneType[]>([]);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedZone, setSelectedZone] = useState<typeof zones[number] | null>(null);
+  const [zoneToDelete, setZoneToDelete] = useState<ZoneType | null>(null);
+
+  // Drawer states
+  const [addEditDrawerOpen, setAddEditDrawerOpen] = useState(false);
+  const [locationsDrawerOpen, setLocationsDrawerOpen] = useState(false);
+
+  // Filter zones
+  const filteredZones = zones.filter(
+  (zone) =>
+    zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ?? 
+    (zone.description ?? "").toLowerCase().includes(searchQuery.toLowerCase())
+);
+
+
+  // Add new zone
+  const handleAddZone = () => {
+    setSelectedZone(null);
+    setAddEditDrawerOpen(true);
+  };
+
+  // Edit zone
+  const handleEditZone = (zone: typeof zones[number]) => {
+    setSelectedZone(zone);
+    setAddEditDrawerOpen(true);
+  };
+
+  // Delete zone
+  const handleDeleteZone = (zone: typeof zones[number]) => {
+    setZoneToDelete(zone);
+  };
+
+  const confirmDelete = async () => {
+  if (!zoneToDelete?.id) return;
+
+  await deleteZone(zoneToDelete.id);
+  fetchZones();
+  setZoneToDelete(null);
+};
+
+
+
+
+  const fetchZones = async () => {
+  try {
+    const { data } = await getZones();
+
+    setZones(
+      data.zones.map((z: Record<string, unknown>) => ({
+        id: String(z.id), 
+        name: z.zoneName,
+        description: z.description,
+        locations: z.locations ?? [],
+        cameraIds: z.cameras ?? []
+      }))
+    );
+  } catch (err) {
+    console.error("Failed to fetch zones", err);
+  }
+};
+
+useEffect(() => {
+  fetchZones();
+}, []);
+
+type ZoneFormData = {
+  id?: string;
+  name: string;
+  description?: string;
+};
+  // Save zone (add or edit)
+  const handleSaveZone = async (zoneData: ZoneFormData) => {
+  if (zoneData.id) {
+    await updateZone(zoneData.id, {
+      zoneName: zoneData.name,
+      description: zoneData.description ?? ""
+    });
+  } else {
+    await createZone({
+      zoneName: zoneData.name,
+      description: zoneData.description ?? ""
+    });
+  }
+
+  fetchZones();
+};
+
+
+  // Assign locations (open drawer)
+  const handleAssignLocations = (zone: typeof zones[number]) => {
+    setSelectedZone(zone);
+    setLocationsDrawerOpen(true);
+  };
+
+  // Save locations: adds created locations to zone.locations array
+  const handleSaveLocations = async (zoneId: string, locations: LocationItem[]) => {
+  for (const loc of locations) {
+    await createLocation({
+      zoneId,
+      locationName: loc.name,
+      description: loc.description ?? ""
+    });
+  }
+  fetchZones();
+};
+
+
+
+
+  // Calculate stats
+  const totalZones = zones.length;
+  const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
+  const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
+
+  return (
+    <Container maxWidth="xl" sx={{ py: 4 }}>
+
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom fontWeight={700}>
+          Zone-Location Mapping
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Manage zones and create locations inside zones for organized monitoring.
+        </Typography>
+      </Box>
+
+      {/* Stats Cards */}
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2,1fr)", md: "repeat(4,1fr)" }, gap: 2, mb: 3 }}>
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(25,118,210,0.08)", border: "2px solid", borderColor: "primary.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="primary.main">{totalZones}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Total Zones</Typography>
+        </Box>
+
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(46,125,50,0.08)", border: "2px solid", borderColor: "success.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="success.main">{configuredZones}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Configured</Typography>
+        </Box>
+
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(2,136,209,0.08)", border: "2px solid", borderColor: "info.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography variant="h3" fontWeight={700} color="info.main">{totalLocations}</Typography>
+          <Typography variant="body2" color="text.secondary" fontWeight={500}>Location Assignments</Typography>
+        </Box>
+
+        <Box sx={{ p: 2.5, borderRadius: 2, backgroundColor: "rgba(237,108,2,0.08)", border: "2px solid", borderColor: "warning.main", display: "flex", flexDirection: "column", gap: 0.5 }}>
+          {/* intentionally left for future camera stats */}
+        </Box>
+      </Box>
+
+      {/* Search and Add */}
+      <Box sx={{ display: "flex", gap: 2, mb: 3, flexDirection: { xs: "column", sm: "row" } }}>
+        <TextField
+          fullWidth
+          placeholder="Search zones by name or description..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          slotProps={{ input: { startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) } }}
+          sx={{ flex: 1, "& .MuiOutlinedInput-root": { backgroundColor: "white" } }}
+        />
+        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZone} sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}>
+          Add Zone
+        </Button>
+      </Box>
+
+      {/* Zone Table */}
+      {filteredZones.length === 0 ? (
+        <Alert severity="info" sx={{ mt: 2 }}>
+          {searchQuery ? "No zones match your search criteria." : "No zones created yet. Click 'Add Zone' to get started."}
+        </Alert>
+      ) : (
+        <Box>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Showing <strong>{filteredZones.length}</strong> of <strong>{zones.length}</strong> zones
+          </Typography>
+
+          <ZoneTable zones={filteredZones} onAssignLocations={handleAssignLocations} onEdit={handleEditZone} onDelete={handleDeleteZone} />
+        </Box>
+      )}
+
+      {/* Add/Edit Zone Drawer */}
+      <AddEditZoneDrawer open={addEditDrawerOpen} onClose={() => setAddEditDrawerOpen(false)} zone={selectedZone} onSave={handleSaveZone} />
+
+      {/* Assign Locations Drawer */}
+      <AssignLocationsDrawer open={locationsDrawerOpen} onClose={() => setLocationsDrawerOpen(false)} zone={selectedZone} onSave={handleSaveLocations} />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={Boolean(zoneToDelete)} onClose={() => setZoneToDelete(null)}>
+        <DialogTitle>Delete Zone?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete <strong>{zoneToDelete?.name}</strong>? This action cannot be undone.</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setZoneToDelete(null)} sx={{ textTransform: "none" }}>Cancel</Button>
+          <Button onClick={confirmDelete} color="error" variant="contained" sx={{ textTransform: "none" }}>Delete</Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
+  );
+};
+
+export default ZoneLocationMapping;
