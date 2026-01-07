@@ -1,11 +1,25 @@
 import { SvgIconComponent } from "@mui/icons-material";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 
+// export interface FilterParams {
+//   status?: string;
+//   employeeName?: string;
+//   startDate?: string;
+//   endDate?: string;
+// }
 export interface FilterParams {
-  status?: string;
-  employeeName?: string;
+  violation?: string;
+  zone?: string;
+  cameraId?: string;
+  alarmTriggered?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface ReportParams extends Violation {
+  cameraId: string;
+  alarmTriggered: boolean;
 }
 export interface TableData {
   id: number;
@@ -46,3 +60,32 @@ export interface KpiItem {
   value: number | string;
   colour: string;
 }
+export interface SubViolationInterface {
+  label: string;
+  value: number;
+}
+
+export interface ZoneViolationInteface {
+  zone: string;
+  violations: number;
+  subViolations: SubViolationInterface[];
+}
+export type PpeSingleReportRequest = {
+  tenantId: string;
+  violation?: string;
+  zone?: string;
+  alarmTriggered?: boolean;
+  cameraId?: string;
+  imageUrl?: string;
+  time?: string;
+};
+
+export type PpeCsvReportRequest = {
+  tenantId: string;
+  startDate: string;
+  endDate: string;
+  violation?: string;
+  zone?: string;
+  cameraId?: string;
+  alarmTriggered?: boolean;
+};

@@ -26,8 +26,8 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { v4 as uuidv4 } from "uuid";
 
+import { useTranslation } from "react-i18next";
 /** Filter Types */
 type FilterType = "text" | "select" | "date" | "datetime";
 
@@ -70,6 +70,7 @@ interface ReportTableProps<T extends object> {
 }
 
 function ReportTable<T extends Record<string, string | number | boolean>>({
+  // function ReportTable<T extends object>({
   title,
   columns,
   data,
@@ -87,6 +88,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const [filterValues, setFilterValues] = useState<Record<keyof T, string>>(
     {} as Record<keyof T, string>
   );
+
+  const { t } = useTranslation();
   const [dateTimeValues, setDateTimeValues] = useState<
     Record<string, Dayjs | null>
   >({});
@@ -98,10 +101,12 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     const hasTextFilters = Object.values(filterValues).some(
       (value) => value !== "" && value !== undefined
     );
+
     const hasDateFilters = Object.values(dateTimeValues).some(
       (value) => value !== null && value !== undefined
     );
-    return hasTextFilters ?? hasDateFilters;
+
+    return hasTextFilters || hasDateFilters;
   }, [filterValues, dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
@@ -113,40 +118,44 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   };
 
   // Calculate min/max dates for start and end date with 3-month range
-  const getDateConstraints = (label: string) => {
+
+  const getDateConstraints = (fieldId: string) => {
     const now = dayjs();
     const threeMonthsAgo = now.subtract(3, "month");
 
-    if (label === "Start Date") {
-      const endDate = dateTimeValues["End Date"];
+    if (fieldId === "startDate") {
+      const endDate = dateTimeValues["endDate"];
       return {
         minDate: threeMonthsAgo,
         maxDate: endDate ?? now,
       };
-    } else if (label === "End Date") {
-      const startDate = dateTimeValues["Start Date"];
+    }
+
+    if (fieldId === "endDate") {
+      const startDate = dateTimeValues["startDate"];
       return {
         minDate: startDate ?? threeMonthsAgo,
         maxDate: now,
       };
     }
+
     return { minDate: threeMonthsAgo, maxDate: now };
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setPage(0);
-    // Combine regular filters with datetime filters
+
     const combinedFilters = {
       ...filterValues,
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
           .filter(([value]) => value !== null)
-          .map(([key, value]) => [key, value?.toISOString() ?? ""])
+          .map(([key, value]) => [key, value!.toISOString()])
       ),
     };
+
     onSubmit?.(combinedFilters);
   };
-
   const handleReset = () => {
     setFilterValues({} as Record<keyof T, string>);
     setDateTimeValues({});
@@ -239,30 +248,32 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
       ...Object.fromEntries(
         Object.entries(dateTimeValues)
           .filter(([value]) => value !== null)
-          .map(([key, value]) => [key, value?.toISOString() ?? ""])
+          .map(([key, value]) => [key, value!.toISOString()])
       ),
     };
+
     onExport?.(format, combinedFilters);
     handleClose();
   };
 
   const renderFilter = (filter: ReportFilter<T>) => {
     // Handle datetime type filters
+
     if (filter.type === "date") {
-      const constraints = getDateConstraints(filter.label);
+      const fieldId = filter.id as string; // "startDate" | "endDate"
+      const constraints = getDateConstraints(fieldId);
+
       return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
             label={filter.label}
-            value={dateTimeValues[filter.label] ?? null}
+            value={dateTimeValues[fieldId] ?? null}
             onChange={(newValue) =>
-              handleDateTimeChange(
-                filter.label,
-                newValue ? dayjs(newValue) : null
-              )
+              handleDateTimeChange(fieldId, newValue ? dayjs(newValue) : null)
             }
             minDateTime={constraints.minDate}
             maxDateTime={constraints.maxDate}
+            format="DD-MM-YYYY HH:mm"
             slotProps={{
               textField: {
                 fullWidth: true,
@@ -270,9 +281,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                   minWidth: 150,
                   "& .MuiPickersOutlinedInput-root": {
                     height: "48px",
-                  },
-                  "& .MuiInputLabel-root": {
-                    transformOrigin: "top left",
                   },
                 },
               },
@@ -295,12 +303,14 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     if (filter.type === "select")
       return (
         <TextField {...commonProps} select>
-          <MenuItem value="">All</MenuItem>
-          {filter.options?.map((opt, index) => (
-            <MenuItem key={uuidv4() + index} value={opt.toString()}>
-              {opt.toString()}
-            </MenuItem>
-          ))}
+          {filter.options?.map((opt, index) => {
+            const value = opt ?? "";
+            return (
+              <MenuItem key={index + 1} value={value.toString()}>
+                {value.toString()}
+              </MenuItem>
+            );
+          })}
         </TextField>
       );
 
@@ -311,8 +321,8 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   if (loading) {
     tableRows = [...Array(5)].map((_, rowIndex) => (
       <TableRow key={rowIndex + 1}>
-        {columns.map((col, index) => (
-          <TableCell key={uuidv4() + index}>
+        {columns.map((_, colIndex) => (
+          <TableCell key={colIndex + 1}>
             <Skeleton variant="text" width="80%" />
           </TableCell>
         ))}
@@ -323,9 +333,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     ));
   } else if (data.length > 0) {
     tableRows = data.map((row, index) => (
-      <TableRow key={uuidv4() + index}>
+      <TableRow key={index + 1}>
         {columns.map((column, index) => (
-          <TableCell key={uuidv4() + index} align={column.align ?? "left"}>
+          <TableCell key={index + 1} align={column.align ?? "left"}>
             {renderCellValue(column, row[column.id])}
           </TableCell>
         ))}
@@ -388,7 +398,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
           </Box>
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 2 }}>
             {filters.map((filter, index) => (
-              <Box key={uuidv4() + index} sx={{ flex: "1 1 150px" }}>
+              <Box key={index + 1} sx={{ flex: "1 1 150px" }}>
                 {renderFilter(filter)}
               </Box>
             ))}
@@ -447,7 +457,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
               <TableRow sx={{ backgroundColor: "#ffffff" }}>
                 {columns.map((column, indx) => (
                   <TableCell
-                    key={uuidv4() + indx}
+                    key={indx + 1}
                     align={column.align ?? "left"}
                     sx={{
                       minWidth: column.minWidth,
@@ -470,7 +480,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                     minWidth: 100,
                   }}
                 >
-                  Actions
+                  {t("Actions")}
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -501,4 +511,4 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   );
 }
 
-export default ReportTable;
+export default React.memo(ReportTable);

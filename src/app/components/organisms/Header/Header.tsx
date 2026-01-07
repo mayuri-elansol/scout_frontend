@@ -344,7 +344,7 @@ const Header: React.FC = () => {
                           fontWeight: 600,
                         }}
                       >
-                        {user.username?.charAt(0).toUpperCase() ?? "?"}
+                        {user.userName?.charAt(0).toUpperCase() ?? "?"}
                       </Avatar>
                     </IconButton>
                   </Box>
@@ -378,32 +378,18 @@ const Header: React.FC = () => {
                   sx={{ mt: "15px" }}
                 >
                   {/* User Info at top */}
-                  <Box
-                    sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}
-                  >
-                    <Typography
-                      variant="body1"
-                      sx={{ fontWeight: 600, color: "#1c2025" }}
-                    >
-                      {user?.firstName} {user?.lastName}
-                    </Typography>
-                    {user?.role && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#6b7280", fontWeight: 400 }}
-                      >
-                        {user.role}
-                      </Typography>
-                    )}
-                    {user?.email && (
-                      <Typography
-                        variant="body2"
-                        sx={{ color: "#6b7280", fontWeight: 400 }}
-                      >
-                        {user.email}
-                      </Typography>
-                    )}
-                  </Box>
+                     <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}>
+        {user.userName && (
+          <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
+            {user.userName}
+          </Typography>
+        )}
+        {user.roles && (
+          <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+           Role : {user.roles}
+          </Typography>
+        )}
+      </Box>
 
                   {/* Logout Button */}
                   <MenuItem onClick={handleLogout}>
@@ -449,7 +435,7 @@ const Header: React.FC = () => {
             loading="lazy"
           />
         </Box>
-        <Sidebar currentPage={currentPage} onPageChange={handlePageChange} />
+        <Sidebar/>
       </Drawer>
     </>
   );

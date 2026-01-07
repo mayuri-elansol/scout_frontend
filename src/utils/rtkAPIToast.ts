@@ -1,33 +1,50 @@
-import { store } from "../../src/app/store/store";
-import {
-  showToast,
-  hideToast,
-} from "../app/components/organisms/toaster/toasterSlice";
-import { v4 as uuidv4 } from "uuid";
+import { AppDispatch } from "../../src/app/store/store";
+import { showToast, hideToast } from "@/app/store/slices/toasterSlice";
 
-/**
- * Utility to trigger global toast notifications without needing useDispatch.
- *
- * @param message - The message to display in the toast
- * @param severity - The alert severity type ('success' | 'info' | 'warning' | 'error')
- */
-export function triggerToast(
-  message: string,
-  severity: "success" | "info" | "warning" | "error" = "success",
-  duration: number = 4000
-): void {
-  const id = uuidv4();
+export interface rtkInbuilt {
+  data: {
+    success: boolean;
+    message: string;
+    error?: string;
+    accessToken: string;
+  };
+}
 
-  store.dispatch(
-    showToast({
-      id,
-      message,
-      severity,
-    })
-  );
+export async function rtkAPIToast<T>(
+  queryFulfilled: Promise<T>,
+  dispatch: AppDispatch,
+  {
+    successMessage,
+    errorMessage,
+    duration = 5000,
+  }: {
+    successMessage: string;
+    errorMessage?: string;
+    duration?: number;
+  }
+) {
+  try {
+    const result = (await queryFulfilled) as rtkInbuilt;
 
-  // auto-remove from Redux after timeout
-  setTimeout(() => {
-    store.dispatch(hideToast(id));
-  }, duration);
+    const message = result?.data?.message ?? successMessage;
+
+    const dynamicMessage = message || successMessage;
+
+    dispatch(showToast({ message: dynamicMessage, severity: "success" }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    dispatch(
+      showToast({
+        message:
+          error?.error?.data?.message ||
+          errorMessage ||
+          "Something went wrong!",
+        severity: "error",
+      })
+    );
+  } finally {
+    setTimeout(() => {
+      dispatch(hideToast());
+    }, duration);
+  }
 }

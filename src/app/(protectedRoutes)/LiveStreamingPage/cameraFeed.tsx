@@ -1,27 +1,8 @@
 import React, { ReactNode } from "react";
-import {
-  Card,
-  Box,
-  Typography,
-  Chip,
-  IconButton,
-  CardContent,
-} from "@mui/material";
-import {
-  VideoCall,
-  PlayArrow,
-  VolumeUp,
-  VolumeOff,
-  Fullscreen,
-  Circle,
-} from "@mui/icons-material";
+import { Card, Box, Typography, Chip, IconButton } from "@mui/material";
+import { VideoCall, Fullscreen, Circle } from "@mui/icons-material";
 
 type ZoneId = "zone-a" | "zone-b" | "zone-c" | "zone-d";
-
-interface VideoState {
-  playing: boolean;
-  muted: boolean;
-}
 
 interface ZoneData {
   id: ZoneId;
@@ -37,17 +18,12 @@ interface ZoneData {
 
 interface CameraFeedProps {
   zone: ZoneData;
-  videoState: VideoState;
-  toggleVideo: (zoneId: ZoneId) => void;
-  toggleMute: (zoneId: ZoneId) => void;
+
   aiProcessingEnabled: boolean;
 }
 
 export const CameraFeed: React.FC<CameraFeedProps> = ({
   zone,
-  videoState,
-  toggleVideo,
-  toggleMute,
   aiProcessingEnabled,
 }) => {
   return (
@@ -159,7 +135,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
           </Typography>
 
           {/* Video Controls */}
-          <Box
+          {/* <Box
             sx={{
               position: "absolute",
               bottom: 12,
@@ -194,7 +170,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
                 <VolumeUp sx={{ fontSize: 18 }} />
               )}
             </IconButton>
-          </Box>
+          </Box> */}
 
           <IconButton
             size="small"
@@ -212,7 +188,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
         </Box>
 
         {/* Zone Metrics */}
-        <CardContent sx={{ p: "5px" }}>
+        {/* <CardContent sx={{ p: "5px" }}>
           <Box
             sx={{ display: "flex", justifyContent: "space-between", gap: 0 }}
           >
@@ -257,7 +233,7 @@ export const CameraFeed: React.FC<CameraFeedProps> = ({
               </Typography>
             </Box>
           </Box>
-        </CardContent>
+        </CardContent> */}
       </Box>
     </Card>
   );

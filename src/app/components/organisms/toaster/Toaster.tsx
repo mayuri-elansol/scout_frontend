@@ -1,87 +1,91 @@
 "use client";
-import { useSelector, useDispatch } from "react-redux";
-// import { RootState } from "../../../store/store";
-// RootState is not exported, so import store and infer the state
-import { store } from "../../../store/store";
-type RootState = ReturnType<typeof store.getState>;
-
-import Alert from "@mui/material/Alert";
-import { hideToast } from "./toasterSlice";
-import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import Snackbar, { SnackbarCloseReason } from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import { useDispatch, useSelector } from "react-redux";
+import { hideToast } from "@/app/store/slices/toasterSlice";
+import { RootState } from "@/app/store/store";
+import { Slide, SlideProps } from "@mui/material";
+
+// Slide transition component
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction="left" />;
+}
 
 export default function Toaster() {
   const dispatch = useDispatch();
-  const toasts = useSelector((state: RootState) => state.toasterGlobal.toasts);
+  const { open, severity, message } = useSelector(
+    (state: RootState) => state.toasterGlobal
+  );
   const [isMounted, setIsMounted] = useState(false);
 
-  // Ensure component only renders on client
   useEffect(() => {
     setIsMounted(true);
+    return () => setIsMounted(false);
   }, []);
 
-  // auto-hide each toast after 4s
-  useEffect(() => {
-    if (toasts.length > 0) {
-      const timers = toasts.map((toast) =>
-        setTimeout(() => {
-          dispatch(hideToast(toast.id));
-        }, 4000)
-      );
-      return () => timers.forEach((t) => clearTimeout(t));
-    }
-  }, [toasts, dispatch]);
-
-  // ✅ Extract background color logic into a function
-  const getBgColor = (severity: string) => {
-    switch (severity) {
-      case "success":
-        return "#4caf50";
-      case "error":
-        return "#e71d36";
-      case "warning":
-        return "#fcca46";
-      case "info":
-      default:
-        return "#0353a4";
-    }
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason
+  ) => {
+    if (reason === "clickaway") return;
+    dispatch(hideToast());
   };
 
-  // Don't render on server
   if (!isMounted) {
     return null;
   }
 
   return (
-    <Box
+    <Snackbar
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={open}
+      autoHideDuration={4000}
+      onClose={handleClose}
+      TransitionComponent={SlideTransition}
       sx={{
-        position: "fixed",
         top: "65px",
         right: "10px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 1,
-        zIndex: 1400,
+        mt: {
+          xs: 1,
+          sm: 8,
+          md: 9,
+        },
+        fontSize: "0.690rem !important",
       }}
     >
-      {toasts.map((toast) => (
-        <Alert
-          key={toast.id}
-          severity={toast.severity}
-          variant="filled"
-          sx={{
-            fontSize: "0.75rem",
-            padding: "4px 8px",
-            display: "flex",
-            alignItems: "center",
-            color: "#fff !important",
-            "& .MuiAlert-icon": { color: "#fff !important" },
-            backgroundColor: getBgColor(toast.severity),
-          }}
-        >
-          {toast.message}
-        </Alert>
-      ))}
-    </Box>
+      <Alert
+        severity={severity}
+        variant="filled"
+        sx={{
+          fontSize: "0.690rem !important",
+          padding: "2px 4px !important",
+          display: "flex",
+          alignItems: "center",
+          color: "#FFFFFF !important",
+          "& .MuiAlert-icon": {
+            color: "#FFFFFF !important",
+          },
+          backgroundColor:
+            severity === "success"
+              ? "#4caf50"
+              : severity === "error"
+              ? "#e71d36"
+              : severity === "warning"
+              ? "#fcca46"
+              : "#0353a4",
+          margin: {
+            xs: "0px 0px",
+            sm: "-14px",
+          },
+          maxWidth: "100vw",
+        }}
+      >
+        {message}
+      </Alert>
+    </Snackbar>
   );
 }

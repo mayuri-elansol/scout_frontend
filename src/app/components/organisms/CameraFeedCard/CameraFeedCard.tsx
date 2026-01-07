@@ -1,13 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, CardContent, Box, Typography, IconButton } from "@mui/material";
+import { Card, Box, Typography, IconButton } from "@mui/material";
 import { VideoCall, Circle, Fullscreen } from "@mui/icons-material";
 import RoiOverlay from "../../molecules/RoiOverlay/RoiOverlay";
 import VideoControlPanel from "../../molecules/VideoControlPanel/VideoControlPanel";
-import ZoneMetricsPanel, {
-  ZoneMetric,
-} from "../../molecules/ZoneMetricsPanel/ZoneMetricsPanel";
 
 export interface CameraFeedCardProps {
   /** Zone information */
@@ -17,8 +14,7 @@ export interface CameraFeedCardProps {
     status: "LIVE" | "OFFLINE" | "MAINTENANCE";
     worker?: string;
   };
-  /** Zone metrics data */
-  metrics: ZoneMetric[];
+
   /** Whether AI processing is enabled */
   aiProcessingEnabled?: boolean;
   /** ROI detection label */
@@ -36,7 +32,7 @@ export interface CameraFeedCardProps {
 
 const CameraFeedCard: React.FC<CameraFeedCardProps> = ({
   zone,
-  metrics,
+
   aiProcessingEnabled = true,
   roiLabel = "ROI DETECTION",
   onPlayPause,
@@ -173,9 +169,9 @@ const CameraFeedCard: React.FC<CameraFeedCardProps> = ({
       </Box>
 
       {/* Zone Metrics */}
-      <CardContent sx={{ pt: 1 }}>
+      {/* <CardContent sx={{ pt: 1 }}>
         <ZoneMetricsPanel metrics={metrics} />
-      </CardContent>
+      </CardContent> */}
     </Card>
   );
 };

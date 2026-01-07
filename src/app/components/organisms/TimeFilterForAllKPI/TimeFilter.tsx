@@ -16,7 +16,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { v4 as uuidv4 } from "uuid";
-const TimeFilter: React.FC = () => {
+// In TimeFilter component props:
+interface TimeFilterProps {
+  onRangeChange: (range: { start: string; end: string }) => void;
+}
+
+const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [customDialogOpen, setCustomDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -36,6 +41,7 @@ const TimeFilter: React.FC = () => {
   }>({ start: null, end: null });
 
   const timeFilters = [
+    "Live",
     `${todayStart.format("YYYY-MM-DD HH:mm")} - ${now.format(
       "YYYY-MM-DD HH:mm"
     )}`,
@@ -55,23 +61,71 @@ const TimeFilter: React.FC = () => {
   };
 
   const handleSelect = (range: string) => {
-    if (range === "Select Your Own Time") {
+    setSelectedTimeRange(range);
+
+    if (range === "Live") {
+      onRangeChange({ start: "", end: "" });
       handleClose();
-      setCustomDialogOpen(true); // open popup
-    } else {
-      setSelectedTimeRange(range);
-      handleClose();
+      return;
     }
+    if (range === "Select Your Own Time") {
+      setCustomRange({ start: null, end: null });
+      setCustomDialogOpen(true);
+      return;
+    }
+
+    /** ---- SHIFT LOGIC ---- **/
+    if (range.includes("Shift 1")) {
+      const date = dayjs().format("YYYY-MM-DD");
+
+      const start = `${date} 06:00:00`;
+      const end = `${date} 14:00:00`;
+
+      setSelectedTimeRange(`Shift 1 (${start} - ${end})`);
+
+      onRangeChange({ start, end });
+      handleClose();
+      return;
+    }
+
+    if (range.includes("Shift 2")) {
+      const date = dayjs().format("YYYY-MM-DD");
+
+      const start = `${date} 14:00:00`;
+      const end = `${date} 22:00:00`;
+
+      setSelectedTimeRange(`Shift 2 (${start} - ${end})`);
+
+      onRangeChange({ start, end });
+      handleClose();
+      return;
+    }
+
+    /** ---- DEFAULT (Today Range) ---- **/
+    setSelectedTimeRange(range);
+
+    const [start, end] = range.split(" - ");
+
+    onRangeChange({
+      start: dayjs(start).format("YYYY-MM-DD HH:mm:ss"),
+      end: dayjs(end).format("YYYY-MM-DD HH:mm:ss"),
+    });
+
+    handleClose();
   };
 
   const applyCustomRange = () => {
     if (customRange.start && customRange.end) {
-      setSelectedTimeRange(
-        `${customRange.start.format(
-          "YYYY-MM-DD HH:mm"
-        )} - ${customRange.end.format("YYYY-MM-DD HH:mm")}`
-      );
+      const start = customRange.start.format("YYYY-MM-DD HH:mm");
+      const end = customRange.end.format("YYYY-MM-DD HH:mm");
+
+      setSelectedTimeRange(`${start} - ${end}`);
+
+      // 🔥 Trigger parent APIs
+      onRangeChange({ start, end });
+
       setCustomDialogOpen(false);
+      setCustomRange({ start: null, end: null });
     }
   };
 
@@ -151,6 +205,7 @@ const TimeFilter: React.FC = () => {
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
               minDateTime={dayjs().subtract(3, "month").startOf("day")}
               maxDateTime={dayjs().endOf("day")}
+              format="DD-MM-YYYY HH:mm"
             />
 
             <DateTimePicker
@@ -165,6 +220,7 @@ const TimeFilter: React.FC = () => {
               slotProps={{ textField: { fullWidth: true, size: "small" } }}
               minDateTime={dayjs().subtract(3, "month").startOf("day")}
               maxDateTime={dayjs().endOf("day")}
+              format="DD-MM-YYYY HH:mm"
             />
 
             <Button variant="contained" onClick={applyCustomRange}>

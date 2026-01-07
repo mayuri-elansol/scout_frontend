@@ -19,40 +19,41 @@ export const apiRoutes = {
     editOrganisationDetailsById: "/edit-organisation-details-by-id",
   },
   roleInformation: {
-    root: "role-information",
-    getList: "/get-role-list",
-    getUserRoleList: "/get-user-role-list",
-    getById: "/get-role-information-by-id",
-    getUserRoleByUserId: "/get-user-role-information-by-user-id",
-    addUserRoleByUserId: "/add-user-role-by-user-id",
-    assignFeaturesToRoleByRoleId: "/assign-features-to-role-by-role-id",
-    getFeaturesOfRoleByRoleId: "/get-features-of-role-by-role-id",
-    unmapFeatureFromRoleByRoleId: "unmap-feature-from-role-by-role-id",
-    deleteById: "/delete-role",
-    deleteUserRoleById: "/delete-user-role",
-    add: "/add-role",
-    addUserRole: "/add-user-role",
-    editById: "/edit-role-by-id",
-    editUserRoleById: "/edit-user-role-by-id",
+    root: '/role-information',
+    getList: 'get-role-list',
+    getUserRoleList: '/get-user-role-list',
+    getById: '/get-role-information-by-id',
+    getUserRoleByUserId: '/get-user-role-information-by-user-id',
+    addUserRoleByUserId: '/add-user-role-by-user-id',
+    assignFeaturesToRoleByRoleId: 'assign-features-to-role-by-role-id',
+    getFeaturesOfRoleByRoleId: 'get-features-of-role-by-role-id',
+    unmapFeatureFromRoleByRoleId: 'unmap-feature-from-role-by-role-id',
+    deleteById: '/delete-role',
+    deleteUserRoleById: '/delete-user-role',
+    add: 'add-role',
+    addUserRole: '/add-user-role',
+    editById: '/edit-role-by-id',
+    editUserRoleById: '/edit-user-role-by-id',
+    getFeaturesByOrgId: 'get-features-by-org-id'
   },
-
+  //TODO: Get it done today
   userInformation: {
-    root: "user-information",
-    getList: "/get-user-list",
-    getById: "/get-user-information-by-id",
-    deleteById: "/delete-user",
-    add: "/add-user",
-    editById: "/edit-user-by-id",
+    root: 'user-information',
+    getList: '/get-user-list',
+    getById: '/get-user-information-by-id',
+    editById: '/edit-user-information-by-id',
+    deleteById: '/delete-user'
   },
 
   dashboard: {},
+
   ppeKitDetection: {
     root: "ppeKitDetection",
     getPpeKitDetectionAnalyticsKpi: "get-ppe-kit-detection-analytics-kpi",
-    getPpeKitDetectionAnalyticsRecentVoliations:
-      "get-ppe-kit-detection-analytics-recent-voliations",
-    getPpeKitDetectionAnalyticsCameraStatusByZone:
-      "get-ppe-kit-detection-analytics-camera-status-by-zone",
+    getPpeKitDetectionAnalyticsRecentViolations:
+      "get-ppe-kit-detection-analytics-recent-violations",
+    getPpeKitDetectionAnalyticsZoneViolations:
+      "get-ppe-kit-detection-analytics-camera-status-by-zone-violations",
     getPpeKitDetectionAnalyticsDetailedReport:
       "get-ppe-kit-detection-analytics-details-report",
     getPpeKitDetectionAnalyticsDownloadDetailedReport:
@@ -61,6 +62,11 @@ export const apiRoutes = {
       "get-ppe-kit-detection-analytics-download-details-report-for-single-id",
     getPpeKitDetectionAnalyticsDetailedReportForSingleId:
       "get-ppe-kit-detection-analytics-details-report-for-single-id",
+
+    getPpeKitDetectionAnalyticsDownloadDetailedCsvReport:
+      "get-ppe-kit-detection-analytics-download-details-csv-report",
+    getPpeKitDetectionAnalyticsDownloadDetailedPdfReport:
+      "get-ppe-kit-detection-analytics-download-details-pdf-report",
   },
   objectDetectionInWalkingBays: {
     root: "objectDetectionInWalkingBays",

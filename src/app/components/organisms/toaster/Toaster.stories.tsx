@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import Toaster from "./Toaster";
 import { Provider } from "react-redux";
 import { store } from "../../../store/store";
-import { showToast } from "./toasterSlice";
+import { showToast } from "../../../store/slices/toasterSlice";
 
 const meta: Meta<typeof Toaster> = {
   title: "Components/Organisms/Toaster",

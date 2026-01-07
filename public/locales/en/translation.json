@@ -1,5 +1,25 @@
 {
-"hello": "Hello",
-"welcome": "Welcome to our app",
-"PPE Compliance":"PPE Compliance"
+  "hello": "hello",
+  "Overview": "Overview",
+  "Recent Violations": "Recent Violations",
+  "Zone Violations": "Zone Violations",
+  "Detailed Report": "Detailed Report",
+  "Zone": "Zone",
+  "Violation": "Violation",
+  "Time": "Time",
+  "Cameras": "Cameras",
+  "Alarm Triggered": "Alarm Triggered",
+  "Start Date": "Start Date",
+  "End Date": "End Date",
+  "Actions": "Actions",
+
+  "Total Violations": "Total Violations",
+  "Current Unsafe Zone": "Current Unsafe Zone",
+  "Last Detection Time": "Last Detection Time",
+  "Missing Helmet": "Missing Helmet",
+  "Missing Vest": "Missing Vest",
+  "Missing Glasses": "Missing Glasses",
+  "Hard hat missing": "Hard hat missing",
+  "Safety vest not worn": "Safety vest not worn",
+  "Safety glasses missing": "Safety glasses missing"
 }

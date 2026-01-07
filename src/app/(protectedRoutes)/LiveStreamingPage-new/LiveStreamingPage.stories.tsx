@@ -1,18 +1,19 @@
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import LiveStreamingPage from './LiveStreamingPage';
+import type { Meta, StoryObj } from "@storybook/nextjs";
+import LiveStreamingPage from "./LiveStreamingPage";
 
 const meta: Meta<typeof LiveStreamingPage> = {
-  title: 'Pages/LiveStreamingPage-New',
+  title: "Pages/LiveStreamingPage-New",
   component: LiveStreamingPage,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     docs: {
       description: {
-        component: 'New Live Streaming Page with single video feed and camera/use case selection controls.',
+        component:
+          "New Live Streaming Page with single video feed and camera/use case selection controls.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -24,7 +25,8 @@ export const InitialState: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Initial state showing the selection controls and placeholder video area.',
+        story:
+          "Initial state showing the selection controls and placeholder video area.",
       },
     },
   },
@@ -33,11 +35,12 @@ export const InitialState: Story = {
 export const MobileView: Story = {
   parameters: {
     viewport: {
-      defaultViewport: 'mobile1',
+      defaultViewport: "mobile1",
     },
     docs: {
       description: {
-        story: 'Mobile responsive layout with stacked controls and responsive video player.',
+        story:
+          "Mobile responsive layout with stacked controls and responsive video player.",
       },
     },
   },
@@ -46,11 +49,11 @@ export const MobileView: Story = {
 export const TabletView: Story = {
   parameters: {
     viewport: {
-      defaultViewport: 'tablet',
+      defaultViewport: "tablet",
     },
     docs: {
       description: {
-        story: 'Tablet responsive layout optimized for medium-sized screens.',
+        story: "Tablet responsive layout optimized for medium-sized screens.",
       },
     },
   },

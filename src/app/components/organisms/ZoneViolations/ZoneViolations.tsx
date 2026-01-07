@@ -82,16 +82,6 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
             mb: 2.5,
           }}
         >
-          {/* <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 600,
-              color: "#1c2025",
-              fontSize: { xs: "1.1rem", sm: "1.25rem" },
-            }}
-          >
-            {loading ? <Skeleton width={180} /> : "Zone Violations"}
-          </Typography> */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <Warning sx={{ fontSize: 20, color: "#f44336" }} />
             <Typography variant="h6" sx={{ fontWeight: 600, color: "#1c2025" }}>
@@ -118,8 +108,25 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
 
         {/* Zone Data */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          {rows.map((zone, index) => {
-            return (
+          {!loading && violationsZone.length === 0 ? (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
+                padding: 4,
+                textAlign: "center",
+                color: "#808080",
+              }}
+            >
+              <Typography variant="h6" sx={{ fontWeight: 500 }}>
+                🚫 No Zone Violations Found
+              </Typography>
+            </Box>
+          ) : (
+            rows.map((zone, index) => (
               <Box
                 key={index + 1}
                 sx={{
@@ -160,18 +167,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                       >
                         {zone.zone}
                       </Typography>
-                      {/* <Typography
-                        sx={{
-                          fontSize: {
-                            xs: "1.3rem",
-                            sm: "1.4rem",
-                          },
-                          fontWeight: 700,
-                          color: "#f44336",
-                        }}
-                      >
-                        2
-                      </Typography> */}
+
                       <Box
                         sx={{
                           display: "flex",
@@ -232,7 +228,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                       </Box>
                     </Box>
 
-                    {/* Sub-Violations Section */}
+                    {/* Sub Violations */}
                     {zone.subViolations && zone.subViolations.length > 0 && (
                       <Box
                         sx={{
@@ -243,11 +239,6 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                         <Box
                           sx={{
                             display: "grid",
-                            // gridTemplateColumns: {
-                            //   xs: "1fr",
-                            //   sm: "repeat(auto-fit, minmax(120px, 1fr))",
-                            // },
-
                             gridTemplateColumns:
                               "repeat(auto-fill, minmax(140px, 1fr))",
                             gap: { xs: 1, sm: 1.5 },
@@ -283,16 +274,12 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                                       }}
                                     />
                                   )}
-
                                   <Box
                                     sx={{
                                       display: "flex",
                                       justifyContent: "center",
                                       alignItems: "center",
                                       gap: 1,
-                                      // flexDirection: "column",
-                                      // minWidth: 0,
-                                      // flex: 1,
                                     }}
                                   >
                                     <Typography
@@ -334,8 +321,8 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                   </>
                 )}
               </Box>
-            );
-          })}
+            ))
+          )}
         </Box>
       </CardContent>
     </Card>

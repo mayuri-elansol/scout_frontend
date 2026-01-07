@@ -12,6 +12,7 @@ import Loader from "../components/atoms/Loader/Loader";
 import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -46,7 +47,7 @@ export default function ClientLayout({
     ];
 
     const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+      (item) => pathname && item.path.toLowerCase() === pathname.toLowerCase()
     );
 
     setCurrentPage(
@@ -94,7 +95,9 @@ export default function ClientLayout({
               minHeight: 0, // Allow flex shrinking
             }}
           >
-            <RouteLoader>{children}</RouteLoader>
+            <FeatureGuardProvider>
+              <RouteLoader>{children}</RouteLoader>
+            </FeatureGuardProvider>
           </Box>
         </Box>
       </LocalizationProvider>

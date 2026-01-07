@@ -1,24 +1,17 @@
-import { store } from "../../src/app/store/store";
-import {
-  showToast,
-  hideToast,
-} from "../app/components/organisms/toaster/toasterSlice";
-import { v4 as uuidv4 } from "uuid";
+import { store } from "@/app/store/store";
+import { showToast } from "@/app/store/slices/toasterSlice";
 
 /**
- * Utility to trigger global toast notifications
+ * Utility to trigger global toast notifications without needing `useDispatch`.
+ *
+ * @param message - The message to display in the toast
+ * @param severity - The alert severity type ('success' | 'info' | 'warning' | 'error')
  */
 export function triggerToast(
   message: string,
-  severity: "success" | "info" | "warning" | "error" = "success",
-  duration: number = 4000
+  severity: "success" | "info" | "warning" | "error" = "success"
 ): void {
-  const id = uuidv4();
+  console.log("Dispatching toast...");
 
-  store.dispatch(showToast({ id, message, severity }));
-
-  // Auto-remove after duration
-  setTimeout(() => {
-    store.dispatch(hideToast(id));
-  }, duration);
+  store.dispatch(showToast({ message, severity }));
 }

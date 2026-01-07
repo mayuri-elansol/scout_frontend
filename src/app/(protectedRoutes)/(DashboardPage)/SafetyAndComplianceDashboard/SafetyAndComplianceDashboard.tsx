@@ -637,7 +637,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       lastDetection: "Zone A",
       lastDetectionTime: "09:58 AM",
       icon: HealthAndSafety,
-      route: "/PPEDetectionPage",
+      route: "/PPEKitDetectionPage",
       tooltipMessage: "Shows total PPE rule violations detected today.",
     },
     {
@@ -714,7 +714,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           mb: 2,
         }}
       >
-        <TimeFilter />
+        <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
       </Box>
 
       {/* KPI Cards Grid */}
