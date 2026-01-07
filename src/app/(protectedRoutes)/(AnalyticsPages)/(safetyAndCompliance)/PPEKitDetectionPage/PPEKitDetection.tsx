@@ -392,7 +392,7 @@ const PPEDetection: React.FC = () => {
           ppeKpiConfig[item.title as keyof typeof ppeKpiConfig] || {};
         return {
           ...item,
-          title: t(item.title),
+
           icon: config.icon,
           tooltipMessage: config.tooltipMessage,
         };
@@ -745,6 +745,7 @@ const PPEDetection: React.FC = () => {
       </Paper>
 
       {/* PPE Violations Report */}
+
 
       <ReportTable
         title={t("Detailed Report")}
