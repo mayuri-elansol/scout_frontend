@@ -38,7 +38,7 @@ import {
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 
-const tenantId = "c8b029975f4ff218";
+const tenantId = "4f3e2f80e5574111";
 
 /* ================= TYPES ================= */
 
@@ -296,14 +296,43 @@ const handleExport = useCallback(
           { id: "cameraId", label: t("Cameras") },
           { id: "alarmTriggered", label: t("Alarm Triggered") },
         ]}
+        // filters={[
+        //   { id: "violation", label: t("Violation"), type: "select" },
+        //   { id: "zone", label: t("Zone"), type: "select" },
+        //   { id: "cameraId", label: t("Cameras"), type: "select" },
+        //   { id: "alarmTriggered", label: t("Alarm Triggered"), type: "select" },
+        //   { id: "startDate", label: t("Start Date"), type: "date" },
+        //   { id: "endDate", label: t("End Date"), type: "date" },
+        // ]}
         filters={[
-          { id: "violation", label: t("Violation"), type: "select" },
-          { id: "zone", label: t("Zone"), type: "select" },
-          { id: "cameraId", label: t("Cameras"), type: "select" },
-          { id: "alarmTriggered", label: t("Alarm Triggered"), type: "select" },
-          { id: "startDate", label: t("Start Date"), type: "date" },
-          { id: "endDate", label: t("End Date"), type: "date" },
-        ]}
+  {
+    id: "violation",
+    label: t("Violation"),
+    type: "select",
+    options: [""], // ✅ MUST contain at least one item
+  },
+  {
+    id: "zone",
+    label: t("Zone"),
+    type: "select",
+    options: [""],
+  },
+  {
+    id: "cameraId",
+    label: t("Cameras"),
+    type: "select",
+    options: [""],
+  },
+  {
+    id: "alarmTriggered",
+    label: t("Alarm Triggered"),
+    type: "select",
+    options: ["True", "False"], // already valid
+  },
+  { id: "startDate", label: t("Start Date"), type: "date" },
+  { id: "endDate", label: t("End Date"), type: "date" },
+]}
+
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
