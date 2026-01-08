@@ -151,6 +151,32 @@ export const settingsMenu: CategoryConfig[] = [
         featureId: FEATURE.CONFIGURATOR,
       },
     ],
+
+  },
+
+  {
+    title: "Configurator",
+    icon: TuneIcon,
+    items: [
+      {
+        name: "Camera Management",
+        page: "camera-management",
+        path: "/Configurator/CameraManagement",
+        featureId: FEATURE.CONFIGURATOR,
+      },
+      {
+        name: "Use-Case Manager",
+        page: "use-case-manager",
+        path: "/Configurator/UseCaseManager",
+        featureId: FEATURE.CONFIGURATOR,
+      },
+      {
+        name: "Zone-Location Mapping",
+        page: "zone-location-mapping",
+        path: "/Configurator/ZoneLocationMapping",
+        featureId: FEATURE.CONFIGURATOR,
+      },
+    ],
   },
 ];
 

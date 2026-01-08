@@ -54,6 +54,12 @@ export const FEATURE = {
   EDIT_ROLE: "SF034",
   DELETE_ROLE: "SF035",
   ROLE_OVERVIEW: "SF036",
+
+
+  //configurator
+  CAMERA_CONFIGURATOR: "SF037",
+  USE_CASE_CONFIGURATOR: "SF038",
+  ZONE_LOCATION_CONFIGURATOR: "SF039",
 } as const;
 
 export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
