@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { Box, CircularProgress } from "@mui/material";
 
 const LoadingComponent = () => (
@@ -19,10 +19,13 @@ const LoadingComponent = () => (
 );
 
 const OrganizationCameraManagement = dynamic(
-  () => import("@/app/components/organisms/configurator/camera-management/OrganizationCameraManagement/OrganizationCameraManagement"),
-  { 
+  () =>
+    import(
+      "@/app/components/organisms/configurator/camera-management/OrganizationCameraManagement/OrganizationCameraManagement"
+    ),
+  {
     ssr: false,
-    loading: LoadingComponent
+    loading: LoadingComponent,
   }
 );
 
