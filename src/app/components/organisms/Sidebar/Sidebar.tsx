@@ -31,6 +31,7 @@ import {
   MenuItemConfig,
   CategoryConfig,
   liveStreamingMenu,
+  LinkMenuItem,
 } from "../../../config/menuConfig";
 import { PageType } from "@/app/types";
 import { useAuth } from "@/customhooks/useAuth";
@@ -40,10 +41,23 @@ interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
+const isLink = (
+  item: MenuItemConfig
+): item is Extract<MenuItemConfig, { type: "link" }> => item.type === "link";
+
+const isGroup = (
+  item: MenuItemConfig
+): item is Extract<MenuItemConfig, { type: "group" }> => item.type === "group";
+const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
+  items.flatMap((item) => {
+    if (isLink(item)) return [item];
+    if (isGroup(item)) return item.items.filter(isLink);
+    return [];
+  });
 
 // Memoized menu item component for better performance
 const MenuItem = React.memo<{
-  item: MenuItemConfig;
+  item: LinkMenuItem;
   pathname: string;
   theme: typeof theme;
 }>(({ item, pathname, theme }) => (
@@ -88,7 +102,7 @@ const MenuItem = React.memo<{
 MenuItem.displayName = "MenuItem";
 
 const SubMenuItem = React.memo<{
-  item: MenuItemConfig;
+  item: LinkMenuItem;
   pathname: string;
   theme: typeof theme;
   categoryTitle: string;
@@ -153,15 +167,14 @@ SubMenuItem.displayName = "SubMenuItem";
 // Memoized category component
 const CategorySection = React.memo<{
   category: CategoryConfig & {
-items: MenuItemConfig[];
+    items: MenuItemConfig[];
   };
   openCategories: Record<string, boolean>;
   onToggle: (title: string) => void;
   pathname: string;
   theme: typeof theme;
 }>(({ category, openCategories, onToggle, pathname, theme }) => {
- const filteredItems = category.items;
-
+  const filteredItems = category.items;
 
   const handleToggle = useCallback(() => {
     onToggle(category.title);
@@ -203,15 +216,45 @@ items: MenuItemConfig[];
         unmountOnExit
       >
         <List sx={{ pl: 3 }}>
-          {filteredItems.map((item, index) => (
-            <SubMenuItem
-              key={uuidv4() + index}
-              item={item}
-              pathname={pathname}
-              theme={theme}
-              categoryTitle={category.title}
-            />
-          ))}
+          {filteredItems.map((item, index) => {
+            if (isLink(item)) {
+              return (
+                <SubMenuItem
+                  key={uuidv4() + index}
+                  item={item}
+                  pathname={pathname}
+                  theme={theme}
+                  categoryTitle={category.title}
+                />
+              );
+            }
+
+            if (isGroup(item)) {
+              return (
+                <Box key={uuidv4() + index}>
+                  {/* GROUP HEADER */}
+                  <ListItem disablePadding sx={{ pl: 1 }}>
+                    <ListItemText
+                      primary={item.name}
+                      sx={{ color: "#5c6b7d", fontSize: "13px" }}
+                    />
+                  </ListItem>
+
+                  {getAllLinkItems(item.items).map((subItem) => (
+                    <SubMenuItem
+                      key={subItem.path} // Use path as stable key
+                      item={subItem} // ✅ Guaranteed to be a LinkMenuItem
+                      pathname={pathname}
+                      theme={theme}
+                      categoryTitle={category.title}
+                    />
+                  ))}
+                </Box>
+              );
+            }
+
+            return null;
+          })}
         </List>
       </Collapse>
     </Box>
@@ -225,7 +268,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const drawerWidth: string = "315px";
 
   const pathname = usePathname();
-const { features } = useAuth();
+  const { features } = useAuth();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -245,58 +288,99 @@ const { features } = useAuth();
     setSettingsOpen((prev) => !prev);
   }, []);
 
- const filteredMenus = useMemo(() => {
-  const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu
-    .filter(item => hasFeature(features, item.featureId));
+  const filteredMenus = useMemo(() => {
+    const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu.filter(
+      (item) => hasFeature(features, item.featureId)
+    );
 
-  const dashboardFlags = dashboardMenu
-    .map(category => ({
-      ...category,
-      items: category.items.filter(item =>
-        hasFeature(features, item.featureId)
-      ),
-    }))
-    .filter(category => category.items.length > 0);
+    const dashboardFlags = dashboardMenu
+      .map((category) => ({
+        ...category,
+        items: category.items
+          .map((item) => {
+            if (isLink(item)) {
+              return hasFeature(features, item.featureId) ? item : null;
+            }
 
-  const alertFlags: MenuItemConfig[] = alertMenu
-    .filter(item => hasFeature(features, item.featureId));
+            if (isGroup(item)) {
+              const children = item.items.filter(
+                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+              );
+              return children.length ? { ...item, items: children } : null;
+            }
 
-  const analyticsFlags = analyticsMenu
-    .map(category => ({
-      ...category,
-      items: category.items.filter(item =>
-        hasFeature(features, item.featureId)
-      ),
-    }))
-    .filter(category => category.items.length > 0);
+            return null;
+          })
+          .filter(Boolean) as MenuItemConfig[],
+      }))
+      .filter((category) => category.items.length > 0);
 
-  const settingsFlags = settingsMenu
-    .map(category => ({
-      ...category,
-      items: category.items.filter(item =>
-        hasFeature(features, item.featureId)
-      ),
-    }))
-    .filter(category => category.items.length > 0);
+    const alertFlags: MenuItemConfig[] = alertMenu.filter((item) =>
+      hasFeature(features, item.featureId)
+    );
 
-  return {
-    liveStreamingFlags,
-    dashboardFlags,
-    alertFlags,
-    analyticsFlags,
-    settingsFlags,
-  };
-}, [features]);
+    const analyticsFlags = analyticsMenu
+      .map((category) => ({
+        ...category,
+        items: category.items
+          .map((item) => {
+            if (isLink(item)) {
+              return hasFeature(features, item.featureId) ? item : null;
+            }
+
+            if (isGroup(item)) {
+              const children = item.items.filter(
+                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+              );
+              return children.length ? { ...item, items: children } : null;
+            }
+
+            return null;
+          })
+          .filter(Boolean) as MenuItemConfig[],
+      }))
+      .filter((category) => category.items.length > 0);
+
+    const settingsFlags = settingsMenu
+      .map((category) => ({
+        ...category,
+        items: category.items
+          .map((item) => {
+            if (isLink(item)) {
+              return hasFeature(features, item.featureId) ? item : null;
+            }
+
+            if (isGroup(item)) {
+              const children = item.items.filter(
+                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+              );
+              return children.length ? { ...item, items: children } : null;
+            }
+
+            return null;
+          })
+          .filter(Boolean) as MenuItemConfig[],
+      }))
+      .filter((category) => category.items.length > 0);
+
+    return {
+      liveStreamingFlags,
+      dashboardFlags,
+      alertFlags,
+      analyticsFlags,
+      settingsFlags,
+    };
+  }, [features]);
 
   const isAnalyticsActive = useMemo(() => {
     return filteredMenus.analyticsFlags.some((category) =>
-      category.items.some((item) => pathname === item.path)
+      getAllLinkItems(category.items).some((link) => pathname === link.path)
     );
   }, [pathname, filteredMenus.analyticsFlags]);
 
   const isSettingsActive = useMemo(() => {
     return filteredMenus.settingsFlags.some((category) =>
-      category.items.some((item) => pathname === item.path)
+      getAllLinkItems(category.items).some((link) => pathname === link.path)
     );
   }, [pathname, filteredMenus.settingsFlags]);
 
@@ -306,9 +390,9 @@ const { features } = useAuth();
         {/* Live Streaming - At the very top */}
         {filteredMenus.liveStreamingFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
-            {filteredMenus.liveStreamingFlags.map((item, index) => (
+            {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
               <MenuItem
-                key={uuidv4() + index}
+                key={item.path}
                 item={item}
                 pathname={pathname}
                 theme={theme}
@@ -320,10 +404,9 @@ const { features } = useAuth();
         {filteredMenus.dashboardFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.dashboardFlags.map((category, index) => {
-            const isCategoryActive = category.items.some(
-  (item) => pathname === item.path
-);
-
+              const isCategoryActive = getAllLinkItems(category.items).some(
+                (link) => pathname === link.path
+              );
 
               const isOpen = openCategories[category.title] ?? false;
 
@@ -370,16 +453,15 @@ const { features } = useAuth();
 
                   <Collapse in={isOpen} timeout="auto" unmountOnExit>
                     <List sx={{ pl: 2 }}>
-                 {category.items.map((item, idx) => (
-
-                          <SubMenuItem
-                            key={uuidv4() + idx}
-                            item={item}
-                            pathname={pathname}
-                            theme={theme}
-                            categoryTitle={category.title}
-                          />
-                        ))}
+                      {getAllLinkItems(category.items).map((item) => (
+                        <SubMenuItem
+                          key={item.path}
+                          item={item}
+                          pathname={pathname}
+                          theme={theme}
+                          categoryTitle={category.title}
+                        />
+                      ))}
                     </List>
                   </Collapse>
                 </Box>
@@ -444,9 +526,9 @@ const { features } = useAuth();
 
         {/* Alerts */}
         <List sx={{ p: 0, mt: 1 }}>
-          {filteredMenus.alertFlags.map((item, index) => (
+          {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
             <MenuItem
-              key={uuidv4() + index}
+              key={item.path}
               item={item}
               pathname={pathname}
               theme={theme}
@@ -455,7 +537,7 @@ const { features } = useAuth();
         </List>
 
         {/* Settings */}
-        {filteredMenus.settingsFlags.length > 0 && (
+        {/* {filteredMenus.settingsFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             <ListItem disablePadding>
               <ListItemButton
@@ -505,16 +587,145 @@ const { features } = useAuth();
                   }
                   
                   // Regular Settings items (Role Management, User Management)
-                  return category.items.map((item, itemIndex) => (
-                    <SubMenuItem
-                      key={uuidv4() + itemIndex}
-                      item={item}
-                      pathname={pathname}
-                      theme={theme}
-                      categoryTitle={category.title}
-                    />
-                  ));
+           return getAllLinkItems(category.items).map((item) => (
+  <SubMenuItem
+    key={item.path}
+    item={item}
+    pathname={pathname}
+    theme={theme}
+    categoryTitle={category.title}
+  />
+));
+
                 })}
+              </List>
+            </Collapse>
+          </List>
+        )} */}
+        {/* Settings */}
+        {filteredMenus.settingsFlags.length > 0 && (
+          <List sx={{ p: 0, mt: 1 }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={handleSettingsToggle}
+                sx={{
+                  borderRadius: 1,
+                  "&.Mui-selected": {
+                    backgroundColor: theme.palette.primary.main,
+                    color: "white",
+                    "&:hover": { backgroundColor: theme.palette.primary.dark },
+                  },
+                  color: isSettingsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 36,
+                    color: isSettingsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
+                >
+                  <Settings />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Settings"
+                  sx={{ fontSize: "14px", color: "#5c6b7d" }}
+                />
+                {settingsOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+
+            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+              <List sx={{ pl: 2 }}>
+                {filteredMenus.settingsFlags.map((category) =>
+                  category.items.map((item) => {
+                    // Role Management / User Management → links
+                    if (isLink(item)) {
+                      return (
+                        <SubMenuItem
+                          key={item.path}
+                          item={item}
+                          pathname={pathname}
+                          theme={theme}
+                          categoryTitle={category.title}
+                        />
+                      );
+                    }
+
+                    // Configurator → expandable group
+                    if (isGroup(item)) {
+                      const isConfiguratorOpen =
+                        openCategories[item.name] ?? false;
+
+                      return (
+                        <Box key={item.name}>
+                          <ListItem disablePadding>
+                            <ListItemButton
+                              onClick={() =>
+                                setOpenCategories((prev) => ({
+                                  ...prev,
+                                  [item.name]: !prev[item.name],
+                                }))
+                              }
+                              sx={{
+                                pl: 1,
+                                borderRadius: 1,
+                                py: 0.75,
+                                fontSize: "14px",
+                                "&:hover": {
+                                  backgroundColor: "rgba(25,118,210,0.08)",
+                                },
+                              }}
+                            >
+                              {item.icon && (
+                                <ListItemIcon
+                                  sx={{ minWidth: 28, color: "#6b7280" }}
+                                >
+                                  <item.icon fontSize="small" />
+                                </ListItemIcon>
+                              )}
+                              <ListItemText
+                                primary={item.name}
+                                sx={{
+                                  fontSize: "14px",
+                                  color: "#6b7280",
+                                }}
+                              />
+                              {isConfiguratorOpen ? (
+                                <ExpandLess />
+                              ) : (
+                                <ExpandMore />
+                              )}
+                            </ListItemButton>
+                          </ListItem>
+
+                          <Collapse
+                            in={isConfiguratorOpen}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <List sx={{ pl: 3 }}>
+                              {getAllLinkItems(item.items).map((subItem) => (
+                                <SubMenuItem
+                                  key={subItem.path}
+                                  item={subItem}
+                                  pathname={pathname}
+                                  theme={theme}
+                                  categoryTitle={category.title}
+                                />
+                              ))}
+                            </List>
+                          </Collapse>
+                        </Box>
+                      );
+                    }
+
+                    return null;
+                  })
+                )}
               </List>
             </Collapse>
           </List>

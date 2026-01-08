@@ -1,4 +1,4 @@
-import { PageType } from "../types/index";
+import { PageType } from "../types";
 import {
   Shield,
   Visibility,
@@ -13,21 +13,36 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PeopleIcon from "@mui/icons-material/People";
 import TuneIcon from "@mui/icons-material/Tune";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
+
 import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { SvgIconTypeMap } from "@mui/material/SvgIcon";
-
-import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import { FEATURE } from "./featureRegistry";
 
-export interface MenuItemConfig {
-  path: string;
+/* =========================
+   TYPES
+========================= */
+
+interface BaseMenuItem {
   name: string;
-  page?: PageType;
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
-  badge?: string;
-  featureFlag?: boolean;
-  featureId?: string;
+  page?: PageType;
+  featureId?: string; // permission-based
+  featureFlag?: boolean; // frontend on/off
 }
+
+export interface LinkMenuItem extends BaseMenuItem {
+  type: "link";
+  path: string;
+  badge?: string;
+}
+
+export interface GroupMenuItem extends BaseMenuItem {
+  type: "group";
+  items: MenuItemConfig[];
+}
+
+export type MenuItemConfig = LinkMenuItem | GroupMenuItem;
 
 export interface CategoryConfig {
   title: string;
@@ -36,73 +51,55 @@ export interface CategoryConfig {
   featureId?: string;
 }
 
-// Live Streaming menu (at the top)
+/* =========================
+   LIVE STREAMING
+========================= */
+
 export const liveStreamingMenu: MenuItemConfig[] = [
   {
+    type: "link",
     name: "Live Streaming",
     icon: VideoCall,
     page: "live-streaming",
     path: "/LiveStreamingPage-new",
     featureId: FEATURE.LIVE_STREAMING,
-  },
-];
-export const Permission = [
-  {
-    name: "Add Features",
-    page: "Add-Features",
-    path: "/AddFeatures",
-    featureId: FEATURE.ADD_FEATURES,
-  },
-  {
-    name: "View Role",
-    page: "View-Role",
-    path: "/ViewRole",
-    featureId: FEATURE.VIEW_ROLE,
-  },
-  {
-    name: "Edit Role",
-    page: "Edit-Role",
-    path: "/EditRole",
-    featureId: FEATURE.EDIT_ROLE,
-  },
-  {
-    name: "Delete Role",
-    page: "Delete-Role",
-    featureId: FEATURE.DELETE_ROLE,
-  },
-  {
-    name: "Role Overview",
-    page: "Role-Overview",
-    featureId: FEATURE.ROLE_OVERVIEW,
+    featureFlag: true,
   },
 ];
 
-// Dashboard menu
+/* =========================
+   DASHBOARD
+========================= */
+
 export const dashboardMenu: CategoryConfig[] = [
   {
     title: "Dashboard",
     icon: SpaceDashboardIcon,
     items: [
       {
-        name: "Safety And Compliance ",
+        type: "link",
+        name: "Safety And Compliance",
         page: "safety-compliance-dashboard",
         path: "/SafetyAndComplianceDashboard",
         featureId: FEATURE.SAFETY_COMPLIANCE,
       },
       {
-        name: "Surveillance Monitoring ",
+        type: "link",
+        name: "Surveillance Monitoring",
         page: "surveillance-monitoring-dashboard",
         path: "/SurveillanceMonitoringDashboard",
         featureId: FEATURE.SURVEILLANCE_MONITORING,
       },
       {
-        name: " Operational Insights ",
+        type: "link",
+        name: "Operational Insights",
         page: "operational-insights-dashboard",
         path: "/OperationalInsightsDashboard",
         featureId: FEATURE.OPERATIONAL_INSIGHTS,
       },
       {
-        name: "Workforce Monitoring ",
+        type: "link",
+        name: "Workforce Monitoring",
         page: "workforce-monitoring-dashboard",
         path: "/WorkforceMonitoringDashboard",
         featureId: FEATURE.WORKFORCE_MONITORING,
@@ -111,9 +108,13 @@ export const dashboardMenu: CategoryConfig[] = [
   },
 ];
 
-// Alert menu
+/* =========================
+   ALERTS
+========================= */
+
 export const alertMenu: MenuItemConfig[] = [
   {
+    type: "link",
     name: "Alerts",
     icon: Warning,
     badge: "12",
@@ -123,46 +124,71 @@ export const alertMenu: MenuItemConfig[] = [
   },
 ];
 
-// Settings as a category (not clickable itself)
+/* =========================
+   SETTINGS
+========================= */
+
 export const settingsMenu: CategoryConfig[] = [
   {
     title: "Settings",
     icon: Settings,
     items: [
       {
+        type: "link",
         name: "Role Management",
         icon: ManageAccountsIcon,
-        page: "role-management",
         path: "/RoleOverview",
         featureId: FEATURE.ROLE_MANAGEMENT,
       },
       {
+        type: "link",
         name: "User Management",
         icon: PeopleIcon,
-        page: "user-management",
         path: "/UserOverview",
         featureId: FEATURE.USER_MANAGEMENT,
       },
       {
+        type: "group",
         name: "Configurator",
         icon: TuneIcon,
-        page: "configurator",
-        path: "/Configurator",
-        featureId: FEATURE.CONFIGURATOR,
+        featureFlag: true,
+        items: [
+          {
+            type: "link",
+            name: "Camera Management",
+            path: "/CameraManagement",
+            featureId: FEATURE.CAMERA_MANAGEMENT,
+          },
+          {
+            type: "link",
+            name: "Use-Case Manager",
+            path: "/UseCaseManager",
+            featureId: FEATURE.USE_CASE_MANAGER,
+          },
+          {
+            type: "link",
+            name: "Zone-Location Mapping",
+            path: "/ZoneLocationMapping",
+            featureId: FEATURE.ZONE_LOCATION_MAPPING,
+          },
+        ],
       },
     ],
   },
 ];
 
-// Analytics categories
+/* =========================
+   ANALYTICS
+========================= */
+
 export const analyticsMenu: CategoryConfig[] = [
   {
-    title: "Camera Tamparing",
+    title: "Camera Tampering",
     icon: VideocamIcon,
     items: [
       {
-        name: "Camera Tamparing Dashboard",
-        page: "camera-tamparing-dasboard",
+        type: "link",
+        name: "Camera Tampering Dashboard",
         path: "/CameraTamperingDashboard",
         featureId: FEATURE.CAMERA_TAMPERING,
       },
@@ -173,38 +199,38 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: Shield,
     items: [
       {
+        type: "link",
         name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
-        page: "ppe-detection",
         path: "/PPEKitDetectionPage",
         featureId: FEATURE.PPE_DETECTION,
       },
       {
+        type: "link",
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
-        page: "fire-smoke-oil-leak-detection",
         path: "/FireSmokeOilLeakDetection",
         featureId: FEATURE.FIRE_SMOKE,
       },
       {
+        type: "link",
         name: "Fall / Laydown Detection",
-        page: "fall-detection",
         path: "/FallDetection",
         featureId: FEATURE.FALL_DETECTION,
       },
       {
+        type: "link",
         name: "Forklift / Vehicle In Walkways",
-        page: "object-detection",
         path: "/ObjectDetection",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {
+        type: "link",
         name: "Emergency Exit Blockage Detection",
-        page: "emergency-exit-blockage-detection",
         path: "/EmergencyExitBlockage",
         featureId: FEATURE.EMERGENCY_EXIT_BLOCKAGE,
       },
       {
+        type: "link",
         name: "Crowd Detection In Hazardous Zones",
-        page: "crowd-gathering-in-hazardous-zones-detection",
         path: "/CrowdGathering",
         featureId: FEATURE.CROWD_DETECTION,
       },
@@ -215,26 +241,20 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: Visibility,
     items: [
       {
+        type: "link",
         name: "Intrusion Detection At Perimeter",
-        page: "intrusion-detection",
         path: "/IntrusionDetectionPage",
         featureId: FEATURE.INTRUSION_DETECTION,
       },
       {
+        type: "link",
         name: "Unauthorized Access In Restricted Areas",
-        page: "unauthorized-access",
         path: "/UnauthorizedAccessInRestrictedAreas",
         featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
-      // {
-      //   name: "Camera Tampering Detection",
-      //   page: "camera-tampering",
-      //   path: "/CameraTampering",
-      //   featureId: FEATURE.CAMERA_TAMPERING,
-      // },
       {
+        type: "link",
         name: "Movement During Shutdown Hours",
-        page: "people-presence",
         path: "/PeoplePresence",
         featureId: FEATURE.PEOPLE_PRESENCE,
       },
@@ -245,32 +265,32 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: People,
     items: [
       {
+        type: "link",
         name: "Employee Presence In Critical Areas",
-        page: "employee-presence-critical-area",
         path: "/EmployeePresenceCriticalArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA,
       },
       {
+        type: "link",
         name: "Employee Presence In Restricted Areas",
-        page: "employee-presence-restricted-area",
         path: "/EmployeePresenceRestrictedArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
       {
+        type: "link",
         name: "Employee Idle Time Monitoring",
-        page: "employee-idle-time",
         path: "/EmployeeIdleTime",
         featureId: FEATURE.EMPLOYEE_IDLE_TIME,
       },
       {
+        type: "link",
         name: "Mobile Phone Usage In Restricted Zones",
-        page: "mobile-phone-usage",
         path: "/MobilePhoneUsage",
         featureId: FEATURE.MOBILE_PHONE_USAGE,
       },
       {
+        type: "link",
         name: "Sleeping / Absence Of Security Guards",
-        page: "sleeping-absence-security-personnel",
         path: "/SleepingSecurityPersonnel",
         featureId: FEATURE.SLEEPING_SECURITY_PERSONNEL,
       },
@@ -281,32 +301,32 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: DirectionsCar,
     items: [
       {
+        type: "link",
         name: "People Count In Factory Premises ",
-        page: "people-count",
         path: "/PeopleCountPage",
         featureId: FEATURE.PEOPLE_COUNT,
       },
       {
+        type: "link",
         name: "Vehicle Count & ANPR At Gates",
-        page: "vehicle-count",
         path: "/VehicleCount",
         featureId: FEATURE.VEHICLE_COUNT,
       },
       {
+        type: "link",
         name: "Canteen Usage Monitoring",
-        page: "monitoring-canteen-usage",
         path: "/MonitoringCanteenUsage&Timings",
         featureId: FEATURE.CANTEEN_USAGE,
       },
       {
+        type: "link",
         name: "Vehicle Unloading / Loading Monitoring",
-        page: "tracking-vehicle",
         path: "/VehicleUnloadingLoading",
         featureId: FEATURE.VEHICLE_UNLOADING_LOADING,
       },
       {
+        type: "link",
         name: "Unauthorized Parking / Blocking Aisles",
-        page: "unauthorized-parking",
         path: "/UnauthorizedParkingOrEquipmentBlockingAisles",
         featureId: FEATURE.UNAUTHORIZED_PARKING,
       },
@@ -317,21 +337,25 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: FaceRecognitionIcon,
     items: [
       {
+        type: "link",
         name: "Face Recognition for Entry/Exit Logging",
-        page: "face-recognition",
         path: "/FaceRecognition",
         featureId: FEATURE.FACE_RECOGNITION,
       },
       {
+        type: "link",
         name: "Employee Idle Time Monitoring with Face Recognition",
-        page: "employee-idle-with-face-recognition",
         path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
         featureId: FEATURE.FACE_IDLE_MONITORING,
       },
     ],
   },
 ];
-//  ADD THIS AT THE BOTTOM
+
+/* =========================
+   EXPORT
+========================= */
+
 export const menuConfig = {
   liveStreamingMenu,
   dashboardMenu,
