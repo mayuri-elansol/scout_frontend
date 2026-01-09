@@ -124,11 +124,15 @@ const PPEDetection: React.FC = () => {
       }
 
       setIsLiveMode(false);
-
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
       const [kpi, zones, recent] = await Promise.all([
-        fetchKpi({ tenantId, ...range }).unwrap(),
-        fetchZoneViolations({ tenantId, ...range }).unwrap(),
-        fetchRecent({ tenantId, ...range }).unwrap(),
+        fetchKpi(payload).unwrap(),
+        fetchZoneViolations(payload).unwrap(),
+        fetchRecent(payload).unwrap(),
       ]);
 
       setDisplayKpi(kpi ?? []);
