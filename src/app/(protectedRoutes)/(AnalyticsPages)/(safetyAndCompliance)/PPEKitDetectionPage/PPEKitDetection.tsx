@@ -124,11 +124,15 @@ const PPEDetection: React.FC = () => {
       }
 
       setIsLiveMode(false);
-
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
       const [kpi, zones, recent] = await Promise.all([
-        fetchKpi({ tenantId, ...range }).unwrap(),
-        fetchZoneViolations({ tenantId, ...range }).unwrap(),
-        fetchRecent({ tenantId, ...range }).unwrap(),
+        fetchKpi(payload).unwrap(),
+        fetchZoneViolations(payload).unwrap(),
+        fetchRecent(payload).unwrap(),
       ]);
 
       setDisplayKpi(kpi ?? []);
@@ -181,41 +185,40 @@ const PPEDetection: React.FC = () => {
     []
   );
 
-const handleExport = useCallback(
-  async (format: "csv" | "pdf", filters: FilterParams) => {
-    try {
-      // ✅ Ensure startDate/endDate are strings
-      const payload = {
-        tenantId,
-        violation: filters.violation ?? "",
-        zone: filters.zone ?? "",
-        cameraId: filters.cameraId ?? "",
-        alarmTriggered:
-          filters.alarmTriggered !== undefined
-            ? filters.alarmTriggered === "True"
-            : false,
-        startDate: filters.startDate ?? "", 
-        endDate: filters.endDate ?? "", 
-      };
+  const handleExport = useCallback(
+    async (format: "csv" | "pdf", filters: FilterParams) => {
+      try {
+        // ✅ Ensure startDate/endDate are strings
+        const payload = {
+          tenantId,
+          violation: filters.violation ?? "",
+          zone: filters.zone ?? "",
+          cameraId: filters.cameraId ?? "",
+          alarmTriggered:
+            filters.alarmTriggered !== undefined
+              ? filters.alarmTriggered === "True"
+              : false,
+          startDate: filters.startDate ?? "",
+          endDate: filters.endDate ?? "",
+        };
 
-      const blob =
-        format === "csv"
-          ? await downloadCsv(payload).unwrap()
-          : await downloadPdf(payload).unwrap();
+        const blob =
+          format === "csv"
+            ? await downloadCsv(payload).unwrap()
+            : await downloadPdf(payload).unwrap();
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `ppe-report-${Date.now()}.${format}`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-    }
-  },
-  [downloadCsv, downloadPdf]
-);
-
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ppe-report-${Date.now()}.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Export failed:", error);
+      }
+    },
+    [downloadCsv, downloadPdf]
+  );
 
   const handleDownloadSingle = useCallback(async (row: any) => {
     const blob = await downloadSinglePdf({
@@ -278,8 +281,7 @@ const handleExport = useCallback(
               label={t("Zone Violations")}
               violationsZone={zoneViolationsForUi}
               loading={zoneLoading}
-                            tooltipMessage="Shows PPE violations per zone"
-
+              tooltipMessage="Shows PPE violations per zone"
             />
           </Grid>
         </Grid>
@@ -305,34 +307,33 @@ const handleExport = useCallback(
         //   { id: "endDate", label: t("End Date"), type: "date" },
         // ]}
         filters={[
-  {
-    id: "violation",
-    label: t("Violation"),
-    type: "select",
-    options: [""], // ✅ MUST contain at least one item
-  },
-  {
-    id: "zone",
-    label: t("Zone"),
-    type: "select",
-    options: [""],
-  },
-  {
-    id: "cameraId",
-    label: t("Cameras"),
-    type: "select",
-    options: [""],
-  },
-  {
-    id: "alarmTriggered",
-    label: t("Alarm Triggered"),
-    type: "select",
-    options: ["True", "False"], // already valid
-  },
-  { id: "startDate", label: t("Start Date"), type: "date" },
-  { id: "endDate", label: t("End Date"), type: "date" },
-]}
-
+          {
+            id: "violation",
+            label: t("Violation"),
+            type: "select",
+            options: [""], // ✅ MUST contain at least one item
+          },
+          {
+            id: "zone",
+            label: t("Zone"),
+            type: "select",
+            options: [""],
+          },
+          {
+            id: "cameraId",
+            label: t("Cameras"),
+            type: "select",
+            options: [""],
+          },
+          {
+            id: "alarmTriggered",
+            label: t("Alarm Triggered"),
+            type: "select",
+            options: ["True", "False"], // already valid
+          },
+          { id: "startDate", label: t("Start Date"), type: "date" },
+          { id: "endDate", label: t("End Date"), type: "date" },
+        ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
