@@ -1,7 +1,7 @@
 
+
 "use client";
 
-import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
@@ -24,17 +24,22 @@ import {
   Paper,
   Grid,
 } from "@mui/material";
-import styles from "./EditUser.module.css";
-import { useRouter } from "next/navigation";
-import { useRoleOverviewQuery } from "../../../(RoleManagement)/RoleOverview/RoleOverviewApi";
-import { RootState } from "@/app/store/store";
+import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import Loader from "@/app/components/atoms/Loader/Loader";
-import { useEditUserMutation } from "./EditUserApi";
+import styles from "./EditUser.module.css";
+
+import {
+  useEditUserMutation,
+  useGetUserByIdQuery,
+  useGetUserRoleByUserIdQuery,
+} from "./EditUserApi";
+import { useRoleListQuery } from "../../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 
 interface UserFormValues {
-  role: string;
+  orgAppRoleId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -44,35 +49,45 @@ interface UserFormValues {
   password: string;
 }
 
-const generatePassword = () =>
-  Math.random().toString(36).slice(-10) + "@A1";
-
 const EditUser: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const params = useParams();
+
+  /** ✅ ROUTE PARAM (FIXED) */
+  const targetUserId = params?.targetUserId as string;
 
   const { user } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
-  const userId = user?.userId;
+  const loggedInUserId = user?.userId;
 
-  const [addUser, { isLoading: isSubmitting }] = useEditUserMutation();
+  const [editUser, { isLoading: isSubmitting }] = useEditUserMutation();
+
+  /** 🔹 USER INFO */
+  const { data: userData, isLoading: isUserLoading } = useGetUserByIdQuery(
+    { tenantId: tenantId!, userId: loggedInUserId!, targetUserId },
+    { skip: !tenantId || !loggedInUserId || !targetUserId }
+  );
+
+  /** 🔹 USER ROLE (SELECTED ROLE) */
+  const { data: userRoleData, isLoading: isUserRoleLoading } =
+    useGetUserRoleByUserIdQuery(
+      { userId: targetUserId!, orgId: tenantId! },
+      { skip: !tenantId || !targetUserId }
+    );
+
+  /** 🔹 ALL ROLES (DROPDOWN OPTIONS) */
+  const { data: roleData, isLoading: isRoleLoading } = useRoleListQuery(
+    { tenantId: tenantId!, userId: loggedInUserId! },
+    { skip: !tenantId || !loggedInUserId }
+  );
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { data, isLoading } = useRoleOverviewQuery(
-    { tenantId: tenantId!, userId: userId! },
-    { skip: !tenantId || !userId } 
-  );
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<UserFormValues>({
+  const { control, handleSubmit, reset } = useForm<UserFormValues>({
     defaultValues: {
-      role: "",
+      orgAppRoleId: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -83,10 +98,34 @@ const EditUser: React.FC = () => {
     },
   });
 
-  // 🔐 Auto-generate password ONCE
+  /** ✅ PREFILL USER INFO */
   useEffect(() => {
-    setValue("password", generatePassword());
-  }, [setValue]);
+    if (!userData?.data) return;
+
+    const u = userData.data;
+
+    reset((prev) => ({
+      ...prev,
+      firstName: u.first_name ?? "",
+      lastName: u.last_name ?? "",
+      email: u.email ?? "",
+      employeeId: u.employee_id ?? "",
+      phone: u.phoneNumber ?? "",
+      userName: u.userName ?? "",
+    }));
+  }, [userData, reset]);
+
+  /** ✅ PREFILL SELECTED ROLE */
+  useEffect(() => {
+    if (!userRoleData?.data?.data?.length) return;
+
+    const selectedRoleId = userRoleData.data.data[0].orgAppRole.org_app_role_id;
+
+    reset((prev) => ({
+      ...prev,
+      orgAppRoleId: selectedRoleId,
+    }));
+  }, [userRoleData, reset]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -96,57 +135,51 @@ const EditUser: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => setImagePreview(reader.result as string);
       reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
     }
   };
 
-  // ✅ FINAL SUBMIT
- const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
-  try {
-    await addUser({
-      payload: {
-        role: data.role,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        employeeId: data.employeeId,
-        phone: data.phone,
-        userName: data.userName,
-        password: data.password,
-        orgId: tenantId!,
-      },
-      image: profileImage ?? undefined,
-    }).unwrap();
+  /** ✅ SUBMIT */
+  const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
+    try {
+      await editUser({
+        payload: {
+          orgAppRoleId: data.orgAppRoleId,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          employeeId: data.employeeId,
+          phone: data.phone,
+          userName: data.userName,
+          orgId: tenantId!,
+          targetUserId,
+        },
+        image: profileImage ?? undefined,
+      }).unwrap();
 
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: "User added successfully",
-        severity: "success",
-      })
-    );
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "User updated successfully",
+          severity: "success",
+        })
+      );
 
-    reset();
-    setProfileImage(null);
-    setImagePreview(null);
+      router.push("/UserOverview");
+    } catch (err: any) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: err?.data?.message || "Failed to update user",
+          severity: "error",
+        })
+      );
+    }
+  };
 
-    router.push("/UserOverview");
-  } catch (err: any) {
-    console.error(err);
-
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: err?.data?.message || "Failed to add user",
-        severity: "error",
-      })
-    );
+  if (isUserLoading || isUserRoleLoading || isRoleLoading) {
+    return <Loader />;
   }
-};
-if(isLoading){
-  return <Loader/>
-}
+
   return (
     <Paper sx={{ p: 2, m: 1.5 }}>
       <Box className={styles.formWrapper}>
@@ -156,41 +189,31 @@ if(isLoading){
             <AssignmentInd color="primary" />
             <Typography variant="subtitle1">Select Role</Typography>
           </Box>
-
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <FormControl fullWidth required>
-                <InputLabel>Role</InputLabel>
-                <Controller
-                  name="role"
-                  control={control}
-                  rules={{ required: "Role is required" }}
-                  render={({ field }) => (
-                    <Select {...field} label="Role" disabled={isLoading}>
-                      {data?.data?.data?.map((r: any) => (
-                        <MenuItem
-                          key={r.role_id?.role_id || uuidv4()}
-                          value={r.role_id?.name}
-                        >
-                          {r.role_id?.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  )}
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
+          <FormControl fullWidth required disabled>
+            <InputLabel>Role</InputLabel>
+            <Controller
+              name="orgAppRoleId"
+              control={control}
+              render={({ field }) => (
+                <Select {...field} label="Role">
+                  {roleData?.data?.data?.map((r: any) => (
+                    <MenuItem key={r.org_app_role_id} value={r.org_app_role_id}>
+                      {r.role_id?.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormControl>
         </Box>
 
-        {/* USER INFO – 5 FIELD GRID */}
+        {/* USER INFO */}
         <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <Person color="primary" />
             <Typography variant="subtitle1">User Information</Typography>
           </Box>
-
-          <Grid container spacing={4}>
+          <Grid container spacing={3}>
             {[
               ["firstName", "First Name"],
               ["lastName", "Last Name"],
@@ -202,15 +225,8 @@ if(isLoading){
                 <Controller
                   name={name as keyof UserFormValues}
                   control={control}
-                  rules={{ required: `${label} is required` }}
-                  render={({ field, fieldState }) => (
-                    <TextField
-                      {...field}
-                      label={label}
-                      fullWidth required
-                      error={!!fieldState.error}
-                      helperText={fieldState.error?.message}
-                    />
+                  render={({ field }) => (
+                    <TextField {...field} label={label} fullWidth />
                   )}
                 />
               </Grid>
@@ -224,49 +240,21 @@ if(isLoading){
             <Lock color="primary" />
             <Typography variant="subtitle1">Credentials</Typography>
           </Box>
-
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Controller
-                name="userName"
-                control={control}
-                rules={{ required: "Username is required" }}
-                render={({ field, fieldState }) => (
-                  <TextField
-                    {...field}
-                    label="Username"
-                    fullWidth required
-                    error={!!fieldState.error}
-                    helperText={fieldState.error?.message}
-                  />
-                )}
-              />
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 3 }}>
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    label="Password (Auto-generated)"
-                    fullWidth 
-                    disabled
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
+          <Controller
+            name="userName"
+            control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Username" fullWidth />
+            )}
+          />
         </Box>
 
- 
-  <Box className={styles.section}>
+        {/* PROFILE IMAGE */}
+        <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <CameraAlt color="primary" />
             <Typography variant="subtitle1">Profile Picture</Typography>
           </Box>
-
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} />
             <Button
@@ -284,9 +272,13 @@ if(isLoading){
             </Button>
           </Box>
         </Box>
+
         {/* ACTIONS */}
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
-          <Button variant="outlined" onClick={() => router.push("/UserOverview")}>
+          <Button
+            variant="outlined"
+            onClick={() => router.push("/UserOverview")}
+          >
             Back
           </Button>
           <Button
@@ -294,7 +286,7 @@ if(isLoading){
             onClick={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Saving..." : "Submit"}
+            {isSubmitting ? "Saving..." : "Update"}
           </Button>
         </Box>
       </Box>

@@ -24,6 +24,7 @@ export const baseProtectedApi = createApi({
     'AddUser',
     'UserOverview',
     'ViewUser',
-    'EditUser'
+    'EditUser',
+    'UserList'
   ],
 });
