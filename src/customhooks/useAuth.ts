@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,8 +5,15 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { setUserFromToken, clearUser, restoreUser } from "@/app/store/slices/authSlice";
-import { JwtPayload, StoredUser } from "@/app/(unprotectedRoutes)/Login/Login.types";
+import {
+  setUserFromToken,
+  clearUser,
+  restoreUser,
+} from "@/app/store/slices/authSlice";
+import {
+  JwtPayload,
+  StoredUser,
+} from "@/app/(unprotectedRoutes)/Login/Login.types";
 import { useValidateTokenMutation } from "@/app/(unprotectedRoutes)/Login/LoginApi";
 
 const STORAGE_USER_KEY = "scout_user";
@@ -32,7 +38,6 @@ export const useAuth = () => {
   //     try {
   //       const parsedUser: StoredUser = JSON.parse(storedUser);
 
-        
   //       // Step 1: Restore minimal user from localStorage
   //       dispatch(restoreUser(parsedUser));
 
@@ -50,115 +55,113 @@ export const useAuth = () => {
   //   setIsLoading(false);
   // }, [dispatch]);
 
-//  useEffect(() => {
-//   const bootstrapAuth = async () => {
-//   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
-//   const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+  //  useEffect(() => {
+  //   const bootstrapAuth = async () => {
+  //   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+  //   const storedUser = localStorage.getItem(STORAGE_USER_KEY);
 
-//   if (!token || !storedUser) {
-//     setIsLoading(false);
-//     return;
-//   }
+  //   if (!token || !storedUser) {
+  //     setIsLoading(false);
+  //     return;
+  //   }
 
-//   try {
-//     const parsedUser: StoredUser = JSON.parse(storedUser);
+  //   try {
+  //     const parsedUser: StoredUser = JSON.parse(storedUser);
 
-//     // ✅ Use org_id from localStorage instead of redux
-//     await validateToken({
-//       token,
-//       orgId: parsedUser.org_id,
-//     }).unwrap();
+  //     // ✅ Use org_id from localStorage instead of redux
+  //     await validateToken({
+  //       token,
+  //       orgId: parsedUser.org_id,
+  //     }).unwrap();
 
-//     // Restore user in redux
-//     dispatch(restoreUser(parsedUser));
-//     dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
-//   } catch (err) {
-//     console.error("Auth restore failed", err);
-//     localStorage.removeItem(STORAGE_USER_KEY);
-//     localStorage.removeItem(STORAGE_TOKEN_KEY);
-//     dispatch(clearUser());
-//     router.push("/Login");
-//   } finally {
-//     setIsLoading(false);
-//   }
-// };
+  //     // Restore user in redux
+  //     dispatch(restoreUser(parsedUser));
+  //     dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+  //   } catch (err) {
+  //     console.error("Auth restore failed", err);
+  //     localStorage.removeItem(STORAGE_USER_KEY);
+  //     localStorage.removeItem(STORAGE_TOKEN_KEY);
+  //     dispatch(clearUser());
+  //     router.push("/Login");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
+  //     bootstrapAuth();
+  //    }, [dispatch, router, validateToken]);
 
-//     bootstrapAuth();
-//    }, [dispatch, router, validateToken]);
+  useEffect(() => {
+    const bootstrapAuth = async () => {
+      const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+      const storedUser = localStorage.getItem(STORAGE_USER_KEY);
 
-useEffect(() => {
-  const bootstrapAuth = async () => {
-    const token = localStorage.getItem(STORAGE_TOKEN_KEY);
-    const storedUser = localStorage.getItem(STORAGE_USER_KEY);
+      if (!token || !storedUser) {
+        setIsLoading(false);
+        return;
+      }
 
-    if (!token || !storedUser) {
-      setIsLoading(false);
-      return;
-    }
+      try {
+        const parsedUser: StoredUser = JSON.parse(storedUser);
 
+        // ✅ Do not validate token here; just restore state
+        dispatch(restoreUser(parsedUser));
+        dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+      } catch (err) {
+        console.error("Auth restore failed", err);
+        localStorage.removeItem(STORAGE_USER_KEY);
+        localStorage.removeItem(STORAGE_TOKEN_KEY);
+        dispatch(clearUser());
+        router.push("/Login");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    bootstrapAuth();
+  }, [dispatch, router]);
+
+  const login = (token: string) => {
     try {
-      const parsedUser: StoredUser = JSON.parse(storedUser);
+      const decoded = jwtDecode<JwtPayload>(token);
 
-      // ✅ Do not validate token here; just restore state
-      dispatch(restoreUser(parsedUser));
-      dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+      //  FORCE RESET FLOW
+      if (decoded.sid) {
+        router.push(`/ResetPassword/${decoded.sid}`);
+        return { type: "RESET_REQUIRED" as const };
+      }
+
+      // ✅ NORMAL LOGIN FLOW (NO sid)
+
+      const userForState: JwtPayload = {
+        userId: decoded.userId,
+        userName: decoded.userName,
+        roles: decoded.roles,
+        licenses: decoded.licenses,
+        features: decoded.features ?? [],
+        org_id: decoded.org_id,
+      };
+
+      const userForStorage: StoredUser = {
+        userId: decoded.userId,
+        userName: decoded.userName,
+        roles: decoded.roles,
+        org_id: decoded.org_id,
+      };
+
+      // Store ONLY when sid is NOT present
+      localStorage.setItem(STORAGE_TOKEN_KEY, token);
+      localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
+
+      dispatch(setUserFromToken(userForState));
+
+      router.push("/SafetyAndComplianceDashboard");
+      // return userForState;
+      return { type: "LOGIN_SUCCESS" as const, user: userForState };
     } catch (err) {
-      console.error("Auth restore failed", err);
-      localStorage.removeItem(STORAGE_USER_KEY);
-      localStorage.removeItem(STORAGE_TOKEN_KEY);
-      dispatch(clearUser());
-      router.push("/Login");
-    } finally {
-      setIsLoading(false);
+      console.error("Invalid token", err);
     }
   };
-
-  bootstrapAuth();
-}, [dispatch, router]);
-
-const login = (token: string) => {
-  try {
-    const decoded = jwtDecode<JwtPayload>(token);
-
-    //  FORCE RESET FLOW
-    if (decoded.sid) {
-      router.push(`/ResetPassword/${decoded.sid}`);
-    return { type: "RESET_REQUIRED" as const };
-    }
-
-    // ✅ NORMAL LOGIN FLOW (NO sid)
-
-    const userForState: JwtPayload = {
-      userId: decoded.userId,
-      userName: decoded.userName,
-      roles: decoded.roles,
-      licenses: decoded.licenses,
-      features: decoded.features ?? [],
-      org_id: decoded.org_id,
-    };
-
-    const userForStorage: StoredUser = {
-      userId: decoded.userId,
-      userName: decoded.userName,
-      roles: decoded.roles,
-      org_id: decoded.org_id,
-    };
-
-    // Store ONLY when sid is NOT present
-    localStorage.setItem(STORAGE_TOKEN_KEY, token);
-    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
-
-    dispatch(setUserFromToken(userForState));
-
-    router.push("/SafetyAndComplianceDashboard");
-    // return userForState;
-return { type: "LOGIN_SUCCESS" as const, user: userForState };
-
-  } catch (err) {
-    console.error("Invalid token", err);
-  }
-};
 
   // 🚪 LOGOUT
   const logout = () => {
@@ -179,7 +182,7 @@ return { type: "LOGIN_SUCCESS" as const, user: userForState };
 
   return {
     user,
-    features,       
+    features,
     isAuthenticated,
     isLoading,
     login,

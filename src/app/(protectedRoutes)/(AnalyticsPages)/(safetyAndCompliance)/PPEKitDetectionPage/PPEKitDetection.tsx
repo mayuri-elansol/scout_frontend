@@ -37,7 +37,7 @@ import {
 
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
-
+import dayjs, { Dayjs } from "dayjs";
 const tenantId = "4f3e2f80e5574111";
 
 /* ================= TYPES ================= */
@@ -74,13 +74,22 @@ const PPEDetection: React.FC = () => {
     useLazyGetPPEKitDetectionZoneViolationsQuery();
   const [fetchRecent, { isLoading: recentLoading }] =
     useLazyGetPpeKitDetectionRecentViolationsQuery();
-  const [fetchDetailedReportApi] =
+  const [fetchDetailedReportApi, { isLoading: reportLoading }] =
     useLazyGetPpeKitDetectionDetailedReportQuery();
 
   const [downloadCsv] = useGetPpeKitDetectionDetailedCsvReportMutation();
   const [downloadPdf] = useGetPpeKitDetectionDetailedPdfReportMutation();
   const [downloadSinglePdf] = useGetPpeKitDetectionSingleReportPdfMutation();
 
+  //function to convert the date-time  into indian standards
+  const formatLocalDateTime = useCallback(
+    (dt: string | Dayjs | undefined): string => {
+      if (!dt) return "";
+      const parsed = typeof dt === "string" ? dayjs(dt) : dt;
+      return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
+    },
+    [] // dayjs import is stable
+  );
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     const load = async () => {
@@ -124,11 +133,15 @@ const PPEDetection: React.FC = () => {
       }
 
       setIsLiveMode(false);
-
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
       const [kpi, zones, recent] = await Promise.all([
-        fetchKpi({ tenantId, ...range }).unwrap(),
-        fetchZoneViolations({ tenantId, ...range }).unwrap(),
-        fetchRecent({ tenantId, ...range }).unwrap(),
+        fetchKpi(payload).unwrap(),
+        fetchZoneViolations(payload).unwrap(),
+        fetchRecent(payload).unwrap(),
       ]);
 
       setDisplayKpi(kpi ?? []);
@@ -137,6 +150,7 @@ const PPEDetection: React.FC = () => {
     },
     []
   );
+  // const tableData = useMemo(() => detailedReport?.data || [], [detailedReport]);
 
   /* ---------- UI MAPPERS ---------- */
   const ppeKpiData = useMemo(
@@ -171,51 +185,80 @@ const PPEDetection: React.FC = () => {
   }, [displayZoneViolations]);
 
   /* ---------- REPORT HANDLERS ---------- */
+  // const handleSubmitFilter = useCallback((filters: FilterParams) => {
+  //   console.log("filters", filters);
+  //   fetchDetailedReportApi({ tenantId, ...filters });
+  // }, []);
+
   const handleSubmitFilter = useCallback(
-    (filters: FilterParams) => fetchDetailedReportApi({ tenantId, ...filters }),
-    []
-  );
+    async (filters: FilterParams) => {
+      console.log("filter params", filters);
 
-  const handleReset = useCallback(
-    () => fetchDetailedReportApi({ tenantId }),
-    []
-  );
+      const body = {
+        tenantId: tenantId,
 
-const handleExport = useCallback(
-  async (format: "csv" | "pdf", filters: FilterParams) => {
-    try {
-      // ✅ Ensure startDate/endDate are strings
-      const payload = {
-        tenantId,
-        violation: filters.violation ?? "",
-        zone: filters.zone ?? "",
-        cameraId: filters.cameraId ?? "",
+        violation: filters.violation || undefined,
+        zone: filters.zone || undefined,
+        cameraId: filters.cameraId || undefined,
+
         alarmTriggered:
           filters.alarmTriggered !== undefined
             ? filters.alarmTriggered === "True"
-            : false,
-        startDate: filters.startDate ?? "", 
-        endDate: filters.endDate ?? "", 
+            : undefined,
+
+        startDate: formatLocalDateTime(filters.startDate),
+        endDate: formatLocalDateTime(filters.endDate),
       };
 
-      const blob =
-        format === "csv"
-          ? await downloadCsv(payload).unwrap()
-          : await downloadPdf(payload).unwrap();
+      console.log("🚀 Sending payload:", body);
 
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `ppe-report-${Date.now()}.${format}`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Export failed:", error);
-    }
-  },
-  [downloadCsv, downloadPdf]
-);
+      const response = await fetchDetailedReportApi(body).unwrap();
+      setDetailedReport(response); // ✅ REQUIRED
+    },
+    [fetchDetailedReportApi, formatLocalDateTime] // ✅ add only what is used
+  );
 
+  const handleReset = useCallback(async () => {
+    const response = await fetchDetailedReportApi({
+      tenantId: tenantId,
+    }).unwrap();
+    setDetailedReport(response);
+  }, []);
+
+  const handleExport = useCallback(
+    async (format: "csv" | "pdf", filters: FilterParams) => {
+      try {
+        // ✅ Ensure startDate/endDate are strings
+        const payload = {
+          tenantId,
+          violation: filters.violation ?? "",
+          zone: filters.zone ?? "",
+          cameraId: filters.cameraId ?? "",
+          alarmTriggered:
+            filters.alarmTriggered !== undefined
+              ? filters.alarmTriggered === "True"
+              : false,
+          startDate: filters.startDate ?? "",
+          endDate: filters.endDate ?? "",
+        };
+
+        const blob =
+          format === "csv"
+            ? await downloadCsv(payload).unwrap()
+            : await downloadPdf(payload).unwrap();
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ppe-report-${Date.now()}.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error("Export failed:", error);
+      }
+    },
+    [downloadCsv, downloadPdf]
+  );
 
   const handleDownloadSingle = useCallback(async (row: any) => {
     const blob = await downloadSinglePdf({
@@ -278,8 +321,7 @@ const handleExport = useCallback(
               label={t("Zone Violations")}
               violationsZone={zoneViolationsForUi}
               loading={zoneLoading}
-                            tooltipMessage="Shows PPE violations per zone"
-
+              tooltipMessage="Shows PPE violations per zone"
             />
           </Grid>
         </Grid>
@@ -288,7 +330,7 @@ const handleExport = useCallback(
       <ReportTable
         title={t("Detailed Report")}
         data={detailedReport?.data || []}
-        loading={!detailedReport}
+        loading={reportLoading}
         columns={[
           { id: "violation", label: t("Violation") },
           { id: "time", label: t("Time") },
@@ -305,34 +347,66 @@ const handleExport = useCallback(
         //   { id: "endDate", label: t("End Date"), type: "date" },
         // ]}
         filters={[
-  {
-    id: "violation",
-    label: t("Violation"),
-    type: "select",
-    options: [""], // ✅ MUST contain at least one item
-  },
-  {
-    id: "zone",
-    label: t("Zone"),
-    type: "select",
-    options: [""],
-  },
-  {
-    id: "cameraId",
-    label: t("Cameras"),
-    type: "select",
-    options: [""],
-  },
-  {
-    id: "alarmTriggered",
-    label: t("Alarm Triggered"),
-    type: "select",
-    options: ["True", "False"], // already valid
-  },
-  { id: "startDate", label: t("Start Date"), type: "date" },
-  { id: "endDate", label: t("End Date"), type: "date" },
-]}
+          // {
+          //   id: "violation",
+          //   label: t("Violation"),
+          //   type: "select",
+          //   options: [""], // ✅ MUST contain at least one item
+          // },
+          // {
+          //   id: "zone",
+          //   label: t("Zone"),
+          //   type: "select",
+          //   options: [""],
+          // },
+          // {
+          //   id: "cameraId",
+          //   label: t("Cameras"),
+          //   type: "select",
+          //   options: [""],
+          // },
+          // {
+          //   id: "alarmTriggered",
+          //   label: t("Alarm Triggered"),
+          //   type: "select",
+          //   options: ["True", "False"], // already valid
+          // },
+          // { id: "startDate", label: t("Start Date"), type: "date" },
+          // { id: "endDate", label: t("End Date"), type: "date" },
 
+          {
+            id: "violation",
+            label: t("Violation"),
+            type: "select" as const,
+            options: [
+              "Hard hat missing",
+              "Safety vest not worn",
+              "Safety glasses missing",
+            ],
+          },
+          {
+            id: "zone",
+            label: t("Zone"),
+            type: "select" as const,
+
+            options: detailedReport?.zones || [],
+          },
+          {
+            id: "cameraId",
+            label: t("Cameras"),
+            type: "select" as const,
+
+            options: detailedReport?.cameras || [],
+          },
+          {
+            id: "alarmTriggered",
+            label: t("Alarm Triggered"),
+            type: "select" as const,
+            options: ["True", "False"],
+          },
+          { id: "startDate", label: t("Start Date"), type: "date" as const },
+          { id: "endDate", label: t("End Date"), type: "date" as const },
+        ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}

@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useCallback } from "react";
-import { useRealtimeSocket } from "@/hooks/useRealtimeSocket";
+import { useRealtimeSocket } from "@/customhooks/useRealtimeSocket";
 
 export default function PPERealtimeViewer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

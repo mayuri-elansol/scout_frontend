@@ -1,4 +1,3 @@
-
 import { PageType } from "../types";
 import {
   Shield,
@@ -28,8 +27,8 @@ interface BaseMenuItem {
   name: string;
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   page?: PageType;
-  featureId?: string;      // permission-based
-  featureFlag?: boolean;   // frontend on/off
+  featureId?: string; // permission-based
+  featureFlag?: boolean; // frontend on/off
 }
 
 export interface LinkMenuItem extends BaseMenuItem {
@@ -62,7 +61,7 @@ export const liveStreamingMenu: MenuItemConfig[] = [
     name: "Live Streaming",
     icon: VideoCall,
     page: "live-streaming",
-    path: "/LiveStreamingPage",
+    path: "/LiveStreamingPage-new",
     featureId: FEATURE.LIVE_STREAMING,
     featureFlag: true,
   },
@@ -199,38 +198,38 @@ export const analyticsMenu: CategoryConfig[] = [
     title: "Safety and Compliance",
     icon: Shield,
     items: [
-        {
-           type: "link",
+      {
+        type: "link",
         name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
         path: "/PPEKitDetectionPage",
         featureId: FEATURE.PPE_DETECTION,
       },
       {
-         type: "link",
+        type: "link",
         name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
         path: "/FireSmokeOilLeakDetection",
         featureId: FEATURE.FIRE_SMOKE,
       },
       {
-         type: "link",
+        type: "link",
         name: "Fall / Laydown Detection",
         path: "/FallDetection",
         featureId: FEATURE.FALL_DETECTION,
       },
       {
-         type: "link",
+        type: "link",
         name: "Forklift / Vehicle In Walkways",
         path: "/ObjectDetection",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {
-         type: "link",
+        type: "link",
         name: "Emergency Exit Blockage Detection",
         path: "/EmergencyExitBlockage",
         featureId: FEATURE.EMERGENCY_EXIT_BLOCKAGE,
       },
       {
-         type: "link",
+        type: "link",
         name: "Crowd Detection In Hazardous Zones",
         path: "/CrowdGathering",
         featureId: FEATURE.CROWD_DETECTION,
@@ -249,7 +248,7 @@ export const analyticsMenu: CategoryConfig[] = [
       },
       {
         type: "link",
-       name: "Unauthorized Access In Restricted Areas",
+        name: "Unauthorized Access In Restricted Areas",
         path: "/UnauthorizedAccessInRestrictedAreas",
         featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
@@ -265,32 +264,32 @@ export const analyticsMenu: CategoryConfig[] = [
     title: "Workforce Monitoring",
     icon: People,
     items: [
-{
-    type: "link",
-          name: "Employee Presence In Critical Areas",
+      {
+        type: "link",
+        name: "Employee Presence In Critical Areas",
         path: "/EmployeePresenceCriticalArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA,
       },
       {
-          type: "link",
+        type: "link",
         name: "Employee Presence In Restricted Areas",
         path: "/EmployeePresenceRestrictedArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
       {
-          type: "link",
+        type: "link",
         name: "Employee Idle Time Monitoring",
         path: "/EmployeeIdleTime",
         featureId: FEATURE.EMPLOYEE_IDLE_TIME,
       },
       {
-          type: "link",
+        type: "link",
         name: "Mobile Phone Usage In Restricted Zones",
         path: "/MobilePhoneUsage",
         featureId: FEATURE.MOBILE_PHONE_USAGE,
       },
       {
-          type: "link",
+        type: "link",
         name: "Sleeping / Absence Of Security Guards",
         path: "/SleepingSecurityPersonnel",
         featureId: FEATURE.SLEEPING_SECURITY_PERSONNEL,
@@ -301,8 +300,8 @@ export const analyticsMenu: CategoryConfig[] = [
     title: "Operational Insight",
     icon: DirectionsCar,
     items: [
-        {
-          type: "link",
+      {
+        type: "link",
         name: "People Count In Factory Premises ",
         path: "/PeopleCountPage",
         featureId: FEATURE.PEOPLE_COUNT,
@@ -339,14 +338,14 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-      name: "Face Recognition for Entry/Exit Logging",
+        name: "Face Recognition for Entry/Exit Logging",
         path: "/FaceRecognition",
         featureId: FEATURE.FACE_RECOGNITION,
       },
       {
         type: "link",
-   name: "Employee Idle Time Monitoring with Face Recognition",
-           path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
+        name: "Employee Idle Time Monitoring with Face Recognition",
+        path: "/EmployeeIdleTimeMonitoringWithFaceRecognition",
         featureId: FEATURE.FACE_IDLE_MONITORING,
       },
     ],
