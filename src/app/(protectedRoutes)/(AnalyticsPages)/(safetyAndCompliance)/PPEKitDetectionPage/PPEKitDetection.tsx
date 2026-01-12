@@ -88,7 +88,7 @@ const PPEDetection: React.FC = () => {
       const parsed = typeof dt === "string" ? dayjs(dt) : dt;
       return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
     },
-    [] // dayjs import is stable
+    []
   );
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
@@ -115,6 +115,7 @@ const PPEDetection: React.FC = () => {
     enabled: isLiveMode,
     event: SOCKET_EVENTS.PPE_UPDATE,
     handler: (payload) => {
+      console.log("payload form the socket", payload);
       setDisplayKpi(payload.kpi ?? []);
       setDisplayZoneViolations(payload.zoneViolations ?? []);
       setRecentViolationsLive(payload.recentViolations ?? []);
@@ -185,10 +186,6 @@ const PPEDetection: React.FC = () => {
   }, [displayZoneViolations]);
 
   /* ---------- REPORT HANDLERS ---------- */
-  // const handleSubmitFilter = useCallback((filters: FilterParams) => {
-  //   console.log("filters", filters);
-  //   fetchDetailedReportApi({ tenantId, ...filters });
-  // }, []);
 
   const handleSubmitFilter = useCallback(
     async (filters: FilterParams) => {
@@ -338,42 +335,7 @@ const PPEDetection: React.FC = () => {
           { id: "cameraId", label: t("Cameras") },
           { id: "alarmTriggered", label: t("Alarm Triggered") },
         ]}
-        // filters={[
-        //   { id: "violation", label: t("Violation"), type: "select" },
-        //   { id: "zone", label: t("Zone"), type: "select" },
-        //   { id: "cameraId", label: t("Cameras"), type: "select" },
-        //   { id: "alarmTriggered", label: t("Alarm Triggered"), type: "select" },
-        //   { id: "startDate", label: t("Start Date"), type: "date" },
-        //   { id: "endDate", label: t("End Date"), type: "date" },
-        // ]}
         filters={[
-          // {
-          //   id: "violation",
-          //   label: t("Violation"),
-          //   type: "select",
-          //   options: [""], // ✅ MUST contain at least one item
-          // },
-          // {
-          //   id: "zone",
-          //   label: t("Zone"),
-          //   type: "select",
-          //   options: [""],
-          // },
-          // {
-          //   id: "cameraId",
-          //   label: t("Cameras"),
-          //   type: "select",
-          //   options: [""],
-          // },
-          // {
-          //   id: "alarmTriggered",
-          //   label: t("Alarm Triggered"),
-          //   type: "select",
-          //   options: ["True", "False"], // already valid
-          // },
-          // { id: "startDate", label: t("Start Date"), type: "date" },
-          // { id: "endDate", label: t("End Date"), type: "date" },
-
           {
             id: "violation",
             label: t("Violation"),
