@@ -536,72 +536,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
           ))}
         </List>
 
-        {/* Settings */}
-        {/* {filteredMenus.settingsFlags.length > 0 && (
-          <List sx={{ p: 0, mt: 1 }}>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={handleSettingsToggle}
-                sx={{
-                  borderRadius: 1,
-                  "&.Mui-selected": {
-                    backgroundColor: theme.palette.primary.main,
-                    color: "white",
-                    "&:hover": { backgroundColor: theme.palette.primary.dark },
-                  },
-                  color: isSettingsActive
-                    ? theme.palette.primary.main
-                    : "inherit",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 36,
-                    color: isSettingsActive
-                      ? theme.palette.primary.main
-                      : "inherit",
-                  }}
-                >
-                  <Settings />
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-                {settingsOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-
-            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
-              <List sx={{ pl: 2 }}>
-                {filteredMenus.settingsFlags.map((category, catIndex) => {
-                  // Check if this category has nested items (like Configurator)
-                  if (category.items.length > 0 && category.title !== "Settings") {
-                    return (
-                      <CategorySection
-                        key={uuidv4() + catIndex}
-                        category={category}
-                        openCategories={openCategories}
-                        onToggle={handleCategoryToggle}
-                        pathname={pathname}
-                        theme={theme}
-                      />
-                    );
-                  }
-                  
-                  // Regular Settings items (Role Management, User Management)
-           return getAllLinkItems(category.items).map((item) => (
-  <SubMenuItem
-    key={item.path}
-    item={item}
-    pathname={pathname}
-    theme={theme}
-    categoryTitle={category.title}
-  />
-));
-
-                })}
-              </List>
-            </Collapse>
-          </List>
-        )} */}
+  
         {/* Settings */}
         {filteredMenus.settingsFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>

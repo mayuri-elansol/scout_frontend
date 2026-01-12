@@ -29,6 +29,7 @@ import {
   alertMenu,
   analyticsMenu,
   dashboardMenu,
+  LinkMenuItem,
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
 import { usePathname } from "next/navigation";
@@ -174,39 +175,68 @@ const Header: React.FC = () => {
   });
 
   // Get current page title
-  const getPageTitle = () => {
-    const allMenuItems = [
-      ...dashboardMenu.flatMap((category) => category.items),
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
+  // const getPageTitle = () => {
+  //   const allMenuItems = [
+  //     ...dashboardMenu.flatMap((category) => category.items),
+  //     ...alertMenu,
+  //     ...analyticsMenu.flatMap((category) => category.items),
+  //   ];
 
-    const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
-    );
+  //   const currentItem = allMenuItems.find(
+  //     (item) => item.path.toLowerCase() === pathname.toLowerCase()
+  //   );
 
-    return currentItem?.name ?? "Live Streaming";
-  };
+  //   return currentItem?.name ?? "Live Streaming";
+  // };
+const getPageTitle = () => {
+  const allMenuItems = [
+    ...dashboardMenu.flatMap(category => category.items),
+    ...alertMenu,
+    ...analyticsMenu.flatMap(category => category.items),
+  ];
 
-  useEffect(() => {
-    const allMenuItems = [
-      ...dashboardMenu.flatMap((category) => category.items),
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
+  const currentItem = allMenuItems.find(
+    (item): item is LinkMenuItem =>
+      item.type === "link" &&
+      item.path.toLowerCase() === pathname.toLowerCase()
+  );
 
-    const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
-    );
+  return currentItem?.name ?? "Live Streaming";
+};
 
-    setCurrentPage(
-      currentItem ? currentItem.page! : "safety-compliance-dashboard"
-    );
-  }, [pathname]);
+  // useEffect(() => {
+  //   const allMenuItems = [
+  //     ...dashboardMenu.flatMap((category) => category.items),
+  //     ...alertMenu,
+  //     ...analyticsMenu.flatMap((category) => category.items),
+  //   ];
 
-  const handlePageChange = (page: PageType) => {
-    setCurrentPage(page);
-  };
+  //   const currentItem = allMenuItems.find(
+  //     (item) => item.path.toLowerCase() === pathname.toLowerCase()
+  //   );
+
+  //   setCurrentPage(
+  //     currentItem ? currentItem.page! : "safety-compliance-dashboard"
+  //   );
+  // }, [pathname]);
+
+useEffect(() => {
+  const allMenuItems = [
+    ...dashboardMenu.flatMap(category => category.items),
+    ...alertMenu,
+    ...analyticsMenu.flatMap(category => category.items),
+  ];
+
+  const currentItem = allMenuItems.find(
+    (item): item is LinkMenuItem =>
+      item.type === "link" &&
+      item.path.toLowerCase() === pathname.toLowerCase()
+  );
+
+  setCurrentPage(
+    currentItem ? currentItem.page! : "safety-compliance-dashboard"
+  );
+}, [pathname]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -384,11 +414,12 @@ const Header: React.FC = () => {
             {user.userName}
           </Typography>
         )}
-        {user.roles && (
-          <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
-           Role : {user.roles}
-          </Typography>
-        )}
+{user.roles?.length > 0 && (
+  <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
+    Role : {user.roles.map(r => r.roleName).join(", ")}
+  </Typography>
+)}
+
       </Box>
 
                   {/* Logout Button */}

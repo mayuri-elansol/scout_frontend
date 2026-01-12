@@ -270,7 +270,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store/store';
-import { useRoleOverviewQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
+import { useRoleListQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
 import { FEATURE } from '@/app/config/featureRegistry';
 import { formatDate } from '@/utils/dateUtils';
 import Loader from '@/app/components/atoms/Loader/Loader';
@@ -293,7 +293,7 @@ export default function RoleOverview() {
   const canDeleteRole = features.includes(FEATURE.DELETE_ROLE);
 
   /* ---------- API ---------- */
-  const { data, isLoading } = useRoleOverviewQuery(
+  const { data, isLoading } = useRoleListQuery(
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
