@@ -536,7 +536,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           ))}
         </List>
 
-  
         {/* Settings */}
         {filteredMenus.settingsFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
