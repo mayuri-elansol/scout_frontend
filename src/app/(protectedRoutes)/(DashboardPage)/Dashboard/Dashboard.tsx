@@ -130,7 +130,6 @@ const Dashboard: React.FC = () => {
       borderColor: "#2196f3",
       iconBg: "#bbdefb",
     },
-
     {
       title: "Movement During Shutdown",
       violationsCount: 2,
@@ -325,7 +324,7 @@ const Dashboard: React.FC = () => {
 
       <Grid container spacing={1.5}>
         {CamerakpiData.map((kpi, index) => (
-          <Grid key={uuidv4() + index} size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
+          <Grid key={uuidv4() + index} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
             <DashboardKpiCardMain {...kpi} />
           </Grid>
         ))}
