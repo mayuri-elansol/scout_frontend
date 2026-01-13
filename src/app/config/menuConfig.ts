@@ -40,6 +40,7 @@ export interface LinkMenuItem extends BaseMenuItem {
 export interface GroupMenuItem extends BaseMenuItem {
   type: "group";
   items: MenuItemConfig[];
+  path?: string;
 }
 
 export type MenuItemConfig = LinkMenuItem | GroupMenuItem;
