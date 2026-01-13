@@ -40,6 +40,7 @@ export interface LinkMenuItem extends BaseMenuItem {
 export interface GroupMenuItem extends BaseMenuItem {
   type: "group";
   items: MenuItemConfig[];
+  path?: string;
 }
 
 export type MenuItemConfig = LinkMenuItem | GroupMenuItem;
@@ -49,6 +50,7 @@ export interface CategoryConfig {
   icon?: OverridableComponent<SvgIconTypeMap<object, "svg">>;
   items: MenuItemConfig[];
   featureId?: string;
+  path?: string;
 }
 
 /* =========================
@@ -75,6 +77,7 @@ export const dashboardMenu: CategoryConfig[] = [
   {
     title: "Dashboard",
     icon: SpaceDashboardIcon,
+    path: "/Dashboard",
     items: [
       {
         type: "link",
