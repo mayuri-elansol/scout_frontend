@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import styles from "./SettingTable.module.css";
+import { BackendUser } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/ViewUser/[targetUserId]/viewUser.types";
 
 export interface User {
   firstName: string;
@@ -23,6 +24,9 @@ export interface User {
 
 interface UserHistoryTableProps {
   users: User[];
+    backendUsers: BackendUser[];   // ✅ ADD
+  currentUserId?: string;        // ✅ ADD
+
   onView: (index: number) => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
@@ -30,6 +34,8 @@ interface UserHistoryTableProps {
 
 const SettingTable: React.FC<UserHistoryTableProps> = ({
   users,
+    backendUsers,
+  currentUserId,
   onView,
   onEdit,
   onDelete,
@@ -52,11 +58,11 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
-
+{/* 
             <TableBody>
               {users.map((user, index) => (
+                
                 <TableRow key={index +1}>
-                  {/* ✅ Sr No value */}
                   <TableCell>{index + 1} .</TableCell>
 
                   <TableCell>
@@ -79,7 +85,45 @@ const SettingTable: React.FC<UserHistoryTableProps> = ({
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
+            </TableBody> */}
+
+<TableBody>
+  {users.map((user, index) => {
+    const isSelf = backendUsers[index]?.userId === currentUserId; // ✅ check if this row is self
+
+    return (
+      <TableRow key={index + 1}>
+        <TableCell>{index + 1}.</TableCell>
+        <TableCell>
+          {user.firstName} {user.lastName}
+        </TableCell>
+        <TableCell>{user.email}</TableCell>
+        <TableCell>{user.phone}</TableCell>
+        <TableCell align="center">
+          <IconButton color="info" onClick={() => onView(index)}>
+            <Visibility />
+          </IconButton>
+
+          <IconButton
+            color="primary"
+            onClick={() => onEdit(index)}
+            disabled={isSelf} // ❌ Disable Edit if self
+          >
+            <Edit />
+          </IconButton>
+
+          <IconButton
+            color="error"
+            onClick={() => onDelete(index)}
+            disabled={isSelf} // ❌ Disable Delete if self
+          >
+            <Delete />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
           </Table>
         </TableContainer>
       </Box>

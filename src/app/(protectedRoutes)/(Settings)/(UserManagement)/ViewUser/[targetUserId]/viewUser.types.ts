@@ -40,3 +40,33 @@ export interface UserInformationProps {
 export interface ViewUserPageProps {
   readonly userInformationData: Readonly<UserInformationProps> | null;
 }
+export interface BackendUser {
+  userId: string;
+  first_name: string | null;
+  last_name: string | null;
+  email: string;
+  phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
+  role?: string; 
+}
+
+export interface BackendRole {
+  orgAppRole: {
+    role_id: {
+      name: string;
+    };
+  };
+}
+
+
+export interface UserOverviewResponse {
+  status: string;
+  message: string;
+  data: BackendUser[];
+}
+export interface BackendRoleResponse {
+  status: string;
+  message: string;
+  data: BackendRole[];
+}

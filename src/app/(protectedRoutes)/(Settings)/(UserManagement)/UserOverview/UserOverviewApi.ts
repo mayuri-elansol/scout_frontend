@@ -2,14 +2,17 @@ import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi"
 import { apiRoutes } from "@/constants/apiRoutes";
 
 
+
 export interface BackendUser {
   userId: string;
   first_name: string | null;
   last_name: string | null;
   email: string;
   phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
+  role?: string; 
 }
-
 export interface UserOverviewResponse {
   status: string;
   message: string;

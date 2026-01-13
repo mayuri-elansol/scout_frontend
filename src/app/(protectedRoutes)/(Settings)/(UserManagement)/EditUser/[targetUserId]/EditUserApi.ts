@@ -15,52 +15,89 @@ export interface EditUserPayload {
 
 export const editUserApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    editUser: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
-      { payload: EditUserPayload; image?: File }
-    >({
-      query: ({ payload }) => ({
-        url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.editById}`,
-        method: "POST",
-        body: {
-          tenantId: payload.orgId,
-          userId: payload.targetUserId,
-          userInformation: {
-            userId: payload.targetUserId, // IMPORTANT
-            first_name: payload.firstName,
-            last_name: payload.lastName,
-            email: payload.email,
-            employee_id: payload.employeeId,
-            phoneNumber: payload.phone,
-            userName: payload.userName,
-          },
-        },
-      }),
+    // editUser: builder.mutation<
+    //   { status: string; message: string; data?: any; error?: string },
+    //   { payload: EditUserPayload; image?: File }
+    // >({
+    //   query: ({ payload }) => ({
+    //     url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.editById}`,
+    //     method: "POST",
+    //     body: {
+    //       tenantId: payload.orgId,
+    //       userId: payload.targetUserId,
+    //       userInformation: {
+    //         userId: payload.targetUserId, // IMPORTANT
+    //         first_name: payload.firstName,
+    //         last_name: payload.lastName,
+    //         email: payload.email,
+    //         employee_id: payload.employeeId,
+    //         phoneNumber: payload.phone,
+    //         userName: payload.userName,
+    //       },
+    //     },
+    //   }),
 
-      invalidatesTags: ["EditUser"],
-    }),
+    //   invalidatesTags: ["EditUser"],
+    // }),
+editUser: builder.mutation<
+  { status: string; message: string; data?: any; error?: string },
+  { payload: EditUserPayload; image?: File }
+>({
+  query: ({ payload, image }) => {
+    const formData = new FormData();
 
-    getUserById: builder.query<
-      { statusCode: number; status: string; message: string; data?: any },
-      { tenantId: string; userId: string; targetUserId: string }
-    >({
-      query: (body) => ({
-        url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.getById}`,
-        method: "POST",
-        body,
-      }),
-    }),
+    // 🔑 REQUIRED FIELDS
+    formData.append("tenantId", payload.orgId);
+    formData.append("userId", payload.targetUserId);
 
-    getUserRoleByUserId: builder.query<
-      { statusCode: number; status: string; message: string; data?: any },
-      { userId: string; orgId: string }
-    >({
-      query: (body) => ({
-        url: `${apiRoutes.roleInformation.root}/${apiRoutes.roleInformation.getUserRoleByUserId}`,
-        method: "POST",
-        body,
-      }),
-    }),
+    // 🔑 userInformation must be STRING
+    formData.append(
+      "userInformation",
+      JSON.stringify({
+        userId: payload.targetUserId,
+        first_name: payload.firstName,
+        last_name: payload.lastName,
+        email: payload.email,
+        employee_id: payload.employeeId,
+        phoneNumber: payload.phone,
+        userName: payload.userName,
+      })
+    );
+
+    // 🖼 IMAGE (OPTIONAL)
+    if (image) {
+      formData.append("image", image); 
+    }
+
+    return {
+      url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.editById}`,
+      method: "POST",
+      body: formData,
+    };
+  },
+
+  invalidatesTags: ["EditUser"],
+}),
+
+   getUserById: builder.query({
+  query: (body) => ({
+    url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.getById}`,
+    method: "POST",
+    body,
+  }),
+  providesTags: ["EditUser"],
+}),
+
+
+    getUserRoleByUserId: builder.query({
+  query: (body) => ({
+    url: `${apiRoutes.roleInformation.root}/${apiRoutes.roleInformation.getUserRoleByUserId}`,
+    method: "POST",
+    body,
+  }),
+  providesTags: ["EditUser"],
+}),
+
   }),
 });
 

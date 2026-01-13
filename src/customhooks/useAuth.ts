@@ -145,7 +145,7 @@ export const useAuth = () => {
       const userForStorage: StoredUser = {
         userId: decoded.userId,
         userName: decoded.userName,
-        roles: decoded.roles,
+        role: decoded.roles[0]?.roleName || "",
         org_id: decoded.org_id,
       };
 
