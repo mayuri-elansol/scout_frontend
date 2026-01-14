@@ -26,7 +26,14 @@ import {
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
 
-import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
+// import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
+
+import {
+  useGetAllCamerasQuery,
+  useDeleteCameraMutation,
+} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+
+
 
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
@@ -45,7 +52,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   forceConfigureCamera,
 }) => {
 
-  const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
+  // const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
+
+  
 
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera ?? null
@@ -61,11 +70,36 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 
-  const fetchCameras = useCallback(async () => {
-    const res = await getCameras();
+  // const fetchCameras = useCallback(async () => {
+  //   const res = await getCameras();
 
-    setCameras(
-      (res.data as CameraApiResponse[]).map((cam) => ({
+  //   setCameras(
+  //     (res.data as CameraApiResponse[]).map((cam) => ({
+  //       id: cam.id,
+  //       ipAddress: cam.cameraIp,
+  //       username: cam.userName,
+  //       password: cam.password,
+  //       port: String(cam.RTSPport),
+  //       make: cam.connectionType,
+  //       position: cam.cameraName,
+  //       rtspStream: cam.rtspStream ?? "",
+  //       status: "connected",
+  //     }))
+  //   );
+  // }, []);
+
+
+  // React.useEffect(() => {
+  //   fetchCameras();
+  // }, [fetchCameras]);
+
+  const { data, isLoading } = useGetAllCamerasQuery();
+  const [deleteCamera] = useDeleteCameraMutation();
+
+
+  const cameras: OrgCamera[] =
+  Array.isArray(data)
+    ? data.map((cam: CameraApiResponse) => ({
         id: cam.id,
         ipAddress: cam.cameraIp,
         username: cam.userName,
@@ -76,48 +110,14 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
       }))
-    );
-  }, []);
-
-
-
-  React.useEffect(() => {
-    fetchCameras();
-  }, [fetchCameras]);
-
-
-  const handleCameraAdd = (camera: OnboardingCamera) => {
-    setCameras((prev) => [
-      ...prev,
-      {
-        id: camera.id,
-        ipAddress: camera.ipAddress,
-        username: camera.username,
-        password: camera.password,
-        port: camera.port,
-        make: "DIRECT_TO_CAMERA",
-        position: camera.cameraname,
-        rtspStream: "",
-        status: camera.status,
-      },
-    ]);
-
-    setSnackbar({
-      open: true,
-      message: "Camera added successfully!",
-      severity: "success",
-    });
-  };
+    : initialCameras;
 
 
 
 
   const handleCameraRemove = async (cameraId: string) => {
     try {
-      await deleteCamera(cameraId);
-
-
-      setCameras((prev) => prev.filter((c) => c.id !== cameraId));
+      await deleteCamera(cameraId).unwrap();
 
       setSnackbar({
         open: true,
@@ -150,11 +150,14 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
 
   const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
-    setCameras((prev) =>
-      prev.map((camera) =>
-        camera.id === cameraId ? { ...camera, aiConfig } : camera
-      )
-    );
+    // setCameras((prev) =>
+    //   prev.map((camera) =>
+    //     camera.id === cameraId ? { ...camera, aiConfig } : camera
+    //   )
+    // );
+
+    
+    
 
     setSelectedCameraForConfig(null);
 
@@ -164,6 +167,16 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       severity: 'success',
     });
   };
+
+
+  if (isLoading) {
+  return (
+    <Box sx={{ height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <VideocamIcon sx={{ fontSize: 40 }} />
+    </Box>
+  );
+}
+
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -215,7 +228,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         <CameraOnboardingStep
           cameras={onboardingCameras}
 
-          onCameraAdd={handleCameraAdd}
+          // onCameraAdd={handleCameraAdd}
 
           onCameraRemove={handleCameraRemove}
           onNext={() => setAddingCamera(false)}

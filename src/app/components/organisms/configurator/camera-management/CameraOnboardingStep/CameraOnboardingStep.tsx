@@ -30,12 +30,24 @@ import {
   Error as ErrorIcon,
 } from "@mui/icons-material";
 
+// import {
+//   addCamera,
+//   detectNvrChannels,
+//   fetchZones,
+//   fetchLocations,
+// } from "@/app/services/configurator/cameraService";
+
+
 import {
-  addCamera,
-  detectNvrChannels,
-  fetchZones,
-  fetchLocations,
-} from "@/app/services/configurator/cameraService";
+  useAddCameraMutation,
+  useDetectNvrChannelsMutation,
+  useGetZonesQuery,
+  useGetLocationsByZoneQuery,
+  useLazyGetLocationsByZoneQuery
+
+} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+
+
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 import type { OnboardingCamera } from "@/app/types/camera";
@@ -58,7 +70,7 @@ interface AssignmentItem {
 interface CameraOnboardingStepProps {
   cameras: OnboardingCamera[];
 
-  onCameraAdd: (camera: OnboardingCamera) => void;
+  // onCameraAdd: (camera: OnboardingCamera) => void;
 
   onCameraRemove: (cameraId: string) => void;
 
@@ -89,7 +101,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
   // zones = [],
   // locations = [],
-  onCameraAdd,
+  // onCameraAdd,
   // onCameraBatchAdd,
   onCameraRemove,
   onNext,
@@ -126,6 +138,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const [zoneList, setZoneList] = useState<ZoneItem[]>([]);
   const [locationList, setLocationList] = useState<LocationItem[]>([]);
+  const [fetchLocationsByZone] = useLazyGetLocationsByZoneQuery();
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -175,31 +188,41 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
 
-  useEffect(() => {
-    const loadZones = async () => {
-      try {
-        const res = await fetchZones();
-        setZoneList(res.data);
-      } catch (err) {
-        console.error("Error loading zones", err);
-      }
-    };
-    loadZones();
-  }, []);
+  // useEffect(() => {
+  //   const loadZones = async () => {
+  //     try {
+  //       const res = await fetchZones();
+  //       setZoneList(res.data);
+  //     } catch (err) {
+  //       console.error("Error loading zones", err);
+  //     }
+  //   };
+  //   loadZones();
+  // }, []);
+
+  const { data: zonesData } = useGetZonesQuery();
+  const [addCamera] = useAddCameraMutation();
+  const [detectNvrChannels] = useDetectNvrChannelsMutation();
+
 
   useEffect(() => {
-    const loadLocations = async () => {
-      if (!selectedZone) return;
-      try {
-        const res = await fetchLocations(selectedZone); // backend service call
-        setLocationList(res.data);
-      } catch (err) {
-        console.error("Error loading locations", err);
-      }
-    };
+    if (Array.isArray(zonesData)) {
+      setZoneList(zonesData);
+    }
+  }, [zonesData]);
 
-    loadLocations();
-  }, [selectedZone]);
+
+  const { data: locationsData } = useGetLocationsByZoneQuery(selectedZone, {
+    skip: !selectedZone,
+  });
+
+  useEffect(() => {
+    if (Array.isArray(locationsData)) {
+      setLocationList(locationsData);
+    }
+  }, [locationsData]);
+
+
 
   useEffect(() => {
     const updateHeight = () => {
@@ -285,14 +308,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const handleInputChange =
     (field: keyof CameraFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({ ...prev, [field]: event.target.value }));
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prev) => ({ ...prev, [field]: event.target.value }));
 
-      // Clear error when user starts typing
-      // if (errors[field]) {
-      //   setErrors(prev => ({ ...prev, [field]: undefined }));
-      // }
-    };
+        // Clear error when user starts typing
+        // if (errors[field]) {
+        //   setErrors(prev => ({ ...prev, [field]: undefined }));
+        // }
+      };
 
   const handleAddCamera = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -307,32 +330,16 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         userName: formData.username.trim(),
         password: formData.password.trim(),
         RTSPport: formData.port.trim(),
-        // cameraZone: selectedZone,
-        // channel: selectedLocation,
         cameraZone: zoneList.find((z) => z.id === selectedZone)?.zoneName ?? "",
         channel:
-          locationList.find((l) => l.id === selectedLocation)?.locationName ??
-          "",
-
+          locationList.find((l) => l.id === selectedLocation)?.locationName ?? "",
         refreshRate: 10,
-        // connectionType: "DIRECT_TO_CAMERA",
-        connectionType: "DIRECT_TO_CAMERA" as const,
-      });
+        connectionType: "DIRECT_TO_CAMERA",
+      }).unwrap();
 
-      console.log(response); // or setState(response.data)
-      const createdCamera = response.data;
+      // ✅ NO onCameraAdd here
 
-      onCameraAdd({
-        id: createdCamera.id,
-        cameraname: createdCamera.cameraName,
-        ipAddress: createdCamera.cameraIp,
-        username: createdCamera.userName,
-        password: formData.password, // backend usually doesn’t return this
-        port: createdCamera.RTSPport,
-        zoneId: selectedZone,
-        locationId: selectedLocation,
-        status: "connected", // or pending if you want
-      });
+      showToast("Camera added successfully!", "success");
 
       setFormData({
         ipAddress: "",
@@ -345,6 +352,11 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       });
       setSelectedZone("");
       setSelectedLocation("");
+
+      // console.log(response); // or setState(response.data)
+      // const createdCamera = response.data ?? response;
+
+
       showToast("Camera added successfully!", "success");
     } catch (error) {
       console.error("Add camera error:", error);
@@ -406,20 +418,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         };
 
         console.log("Final payload:", payload);
-        const response = await addCamera(payload);
+        const response = await addCamera(payload).unwrap();
 
         // 🔥 This updates UI instantly
-        onCameraAdd({
-          id: response.data.id,
-          ipAddress: response.data.cameraIp,
-          cameraname: response.data.cameraName,
-          username: response.data.userName,
-          password: response.data.password,
-          port: response.data.RTSPport,
-          zoneId: cam.zoneId,
-          locationId: cam.locationId,
-          status: "connected",
-        });
       }
 
       showToast("NVR cameras added successfully!", "success");
@@ -444,20 +445,26 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsSavingAssignments(false);
   };
 
+
   const handleAssignmentZoneChange = async (index: number, zoneId: string) => {
     const updated = [...pendingAssignments];
+
     updated[index].zoneId = zoneId;
     updated[index].locationId = "";
+    updated[index].locationOptions = [];
     setPendingAssignments(updated);
 
     try {
-      const res = await fetchLocations(zoneId);
-      updated[index].locationOptions = res.data;
+      const res = await fetchLocationsByZone(zoneId).unwrap();
+      updated[index].locationOptions = Array.isArray(res) ? res : [];
       setPendingAssignments([...updated]);
     } catch (err) {
       console.error("Failed to load locations", err);
+      updated[index].locationOptions = [];
+      setPendingAssignments([...updated]);
     }
   };
+
 
   const handleNvrCameraToggle = (channel: string) => {
     setSelectedNvrCams((prev) =>
@@ -776,9 +783,19 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             password: nvrData.password,
                             numberofchannels: Number(nvrData.numberofchannels),
                             rtsplink: nvrData.rtsplink,
-                          });
+                          }).unwrap();
 
-                          setNvrCameras(response.data.activeChannels); // from backend
+                          const activeChannels = response?.activeChannels;
+
+
+                          if (!Array.isArray(activeChannels)) {
+                            showToast("No cameras detected from NVR", "warning");
+                            setNvrCameras([]);
+                            return;
+                          }
+
+                          setNvrCameras(activeChannels);
+
                         } catch (error) {
                           console.error("Detect NVR Error:", error);
                         } finally {
@@ -842,9 +859,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             const mapped = selected.map((cam) => ({
                               channel: cam.channel,
                               // cameraName: `${nvrData.name}-Channel-${cam.channel}`,
-                              cameraName: `${nvrData.name}-${
-                                cam.channel
-                              }-${Date.now()}`,
+                              cameraName: `${nvrData.name}-${cam.channel
+                                }-${Date.now()}`,
                               // cameraIp: `${nvrData.ip}-${cam.channel}`,
                               cameraIp: nvrData.ip,
                               // channel: cam.channel,

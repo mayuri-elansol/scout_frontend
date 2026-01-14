@@ -2,7 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
-import { assignCameras, getCameraAssignments, getUsecases, unassignCamera } from '@/app/services/configurator/usecaseService';
+import {
+  useGetUsecasesQuery,
+  useAssignCamerasMutation,
+  useUnassignCameraMutation,
+  useLazyGetCameraAssignmentsQuery,
+} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/UseCaseManager/UseCaseManagerAPI';
+import {
+  useLazyGetRoiQuery,
+  useSaveRoiMutation,
+} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/RoiApi';
 
 import {
   Box,
@@ -32,13 +41,9 @@ import {
   Settings as SettingsIcon,
   Tune as TuneIcon,
   RadioButtonUnchecked as ROIIcon,
-  // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
 
-import { roiService } from '@/app/services/roiService';
-
 import { ROIShape } from '@/app/types/roi';
-
 
 interface ROIData {
   configured: boolean;
@@ -97,26 +102,30 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   onBack,
 }) => {
 
+  // RTK Query hooks
+  const { data: useCasesResponse, isLoading: loadingUseCases } = useGetUsecasesQuery();
+  const [assignCameras] = useAssignCamerasMutation();
+  const [unassignCamera] = useUnassignCameraMutation();
+  const [getCameraAssignments] = useLazyGetCameraAssignmentsQuery();
+
+  // ROI RTK Query hooks
+  const [getRoi] = useLazyGetRoiQuery();
+  const [saveRoi, { isLoading: isSavingRoi }] = useSaveRoiMutation();
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
-  const [loadingUseCases, setLoadingUseCases] = useState(true);
+
+  // ✅ Combined effect - Load use cases WITH assignments
   useEffect(() => {
-    loadUseCases();
-  }, []);
+    const loadUseCasesWithAssignments = async () => {
+      if (loadingUseCases || !useCasesResponse || !Array.isArray(useCasesResponse)) {
+        return;
+      }
 
-
-  const loadUseCases = async () => {
-    try {
-      setLoadingUseCases(true);
-
-      const response = await getUsecases();
-      const apiUseCases = response.data;
-
-      // Map DB → Component structure
-      const mapped = apiUseCases.map((uc: Record<string, unknown>) => ({
+      // Step 1: Map use cases from API response
+      const mapped = useCasesResponse.map((uc) => ({
         id: uc.id,
         name: uc.usecaseName,
-        description: uc.description,
+        description: uc.description || '',
         selected: false,
         roiConfigured: false,
         fineTuned: false,
@@ -125,65 +134,53 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         labels: uc.labels ?? [],
       }));
 
-      setUseCases(mapped);
-    } catch (error) {
-      console.error("❌ Failed to load use cases:", error);
-    } finally {
-      setLoadingUseCases(false);
-    }
-  };
+      try {
+        // Step 2: Get camera assignments
+        const res = await getCameraAssignments(camera.id).unwrap();
 
-
-const loadAssignedUsecases = async () => {
-  try {
-    const res = await getCameraAssignments(camera.id);
-    const assigned = res.data;
-
-    // Step 1: mark selected use cases
-    const withSelection = useCases.map(uc => ({
-      ...uc,
-      selected: assigned.some(
-        (a: { usecaseId: string }) => a.usecaseId === uc.id
-      ),
-    }));
-
-    // Step 2: load ROI ONLY for selected use cases
-    const withROI = await Promise.all(
-      withSelection.map(async (uc) => {
-        if (!uc.selected) return uc;
-
-        try {
-          const shapes = await roiService.getRoi(camera.id, uc.id);
-          return {
-            ...uc,
-            roiConfigured: shapes.length > 0,
-            roiShapes: shapes,
-          };
-        } catch {
-          return uc;
+        if (!Array.isArray(res)) {
+          setUseCases(mapped);
+          return;
         }
-      })
-    );
 
-    // ✅ ONE setState only
-    setUseCases(withROI);
+        // Step 3: Mark selected use cases
+        const withSelection = mapped.map(uc => ({
+          ...uc,
+          selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
+        }));
 
-  } catch (e) {
-    console.error('Failed to load assignments', e);
-  }
-};
+        // Step 4: Load ROI for selected use cases using RTK Query
+        const withROI = await Promise.all(
+          withSelection.map(async (uc) => {
+            if (!uc.selected) return uc;
 
+            try {
+              const shapes = await getRoi({
+                cameraId: camera.id,
+                usecaseId: uc.id
+              }).unwrap();
 
+              return {
+                ...uc,
+                roiConfigured: shapes.length > 0,
+                roiShapes: shapes,
+              };
+            } catch {
+              return uc;
+            }
+          })
+        );
 
- useEffect(() => {
-  if (!loadingUseCases && useCases.length > 0) {
-    loadAssignedUsecases();
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [loadingUseCases]);
+        setUseCases(withROI);
+      } catch (error) {
+        console.error('Failed to load assignments', error);
+        // Set use cases anyway without assignments
+        setUseCases(mapped);
+      }
+    };
 
-
-
+    loadUseCasesWithAssignments();
+  }, [loadingUseCases, useCasesResponse, camera.id, getCameraAssignments, getRoi]);
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
@@ -201,12 +198,11 @@ const loadAssignedUsecases = async () => {
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
-
-
   const handleUseCaseSelect = async (usecaseId: string) => {
     const useCase = useCases.find(uc => uc.id === usecaseId);
     const isSelected = !useCase?.selected;
 
+    // Optimistic update
     setUseCases(prev =>
       prev.map(uc =>
         uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
@@ -216,10 +212,16 @@ const loadAssignedUsecases = async () => {
     try {
       if (isSelected) {
         // ASSIGN
-        await assignCameras(usecaseId, [camera.id]);
+        await assignCameras({
+          usecaseId: usecaseId,
+          cameraIds: [camera.id]
+        }).unwrap();
       } else {
         // UNASSIGN
-        await unassignCamera(usecaseId, camera.id);
+        await unassignCamera({
+          usecaseId: usecaseId,
+          cameraId: camera.id
+        }).unwrap();
       }
 
       setSnackbar({
@@ -231,6 +233,14 @@ const loadAssignedUsecases = async () => {
       });
     } catch (error) {
       console.error(error);
+
+      // Revert optimistic update on error
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === usecaseId ? { ...uc, selected: !isSelected } : uc
+        )
+      );
+
       setSnackbar({
         open: true,
         severity: "error",
@@ -239,14 +249,15 @@ const loadAssignedUsecases = async () => {
     }
   };
 
-
-
-
   const handleAddROI = async (useCaseId: string) => {
     setCurrentUseCaseForROI(useCaseId);
 
     try {
-      const shapes = await roiService.getRoi(camera.id, useCaseId);
+      // Use RTK Query to get ROI
+      const shapes = await getRoi({
+        cameraId: camera.id,
+        usecaseId: useCaseId
+      }).unwrap();
 
       setUseCases(prev =>
         prev.map(uc =>
@@ -262,32 +273,41 @@ const loadAssignedUsecases = async () => {
     setRoiModalOpen(true);
   };
 
-
   const handleROISave = async (roiShapes: ROIShape[]) => {
     if (!currentUseCaseForROI) return;
 
     try {
       setLoading(true);
 
-      // 🔥 SAVE TO BACKEND
-      await roiService.saveRoi(
-        camera.id,
-        currentUseCaseForROI,
-        roiShapes
-      );
+      await saveRoi({
+        cameraId: camera.id,
+        usecaseId: currentUseCaseForROI,
+        rois: roiShapes.map(r => ({
+          type: r.type,
+          label: r.name,
+          mode: r.mode,
+          points: r.points,
+        })),
+      }).unwrap();
 
-      // 🔁 Update local UI state
+      // 🔥 ADD THIS
+      const refreshed = await getRoi({
+        cameraId: camera.id,
+        usecaseId: currentUseCaseForROI,
+      }).unwrap();
+
       setUseCases(prev =>
         prev.map(uc =>
           uc.id === currentUseCaseForROI
             ? {
               ...uc,
-              roiConfigured: true,
-              roiShapes,
+              roiConfigured: refreshed.length > 0,
+              roiShapes: refreshed,
             }
             : uc
         )
       );
+
 
       setSnackbar({
         open: true,
@@ -309,7 +329,6 @@ const loadAssignedUsecases = async () => {
     }
   };
 
-
   const handleROIClose = () => {
     setRoiModalOpen(false);
     setCurrentUseCaseForROI(null);
@@ -322,7 +341,6 @@ const loadAssignedUsecases = async () => {
       )
     );
   };
-
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
@@ -358,32 +376,24 @@ const loadAssignedUsecases = async () => {
   };
 
   const getCameraFeedUrl = () => {
-    // Try to use camera snapshot/feed URL if available
-    // Priority: rtspStream > specific snapshot URL > fallback image
     if (camera.rtspStream && camera.rtspStream.trim() !== '') {
-      // Convert RTSP to HTTP snapshot if needed
-      // Example: rtsp://192.168.1.100:554/stream -> http://192.168.1.100/snapshot.jpg
       const rtspUrl = camera.rtspStream;
-      
-      // If it's already an HTTP URL, use it directly
+
       if (rtspUrl.startsWith('http')) {
         return rtspUrl;
       }
-      
-      // Try to construct snapshot URL from camera IP
+
       if (camera.ipAddress) {
-        // Common snapshot endpoints for different camera makes
         const snapshotPaths: Record<string, string> = {
           'hikvision': '/ISAPI/Streaming/channels/101/picture',
           'dahua': '/cgi-bin/snapshot.cgi',
           'axis': '/axis-cgi/jpg/image.cgi',
           'default': '/snapshot.jpg'
         };
-        
+
         const make = camera.make?.toLowerCase() ?? 'default';
         const path = snapshotPaths[make] ?? snapshotPaths['default'];
-        
-        // Construct HTTP URL with authentication if needed
+
         if (camera.username && camera.password) {
           return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
         } else {
@@ -391,8 +401,7 @@ const loadAssignedUsecases = async () => {
         }
       }
     }
-    
-    // Fallback to default image
+
     return '/img/siteimage.jpg';
   };
 
@@ -402,8 +411,7 @@ const loadAssignedUsecases = async () => {
 
   return (
     <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>
-      {/* Loading Overlay */}
-      {loading && (
+      {(loading || isSavingRoi) && (
         <Box
           sx={{
             position: 'absolute',
@@ -426,8 +434,6 @@ const loadAssignedUsecases = async () => {
       )}
 
       <Grid container spacing={1.5}>
-        {/* Left Panel - Camera Info and Controls */}
-
         <Grid size={{ xs: 12, lg: 5 }}>
           <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
@@ -476,7 +482,6 @@ const loadAssignedUsecases = async () => {
             </CardContent>
           </Card>
 
-          {/* Camera View Placeholder */}
           <Card variant="outlined" sx={{ bgcolor: 'grey.900', minHeight: 350 }}>
             <CardContent
               sx={{
@@ -505,8 +510,6 @@ const loadAssignedUsecases = async () => {
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Right Panel - Use Cases Configuration */}
 
         <Grid size={{ xs: 12, lg: 7 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
@@ -684,11 +687,7 @@ const loadAssignedUsecases = async () => {
         </Box>
       </Box>
 
-      {/* ROI Selection Modal */}
       <RoiSelectionModal
-        // key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
-        // key={`${currentUseCaseForROI}-${roiModalOpen}`} 
-        // key={roiModalKey}
         key={`${camera.id}-${currentUseCaseForROI}`}
         open={roiModalOpen}
         onClose={handleROIClose}
@@ -699,7 +698,6 @@ const loadAssignedUsecases = async () => {
         labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels ?? []}
       />
 
-      {/* Success/Error Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}

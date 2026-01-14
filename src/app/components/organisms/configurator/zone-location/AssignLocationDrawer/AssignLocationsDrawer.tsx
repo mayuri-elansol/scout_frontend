@@ -13,7 +13,13 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
-import { Zone } from "@/app/data/mockZones";
+// import { Zone } from "@/app/data/mockZones";
+
+type ZoneUI = {
+  id: string;
+  name: string;
+};
+
 
 export interface LocationItem {
   id: string;
@@ -24,7 +30,7 @@ export interface LocationItem {
 interface AddLocationDrawerProps {
   open: boolean;
   onClose: () => void;
-  zone: Zone | null;
+  zone: ZoneUI | null;
   onSave: (zoneId: string, locations: LocationItem[]) => void;
 }
 
@@ -157,22 +163,34 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
         </Typography>
 
         <List sx={{ p: 0 }}>
-          {localLocations.map((loc) => (
-            <ListItem key={loc.id} sx={{ borderRadius: 1, mb: 1, border: "1px solid", borderColor: "divider", backgroundColor: "white" }}>
-              <ListItemText
-                primary={<Typography sx={{ fontWeight: 600 }}>{loc.name}</Typography>}
-                secondary={loc.description}
-              />
-              <ListItem>
-                secondaryAction={
-                <IconButton edge="end" onClick={() => handleRemoveLocalLocation(loc.id)} size="small">
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-}
-              </ListItem>
-            </ListItem>
-          ))}
-        </List>
+  {localLocations.map((loc) => (
+    <ListItem
+      key={loc.id}
+      sx={{
+        borderRadius: 1,
+        mb: 1,
+        border: "1px solid",
+        borderColor: "divider",
+        backgroundColor: "white",
+      }}
+      secondaryAction={
+        <IconButton
+          edge="end"
+          size="small"
+          onClick={() => handleRemoveLocalLocation(loc.id)}
+        >
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      }
+    >
+      <ListItemText
+        primary={<Typography sx={{ fontWeight: 600 }}>{loc.name}</Typography>}
+        secondary={loc.description}
+      />
+    </ListItem>
+  ))}
+</List>
+
       </Box>
 
       {/* Footer */}

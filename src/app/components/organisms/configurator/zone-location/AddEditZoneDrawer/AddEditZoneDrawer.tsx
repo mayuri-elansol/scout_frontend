@@ -10,14 +10,22 @@ import {
   IconButton,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { Zone } from "@/app/data/mockZones";
+// import { Zone } from "@/app/data/mockZones";
+
+type ZoneUI = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
 
 interface AddEditZoneDrawerProps {
   open: boolean;
   onClose: () => void;
-  zone: Zone | null;
-  onSave: (zone: Omit<Zone, "id" | "createdAt" | "updatedAt"> | Zone) => void;
+  zone: ZoneUI | null;
+  onSave: (zone: { name: string; description?: string; id?: string }) => void;
 }
+
 
 export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
   open,
@@ -87,12 +95,11 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
     } else {
       // Create new zone
       onSave({
+        ...(zone ? { id: zone.id } : {}),
         name: formData.name.trim(),
-        type: "General", // Default type
         description: formData.description.trim(),
-        locationIds: [],
-        cameraIds: [],
       });
+
     }
 
     onClose();

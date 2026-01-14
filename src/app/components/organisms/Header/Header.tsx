@@ -182,7 +182,7 @@ const Header: React.FC = () => {
     ];
 
     const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+      (item) => "path" in item && item.path.toLowerCase() === pathname.toLowerCase()
     );
 
     return currentItem?.name ?? "Live Streaming";
@@ -196,7 +196,7 @@ const Header: React.FC = () => {
     ];
 
     const currentItem = allMenuItems.find(
-      (item) => item.path.toLowerCase() === pathname.toLowerCase()
+      (item) => "path" in item && item.path.toLowerCase() === pathname.toLowerCase()
     );
 
     setCurrentPage(
