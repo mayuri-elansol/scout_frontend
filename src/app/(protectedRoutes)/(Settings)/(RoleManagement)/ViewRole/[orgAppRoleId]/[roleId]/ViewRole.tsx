@@ -89,12 +89,12 @@ export default function ViewRolePage() {
             text={selectedRole?.role_id?.name}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+        {/* <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <CardForSettings
             title="Role Description"
             text={selectedRole?.org_app_role_id}
           />
-        </Grid>
+        </Grid> */}
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <CardForSettings
             title="Created At"

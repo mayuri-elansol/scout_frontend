@@ -1,24 +1,9 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { BackendRole, BackendRoleResponse, BackendUser } from "./viewUser.types";
 
 
-export interface BackendUser {
-  userId: string;
-  first_name: string | null;
-  last_name: string | null;
-  email: string;
-  phoneNumber: string;
-  createdAt:string;
-  updatedAt:string;
-  role:string
 
-}
-
-export interface UserOverviewResponse {
-  status: string;
-  message: string;
-  data: BackendUser[];
-}
 
 export const viewUserApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -27,10 +12,10 @@ export const viewUserApi = baseProtectedApi.injectEndpoints({
         statusCode: number;
         status: string;
         message: string;
-        data?: BackendUser[];
+        data?: BackendUser;
         error?: string;
       },
-      { tenantId: string; userId: string,targetUserId:string }
+      { tenantId: string; userId: string }
     >({
       query: (body) => ({
         url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.getById}`,
@@ -44,7 +29,7 @@ export const viewUserApi = baseProtectedApi.injectEndpoints({
         statusCode: number;
         status: string;
         message: string;
-        data?: BackendUser[];
+        data?: BackendRoleResponse;
         error?: string;
       },
       { tenantId: string; userId: string }

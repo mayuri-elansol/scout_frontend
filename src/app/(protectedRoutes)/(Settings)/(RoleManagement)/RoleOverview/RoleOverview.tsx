@@ -285,6 +285,7 @@ export default function RoleOverview() {
   const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
   const userId = user?.userId;
+  const role = user?.role;
 
   /* ---------- PERMISSIONS ---------- */
   const canAddRole = features.includes(FEATURE.ROLE_MANAGEMENT);
@@ -446,7 +447,7 @@ export default function RoleOverview() {
             </TableRow>
           </TableHead>
 
-          <TableBody>
+          {/* <TableBody>
             {paginatedRows.map((row) => (
               <TableRow key={row.org_app_role_id}>
                 <TableCell>{row.role_id.name}</TableCell>
@@ -488,7 +489,56 @@ export default function RoleOverview() {
                 </TableCell>
               </TableRow>
             ))}
-          </TableBody>
+          </TableBody> */}
+<TableBody>
+  {paginatedRows.map((row) => {
+    const isSelf = row.role_id.name === role && userId === user?.userId;
+
+    return (
+      <TableRow key={row.org_app_role_id}>
+        <TableCell>{row.role_id.name}</TableCell>
+        <TableCell>{row.role_id.role_id}</TableCell>
+        <TableCell>{formatDate(row.createdAt)}</TableCell>
+        <TableCell>{formatDate(row.updatedAt)}</TableCell>
+        <TableCell>
+          {canViewRole && (
+            <IconButton
+              color="primary"
+              onClick={() =>
+                handleView(row.org_app_role_id, row.role_id.role_id)
+              }
+            >
+              <VisibilityIcon />
+            </IconButton>
+          )}
+
+          {canEditRole && (
+            <IconButton
+              color="secondary"
+              onClick={() =>
+                handleEdit(row.org_app_role_id, row.role_id.role_id)
+              }
+              disabled={isSelf} // disable self-edit
+            >
+              <EditIcon />
+            </IconButton>
+          )}
+
+          {canDeleteRole && row.role_id.can_delete && (
+            <IconButton
+              color="error"
+              onClick={() => handleOpenConfirm(row.role_id.role_id)}
+              disabled={isSelf || isDeleting} // disable self-delete
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+        </TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
+
         </Table>
 
         <TablePagination

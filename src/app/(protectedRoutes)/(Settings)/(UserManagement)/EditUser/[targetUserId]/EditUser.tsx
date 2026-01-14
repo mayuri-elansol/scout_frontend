@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -15,10 +13,7 @@ import {
   Box,
   Typography,
   TextField,
-  Select,
   MenuItem,
-  InputLabel,
-  FormControl,
   Button,
   Avatar,
   Paper,
@@ -28,7 +23,6 @@ import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
-import Loader from "@/app/components/atoms/Loader/Loader";
 import styles from "./EditUser.module.css";
 
 import {
@@ -54,7 +48,6 @@ const EditUser: React.FC = () => {
   const router = useRouter();
   const params = useParams();
 
-  /** ✅ ROUTE PARAM (FIXED) */
   const targetUserId = params?.targetUserId as string;
 
   const { user } = useSelector((state: RootState) => state.auth);
@@ -63,21 +56,17 @@ const EditUser: React.FC = () => {
 
   const [editUser, { isLoading: isSubmitting }] = useEditUserMutation();
 
-  /** 🔹 USER INFO */
-  const { data: userData, isLoading: isUserLoading } = useGetUserByIdQuery(
-    { tenantId: tenantId!, userId: loggedInUserId!, targetUserId },
+  const { data: userData } = useGetUserByIdQuery(
+    { tenantId: tenantId!, userId: targetUserId },
     { skip: !tenantId || !loggedInUserId || !targetUserId }
   );
 
-  /** 🔹 USER ROLE (SELECTED ROLE) */
-  const { data: userRoleData, isLoading: isUserRoleLoading } =
-    useGetUserRoleByUserIdQuery(
-      { userId: targetUserId!, orgId: tenantId! },
-      { skip: !tenantId || !targetUserId }
-    );
+  const { data: userRoleData } = useGetUserRoleByUserIdQuery(
+    { userId: targetUserId!, orgId: tenantId! },
+    { skip: !tenantId || !targetUserId }
+  );
 
-  /** 🔹 ALL ROLES (DROPDOWN OPTIONS) */
-  const { data: roleData, isLoading: isRoleLoading } = useRoleListQuery(
+  const { data: roleData } = useRoleListQuery(
     { tenantId: tenantId!, userId: loggedInUserId! },
     { skip: !tenantId || !loggedInUserId }
   );
@@ -85,7 +74,8 @@ const EditUser: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { control, handleSubmit, reset } = useForm<UserFormValues>({
+  const { control, handleSubmit, setValue, watch } = useForm<UserFormValues>({
+    shouldUnregister: false,
     defaultValues: {
       orgAppRoleId: "",
       firstName: "",
@@ -98,34 +88,31 @@ const EditUser: React.FC = () => {
     },
   });
 
-  /** ✅ PREFILL USER INFO */
+  /** ✅ USER ROLE (SOURCE OF TRUTH) */
+  const userRole = userRoleData?.data?.data?.[0];
+  const userOrgAppRoleId = userRole?.orgAppRole?.org_app_role_id;
+  const userRoleName = userRole?.orgAppRole?.role_id?.name;
+
+  /** ✅ PREFILL USER DATA */
   useEffect(() => {
     if (!userData?.data) return;
 
     const u = userData.data;
+    setValue("firstName", u.first_name ?? "");
+    setValue("lastName", u.last_name ?? "");
+    setValue("email", u.email ?? "");
+    setValue("employeeId", u.employee_id ?? "");
+    setValue("phone", u.phoneNumber ?? "");
+    setValue("userName", u.userName ?? "");
+    setImagePreview(u.image_path ?? null);
+  }, [userData, setValue]);
 
-    reset((prev) => ({
-      ...prev,
-      firstName: u.first_name ?? "",
-      lastName: u.last_name ?? "",
-      email: u.email ?? "",
-      employeeId: u.employee_id ?? "",
-      phone: u.phoneNumber ?? "",
-      userName: u.userName ?? "",
-    }));
-  }, [userData, reset]);
-
-  /** ✅ PREFILL SELECTED ROLE */
+  /** ✅ PREFILL ROLE (NO MATCHING) */
   useEffect(() => {
-    if (!userRoleData?.data?.data?.length) return;
-
-    const selectedRoleId = userRoleData.data.data[0].orgAppRole.org_app_role_id;
-
-    reset((prev) => ({
-      ...prev,
-      orgAppRoleId: selectedRoleId,
-    }));
-  }, [userRoleData, reset]);
+    if (userOrgAppRoleId) {
+      setValue("orgAppRoleId", userOrgAppRoleId);
+    }
+  }, [userOrgAppRoleId, setValue]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
@@ -138,7 +125,6 @@ const EditUser: React.FC = () => {
     }
   };
 
-  /** ✅ SUBMIT */
   const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
     try {
       await editUser({
@@ -176,10 +162,6 @@ const EditUser: React.FC = () => {
     }
   };
 
-  if (isUserLoading || isUserRoleLoading || isRoleLoading) {
-    return <Loader />;
-  }
-
   return (
     <Paper sx={{ p: 2, m: 1.5 }}>
       <Box className={styles.formWrapper}>
@@ -187,32 +169,66 @@ const EditUser: React.FC = () => {
         <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <AssignmentInd color="primary" />
-            <Typography variant="subtitle1">Select Role</Typography>
+            <Typography variant="subtitle1">Role</Typography>
           </Box>
-          <FormControl fullWidth required disabled>
-            <InputLabel>Role</InputLabel>
-            <Controller
-              name="orgAppRoleId"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} label="Role">
-                  {roleData?.data?.data?.map((r: any) => (
-                    <MenuItem key={r.org_app_role_id} value={r.org_app_role_id}>
-                      {r.role_id?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              )}
-            />
-          </FormControl>
+
+          <Controller
+            name="orgAppRoleId"
+            control={control}
+            render={() => (
+              <TextField
+                select
+                fullWidth
+                required
+                disabled
+                label="Role"
+                value={watch("orgAppRoleId") || ""}
+                slotProps={{
+                  select: {
+                    displayEmpty: true,
+                    renderValue: (selected: any) => {
+                      if (selected === userOrgAppRoleId) {
+                        return userRoleName;
+                      }
+
+                      const role = roleData?.data?.data?.find(
+                        (r: any) => r.org_app_role_id === selected
+                      );
+
+                      return role?.role_id?.name || "";
+                    },
+                  },
+                }}
+              >
+                {/* hidden user role */}
+                {userOrgAppRoleId && (
+                  <MenuItem value={userOrgAppRoleId} sx={{ display: "none" }}>
+                    {userRoleName}
+                  </MenuItem>
+                )}
+
+                {/* role list */}
+                {roleData?.data?.data?.map((role: any) => (
+                  <MenuItem
+                    key={role.org_app_role_id}
+                    value={role.org_app_role_id}
+                  >
+                    {role.role_id.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
         </Box>
 
-        {/* USER INFO */}
+        {/* REST OF FORM — UNCHANGED */}
+        {/* ... everything else stays exactly the same ... */}
         <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <Person color="primary" />
             <Typography variant="subtitle1">User Information</Typography>
           </Box>
+
           <Grid container spacing={3}>
             {[
               ["firstName", "First Name"],
@@ -234,12 +250,13 @@ const EditUser: React.FC = () => {
           </Grid>
         </Box>
 
-        {/* CREDENTIALS */}
+        {/* USERNAME */}
         <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <Lock color="primary" />
             <Typography variant="subtitle1">Credentials</Typography>
           </Box>
+
           <Controller
             name="userName"
             control={control}
@@ -249,14 +266,23 @@ const EditUser: React.FC = () => {
           />
         </Box>
 
-        {/* PROFILE IMAGE */}
+        {/* IMAGE */}
         <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <CameraAlt color="primary" />
             <Typography variant="subtitle1">Profile Picture</Typography>
           </Box>
+
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} />
+            {/* <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} /> */}
+            <Avatar
+  src={imagePreview ?? ""}
+  sx={{ width: 100, height: 100 }}
+  imgProps={{
+    referrerPolicy: "no-referrer",
+  }}
+/>
+
             <Button
               variant="outlined"
               component="label"
