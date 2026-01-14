@@ -56,16 +56,6 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         body,
         responseHandler: (response) => response.blob(),
       }),
-
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        await rtkAPIToast(queryFulfilled, dispatch, {
-          successMessage:
-            "PPE detection single report PDF downloaded successfully.",
-          errorMessage:
-            "Failed to download the PPE detection single report PDF.",
-          duration: 4000,
-        });
-      },
     }),
     getPpeKitDetectionDetailedCsvReport: builder.mutation<
       Blob,

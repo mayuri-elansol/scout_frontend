@@ -38,6 +38,7 @@ import {
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import dayjs, { Dayjs } from "dayjs";
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 const tenantId = "4f3e2f80e5574111";
 
 /* ================= TYPES ================= */
@@ -48,7 +49,10 @@ interface PpeSocketPayload {
   zoneViolations: ZoneViolationInteface[];
   recentViolations: any[];
 }
-
+interface PPEViolation extends Violation {
+  cameraId: string;
+  alarmTriggered: boolean;
+}
 /* ================= COMPONENT ================= */
 
 const PPEDetection: React.FC = () => {
@@ -74,12 +78,13 @@ const PPEDetection: React.FC = () => {
     useLazyGetPPEKitDetectionZoneViolationsQuery();
   const [fetchRecent, { isLoading: recentLoading }] =
     useLazyGetPpeKitDetectionRecentViolationsQuery();
-  const [fetchDetailedReportApi, { isLoading: reportLoading }] =
-    useLazyGetPpeKitDetectionDetailedReportQuery();
-
-  const [downloadCsv] = useGetPpeKitDetectionDetailedCsvReportMutation();
-  const [downloadPdf] = useGetPpeKitDetectionDetailedPdfReportMutation();
+  const [
+    fetchDetailedReport,
+    { data: detailedReportt, isLoading: detailedReportLoading },
+  ] = useLazyGetPpeKitDetectionDetailedReportQuery();
   const [downloadSinglePdf] = useGetPpeKitDetectionSingleReportPdfMutation();
+  const [downloadCsvReport] = useGetPpeKitDetectionDetailedCsvReportMutation();
+  const [downloadPdfReport] = useGetPpeKitDetectionDetailedPdfReportMutation();
 
   //function to convert the date-time  into indian standards
   const formatLocalDateTime = useCallback(
@@ -97,7 +102,7 @@ const PPEDetection: React.FC = () => {
         fetchKpi({ tenantId }).unwrap(),
         fetchZoneViolations({ tenantId }).unwrap(),
         fetchRecent({ tenantId }).unwrap(),
-        fetchDetailedReportApi({ tenantId }).unwrap(),
+        fetchDetailedReport({ tenantId }).unwrap(),
       ]);
 
       setDisplayKpi(kpi ?? []);
@@ -151,7 +156,6 @@ const PPEDetection: React.FC = () => {
     },
     []
   );
-  // const tableData = useMemo(() => detailedReport?.data || [], [detailedReport]);
 
   /* ---------- UI MAPPERS ---------- */
   const ppeKpiData = useMemo(
@@ -187,6 +191,55 @@ const PPEDetection: React.FC = () => {
 
   /* ---------- REPORT HANDLERS ---------- */
 
+  const tableColumns = useMemo(
+    () => [
+      { id: "violation", label: t("Violation") },
+      { id: "time", label: t("Time") },
+      { id: "zone", label: t("Zone") },
+      { id: "cameraId", label: t("Cameras") },
+      { id: "alarmTriggered", label: t("Alarm Triggered") },
+    ],
+    []
+  );
+
+  const tableFilters = useMemo(
+    () => [
+      {
+        id: "violation",
+        label: t("Violation"),
+        type: "select" as const,
+        options: [
+          "Hard hat missing",
+          "Safety vest not worn",
+          "Safety glasses missing",
+        ],
+      },
+      {
+        id: "zone",
+        label: t("Zone"),
+        type: "select" as const,
+
+        options: detailedReport?.zones || [],
+      },
+      {
+        id: "cameraId",
+        label: t("Cameras"),
+        type: "select" as const,
+
+        options: detailedReport?.cameras || [],
+      },
+      {
+        id: "alarmTriggered",
+        label: t("Alarm Triggered"),
+        type: "select" as const,
+        options: ["True", "False"],
+      },
+      { id: "startDate", label: t("Start Date"), type: "date" as const },
+      { id: "endDate", label: t("End Date"), type: "date" as const },
+    ],
+    [detailedReport?.zones, detailedReport?.cameras]
+  );
+
   const handleSubmitFilter = useCallback(
     async (filters: FilterParams) => {
       console.log("filter params", filters);
@@ -209,67 +262,155 @@ const PPEDetection: React.FC = () => {
 
       console.log("🚀 Sending payload:", body);
 
-      const response = await fetchDetailedReportApi(body).unwrap();
-      setDetailedReport(response); // ✅ REQUIRED
+      const res = await fetchDetailedReport(body);
+      setDetailedReport(res);
     },
-    [fetchDetailedReportApi, formatLocalDateTime] // ✅ add only what is used
+    [fetchDetailedReport, formatLocalDateTime] // ✅ add only what is used
   );
 
-  const handleReset = useCallback(async () => {
-    const response = await fetchDetailedReportApi({
+  const handleReset = useCallback(() => {
+    console.log("reset button clicked");
+
+    fetchDetailedReport({
       tenantId: tenantId,
-    }).unwrap();
-    setDetailedReport(response);
-  }, []);
+    });
+  }, [fetchDetailedReport]);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: FilterParams) => {
       try {
-        // ✅ Ensure startDate/endDate are strings
         const payload = {
-          tenantId,
-          violation: filters.violation ?? "",
-          zone: filters.zone ?? "",
-          cameraId: filters.cameraId ?? "",
+          tenantId: tenantId,
+
+          violation: filters.violation || undefined,
+          zone: filters.zone || undefined,
+          cameraId: filters.cameraId || undefined,
+
           alarmTriggered:
             filters.alarmTriggered !== undefined
               ? filters.alarmTriggered === "True"
-              : false,
-          startDate: filters.startDate ?? "",
-          endDate: filters.endDate ?? "",
+              : undefined,
+
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
         };
 
-        const blob =
-          format === "csv"
-            ? await downloadCsv(payload).unwrap()
-            : await downloadPdf(payload).unwrap();
+        // ================= CSV =================
+        if (format === "csv") {
+          const csvBlob = await downloadCsvReport(payload).unwrap();
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `ppe-report-${Date.now()}.${format}`;
-        a.click();
-        URL.revokeObjectURL(url);
+          const url = window.URL.createObjectURL(csvBlob);
+          const a = document.createElement("a");
+
+          a.href = url;
+          a.download = `ppe-violations-report-${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        }
+
+        // ================= PDF =================
+        if (format === "pdf") {
+          const pdfBlob = await downloadPdfReport(payload).unwrap();
+
+          const url = window.URL.createObjectURL(
+            new Blob([pdfBlob], { type: "application/pdf" })
+          );
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `ppe-violations-report-${Date.now()}.pdf`;
+
+          document.body.appendChild(a);
+          a.click();
+
+          a.remove();
+          window.URL.revokeObjectURL(url);
+        }
       } catch (error) {
-        console.error("Export failed:", error);
+        console.error("❌ Export failed:", error);
       }
     },
-    [downloadCsv, downloadPdf]
+    [downloadCsvReport, downloadPdfReport, formatLocalDateTime]
   );
 
-  const handleDownloadSingle = useCallback(async (row: any) => {
-    const blob = await downloadSinglePdf({
-      tenantId,
-      ...row,
-    }).unwrap();
+  const handleDownloadSingle = useCallback(
+    async (row: PPEViolation) => {
+      console.log("download single row", row);
+      try {
+        const payload = {
+          tenantId: tenantId,
+          violation: String(row.violation),
+          zone: row.zone,
+          time: row.time,
+          cameraId: row.cameraId,
+          alarmTriggered: row.alarmTriggered,
+          imageUrl: row.imageUrl,
+        };
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `ppe-violation-${Date.now()}.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, []);
+        const pdfBlob = await downloadSinglePdf(payload).unwrap();
+
+        // ✅ Create browser download
+        const blobUrl = window.URL.createObjectURL(pdfBlob);
+        const a = document.createElement("a");
+
+        a.href = blobUrl;
+        a.download = `ppe-single-report-${Date.now()}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+
+        // ✅ Cleanup
+        a.remove();
+        window.URL.revokeObjectURL(blobUrl);
+      } catch (err) {
+        console.error("PDF download failed", err);
+      }
+    },
+    [downloadSinglePdf]
+  );
+
+  const handleViewSingle = useCallback(
+    (row: PPEViolation) => {
+      console.log("view single row", row);
+      setViewPopupData(row);
+      setViewPopupOpen(true);
+    },
+    [] // setState functions are stable
+  );
+  const handleDownloadViolation = async (url: string, violation: Violation) => {
+    if (!violation) return;
+    const ppeViolation = violation as PPEViolation;
+    try {
+      const payload = {
+        tenantId: tenantId,
+        violation: String(ppeViolation.violation),
+        zone: ppeViolation.zone,
+        time: ppeViolation.time,
+        cameraId: ppeViolation.cameraId,
+        alarmTriggered: ppeViolation.alarmTriggered,
+        imageUrl: url,
+      };
+
+      const pdfBlob = await downloadSinglePdf(payload).unwrap();
+
+      // ✅ Create browser download
+      const blobUrl = window.URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+
+      a.href = blobUrl;
+      a.download = `ppe-single-report-${Date.now()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+
+      // ✅ Cleanup
+      a.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("PDF download failed", err);
+    }
+  };
 
   /* ---------- RENDER ---------- */
   return (
@@ -307,9 +448,7 @@ const PPEDetection: React.FC = () => {
               violations={recentViolationsLive}
               loading={recentLoading}
               tooltipMessage="Latest 20 detected PPE violations"
-              onDownload={(url, row) =>
-                handleDownloadSingle({ ...row, imageUrl: url })
-              }
+              onDownload={handleDownloadViolation}
             />
           </Grid>
 
@@ -324,10 +463,10 @@ const PPEDetection: React.FC = () => {
         </Grid>
       </Paper>
 
-      <ReportTable
+      {/* <ReportTable
         title={t("Detailed Report")}
         data={detailedReport?.data || []}
-        loading={reportLoading}
+        loading={detailedReportLoading}
         columns={[
           { id: "violation", label: t("Violation") },
           { id: "time", label: t("Time") },
@@ -372,7 +511,7 @@ const PPEDetection: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        onDownload={handleDownloadSingle}
+        onDownload={(row) => handleDownloadSingle(row as PPEViolation)}
         onView={(row) => {
           setViewPopupData(row);
           setViewPopupOpen(true);
@@ -386,10 +525,36 @@ const PPEDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        onDownload={(url) =>
-          viewPopupData &&
-          handleDownloadSingle({ ...viewPopupData, imageUrl: url })
-        }
+        onDownload={(url) => {
+          if (!viewPopupData) return;
+          handleDownloadViolation(url, viewPopupData);
+        }}
+      /> */}
+
+      <ReportTable
+        title={t("Detailed Report")}
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        data={detailedReportt?.data || []}
+        columns={tableColumns}
+        filters={tableFilters}
+        onSubmit={handleSubmitFilter}
+        onReset={handleReset}
+        onExport={handleExport}
+        onDownload={(row) => handleDownloadSingle(row as PPEViolation)}
+        onView={(row) => handleViewSingle(row as PPEViolation)}
+        downloadFileName="ppe-violations-report"
+        loading={detailedReportLoading}
+      />
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => {
+          if (!viewPopupData) return;
+          handleDownloadViolation(url, viewPopupData);
+        }}
       />
     </Box>
   );

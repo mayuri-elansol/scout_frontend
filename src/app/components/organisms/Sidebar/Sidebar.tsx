@@ -458,22 +458,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     </ListItemButton>
                   </ListItem>
 
-                  {/* <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                    <List sx={{ pl: 2 }}>
-                      {category.items
-                        .filter((item) => item.featureFlag)
-                        .map((item, idx) => (
-                          <SubMenuItem
-                            key={uuidv4() + idx}
-                            item={item}
-                            pathname={pathname}
-                            theme={theme}
-                            categoryTitle={category.title}
-                          />
-                        ))}
-                    </List>
-                  </Collapse> */}
-
                   <Collapse in={isOpen} timeout="auto" unmountOnExit>
                     <List sx={{ pl: 2 }}>
                       {getAllLinkItems(category.items).map((item) => (
