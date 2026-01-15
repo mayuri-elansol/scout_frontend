@@ -1,4 +1,3 @@
-
 // export const FEATURE = {
 //   // Dashboards
 //   SAFETY_COMPLIANCE: "SF001",
@@ -107,7 +106,7 @@ export const FEATURE = {
   CANTEEN_USAGE: "SUC018",
   VEHICLE_UNLOADING_LOADING: "SUC019",
   UNAUTHORIZED_PARKING: "SUC020",
-  
+
   // Face Recognition
   FACE_RECOGNITION: "SUC021",
   FACE_IDLE_MONITORING: "SUC022",

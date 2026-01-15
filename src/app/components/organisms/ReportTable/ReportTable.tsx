@@ -108,6 +108,24 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
 
     return hasTextFilters || hasDateFilters;
   }, [filterValues, dateTimeValues]);
+  const isDateRangeValid = useMemo(() => {
+    const start = dateTimeValues["startDate"];
+    const end = dateTimeValues["endDate"];
+    const now = dayjs();
+    const threeMonthsAgo = now.subtract(3, "month");
+
+    // If only one date is selected → allow
+    if (!start || !end) return true;
+
+    // Start must be before or equal to end
+    if (start.isAfter(end)) return false;
+
+    // Range must be within last 3 months
+    if (start.isBefore(threeMonthsAgo)) return false;
+    if (end.isAfter(now)) return false;
+
+    return true;
+  }, [dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
@@ -119,6 +137,28 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
 
   // Calculate min/max dates for start and end date with 3-month range
 
+  // const getDateConstraints = (fieldId: string) => {
+  //   const now = dayjs();
+  //   const threeMonthsAgo = now.subtract(3, "month");
+
+  //   if (fieldId === "startDate") {
+  //     const endDate = dateTimeValues["endDate"];
+  //     return {
+  //       minDate: threeMonthsAgo,
+  //       maxDate: endDate ?? now,
+  //     };
+  //   }
+
+  //   if (fieldId === "endDate") {
+  //     const startDate = dateTimeValues["startDate"];
+  //     return {
+  //       minDate: startDate ?? threeMonthsAgo,
+  //       maxDate: now,
+  //     };
+  //   }
+
+  //   return { minDate: threeMonthsAgo, maxDate: now };
+  // };
   const getDateConstraints = (fieldId: string) => {
     const now = dayjs();
     const threeMonthsAgo = now.subtract(3, "month");
@@ -265,6 +305,27 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
 
       return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* <DateTimePicker
+            label={filter.label}
+            value={dateTimeValues[fieldId] ?? null}
+            onChange={(newValue) =>
+              handleDateTimeChange(fieldId, newValue ? dayjs(newValue) : null)
+            }
+            minDateTime={constraints.minDate}
+            maxDateTime={constraints.maxDate}
+            format="DD-MM-YYYY HH:mm"
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                sx: {
+                  minWidth: 150,
+                  "& .MuiPickersOutlinedInput-root": {
+                    height: "48px",
+                  },
+                },
+              },
+            }}
+          /> */}
           <DateTimePicker
             label={filter.label}
             value={dateTimeValues[fieldId] ?? null}
@@ -277,6 +338,10 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             slotProps={{
               textField: {
                 fullWidth: true,
+                error: !isDateRangeValid,
+                helperText: !isDateRangeValid
+                  ? "Invalid date range (max 3 months, start ≤ end)"
+                  : "",
                 sx: {
                   minWidth: 150,
                   "& .MuiPickersOutlinedInput-root": {
@@ -411,11 +476,21 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 flexGrow: 1,
               }}
             >
-              <Button
+              {/* <Button
                 size="small"
                 variant="outlined"
                 onClick={handleSubmit}
                 disabled={!hasActiveFilters || isSubmitDisabled}
+              >
+                Submit
+              </Button> */}
+              <Button
+                size="small"
+                variant="outlined"
+                onClick={handleSubmit}
+                disabled={
+                  !hasActiveFilters || !isDateRangeValid || isSubmitDisabled
+                }
               >
                 Submit
               </Button>
