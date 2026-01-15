@@ -68,8 +68,8 @@ export type PageType =
   | "vehicle-tracking"
   | "work-hours"
   | "camera-management"
-  | 'use-case-manager'
-  | 'zone-location-mapping'
+  | "use-case-manager"
+  | "zone-location-mapping"
   | "zone-occupancy"
   | "crowd-management"
   | "live-streaming"
@@ -94,7 +94,8 @@ export type PageType =
   | "role-management"
   | "user-management"
   | "configurator"
-  | "camera-tamparing-dasboard";
+  | "camera-tamparing-dasboard"
+  | "dashboard";
 // Component Props Types
 export interface SidebarProps {
   currentPage: PageType;

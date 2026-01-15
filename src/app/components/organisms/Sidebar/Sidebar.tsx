@@ -388,7 +388,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     () => (
       <>
         {/* Live Streaming - At the very top */}
-        {filteredMenus.liveStreamingFlags.length > 0 && (
+        {/* {filteredMenus.liveStreamingFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
               <MenuItem
@@ -399,7 +399,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
               />
             ))}
           </List>
-        )}
+        )} */}
         {/* Dashboard */}
 
         {filteredMenus.dashboardFlags.length > 0 && (
@@ -411,25 +411,39 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
               const isOpen = openCategories[category.title] ?? false;
 
+              const isDashboardRoot =
+                !!category.path && pathname === category.path;
+
+              const isDashboardChild = category.items.some(
+                (item) =>
+                  item.type === "link" &&
+                  (pathname === item.path ||
+                    pathname.startsWith(`${item.path}/`))
+              );
               return (
                 <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                   <ListItem disablePadding>
                     <ListItemButton
-                      // selected={isCategoryActive}
+                      selected={isDashboardRoot}
                       sx={{
                         borderRadius: 1,
                         py: 1,
-                        backgroundColor: "transparent", // ⛔ no blue bg
-                        color: isCategoryActive
-                          ? theme.palette.primary.main // 🔵 text only
-                          : "#5c6b7d",
+
+                        "&.Mui-selected": {
+                          backgroundColor: theme.palette.primary.main,
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
+                        },
+
                         "&:hover": {
                           backgroundColor: "rgba(25,118,210,0.08)",
                         },
                       }}
                       onClick={() => {
                         if (category.path) {
-                          router.push(category.path); // ✅ navigate to dashboard
+                          router.push(category.path);
                         }
                       }}
                     >
@@ -437,21 +451,40 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         <ListItemIcon
                           sx={{
                             minWidth: 36,
-                            color: isCategoryActive
-                              ? theme.palette.primary.dark
+                            color: isDashboardRoot
+                              ? "white"
+                              : isDashboardChild
+                              ? theme.palette.primary.main
                               : "#5c6b7d",
                           }}
                         >
                           <category.icon />
                         </ListItemIcon>
                       )}
-                      <ListItemText primary={category.title} />
+                      <ListItemText
+                        primary={category.title}
+                        sx={{
+                          color: isDashboardRoot
+                            ? "white"
+                            : isDashboardChild
+                            ? theme.palette.primary.main
+                            : "#5c6b7d",
+                        }}
+                      />
                       <Box
                         onClick={(e) => {
                           e.stopPropagation(); // ⛔ prevent navigation
                           handleCategoryToggle(category.title);
                         }}
-                        sx={{ display: "flex", alignItems: "center" }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: isDashboardRoot
+                            ? "white"
+                            : isDashboardChild
+                            ? theme.palette.primary.main
+                            : "#5c6b7d",
+                        }}
                       >
                         {isOpen ? <ExpandLess /> : <ExpandMore />}
                       </Box>

@@ -189,54 +189,48 @@ const PPEDetection: React.FC = () => {
 
   /* ---------- REPORT HANDLERS ---------- */
 
-  const tableColumns = useMemo(
-    () => [
-      { id: "violation", label: t("Violation") },
-      { id: "time", label: t("Time") },
-      { id: "zone", label: t("Zone") },
-      { id: "cameraId", label: t("Cameras") },
-      { id: "alarmTriggered", label: t("Alarm Triggered") },
-    ],
-    []
-  );
+  const tableColumns = [
+    { id: "violation", label: t("Violation") },
+    { id: "time", label: t("Time") },
+    { id: "zone", label: t("Zone") },
+    { id: "cameraId", label: t("Cameras") },
+    { id: "alarmTriggered", label: t("Alarm Triggered") },
+  ];
 
-  const tableFilters = useMemo(
-    () => [
-      {
-        id: "violation",
-        label: t("Violation"),
-        type: "select" as const,
-        options: [
-          "Hard hat missing",
-          "Safety vest not worn",
-          "Safety glasses missing",
-        ],
-      },
-      {
-        id: "zone",
-        label: t("Zone"),
-        type: "select" as const,
+  const tableFilters = [
+    {
+      id: "violation",
+      label: t("Violation"),
+      type: "select" as const,
+      options: [
+        "Hard hat missing",
+        "Safety vest not worn",
+        "Safety glasses missing",
+      ],
+    },
+    {
+      id: "zone",
+      label: t("Zone"),
+      type: "select" as const,
 
-        options: detailedReport?.zones || [],
-      },
-      {
-        id: "cameraId",
-        label: t("Cameras"),
-        type: "select" as const,
+      options: detailedReport?.zones || [],
+    },
+    {
+      id: "cameraId",
+      label: t("Cameras"),
+      type: "select" as const,
 
-        options: detailedReport?.cameras || [],
-      },
-      {
-        id: "alarmTriggered",
-        label: t("Alarm Triggered"),
-        type: "select" as const,
-        options: ["True", "False"],
-      },
-      { id: "startDate", label: t("Start Date"), type: "date" as const },
-      { id: "endDate", label: t("End Date"), type: "date" as const },
-    ],
-    [detailedReport?.zones, detailedReport?.cameras]
-  );
+      options: detailedReport?.cameras || [],
+    },
+    {
+      id: "alarmTriggered",
+      label: t("Alarm Triggered"),
+      type: "select" as const,
+      options: ["True", "False"],
+    },
+    { id: "startDate", label: t("Start Date"), type: "date" as const },
+    { id: "endDate", label: t("End Date"), type: "date" as const },
+  ];
 
   const handleSubmitFilter = useCallback(
     async (filters: FilterParams) => {
@@ -261,19 +255,11 @@ const PPEDetection: React.FC = () => {
       console.log("🚀 Sending payload:", body);
 
       const response = await fetchDetailedReportApi(body).unwrap();
-      setDetailedReport(response); // ✅ REQUIRED
+      setDetailedReport(response);
     },
-    [fetchDetailedReportApi, formatLocalDateTime] // ✅ add only what is used
+    [fetchDetailedReportApi, formatLocalDateTime]
   );
 
-  // const handleReset = useCallback(async () => {
-  //   console.log("reset button clicked");
-
-  //   const response = await fetchDetailedReportApi({
-  //     tenantId: tenantId,
-  //   });
-  //   setDetailedReport(response);
-  // }, [fetchDetailedReportApi]);
   const handleReset = useCallback(async () => {
     const response = await fetchDetailedReportApi({
       tenantId: tenantId,
@@ -302,19 +288,6 @@ const PPEDetection: React.FC = () => {
 
         // ================= CSV =================
         if (format === "csv") {
-          // const csvBlob = await downloadCsvReport(payload).unwrap();
-
-          // const url = window.URL.createObjectURL(csvBlob);
-          // const a = document.createElement("a");
-
-          // a.href = url;
-          // a.download = `ppe-violations-report-${Date.now()}.csv`;
-          // document.body.appendChild(a);
-          // a.click();
-
-          // a.remove();
-          // window.URL.revokeObjectURL(url);
-
           await downloadCsvReport(payload);
         }
 
@@ -329,41 +302,6 @@ const PPEDetection: React.FC = () => {
     [downloadCsvReport, downloadPdfReport, formatLocalDateTime]
   );
 
-  // const handleDownloadSingle = useCallback(
-  //   async (row: PPEViolation) => {
-  //     console.log("download single row", row);
-  //     try {
-  //       const payload = {
-  //         tenantId: tenantId,
-  //         violation: String(row.violation),
-  //         zone: row.zone,
-  //         time: row.time,
-  //         cameraId: row.cameraId,
-  //         alarmTriggered: row.alarmTriggered,
-  //         imageUrl: row.imageUrl,
-  //       };
-
-  //       const pdfBlob = await downloadSinglePdf(payload).unwrap();
-
-  //       // ✅ Create browser download
-  //       const blobUrl = window.URL.createObjectURL(pdfBlob);
-  //       const a = document.createElement("a");
-
-  //       a.href = blobUrl;
-  //       a.download = `ppe-single-report-${Date.now()}.pdf`;
-  //       document.body.appendChild(a);
-  //       a.click();
-
-  //       // ✅ Cleanup
-  //       a.remove();
-  //       window.URL.revokeObjectURL(blobUrl);
-  //     } catch (err) {
-  //       console.error("PDF download failed", err);
-  //     }
-  //   },
-  //   [downloadSinglePdf]
-  // );
-
   const handleDownloadSingle = useCallback(
     async (row: PPEViolation) => {
       try {
@@ -377,21 +315,6 @@ const PPEDetection: React.FC = () => {
           imageUrl: row.imageUrl,
         };
 
-        // ✅ Fetch PDF
-        // const pdfBlob = await downloadSinglePdf(payload).unwrap();
-
-        // // ✅ Browser download
-        // const url = window.URL.createObjectURL(pdfBlob);
-        // const a = document.createElement("a");
-
-        // a.href = url;
-        // a.download = `ppe-single-report-${Date.now()}.pdf`;
-        // document.body.appendChild(a);
-        // a.click();
-
-        // // ✅ Cleanup
-        // a.remove();
-        // window.URL.revokeObjectURL(url);
         await downloadSinglePdf(payload);
       } catch (error) {
         console.error("❌ Single PDF download failed", error);
@@ -422,20 +345,6 @@ const PPEDetection: React.FC = () => {
         imageUrl: url,
       };
 
-      // const pdfBlob = await downloadSinglePdf(payload).unwrap();
-
-      // // ✅ Create browser download
-      // const blobUrl = window.URL.createObjectURL(pdfBlob);
-      // const a = document.createElement("a");
-
-      // a.href = blobUrl;
-      // a.download = `ppe-single-report-${Date.now()}.pdf`;
-      // document.body.appendChild(a);
-      // a.click();
-
-      // // ✅ Cleanup
-      // a.remove();
-      // window.URL.revokeObjectURL(blobUrl);
       await downloadSinglePdf(payload);
     } catch (err) {
       console.error("PDF download failed", err);
