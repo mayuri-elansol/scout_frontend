@@ -375,36 +375,43 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     return useCase?.roiShapes ?? [];
   };
 
+  // const getCameraFeedUrl = () => {
+  //   if (camera.rtspStream && camera.rtspStream.trim() !== '') {
+  //     const rtspUrl = camera.rtspStream;
+
+  //     if (rtspUrl.startsWith('http')) {
+  //       return rtspUrl;
+  //     }
+
+  //     if (camera.ipAddress) {
+  //       const snapshotPaths: Record<string, string> = {
+  //         'hikvision': '/ISAPI/Streaming/channels/101/picture',
+  //         'dahua': '/cgi-bin/snapshot.cgi',
+  //         'axis': '/axis-cgi/jpg/image.cgi',
+  //         'default': '/snapshot.jpg'
+  //       };
+
+  //       const make = camera.make?.toLowerCase() ?? 'default';
+  //       const path = snapshotPaths[make] ?? snapshotPaths['default'];
+
+  //       if (camera.username && camera.password) {
+  //         return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
+  //       } else {
+  //         return `http://${camera.ipAddress}:${camera.port ?? '80'}${path}`;
+  //       }
+  //     }
+  //   }
+
+  //   return '/img/siteimage.jpg';
+  // };
+
   const getCameraFeedUrl = () => {
-    if (camera.rtspStream && camera.rtspStream.trim() !== '') {
-      const rtspUrl = camera.rtspStream;
-
-      if (rtspUrl.startsWith('http')) {
-        return rtspUrl;
-      }
-
-      if (camera.ipAddress) {
-        const snapshotPaths: Record<string, string> = {
-          'hikvision': '/ISAPI/Streaming/channels/101/picture',
-          'dahua': '/cgi-bin/snapshot.cgi',
-          'axis': '/axis-cgi/jpg/image.cgi',
-          'default': '/snapshot.jpg'
-        };
-
-        const make = camera.make?.toLowerCase() ?? 'default';
-        const path = snapshotPaths[make] ?? snapshotPaths['default'];
-
-        if (camera.username && camera.password) {
-          return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-        } else {
-          return `http://${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-        }
-      }
+    if (!camera?.id) {
+      return '/img/siteimage.jpg';
     }
 
-    return '/img/siteimage.jpg';
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${camera.id}/frame`;
   };
-
   const handleCloseSnackbar = () => {
     setSnackbar(prev => ({ ...prev, open: false }));
   };
