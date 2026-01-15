@@ -13,6 +13,7 @@ export const baseProtectedApi = createApi({
       // Get tenant ID from auth state (from Redux)
       const tenantId = state.auth?.user?.org_id;
       
+      
       if (tenantId) {
         headers.set("x-tenant-id", tenantId);
       } else {
