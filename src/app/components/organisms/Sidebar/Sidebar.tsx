@@ -1,3 +1,4 @@
+
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
@@ -388,7 +389,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     () => (
       <>
         {/* Live Streaming - At the very top */}
-        {filteredMenus.liveStreamingFlags.length > 0 && (
+        {/* {filteredMenus.liveStreamingFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
               <MenuItem
@@ -399,7 +400,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
               />
             ))}
           </List>
-        )}
+        )} */}
         {/* Dashboard */}
 
         {filteredMenus.dashboardFlags.length > 0 && (
@@ -411,25 +412,39 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
               const isOpen = openCategories[category.title] ?? false;
 
+              const isDashboardRoot =
+                !!category.path && pathname === category.path;
+
+              const isDashboardChild = category.items.some(
+                (item) =>
+                  item.type === "link" &&
+                  (pathname === item.path ||
+                    pathname.startsWith(`${item.path}/`))
+              );
               return (
                 <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                   <ListItem disablePadding>
                     <ListItemButton
-                      // selected={isCategoryActive}
+                      selected={isDashboardRoot}
                       sx={{
                         borderRadius: 1,
                         py: 1,
-                        backgroundColor: "transparent", // ⛔ no blue bg
-                        color: isCategoryActive
-                          ? theme.palette.primary.main // 🔵 text only
-                          : "#5c6b7d",
+
+                        "&.Mui-selected": {
+                          backgroundColor: theme.palette.primary.main,
+                          color: "white",
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
+                        },
+
                         "&:hover": {
                           backgroundColor: "rgba(25,118,210,0.08)",
                         },
                       }}
                       onClick={() => {
                         if (category.path) {
-                          router.push(category.path); // ✅ navigate to dashboard
+                          router.push(category.path);
                         }
                       }}
                     >
@@ -437,42 +452,45 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         <ListItemIcon
                           sx={{
                             minWidth: 36,
-                            color: isCategoryActive
-                              ? theme.palette.primary.dark
+                            color: isDashboardRoot
+                              ? "white"
+                              : isDashboardChild
+                              ? theme.palette.primary.main
                               : "#5c6b7d",
                           }}
                         >
                           <category.icon />
                         </ListItemIcon>
                       )}
-                      <ListItemText primary={category.title} />
+                      <ListItemText
+                        primary={category.title}
+                        sx={{
+                          color: isDashboardRoot
+                            ? "white"
+                            : isDashboardChild
+                            ? theme.palette.primary.main
+                            : "#5c6b7d",
+                        }}
+                      />
                       <Box
                         onClick={(e) => {
                           e.stopPropagation(); // ⛔ prevent navigation
                           handleCategoryToggle(category.title);
                         }}
-                        sx={{ display: "flex", alignItems: "center" }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: isDashboardRoot
+                            ? "white"
+                            : isDashboardChild
+                            ? theme.palette.primary.main
+                            : "#5c6b7d",
+                        }}
                       >
                         {isOpen ? <ExpandLess /> : <ExpandMore />}
                       </Box>
                     </ListItemButton>
                   </ListItem>
-
-                  {/* <Collapse in={isOpen} timeout="auto" unmountOnExit>
-                    <List sx={{ pl: 2 }}>
-                      {category.items
-                        .filter((item) => item.featureFlag)
-                        .map((item, idx) => (
-                          <SubMenuItem
-                            key={uuidv4() + idx}
-                            item={item}
-                            pathname={pathname}
-                            theme={theme}
-                            categoryTitle={category.title}
-                          />
-                        ))}
-                    </List>
-                  </Collapse> */}
 
                   <Collapse in={isOpen} timeout="auto" unmountOnExit>
                     <List sx={{ pl: 2 }}>
@@ -777,3 +795,431 @@ const Sidebar: React.FC<SidebarProps> = () => {
 };
 
 export default React.memo(Sidebar);
+
+
+
+
+// TODO: ADD LOADER FOR ROUTE CHANGES
+// "use client";
+
+// import { v4 as uuidv4 } from "uuid";
+// import React, { useState, useMemo, useCallback } from "react";
+// import { usePathname, useRouter } from "next/navigation";
+// import {
+//   Drawer,
+//   Box,
+//   List,
+//   ListItem,
+//   ListItemButton,
+//   ListItemIcon,
+//   ListItemText,
+//   Collapse,
+//   Typography,
+//   Chip,
+//   useTheme,
+//   Divider,
+// } from "@mui/material";
+// import { BarChart, ExpandLess, ExpandMore, Settings } from "@mui/icons-material";
+// import {
+//   dashboardMenu,
+//   alertMenu,
+//   analyticsMenu,
+//   settingsMenu,
+//   MenuItemConfig,
+//   CategoryConfig,
+//   liveStreamingMenu,
+//   LinkMenuItem,
+// } from "../../../config/menuConfig";
+// import { PageType } from "@/app/types";
+// import { useAuth } from "@/customhooks/useAuth";
+// import { hasFeature } from "@/utils/hasFeature";
+// import theme from "../../../theme/theme";
+// import { startRouteLoading } from "@/app/store/slices/routeLoaderSlice";
+// import { useDispatch } from "react-redux";
+
+// interface SidebarProps {
+//   currentPage?: PageType;
+//   onPageChange?: (page: PageType) => void;
+// }
+
+// const isLink = (item: MenuItemConfig): item is Extract<MenuItemConfig, { type: "link" }> => item.type === "link";
+// const isGroup = (item: MenuItemConfig): item is Extract<MenuItemConfig, { type: "group" }> => item.type === "group";
+
+// const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
+//   items.flatMap((item) => {
+//     if (isLink(item)) return [item];
+//     if (isGroup(item)) return item.items.filter(isLink);
+//     return [];
+//   });
+
+// // ======================= MENU ITEM =======================
+// const MenuItem = React.memo<{ item: LinkMenuItem; pathname: string; theme: typeof theme; onNavigate: (path?: string) => void; }>(({ item, pathname, theme, onNavigate }) => (
+//   <ListItem disablePadding sx={{ mb: 0.5 }}>
+//     <ListItemButton
+//       onClick={() => onNavigate(item.path)}
+//       selected={pathname === item.path}
+//       sx={{
+//         borderRadius: 1,
+//         "&.Mui-selected": {
+//           backgroundColor: theme.palette.primary.main,
+//           color: "white",
+//           "&:hover": { backgroundColor: theme.palette.primary.dark },
+//         },
+//       }}
+//     >
+//       {item.icon && (
+//         <ListItemIcon sx={{ minWidth: 36, color: pathname === item.path ? "white" : "inherit" }}>
+//           <item.icon />
+//         </ListItemIcon>
+//       )}
+//       <ListItemText primary={item.name} />
+//       {item.badge && <Chip label={item.badge} size="small" color="error" sx={{ height: 20, fontSize: "12px" }} />}
+//     </ListItemButton>
+//   </ListItem>
+// ));
+// MenuItem.displayName = "MenuItem";
+
+// // ======================= SUB MENU ITEM =======================
+// const SubMenuItem = React.memo<{
+//   item: LinkMenuItem;
+//   pathname: string;
+//   theme: typeof theme;
+//   categoryTitle: string;
+//   onNavigate: (path?: string) => void;
+// }>(({ item, pathname, theme, categoryTitle, onNavigate }) => (
+//   <ListItem disablePadding>
+//     <ListItemButton
+//       onClick={() => onNavigate(item.path)}
+//       selected={pathname === item.path}
+//       sx={{
+//         borderRadius: 1,
+//         py: 0.75,
+//         "&.Mui-selected": {
+//           backgroundColor: theme.palette.primary.main,
+//           color: "white",
+//           "&:hover": { backgroundColor: theme.palette.primary.dark },
+//         },
+//         "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
+//       }}
+//     >
+//       {item.icon && (
+//         <ListItemIcon sx={{ minWidth: 28, color: pathname === item.path ? "white" : "#6b7280" }}>
+//           <item.icon fontSize="small" />
+//         </ListItemIcon>
+//       )}
+//       <ListItemText
+//         primary={categoryTitle === "Settings" ? item.name : `• ${item.name}`}
+//         slotProps={{
+//           primary: {
+//             sx: {
+//               fontSize: ["Dashboard", "Analytics", "Settings"].includes(categoryTitle) ? "14px" : "12px",
+//               color: pathname === item.path ? "white" : "#6b7280",
+//               lineHeight: 1.4,
+//             },
+//           },
+//         }}
+//       />
+//     </ListItemButton>
+//   </ListItem>
+// ));
+// SubMenuItem.displayName = "SubMenuItem";
+
+// // ======================= CATEGORY SECTION =======================
+// const CategorySection = React.memo<{
+//   category: CategoryConfig & { items: MenuItemConfig[] };
+//   openCategories: Record<string, boolean>;
+//   onToggle: (title: string) => void;
+//   pathname: string;
+//   theme: typeof theme;
+//   onNavigate: (path?: string) => void;
+// }>(({ category, openCategories, onToggle, pathname, theme, onNavigate }) => {
+//   const filteredItems = category.items;
+//   if (!filteredItems.length) return null;
+
+//   const handleToggle = useCallback(() => onToggle(category.title), [category.title, onToggle]);
+//   const isOpen = openCategories[category.title] ?? false;
+
+//   return (
+//     <Box>
+//       <ListItem disablePadding>
+//         <ListItemButton onClick={handleToggle} sx={{ borderRadius: 1, py: 1 }}>
+//           {category.icon && <ListItemIcon sx={{ minWidth: 28 }}><category.icon sx={{ fontSize: 16 }} /></ListItemIcon>}
+//           <ListItemText primary={category.title} slotProps={{ primary: { sx: { fontSize: "14px", color: "#5c6b7d" } } }} />
+//           {isOpen ? <ExpandLess sx={{ fontSize: 12 }} /> : <ExpandMore sx={{ fontSize: 12 }} />}
+//         </ListItemButton>
+//       </ListItem>
+
+//       <Collapse in={isOpen} timeout="auto" unmountOnExit>
+//         <List sx={{ pl: 3 }}>
+//           {getAllLinkItems(filteredItems).map((item) => (
+//             <SubMenuItem
+//               key={item.path}
+//               item={item}
+//               pathname={pathname}
+//               theme={theme}
+//               categoryTitle={category.title}
+//               onNavigate={onNavigate}
+//             />
+//           ))}
+//         </List>
+//       </Collapse>
+//     </Box>
+//   );
+// });
+// CategorySection.displayName = "CategorySection";
+
+// // ======================= SIDEBAR =======================
+// const Sidebar: React.FC<SidebarProps> = () => {
+//   const theme = useTheme();
+//   const drawerWidth = "315px";
+//   const router = useRouter();
+//   const pathname = usePathname();
+//   const dispatch = useDispatch();
+//   const { features } = useAuth();
+
+//   const [analyticsOpen, setAnalyticsOpen] = useState(true);
+//   const [settingsOpen, setSettingsOpen] = useState(false);
+//   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
+
+//   // ✅ NAVIGATION HANDLER
+//   const handleNavigate = useCallback(
+//     (path?: string) => {
+//       if (!path || pathname === path) return;
+//       dispatch(startRouteLoading());
+//       router.push(path);
+//     },
+//     [dispatch, router, pathname]
+//   );
+
+//   const handleCategoryToggle = useCallback((title: string) => {
+//     setOpenCategories((prev) => ({ ...prev, [title]: !prev[title] }));
+//   }, []);
+
+//   const handleAnalyticsToggle = useCallback(() => setAnalyticsOpen((prev) => !prev), []);
+//   const handleSettingsToggle = useCallback(() => setSettingsOpen((prev) => !prev), []);
+
+//   // ======================= FILTER MENUS BY FEATURE =======================
+//   const filteredMenus = useMemo(() => {
+//     const filterItems = (items: MenuItemConfig[]) =>
+//       items
+//         .map((item) => {
+//           if (isLink(item)) return hasFeature(features, item.featureId) ? item : null;
+//           if (isGroup(item)) {
+//             const children = item.items.filter((sub) => isLink(sub) && hasFeature(features, sub.featureId));
+//             return children.length ? { ...item, items: children } : null;
+//           }
+//           return null;
+//         })
+//         .filter(Boolean) as MenuItemConfig[];
+
+//     return {
+//       liveStreamingFlags: liveStreamingMenu.filter((item) => hasFeature(features, item.featureId)),
+//       dashboardFlags: dashboardMenu.map((c) => ({ ...c, items: filterItems(c.items) })).filter((c) => c.items.length > 0),
+//       alertFlags: alertMenu.filter((item) => hasFeature(features, item.featureId)),
+//       analyticsFlags: analyticsMenu.map((c) => ({ ...c, items: filterItems(c.items) })).filter((c) => c.items.length > 0),
+//       settingsFlags: settingsMenu.map((c) => ({ ...c, items: filterItems(c.items) })).filter((c) => c.items.length > 0),
+//     };
+//   }, [features]);
+
+//   const isAnalyticsActive = useMemo(() =>
+//     filteredMenus.analyticsFlags.some((category) =>
+//       getAllLinkItems(category.items).some((link) => pathname === link.path)
+//     ), [pathname, filteredMenus.analyticsFlags]);
+
+//   const isSettingsActive = useMemo(() =>
+//     filteredMenus.settingsFlags.some((category) =>
+//       getAllLinkItems(category.items).some((link) => pathname === link.path)
+//     ), [pathname, filteredMenus.settingsFlags]);
+
+//   // ======================= MENU CONTENT =======================
+//   const menuContent = useMemo(() => (
+//     <>
+//       {/* Live Streaming */}
+//       {filteredMenus.liveStreamingFlags.length > 0 && (
+//         <List sx={{ p: 0, mt: 1 }}>
+//           {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
+//             <MenuItem key={item.path} item={item} pathname={pathname} theme={theme} onNavigate={handleNavigate} />
+//           ))}
+//         </List>
+//       )}
+
+//       {/* Dashboard */}
+//       {filteredMenus.dashboardFlags.length > 0 && (
+//         <List sx={{ p: 0, mt: 1 }}>
+//           {filteredMenus.dashboardFlags.map((category, idx) => {
+//             const isCategoryActive = category.items.some((item) => pathname === (isLink(item) ? item.path : undefined));
+//             const isOpen = openCategories[category.title] ?? false;
+//             return (
+//               <Box key={uuidv4() + idx} sx={{ mb: 1 }}>
+//                 <ListItem disablePadding>
+//                   <ListItemButton
+//                     onClick={() => { category.path && handleNavigate(category.path); }}
+//                     sx={{
+//                       borderRadius: 1,
+//                       py: 1,
+//                       backgroundColor: "transparent",
+//                       color: isCategoryActive ? theme.palette.primary.main : "#5c6b7d",
+//                       "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
+//                     }}
+//                   >
+//                     {category.icon && <ListItemIcon sx={{ minWidth: 36, color: isCategoryActive ? theme.palette.primary.dark : "#5c6b7d" }}><category.icon /></ListItemIcon>}
+//                     <ListItemText primary={category.title} />
+//                     <Box onClick={(e) => { e.stopPropagation(); handleCategoryToggle(category.title); }} sx={{ display: "flex", alignItems: "center" }}>
+//                       {isOpen ? <ExpandLess /> : <ExpandMore />}
+//                     </Box>
+//                   </ListItemButton>
+//                 </ListItem>
+
+//                 <Collapse in={isOpen} timeout="auto" unmountOnExit>
+//                   <List sx={{ pl: 2 }}>
+//                     {getAllLinkItems(category.items).map((item) => (
+//                       <SubMenuItem key={item.path} item={item} pathname={pathname} theme={theme} categoryTitle={category.title} onNavigate={handleNavigate} />
+//                     ))}
+//                   </List>
+//                 </Collapse>
+//               </Box>
+//             );
+//           })}
+//         </List>
+//       )}
+
+//       {/* Analytics */}
+//       {filteredMenus.analyticsFlags.length > 0 && (
+//         <List sx={{ p: 0, mt: 1 }}>
+//           <ListItem disablePadding>
+//             <ListItemButton
+//               onClick={handleAnalyticsToggle}
+//               selected={isAnalyticsActive && !Object.values(openCategories).some(Boolean)}
+//               sx={{
+//                 borderRadius: 1,
+//                 "&.Mui-selected": { backgroundColor: theme.palette.primary.main, color: "white", "&:hover": { backgroundColor: theme.palette.primary.dark } },
+//                 color: isAnalyticsActive ? theme.palette.primary.main : "inherit",
+//               }}
+//             >
+//               <ListItemIcon sx={{ minWidth: 36, color: isAnalyticsActive ? theme.palette.primary.main : "inherit" }}><BarChart /></ListItemIcon>
+//               <ListItemText primary="Analytics" />
+//               {analyticsOpen ? <ExpandLess /> : <ExpandMore />}
+//             </ListItemButton>
+//           </ListItem>
+
+//           <Collapse in={analyticsOpen} timeout="auto" unmountOnExit>
+//             <List sx={{ pl: 2 }}>
+//               {filteredMenus.analyticsFlags.map((category, index) => (
+//                 <CategorySection
+//                   key={uuidv4() + index}
+//                   category={category}
+//                   openCategories={openCategories}
+//                   onToggle={handleCategoryToggle}
+//                   pathname={pathname}
+//                   theme={theme}
+//                   onNavigate={handleNavigate}
+//                 />
+//               ))}
+//             </List>
+//           </Collapse>
+//         </List>
+//       )}
+
+//       {/* Alerts */}
+//       <List sx={{ p: 0, mt: 1 }}>
+//         {filteredMenus.alertFlags.filter(isLink).map((item) => (
+//           <MenuItem key={item.path} item={item} pathname={pathname} theme={theme} onNavigate={handleNavigate} />
+//         ))}
+//       </List>
+
+//       {/* Settings */}
+//       {filteredMenus.settingsFlags.length > 0 && (
+//         <List sx={{ p: 0, mt: 1 }}>
+//           <ListItem disablePadding>
+//             <ListItemButton onClick={handleSettingsToggle} sx={{ borderRadius: 1, color: isSettingsActive ? theme.palette.primary.main : "inherit" }}>
+//               <ListItemIcon sx={{ minWidth: 36, color: isSettingsActive ? theme.palette.primary.main : "inherit" }}><Settings /></ListItemIcon>
+//               <ListItemText primary="Settings" sx={{ fontSize: "14px", color: "#5c6b7d" }} />
+//               {settingsOpen ? <ExpandLess /> : <ExpandMore />}
+//             </ListItemButton>
+//           </ListItem>
+
+//           <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+//             <List sx={{ pl: 2 }}>
+//               {filteredMenus.settingsFlags.map((category) =>
+//                 category.items.map((item) => {
+//                   if (isLink(item)) {
+//                     return <SubMenuItem key={item.path} item={item} pathname={pathname} theme={theme} categoryTitle={category.title} onNavigate={handleNavigate} />;
+//                   }
+//                   if (isGroup(item)) {
+//                     const isConfiguratorOpen = openCategories[item.name] ?? false;
+//                     return (
+//                       <Box key={item.name}>
+//                         <ListItem disablePadding>
+//                           <ListItemButton
+//                             onClick={() => setOpenCategories((prev) => ({ ...prev, [item.name]: !prev[item.name] }))}
+//                             sx={{ pl: 1, borderRadius: 1, py: 0.75, fontSize: "14px", "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" } }}
+//                           >
+//                             {item.icon && <ListItemIcon sx={{ minWidth: 28, color: "#6b7280" }}><item.icon fontSize="small" /></ListItemIcon>}
+//                             <ListItemText primary={item.name} sx={{ fontSize: "14px", color: "#6b7280" }} />
+//                             {isConfiguratorOpen ? <ExpandLess /> : <ExpandMore />}
+//                           </ListItemButton>
+//                         </ListItem>
+
+//                         <Collapse in={isConfiguratorOpen} timeout="auto" unmountOnExit>
+//                           <List sx={{ pl: 3 }}>
+//                             {getAllLinkItems(item.items).map((subItem) => (
+//                               <SubMenuItem key={subItem.path} item={subItem} pathname={pathname} theme={theme} categoryTitle={category.title} onNavigate={handleNavigate} />
+//                             ))}
+//                           </List>
+//                         </Collapse>
+//                       </Box>
+//                     );
+//                   }
+//                   return null;
+//                 })
+//               )}
+//             </List>
+//           </Collapse>
+//         </List>
+//       )}
+//     </>
+//   ), [filteredMenus, pathname, theme, analyticsOpen, settingsOpen, openCategories, handleAnalyticsToggle, handleSettingsToggle, handleCategoryToggle, handleNavigate, isAnalyticsActive, isSettingsActive]);
+
+//   // ======================= RENDER SIDEBAR =======================
+//   return (
+//     <Drawer
+//       variant="permanent"
+//       sx={{
+//         width: drawerWidth,
+//         flexShrink: 0,
+//         "& .MuiDrawer-paper": {
+//           width: drawerWidth,
+//           boxSizing: "border-box",
+//           height: "100vh",
+//           borderRight: "none",
+//           boxShadow: "1px 0 3px rgba(0,0,0,0.1)",
+//           p: 2,
+//           display: "flex",
+//           flexDirection: "column",
+//           justifyContent: "space-between",
+//         },
+//       }}
+//     >
+//       {/* Logo */}
+//       <Box sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+//         <Box component="img" src="./CustomerLogo1.png" alt="Customer Logo" sx={{ height: 46 }} />
+//       </Box>
+
+//       <Divider sx={{ mx: -2, mb: 1.5 }} />
+
+//       {/* Menu */}
+//       <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
+
+//       {/* Footer */}
+//       <Box sx={{ pt: 2, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 1 }}>
+//         <Box component="img" src="/scoutLogo.png" alt="Elansol Logo" sx={{ height: 46, width: "auto" }} loading="lazy" />
+//         <Typography sx={{ fontSize: "13px", color: "#666" }}>
+//           &copy; 2025 Elansol Technologies. <br />
+//           All rights reserved.
+//         </Typography>
+//       </Box>
+//     </Drawer>
+//   );
+// };
+
+// export default React.memo(Sidebar);

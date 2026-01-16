@@ -29,7 +29,7 @@ import { RootState } from "@/app/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddUserMutation } from "./AddUseApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import { useRoleListQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 
 interface UserFormValues {

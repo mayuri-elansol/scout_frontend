@@ -16,14 +16,14 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/utils/dateUtils";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import {  useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import { BackendRole, BackendUser, ViewUserPageProps } from "./viewUser.types";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 
-export default function ViewUserPage({ userInformationData }: Readonly<ViewUserPageProps>) {
+export default function ViewUserPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const params = useParams();

@@ -8,7 +8,6 @@ import { useAuth } from "@/customhooks/useAuth";
 import { useGetLoginDataMutation } from "./LoginApi";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { triggerToast } from "@/utils/toast";
-import { useRouter } from "next/navigation";
 
 interface LoginFormData {
   userName: string;
@@ -17,7 +16,6 @@ interface LoginFormData {
 
 const Login: React.FC = () => {
   const { login } = useAuth();
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +71,7 @@ const Login: React.FC = () => {
         isLoading={isLoading}
         error={error}
         onTogglePassword={() => setShowPassword((prev) => !prev)}
-        onSubmit={handleSubmit} //  must accept form data
+        onSubmit={handleSubmit}  
       />
     </ThemeProvider>
   );

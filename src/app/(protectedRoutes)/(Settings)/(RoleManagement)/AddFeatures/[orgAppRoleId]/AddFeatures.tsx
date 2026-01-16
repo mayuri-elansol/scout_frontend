@@ -23,7 +23,7 @@ import {
   useAssignFeatureToRoleMutation,
   useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 
 /* ---------------- Types ---------------- */
 
@@ -64,11 +64,9 @@ const AddFeatures: React.FC = () => {
   const features: Feature[] = featuresRes?.data?.data ?? [];
 
   //  CONDITIONAL RENDER AFTER HOOKS
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Loader />;
   }
-  
-
   /* ---------------- Handlers ---------------- */
 
   const toggleFeature = (featureId: string) => {

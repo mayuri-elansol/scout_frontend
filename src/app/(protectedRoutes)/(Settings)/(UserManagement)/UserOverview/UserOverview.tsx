@@ -14,15 +14,17 @@ import {
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import SettingTable from "@/app/components/organisms/SettingTable/SettingTable";
+import SettingTable from "@/app/components/organisms/UserSettingTable/UserSettingTable";
 import { RootState } from "@/app/store/store";
 import {
   useDeleteUserMutation,
   useGetUserOverviewQuery,
 } from "./UserOverviewApi";
 import type { BackendUser } from "./UserOverviewApi";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import { showToast } from "@/app/store/slices/toasterSlice";
+import { FEATURE } from "@/app/config/featureRegistry";
+import UserSettingTable from "@/app/components/organisms/UserSettingTable/UserSettingTable";
 
 /** Table-only user */
 interface TableUser {
@@ -36,9 +38,14 @@ const UserOverview: React.FC = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
   const userId = user?.userId;
+  /* ---------- PERMISSIONS ---------- */
+  const canAddUser = features.includes(FEATURE.ADD_USER);
+  const canViewUser = features.includes(FEATURE.VIEW_USER);
+  const canEditUser = features.includes(FEATURE.EDIT_USER);
+  const canDeleteUser = features.includes(FEATURE.DELETE_USER);
 
   const { data, isLoading, isError, error } = useGetUserOverviewQuery(
     { tenantId: tenantId!, userId: userId! },
@@ -126,11 +133,14 @@ const UserOverview: React.FC = () => {
         </Typography>
       )}
 
-      {users.length > 0 && (
-        <SettingTable
+      {users.length > 0 &&  !isLoading && (
+        <UserSettingTable
           users={users}
           backendUsers={backendUsers}
           currentUserId={userId}
+          canView={canViewUser}
+          canEdit={canEditUser}
+          canDelete={canDeleteUser}
           onView={handleView}
           onEdit={handleEdit}
           onDelete={handleOpenConfirm} // <-- OPEN DIALOG
@@ -141,11 +151,20 @@ const UserOverview: React.FC = () => {
         <Typography color="text.secondary">No users found.</Typography>
       )}
 
-      <Box textAlign="center" mt={3}>
+      {/* {canAddUser && (<Box textAlign="center" mt={3}>
         <Button variant="contained" onClick={() => router.push("/AddUser")}>
           Add User
         </Button>
-      </Box>
+      </Box>)} */}
+<Box textAlign="center" mt={3}>
+  <Button
+    variant="contained"
+    onClick={() => router.push("/AddUser")}
+    disabled={!canAddUser} //  disable if no permission
+  >
+    Add User
+  </Button>
+</Box>
 
       {/* ---------- CONFIRM DELETE DIALOG ---------- */}
       <Dialog open={openConfirm} onClose={handleCloseConfirm}>

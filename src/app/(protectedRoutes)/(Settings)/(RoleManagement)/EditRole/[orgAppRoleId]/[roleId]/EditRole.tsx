@@ -26,7 +26,7 @@ import {
   useGetFeaturesByOrgIdQuery,
   useUnmappedFeatureFromRoleByRoleIdMutation,
 } from "./EditRoleApi";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 
 /* ---------------- Types ---------------- */
 

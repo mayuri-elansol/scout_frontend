@@ -8,7 +8,7 @@ import Sidebar from "../components/organisms/Sidebar/Sidebar";
 import Header from "../components/organisms/Header/Header";
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
-import Loader from "../components/atoms/Loader/Loader";
+import Loader from "../components/atoms/FullPageLoader/FullPageLoader";
 import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -47,9 +47,10 @@ export default function ClientLayout({
       ...analyticsMenu.flatMap((category) => category.items),
     ];
 
-    const currentItem = allMenuItems.find(
-      (item) => pathname && item.path.toLowerCase() === pathname.toLowerCase()
-    );
+   const currentItem = allMenuItems.find(
+  (item) => pathname && item.path?.toLowerCase() === pathname.toLowerCase()
+);
+
 
     setCurrentPage(
       currentItem ? currentItem.page! : "safety-compliance-dashboard"
@@ -98,7 +99,8 @@ export default function ClientLayout({
             }}
           >
             <FeatureGuardProvider>
-              <RouteLoader>{children}</RouteLoader>
+              {/* <RouteLoader/> */}
+                {children}
             </FeatureGuardProvider>
           </Box>
         </Box>

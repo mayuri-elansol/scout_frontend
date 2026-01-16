@@ -4,7 +4,6 @@
 import { CircularProgress, Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 
 export default function RouteLoader() {
   const loading = useSelector(
@@ -15,9 +14,17 @@ export default function RouteLoader() {
 
   return (
     <Box
-      
+      sx={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "rgba(255,255,255,0.6)",
+        zIndex: 1300,
+      }}
     >
-      <Loader/>
+      <CircularProgress />
     </Box>
   );
 }
