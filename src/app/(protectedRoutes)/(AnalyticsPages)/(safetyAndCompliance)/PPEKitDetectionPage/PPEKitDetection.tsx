@@ -38,7 +38,9 @@ import {
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import dayjs, { Dayjs } from "dayjs";
-const tenantId = "4f3e2f80e5574111";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+// const tenantId = "4f3e2f80e5574111";
 
 /* ================= TYPES ================= */
 
@@ -53,7 +55,11 @@ interface PpeSocketPayload {
 
 const PPEDetection: React.FC = () => {
   const { t } = useTranslation();
-
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId = user?.org_id;
+  if (!tenantId) {
+    return ""
+  }
   /* ---------- STATE ---------- */
   const [isLiveMode, setIsLiveMode] = useState(true);
 
@@ -283,21 +289,21 @@ const PPEDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {kpiLoading
             ? Array.from({ length: 6 }).map(() => (
-                <Grid
-                  key={uuidv4()}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
+              <Grid
+                key={uuidv4()}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
             : ppeKpiData.map((kpi) => (
-                <Grid
-                  key={kpi.title}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
         </Grid>
 
         <Grid container spacing={3}>
