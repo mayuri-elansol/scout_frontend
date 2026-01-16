@@ -65,11 +65,14 @@ const PPEDetection: React.FC = () => {
   const [displayZoneViolations, setDisplayZoneViolations] = useState<
     ZoneViolationInteface[]
   >([]);
-  const [recentViolationsLive, setRecentViolationsLive] = useState<any[]>([]);
+  const [recentViolationsLive, setRecentViolationsLive] = useState<
+    PPEViolation[]
+  >([]);
   const [detailedReport, setDetailedReport] = useState<any>(null);
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<any>(null);
+
+  const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
 
   /* ---------- API HOOKS ---------- */
   const [fetchKpi, { isLoading: kpiLoading }] =
@@ -110,7 +113,7 @@ const PPEDetection: React.FC = () => {
     };
 
     load().catch(console.error);
-  }, []);
+  }, [fetchKpi, fetchZoneViolations, fetchRecent, fetchDetailedReportApi]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<PpeSocketPayload>({
@@ -152,25 +155,38 @@ const PPEDetection: React.FC = () => {
       setDisplayZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
     },
-    []
+    [fetchKpi, fetchZoneViolations, fetchRecent]
   );
 
   /* ---------- UI MAPPERS ---------- */
+  // const ppeKpiData = useMemo(
+  //   () =>
+  //     displayKpi.map((item) => ({
+  //       ...item,
+  //       title: t(item.title),
+  //       icon:
+  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]?.icon ||
+  //         EngineeringIcon,
+  //       tooltipMessage:
+  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]
+  //           ?.tooltipMessage || "",
+  //     })),
+  //   [displayKpi, t]
+  // );
   const ppeKpiData = useMemo(
     () =>
-      displayKpi.map((item) => ({
-        ...item,
-        title: t(item.title),
-        icon:
-          ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]?.icon ||
-          EngineeringIcon,
-        tooltipMessage:
-          ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]
-            ?.tooltipMessage || "",
-      })),
+      displayKpi.map((item) => {
+        const config = ppeKpiConfig[item.title];
+
+        return {
+          ...item,
+          title: t(item.title),
+          icon: config?.icon || EngineeringIcon,
+          tooltipMessage: config?.tooltipMessage || "",
+        };
+      }),
     [displayKpi, t]
   );
-
   const zoneViolationsForUi = useMemo(() => {
     const iconMap: Record<string, SvgIconComponent> = {
       Helmet: EngineeringIcon,
@@ -265,13 +281,13 @@ const PPEDetection: React.FC = () => {
       tenantId: tenantId,
     }).unwrap();
     setDetailedReport(response);
-  }, []);
+  }, [fetchDetailedReportApi]);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: FilterParams) => {
       try {
         const payload = {
-          tenantId: tenantId,
+          tenantId,
 
           violation: filters.violation || undefined,
           zone: filters.zone || undefined,

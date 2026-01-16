@@ -1,9 +1,6 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
-import { BackendRole, BackendRoleResponse, BackendUser } from "./viewUser.types";
-
-
-
+import { BackendRoleResponse, BackendUser } from "./viewUser.types";
 
 export const viewUserApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -44,7 +41,5 @@ export const viewUserApi = baseProtectedApi.injectEndpoints({
   }),
 });
 
-export const {
-    useGetUserRoleQuery,
-  useGetUserDetailsByUserIdQuery,   
-} = viewUserApi;
+export const { useGetUserRoleQuery, useGetUserDetailsByUserIdQuery } =
+  viewUserApi;

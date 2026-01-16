@@ -8,11 +8,9 @@ import Sidebar from "../components/organisms/Sidebar/Sidebar";
 import Header from "../components/organisms/Header/Header";
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
-import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
-import AuthGuard from "../components/organisms/Authguard/Authguard";
 import Loader from "../components/atoms/Loader/Loader";
 
 interface ClientLayoutProps {

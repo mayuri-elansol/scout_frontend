@@ -308,7 +308,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
               );
               return children.length ? { ...item, items: children } : null;
             }
-
             return null;
           })
           .filter(Boolean) as MenuItemConfig[],
@@ -387,28 +386,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const menuContent = useMemo(
     () => (
       <>
-        {/* Live Streaming - At the very top */}
-        {/* {filteredMenus.liveStreamingFlags.length > 0 && (
-          <List sx={{ p: 0, mt: 1 }}>
-            {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
-              <MenuItem
-                key={item.path}
-                item={item}
-                pathname={pathname}
-                theme={theme}
-              />
-            ))}
-          </List>
-        )} */}
         {/* Dashboard */}
-
         {filteredMenus.dashboardFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.dashboardFlags.map((category, index) => {
-              const isCategoryActive = category.items.some(
-                (item) => item.featureFlag && pathname === item.path
-              );
-
               const isOpen = openCategories[category.title] ?? false;
 
               const isDashboardRoot =
@@ -420,6 +401,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
                   (pathname === item.path ||
                     pathname.startsWith(`${item.path}/`))
               );
+              let iconColor = "#5c6b7d";
+
+              if (isDashboardRoot) {
+                iconColor = "white";
+              } else if (isDashboardChild) {
+                iconColor = theme.palette.primary.main;
+              }
               return (
                 <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                   <ListItem disablePadding>
@@ -447,7 +435,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         }
                       }}
                     >
-                      {category.icon && (
+                      {/* {category.icon && (
                         <ListItemIcon
                           sx={{
                             minWidth: 36,
@@ -460,30 +448,38 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         >
                           <category.icon />
                         </ListItemIcon>
+                      )} */}
+                      {category.icon && (
+                        <ListItemIcon sx={{ minWidth: 36, color: iconColor }}>
+                          <category.icon />
+                        </ListItemIcon>
                       )}
                       <ListItemText
                         primary={category.title}
-                        sx={{
-                          color: isDashboardRoot
-                            ? "white"
-                            : isDashboardChild
-                            ? theme.palette.primary.main
-                            : "#5c6b7d",
-                        }}
+                        // sx={{
+                        //   color: isDashboardRoot
+                        //     ? "white"
+                        //     : isDashboardChild
+                        //     ? theme.palette.primary.main
+                        //     : "#5c6b7d",
+                        // }}
+                        sx={{ color: iconColor }}
                       />
                       <Box
                         onClick={(e) => {
-                          e.stopPropagation(); // ⛔ prevent navigation
+                          e.stopPropagation();
                           handleCategoryToggle(category.title);
                         }}
                         sx={{
                           display: "flex",
                           alignItems: "center",
-                          color: isDashboardRoot
-                            ? "white"
-                            : isDashboardChild
-                            ? theme.palette.primary.main
-                            : "#5c6b7d",
+                          // color: isDashboardRoot
+                          //   ? "white"
+                          //   : isDashboardChild
+                          //   ? theme.palette.primary.main
+                          //   : "#5c6b7d",
+
+                          color: iconColor,
                         }}
                       >
                         {isOpen ? <ExpandLess /> : <ExpandMore />}
@@ -710,6 +706,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       filteredMenus,
       pathname,
       theme,
+      router,
       analyticsOpen,
       settingsOpen,
       openCategories,
@@ -746,8 +743,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           display: "flex",
           justifyContent: "left",
           alignItems: "center",
-          // height: 50,
-          // gap: 2,
         }}
       >
         <Box

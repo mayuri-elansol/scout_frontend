@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { Avatar, Box, Typography, Grid, Button } from "@mui/material";
@@ -17,13 +15,16 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/utils/dateUtils";
 import Loader from "@/app/components/atoms/Loader/Loader";
-import {  useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
+import {
+  useGetUserDetailsByUserIdQuery,
+  useGetUserRoleQuery,
+} from "./ViewUserApi";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
-import { BackendRole, BackendUser, ViewUserPageProps } from "./viewUser.types";
+import { BackendRole, BackendUser } from "./viewUser.types";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 
-export default function ViewUserPage({ userInformationData }: Readonly<ViewUserPageProps>) {
+export default function ViewUserPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const params = useParams();
@@ -31,66 +32,90 @@ export default function ViewUserPage({ userInformationData }: Readonly<ViewUserP
 
   const tenantId = authUser?.org_id;
   const userId = authUser?.userId;
-  const targetUserId = typeof params?.targetUserId === "string" ? params.targetUserId : "";
+  const targetUserId =
+    typeof params?.targetUserId === "string" ? params.targetUserId : "";
 
   // Fetch user roles
-  const { data: roleListData, isLoading: roleListLoading, isError: roleListError } = useGetUserRoleQuery(
+  const {
+    data: roleListData,
+    isLoading: roleListLoading,
+    isError: roleListError,
+  } = useGetUserRoleQuery(
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
 
   // Fetch user details
-  const { data: userData, isLoading: userLoading, isError: userError } = useGetUserDetailsByUserIdQuery(
-    { tenantId: tenantId!, userId: targetUserId!  },
-    { skip: !tenantId || !userId  }
+  const {
+    data: userData,
+    isLoading: userLoading,
+    isError: userError,
+  } = useGetUserDetailsByUserIdQuery(
+    { tenantId: tenantId!, userId: targetUserId! },
+    { skip: !tenantId || !userId }
   );
-// Handle errors
-useEffect(() => {
-  if (roleListError) {
-    dispatch(showToast({ id: crypto.randomUUID(), message: "Failed to fetch roles.", severity: "error" }));
+  // Handle errors
+  useEffect(() => {
+    if (roleListError) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "Failed to fetch roles.",
+          severity: "error",
+        })
+      );
+    }
+    if (userError) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "Failed to fetch user information.",
+          severity: "error",
+        })
+      );
+    }
+  }, [roleListError, userError, dispatch]);
+
+  // ✅ ALWAYS define hooks first
+  const user: BackendUser | null = userData?.data ?? null;
+
+  const selectedRole = useMemo(() => {
+    const roles: BackendRole[] = roleListData?.data?.data ?? [];
+    return roles[0]?.orgAppRole?.role_id?.name ?? "-";
+  }, [roleListData]);
+  const viewUser = useMemo(() => {
+    return {
+      name: `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || "-",
+      email: user?.email ?? "-",
+      phone: user?.phoneNumber ?? "-",
+      status: "Active",
+      createdAt: formatDate(user?.createdAt) ?? "-",
+      updatedAt: formatDate(user?.updatedAt) ?? "-",
+      role: selectedRole,
+    };
+  }, [user, selectedRole]);
+
+  // ✅ ONLY ONE loader return, AFTER hooks
+  if (roleListLoading || userLoading) {
+    return <Loader />;
   }
-  if (userError) {
-    dispatch(showToast({ id: crypto.randomUUID(), message: "Failed to fetch user information.", severity: "error" }));
-  }
-}, [roleListError, userError, dispatch]);
-
-// ✅ ALWAYS define hooks first
-const roleArray: BackendRole[] = roleListData?.data?.data ?? [];
-const user: BackendUser | null = userData?.data ?? null;
-
-
-const selectedRole = useMemo(() => {
-  return roleArray[0]?.orgAppRole?.role_id?.name ?? "-";
-}, [roleArray]);
-
-const viewUser = useMemo(() => {
-  return {
-    name: `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || "-",
-    email: user?.email ?? "-",
-    phone: user?.phoneNumber ?? "-",
-    status: "Active",
-    createdAt: formatDate(user?.createdAt) ?? "-",
-    updatedAt: formatDate(user?.updatedAt) ?? "-",
-    role: selectedRole,
-  };
-}, [user, selectedRole]);
-
-
-// ✅ ONLY ONE loader return, AFTER hooks
-if (roleListLoading || userLoading) {
-  return <Loader />;
-}
-
-;
 
   const handleEdit = () => router.push(`/EditUser/${targetUserId}`);
   const handleBack = () => router.push("/UserOverview");
 
   return (
-    <Box sx={{ height: "100%", width: "100%", display: "flex", flexDirection: "column", gap: 5 }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 5,
+      }}
+    >
       <Box className="viewOrganisation">
         {/* Header */}
-         <Box
+        <Box
           sx={{
             borderColor: "divider",
             pb: 2,
@@ -133,18 +158,68 @@ if (roleListLoading || userLoading) {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 1 }}>
             <Typography variant="h6">User Information</Typography>
             <Grid container spacing={{ xs: 2, md: 3 }}>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Name" text={viewUser.name} icon={<PersonIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Email" text={viewUser.email} icon={<EmailIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Phone" text={viewUser.phone} icon={<PhoneIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Role" text={viewUser.role} icon={<ManageAccountsIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Status" text={viewUser.status} icon={viewUser.status === "Active" ? <CheckCircleIcon /> : <CancelIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Created At" text={viewUser.createdAt} icon={<EventIcon />} /></Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}><CardForSettings title="Updated At" text={viewUser.updatedAt} icon={<UpdateIcon />} /></Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Name"
+                  text={viewUser.name}
+                  icon={<PersonIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Email"
+                  text={viewUser.email}
+                  icon={<EmailIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Phone"
+                  text={viewUser.phone}
+                  icon={<PhoneIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Role"
+                  text={viewUser.role}
+                  icon={<ManageAccountsIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Status"
+                  text={viewUser.status}
+                  icon={
+                    viewUser.status === "Active" ? (
+                      <CheckCircleIcon />
+                    ) : (
+                      <CancelIcon />
+                    )
+                  }
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Created At"
+                  text={viewUser.createdAt}
+                  icon={<EventIcon />}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                <CardForSettings
+                  title="Updated At"
+                  text={viewUser.updatedAt}
+                  icon={<UpdateIcon />}
+                />
+              </Grid>
             </Grid>
           </Box>
 
           <Box sx={{ display: "flex", justifyContent: "left", gap: 2, mt: 3 }}>
-            <Button variant="outlined" onClick={handleBack}>Back</Button>
+            <Button variant="outlined" onClick={handleBack}>
+              Back
+            </Button>
           </Box>
         </Box>
       </Box>

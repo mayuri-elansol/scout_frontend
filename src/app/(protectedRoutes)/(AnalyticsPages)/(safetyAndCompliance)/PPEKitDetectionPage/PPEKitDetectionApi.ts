@@ -46,17 +46,6 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["PpeRecentViolations"],
     }),
-    // getPpeKitDetectionSingleReportPdf: builder.mutation<
-    //   Blob,
-    //   PpeSingleReportRequest
-    // >({
-    //   query: (body) => ({
-    //     url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedReportForSingleId}`,
-    //     method: "POST",
-    //     body,
-    //     responseHandler: (response) => response.blob(),
-    //   }),
-    // }),
 
     getPpeKitDetectionSingleReportPdf: builder.mutation<
       null,
@@ -93,27 +82,6 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
       },
     }),
 
-    // getPpeKitDetectionDetailedCsvReport: builder.mutation<
-    //   Blob,
-    //   PpeCsvReportRequest
-    // >({
-    //   query: (body) => ({
-    //     url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedCsvReport}`,
-    //     method: "POST",
-    //     body,
-    //     responseHandler: (response) => response.blob(),
-    //   }),
-
-    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //   await rtkAPIToast(queryFulfilled, dispatch, {
-    //     successMessage:
-    //       "PPE detection detailed CSV report downloaded successfully.",
-    //     errorMessage:
-    //       "Failed to download the PPE detection detailed CSV report.",
-    //     duration: 4000,
-    //   });
-    // },
-    // }),
     getPpeKitDetectionDetailedCsvReport: builder.mutation<
       null,
       PpeCsvReportRequest
@@ -150,27 +118,6 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
-
-    // getPpeKitDetectionDetailedPdfReport: builder.mutation<
-    //   Blob,
-    //   PpeCsvReportRequest
-    // >({
-    //   query: (body) => ({
-    //     url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedPdfReport}`,
-    //     method: "POST",
-    //     body,
-    //     responseHandler: (response) => response.blob(),
-    //   }),
-    // async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //   await rtkAPIToast(queryFulfilled, dispatch, {
-    //     successMessage:
-    //       "PPE detailed report has been downloaded successfully.",
-    //     errorMessage:
-    //       "Failed to download the PPE detailed report. Please try again.",
-    //     duration: 4000,
-    //   });
-    // },
-    // }),
 
     getPpeKitDetectionDetailedPdfReport: builder.mutation<
       null,

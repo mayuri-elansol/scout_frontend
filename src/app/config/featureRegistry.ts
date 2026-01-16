@@ -1,66 +1,3 @@
-// export const FEATURE = {
-//   // Dashboards
-//   SAFETY_COMPLIANCE: "SF001",
-//   SURVEILLANCE_MONITORING: "SF002",
-//   OPERATIONAL_INSIGHTS: "SF003",
-//   WORKFORCE_MONITORING: "SF004",
-
-//   // Alerts
-//   ALERTS: "SF005",
-
-//   // Settings
-//   ROLE_MANAGEMENT: "SF006",
-//   USER_MANAGEMENT: "SF007",
-
-//   // Configurator
-//   CAMERA_MANAGEMENT: "SF008",
-//   USE_CASE_MANAGER: "SF009",
-//   ZONE_LOCATION_MAPPING: "SF010",
-
-//   // Analytics – Safety & Compliance
-//   PPE_DETECTION: "SF011",
-//   FIRE_SMOKE: "SF012",
-//   FALL_DETECTION: "SF013",
-//   OBJECT_DETECTION: "SF014",
-//   EMERGENCY_EXIT_BLOCKAGE: "SF015",
-//   CROWD_DETECTION: "SF016",
-
-//   // Surveillance Monitoring
-//   INTRUSION_DETECTION: "SF017",
-//   UNAUTHORIZED_ACCESS: "SF018",
-//   CAMERA_TAMPERING: "SF019",
-//   PEOPLE_PRESENCE: "SF020",
-
-//   // Workforce Monitoring
-//   EMPLOYEE_PRESENCE_CRITICAL_AREA: "SF021",
-//   EMPLOYEE_PRESENCE_RESTRICTED_AREA: "SF022",
-//   EMPLOYEE_IDLE_TIME: "SF023",
-//   MOBILE_PHONE_USAGE: "SF024",
-//   SLEEPING_SECURITY_PERSONNEL: "SF025",
-
-//   // Operational Insight
-//   PEOPLE_COUNT: "SF026",
-//   VEHICLE_COUNT: "SF027",
-//   CANTEEN_USAGE: "SF028",
-//   VEHICLE_UNLOADING_LOADING: "SF029",
-//   UNAUTHORIZED_PARKING: "SF030",
-
-//   // Face Recognition
-//   FACE_RECOGNITION: "SF031",
-//   FACE_IDLE_MONITORING: "SF032",
-
-//   // Live Streaming
-//   LIVE_STREAMING: "SF033",
-
-//   // Permissions
-//   ADD_FEATURES: "SF034",
-//   VIEW_ROLE: "SF035",
-//   EDIT_ROLE: "SF036",
-//   DELETE_ROLE: "SF037",
-//   ROLE_OVERVIEW: "SF038",
-// } as const;
-
-// export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
 export const FEATURE = {
   // Dashboards
   SAFETY_COMPLIANCE: "SF001",
@@ -100,6 +37,7 @@ export const FEATURE = {
   EMPLOYEE_IDLE_TIME: "SUC013",
   MOBILE_PHONE_USAGE: "SUC014",
   SLEEPING_SECURITY_PERSONNEL: "SUC015",
+
   // Operational Insight
   PEOPLE_COUNT: "SUC016",
   VEHICLE_COUNT: "SUC017",

@@ -1,7 +1,7 @@
 import { AppDispatch } from "../../src/app/store/store";
 import { showToast, hideToast } from "@/app/store/slices/toasterSlice";
 
-export interface rtkInbuilt {
+export interface RtkApiResponse {
   data: {
     success: boolean;
     message: string;
@@ -24,7 +24,7 @@ export async function rtkAPIToast<T>(
   }
 ) {
   try {
-    const result = (await queryFulfilled) as rtkInbuilt;
+    const result = (await queryFulfilled) as RtkApiResponse;
 
     const message = result?.data?.message ?? successMessage;
 

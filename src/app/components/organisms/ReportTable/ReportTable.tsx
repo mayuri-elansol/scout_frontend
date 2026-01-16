@@ -135,30 +135,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
     setDateTimeValues((prev) => ({ ...prev, [label]: value }));
   };
 
-  // Calculate min/max dates for start and end date with 3-month range
-
-  // const getDateConstraints = (fieldId: string) => {
-  //   const now = dayjs();
-  //   const threeMonthsAgo = now.subtract(3, "month");
-
-  //   if (fieldId === "startDate") {
-  //     const endDate = dateTimeValues["endDate"];
-  //     return {
-  //       minDate: threeMonthsAgo,
-  //       maxDate: endDate ?? now,
-  //     };
-  //   }
-
-  //   if (fieldId === "endDate") {
-  //     const startDate = dateTimeValues["startDate"];
-  //     return {
-  //       minDate: startDate ?? threeMonthsAgo,
-  //       maxDate: now,
-  //     };
-  //   }
-
-  //   return { minDate: threeMonthsAgo, maxDate: now };
-  // };
   const getDateConstraints = (fieldId: string) => {
     const now = dayjs();
     const threeMonthsAgo = now.subtract(3, "month");

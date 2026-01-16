@@ -334,31 +334,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 carttitle="Vehicle in Walkways by Zone"
               />
             </Box>
-
-            {/* Second Pie Chart */}
-            {/* <Box
-              sx={{
-                flex: 1,
-                minWidth: { xs: "50%", md: "100%" },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: { xs: 140, md: "50%" },
-              }}
-            >
-              <DynamicPieChart
-                data={[
-                  { label: "Production Gate", value: 31, color: "#ffcdd2" },
-                  { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
-                  { label: "Parking Gate", value: 26, color: "#FFEAA7" },
-                  { label: "Main Entrance", value: 20, color: "#C7EDCC" },
-                  { label: "Side Exit", value: 71, color: "#A8E6CF" },
-                ]}
-                count={2.5}
-                carttitle="PPE Violations by Zone"
-              />
-            </Box> */}
           </Grid>
         </Grid>
       ),
