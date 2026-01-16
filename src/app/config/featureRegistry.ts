@@ -1,5 +1,3 @@
-
-// export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
 export const FEATURE = {
   // Dashboards
   SAFETY_COMPLIANCE: "SF001",
@@ -39,13 +37,14 @@ export const FEATURE = {
   EMPLOYEE_IDLE_TIME: "SUC013",
   MOBILE_PHONE_USAGE: "SUC014",
   SLEEPING_SECURITY_PERSONNEL: "SUC015",
+
   // Operational Insight
   PEOPLE_COUNT: "SUC016",
   VEHICLE_COUNT: "SUC017",
   CANTEEN_USAGE: "SUC018",
   VEHICLE_UNLOADING_LOADING: "SUC019",
   UNAUTHORIZED_PARKING: "SUC020",
-  
+
   // Face Recognition
   FACE_RECOGNITION: "SUC021",
   FACE_IDLE_MONITORING: "SUC022",

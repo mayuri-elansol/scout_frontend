@@ -62,13 +62,7 @@ const AddUser: React.FC = () => {
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<UserFormValues>({
+  const { control, handleSubmit, reset, setValue } = useForm<UserFormValues>({
     defaultValues: {
       role: "",
       firstName: "",
@@ -273,7 +267,7 @@ const AddUser: React.FC = () => {
               component="label"
               startIcon={<CloudUpload />}
             >
-              Upload
+              <span>Upload</span>
               <input
                 type="file"
                 hidden

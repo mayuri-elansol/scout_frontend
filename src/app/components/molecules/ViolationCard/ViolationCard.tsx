@@ -75,6 +75,8 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
             mb: 0.5,
             border: "1px solid #dee2e6",
             position: "relative",
+            overflow: "hidden", // ✅ important
+            p: 0.5,
           }}
         >
           {violations.imageUrl ? (
@@ -82,7 +84,10 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               src={String(violations.imageUrl)}
               alt="Violation"
               fill
-              style={{ objectFit: "cover", borderRadius: 6 }}
+              style={{
+                objectFit: "cover",
+                borderRadius: 6,
+              }}
               unoptimized
               priority
             />

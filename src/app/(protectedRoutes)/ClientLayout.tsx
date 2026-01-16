@@ -13,7 +13,7 @@ import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
-import AuthGuard from "../components/organisms/Authguard/Authguard";
+import Loader from "../components/atoms/Loader/Loader";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -52,9 +52,7 @@ export default function ClientLayout({
 );
 
 
-    setCurrentPage(
-      currentItem ? currentItem.page! : "safety-compliance-dashboard"
-    );
+    setCurrentPage(currentItem ? currentItem.page! : "dashboard");
   }, [pathname]);
 
   const handlePageChange = (page: PageType) => {
@@ -95,7 +93,7 @@ export default function ClientLayout({
               pt: 10,
               backgroundColor: "#f5f7fa",
               overflow: "auto",
-              minHeight: 0, 
+              minHeight: 0,
             }}
           >
             <FeatureGuardProvider>
@@ -106,7 +104,6 @@ export default function ClientLayout({
         </Box>
       </LocalizationProvider>
     </ThemeProvider>
-      //</AuthGuard> */}
-
+    //</AuthGuard> */}
   );
 }

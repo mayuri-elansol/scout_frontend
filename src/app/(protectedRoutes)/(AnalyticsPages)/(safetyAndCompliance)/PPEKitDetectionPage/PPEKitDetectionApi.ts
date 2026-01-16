@@ -46,36 +46,66 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["PpeRecentViolations"],
     }),
+
     getPpeKitDetectionSingleReportPdf: builder.mutation<
-      Blob,
+      null,
       PpeSingleReportRequest
     >({
       query: (body) => ({
         url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedReportForSingleId}`,
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(),
-      }),
+        responseHandler: async (response) => {
+          const blob = await response.blob();
 
+          // ✅ Create browser download
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `ppe-single-report-${Date.now()}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+
+          return null; // ✅ Must return something serializable
+        },
+      }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await rtkAPIToast(queryFulfilled, dispatch, {
           successMessage:
-            "PPE detection single report PDF downloaded successfully.",
+            "PPE detection single PDF report downloaded successfully.",
           errorMessage:
-            "Failed to download the PPE detection single report PDF.",
+            "Failed to download the PPE detection single PDF report.",
           duration: 4000,
         });
       },
     }),
+
     getPpeKitDetectionDetailedCsvReport: builder.mutation<
-      Blob,
+      null,
       PpeCsvReportRequest
     >({
       query: (body) => ({
         url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedCsvReport}`,
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(),
+        responseHandler: async (response) => {
+          const blob = await response.blob();
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+
+          a.href = url;
+          a.download = `ppe-violations-report-${Date.now()}.csv`;
+          document.body.appendChild(a);
+          a.click();
+
+          a.remove();
+          window.URL.revokeObjectURL(url);
+
+          return null; // ✅ MUST return something
+        },
       }),
 
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -88,15 +118,30 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
     getPpeKitDetectionDetailedPdfReport: builder.mutation<
-      Blob,
+      null,
       PpeCsvReportRequest
     >({
       query: (body) => ({
         url: `${apiRoutes.ppeKitDetection.root}/${apiRoutes.ppeKitDetection.getPpeKitDetectionAnalyticsDownloadDetailedPdfReport}`,
         method: "POST",
         body,
-        responseHandler: (response) => response.blob(),
+        responseHandler: async (response) => {
+          const blob = await response.blob();
+
+          // ✅ Create browser download inside the mutation
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `ppe-detailed-report-${Date.now()}.pdf`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+
+          return null; // ✅ Must return something serializable for Redux
+        },
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await rtkAPIToast(queryFulfilled, dispatch, {

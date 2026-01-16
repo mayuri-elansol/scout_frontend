@@ -59,13 +59,15 @@ export default function RoleOverview() {
   );
   const rows = data?.data?.data ?? [];
 
-  const [deleteRoleById, { isLoading: isDeleting }] = useDeleteRoleByIdMutation();
+  const [deleteRoleById, { isLoading: isDeleting }] =
+    useDeleteRoleByIdMutation();
 
   /* ---------- STATE ---------- */
-  const [orderBy, setOrderBy] =
-    useState<'name' | 'role_id' | 'createdAt' | 'updatedAt'>('name');
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [orderBy] = useState<"name" | "role_id" | "createdAt" | "updatedAt">(
+    "name"
+  );
+  const [order] = useState<"asc" | "desc">("asc");
+  const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -75,29 +77,29 @@ export default function RoleOverview() {
   /* ---------- SORT ---------- */
   const sortedRows = useMemo(() => {
     return [...rows].sort((a, b) => {
-      let aVal = '';
-      let bVal = '';
+      let aVal = "";
+      let bVal = "";
 
       switch (orderBy) {
-        case 'name':
-          aVal = a.role_id?.name ?? '';
-          bVal = b.role_id?.name ?? '';
+        case "name":
+          aVal = a.role_id?.name ?? "";
+          bVal = b.role_id?.name ?? "";
           break;
-        case 'role_id':
-          aVal = a.role_id?.role_id ?? '';
-          bVal = b.role_id?.role_id ?? '';
+        case "role_id":
+          aVal = a.role_id?.role_id ?? "";
+          bVal = b.role_id?.role_id ?? "";
           break;
-        case 'createdAt':
+        case "createdAt":
           aVal = a.createdAt;
           bVal = b.createdAt;
           break;
-        case 'updatedAt':
+        case "updatedAt":
           aVal = a.updatedAt;
           bVal = b.updatedAt;
           break;
       }
 
-      return order === 'asc'
+      return order === "asc"
         ? aVal.localeCompare(bVal)
         : bVal.localeCompare(aVal);
     });
@@ -140,13 +142,17 @@ export default function RoleOverview() {
     if (!tenantId || !userId || !selectedRoleId) return;
 
     try {
-      const res = await deleteRoleById({ tenantId, userId, roleId: selectedRoleId }).unwrap();
+      const res = await deleteRoleById({
+        tenantId,
+        userId,
+        roleId: selectedRoleId,
+      }).unwrap();
 
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: res.message || 'Role deleted successfully',
-          severity: 'success',
+          message: res.message || "Role deleted successfully",
+          severity: "success",
         })
       );
 
@@ -155,8 +161,8 @@ export default function RoleOverview() {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || 'Failed to delete role',
-          severity: 'error',
+          message: err?.data?.message || "Failed to delete role",
+          severity: "error",
         })
       );
     }
@@ -189,7 +195,10 @@ if (!isLoading && !isFetching && rows.length === 0) {
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         {canAddRole && (
-          <Button variant="contained" onClick={() => router.push('/CreateRole')}>
+          <Button
+            variant="contained"
+            onClick={() => router.push("/CreateRole")}
+          >
             Add Role
           </Button>
         )}
@@ -212,14 +221,19 @@ if (!isLoading && !isFetching && rows.length === 0) {
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete this role? This action cannot be undone.
+            Are you sure you want to delete this role? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseConfirm} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteConfirm} color="error" disabled={isDeleting}>
+          <Button
+            onClick={handleDeleteConfirm}
+            color="error"
+            disabled={isDeleting}
+          >
             Delete
           </Button>
         </DialogActions>
