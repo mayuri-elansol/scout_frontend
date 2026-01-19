@@ -4,33 +4,21 @@
 import React, { useMemo, useState } from 'react';
 import {
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
+
   TextField,
-  TablePagination,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-  CircularProgress,
 } from '@mui/material';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+
 import { useRouter } from 'next/navigation';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { useRoleListQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
 import { FEATURE } from '@/app/config/featureRegistry';
-import { formatDate } from '@/utils/dateUtils';
 import Loader from '@/app/components/atoms/Loader/Loader';
 import { showToast } from '@/app/store/slices/toasterSlice';
 import AddRole from '../AddRole/AddRole';
@@ -68,8 +56,8 @@ export default function RoleOverview() {
   );
   const [order] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page] = useState(0);
+  const [rowsPerPage] = useState(10);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);

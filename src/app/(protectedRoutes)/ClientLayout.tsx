@@ -9,11 +9,9 @@ import Header from "../components/organisms/Header/Header";
 import { PageType } from "@/app/types";
 import { dashboardMenu, alertMenu, analyticsMenu } from "../config/menuConfig";
 import Loader from "../components/atoms/FullPageLoader/FullPageLoader";
-import RouteLoader from "../../utils/RouteLoader";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
-import Loader from "../components/atoms/Loader/Loader";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -61,7 +59,7 @@ export default function ClientLayout({
   };
 
   if (!mounted) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
