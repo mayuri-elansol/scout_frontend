@@ -10,6 +10,7 @@ export type AddCameraPayload = {
   password: string;
   RTSPport: string | number;
   cameraZone?: string;
+  cameraLocation?: string;
   channel?: string;
   connectionType: "DIRECT_TO_CAMERA" | "NVR";
   refreshRate?: number;

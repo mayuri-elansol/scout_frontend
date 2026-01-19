@@ -51,6 +51,7 @@ import {
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 import type { OnboardingCamera } from "@/app/types/camera";
+import { channel } from "diagnostics_channel";
 interface LocationOption {
   id: string;
   locationName: string;
@@ -331,8 +332,10 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         password: formData.password.trim(),
         RTSPport: formData.port.trim(),
         cameraZone: zoneList.find((z) => z.id === selectedZone)?.zoneName ?? "",
-        channel:
+        cameraLocation:
           locationList.find((l) => l.id === selectedLocation)?.locationName ?? "",
+
+        channel: null,
         refreshRate: 10,
         connectionType: "DIRECT_TO_CAMERA",
       }).unwrap();
@@ -409,8 +412,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           userName: cam.username,
           password: cam.password,
           RTSPport: cam.port,
+          channel: cam.channel,
           cameraZone: zoneList.find((z) => z.id === cam.zoneId)?.zoneName ?? "",
-          channel:
+          cameraLocation:
             cam.locationOptions.find((l) => l.id === cam.locationId)
               ?.locationName ?? "",
           connectionType: "NVR" as const,
