@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Box } from "@mui/material";
-import Loader from "./Loader";
+import Loader from "./FullPageLoader";
 
 const meta: Meta<typeof Loader> = {
   title: "Components/Atoms/Loader",

@@ -1,3 +1,5 @@
+
+
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
@@ -37,10 +39,12 @@ import { PageType } from "@/app/types";
 import { useAuth } from "@/customhooks/useAuth";
 import { hasFeature } from "@/utils/hasFeature";
 import theme from "../../../theme/theme";
+
 interface SidebarProps {
   currentPage: PageType;
   onPageChange: (page: PageType) => void;
 }
+
 const isLink = (
   item: MenuItemConfig
 ): item is Extract<MenuItemConfig, { type: "link" }> => item.type === "link";
@@ -48,12 +52,20 @@ const isLink = (
 const isGroup = (
   item: MenuItemConfig
 ): item is Extract<MenuItemConfig, { type: "group" }> => item.type === "group";
+
 const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
   items.flatMap((item) => {
     if (isLink(item)) return [item];
     if (isGroup(item)) return item.items.filter(isLink);
     return [];
   });
+
+// Helper function to filter children by feature
+const filterChildrenByFeature = (items: MenuItemConfig[], features: any) => {
+  return items.filter(
+    (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+  );
+};
 
 // Memoized menu item component for better performance
 const MenuItem = React.memo<{
@@ -126,7 +138,6 @@ const SubMenuItem = React.memo<{
         },
       }}
     >
-      {/* Add this */}
       {item.icon && (
         <ListItemIcon
           sx={{
@@ -152,7 +163,6 @@ const SubMenuItem = React.memo<{
                   ? "14px"
                   : "12px",
               color: pathname === item.path ? "white" : "#6b7280",
-              // fontWeight: pathname === item.path ? 600 : 400,
               lineHeight: 1.4,
             },
           },
@@ -232,7 +242,6 @@ const CategorySection = React.memo<{
             if (isGroup(item)) {
               return (
                 <Box key={uuidv4() + index}>
-                  {/* GROUP HEADER */}
                   <ListItem disablePadding sx={{ pl: 1 }}>
                     <ListItemText
                       primary={item.name}
@@ -242,8 +251,8 @@ const CategorySection = React.memo<{
 
                   {getAllLinkItems(item.items).map((subItem) => (
                     <SubMenuItem
-                      key={subItem.path} // Use path as stable key
-                      item={subItem} // ✅ Guaranteed to be a LinkMenuItem
+                      key={subItem.path}
+                      item={subItem}
                       pathname={pathname}
                       theme={theme}
                       categoryTitle={category.title}
@@ -262,6 +271,84 @@ const CategorySection = React.memo<{
 });
 
 CategorySection.displayName = "CategorySection";
+
+// Extract configurator group component
+const ConfiguratorGroup = React.memo<{
+  item: Extract<MenuItemConfig, { type: "group" }>;
+  openCategories: Record<string, boolean>;
+  setOpenCategories: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  pathname: string;
+  theme: typeof theme;
+  categoryTitle: string;
+}>(({ item, openCategories, setOpenCategories, pathname, theme, categoryTitle }) => {
+  const isConfiguratorOpen = openCategories[item.name] ?? false;
+
+  const handleToggle = useCallback(() => {
+    setOpenCategories((prev) => ({
+      ...prev,
+      [item.name]: !prev[item.name],
+    }));
+  }, [item.name, setOpenCategories]);
+
+  return (
+    <Box>
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={handleToggle}
+          sx={{
+            pl: 1,
+            borderRadius: 1,
+            py: 0.75,
+            fontSize: "14px",
+            "&:hover": {
+              backgroundColor: "rgba(25,118,210,0.08)",
+            },
+          }}
+        >
+          {item.icon && (
+            <ListItemIcon
+              sx={{ minWidth: 28, color: "#6b7280" }}
+            >
+              <item.icon fontSize="small" />
+            </ListItemIcon>
+          )}
+          <ListItemText
+            primary={item.name}
+            sx={{
+              fontSize: "14px",
+              color: "#6b7280",
+            }}
+          />
+          {isConfiguratorOpen ? (
+            <ExpandLess />
+          ) : (
+            <ExpandMore />
+          )}
+        </ListItemButton>
+      </ListItem>
+
+      <Collapse
+        in={isConfiguratorOpen}
+        timeout="auto"
+        unmountOnExit
+      >
+        <List sx={{ pl: 3 }}>
+          {getAllLinkItems(item.items).map((subItem) => (
+            <SubMenuItem
+              key={subItem.path}
+              item={subItem}
+              pathname={pathname}
+              theme={theme}
+              categoryTitle={categoryTitle}
+            />
+          ))}
+        </List>
+      </Collapse>
+    </Box>
+  );
+});
+
+ConfiguratorGroup.displayName = "ConfiguratorGroup";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
@@ -289,6 +376,22 @@ const Sidebar: React.FC<SidebarProps> = () => {
   }, []);
 
   const filteredMenus = useMemo(() => {
+    const filterCategoryItems = (items: MenuItemConfig[]) => {
+      return items
+        .map((item) => {
+          if (isLink(item)) {
+            return hasFeature(features, item.featureId) ? item : null;
+          }
+
+          if (isGroup(item)) {
+            const children = filterChildrenByFeature(item.items, features);
+            return children.length ? { ...item, items: children } : null;
+          }
+          return null;
+        })
+        .filter(Boolean) as MenuItemConfig[];
+    };
+
     const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu.filter(
       (item) => hasFeature(features, item.featureId)
     );
@@ -296,21 +399,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const dashboardFlags = dashboardMenu
       .map((category) => ({
         ...category,
-        items: category.items
-          .map((item) => {
-            if (isLink(item)) {
-              return hasFeature(features, item.featureId) ? item : null;
-            }
-
-            if (isGroup(item)) {
-              const children = item.items.filter(
-                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
-              );
-              return children.length ? { ...item, items: children } : null;
-            }
-            return null;
-          })
-          .filter(Boolean) as MenuItemConfig[],
+        items: filterCategoryItems(category.items),
       }))
       .filter((category) => category.items.length > 0);
 
@@ -321,44 +410,14 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const analyticsFlags = analyticsMenu
       .map((category) => ({
         ...category,
-        items: category.items
-          .map((item) => {
-            if (isLink(item)) {
-              return hasFeature(features, item.featureId) ? item : null;
-            }
-
-            if (isGroup(item)) {
-              const children = item.items.filter(
-                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
-              );
-              return children.length ? { ...item, items: children } : null;
-            }
-
-            return null;
-          })
-          .filter(Boolean) as MenuItemConfig[],
+        items: filterCategoryItems(category.items),
       }))
       .filter((category) => category.items.length > 0);
 
     const settingsFlags = settingsMenu
       .map((category) => ({
         ...category,
-        items: category.items
-          .map((item) => {
-            if (isLink(item)) {
-              return hasFeature(features, item.featureId) ? item : null;
-            }
-
-            if (isGroup(item)) {
-              const children = item.items.filter(
-                (sub) => isLink(sub) && hasFeature(features, sub.featureId)
-              );
-              return children.length ? { ...item, items: children } : null;
-            }
-
-            return null;
-          })
-          .filter(Boolean) as MenuItemConfig[],
+        items: filterCategoryItems(category.items),
       }))
       .filter((category) => category.items.length > 0);
 
@@ -435,20 +494,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         }
                       }}
                     >
-                      {/* {category.icon && (
-                        <ListItemIcon
-                          sx={{
-                            minWidth: 36,
-                            color: isDashboardRoot
-                              ? "white"
-                              : isDashboardChild
-                              ? theme.palette.primary.main
-                              : "#5c6b7d",
-                          }}
-                        >
-                          <category.icon />
-                        </ListItemIcon>
-                      )} */}
                       {category.icon && (
                         <ListItemIcon sx={{ minWidth: 36, color: iconColor }}>
                           <category.icon />
@@ -456,13 +501,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
                       )}
                       <ListItemText
                         primary={category.title}
-                        // sx={{
-                        //   color: isDashboardRoot
-                        //     ? "white"
-                        //     : isDashboardChild
-                        //     ? theme.palette.primary.main
-                        //     : "#5c6b7d",
-                        // }}
                         sx={{ color: iconColor }}
                       />
                       <Box
@@ -473,12 +511,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         sx={{
                           display: "flex",
                           alignItems: "center",
-                          // color: isDashboardRoot
-                          //   ? "white"
-                          //   : isDashboardChild
-                          //   ? theme.palette.primary.main
-                          //   : "#5c6b7d",
-
                           color: iconColor,
                         }}
                       >
@@ -612,7 +644,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
               <List sx={{ pl: 2 }}>
                 {filteredMenus.settingsFlags.map((category) =>
                   category.items.map((item) => {
-                    // Role Management / User Management → links
                     if (isLink(item)) {
                       return (
                         <SubMenuItem
@@ -625,71 +656,17 @@ const Sidebar: React.FC<SidebarProps> = () => {
                       );
                     }
 
-                    // Configurator → expandable group
                     if (isGroup(item)) {
-                      const isConfiguratorOpen =
-                        openCategories[item.name] ?? false;
-
                       return (
-                        <Box key={item.name}>
-                          <ListItem disablePadding>
-                            <ListItemButton
-                              onClick={() =>
-                                setOpenCategories((prev) => ({
-                                  ...prev,
-                                  [item.name]: !prev[item.name],
-                                }))
-                              }
-                              sx={{
-                                pl: 1,
-                                borderRadius: 1,
-                                py: 0.75,
-                                fontSize: "14px",
-                                "&:hover": {
-                                  backgroundColor: "rgba(25,118,210,0.08)",
-                                },
-                              }}
-                            >
-                              {item.icon && (
-                                <ListItemIcon
-                                  sx={{ minWidth: 28, color: "#6b7280" }}
-                                >
-                                  <item.icon fontSize="small" />
-                                </ListItemIcon>
-                              )}
-                              <ListItemText
-                                primary={item.name}
-                                sx={{
-                                  fontSize: "14px",
-                                  color: "#6b7280",
-                                }}
-                              />
-                              {isConfiguratorOpen ? (
-                                <ExpandLess />
-                              ) : (
-                                <ExpandMore />
-                              )}
-                            </ListItemButton>
-                          </ListItem>
-
-                          <Collapse
-                            in={isConfiguratorOpen}
-                            timeout="auto"
-                            unmountOnExit
-                          >
-                            <List sx={{ pl: 3 }}>
-                              {getAllLinkItems(item.items).map((subItem) => (
-                                <SubMenuItem
-                                  key={subItem.path}
-                                  item={subItem}
-                                  pathname={pathname}
-                                  theme={theme}
-                                  categoryTitle={category.title}
-                                />
-                              ))}
-                            </List>
-                          </Collapse>
-                        </Box>
+                        <ConfiguratorGroup
+                          key={item.name}
+                          item={item}
+                          openCategories={openCategories}
+                          setOpenCategories={setOpenCategories}
+                          pathname={pathname}
+                          theme={theme}
+                          categoryTitle={category.title}
+                        />
                       );
                     }
 

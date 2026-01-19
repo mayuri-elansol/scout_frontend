@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"; 
-import SettingTable, { User } from "./SettingTable";
+import SettingTable, { User } from "./UserSettingTable";
 
 // Sample user data
 const sampleUsers: User[] = [

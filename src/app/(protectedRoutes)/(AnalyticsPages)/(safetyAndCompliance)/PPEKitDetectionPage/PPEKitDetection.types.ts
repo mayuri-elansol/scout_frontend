@@ -91,3 +91,13 @@ export interface Violation {
   incident?: string;
   [key: string]: string | number | boolean | undefined; // extra dynamic fields
 }
+export interface PpeSocketPayload {
+  serverTimestamp: string;
+  kpi: KpiItem[];
+  zoneViolations: ZoneViolationInteface[];
+  recentViolations: PPEViolation[];
+}
+export interface PPEViolation extends Violation {
+  cameraId: string;
+  alarmTriggered: boolean;
+}

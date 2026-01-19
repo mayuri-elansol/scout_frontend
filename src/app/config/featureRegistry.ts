@@ -52,12 +52,17 @@ export const FEATURE = {
   // Live Streaming
   LIVE_STREAMING: "SF033",
 
-  // Permissions
-  ADD_FEATURES: "SF034",
-  VIEW_ROLE: "SF035",
-  EDIT_ROLE: "SF036",
-  DELETE_ROLE: "SF037",
-  ROLE_OVERVIEW: "SF038",
+  // Permissions FOR ROLE
+  EDIT_ROLE: "SF011",//edit-feature same
+  VIEW_ROLE: "SF012",
+  DELETE_ROLE: "SF013",
+  CREATE_ROLE:"SF014",
+
+  //PERMISSIONS FOR USER
+  ADD_USER:"SF015",
+  EDIT_USER:"SF016",
+  VIEW_USER:"SF017",
+  DELETE_USER:"SF018",
 } as const;
 
 export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];

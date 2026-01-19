@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 import {
   useGetFeatureOfRoleByRoleIdMutation,
@@ -57,14 +57,10 @@ export default function ViewRolePage() {
       });
   }, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
 
+
+
   /* ---------------- LOADING ---------------- */
-  if (isLoadingForRole || isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-        <Loader />
-      </Box>
-    );
-  }
+
   /* ---------------- ERROR ---------------- */
   if (isError) {
     return (
@@ -76,8 +72,15 @@ export default function ViewRolePage() {
 
   /* ---------------- UI ---------------- */
   return (
+    
     <Box className="viewRole" sx={{ p: 2 }}>
       {/* ---------------- ROLE DETAILS ---------------- */}
+        {isLoadingForRole || isLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center",alignItems:"center", mt: 20 }}>
+            <Loader />
+          </Box>
+        ) : (
+      <>
       <Typography variant="h6" mb={2}>
         Role Details :
       </Typography>
@@ -137,6 +140,8 @@ export default function ViewRolePage() {
           Back
         </Button>
       </Box>
+      </>
+        )}
     </Box>
   );
 }

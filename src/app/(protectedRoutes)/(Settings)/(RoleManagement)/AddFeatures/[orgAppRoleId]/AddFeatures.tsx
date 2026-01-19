@@ -23,7 +23,7 @@ import {
   useAssignFeatureToRoleMutation,
   useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
-import Loader from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 
 /* ---------------- Types ---------------- */
 
@@ -46,8 +46,7 @@ const AddFeatures: React.FC = () => {
   const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
   const userId = useSelector((state: RootState) => state.auth.user?.userId);
 
-  // ✅ ALL HOOKS FIRST
-  const { data: featuresRes, isLoading } = useGetFeaturesByOrgIdQuery(
+const { data: features = [], isLoading } = useGetFeaturesByOrgIdQuery(
     { userId: userId!, orgId: tenantId! },
     { skip: !userId || !tenantId }
   );
@@ -56,13 +55,6 @@ const AddFeatures: React.FC = () => {
     useAssignFeatureToRoleMutation();
 
   const [selectedFeatureIds, setSelectedFeatureIds] = useState<string[]>([]);
-
-  const features: Feature[] = featuresRes?.data?.data ?? [];
-
-  //  CONDITIONAL RENDER AFTER HOOKS
-  if (isLoading) {
-    return <Loader />;
-  }
 
   /* ---------------- Handlers ---------------- */
 
@@ -95,7 +87,7 @@ const AddFeatures: React.FC = () => {
     }
 
     try {
-      const res = await assignFeatureToRole({
+      await assignFeatureToRole({
         tenantId,
         orgAppRoleId,
         featureIds: selectedFeatureIds,
@@ -104,7 +96,7 @@ const AddFeatures: React.FC = () => {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: res.message || "Features assigned successfully",
+          message: "Features assigned successfully",
           severity: "success",
         })
       );
@@ -120,14 +112,14 @@ const AddFeatures: React.FC = () => {
       );
     }
   };
-
   /* ---------------- UI ---------------- */
 
   return (
     <Box sx={{ py: 2, px: { xs: 2, sm: 3, md: 4 } }}>
-      {/* {isPageLoading ? (
+       { 
+       isLoading ? ( 
         <Loader />
-      ) : ( */}
+      ) : ( 
       <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 3 }}>
         {/* Header */}
         <Box
@@ -189,7 +181,7 @@ const AddFeatures: React.FC = () => {
           <Grid container spacing={2}>
             {Array.isArray(features) &&
               features.map((feature) => {
-                const checked = selectedFeatureIds.includes(feature.feature_id);
+              const checked = selectedFeatureIds.includes(feature.feature_id);
 
                 return (
                   <Grid
@@ -268,7 +260,7 @@ const AddFeatures: React.FC = () => {
           </Button>
         </Box>
       </Paper>
-      {/* )} */}
+       )} 
     </Box>
   );
 };

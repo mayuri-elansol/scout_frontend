@@ -1,37 +1,28 @@
-"use client";
 
-import React, { useMemo, useState } from "react";
+'use client';
+
+import React, { useMemo, useState } from 'react';
 import {
   Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
+
   TextField,
-  TablePagination,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useRouter } from "next/navigation";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/app/store/store";
-import { useRoleListQuery, useDeleteRoleByIdMutation } from "./RoleOverviewApi";
-import { FEATURE } from "@/app/config/featureRegistry";
-import { formatDate } from "@/utils/dateUtils";
-import Loader from "@/app/components/atoms/Loader/Loader";
-import { showToast } from "@/app/store/slices/toasterSlice";
-import AddRole from "../AddRole/AddRole";
+} from '@mui/material';
+
+import { useRouter } from 'next/navigation';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/app/store/store';
+import { useRoleListQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
+import { FEATURE } from '@/app/config/featureRegistry';
+import Loader from '@/app/components/atoms/Loader/Loader';
+import { showToast } from '@/app/store/slices/toasterSlice';
+import AddRole from '../AddRole/AddRole';
+import RoleSettingTable from '@/app/components/organisms/RoleSettingTable/RoleSettingTable';
 
 export default function RoleOverview() {
   const router = useRouter();
@@ -41,16 +32,16 @@ export default function RoleOverview() {
   const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
   const userId = user?.userId;
-  const role = user?.role;
+  const roleName = user?.roles?.[0]?.roleName;
 
   /* ---------- PERMISSIONS ---------- */
-  const canAddRole = features.includes(FEATURE.ROLE_MANAGEMENT);
+  const canAddRole = features.includes(FEATURE.CREATE_ROLE);
   const canViewRole = features.includes(FEATURE.VIEW_ROLE);
   const canEditRole = features.includes(FEATURE.EDIT_ROLE);
   const canDeleteRole = features.includes(FEATURE.DELETE_ROLE);
 
   /* ---------- API ---------- */
-  const { data, isLoading } = useRoleListQuery(
+  const { data, isLoading, isFetching } = useRoleListQuery(
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
@@ -65,8 +56,8 @@ export default function RoleOverview() {
   );
   const [order] = useState<"asc" | "desc">("asc");
   const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page] = useState(0);
+  const [rowsPerPage] = useState(10);
 
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
@@ -165,24 +156,25 @@ export default function RoleOverview() {
     }
   };
 
-  /* ---------- LOADING ---------- */
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-        <Loader />
-      </Box>
-    );
-  }
+ 
+
 
   /* ---------- EMPTY STATE ---------- */
-  if (!isLoading && rows.length === 0) {
+if (!isLoading && !isFetching && rows.length === 0) {
     return <AddRole />;
   }
 
   /* ---------- UI ---------- */
   return (
-    <Box sx={{ p: 2 }}>
-      {/* Header */}
+<Box sx={{ p: 2 }}>
+  {isFetching || isLoading ? (
+    // ✅ Loader while fetching
+    <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+      <Loader />
+    </Box>
+  ) : (
+    // ✅ Content after loading
+    <>
       <Box display="flex" justifyContent="space-between" mb={2}>
         <TextField
           label="Search"
@@ -200,86 +192,21 @@ export default function RoleOverview() {
         )}
       </Box>
 
-      {/* Table */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow sx={{ background: "rgba(169,177,184,0.2)" }}>
-              {["ROLE NAME", "ROLE ID", "CREATED AT", "UPDATED AT"].map((h) => (
-                <TableCell key={h}>{h}</TableCell>
-              ))}
-              <TableCell>ACTIONS</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {paginatedRows.map((row) => {
-              const isSelf =
-                row.role_id.name === role && userId === user?.userId;
-
-              return (
-                <TableRow key={row.org_app_role_id}>
-                  <TableCell>{row.role_id.name}</TableCell>
-                  <TableCell>{row.role_id.role_id}</TableCell>
-                  <TableCell>{formatDate(row.createdAt)}</TableCell>
-                  <TableCell>{formatDate(row.updatedAt)}</TableCell>
-                  <TableCell>
-                    {canViewRole && (
-                      <IconButton
-                        color="primary"
-                        onClick={() =>
-                          handleView(row.org_app_role_id, row.role_id.role_id)
-                        }
-                      >
-                        <VisibilityIcon />
-                      </IconButton>
-                    )}
-
-                    {canEditRole && (
-                      <IconButton
-                        color="secondary"
-                        onClick={() =>
-                          handleEdit(row.org_app_role_id, row.role_id.role_id)
-                        }
-                        disabled={isSelf} // disable self-edit
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    )}
-
-                    {canDeleteRole && row.role_id.can_delete && (
-                      <IconButton
-                        color="error"
-                        onClick={() => handleOpenConfirm(row.role_id.role_id)}
-                        disabled={isSelf || isDeleting} // disable self-delete
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    )}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 20]}
-          component="div"
-          count={filteredRows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={(_, newPage) => setPage(newPage)}
-          onRowsPerPageChange={(e) => {
-            setRowsPerPage(Number(e.target.value));
-            setPage(0);
-          }}
-        />
-      </TableContainer>
+      <RoleSettingTable
+        rows={paginatedRows}
+        roleName={roleName}
+        canView={canViewRole}
+        canEdit={canEditRole}
+        canDelete={canDeleteRole}
+        isDeleting={isDeleting}
+        onView={handleView}
+        onEdit={handleEdit}
+        onDelete={handleOpenConfirm}
+      />
 
       {/* ---------- CONFIRM DIALOG ---------- */}
       <Dialog open={openConfirm} onClose={handleCloseConfirm}>
-        <DialogTitle>Confirm Delete </DialogTitle>
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Are you sure you want to delete this role? This action cannot be
@@ -299,6 +226,8 @@ export default function RoleOverview() {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
-  );
-}
+    </>
+  )}
+</Box>
+
+)}

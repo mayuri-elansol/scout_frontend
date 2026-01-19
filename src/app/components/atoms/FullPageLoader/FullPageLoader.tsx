@@ -1,17 +1,17 @@
 "use client";
 
+import React from "react";
 import { Box, CircularProgress } from "@mui/material";
 
-const Loader = () => {
+const FullPageLoader: React.FC = () => {
   return (
     <Box
-   sx={{
+      sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        height: "10%" 
-        
+        height: "100%" 
       }}
     >
       <CircularProgress />
@@ -19,4 +19,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default FullPageLoader;
