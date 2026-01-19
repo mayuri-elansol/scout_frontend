@@ -1,14 +1,7 @@
-
 "use client";
 
 import React from "react";
-import {
-  CardContent,
-  TextField,
-  Typography,
-  Box,
-  Link,
-} from "@mui/material";
+import { CardContent, TextField, Typography, Box, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
@@ -95,24 +88,22 @@ const ForgotPasswordForm: React.FC<Props> = ({
         >
           {isLoading ? "Requesting..." : "Request"}
         </button>
-
-        
       </form>
       {/* 🔙 Back to login */}
-        <Box textAlign="center">
-          <Link
-            component="button"
-            variant="body2"
-            onClick={() => router.push("/Login")}
-            sx={{
-              cursor: "pointer",
-              fontWeight: 500,
-              color: "#1976d2",
-            }}
-          >
-            Back to Sign In
-          </Link>
-        </Box>
+      <Box textAlign="center">
+        <Link
+          component="button"
+          variant="body2"
+          onClick={() => router.push("/Login")}
+          sx={{
+            cursor: "pointer",
+            fontWeight: 500,
+            color: "#1976d2",
+          }}
+        >
+          Back to Sign In
+        </Link>
+      </Box>
     </CardContent>
   );
 };

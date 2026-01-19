@@ -108,6 +108,24 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
 
     return hasTextFilters || hasDateFilters;
   }, [filterValues, dateTimeValues]);
+  const isDateRangeValid = useMemo(() => {
+    const start = dateTimeValues["startDate"];
+    const end = dateTimeValues["endDate"];
+    const now = dayjs();
+    const threeMonthsAgo = now.subtract(3, "month");
+
+    // If only one date is selected → allow
+    if (!start || !end) return true;
+
+    // Start must be before or equal to end
+    if (start.isAfter(end)) return false;
+
+    // Range must be within last 3 months
+    if (start.isBefore(threeMonthsAgo)) return false;
+    if (end.isAfter(now)) return false;
+
+    return true;
+  }, [dateTimeValues]);
 
   const handleFilterChange = (id: keyof T, value: string) => {
     setFilterValues((prev) => ({ ...prev, [id]: value }));
@@ -116,8 +134,6 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
   const handleDateTimeChange = (label: string, value: Dayjs | null) => {
     setDateTimeValues((prev) => ({ ...prev, [label]: value }));
   };
-
-  // Calculate min/max dates for start and end date with 3-month range
 
   const getDateConstraints = (fieldId: string) => {
     const now = dayjs();
@@ -277,6 +293,10 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
             slotProps={{
               textField: {
                 fullWidth: true,
+                error: !isDateRangeValid,
+                helperText: !isDateRangeValid
+                  ? "Invalid date range (max 3 months, start ≤ end)"
+                  : "",
                 sx: {
                   minWidth: 150,
                   "& .MuiPickersOutlinedInput-root": {
@@ -415,7 +435,9 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 size="small"
                 variant="outlined"
                 onClick={handleSubmit}
-                disabled={!hasActiveFilters || isSubmitDisabled}
+                disabled={
+                  !hasActiveFilters || !isDateRangeValid || isSubmitDisabled
+                }
               >
                 Submit
               </Button>

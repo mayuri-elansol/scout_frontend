@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -47,11 +47,7 @@ const AddFeatures: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user?.userId);
 
   // ✅ ALL HOOKS FIRST
-  const {
-    data: featuresRes,
-    isLoading,
-    isFetching,
-  } = useGetFeaturesByOrgIdQuery(
+  const { data: featuresRes, isLoading } = useGetFeaturesByOrgIdQuery(
     { userId: userId!, orgId: tenantId! },
     { skip: !userId || !tenantId }
   );
@@ -67,7 +63,6 @@ const AddFeatures: React.FC = () => {
   if (isLoading) {
     return <Loader />;
   }
-  
 
   /* ---------------- Handlers ---------------- */
 
@@ -114,7 +109,7 @@ const AddFeatures: React.FC = () => {
         })
       );
 
-      router.push("/RoleOverview"); 
+      router.push("/RoleOverview");
     } catch (err: any) {
       dispatch(
         showToast({
@@ -129,20 +124,19 @@ const AddFeatures: React.FC = () => {
   /* ---------------- UI ---------------- */
 
   return (
-
     <Box sx={{ py: 2, px: { xs: 2, sm: 3, md: 4 } }}>
       {/* {isPageLoading ? (
         <Loader />
       ) : ( */}
-        <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 3 }}>
-          {/* Header */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: 3,
-            }}
-          >
+      <Paper elevation={3} sx={{ p: 4, mt: 3, borderRadius: 3 }}>
+        {/* Header */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mb: 3,
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
               sx={{
@@ -192,7 +186,6 @@ const AddFeatures: React.FC = () => {
 
         {/* Feature Grid */}
         <FormGroup>
-           
           <Grid container spacing={2}>
             {Array.isArray(features) &&
               features.map((feature) => {
@@ -260,7 +253,6 @@ const AddFeatures: React.FC = () => {
                 );
               })}
           </Grid>
-           
         </FormGroup>
 
         {/* Save */}
@@ -278,7 +270,6 @@ const AddFeatures: React.FC = () => {
       </Paper>
       {/* )} */}
     </Box>
-     
   );
 };
 

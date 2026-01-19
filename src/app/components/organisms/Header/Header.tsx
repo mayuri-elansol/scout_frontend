@@ -29,6 +29,7 @@ import {
   alertMenu,
   analyticsMenu,
   dashboardMenu,
+  LinkMenuItem,
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
 import { usePathname } from "next/navigation";
@@ -173,7 +174,6 @@ const Header: React.FC = () => {
     lastChecked: new Date().toLocaleTimeString(),
   });
 
-  // Get current page title
   const getPageTitle = () => {
     const allMenuItems = [
       ...dashboardMenu.flatMap((category) => category.items),
@@ -182,7 +182,9 @@ const Header: React.FC = () => {
     ];
 
     const currentItem = allMenuItems.find(
-      (item) => "path" in item && item.path.toLowerCase() === pathname.toLowerCase()
+      (item): item is LinkMenuItem =>
+        item.type === "link" &&
+        item.path.toLowerCase() === pathname.toLowerCase()
     );
 
     return currentItem?.name ?? "Live Streaming";
@@ -196,17 +198,15 @@ const Header: React.FC = () => {
     ];
 
     const currentItem = allMenuItems.find(
-      (item) => "path" in item && item.path.toLowerCase() === pathname.toLowerCase()
+      (item): item is LinkMenuItem =>
+        item.type === "link" &&
+        item.path.toLowerCase() === pathname.toLowerCase()
     );
 
     setCurrentPage(
       currentItem ? currentItem.page! : "safety-compliance-dashboard"
     );
   }, [pathname]);
-
-  const handlePageChange = (page: PageType) => {
-    setCurrentPage(page);
-  };
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -378,18 +378,26 @@ const Header: React.FC = () => {
                   sx={{ mt: "15px" }}
                 >
                   {/* User Info at top */}
-                     <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}>
-        {user.userName && (
-          <Typography variant="body1" sx={{ fontWeight: 600, color: "#1c2025" }}>
-            {user.userName}
-          </Typography>
-        )}
-        {user.roles && (
-          <Typography variant="body2" sx={{ color: "#6b7280", fontWeight: 400 }}>
-           Role : {user.roles}
-          </Typography>
-        )}
-      </Box>
+                  <Box
+                    sx={{ px: 2, py: 1.5, borderBottom: "1px solid #e0e0e0" }}
+                  >
+                    {user.userName && (
+                      <Typography
+                        variant="body1"
+                        sx={{ fontWeight: 600, color: "#1c2025" }}
+                      >
+                        {user.userName}
+                      </Typography>
+                    )}
+                    {user.roles?.length > 0 && (
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "#6b7280", fontWeight: 400 }}
+                      >
+                        Role : {user.roles.map((r) => r.roleName).join(", ")}
+                      </Typography>
+                    )}
+                  </Box>
 
                   {/* Logout Button */}
                   <MenuItem onClick={handleLogout}>
@@ -435,9 +443,12 @@ const Header: React.FC = () => {
             loading="lazy"
           />
         </Box>
-        <Sidebar currentPage={"safety-compliance-dashboard"} onPageChange={function (page: PageType): void {
-          throw new Error("Function not implemented.");
-        } }/>
+        <Sidebar
+          currentPage={"safety-compliance-dashboard"}
+          onPageChange={function (page: PageType): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </Drawer>
     </>
   );

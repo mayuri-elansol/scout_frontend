@@ -26,10 +26,7 @@ const meta = {
       control: "object",
       description: "Zone information including ID, name, status, and worker",
     },
-    metrics: {
-      control: "object",
-      description: "Array of zone metrics to display",
-    },
+
     aiProcessingEnabled: {
       control: "boolean",
       description: "Whether AI processing overlays are shown",
@@ -66,12 +63,7 @@ const meta = {
       status: "LIVE",
       worker: "Worker #2",
     },
-    metrics: [
-      { value: "87.5%", label: "Compliance Rate", color: "#4caf50" },
-      { value: 3, label: "Active Violations", color: "#f44336" },
-      { value: 234, label: "People Detected", color: "#2196f3" },
-      { value: 12, label: "No Helmet Detected", color: "#f44336" },
-    ],
+
     aiProcessingEnabled: true,
     roiLabel: "ROI DETECTION",
     initialPlaying: false,
@@ -97,12 +89,6 @@ export const WarehouseZone: Story = {
       status: "LIVE",
       worker: "Worker #4",
     },
-    metrics: [
-      { value: "92.3%", label: "Compliance Rate", color: "#4caf50" },
-      { value: 1, label: "Active Violations", color: "#ff9800" },
-      { value: 45, label: "People Detected", color: "#2196f3" },
-      { value: 2, label: "No Helmet Detected", color: "#f44336" },
-    ],
   },
 };
 
@@ -114,12 +100,6 @@ export const AssemblyZone: Story = {
       status: "LIVE",
       worker: undefined,
     },
-    metrics: [
-      { value: "95.1%", label: "Compliance Rate", color: "#4caf50" },
-      { value: 0, label: "Active Violations", color: "#4caf50" },
-      { value: 67, label: "People Detected", color: "#2196f3" },
-      { value: 1, label: "No Helmet Detected", color: "#ff9800" },
-    ],
   },
 };
 
@@ -131,12 +111,6 @@ export const EmptyZone: Story = {
       status: "LIVE",
       worker: undefined,
     },
-    metrics: [
-      { value: "—", label: "Compliance Rate", color: "#999" },
-      { value: 0, label: "Active Violations", color: "#4caf50" },
-      { value: 0, label: "People Detected", color: "#999" },
-      { value: 0, label: "No Helmet Detected", color: "#4caf50" },
-    ],
   },
 };
 
@@ -148,12 +122,7 @@ export const OfflineZone: Story = {
       status: "OFFLINE",
       worker: undefined,
     },
-    metrics: [
-      { value: "—", label: "Compliance Rate", color: "#999" },
-      { value: "—", label: "Active Violations", color: "#999" },
-      { value: "—", label: "People Detected", color: "#999" },
-      { value: "—", label: "No Helmet Detected", color: "#999" },
-    ],
+
     aiProcessingEnabled: false,
   },
 };
@@ -166,12 +135,7 @@ export const MaintenanceZone: Story = {
       status: "MAINTENANCE",
       worker: undefined,
     },
-    metrics: [
-      { value: "—", label: "Compliance Rate", color: "#999" },
-      { value: "—", label: "Active Violations", color: "#999" },
-      { value: "—", label: "People Detected", color: "#999" },
-      { value: "—", label: "No Helmet Detected", color: "#999" },
-    ],
+
     aiProcessingEnabled: false,
   },
 };
@@ -191,12 +155,6 @@ export const PPEDetection: Story = {
       status: "LIVE",
       worker: "Worker #7",
     },
-    metrics: [
-      { value: "76.2%", label: "PPE Compliance", color: "#ff9800" },
-      { value: 8, label: "Violations", color: "#f44336" },
-      { value: 34, label: "People Detected", color: "#2196f3" },
-      { value: 8, label: "Missing PPE", color: "#f44336" },
-    ],
   },
 };
 
@@ -204,7 +162,7 @@ export const LiveStreamingGrid: Story = {
   decorators: [
     () => (
       <Grid container spacing={3} sx={{ maxWidth: "1200px", p: 2 }}>
-        <Grid size={{ xs:12, lg:6 }}>
+        <Grid size={{ xs: 12, lg: 6 }}>
           <CameraFeedCard
             zone={{
               id: "zone-a",
@@ -212,16 +170,10 @@ export const LiveStreamingGrid: Story = {
               status: "LIVE",
               worker: "Worker #2",
             }}
-            metrics={[
-              { value: "87.5%", label: "Compliance Rate", color: "#4caf50" },
-              { value: 3, label: "Active Violations", color: "#f44336" },
-              { value: 234, label: "People Detected", color: "#2196f3" },
-              { value: 12, label: "No Helmet Detected", color: "#f44336" },
-            ]}
             aiProcessingEnabled={true}
           />
         </Grid>
-        <Grid size={{ xs:12, lg:6 }}>
+        <Grid size={{ xs: 12, lg: 6 }}>
           <CameraFeedCard
             zone={{
               id: "zone-b",
@@ -229,12 +181,6 @@ export const LiveStreamingGrid: Story = {
               status: "LIVE",
               worker: "Worker #4",
             }}
-            metrics={[
-              { value: "92.3%", label: "Compliance Rate", color: "#4caf50" },
-              { value: 1, label: "Active Violations", color: "#ff9800" },
-              { value: 45, label: "People Detected", color: "#2196f3" },
-              { value: 2, label: "No Helmet Detected", color: "#f44336" },
-            ]}
             aiProcessingEnabled={true}
           />
         </Grid>

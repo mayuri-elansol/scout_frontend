@@ -58,6 +58,7 @@ interface LocationOption {
 }
 interface AssignmentItem {
   channel: string;
+  rtspUrl: string;
   cameraName: string;
   cameraIp: string;
   username: string;
@@ -183,6 +184,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   type NvrCamera = {
     channel: string;
+    rtspUrl: string;
   };
 
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
@@ -204,6 +206,12 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const { data: zonesData } = useGetZonesQuery();
   const [addCamera] = useAddCameraMutation();
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
+
+  const extractRtspChannelNumber = (rtspUrl: string): string => {
+  const match = rtspUrl.match(/Channels\/(\d+)/);
+  return match ? match[1] : "";
+};
+
 
 
   useEffect(() => {
@@ -413,6 +421,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           password: cam.password,
           RTSPport: cam.port,
           channel: cam.channel,
+          rtspUrl: cam.rtspUrl,
           cameraZone: zoneList.find((z) => z.id === cam.zoneId)?.zoneName ?? "",
           cameraLocation:
             cam.locationOptions.find((l) => l.id === cam.locationId)
@@ -861,8 +870,11 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             );
 
                             const mapped = selected.map((cam) => ({
-                              channel: cam.channel,
+                              // channel: cam.channel,
+                              channel:extractRtspChannelNumber(cam.rtspUrl), 
                               // cameraName: `${nvrData.name}-Channel-${cam.channel}`,
+
+                              rtspUrl: cam.rtspUrl, 
                               cameraName: `${nvrData.name}-${cam.channel
                                 }-${Date.now()}`,
                               // cameraIp: `${nvrData.ip}-${cam.channel}`,

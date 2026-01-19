@@ -1,4 +1,3 @@
-
 "use client";
 
 import { v4 as uuidv4 } from "uuid";
@@ -26,12 +25,12 @@ import {
 } from "@mui/material";
 import styles from "./AddUser.module.css";
 import { useRouter } from "next/navigation";
-import { useRoleOverviewQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 import { RootState } from "@/app/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddUserMutation } from "./AddUseApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import Loader from "@/app/components/atoms/Loader/Loader";
+import { useRoleListQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 
 interface UserFormValues {
   role: string;
@@ -44,8 +43,7 @@ interface UserFormValues {
   password: string;
 }
 
-const generatePassword = () =>
-  Math.random().toString(36).slice(-10) + "@A1";
+const generatePassword = () => Math.random().toString(36).slice(-10) + "@A1";
 
 const AddUser: React.FC = () => {
   const dispatch = useDispatch();
@@ -60,17 +58,11 @@ const AddUser: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { data, isLoading } = useRoleOverviewQuery(
+  const { data, isLoading } = useRoleListQuery(
     { tenantId: tenantId!, userId: userId! },
-    { skip: !tenantId || !userId } 
+    { skip: !tenantId || !userId }
   );
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-    setValue,
-  } = useForm<UserFormValues>({
+  const { control, handleSubmit, reset, setValue } = useForm<UserFormValues>({
     defaultValues: {
       role: "",
       firstName: "",
@@ -102,51 +94,51 @@ const AddUser: React.FC = () => {
   };
 
   // ✅ FINAL SUBMIT
- const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
-  try {
-    await addUser({
-      payload: {
-        role: data.role,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email,
-        employeeId: data.employeeId,
-        phone: data.phone,
-        userName: data.userName,
-        password: data.password,
-        orgId: tenantId!,
-      },
-      image: profileImage ?? undefined,
-    }).unwrap();
+  const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
+    try {
+      await addUser({
+        payload: {
+          role: data.role,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          employeeId: data.employeeId,
+          phone: data.phone,
+          userName: data.userName,
+          password: data.password,
+          orgId: tenantId!,
+        },
+        image: profileImage ?? undefined,
+      }).unwrap();
 
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: "User added successfully",
-        severity: "success",
-      })
-    );
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "User added successfully",
+          severity: "success",
+        })
+      );
 
-    reset();
-    setProfileImage(null);
-    setImagePreview(null);
+      reset();
+      setProfileImage(null);
+      setImagePreview(null);
 
-    router.push("/UserOverview");
-  } catch (err: any) {
-    console.error(err);
+      router.push("/UserOverview");
+    } catch (err: any) {
+      console.error(err);
 
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: err?.data?.message || "Failed to add user",
-        severity: "error",
-      })
-    );
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: err?.data?.message || "Failed to add user",
+          severity: "error",
+        })
+      );
+    }
+  };
+  if (isLoading) {
+    return <Loader />;
   }
-};
-if(isLoading){
-  return <Loader/>
-}
   return (
     <Paper sx={{ p: 2, m: 1.5 }}>
       <Box className={styles.formWrapper}>
@@ -207,7 +199,8 @@ if(isLoading){
                     <TextField
                       {...field}
                       label={label}
-                      fullWidth required
+                      fullWidth
+                      required
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                     />
@@ -235,7 +228,8 @@ if(isLoading){
                   <TextField
                     {...field}
                     label="Username"
-                    fullWidth required
+                    fullWidth
+                    required
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
                   />
@@ -251,7 +245,7 @@ if(isLoading){
                   <TextField
                     {...field}
                     label="Password (Auto-generated)"
-                    fullWidth 
+                    fullWidth
                     disabled
                   />
                 )}
@@ -260,8 +254,7 @@ if(isLoading){
           </Grid>
         </Box>
 
- 
-  <Box className={styles.section}>
+        <Box className={styles.section}>
           <Box className={styles.sectionHeader}>
             <CameraAlt color="primary" />
             <Typography variant="subtitle1">Profile Picture</Typography>
@@ -274,7 +267,7 @@ if(isLoading){
               component="label"
               startIcon={<CloudUpload />}
             >
-              Upload
+              <span>Upload</span>
               <input
                 type="file"
                 hidden
@@ -286,7 +279,10 @@ if(isLoading){
         </Box>
         {/* ACTIONS */}
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
-          <Button variant="outlined" onClick={() => router.push("/UserOverview")}>
+          <Button
+            variant="outlined"
+            onClick={() => router.push("/UserOverview")}
+          >
             Back
           </Button>
           <Button

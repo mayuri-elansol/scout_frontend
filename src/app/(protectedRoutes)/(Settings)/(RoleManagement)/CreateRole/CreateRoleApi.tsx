@@ -3,14 +3,21 @@ import { apiRoutes } from "@/constants/apiRoutes";
 
 export const createRoleApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    createRole: builder.mutation<{ status: string; message: string; data?: any; error?: string }, 
-                                { tenantId: string; userId: string; roleName: string,description:string }>({
+    createRole: builder.mutation<
+      { status: string; message: string; data?: any; error?: string },
+      {
+        tenantId: string;
+        userId: string;
+        roleName: string;
+        description: string;
+      }
+    >({
       query: (body) => ({
         url: `${apiRoutes.roleInformation.root}/${apiRoutes.roleInformation.add}`,
         method: "POST",
         body,
       }),
-      invalidatesTags: ["CreateRole"], 
+      invalidatesTags: ["CreateRole"],
     }),
   }),
 });

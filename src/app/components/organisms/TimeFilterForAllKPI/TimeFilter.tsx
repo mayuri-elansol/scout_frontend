@@ -22,6 +22,22 @@ interface TimeFilterProps {
 }
 
 const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
+  const [endDateError, setEndDateError] = useState<string>("");
+  const validateStartEnd = (start: Dayjs | null, end: Dayjs | null) => {
+    if (!start || !end) {
+      setEndDateError("");
+      return true;
+    }
+
+    if (end.isBefore(start)) {
+      setEndDateError("End date must be after start date");
+      return false;
+    }
+
+    setEndDateError("");
+    return true;
+  };
+
   const [timePickerOpen, setTimePickerOpen] = useState(false);
   const [customDialogOpen, setCustomDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -196,13 +212,22 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
             <DateTimePicker
               label="Start"
               value={customRange.start}
-              onChange={(value) =>
+              onChange={(value) => {
+                const startValue = value as Dayjs | null;
+
                 setCustomRange((prev) => ({
                   ...prev,
-                  start: value as Dayjs | null,
-                }))
-              }
-              slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                  start: startValue,
+                }));
+
+                validateStartEnd(startValue, customRange.end);
+              }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  size: "small",
+                },
+              }}
               minDateTime={dayjs().subtract(3, "month").startOf("day")}
               maxDateTime={dayjs().endOf("day")}
               format="DD-MM-YYYY HH:mm"
@@ -211,19 +236,34 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
             <DateTimePicker
               label="End"
               value={customRange.end}
-              onChange={(value) =>
+              onChange={(value) => {
+                const endValue = value as Dayjs | null;
+
                 setCustomRange((prev) => ({
                   ...prev,
-                  end: value as Dayjs | null,
-                }))
-              }
-              slotProps={{ textField: { fullWidth: true, size: "small" } }}
+                  end: endValue,
+                }));
+
+                validateStartEnd(customRange.start, endValue);
+              }}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  size: "small",
+                  error: Boolean(endDateError),
+                  helperText: endDateError,
+                },
+              }}
               minDateTime={dayjs().subtract(3, "month").startOf("day")}
               maxDateTime={dayjs().endOf("day")}
               format="DD-MM-YYYY HH:mm"
             />
 
-            <Button variant="contained" onClick={applyCustomRange}>
+            <Button
+              variant="contained"
+              onClick={applyCustomRange}
+              disabled={Boolean(endDateError)}
+            >
               Apply
             </Button>
           </DialogContent>

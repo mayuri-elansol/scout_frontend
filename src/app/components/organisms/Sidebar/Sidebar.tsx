@@ -1,7 +1,7 @@
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   Drawer,
@@ -266,7 +266,7 @@ CategorySection.displayName = "CategorySection";
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
   const drawerWidth: string = "315px";
-
+  const router = useRouter();
   const pathname = usePathname();
   const { features } = useAuth();
 
@@ -308,7 +308,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
               );
               return children.length ? { ...item, items: children } : null;
             }
-
             return null;
           })
           .filter(Boolean) as MenuItemConfig[],
@@ -387,41 +386,37 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const menuContent = useMemo(
     () => (
       <>
-        {/* Live Streaming - At the very top */}
-        {filteredMenus.liveStreamingFlags.length > 0 && (
-          <List sx={{ p: 0, mt: 1 }}>
-            {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
-              <MenuItem
-                key={item.path}
-                item={item}
-                pathname={pathname}
-                theme={theme}
-              />
-            ))}
-          </List>
-        )}
         {/* Dashboard */}
         {filteredMenus.dashboardFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.dashboardFlags.map((category, index) => {
-              const isCategoryActive = getAllLinkItems(category.items).some(
-                (link) => pathname === link.path
-              );
-
               const isOpen = openCategories[category.title] ?? false;
 
+              const isDashboardRoot =
+                !!category.path && pathname === category.path;
+
+              const isDashboardChild = category.items.some(
+                (item) =>
+                  item.type === "link" &&
+                  (pathname === item.path ||
+                    pathname.startsWith(`${item.path}/`))
+              );
+              let iconColor = "#5c6b7d";
+
+              if (isDashboardRoot) {
+                iconColor = "white";
+              } else if (isDashboardChild) {
+                iconColor = theme.palette.primary.main;
+              }
               return (
                 <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                   <ListItem disablePadding>
                     <ListItemButton
-                      onClick={() => handleCategoryToggle(category.title)}
-                      selected={
-                        isCategoryActive &&
-                        !Object.values(openCategories).some(Boolean)
-                      }
+                      selected={isDashboardRoot}
                       sx={{
                         borderRadius: 1,
                         py: 1,
+
                         "&.Mui-selected": {
                           backgroundColor: theme.palette.primary.main,
                           color: "white",
@@ -429,25 +424,66 @@ const Sidebar: React.FC<SidebarProps> = () => {
                             backgroundColor: theme.palette.primary.dark,
                           },
                         },
-                        color: isCategoryActive
-                          ? theme.palette.primary.main
-                          : "#5c6b7d",
+
+                        "&:hover": {
+                          backgroundColor: "rgba(25,118,210,0.08)",
+                        },
+                      }}
+                      onClick={() => {
+                        if (category.path) {
+                          router.push(category.path);
+                        }
                       }}
                     >
-                      {category.icon && (
+                      {/* {category.icon && (
                         <ListItemIcon
                           sx={{
                             minWidth: 36,
-                            color: isCategoryActive
-                              ? theme.palette.primary.dark
+                            color: isDashboardRoot
+                              ? "white"
+                              : isDashboardChild
+                              ? theme.palette.primary.main
                               : "#5c6b7d",
                           }}
                         >
                           <category.icon />
                         </ListItemIcon>
+                      )} */}
+                      {category.icon && (
+                        <ListItemIcon sx={{ minWidth: 36, color: iconColor }}>
+                          <category.icon />
+                        </ListItemIcon>
                       )}
-                      <ListItemText primary={category.title} />
-                      {isOpen ? <ExpandLess /> : <ExpandMore />}
+                      <ListItemText
+                        primary={category.title}
+                        // sx={{
+                        //   color: isDashboardRoot
+                        //     ? "white"
+                        //     : isDashboardChild
+                        //     ? theme.palette.primary.main
+                        //     : "#5c6b7d",
+                        // }}
+                        sx={{ color: iconColor }}
+                      />
+                      <Box
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCategoryToggle(category.title);
+                        }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          // color: isDashboardRoot
+                          //   ? "white"
+                          //   : isDashboardChild
+                          //   ? theme.palette.primary.main
+                          //   : "#5c6b7d",
+
+                          color: iconColor,
+                        }}
+                      >
+                        {isOpen ? <ExpandLess /> : <ExpandMore />}
+                      </Box>
                     </ListItemButton>
                   </ListItem>
 
@@ -536,72 +572,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           ))}
         </List>
 
-        {/* Settings */}
-        {/* {filteredMenus.settingsFlags.length > 0 && (
-          <List sx={{ p: 0, mt: 1 }}>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={handleSettingsToggle}
-                sx={{
-                  borderRadius: 1,
-                  "&.Mui-selected": {
-                    backgroundColor: theme.palette.primary.main,
-                    color: "white",
-                    "&:hover": { backgroundColor: theme.palette.primary.dark },
-                  },
-                  color: isSettingsActive
-                    ? theme.palette.primary.main
-                    : "inherit",
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 36,
-                    color: isSettingsActive
-                      ? theme.palette.primary.main
-                      : "inherit",
-                  }}
-                >
-                  <Settings />
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-                {settingsOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-
-            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
-              <List sx={{ pl: 2 }}>
-                {filteredMenus.settingsFlags.map((category, catIndex) => {
-                  // Check if this category has nested items (like Configurator)
-                  if (category.items.length > 0 && category.title !== "Settings") {
-                    return (
-                      <CategorySection
-                        key={uuidv4() + catIndex}
-                        category={category}
-                        openCategories={openCategories}
-                        onToggle={handleCategoryToggle}
-                        pathname={pathname}
-                        theme={theme}
-                      />
-                    );
-                  }
-                  
-                  // Regular Settings items (Role Management, User Management)
-           return getAllLinkItems(category.items).map((item) => (
-  <SubMenuItem
-    key={item.path}
-    item={item}
-    pathname={pathname}
-    theme={theme}
-    categoryTitle={category.title}
-  />
-));
-
-                })}
-              </List>
-            </Collapse>
-          </List>
-        )} */}
         {/* Settings */}
         {filteredMenus.settingsFlags.length > 0 && (
           <List sx={{ p: 0, mt: 1 }}>
@@ -736,6 +706,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       filteredMenus,
       pathname,
       theme,
+      router,
       analyticsOpen,
       settingsOpen,
       openCategories,
@@ -772,8 +743,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
           display: "flex",
           justifyContent: "left",
           alignItems: "center",
-          // height: 50,
-          // gap: 2,
         }}
       >
         <Box

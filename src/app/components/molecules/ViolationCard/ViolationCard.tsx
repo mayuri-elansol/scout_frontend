@@ -4,13 +4,12 @@ import { CameraAlt } from "@mui/icons-material";
 import Image from "next/image";
 
 export interface Violation {
-  // voilation?: string;
   violation?: string;
   zone: string;
   time: string;
   imageUrl?: string;
   incident?: string;
-  [key: string]: string | number | boolean | undefined; // extra dynamic fields
+  [key: string]: string | number | boolean | undefined;
 }
 
 interface ViolationCardProps {
@@ -53,14 +52,6 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               mb: 0.5,
             }}
           >
-            {/* {
-              //violations.incident ??
-              violations.violation ??
-                // violations.usage ??
-                // violations.eventMessage ??
-                "Unknown Violation"
-            } */}
-
             {violations.violation || "Unknown Violation"}
           </Typography>
           <Typography sx={{ fontSize: "14px", color: "#5c6b7d" }}>
@@ -84,6 +75,8 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
             mb: 0.5,
             border: "1px solid #dee2e6",
             position: "relative",
+            overflow: "hidden", // ✅ important
+            p: 0.5,
           }}
         >
           {violations.imageUrl ? (
@@ -91,7 +84,10 @@ export const ViolationCard: React.FC<ViolationCardProps> = ({
               src={String(violations.imageUrl)}
               alt="Violation"
               fill
-              style={{ objectFit: "cover", borderRadius: 6 }}
+              style={{
+                objectFit: "cover",
+                borderRadius: 6,
+              }}
               unoptimized
               priority
             />

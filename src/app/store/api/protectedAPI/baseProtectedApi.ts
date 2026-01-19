@@ -54,6 +54,7 @@ export const baseProtectedApi = createApi({
     'CameraManagement',
     'ZoneLocationManagement',
     'UseCaseManager',
-    'ROI'
+    'ROI',
+    'UserList'
   ],
 });

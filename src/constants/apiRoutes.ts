@@ -50,8 +50,8 @@ export const apiRoutes = {
     root: 'user-information',
     getList: 'get-user-list',
     getById: 'get-user-information-by-id',
-    editById: '/edit-user-information-by-id',
-    deleteById: '/delete-user'
+    editById: 'edit-user-information-by-id',
+    deleteById: 'delete-user'
   },
 
   dashboard: {},

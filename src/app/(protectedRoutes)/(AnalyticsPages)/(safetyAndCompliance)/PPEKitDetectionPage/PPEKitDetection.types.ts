@@ -1,12 +1,6 @@
 import { SvgIconComponent } from "@mui/icons-material";
 import { ppeKpiConfig } from "./PPEKitDetectionConfig";
 
-// export interface FilterParams {
-//   status?: string;
-//   employeeName?: string;
-//   startDate?: string;
-//   endDate?: string;
-// }
 export interface FilterParams {
   violation?: string;
   zone?: string;
@@ -15,7 +9,6 @@ export interface FilterParams {
   startDate?: string;
   endDate?: string;
 }
-
 
 export interface ReportParams extends Violation {
   cameraId: string;

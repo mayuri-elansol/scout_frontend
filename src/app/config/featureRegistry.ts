@@ -1,63 +1,3 @@
-// // config/featureRegistry.ts
-// export const FEATURE = {
-//   // Dashboards
-//   SAFETY_COMPLIANCE: "SF001",
-//   SURVEILLANCE_MONITORING: "SF002",
-//   OPERATIONAL_INSIGHTS: "SF003",
-//   WORKFORCE_MONITORING: "SF004",
-
-//   // Alerts & Settings
-//   ALERTS: "SF005",
-//   ROLE_MANAGEMENT: "SF006",
-//   USER_MANAGEMENT: "SF007",
-
-//   CONFIGURATOR: "SF008",
-
-//   // Analytics – Safety & Compliance
-//   PPE_DETECTION: "SF009",
-//   FIRE_SMOKE: "SF010",
-//   FALL_DETECTION: "SF011",
-//   OBJECT_DETECTION: "SF012",
-//   EMERGENCY_EXIT_BLOCKAGE: "SF013",
-//   CROWD_DETECTION: "SF014",
-
-//   // Surveillance
-//   INTRUSION_DETECTION: "SF015",
-//   UNAUTHORIZED_ACCESS: "SF016",
-//   CAMERA_TAMPERING: "SF017",
-//   PEOPLE_PRESENCE: "SF018",
-
-//   // Workforce
-//   EMPLOYEE_PRESENCE_CRITICAL_AREA: "SF019",
-//   EMPLOYEE_PRESENCE_RESTRICTED_AREA: "SF020",
-//   EMPLOYEE_IDLE_TIME: "SF021",
-//   MOBILE_PHONE_USAGE: "SF022",
-//   SLEEPING_SECURITY_PERSONNEL: "SF023",
-
-//   // Operational Insight
-//   PEOPLE_COUNT: "SF024",
-//   VEHICLE_COUNT: "SF025",
-//   CANTEEN_USAGE: "SF026",
-//   VEHICLE_UNLOADING_LOADING: "SF027",
-//   UNAUTHORIZED_PARKING: "SF028",
-
-//   // Face Recognition
-//   FACE_RECOGNITION: "SF029",
-//   FACE_IDLE_MONITORING: "SF030",
-
-//   // Live
-//   LIVE_STREAMING: "SF031",
-
-//   // Permissions
-//   ADD_FEATURES: "SF032",
-//   VIEW_ROLE: "SF033",
-//   EDIT_ROLE: "SF034",
-//   DELETE_ROLE: "SF035",
-//   ROLE_OVERVIEW: "SF036",
-// } as const;
-
-// export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
-// config/featureRegistry.ts
 export const FEATURE = {
   // Dashboards
   SAFETY_COMPLIANCE: "SF001",
@@ -97,13 +37,14 @@ export const FEATURE = {
   EMPLOYEE_IDLE_TIME: "SUC013",
   MOBILE_PHONE_USAGE: "SUC014",
   SLEEPING_SECURITY_PERSONNEL: "SUC015",
+
   // Operational Insight
   PEOPLE_COUNT: "SUC016",
   VEHICLE_COUNT: "SUC017",
   CANTEEN_USAGE: "SUC018",
   VEHICLE_UNLOADING_LOADING: "SUC019",
   UNAUTHORIZED_PARKING: "SUC020",
-  
+
   // Face Recognition
   FACE_RECOGNITION: "SUC021",
   FACE_IDLE_MONITORING: "SUC022",

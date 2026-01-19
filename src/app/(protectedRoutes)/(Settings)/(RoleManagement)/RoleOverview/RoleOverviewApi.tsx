@@ -2,7 +2,7 @@ import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi"
 import { apiRoutes } from "@/constants/apiRoutes";
 const roleOverviewApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    roleOverview: builder.query<
+    roleList: builder.query<
       { status: string; message: string; data?: any },
       { tenantId: string; userId: string }
     >({
@@ -27,4 +27,4 @@ const roleOverviewApi = baseProtectedApi.injectEndpoints({
   }),
 });
 
-export const { useRoleOverviewQuery,useDeleteRoleByIdMutation } = roleOverviewApi;
+export const { useRoleListQuery,useDeleteRoleByIdMutation } = roleOverviewApi;

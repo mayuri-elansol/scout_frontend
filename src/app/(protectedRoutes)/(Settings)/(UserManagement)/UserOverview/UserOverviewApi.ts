@@ -2,20 +2,27 @@ import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi"
 import { apiRoutes } from "@/constants/apiRoutes";
 
 
+
 export interface BackendUser {
   userId: string;
   first_name: string | null;
   last_name: string | null;
   email: string;
   phoneNumber: string;
+  createdAt: string;
+  updatedAt: string;
+  role?: string; 
 }
-
 export interface UserOverviewResponse {
   status: string;
   message: string;
   data: BackendUser[];
 }
-
+export interface DeleteUserPayload {
+  tenantId: string;
+  userId: string;        // logged-in user
+  targetUserId: string;  // user to delete
+}
 export const userOverviewApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     getUserOverview: builder.query<
@@ -35,9 +42,21 @@ export const userOverviewApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["UserOverview"],
     }),
+      deleteUser: builder.mutation<
+      { statusCode: number; status: string; message: string },
+      DeleteUserPayload
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.deleteById}`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["UserList"],
+    }),
   }),
 });
 
 export const {
-  useGetUserOverviewQuery,   
+  useGetUserOverviewQuery,
+  useDeleteUserMutation,
 } = userOverviewApi;

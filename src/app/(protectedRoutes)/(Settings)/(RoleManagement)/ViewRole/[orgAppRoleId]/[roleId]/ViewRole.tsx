@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Box, Typography, Grid, Button } from "@mui/material";
@@ -34,11 +34,11 @@ export default function ViewRolePage() {
   );
 
   /* ✅ ADD THIS RIGHT HERE */
-  const roleList = data?.data?.data ?? [];
 
   const selectedRole = React.useMemo(() => {
+    const roleList = data?.data?.data ?? [];
     return roleList.find((item: any) => item.org_app_role_id === orgAppRoleId);
-  }, [roleList, orgAppRoleId]);
+  }, [data, orgAppRoleId]);
 
   /* ---------------- FEATURE API ---------------- */
   const [fetchFeatures, { isLoading, isError }] =
@@ -89,12 +89,7 @@ export default function ViewRolePage() {
             text={selectedRole?.role_id?.name}
           />
         </Grid>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <CardForSettings
-            title="Role Description"
-            text={selectedRole?.org_app_role_id}
-          />
-        </Grid>
+
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <CardForSettings
             title="Created At"
