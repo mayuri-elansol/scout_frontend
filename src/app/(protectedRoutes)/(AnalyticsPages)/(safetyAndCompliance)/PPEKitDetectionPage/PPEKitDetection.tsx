@@ -158,21 +158,6 @@ const PPEDetection: React.FC = () => {
     [fetchKpi, fetchZoneViolations, fetchRecent]
   );
 
-  /* ---------- UI MAPPERS ---------- */
-  // const ppeKpiData = useMemo(
-  //   () =>
-  //     displayKpi.map((item) => ({
-  //       ...item,
-  //       title: t(item.title),
-  //       icon:
-  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]?.icon ||
-  //         EngineeringIcon,
-  //       tooltipMessage:
-  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]
-  //           ?.tooltipMessage || "",
-  //     })),
-  //   [displayKpi, t]
-  // );
   const ppeKpiData = useMemo(
     () =>
       displayKpi.map((item) => {
