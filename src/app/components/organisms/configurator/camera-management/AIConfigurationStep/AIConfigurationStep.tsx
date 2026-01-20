@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { SyntheticEvent, useEffect, useState } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 import {
   useGetUsecasesQuery,
@@ -82,6 +82,7 @@ interface AIConfigurationStepProps {
   camera: CameraData;
   onSave: (aiConfig: AIConfig) => void;
   onBack: () => void;
+  tenantId: string;
 }
 
 interface UseCaseData {
@@ -100,6 +101,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   camera,
   onSave,
   onBack,
+  tenantId,
 }) => {
 
   // RTK Query hooks
@@ -406,15 +408,19 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   // };
 
   const getCameraFeedUrl = () => {
-    if (!camera?.id) {
-      return '/img/siteimage.jpg';
-    }
+  if (!camera?.id || !tenantId) {
+    console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
+    return '/img/siteimage.jpg';
+  }
 
-    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${camera.id}/frame`;
-  };
-  const handleCloseSnackbar = () => {
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+
+};
+
+
+  function handleCloseSnackbar(event: SyntheticEvent | Event, reason?: string): void {
     setSnackbar(prev => ({ ...prev, open: false }));
-  };
+  }
 
   return (
     <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>

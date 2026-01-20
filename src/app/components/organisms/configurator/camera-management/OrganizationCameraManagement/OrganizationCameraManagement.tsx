@@ -1,6 +1,7 @@
 'use client';
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+// import { useSession } from 'next-auth/react';
+import { useAuth } from "@/customhooks/useAuth";
 
 import {
   Box,
@@ -51,6 +52,8 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   forceAddCamera = false,
   forceConfigureCamera,
 }) => {
+  const { user } = useAuth();
+  const tenantId = user?.org_id || '';
 
   // const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
 
@@ -200,6 +203,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
         <AIConfigurationStep
           camera={camera!}
+          tenantId={tenantId}   
           onSave={(aiConfig) => handleAIConfigSave(selectedCameraForConfig, aiConfig)}
           onBack={() => setSelectedCameraForConfig(null)}
         />
