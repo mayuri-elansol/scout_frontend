@@ -170,12 +170,11 @@ const UserOverview: React.FC = () => {
 
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <TextField
-          label="Search users"
-          placeholder="Search by name, email, or phone"
+          label="Search"
           size="small"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ minWidth: 300 }}
+          // sx={{ minWidth: 300 }}
         />
         {canAddUser && (
           <Button
