@@ -1,6 +1,5 @@
 "use client";
 
-import { v4 as uuidv4 } from "uuid";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import {
@@ -27,10 +26,13 @@ import styles from "./AddUser.module.css";
 import { useRouter } from "next/navigation";
 import { RootState } from "@/app/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { useAddUserMutation } from "./AddUseApi";
+import { useAddUserMutation } from "./AddUserApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import { useRoleListQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { OrgAppRole } from "./AddUser.types";
 
 interface UserFormValues {
   role: string;
@@ -53,59 +55,59 @@ const AddUser: React.FC = () => {
   const tenantId = user?.org_id;
   const userId = user?.userId;
 
+ 
   const [addUser, { isLoading: isSubmitting }] = useAddUserMutation();
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { data, isLoading } = useRoleListQuery(
-    { tenantId: tenantId!, userId: userId! },
-    { skip: !tenantId || !userId }
-  );
-  const { control, handleSubmit, reset, setValue } = useForm<UserFormValues>({
-    defaultValues: {
-      role: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      employeeId: "",
-      phone: "",
-      userName: "",
-      password: "",
-    },
-  });
+const { data, isLoading } = useRoleListQuery(
+  tenantId && userId
+    ? { tenantId, userId }
+    : skipToken
+);
 
-  // 🔐 Auto-generate password ONCE
+
+  const { control, handleSubmit, reset, setValue } =
+    useForm<UserFormValues>({
+      defaultValues: {
+        role: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        employeeId: "",
+        phone: "",
+        userName: "",
+        password: "",
+      },
+    });
+
   useEffect(() => {
     setValue("password", generatePassword());
   }, [setValue]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     const file = e.target.files?.[0] ?? null;
     setProfileImage(file);
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setImagePreview(reader.result as string);
-      reader.readAsDataURL(file);
-    } else {
+    if (!file) {
       setImagePreview(null);
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onloadend = () =>
+      setImagePreview(reader.result as string);
+    reader.readAsDataURL(file);
   };
 
-  // ✅ FINAL SUBMIT
-  const onSubmit: SubmitHandler<UserFormValues> = async (data) => {
+  const onSubmit: SubmitHandler<UserFormValues> = async (formData) => {
     try {
       await addUser({
         payload: {
-          role: data.role,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          employeeId: data.employeeId,
-          phone: data.phone,
-          userName: data.userName,
-          password: data.password,
+          ...formData,
           orgId: tenantId!,
         },
         image: profileImage ?? undefined,
@@ -122,15 +124,12 @@ const AddUser: React.FC = () => {
       reset();
       setProfileImage(null);
       setImagePreview(null);
-
       router.push("/UserOverview");
-    } catch (err: any) {
-      console.error(err);
-
+    } catch (error) {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || "Failed to add user",
+          message: getErrorMessage(error, "Failed to add user"),
           severity: "error",
         })
       );
@@ -159,14 +158,15 @@ const AddUser: React.FC = () => {
                   rules={{ required: "Role is required" }}
                   render={({ field }) => (
                     <Select {...field} label="Role" disabled={isLoading}>
-                      {data?.data?.data?.map((r: any) => (
-                        <MenuItem
-                          key={r.role_id?.role_id || uuidv4()}
-                          value={r.role_id?.name}
-                        >
-                          {r.role_id?.name}
-                        </MenuItem>
-                      ))}
+                   {data?.data?.data?.map((r: OrgAppRole) => (
+  <MenuItem
+    key={r.org_app_role_id}
+    value={r.role_id.name}
+  >
+    {r.role_id.name}
+  </MenuItem>
+))}
+
                     </Select>
                   )}
                 />

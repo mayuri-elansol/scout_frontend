@@ -61,9 +61,18 @@ const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
   });
 
 // Helper function to filter children by feature
-const filterChildrenByFeature = (items: MenuItemConfig[], features: any) => {
+// const filterChildrenByFeature = (items: MenuItemConfig[], features: any) => {
+//   return items.filter(
+//     (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+//   );
+// };
+// Helper function to filter children by feature
+const filterChildrenByFeature = (
+  items: MenuItemConfig[],
+  features: string[]
+): LinkMenuItem[] => {
   return items.filter(
-    (sub) => isLink(sub) && hasFeature(features, sub.featureId)
+    (sub): sub is LinkMenuItem => isLink(sub) && hasFeature(features, sub.featureId)
   );
 };
 

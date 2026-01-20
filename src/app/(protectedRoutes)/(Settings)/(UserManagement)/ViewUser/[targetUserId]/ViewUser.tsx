@@ -6,8 +6,7 @@ import React, { useEffect, useMemo } from "react";
 import PersonIcon from "@mui/icons-material/Person";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+
 import EventIcon from "@mui/icons-material/Event";
 import UpdateIcon from "@mui/icons-material/Update";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
@@ -15,10 +14,10 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/utils/dateUtils";
 import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
-import {  useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
+import { useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
-import { BackendRole, BackendUser } from "./viewUser.types";
+import { BackendUser } from "./viewUser.types";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 
 export default function ViewUserPage() {
@@ -38,9 +37,10 @@ export default function ViewUserPage() {
     isLoading: roleListLoading,
     isError: roleListError,
   } = useGetUserRoleQuery(
-    { tenantId: tenantId!, userId: userId! },
-    { skip: !tenantId || !userId }
+    { tenantId: tenantId!, userId: targetUserId! },
+    { skip: !tenantId || !targetUserId }
   );
+
 
   // Fetch user details
   const {
@@ -77,9 +77,12 @@ export default function ViewUserPage() {
   const user: BackendUser | null = userData?.data ?? null;
 
   const selectedRole = useMemo(() => {
-    const roles: BackendRole[] = roleListData?.data?.data ?? [];
-    return roles[0]?.orgAppRole?.role_id?.name ?? "-";
+    const roles = roleListData?.data?.data ?? [];
+    return roles.length
+      ? roles.map(r => r.orgAppRole.role_id.name).join(", ")
+      : "-";
   }, [roleListData]);
+
   const viewUser = useMemo(() => {
     return {
       name: `${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || "-",
@@ -126,15 +129,23 @@ export default function ViewUserPage() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Avatar
               alt={viewUser.name}
-              src="/static/images/avatar/1.jpg"
+              src={user?.image_path || undefined}
               sx={{ width: 56, height: 56, borderRadius: "8px" }}
               variant="square"
-            />
+              slotProps={{
+                img: {
+                  referrerPolicy: "no-referrer",
+                },
+              }}
+            >
+              {!user?.image_path && <PersonIcon />}
+            </Avatar>
+
             <Box>
               <Typography variant="h5" fontWeight={600}>
                 {viewUser.name}
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="body1"
                 sx={{
                   color: viewUser.status === "Active" ? "green" : "red",
@@ -142,7 +153,7 @@ export default function ViewUserPage() {
                 }}
               >
                 {viewUser.status}
-              </Typography>
+              </Typography> */}
             </Box>
           </Box>
           <Button variant="contained" onClick={handleEdit}>
@@ -183,7 +194,7 @@ export default function ViewUserPage() {
                   icon={<ManageAccountsIcon />}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              {/* <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <CardForSettings
                   title="Status"
                   text={viewUser.status}
@@ -195,7 +206,7 @@ export default function ViewUserPage() {
                     )
                   }
                 />
-              </Grid>
+              </Grid> */}
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <CardForSettings
                   title="Created At"

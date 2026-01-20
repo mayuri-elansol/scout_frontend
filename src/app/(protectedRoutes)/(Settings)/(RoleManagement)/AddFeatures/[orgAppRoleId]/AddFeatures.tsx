@@ -24,14 +24,8 @@ import {
   useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
 import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
-/* ---------------- Types ---------------- */
-
-interface Feature {
-  feature_id: string;
-  name: string;
-  description: string;
-}
 
 /* ---------------- Component ---------------- */
 
@@ -102,11 +96,11 @@ const { data: features = [], isLoading } = useGetFeaturesByOrgIdQuery(
       );
 
       router.push("/RoleOverview");
-    } catch (err: any) {
+} catch (err) {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || "Failed to assign features",
+      message: getErrorMessage(err),
           severity: "error",
         })
       );

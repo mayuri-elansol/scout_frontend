@@ -1,29 +1,39 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import RoleSettingTable from './RoleSettingTable';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 
-// Mock data
-const mockRows = [
+import RoleSettingTable from './RoleSettingTable';
+import type { RoleRow } from './RoleSettingTable.types';
+
+/* -------------------------------------------------------------------------- */
+/*                                   MOCK DATA                                */
+/* -------------------------------------------------------------------------- */
+
+const mockRows: RoleRow[] = [
   {
     org_app_role_id: '1',
-    role_id: { role_id: 'admin', name: 'Admin', can_delete: false },
+    role_id: { role_id: 'admin', name: 'Admin' },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     org_app_role_id: '2',
-    role_id: { role_id: 'manager', name: 'Manager', can_delete: true },
+    role_id: { role_id: 'manager', name: 'Manager' },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
     org_app_role_id: '3',
-    role_id: { role_id: 'user', name: 'User', can_delete: true },
+    role_id: { role_id: 'user', name: 'User' },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
 ];
+
+
+/* -------------------------------------------------------------------------- */
+/*                                   META                                     */
+/* -------------------------------------------------------------------------- */
 
 const meta: Meta<typeof RoleSettingTable> = {
   title: 'Components/RoleSettingTable',
@@ -31,16 +41,22 @@ const meta: Meta<typeof RoleSettingTable> = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof RoleSettingTable>;
 
-// Template function
-const Template = (args: any) => (
+/* -------------------------------------------------------------------------- */
+/*                                   TEMPLATE                                 */
+/* -------------------------------------------------------------------------- */
+
+const Template: Story['render'] = (args) => (
   <Box p={3} width="800px">
     <RoleSettingTable {...args} />
   </Box>
 );
 
-// ✅ Stories
+/* -------------------------------------------------------------------------- */
+/*                                   STORIES                                  */
+/* -------------------------------------------------------------------------- */
 
 export const Default: Story = {
   render: Template,
@@ -51,11 +67,11 @@ export const Default: Story = {
     canEdit: true,
     canDelete: true,
     isDeleting: false,
-    onView: (orgAppRoleId: string, roleId: string) =>
+    onView: (orgAppRoleId, roleId) =>
       alert(`View role: ${roleId} (orgAppRoleId: ${orgAppRoleId})`),
-    onEdit: (orgAppRoleId: string, roleId: string) =>
+    onEdit: (orgAppRoleId, roleId) =>
       alert(`Edit role: ${roleId} (orgAppRoleId: ${orgAppRoleId})`),
-    onDelete: (roleId: string) => alert(`Delete role: ${roleId}`),
+    onDelete: (roleId) => alert(`Delete role: ${roleId}`),
   },
 };
 
@@ -78,16 +94,14 @@ export const SelfRoleEditDeleteDisabled: Story = {
   render: Template,
   args: {
     rows: mockRows,
-    roleName: 'Manager', // logged-in as manager
+    roleName: 'Manager',
     canView: true,
     canEdit: true,
     canDelete: true,
     isDeleting: false,
-    onView: (orgAppRoleId: string, roleId: string) =>
-      alert(`View role: ${roleId} (orgAppRoleId: ${orgAppRoleId})`),
-    onEdit: (orgAppRoleId: string, roleId: string) =>
-      alert(`Edit role: ${roleId} (orgAppRoleId: ${orgAppRoleId})`),
-    onDelete: (roleId: string) => alert(`Delete role: ${roleId}`),
+    onView: () => {},
+    onEdit: () => {},
+    onDelete: () => {},
   },
 };
 
@@ -99,7 +113,7 @@ export const DeletingState: Story = {
     canView: true,
     canEdit: true,
     canDelete: true,
-    isDeleting: true, 
+    isDeleting: true,
     onView: () => {},
     onEdit: () => {},
     onDelete: () => {},
