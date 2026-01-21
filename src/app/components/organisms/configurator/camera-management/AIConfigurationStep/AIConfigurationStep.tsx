@@ -72,7 +72,8 @@ interface CameraData {
   password: string;
   port: string;
   make: string;
-  position: string;
+  cameraname: string;
+  location?: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: AIConfig
@@ -489,9 +490,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                 <Typography variant="body2" color="text.secondary">
                   <strong>Camera ID:</strong> {camera.id}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Position:</strong> {camera.position}
-                </Typography>
+                {/* <Typography variant="body2" color="text.secondary">
+                  <strong>Location:</strong> {camera.location || 'N/A'}
+                </Typography> */}
                 <Typography variant="body2" color="text.secondary">
                   <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
                 </Typography>

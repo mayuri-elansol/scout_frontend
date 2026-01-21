@@ -46,6 +46,10 @@ interface OrganizationCameraManagementProps {
   forceConfigureCamera?: string;
 }
 
+interface CameraData extends OrgCamera {
+  cameraname: string;
+}
+
 
 const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> = ({
   initialCameras = [],
@@ -109,7 +113,8 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         password: cam.password,
         port: String(cam.RTSPport),
         make: cam.connectionType,
-        position: cam.cameraName,
+        location: cam.Cameralocation ?? "",
+        cameraName: cam.cameraName,
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
       }))
@@ -198,7 +203,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
   // 1) AI CONFIGURATION SCREEN
   if (selectedCameraForConfig) {
-    const camera = cameras.find((c) => c.id === selectedCameraForConfig);
+    const camera = cameras.find((c) => c.id === selectedCameraForConfig) as CameraData | undefined;
     return (
       <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
         <AIConfigurationStep
@@ -215,7 +220,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
   const onboardingCameras: OnboardingCamera[] = cameras.map((cam) => ({
     id: cam.id,
-    cameraname: cam.position,
+    cameraname: cam.cameraName,
     ipAddress: cam.ipAddress,
     username: cam.username,
     password: cam.password,
@@ -312,7 +317,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
                 <TableBody>
                   {cameras.map((camera) => (
                     <TableRow key={camera.id} hover>
-                      <TableCell>{camera.position}</TableCell>
+                      <TableCell>{camera.cameraName}</TableCell>
                       <TableCell>{camera.ipAddress}</TableCell>
                       <TableCell>{camera.port}</TableCell>
                       <TableCell>{camera.make}</TableCell>

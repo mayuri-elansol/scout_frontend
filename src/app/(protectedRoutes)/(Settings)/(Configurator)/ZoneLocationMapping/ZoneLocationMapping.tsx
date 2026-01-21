@@ -288,6 +288,7 @@ const ZoneLocationMapping: React.FC = () => {
         open={locationsDrawerOpen}
         onClose={() => setLocationsDrawerOpen(false)}
         zone={selectedZone}
+        existingLocations={selectedZone?.locations ?? []}
         onSave={handleSaveLocations}
       />
 

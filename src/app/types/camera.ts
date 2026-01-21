@@ -1,12 +1,13 @@
 // Camera as stored & listed in organization
 export interface OrgCamera {
+  cameraName: any;
   id: string;
   ipAddress: string;
   username: string;
   password: string;
   port: string;
   make: string;
-  position: string;
+  location: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: {
@@ -39,6 +40,7 @@ export interface CameraApiResponse {
   userName: string;
   password: string;
   RTSPport: string | number;
+  Cameralocation?: string;
   connectionType: 'DIRECT_TO_CAMERA' | 'NVR';
   rtspStream?: string;
 }
