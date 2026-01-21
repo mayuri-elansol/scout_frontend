@@ -157,16 +157,18 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
             if (!uc.selected) return uc;
 
             try {
-              const shapes = await getRoi({
+              const rois = await getRoi({
                 cameraId: camera.id,
-                usecaseId: uc.id
+                usecaseId: uc.id,
               }).unwrap();
 
               return {
                 ...uc,
-                roiConfigured: shapes.length > 0,
-                roiShapes: shapes,
+                roiConfigured: rois.length > 0,
+                roiShapes: rois,
               };
+
+
             } catch {
               return uc;
             }
@@ -186,7 +188,10 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
-  const [showCameraView, setShowCameraView] = useState(false);
+  const [showCameraView, setShowCameraView] = useState(true);
+
+  const [frameUrl, setFrameUrl] = useState<string | null>(null);
+
 
   // ROI Modal state
   const [roiModalOpen, setRoiModalOpen] = useState(false);
@@ -256,18 +261,20 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
 
     try {
       // Use RTK Query to get ROI
-      const shapes = await getRoi({
+      const rois = await getRoi({
         cameraId: camera.id,
-        usecaseId: useCaseId
+        usecaseId: useCaseId,
       }).unwrap();
 
       setUseCases(prev =>
         prev.map(uc =>
           uc.id === useCaseId
-            ? { ...uc, roiShapes: shapes, roiConfigured: true }
+            ? { ...uc, roiShapes: rois, roiConfigured: rois.length > 0 }
             : uc
         )
       );
+
+
     } catch {
       // No ROI exists yet → open empty canvas
     }
@@ -288,12 +295,12 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
           type: r.type,
           label: r.name,
           mode: r.mode,
+          color: r.color,
           points: r.points,
         })),
       }).unwrap();
 
-      // 🔥 ADD THIS
-      const refreshed = await getRoi({
+      const rois = await getRoi({
         cameraId: camera.id,
         usecaseId: currentUseCaseForROI,
       }).unwrap();
@@ -303,12 +310,14 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
           uc.id === currentUseCaseForROI
             ? {
               ...uc,
-              roiConfigured: refreshed.length > 0,
-              roiShapes: refreshed,
+              roiConfigured: rois.length > 0,
+              roiShapes: rois,
             }
             : uc
         )
       );
+
+
 
 
       setSnackbar({
@@ -408,14 +417,31 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   // };
 
   const getCameraFeedUrl = () => {
-  if (!camera?.id || !tenantId) {
-    console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
-    return '/img/siteimage.jpg';
-  }
+    if (!camera?.id || !tenantId) {
+      console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
+      return '/img/siteimage.jpg';
+    }
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+    // return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame?t=${Date.now()}`;
 
-  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+  };
 
-};
+  useEffect(() => {
+    if (!showCameraView) {
+      setFrameUrl(null);
+      return;
+    }
+
+    // initial frame
+    setFrameUrl(getCameraFeedUrl());
+
+    const interval = setInterval(() => {
+      setFrameUrl(getCameraFeedUrl());
+    }, 1000); // 🔁 1 frame per second (adjust if needed)
+
+    return () => clearInterval(interval);
+  }, [showCameraView, camera.id, tenantId]);
+
 
 
   function handleCloseSnackbar(event: SyntheticEvent | Event, reason?: string): void {
@@ -505,15 +531,32 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
               }}
             >
               {showCameraView ? (
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-                  <Typography variant="h6" gutterBottom>
-                    Live Camera Feed
-                  </Typography>
-                  <Typography variant="body2">
-                    Click &apos;View&apos; on a camera row
-                  </Typography>
-                </Box>
+                frameUrl ? (
+                  <Box
+                    component="img"
+                    src={frameUrl}
+                    alt="Live Camera Frame"
+                    sx={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'contain',
+                      borderRadius: 1,
+                    }}
+                    onError={() => {
+                      console.error('Failed to load camera frame');
+                      setFrameUrl(null);
+                    }}
+                  />
+                ) : (
+                  <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+                    <CircularProgress />
+                    <Typography variant="body2" sx={{ mt: 1 }}>
+                      Loading camera feed...
+                    </Typography>
+                  </Box>
+                )
               ) : (
+
                 <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
                   <Typography variant="body2">
                     Click &apos;Show Camera View&apos; to display feed

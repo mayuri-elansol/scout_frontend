@@ -759,7 +759,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                       <Grid size={{ xs: 12 }}>
                         <TextField
-                          label="rstp link"
+                          label="rtsp link"
                           required
                           fullWidth
                           size="small"

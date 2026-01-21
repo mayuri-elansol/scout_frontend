@@ -28,10 +28,16 @@ export type RoiResponse = {
         type: ROIShape["type"];
         label: string;
         mode: ROIShape["mode"];
+        color: string;
         points: ROIShape["points"];
     }[];
 };
 
+// interface RoiResponse {
+//   version: number;
+//   canvasAspectRatio: string;
+//   rois: ROIShape[];
+// }
 
 /* ---------- API ---------- */
 
@@ -54,7 +60,7 @@ export const roiApi = baseProtectedApi.injectEndpoints({
                     mode: r.mode,
                     points: r.points,
                     completed: true,
-                    color: "#00ff00",
+                    color: r.color ?? "#00ff00",
                 }));
             },
         }),
