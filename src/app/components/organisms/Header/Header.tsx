@@ -30,6 +30,8 @@ import {
   analyticsMenu,
   dashboardMenu,
   LinkMenuItem,
+  liveStreamingMenu,
+  settingsMenu,
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
 import { usePathname } from "next/navigation";
@@ -187,22 +189,38 @@ const Header: React.FC = () => {
         item.path.toLowerCase() === pathname.toLowerCase()
     );
 
-    return currentItem?.name ?? "Live Streaming";
+    return currentItem?.name ?? "Dashboard";
   };
 
   useEffect(() => {
+    // const allMenuItems = [
+    //   ...dashboardMenu.flatMap((category) => category.items),
+    //   ...alertMenu,
+    //   ...analyticsMenu.flatMap((category) => category.items),
+    // ];
+
+
+    // const currentItem = allMenuItems.find(
+    //   (item): item is LinkMenuItem =>
+    //     item.type === "link" &&
+    //     item.path.toLowerCase() === pathname.toLowerCase()
+    // );
+
+
     const allMenuItems = [
-      ...dashboardMenu.flatMap((category) => category.items),
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
+  ...liveStreamingMenu,
+  ...dashboardMenu.flatMap(c => c.items),
+  ...alertMenu,
+  ...analyticsMenu.flatMap(c => c.items),
+  ...settingsMenu.flatMap(c => c.items),
+];
 
-    const currentItem = allMenuItems.find(
-      (item): item is LinkMenuItem =>
-        item.type === "link" &&
+  
+const currentItem = allMenuItems.find(
+  (item): item is LinkMenuItem =>
+    item.type === "link" &&
         item.path.toLowerCase() === pathname.toLowerCase()
-    );
-
+);
     setCurrentPage(
       currentItem ? currentItem.page! : "safety-compliance-dashboard"
     );

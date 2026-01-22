@@ -40,7 +40,7 @@ export const userOverviewApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      providesTags: ["UserOverview"],
+      providesTags: ["UserOverview","EditUser"],
     }),
       deleteUser: builder.mutation<
       { statusCode: number; status: string; message: string },

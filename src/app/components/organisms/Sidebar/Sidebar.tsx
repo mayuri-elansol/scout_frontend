@@ -60,12 +60,7 @@ const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
     return [];
   });
 
-// Helper function to filter children by feature
-// const filterChildrenByFeature = (items: MenuItemConfig[], features: any) => {
-//   return items.filter(
-//     (sub) => isLink(sub) && hasFeature(features, sub.featureId)
-//   );
-// };
+
 // Helper function to filter children by feature
 const filterChildrenByFeature = (
   items: MenuItemConfig[],
@@ -372,18 +367,51 @@ const Sidebar: React.FC<SidebarProps> = () => {
     {}
   );
 
-  const handleCategoryToggle = useCallback((title: string) => {
-    setOpenCategories((prev) => ({ ...prev, [title]: !prev[title] }));
-  }, []);
+const handleCategoryToggle = useCallback(
+  (title: string, isTopLevel: boolean = true) => {
+    setOpenCategories((prev) => {
+      const isCurrentlyOpen = !!prev[title];
 
-  const handleAnalyticsToggle = useCallback(() => {
-    setAnalyticsOpen((prev) => !prev);
-  }, []);
+      if (isTopLevel) {
+        // Close all other top-level categories
+        const newState: Record<string, boolean> = {};
+        if (!isCurrentlyOpen) {
+          newState[title] = true;
+        }
+        return newState;
+      } else {
+        // Nested toggle: just toggle this item
+        return {
+          ...prev,
+          [title]: !isCurrentlyOpen,
+        };
+      }
+    });
+  },
+  []
+);
 
-  const handleSettingsToggle = useCallback(() => {
-    setSettingsOpen((prev) => !prev);
-  }, []);
+const handleAnalyticsToggle = useCallback(() => {
+  const willOpen = !analyticsOpen;
+  
+  if (willOpen) {
+    setOpenCategories({});
+    setSettingsOpen(false);
+  }
+  
+  setAnalyticsOpen((prev) => !prev);
+}, [analyticsOpen]);
 
+const handleSettingsToggle = useCallback(() => {
+  const willOpen = !settingsOpen;
+  
+  if (willOpen) {
+    setOpenCategories({});
+    setAnalyticsOpen(false);
+  }
+  
+  setSettingsOpen((prev) => !prev);
+}, [settingsOpen]);
   const filteredMenus = useMemo(() => {
     const filterCategoryItems = (items: MenuItemConfig[]) => {
       return items
@@ -477,7 +505,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 iconColor = theme.palette.primary.main;
               }
               return (
-                <Box key={uuidv4() + index} sx={{ mb: 1 }}>
+                // <Box key={uuidv4() + index} sx={{ mb: 1 }}>
+                  <Box key={category.title} sx={{ mb: 1 }}>
+
                   <ListItem disablePadding>
                     <ListItemButton
                       selected={isDashboardRoot}
@@ -528,7 +558,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     </ListItemButton>
                   </ListItem>
 
-                  <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                  <Collapse in={isOpen} timeout="auto" >
+                  
                     <List sx={{ pl: 2 }}>
                       {getAllLinkItems(category.items).map((item) => (
                         <SubMenuItem
@@ -546,6 +577,15 @@ const Sidebar: React.FC<SidebarProps> = () => {
             })}
           </List>
         )}
+
+
+
+
+
+
+
+
+
 
         {/* Analytics */}
         {filteredMenus.analyticsFlags.length > 0 && (

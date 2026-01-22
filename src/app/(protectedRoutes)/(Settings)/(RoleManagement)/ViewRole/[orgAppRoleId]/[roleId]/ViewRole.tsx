@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 import {
   useGetFeatureOfRoleByRoleIdMutation,
@@ -15,6 +14,7 @@ import { RootState } from "@/app/store/store";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import { formatDate } from "@/utils/dateUtils";
 import { OrgAppRole, RoleFeature } from "./ViewRole.types";
+import Loader from "@/app/components/atoms/Loader/Loader";
 
 export default function ViewRolePage() {
   const router = useRouter();

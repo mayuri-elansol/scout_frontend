@@ -34,6 +34,7 @@ import {
 } from "./EditUserApi";
 import { useRoleListQuery } from "../../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 import { getErrorMessage } from "@/utils/getErrorMessage";
+import Loader from "@/app/components/atoms/Loader/Loader";
 
 interface UserFormValues {
   orgAppRoleId: string;
@@ -59,17 +60,17 @@ const EditUser: React.FC = () => {
 
   const [editUser, { isLoading: isSubmitting }] = useEditUserMutation();
 
-  const { data: userData } = useGetUserByIdQuery(
+  const { data: userData, isLoading: isUserLoading } = useGetUserByIdQuery(
     { tenantId: tenantId!, userId: targetUserId },
     { skip: !tenantId || !loggedInUserId || !targetUserId }
   );
 
-  const { data: userRoleData } = useGetUserRoleByUserIdQuery(
+  const { data: userRoleData,isLoading: isUserRoleLoading } = useGetUserRoleByUserIdQuery(
     { userId: targetUserId!, orgId: tenantId! },
     { skip: !tenantId || !targetUserId }
   );
 
-  const { data: roleData } = useRoleListQuery(
+  const { data: roleData,isLoading: isRoleLoading } = useRoleListQuery(
     { tenantId: tenantId!, userId: loggedInUserId! },
     { skip: !tenantId || !loggedInUserId }
   );
@@ -164,8 +165,16 @@ const EditUser: React.FC = () => {
       );
     }
   };
+const isPageLoading =
+  isUserLoading || isUserRoleLoading || isRoleLoading;
 
   return (
+    <>
+    {isPageLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Loader />
+            </Box>
+          ) : (
     <Paper sx={{ p: 2, m: 1.5 }}>
       <Box className={styles.formWrapper}>
         {/* ROLE */}
@@ -323,6 +332,9 @@ const EditUser: React.FC = () => {
         </Box>
       </Box>
     </Paper>
+          )}
+    </>
+        
   );
 };
 

@@ -13,7 +13,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/utils/dateUtils";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";

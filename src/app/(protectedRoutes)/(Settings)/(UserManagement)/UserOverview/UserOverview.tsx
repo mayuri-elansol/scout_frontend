@@ -22,7 +22,7 @@ import {
   useGetUserOverviewQuery,
 } from "./UserOverviewApi";
 import type { BackendUser } from "./UserOverviewApi";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import { FEATURE } from "@/app/config/featureRegistry";
 import UserSettingTable from "@/app/components/organisms/UserSettingTable/UserSettingTable";
