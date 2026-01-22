@@ -28,7 +28,7 @@ import { RootState } from "@/app/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { useAddUserMutation } from "./AddUserApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { useRoleListQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { skipToken } from "@reduxjs/toolkit/query";

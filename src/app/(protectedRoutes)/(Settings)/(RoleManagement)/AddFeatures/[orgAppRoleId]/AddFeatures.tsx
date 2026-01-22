@@ -23,7 +23,7 @@ import {
   useAssignFeatureToRoleMutation,
   useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import {Loader} from "@/app/components/atoms/Loader/Loader";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 
 

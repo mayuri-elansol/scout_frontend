@@ -5,13 +5,12 @@ import { Box, CircularProgress } from "@mui/material";
 const Loader = () => {
   return (
     <Box
-   sx={{
+      sx={{
         display: "flex",
-        alignItems: "center",
         justifyContent: "center",
+        alignItems: "center",
         width: "100%",
-        height: "10%" 
-        
+        height: "80vh",
       }}
     >
       <CircularProgress />

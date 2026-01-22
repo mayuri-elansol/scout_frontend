@@ -26,7 +26,7 @@ import {
   useGetFeaturesByOrgIdQuery,
   useUnmappedFeatureFromRoleByRoleIdMutation,
 } from "./EditRoleApi";
-import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import {Loader} from "@/app/components/atoms/Loader/Loader";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { RoleFeature } from "./EditRole.types";
 
@@ -88,15 +88,6 @@ useEffect(() => {
   }
 }, [allFeaturesRes]);
 
-// useEffect(() => {
-//   const assigned =
-//     roleFeaturesRes?.data?.data?.map(
-//       (i: any) => i.feature_id ?? i.feature?.feature_id
-//     ) ?? [];
-
-//   setSelectedFeatureIds(assigned);
-//   setInitialFeatureIds(assigned);
-// }, [roleFeaturesRes]);
 useEffect(() => {
   const assigned =
     roleFeaturesRes?.data?.data?.map(

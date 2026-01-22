@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store/store';
 import { useRoleListQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
 import { FEATURE } from '@/app/config/featureRegistry';
-import Loader from '@/app/components/atoms/Loader/Loader';
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { showToast } from '@/app/store/slices/toasterSlice';
 import AddRole from '../AddRole/AddRole';
 import RoleSettingTable from '@/app/components/organisms/RoleSettingTable/RoleSettingTable';
