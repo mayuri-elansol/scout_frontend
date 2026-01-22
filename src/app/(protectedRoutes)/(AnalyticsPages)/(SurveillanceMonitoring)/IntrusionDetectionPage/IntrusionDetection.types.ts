@@ -78,3 +78,10 @@ export type IntrusionCsvReportRequest = {
   cameraId?: string;
   alarmTriggered?: boolean;
 };
+
+export interface IntrusionSocketPayload {
+  serverTimestamp: string;
+  kpi: IntrusionKpiItem[];
+  zoneViolations: IntrusionZoneViolation[];
+  recentViolations: IntrusionViolation[];
+}

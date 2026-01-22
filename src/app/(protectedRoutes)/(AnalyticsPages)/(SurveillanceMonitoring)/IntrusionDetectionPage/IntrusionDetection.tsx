@@ -28,11 +28,14 @@ import {
   IntrusionDetailedReportResponse,
   IntrusionFilterParams,
   IntrusionKpiItem,
+  IntrusionSocketPayload,
   IntrusionViolation,
   IntrusionZoneViolation,
 } from "./IntrusionDetection.types";
 import { intrusionKpiConfig } from "./IntrusionDetectionConfig";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
 const IntrusionDetection: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -105,17 +108,17 @@ const IntrusionDetection: React.FC = () => {
   ]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
+  useSocketEvent<IntrusionSocketPayload>({
+    tenantId,
+    enabled: isIntrusionLiveMode,
+    event: SOCKET_EVENTS.INTRUSION_UPDATE,
+    handler: (payload) => {
+      console.log("payload form the socket", payload);
+      setDisplayIntrusionKpi(payload.kpi ?? []);
+      setDisplayIntrusionZoneViolations(payload.zoneViolations ?? []);
+      setRecentIntrusionViolationsLive(payload.recentViolations ?? []);
+    },
+  });
 
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
