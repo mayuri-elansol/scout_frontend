@@ -1,10 +1,12 @@
+
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { CreateRoleApiResponse } from "./CreateRole.type";
 
 export const createRoleApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     createRole: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      CreateRoleApiResponse,
       {
         tenantId: string;
         userId: string;

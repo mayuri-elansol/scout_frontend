@@ -15,21 +15,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatDate } from '@/utils/dateUtils';
-
-interface RoleSettingTableProps {
-  rows: any[];
-  roleName?: string;
-
-  canView: boolean;
-  canEdit: boolean;
-  canDelete: boolean;
-
-  isDeleting: boolean;
-
-  onView: (orgAppRoleId: string, roleId: string) => void;
-  onEdit: (orgAppRoleId: string, roleId: string) => void;
-  onDelete: (roleId: string) => void;
-}
+import { RoleSettingTableProps } from './RoleSettingTable.types';
+ 
 
 const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
   rows,

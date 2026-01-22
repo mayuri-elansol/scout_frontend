@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -10,11 +11,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
+  TextField,
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 
-import SettingTable from "@/app/components/organisms/UserSettingTable/UserSettingTable";
 import { RootState } from "@/app/store/store";
 import {
   useDeleteUserMutation,
@@ -25,14 +26,7 @@ import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import { FEATURE } from "@/app/config/featureRegistry";
 import UserSettingTable from "@/app/components/organisms/UserSettingTable/UserSettingTable";
-
-/** Table-only user */
-interface TableUser {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-}
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 const UserOverview: React.FC = () => {
   const router = useRouter();
@@ -41,6 +35,7 @@ const UserOverview: React.FC = () => {
   const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
   const userId = user?.userId;
+  
   /* ---------- PERMISSIONS ---------- */
   const canAddUser = features.includes(FEATURE.ADD_USER);
   const canViewUser = features.includes(FEATURE.VIEW_USER);
@@ -54,28 +49,68 @@ const UserOverview: React.FC = () => {
 
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
-  const backendUsers: BackendUser[] = data?.data ?? [];
-  const users: TableUser[] = backendUsers.map((u) => ({
-    firstName: u.first_name ?? "",
-    lastName: u.last_name ?? "",
-    email: u.email,
-    phone: u.phoneNumber,
-  }));
+  /** ----- SEARCH STATE ----- */
+  const [searchQuery, setSearchQuery] = useState("");
+
+  /** ----- FILTERED USERS ----- */
+  const { filteredBackendUsers, filteredTableUsers } = useMemo(() => {
+    const backendUsers: BackendUser[] = data?.data ?? [];
+    
+    if (!searchQuery.trim()) {
+      // No search query - return all users
+      const tableUsers = backendUsers.map((u) => ({
+        firstName: u.first_name ?? "",
+        lastName: u.last_name ?? "",
+        email: u.email,
+        phone: u.phoneNumber,
+      }));
+      return {
+        filteredBackendUsers: backendUsers,
+        filteredTableUsers: tableUsers,
+      };
+    }
+
+    // Filter users based on search query
+    const query = searchQuery.toLowerCase();
+    const filtered = backendUsers.filter((u) => {
+      const firstName = (u.first_name ?? "").toLowerCase();
+      const lastName = (u.last_name ?? "").toLowerCase();
+      const email = (u.email ?? "").toLowerCase();
+      const phone = (u.phoneNumber ?? "").toLowerCase();
+      
+      return (
+        firstName.includes(query) ||
+        lastName.includes(query) ||
+        email.includes(query) ||
+        phone.includes(query)
+      );
+    });
+
+    const tableUsers = filtered.map((u) => ({
+      firstName: u.first_name ?? "",
+      lastName: u.last_name ?? "",
+      email: u.email,
+      phone: u.phoneNumber,
+    }));
+
+    return {
+      filteredBackendUsers: filtered,
+      filteredTableUsers: tableUsers,
+    };
+  }, [data?.data, searchQuery]);
 
   /** ----- DIALOG STATE ----- */
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [selectedUserIndex, setSelectedUserIndex] = useState<number | null>(
-    null
-  );
+  const [selectedUserIndex, setSelectedUserIndex] = useState<number | null>(null);
 
   const handleView = (index: number) => {
-    const selectedUser = backendUsers[index];
+    const selectedUser = filteredBackendUsers[index];
     if (!selectedUser) return;
     router.push(`/ViewUser/${selectedUser.userId}`);
   };
 
   const handleEdit = (index: number) => {
-    const selectedUser = backendUsers[index];
+    const selectedUser = filteredBackendUsers[index];
     if (!selectedUser) return;
     router.push(`/EditUser/${selectedUser.userId}`);
   };
@@ -92,7 +127,7 @@ const UserOverview: React.FC = () => {
 
   const handleDeleteConfirm = async () => {
     if (selectedUserIndex === null) return;
-    const selectedUser = backendUsers[selectedUserIndex];
+    const selectedUser = filteredBackendUsers[selectedUserIndex];
 
     try {
       await deleteUser({
@@ -108,11 +143,11 @@ const UserOverview: React.FC = () => {
           severity: "success",
         })
       );
-    } catch (err: any) {
+    } catch (err) {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || "Failed to delete user",
+          message: getErrorMessage(err, "Failed to delete user"),
           severity: "error",
         })
       );
@@ -129,42 +164,47 @@ const UserOverview: React.FC = () => {
     <Box sx={{ p: 3 }}>
       {isError && (
         <Typography color="error">
-          {(error as any)?.data?.message || "Failed to fetch users"}
+          {getErrorMessage(error, "Failed to fetch users")}
         </Typography>
       )}
 
-      {users.length > 0 &&  !isLoading && (
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <TextField
+          label="Search"
+          size="small"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          // sx={{ minWidth: 300 }}
+        />
+        {canAddUser && (
+          <Button
+            variant="contained"
+            onClick={() => router.push("/AddUser")}
+          >
+            Add User
+          </Button>
+        )}
+      </Box>
+
+      {filteredTableUsers.length > 0 && !isLoading && (
         <UserSettingTable
-          users={users}
-          backendUsers={backendUsers}
+          users={filteredTableUsers}
+          backendUsers={filteredBackendUsers}
           currentUserId={userId}
           canView={canViewUser}
           canEdit={canEditUser}
           canDelete={canDeleteUser}
           onView={handleView}
           onEdit={handleEdit}
-          onDelete={handleOpenConfirm} // <-- OPEN DIALOG
+          onDelete={handleOpenConfirm}
         />
       )}
 
-      {users.length === 0 && !isError && (
-        <Typography color="text.secondary">No users found.</Typography>
+      {filteredTableUsers.length === 0 && !isError && (
+        <Typography color="text.secondary">
+          {searchQuery ? "No users found matching your search." : "No users found."}
+        </Typography>
       )}
-
-      {/* {canAddUser && (<Box textAlign="center" mt={3}>
-        <Button variant="contained" onClick={() => router.push("/AddUser")}>
-          Add User
-        </Button>
-      </Box>)} */}
-<Box textAlign="center" mt={3}>
-  <Button
-    variant="contained"
-    onClick={() => router.push("/AddUser")}
-    disabled={!canAddUser} //  disable if no permission
-  >
-    Add User
-  </Button>
-</Box>
 
       {/* ---------- CONFIRM DELETE DIALOG ---------- */}
       <Dialog open={openConfirm} onClose={handleCloseConfirm}>

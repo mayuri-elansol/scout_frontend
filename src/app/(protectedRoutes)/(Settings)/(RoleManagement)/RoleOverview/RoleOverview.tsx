@@ -4,7 +4,6 @@
 import React, { useMemo, useState } from 'react';
 import {
   Box,
-
   TextField,
   Button,
   Dialog,
@@ -23,6 +22,7 @@ import Loader from '@/app/components/atoms/Loader/Loader';
 import { showToast } from '@/app/store/slices/toasterSlice';
 import AddRole from '../AddRole/AddRole';
 import RoleSettingTable from '@/app/components/organisms/RoleSettingTable/RoleSettingTable';
+import { getErrorMessage } from '@/utils/getErrorMessage';
 
 export default function RoleOverview() {
   const router = useRouter();
@@ -45,7 +45,9 @@ export default function RoleOverview() {
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
-  const rows = data?.data?.data ?? [];
+const rows = useMemo(() => {
+  return data?.data?.data ?? [];
+}, [data]);
 
   const [deleteRoleById, { isLoading: isDeleting }] =
     useDeleteRoleByIdMutation();
@@ -145,11 +147,11 @@ export default function RoleOverview() {
       );
 
       handleCloseConfirm();
-    } catch (err: any) {
+    } catch (err) {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || "Failed to delete role",
+      message: getErrorMessage(err),
           severity: "error",
         })
       );

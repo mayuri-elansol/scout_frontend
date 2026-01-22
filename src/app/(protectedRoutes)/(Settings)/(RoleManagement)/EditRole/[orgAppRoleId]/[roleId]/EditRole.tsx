@@ -27,6 +27,8 @@ import {
   useUnmappedFeatureFromRoleByRoleIdMutation,
 } from "./EditRoleApi";
 import Loader from "@/app/components/atoms/FullPageLoader/FullPageLoader";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { RoleFeature } from "./EditRole.types";
 
 /* ---------------- Types ---------------- */
 
@@ -86,16 +88,25 @@ useEffect(() => {
   }
 }, [allFeaturesRes]);
 
+// useEffect(() => {
+//   const assigned =
+//     roleFeaturesRes?.data?.data?.map(
+//       (i: any) => i.feature_id ?? i.feature?.feature_id
+//     ) ?? [];
+
+//   setSelectedFeatureIds(assigned);
+//   setInitialFeatureIds(assigned);
+// }, [roleFeaturesRes]);
 useEffect(() => {
   const assigned =
     roleFeaturesRes?.data?.data?.map(
-      (i: any) => i.feature_id ?? i.feature?.feature_id
-    ) ?? [];
+      (item: RoleFeature) =>
+        item.feature_id ?? item.feature?.feature_id
+    ).filter((id): id is string => Boolean(id)) ?? [];
 
   setSelectedFeatureIds(assigned);
   setInitialFeatureIds(assigned);
 }, [roleFeaturesRes]);
-
   /* ---------------- Loading ---------------- */
   const isPageLoading = isAllLoading || isRoleLoading;
 
@@ -158,11 +169,11 @@ useEffect(() => {
     );
 
     router.push("/RoleOverview");
-  } catch (err: any) {
+  } catch (err) {
     dispatch(
       showToast({
         id: crypto.randomUUID(),
-        message: err?.data?.message || "Failed to update permissions",
+        message: getErrorMessage(err),
         severity: "error",
       })
     );
