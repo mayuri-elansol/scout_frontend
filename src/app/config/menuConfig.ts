@@ -107,6 +107,13 @@ export const dashboardMenu: CategoryConfig[] = [
         path: "/WorkforceMonitoringDashboard",
         featureId: FEATURE.WORKFORCE_MONITORING,
       },
+      {
+        type: "link",
+        name: "Camera Tampering",
+        page: "workforce-monitoring-dashboard",
+        path: "/CameraTamperingDashboard",
+        featureId: FEATURE.CAMERA_TAMPERING,
+      },
     ],
   },
 ];
@@ -185,18 +192,18 @@ export const settingsMenu: CategoryConfig[] = [
 ========================= */
 
 export const analyticsMenu: CategoryConfig[] = [
-  {
-    title: "Camera Tampering",
-    icon: VideocamIcon,
-    items: [
-      {
-        type: "link",
-        name: "Camera Tampering Dashboard",
-        path: "/CameraTamperingDashboard",
-        featureId: FEATURE.CAMERA_TAMPERING,
-      },
-    ],
-  },
+  // {
+  //   title: "Camera Tampering",
+  //   icon: VideocamIcon,
+  //   items: [
+  //     {
+  //       type: "link",
+  //       name: "Camera Tampering Dashboard",
+  //       path: "/CameraTamperingDashboard",
+  //       featureId: FEATURE.CAMERA_TAMPERING,
+  //     },
+  //   ],
+  // },
   {
     title: "Safety and Compliance",
     icon: Shield,

@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 interface RealtimeSocketOptions {
   topic: string;
   onData: (data: any) => void;
-  onLiveFrame?: (frame: any) => void; 
+  onLiveFrame?: (frame: any) => void;
 }
 
 export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {

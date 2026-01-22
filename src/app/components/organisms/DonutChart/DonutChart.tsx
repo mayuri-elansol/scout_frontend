@@ -20,10 +20,12 @@ const CameraStatusDonutChart: React.FC<CameraStatusDonutChartProps> = ({
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: 3,
+        //  backgroundColor: theme.palette.background.paper,
+        //   backgroundColor: "red",
+        // borderRadius: 3,
+
         p: 3,
-        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        //  boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
       }}
     >
       {/* Title */}
@@ -38,8 +40,9 @@ const CameraStatusDonutChart: React.FC<CameraStatusDonutChartProps> = ({
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           flexWrap: "wrap",
+          //  bgcolor: "blue",
         }}
       >
         {/* Donut chart */}
