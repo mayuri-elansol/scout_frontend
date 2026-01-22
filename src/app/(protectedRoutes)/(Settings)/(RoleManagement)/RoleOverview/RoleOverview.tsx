@@ -171,7 +171,7 @@ if (!isLoading && !isFetching && rows.length === 0) {
 <Box sx={{ p: 2 }}>
   {isFetching || isLoading ? (
     // ✅ Loader while fetching
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+    <Box sx={{ display: "flex", justifyContent: "center" }}>
       <Loader />
     </Box>
   ) : (

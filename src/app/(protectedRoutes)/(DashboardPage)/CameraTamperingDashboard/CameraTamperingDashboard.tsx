@@ -603,6 +603,8 @@ export default function CameraTamperingDashboard() {
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
+         pt: 2,
+        px: 3,
         minHeight: 0, // ✅ allow shrinking
         overflow: "hidden", // ✅ prevent runaway growth
       }}
