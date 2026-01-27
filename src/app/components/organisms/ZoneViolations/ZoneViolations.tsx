@@ -180,7 +180,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                             (key) =>
                               key !== "zone" &&
                               key !== "icons" &&
-                              key !== "subViolations"
+                              key !== "subViolations",
                           )
                           .map((key) => {
                             return (
@@ -313,7 +313,7 @@ const ZoneViolations: React.FC<ZoneViolationsProps> = ({
                                   </Box>
                                 </Box>
                               );
-                            }
+                            },
                           )}
                         </Box>
                       </Box>

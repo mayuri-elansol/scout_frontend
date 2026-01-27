@@ -4,12 +4,13 @@ import { basePublicApi } from "@/app/store/api/publicApi/basePublicApi";
 import toasterReducer from "@/app/store/slices/toasterSlice";
 import languageReducer from "./slices/languageSlice";
 import authReducer from "./slices/authSlice";
-
+import routeLoaderReducer from "./slices/routeLoaderSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     toasterGlobal: toasterReducer,
     language: languageReducer,
+  routeLoader: routeLoaderReducer,
 
     // ✅ RTK Query reducers
     [basePublicApi.reducerPath]: basePublicApi.reducer,

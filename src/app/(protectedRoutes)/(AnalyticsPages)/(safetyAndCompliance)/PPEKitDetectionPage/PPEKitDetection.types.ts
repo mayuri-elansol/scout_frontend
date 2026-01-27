@@ -84,10 +84,26 @@ export type PpeCsvReportRequest = {
 };
 
 export interface Violation {
-  voilation?: string;
+  voilation: string;
   zone: string;
   time: string;
-  imageUrl?: string;
-  incident?: string;
-  [key: string]: string | number | boolean | undefined; // extra dynamic fields
+  imageUrl: string;
+  incident: string;
+  [key: string]: string | number | boolean; // extra dynamic fields
+}
+export interface PpeSocketPayload {
+  serverTimestamp: string;
+  kpi: KpiItem[];
+  zoneViolations: ZoneViolationInteface[];
+  recentViolations: PPEViolation[];
+}
+export interface PPEViolation extends Violation {
+  cameraId: string;
+  alarmTriggered: boolean;
+}
+
+export interface DetailedReportResponse {
+  data: PPEViolation[];
+  zones: string[];
+  cameras: string[];
 }

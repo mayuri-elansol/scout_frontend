@@ -49,6 +49,7 @@ export interface BackendUser {
   createdAt: string;
   updatedAt: string;
   role?: string; 
+  image_path?:string
 }
 
 export interface BackendRole {

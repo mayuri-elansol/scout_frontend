@@ -1,3 +1,5 @@
+
+
 "use client";
 import React, { useState } from "react";
 import {
@@ -14,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { useCreateRoleMutation } from "./CreateRoleApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
+import { getErrorMessage } from "@/utils/getErrorMessage";
 
 const CreateRole: React.FC = () => {
   const router = useRouter();
@@ -62,10 +65,10 @@ const CreateRole: React.FC = () => {
 
       // ✅ pass real ID
       router.push(`/AddFeatures/${orgAppRoleId}`);
-    } catch (err: any) {
+    } catch (err) {
       dispatch(
         showToast({
-          message: err?.data?.message || "Failed to create role",
+          message: getErrorMessage(err),
           severity: "error",
           id: crypto.randomUUID(),
         })

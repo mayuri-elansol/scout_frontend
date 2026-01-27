@@ -257,6 +257,14 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCircularProgress: {
+  styleOverrides: {
+    root: ({ theme }) => ({
+      color: theme.palette.primary.main,
+    }),
+  },
+},
+
     MuiLinearProgress: {
       styleOverrides: {
         root: {

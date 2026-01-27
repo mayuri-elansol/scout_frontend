@@ -1,9 +1,12 @@
+
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { ApiResponse, OrgAppRole } from "./RoleOverview.types";
+
 const roleOverviewApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     roleList: builder.query<
-      { status: string; message: string; data?: any },
+      ApiResponse<OrgAppRole[]>,
       { tenantId: string; userId: string }
     >({
       query: (body) => ({
@@ -13,8 +16,9 @@ const roleOverviewApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["RoleOverview"],
     }),
+
     deleteRoleById: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      ApiResponse<null>,
       { tenantId: string; userId: string; roleId: string }
     >({
       query: (body) => ({
@@ -27,4 +31,7 @@ const roleOverviewApi = baseProtectedApi.injectEndpoints({
   }),
 });
 
-export const { useRoleListQuery,useDeleteRoleByIdMutation } = roleOverviewApi;
+export const {
+  useRoleListQuery,
+  useDeleteRoleByIdMutation,
+} = roleOverviewApi;

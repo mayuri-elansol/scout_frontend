@@ -6,5 +6,5 @@ interface LayoutProps {
 }
 
 export default function ProtectedLayout({ children }: LayoutProps) {
-  return <ClientLayout>{children}</ClientLayout>;
+  return <ClientLayout>{children}</ClientLayout>
 }

@@ -1,3 +1,5 @@
+
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -31,6 +33,8 @@ import {
   useGetUserRoleByUserIdQuery,
 } from "./EditUserApi";
 import { useRoleListQuery } from "../../../(RoleManagement)/RoleOverview/RoleOverviewApi";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import Loader from "@/app/components/atoms/Loader/Loader";
 
 interface UserFormValues {
   orgAppRoleId: string;
@@ -56,17 +60,17 @@ const EditUser: React.FC = () => {
 
   const [editUser, { isLoading: isSubmitting }] = useEditUserMutation();
 
-  const { data: userData } = useGetUserByIdQuery(
+  const { data: userData, isLoading: isUserLoading } = useGetUserByIdQuery(
     { tenantId: tenantId!, userId: targetUserId },
     { skip: !tenantId || !loggedInUserId || !targetUserId }
   );
 
-  const { data: userRoleData } = useGetUserRoleByUserIdQuery(
+  const { data: userRoleData,isLoading: isUserRoleLoading } = useGetUserRoleByUserIdQuery(
     { userId: targetUserId!, orgId: tenantId! },
     { skip: !tenantId || !targetUserId }
   );
 
-  const { data: roleData } = useRoleListQuery(
+  const { data: roleData,isLoading: isRoleLoading } = useRoleListQuery(
     { tenantId: tenantId!, userId: loggedInUserId! },
     { skip: !tenantId || !loggedInUserId }
   );
@@ -151,18 +155,26 @@ const EditUser: React.FC = () => {
       );
 
       router.push("/UserOverview");
-    } catch (err: any) {
+    } catch (err) {
       dispatch(
         showToast({
           id: crypto.randomUUID(),
-          message: err?.data?.message || "Failed to update user",
+          message: getErrorMessage(err, "Failed to update user"),
           severity: "error",
         })
       );
     }
   };
+const isPageLoading =
+  isUserLoading || isUserRoleLoading || isRoleLoading;
 
   return (
+    <>
+    {isPageLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Loader />
+            </Box>
+          ) : (
     <Paper sx={{ p: 2, m: 1.5 }}>
       <Box className={styles.formWrapper}>
         {/* ROLE */}
@@ -171,54 +183,55 @@ const EditUser: React.FC = () => {
             <AssignmentInd color="primary" />
             <Typography variant="subtitle1">Role</Typography>
           </Box>
-
           <Controller
             name="orgAppRoleId"
             control={control}
-            render={() => (
-              <TextField
-                select
-                fullWidth
-                required
-                disabled
-                label="Role"
-                value={watch("orgAppRoleId") || ""}
-                slotProps={{
-                  select: {
+            render={() => {
+              const selectedOrgAppRoleId = watch("orgAppRoleId") || userOrgAppRoleId;
+
+              return (
+                <TextField
+                  select
+                  fullWidth
+                  required
+                  disabled
+                  label="Role"
+                  value={selectedOrgAppRoleId}
+                  SelectProps={{
                     displayEmpty: true,
-                    renderValue: (selected: any) => {
-                      if (selected === userOrgAppRoleId) {
-                        return userRoleName;
-                      }
+                    renderValue: (value) => {
+                      const selected = value as string; // cast unknown -> string
+
+                      if (selected === userOrgAppRoleId) return userRoleName;
 
                       const role = roleData?.data?.data?.find(
-                        (r: any) => r.org_app_role_id === selected
+                        (r) => r.org_app_role_id === selected
                       );
 
                       return role?.role_id?.name || "";
                     },
-                  },
-                }}
-              >
-                {/* hidden user role */}
-                {userOrgAppRoleId && (
-                  <MenuItem value={userOrgAppRoleId} sx={{ display: "none" }}>
-                    {userRoleName}
-                  </MenuItem>
-                )}
+                  }}
+                >
+                  {userOrgAppRoleId && (
+                    <MenuItem value={userOrgAppRoleId} sx={{ display: "none" }}>
+                      {userRoleName}
+                    </MenuItem>
+                  )}
 
-                {/* role list */}
-                {roleData?.data?.data?.map((role: any) => (
-                  <MenuItem
-                    key={role.org_app_role_id}
-                    value={role.org_app_role_id}
-                  >
-                    {role.role_id.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            )}
+                  {roleData?.data?.data?.map((role) => (
+                    <MenuItem
+                      key={role.org_app_role_id}
+                      value={role.org_app_role_id}
+                    >
+                      {role.role_id.name}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              );
+            }}
           />
+
+
         </Box>
 
         {/* REST OF FORM — UNCHANGED */}
@@ -276,26 +289,28 @@ const EditUser: React.FC = () => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             {/* <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} /> */}
             <Avatar
-  src={imagePreview ?? ""}
-  sx={{ width: 100, height: 100 }}
-  imgProps={{
-    referrerPolicy: "no-referrer",
-  }}
-/>
-
+              src={imagePreview ?? ""}
+              sx={{ width: 100, height: 100 }}
+              imgProps={{
+                referrerPolicy: "no-referrer",
+              }}
+            />
             <Button
               variant="outlined"
               component="label"
               startIcon={<CloudUpload />}
             >
               Upload
+              {/* Wrap the input so JSX spacing is unambiguous */}
               <input
                 type="file"
                 hidden
                 accept="image/*"
                 onChange={handleImageUpload}
+                style={{ display: "none" }}
               />
             </Button>
+
           </Box>
         </Box>
 
@@ -317,6 +332,9 @@ const EditUser: React.FC = () => {
         </Box>
       </Box>
     </Paper>
+          )}
+    </>
+        
   );
 };
 

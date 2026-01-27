@@ -1,19 +1,19 @@
+
+
+
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
-
-/* ---------- COMMON RESPONSE TYPE ---------- */
-export interface ApiResponse<T = any> {
-  status: string;
-  message: string;
-  data?: T;
-  error?: string;
-}
+import {
+  ApiResponse,
+  Feature,
+  RoleFeature,
+} from "./EditRole.types";
 
 export const EditRoleApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     /* ---------- FETCH ROLE FEATURES ---------- */
     getFeaturesOfRoleByRoleId: builder.query<
-      ApiResponse<any>,
+      ApiResponse<RoleFeature[]>,
       { tenantId: string; roleId: string; orgAppRoleId: string }
     >({
       query: (body) => ({
@@ -21,14 +21,14 @@ export const EditRoleApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      providesTags: (result, error, arg) => [
+      providesTags: (_, __, arg) => [
         { type: "EditRole", id: arg.orgAppRoleId },
       ],
     }),
 
     /* ---------- FETCH ALL FEATURES ---------- */
     getFeaturesByOrgId: builder.query<
-      ApiResponse<any>,
+      ApiResponse<Feature[]>,
       { userId: string; orgId: string }
     >({
       query: (body) => ({
@@ -41,7 +41,7 @@ export const EditRoleApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- ASSIGN FEATURES ---------- */
     assignFeatureToRole: builder.mutation<
-      ApiResponse<any>,
+      ApiResponse<RoleFeature[]>,
       { tenantId: string; orgAppRoleId: string; featureIds: string[] }
     >({
       query: (body) => ({
@@ -49,14 +49,14 @@ export const EditRoleApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
+      invalidatesTags: (_, __, arg) => [
         { type: "EditRole", id: arg.orgAppRoleId },
       ],
     }),
 
     /* ---------- UNMAP FEATURES ---------- */
     unmappedFeatureFromRoleByRoleId: builder.mutation<
-      ApiResponse<any>,
+      ApiResponse<RoleFeature[]>,
       { tenantId: string; orgAppRoleId: string; featureIds: string[] }
     >({
       query: (body) => ({
@@ -64,14 +64,13 @@ export const EditRoleApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: (result, error, arg) => [
+      invalidatesTags: (_, __, arg) => [
         { type: "EditRole", id: arg.orgAppRoleId },
       ],
     }),
   }),
 });
 
-/* ---------- HOOK EXPORTS ---------- */
 export const {
   useGetFeaturesOfRoleByRoleIdQuery,
   useGetFeaturesByOrgIdQuery,

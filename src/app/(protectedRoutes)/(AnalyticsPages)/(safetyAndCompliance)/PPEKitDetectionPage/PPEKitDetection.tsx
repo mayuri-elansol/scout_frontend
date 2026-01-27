@@ -33,30 +33,25 @@ import {
   KpiItem,
   ZoneViolationInteface,
   FilterParams,
+  PPEViolation,
+  PpeSocketPayload,
+  DetailedReportResponse,
 } from "./PPEKitDetection.types";
 
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
-import dayjs, { Dayjs } from "dayjs";
+
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
-const tenantId = "4f3e2f80e5574111";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 
-/* ================= TYPES ================= */
-
-interface PpeSocketPayload {
-  serverTimestamp: string;
-  kpi: KpiItem[];
-  zoneViolations: ZoneViolationInteface[];
-  recentViolations: any[];
-}
-interface PPEViolation extends Violation {
-  cameraId: string;
-  alarmTriggered: boolean;
-}
 /* ================= COMPONENT ================= */
 
 const PPEDetection: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
   const [isLiveMode, setIsLiveMode] = useState(true);
@@ -68,7 +63,8 @@ const PPEDetection: React.FC = () => {
   const [recentViolationsLive, setRecentViolationsLive] = useState<
     PPEViolation[]
   >([]);
-  const [detailedReport, setDetailedReport] = useState<any>(null);
+  const [detailedReport, setDetailedReport] =
+    useState<DetailedReportResponse | null>(null);
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
 
@@ -87,15 +83,6 @@ const PPEDetection: React.FC = () => {
   const [downloadCsvReport] = useGetPpeKitDetectionDetailedCsvReportMutation();
   const [downloadPdfReport] = useGetPpeKitDetectionDetailedPdfReportMutation();
 
-  //function to convert the date-time  into indian standards
-  const formatLocalDateTime = useCallback(
-    (dt: string | Dayjs | undefined): string => {
-      if (!dt) return "";
-      const parsed = typeof dt === "string" ? dayjs(dt) : dt;
-      return parsed.format("YYYY-MM-DD HH:mm:ss.SSS");
-    },
-    []
-  );
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     const load = async () => {
@@ -113,7 +100,13 @@ const PPEDetection: React.FC = () => {
     };
 
     load().catch(console.error);
-  }, [fetchKpi, fetchZoneViolations, fetchRecent, fetchDetailedReportApi]);
+  }, [
+    tenantId,
+    fetchKpi,
+    fetchZoneViolations,
+    fetchRecent,
+    fetchDetailedReportApi,
+  ]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<PpeSocketPayload>({
@@ -155,24 +148,9 @@ const PPEDetection: React.FC = () => {
       setDisplayZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
     },
-    [fetchKpi, fetchZoneViolations, fetchRecent]
+    [tenantId, fetchKpi, fetchZoneViolations, fetchRecent],
   );
 
-  /* ---------- UI MAPPERS ---------- */
-  // const ppeKpiData = useMemo(
-  //   () =>
-  //     displayKpi.map((item) => ({
-  //       ...item,
-  //       title: t(item.title),
-  //       icon:
-  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]?.icon ||
-  //         EngineeringIcon,
-  //       tooltipMessage:
-  //         ppeKpiConfig[item.title as keyof typeof ppeKpiConfig]
-  //           ?.tooltipMessage || "",
-  //     })),
-  //   [displayKpi, t]
-  // );
   const ppeKpiData = useMemo(
     () =>
       displayKpi.map((item) => {
@@ -185,7 +163,7 @@ const PPEDetection: React.FC = () => {
           tooltipMessage: config?.tooltipMessage || "",
         };
       }),
-    [displayKpi, t]
+    [displayKpi, t],
   );
   const zoneViolationsForUi = useMemo(() => {
     const iconMap: Record<string, SvgIconComponent> = {
@@ -273,7 +251,7 @@ const PPEDetection: React.FC = () => {
       const response = await fetchDetailedReportApi(body).unwrap();
       setDetailedReport(response);
     },
-    [fetchDetailedReportApi, formatLocalDateTime]
+    [tenantId, fetchDetailedReportApi, formatLocalDateTime],
   );
 
   const handleReset = useCallback(async () => {
@@ -281,7 +259,7 @@ const PPEDetection: React.FC = () => {
       tenantId: tenantId,
     }).unwrap();
     setDetailedReport(response);
-  }, [fetchDetailedReportApi]);
+  }, [tenantId, fetchDetailedReportApi]);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: FilterParams) => {
@@ -315,7 +293,7 @@ const PPEDetection: React.FC = () => {
         console.error("❌ Export failed:", error);
       }
     },
-    [downloadCsvReport, downloadPdfReport, formatLocalDateTime]
+    [tenantId, downloadCsvReport, downloadPdfReport, formatLocalDateTime],
   );
 
   const handleDownloadSingle = useCallback(
@@ -336,7 +314,7 @@ const PPEDetection: React.FC = () => {
         console.error("❌ Single PDF download failed", error);
       }
     },
-    [downloadSinglePdf]
+    [tenantId, downloadSinglePdf],
   );
 
   const handleViewSingle = useCallback(
@@ -345,7 +323,7 @@ const PPEDetection: React.FC = () => {
       setViewPopupData(row);
       setViewPopupOpen(true);
     },
-    [] // setState functions are stable
+    [], // setState functions are stable
   );
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;

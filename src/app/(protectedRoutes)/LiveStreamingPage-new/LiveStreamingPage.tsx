@@ -93,16 +93,6 @@ const LiveStreamingPage: React.FC = () => {
             gap: 2,
           }}
         >
-          {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            <VideoCall sx={{ fontSize: 28, color: "#1976d2" }} />
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "19px", color: "#5c6b7d", lineHeight: 1.5 }}
-            >
-              Real-time monitoring with AI-powered analytics
-            </Typography>
-          </Box> */}
-
           {/* AI Processing Toggle */}
           <AiToggleSwitch
             enabled={aiProcessingEnabled}
@@ -150,9 +140,6 @@ const LiveStreamingPage: React.FC = () => {
               label="Select Camera"
               onChange={handleCameraChange}
             >
-              {/* <MenuItem value="">
-                <em>None</em>
-              </MenuItem> */}
               {cameras.map((camera) => (
                 <MenuItem key={camera.id} value={camera.id}>
                   {camera.name}
@@ -172,11 +159,8 @@ const LiveStreamingPage: React.FC = () => {
               value={selectedUseCase}
               label="Select Use Case"
               onChange={handleUseCaseChange}
-              disabled={!selectedCamera} // Disable until camera is selected
+              disabled={!selectedCamera}
             >
-              {/* <MenuItem value="">
-                <em>None</em>
-              </MenuItem> */}
               {useCases.map((useCase) => (
                 <MenuItem key={useCase.id} value={useCase.id}>
                   {useCase.name}

@@ -28,30 +28,30 @@ export const apiRoutes = {
     editOrganisationDetailsById: "/edit-organisation-details-by-id",
   },
   roleInformation: {
-    root: '/role-information',
-    getList: 'get-role-list',
-    getUserRoleList: '/get-user-role-list',
-    getById: 'get-role-information-by-id',
-    getUserRoleByUserId: 'get-user-role-information-by-user-id',
-    addUserRoleByUserId: 'add-user-role-by-user-id',
-    assignFeaturesToRoleByRoleId: 'assign-features-to-role-by-role-id',
-    getFeaturesOfRoleByRoleId: 'get-features-of-role-by-role-id',
-    unmapFeatureFromRoleByRoleId: 'unmap-feature-from-role-by-role-id',
-    deleteById: 'delete-role',
-    deleteUserRoleById: 'delete-user-role',
-    add: 'add-role',
-    addUserRole: '/add-user-role',
-    editById: '/edit-role-by-id',
-    editUserRoleById: '/edit-user-role-by-id',
-    getFeaturesByOrgId: 'get-features-by-org-id'
+    root: "/role-information",
+    getList: "get-role-list",
+    getUserRoleList: "/get-user-role-list",
+    getById: "get-role-information-by-id",
+    getUserRoleByUserId: "get-user-role-information-by-user-id",
+    addUserRoleByUserId: "add-user-role-by-user-id",
+    assignFeaturesToRoleByRoleId: "assign-features-to-role-by-role-id",
+    getFeaturesOfRoleByRoleId: "get-features-of-role-by-role-id",
+    unmapFeatureFromRoleByRoleId: "unmap-feature-from-role-by-role-id",
+    deleteById: "delete-role",
+    deleteUserRoleById: "delete-user-role",
+    add: "add-role",
+    addUserRole: "/add-user-role",
+    editById: "/edit-role-by-id",
+    editUserRoleById: "/edit-user-role-by-id",
+    getFeaturesByOrgId: "get-features-by-org-id",
   },
   //TODO: Get it done today
   userInformation: {
-    root: 'user-information',
-    getList: 'get-user-list',
-    getById: 'get-user-information-by-id',
-    editById: 'edit-user-information-by-id',
-    deleteById: 'delete-user'
+    root: "user-information",
+    getList: "get-user-list",
+    getById: "get-user-information-by-id",
+    editById: "edit-user-information-by-id",
+    deleteById: "delete-user",
   },
 
   dashboard: {},
@@ -165,20 +165,21 @@ export const apiRoutes = {
   },
   intrusionDetectionAtPremisesPerimeter: {
     root: "intrusionDetectionAtPremisesPerimeter",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsKpi:
-      "get-crowd-gathering-in-hazardous-zones-analytics-kpi",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsRecentVoliations:
-      "get-crowd-gathering-in-hazardous-zones-analytics-recent-voliations",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsCameraStatusByZone:
-      "get-crowd-gathering-in-hazardous-zones-analytics-camera-status-by-zone",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsDetailedReport:
-      "get-crowd-gathering-in-hazardous-zones-analytics-details-report",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsDownloadDetailedReport:
-      "get-crowd-gathering-in-hazardous-zones-analytics-download-details-report",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsDownloadDetailedReportForSingleId:
-      "get-crowd-gathering-in-hazardous-zones-analytics-download-details-report-for-single-id",
-    getIntrusionDetectionAtPremisesPerimeterAnalyticsDetailedReportForSingleId:
-      "get-crowd-gathering-in-hazardous-zones-analytics-details-report-for-single-id",
+    getIntrusionDetectionAnalyticsKpi: "get-intrusion-detection-analytics-kpi",
+    getIntrusionDetectionAnalyticsRecentViolations:
+      "get-intrusion-detection-analytics-recent-violations",
+    getIntrusionDetectionAnalyticsZoneViolations:
+      "get-intrusion-detection-analytics-zone-violations",
+    getIntrusionDetectionAnalyticsDetailedReport:
+      "get-intrusion-detection-analytics-details-report",
+    getIntrusionDetectionAnalyticsDownloadDetailedPdfReport:
+      "get-intrusion-detection-analytics-download-details-pdf-report",
+    getIntrusionDetectionAnalyticsDownloadDetailedCsvReport:
+      "get-intrusion-detection-analytics-download-details-csv-report",
+    getIntrusionDetectionAnalyticsDownloadDetailedReportForSingleId:
+      "get-intrusion-detection-analytics-download-details-report-for-single-id",
+    getIntrusionDetectionAnalyticsDetailedReportForSingleId:
+      "get-intrusion-detection-analytics-details-report-for-single-id",
   },
   cameraTamperingOrOfflineDetection: {
     root: "cameraTamperingOrOfflineDetection",

@@ -96,7 +96,6 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const getUseCaseName = () => {
     return useCases.find((uc) => uc.id === selectedUseCase)?.name || "";
   };
-
   const drawDetection = useCallback(
     (data: any) => {
       if (!aiProcessingEnabled) return;
@@ -160,7 +159,7 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     };
   }, []);
 
-  useRealtimeSocket("https://192.168.0.5:4006", {
+  useRealtimeSocket("http://192.168.0.5:4006", {
     topic: selectedUseCase,
     onData: (msg) => {
       drawDetection(msg); // ROI overlay

@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { Box, Typography, Grid, Button } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
-import Loader from "@/app/components/atoms/Loader/Loader";
 import CardForSettings from "@/app/components/molecules/CardForSettings/CardForSettings";
 import {
   useGetFeatureOfRoleByRoleIdMutation,
@@ -14,6 +13,8 @@ import {
 import { RootState } from "@/app/store/store";
 import { skipToken } from "@reduxjs/toolkit/query/react";
 import { formatDate } from "@/utils/dateUtils";
+import { OrgAppRole, RoleFeature } from "./ViewRole.types";
+import Loader from "@/app/components/atoms/Loader/Loader";
 
 export default function ViewRolePage() {
   const router = useRouter();
@@ -33,38 +34,34 @@ export default function ViewRolePage() {
     tenantId && userId ? { tenantId, userId } : skipToken
   );
 
-  /* ✅ ADD THIS RIGHT HERE */
-
-  const selectedRole = React.useMemo(() => {
-    const roleList = data?.data?.data ?? [];
-    return roleList.find((item: any) => item.org_app_role_id === orgAppRoleId);
-  }, [data, orgAppRoleId]);
+  const selectedRole = useMemo<OrgAppRole | undefined>(() => {
+  const roleList = data?.data?.data ?? [];
+  return roleList.find(
+    (item) => item.org_app_role_id === orgAppRoleId
+  );
+}, [data, orgAppRoleId]);
 
   /* ---------------- FEATURE API ---------------- */
   const [fetchFeatures, { isLoading, isError }] =
     useGetFeatureOfRoleByRoleIdMutation();
 
-  const [features, setFeatures] = useState<any[]>([]);
+const [features, setFeatures] = useState<RoleFeature[]>([]);
 
   /* ---------------- FETCH FEATURES ---------------- */
-  useEffect(() => {
-    if (!tenantId || !roleId || !orgAppRoleId) return;
 
-    fetchFeatures({ tenantId, roleId, orgAppRoleId })
-      .unwrap()
-      .then((res) => {
-        setFeatures(res?.data?.data ?? []);
-      });
-  }, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
+useEffect(() => {
+  if (!tenantId || !roleId || !orgAppRoleId) return;
+
+  fetchFeatures({ tenantId, roleId, orgAppRoleId })
+    .unwrap()
+    .then((res) => {
+      setFeatures(res.data.data);
+    });
+}, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
+
 
   /* ---------------- LOADING ---------------- */
-  if (isLoadingForRole || isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
-        <Loader />
-      </Box>
-    );
-  }
+
   /* ---------------- ERROR ---------------- */
   if (isError) {
     return (
@@ -76,8 +73,15 @@ export default function ViewRolePage() {
 
   /* ---------------- UI ---------------- */
   return (
+    
     <Box className="viewRole" sx={{ p: 2 }}>
       {/* ---------------- ROLE DETAILS ---------------- */}
+        {isLoadingForRole || isLoading ? (
+          <Box sx={{ display: "flex", justifyContent: "center",alignItems:"center", mt: 20 }}>
+            <Loader />
+          </Box>
+        ) : (
+      <>
       <Typography variant="h6" mb={2}>
         Role Details :
       </Typography>
@@ -111,7 +115,7 @@ export default function ViewRolePage() {
       </Typography>
 
       <Grid container spacing={2}>
-        {features.map((item: any) => (
+        {features.map((item) => (
           <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.role_feature_id}>
             <CardForSettings
               title={item.feature?.name}
@@ -137,6 +141,8 @@ export default function ViewRolePage() {
           Back
         </Button>
       </Box>
+      </>
+        )}
     </Box>
   );
 }

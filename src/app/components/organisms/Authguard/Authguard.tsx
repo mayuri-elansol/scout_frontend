@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { useAuth } from "@/customhooks/useAuth";
-import Loader from "../../atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { useRouter } from "next/navigation";
 
 type Props = {

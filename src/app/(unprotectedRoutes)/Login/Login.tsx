@@ -71,7 +71,7 @@ const Login: React.FC = () => {
         isLoading={isLoading}
         error={error}
         onTogglePassword={() => setShowPassword((prev) => !prev)}
-        onSubmit={handleSubmit} //  must accept form data
+        onSubmit={handleSubmit}  
       />
     </ThemeProvider>
   );

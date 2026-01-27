@@ -92,7 +92,7 @@ export const useAuth = () => {
 
       dispatch(setUserFromToken(userForState));
 
-      router.push("/SafetyAndComplianceDashboard");
+      router.push("/Dashboard");
       // return userForState;
       return { type: "LOGIN_SUCCESS" as const, user: userForState };
     } catch (err) {

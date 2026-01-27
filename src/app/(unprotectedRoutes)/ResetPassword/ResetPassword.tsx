@@ -7,10 +7,14 @@ import { ResetPasswordFormData } from "@/app/components/molecules/ResetPassword/
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import { useGetResetPasswordDataMutation } from "./ResetPasswordApi";
+import { showToast } from "@/app/store/slices/toasterSlice";
+import { getErrorMessage } from "@/utils/getErrorMessage";
+import { useDispatch } from "react-redux";
 
 const ResetPassword: React.FC = () => {
   const router = useRouter();
   const params = useParams();
+  const dispatch = useDispatch();
 
   const sid = params?.sid as string;
 
@@ -35,9 +39,21 @@ const ResetPassword: React.FC = () => {
       }).unwrap();
 
       router.replace("/Login");
-    } catch (err: any) {
-      alert(err?.data?.message || "Failed to reset password");
-    } finally {
+    } 
+    // catch (err) {
+    //   alert(err?.data?.message || "Failed to reset password");
+    // } 
+    catch (err) {
+          dispatch(
+            showToast({
+              id: crypto.randomUUID(),
+              message: getErrorMessage(err,"Failed to reset password") ,
+              severity: "error",
+            })
+          );
+        }
+    
+    finally {
       setIsLoading(false);
     }
   };

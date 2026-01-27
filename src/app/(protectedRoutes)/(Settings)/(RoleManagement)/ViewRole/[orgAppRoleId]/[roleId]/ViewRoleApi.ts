@@ -1,21 +1,25 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { ApiResponse, OrgAppRole, RoleFeature } from "./ViewRole.types";
 
-export const createRoleApi = baseProtectedApi.injectEndpoints({
+export const viewRoleApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
+    /* ---------- GET ROLE LIST ---------- */
     getRole: builder.query<
-      { status: string; message: string; data?: any },
+      ApiResponse<OrgAppRole[]>,
       { tenantId: string; userId: string }
     >({
       query: (body) => ({
         url: `${apiRoutes.roleInformation.root}/${apiRoutes.roleInformation.getList}`,
-        method: 'POST',
+        method: "POST",
         body,
       }),
-      providesTags: ['ViewRole'],
+      providesTags: ["ViewRole"],
     }),
+
+    /* ---------- GET FEATURES OF ROLE ---------- */
     getFeatureOfRoleByRoleId: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      ApiResponse<RoleFeature[]>,
       { tenantId: string; roleId: string; orgAppRoleId: string }
     >({
       query: (body) => ({
@@ -23,10 +27,12 @@ export const createRoleApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["ViewRole"], 
+      invalidatesTags: ["ViewRole"],
     }),
-      
   }),
 });
 
-export const { useGetRoleQuery, useGetFeatureOfRoleByRoleIdMutation } = createRoleApi;
+export const {
+  useGetRoleQuery,
+  useGetFeatureOfRoleByRoleIdMutation,
+} = viewRoleApi;

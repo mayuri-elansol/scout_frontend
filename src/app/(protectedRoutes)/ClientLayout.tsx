@@ -24,7 +24,7 @@ export default function ClientLayout({
 
   const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>(
-    "safety-compliance-dashboard"
+    "dashboard"
   );
 
   const sidebartheme = useTheme();
@@ -45,9 +45,10 @@ export default function ClientLayout({
       ...analyticsMenu.flatMap((category) => category.items),
     ];
 
-    const currentItem = allMenuItems.find(
-      (item) => pathname && item.path?.toLowerCase() === pathname.toLowerCase()
-    );
+   const currentItem = allMenuItems.find(
+  (item) => pathname && item.path?.toLowerCase() === pathname.toLowerCase()
+);
+
 
     setCurrentPage(currentItem ? currentItem.page! : "dashboard");
   }, [pathname]);
@@ -58,7 +59,7 @@ export default function ClientLayout({
   };
 
   if (!mounted) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -95,7 +96,7 @@ export default function ClientLayout({
           >
             <FeatureGuardProvider>
               {/* <RouteLoader/> */}
-              {children}
+                {children}
             </FeatureGuardProvider>
           </Box>
         </Box>

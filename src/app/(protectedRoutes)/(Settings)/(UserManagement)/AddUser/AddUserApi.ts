@@ -1,6 +1,8 @@
+
+
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
-
+import { ApiResponse } from "./AddUser.types";
 
 export interface AddUserPayload {
   role: string;
@@ -17,12 +19,11 @@ export interface AddUserPayload {
 export const addUserApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     addUser: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      ApiResponse<null>,
       { payload: AddUserPayload; image?: File }
     >({
       query: ({ payload, image }) => {
         const formData = new FormData();
-
         formData.append("payload", JSON.stringify(payload));
 
         if (image) {
@@ -35,6 +36,8 @@ export const addUserApi = baseProtectedApi.injectEndpoints({
           body: formData,
         };
       },
+
+      
       invalidatesTags: ["AddUser"],
     }),
   }),
