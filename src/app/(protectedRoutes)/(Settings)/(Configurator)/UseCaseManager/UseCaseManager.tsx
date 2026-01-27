@@ -12,7 +12,7 @@ import {
 import {
   Category as CategoryIcon,
 } from "@mui/icons-material";
-import { UseCase, Camera } from "@/app/types/useCaseManager";
+import { UseCase } from "@/app/types/useCaseManager";
 import {
   useGetUsecasesQuery,
   useGetCamerasQuery,

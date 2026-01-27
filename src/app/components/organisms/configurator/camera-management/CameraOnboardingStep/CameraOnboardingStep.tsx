@@ -315,25 +315,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsAdding(true);
 
     try {
-      const response = await addCamera({
-        cameraIp: formData.ipAddress.trim(),
-        cameraName: formData.cameraname.trim(),
-        userName: formData.username.trim(),
-        password: formData.password.trim(),
-        RTSPport: formData.port.trim(),
-        cameraZone: zoneList.find((z) => z.id === selectedZone)?.zoneName ?? "",
-        cameraLocation:
-          locationList.find((l) => l.id === selectedLocation)?.locationName ?? "",
-
-        channel: null,
-        refreshRate: 10,
-        connectionType: "DIRECT_TO_CAMERA",
-      }).unwrap();
-
-      // ✅ NO onCameraAdd here
-
       showToast("Camera added successfully!", "success");
-
       setFormData({
         ipAddress: "",
         cameraname: "",
@@ -409,7 +391,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         };
 
         console.log("Final payload:", payload);
-        const response = await addCamera(payload).unwrap();
+        // const response = await addCamera(payload).unwrap();
 
         // 🔥 This updates UI instantly
       }
