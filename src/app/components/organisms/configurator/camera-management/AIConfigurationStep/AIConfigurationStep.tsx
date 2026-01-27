@@ -128,7 +128,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       const mapped = useCasesResponse.map((uc) => ({
         id: uc.id,
         name: uc.usecaseName,
-        description: uc.description || '',
+        description: uc.description ?? '',
         selected: false,
         roiConfigured: false,
         fineTuned: false,

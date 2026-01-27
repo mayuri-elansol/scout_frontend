@@ -95,7 +95,7 @@ const ZoneLocationMapping: React.FC = () => {
   // Filter zones
   const filteredZones = zones.filter(
     (zone) =>
-      zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ??
       (zone.description ?? "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 

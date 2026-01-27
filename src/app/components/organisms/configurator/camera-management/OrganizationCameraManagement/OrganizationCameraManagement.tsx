@@ -54,7 +54,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   forceConfigureCamera,
 }) => {
   const { user } = useAuth();
-  const tenantId = user?.org_id || '';
+  const tenantId = user?.org_id ?? '';
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera ?? null
   );

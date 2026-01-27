@@ -82,7 +82,7 @@ const UseCaseManager: React.FC = () => {
   return useCasesResponse.map((uc) => ({
     id: uc.id,
     name: uc.usecaseName,
-    description: uc.description || "",
+    description: uc.description ?? "",
     category: "AI",
     enabled: true,
     assignedCameraIds: assignmentMap[uc.id] ?? [],
@@ -97,11 +97,11 @@ const UseCaseManager: React.FC = () => {
   return camerasResponse.map((cam) => ({
     id: cam.id,
     name: cam.cameraName,
-    position: cam.cameraZone || "",
-    location: cam.cameraZone || "",
+    position: cam.cameraZone ?? "",
+    location: cam.cameraZone ?? "",
     ipAddress: cam.cameraIp,
     port: String(cam.RTSPport),
-    make: cam.connectionType || "",
+    make: cam.connectionType ?? "",
     status: "connected" as const,
   }));
 }, [camerasResponse]);
@@ -275,7 +275,7 @@ const UseCaseManager: React.FC = () => {
         useCase={selectedUseCase}
         cameras={cameras}
         onSave={handleSaveCameraAssignments}
-        isLoading={isLoadingCameras || isAssigning}
+        isLoading={isLoadingCameras ?? isAssigning}
       />
     </Container>
   );

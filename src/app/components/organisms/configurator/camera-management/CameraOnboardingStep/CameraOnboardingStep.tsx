@@ -391,8 +391,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         };
 
         console.log("Final payload:", payload);
-        // const response = await addCamera(payload).unwrap();
-
         // 🔥 This updates UI instantly
       }
 

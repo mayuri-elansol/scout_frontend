@@ -33,11 +33,6 @@ export type RoiResponse = {
     }[];
 };
 
-// interface RoiResponse {
-//   version: number;
-//   canvasAspectRatio: string;
-//   rois: ROIShape[];
-// }
 
 /* ---------- API ---------- */
 
