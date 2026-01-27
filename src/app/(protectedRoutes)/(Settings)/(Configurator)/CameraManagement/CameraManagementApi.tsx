@@ -29,6 +29,7 @@ export type DetectNvrChannelsPayload = {
 /* ---------- API ---------- */
 
 export const cameraManagementApi = baseProtectedApi.injectEndpoints({
+  overrideExisting: true,
   
   endpoints: (builder) => ({
 
