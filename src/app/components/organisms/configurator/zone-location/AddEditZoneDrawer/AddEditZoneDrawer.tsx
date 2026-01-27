@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-// import { Zone } from "@/app/data/mockZones";
+
 
 type ZoneUI = {
   id: string;
@@ -95,7 +95,6 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
     } else {
       // Create new zone
       onSave({
-        ...(zone ? { id: zone.id } : {}),
         name: formData.name.trim(),
         description: formData.description.trim(),
       });

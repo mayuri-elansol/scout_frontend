@@ -30,12 +30,7 @@ import {
   Error as ErrorIcon,
 } from "@mui/icons-material";
 
-// import {
-//   addCamera,
-//   detectNvrChannels,
-//   fetchZones,
-//   fetchLocations,
-// } from "@/app/services/configurator/cameraService";
+
 
 
 import {
@@ -190,25 +185,12 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
   const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
-
-  // useEffect(() => {
-  //   const loadZones = async () => {
-  //     try {
-  //       const res = await fetchZones();
-  //       setZoneList(res.data);
-  //     } catch (err) {
-  //       console.error("Error loading zones", err);
-  //     }
-  //   };
-  //   loadZones();
-  // }, []);
-
   const { data: zonesData } = useGetZonesQuery();
   const [addCamera] = useAddCameraMutation();
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
 
   const extractRtspChannelNumber = (rtspUrl: string): string => {
-  const match = rtspUrl.match(/Channels\/(\d+)/);
+  const match = RegExp(/Channels\/(\d+)/).exec(rtspUrl);
   return match ? match[1] : "";
 };
 
@@ -363,10 +345,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       });
       setSelectedZone("");
       setSelectedLocation("");
-
-      // console.log(response); // or setState(response.data)
-      // const createdCamera = response.data ?? response;
-
 
       showToast("Camera added successfully!", "success");
     } catch (error) {

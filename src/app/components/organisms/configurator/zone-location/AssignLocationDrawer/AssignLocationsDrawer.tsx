@@ -13,7 +13,6 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
-// import { Zone } from "@/app/data/mockZones";
 
 type ZoneUI = {
   id: string;

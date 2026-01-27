@@ -25,7 +25,6 @@ import {
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
 } from "@mui/icons-material";
-// import { Zone } from "@/app/data/mockZones";
 
 type ZoneUI = {
   id: string;

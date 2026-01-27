@@ -1,6 +1,5 @@
 'use client';
-import React, { useState, useCallback, useEffect } from 'react';
-// import { useSession } from 'next-auth/react';
+import React, { useState} from 'react';
 import { useAuth } from "@/customhooks/useAuth";
 
 import {
@@ -26,8 +25,6 @@ import {
   Error as ErrorIcon,
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
-
-// import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
 
 import {
   useGetAllCamerasQuery,
@@ -58,11 +55,6 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 }) => {
   const { user } = useAuth();
   const tenantId = user?.org_id || '';
-
-  // const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
-
-  
-
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera ?? null
   );
@@ -76,29 +68,6 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     message: '',
     severity: 'success',
   });
-
-  // const fetchCameras = useCallback(async () => {
-  //   const res = await getCameras();
-
-  //   setCameras(
-  //     (res.data as CameraApiResponse[]).map((cam) => ({
-  //       id: cam.id,
-  //       ipAddress: cam.cameraIp,
-  //       username: cam.userName,
-  //       password: cam.password,
-  //       port: String(cam.RTSPport),
-  //       make: cam.connectionType,
-  //       position: cam.cameraName,
-  //       rtspStream: cam.rtspStream ?? "",
-  //       status: "connected",
-  //     }))
-  //   );
-  // }, []);
-
-
-  // React.useEffect(() => {
-  //   fetchCameras();
-  // }, [fetchCameras]);
 
   const { data, isLoading } = useGetAllCamerasQuery();
   const [deleteCamera] = useDeleteCameraMutation();
@@ -158,15 +127,6 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
 
   const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
-    // setCameras((prev) =>
-    //   prev.map((camera) =>
-    //     camera.id === cameraId ? { ...camera, aiConfig } : camera
-    //   )
-    // );
-
-    
-    
-
     setSelectedCameraForConfig(null);
 
     setSnackbar({

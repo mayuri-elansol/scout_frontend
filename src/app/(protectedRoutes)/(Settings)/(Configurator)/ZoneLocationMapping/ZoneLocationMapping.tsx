@@ -27,9 +27,6 @@ import {
 } from "@/app/components/organisms/configurator/zone-location";
 
 
-// import { Zone as ZoneType } from "@/app/data/mockZones";
-
-
 type ZoneType = {
   id: string;
   name: string;
@@ -73,9 +70,9 @@ const ZoneLocationMapping: React.FC = () => {
   // RTK Query hooks
   const { data: zonesResponse, isLoading, error } = useGetZonesQuery();
   const [createZone, { isLoading: isCreating }] = useCreateZoneMutation();
-  const [updateZone, { isLoading: isUpdating }] = useUpdateZoneMutation();
+  const [updateZone] = useUpdateZoneMutation();
   const [deleteZone, { isLoading: isDeleting }] = useDeleteZoneMutation();
-  const [createLocation, { isLoading: isCreatingLocation }] = useCreateLocationMutation();
+  const [createLocation] = useCreateLocationMutation();
 
   // Process zones data
   const zones = useMemo(() => {

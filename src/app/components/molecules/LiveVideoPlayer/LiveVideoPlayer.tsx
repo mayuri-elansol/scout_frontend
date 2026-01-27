@@ -96,101 +96,6 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const getUseCaseName = () => {
     return useCases.find((uc) => uc.id === selectedUseCase)?.name || "";
   };
-  // ============================
-  // DRAW FRAME (ALWAYS)
-  // ============================
-  // const drawLiveFrame = useCallback(
-  //   (msg: any) => {
-  //     // if (msg.cameraId !== selectedCamera || msg.useCase !== selectedUseCase) {
-  //     //   return; // ❌ Not selected stream
-  //     // }
-
-  //     const canvas = canvasRef.current;
-  //     const ctx = canvas?.getContext("2d");
-  //     if (!canvas || !ctx) return;
-
-  //     const img = new Image();
-  //     img.src = `data:image/jpeg;base64,${msg.frameData}`;
-
-  //     img.onload = () => {
-  //       ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  //     };
-  //   },
-  //   [selectedCamera, selectedUseCase]
-  // );
-
-  // ============================
-  // DRAW ROI (ONLY IF AI ON)
-  // ============================
-  // const drawDetection = useCallback(
-  //   (msg: any) => {
-  //     if (!aiProcessingEnabled) return;
-
-  //     if (
-  //       msg.camera_id !== selectedCamera ||
-  //       msg.use_case !== selectedUseCase
-  //     ) {
-  //       return;
-  //     }
-
-  //     const canvas = canvasRef.current;
-  //     const ctx = canvas?.getContext("2d");
-  //     if (!canvas || !ctx) return;
-  //     console.log("inside the drawdetection function", msg);
-  //     msg.detections?.forEach((det: any) => {
-  //       const { bbox, object, confidence } = det;
-  //       if (!bbox) return;
-
-  //       const { x1, y1, x2, y2 } = bbox;
-
-  //       ctx.strokeStyle = "lime";
-  //       ctx.lineWidth = 2;
-  //       ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-
-  //       ctx.fillStyle = "yellow";
-  //       ctx.font = "14px Arial";
-  //       ctx.fillText(
-  //         `${object} ${(confidence * 100).toFixed(1)}%`,
-  //         x1 + 5,
-  //         y1 + 15
-  //       );
-  //     });
-  //   },
-  //   [selectedCamera, selectedUseCase, aiProcessingEnabled]
-  // );
-
-  // const drawDetection = useCallback((data: any) => {
-  //   if (!aiProcessingEnabled) return;
-
-  //   const canvas = canvasRef.current;
-  //   const ctx = canvas?.getContext("2d");
-  //   if (!canvas || !ctx) return;
-
-  //   const detections = data?.detections;
-  //   if (!detections || detections.length === 0) return;
-
-  //   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  //   detections.forEach((det: any) => {
-  //     const { object, confidence, bbox } = det;
-  //     if (!bbox) return;
-
-  //     const { x1, y1, x2, y2 } = bbox;
-
-  //     ctx.strokeStyle = "lime";
-  //     ctx.lineWidth = 2;
-  //     ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-
-  //     ctx.font = "14px Arial";
-  //     ctx.fillStyle = "yellow";
-  //     ctx.fillText(
-  //       `${object} ${(confidence * 100).toFixed(1)}%`,
-  //       x1 + 5,
-  //       y1 + 15
-  //     );
-  //   });
-  // }, []);
 
   const drawDetection = useCallback(
     (data: any) => {
@@ -254,15 +159,8 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     };
   }, []);
-  // ============================
-  // WEBSOCKET CONNECTION
-  // ============================
-  // useRealtimeSocket("http://192.168.0.5:3001", {
-  //   topic: selectedUseCase,
-  //   onLiveFrame: drawLiveFrame,
-  //   onData: drawDetection,
-  // });
-  useRealtimeSocket("http://192.168.0.5:4006", {
+
+  useRealtimeSocket("https://192.168.0.5:4006", {
     topic: selectedUseCase,
     onData: (msg) => {
       drawDetection(msg); // ROI overlay

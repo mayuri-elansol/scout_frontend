@@ -387,44 +387,53 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     return useCase?.roiShapes ?? [];
   };
 
-  // const getCameraFeedUrl = () => {
-  //   if (camera.rtspStream && camera.rtspStream.trim() !== '') {
-  //     const rtspUrl = camera.rtspStream;
-
-  //     if (rtspUrl.startsWith('http')) {
-  //       return rtspUrl;
-  //     }
-
-  //     if (camera.ipAddress) {
-  //       const snapshotPaths: Record<string, string> = {
-  //         'hikvision': '/ISAPI/Streaming/channels/101/picture',
-  //         'dahua': '/cgi-bin/snapshot.cgi',
-  //         'axis': '/axis-cgi/jpg/image.cgi',
-  //         'default': '/snapshot.jpg'
-  //       };
-
-  //       const make = camera.make?.toLowerCase() ?? 'default';
-  //       const path = snapshotPaths[make] ?? snapshotPaths['default'];
-
-  //       if (camera.username && camera.password) {
-  //         return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-  //       } else {
-  //         return `http://${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-  //       }
-  //     }
-  //   }
-
-  //   return '/img/siteimage.jpg';
-  // };
-
   const getCameraFeedUrl = () => {
     if (!camera?.id || !tenantId) {
       console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
       return '/img/siteimage.jpg';
     }
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
-    // return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame?t=${Date.now()}`;
+  };
 
+  const renderCameraContent = () => {
+    if (!showCameraView) {
+      return (
+        <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+          <Typography variant="body2">
+            Click &apos;Show Camera View&apos; to display feed
+          </Typography>
+        </Box>
+      );
+    }
+
+    if (frameUrl) {
+      return (
+        <Box
+          component="img"
+          src={frameUrl}
+          alt="Live Camera Frame"
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            borderRadius: 1,
+          }}
+          onError={() => {
+            console.error('Failed to load camera frame');
+            setFrameUrl(null);
+          }}
+        />
+      );
+    }
+
+    return (
+      <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Loading camera feed...
+        </Typography>
+      </Box>
+    );
   };
 
   useEffect(() => {
@@ -531,39 +540,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                 minHeight: 320,
               }}
             >
-              {showCameraView ? (
-                frameUrl ? (
-                  <Box
-                    component="img"
-                    src={frameUrl}
-                    alt="Live Camera Frame"
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'contain',
-                      borderRadius: 1,
-                    }}
-                    onError={() => {
-                      console.error('Failed to load camera frame');
-                      setFrameUrl(null);
-                    }}
-                  />
-                ) : (
-                  <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-                    <CircularProgress />
-                    <Typography variant="body2" sx={{ mt: 1 }}>
-                      Loading camera feed...
-                    </Typography>
-                  </Box>
-                )
-              ) : (
-
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-                  <Typography variant="body2">
-                    Click &apos;Show Camera View&apos; to display feed
-                  </Typography>
-                </Box>
-              )}
+              {renderCameraContent()}
             </CardContent>
           </Card>
         </Grid>

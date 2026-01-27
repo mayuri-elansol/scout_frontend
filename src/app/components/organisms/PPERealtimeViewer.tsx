@@ -50,7 +50,7 @@ export default function PPERealtimeViewer() {
     };
   }, []);
 
-  useRealtimeSocket("http://192.168.0.5:3001", {
+  useRealtimeSocket("https://192.168.0.5:3001", {
     topic: "safety.ppe",
     onData: (msg) => {
       drawDetection(msg); // ROI overlay
