@@ -118,74 +118,162 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
 
   // ✅ Combined effect - Load use cases WITH assignments
-  useEffect(() => {
-    const loadUseCasesWithAssignments = async () => {
-      if (loadingUseCases || !useCasesResponse || !Array.isArray(useCasesResponse)) {
-        return;
-      }
+  // useEffect(() => {
+  //   const loadUseCasesWithAssignments = async () => {
+  //     if (loadingUseCases || !useCasesResponse || !Array.isArray(useCasesResponse)) {
+  //       return;
+  //     }
 
-      // Step 1: Map use cases from API response
-      const mapped = useCasesResponse.map((uc) => ({
-        id: uc.id,
-        name: uc.usecaseName,
-        description: uc.description ?? '',
-        selected: false,
-        roiConfigured: false,
-        fineTuned: false,
-        enabled: false,
-        roiShapes: [],
-        labels: uc.labels ?? [],
-      }));
+  //     // Step 1: Map use cases from API response
+  //     const mapped = useCasesResponse.map((uc) => ({
+  //       id: uc.id,
+  //       name: uc.usecaseName,
+  //       description: uc.description ?? '',
+  //       selected: false,
+  //       roiConfigured: false,
+  //       fineTuned: false,
+  //       enabled: false,
+  //       roiShapes: [],
+  //       labels: uc.labels ?? [],
+  //     }));
+
+  //     try {
+  //       // Step 2: Get camera assignments
+  //       const res = await getCameraAssignments(camera.id).unwrap();
+
+  //       if (!Array.isArray(res)) {
+  //         setUseCases(mapped);
+  //         return;
+  //       }
+
+  //       // Step 3: Mark selected use cases
+  //       const withSelection = mapped.map(uc => ({
+  //         ...uc,
+  //         selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
+  //       }));
+
+  //       // Step 4: Load ROI for selected use cases using RTK Query
+  //       const withROI = await Promise.all(
+  //         withSelection.map(async (uc) => {
+  //           if (!uc.selected) return uc;
+
+  //           try {
+  //             const rois = await getRoi({
+  //               cameraId: camera.id,
+  //               usecaseId: uc.id,
+  //             }).unwrap();
+
+  //             return {
+  //               ...uc,
+  //               roiConfigured: rois.length > 0,
+  //               roiShapes: rois,
+  //             };
+
+
+  //           } catch {
+  //             return uc;
+  //           }
+  //         })
+  //       );
+
+  //       setUseCases(withROI);
+  //     } catch (error) {
+  //       console.error('Failed to load assignments', error);
+  //       // Set use cases anyway without assignments
+  //       setUseCases(mapped);
+  //     }
+  //   };
+
+  //   loadUseCasesWithAssignments();
+  // }, [loadingUseCases, useCasesResponse, camera.id, getCameraAssignments, getRoi]);
+
+
+  const loadAssignments = async (
+  mapped: UseCaseData[]
+): Promise<UseCaseData[]> => {
+  const res = await getCameraAssignments(camera.id).unwrap();
+
+  if (!Array.isArray(res)) {
+    return mapped;
+  }
+
+  return mapped.map((uc) => ({
+    ...uc,
+    selected: res.some(
+      (a: { usecaseId: string }) => a.usecaseId === uc.id
+    ),
+  }));
+};
+
+
+const loadRoiForUseCases = async (
+  useCases: UseCaseData[]
+): Promise<UseCaseData[]> => {
+  return Promise.all(
+    useCases.map(async (uc) => {
+      if (!uc.selected) return uc;
 
       try {
-        // Step 2: Get camera assignments
-        const res = await getCameraAssignments(camera.id).unwrap();
+        const rois = await getRoi({
+          cameraId: camera.id,
+          usecaseId: uc.id,
+        }).unwrap();
 
-        if (!Array.isArray(res)) {
-          setUseCases(mapped);
-          return;
-        }
-
-        // Step 3: Mark selected use cases
-        const withSelection = mapped.map(uc => ({
+        return {
           ...uc,
-          selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
-        }));
-
-        // Step 4: Load ROI for selected use cases using RTK Query
-        const withROI = await Promise.all(
-          withSelection.map(async (uc) => {
-            if (!uc.selected) return uc;
-
-            try {
-              const rois = await getRoi({
-                cameraId: camera.id,
-                usecaseId: uc.id,
-              }).unwrap();
-
-              return {
-                ...uc,
-                roiConfigured: rois.length > 0,
-                roiShapes: rois,
-              };
-
-
-            } catch {
-              return uc;
-            }
-          })
-        );
-
-        setUseCases(withROI);
-      } catch (error) {
-        console.error('Failed to load assignments', error);
-        // Set use cases anyway without assignments
-        setUseCases(mapped);
+          roiConfigured: rois.length > 0,
+          roiShapes: rois,
+        };
+      } catch {
+        return uc;
       }
-    };
+    })
+  );
+};
 
-    loadUseCasesWithAssignments();
-  }, [loadingUseCases, useCasesResponse, camera.id, getCameraAssignments, getRoi]);
+
+
+  useEffect(() => {
+  if (
+    loadingUseCases ||
+    !useCasesResponse ||
+    !Array.isArray(useCasesResponse)
+  ) {
+    return;
+  }
+
+  const run = async () => {
+    const mapped: UseCaseData[] = useCasesResponse.map((uc) => ({
+      id: uc.id,
+      name: uc.usecaseName,
+      description: uc.description ?? '',
+      selected: false,
+      roiConfigured: false,
+      fineTuned: false,
+      enabled: false,
+      roiShapes: [],
+      labels: uc.labels ?? [],
+    }));
+
+    try {
+      const withAssignments = await loadAssignments(mapped);
+      const withROI = await loadRoiForUseCases(withAssignments);
+      setUseCases(withROI);
+    } catch (err) {
+      console.error('Failed to load assignments', err);
+      setUseCases(mapped);
+    }
+  };
+
+  void run();
+}, [
+  loadingUseCases,
+  useCasesResponse,
+  camera.id,
+  getCameraAssignments,
+  getRoi,
+]);
+
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');

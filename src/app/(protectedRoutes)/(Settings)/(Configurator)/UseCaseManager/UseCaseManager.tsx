@@ -25,6 +25,8 @@ import {
   CameraSelectionDrawer,
 } from "@/app/components/organisms/configurator/use-case-manager";
 
+
+
 const UseCaseManager: React.FC = () => {
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -32,36 +34,39 @@ const UseCaseManager: React.FC = () => {
   const [fetchAssignments] = useLazyGetAssignmentsQuery();
   const [assignmentMap, setAssignmentMap] = useState<Record<string, string[]>>({});
 
-
-
   
+const loadAssignmentsForUseCases = async (
+  useCases: Array<{ id: string }>
+): Promise<void> => {
+  const updates: Record<string, string[]> = {};
 
+  await Promise.all(
+    useCases.map(async (uc) => {
+      try {
+        const res = await fetchAssignments(uc.id).unwrap();
+        updates[uc.id] = Array.isArray(res)
+          ? res.map((a) => a.cameraId)
+          : [];
+      } catch {
+        updates[uc.id] = [];
+      }
+    })
+  );
+
+  setAssignmentMap((prev) => ({
+    ...prev,
+    ...updates,
+  }));
+};
   // RTK Query hooks
   const { 
     data: useCasesResponse, 
     isLoading: isLoadingUseCases,
     error: useCasesError,
   } = useGetUsecasesQuery();
- 
-
   useEffect(() => {
   if (!Array.isArray(useCasesResponse)) return;
-
-  useCasesResponse.forEach(async (uc) => {
-    try {
-      const res = await fetchAssignments(uc.id).unwrap();
-
-      setAssignmentMap((prev) => ({
-  ...prev,
-  [uc.id]: Array.isArray(res) ? res.map(a => a.cameraId) : [],
-}));
-    } catch {
-      setAssignmentMap((prev) => ({
-        ...prev,
-        [uc.id]: [],
-      }));
-    }
-  });
+  void loadAssignmentsForUseCases(useCasesResponse);
 }, [useCasesResponse]);
 
 
