@@ -92,7 +92,7 @@ export const zoneLocationMappingApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- DELETE ZONE ---------- */
     deleteZone: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string; error?: string },
       string
     >({
       query: (id) => ({

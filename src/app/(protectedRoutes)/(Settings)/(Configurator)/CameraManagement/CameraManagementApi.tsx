@@ -35,7 +35,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- GET CAMERAS ---------- */
     getAllCameras: builder.query<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string[]; error?: string },
       void
     >({
       query: () => ({
@@ -47,7 +47,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- GET ZONES ---------- */
     getZones: builder.query<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string[]; error?: string },
       void
     >({
       query: () => ({
@@ -59,7 +59,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- GET LOCATIONS BY ZONE ---------- */
     getLocationsByZone: builder.query<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string; error?: string },
       string
     >({
       query: (zoneId) => ({
@@ -82,7 +82,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- DELETE CAMERA ---------- */
     deleteCamera: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string; error?: string },
       string
     >({
       query: (cameraId) => ({
@@ -95,7 +95,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
     /* ---------- DETECT NVR CHANNELS ---------- */
     detectNvrChannels: builder.mutation<
       {
-        data: any; activeChannels: any[]; noResponseChannels?: any[] 
+        data: string; activeChannels: number[]; noResponseChannels?: number[] 
 },
       DetectNvrChannelsPayload
     >({

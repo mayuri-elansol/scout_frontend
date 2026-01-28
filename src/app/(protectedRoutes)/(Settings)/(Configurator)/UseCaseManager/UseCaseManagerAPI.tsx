@@ -81,7 +81,7 @@ export const useCaseManagerApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- ASSIGN CAMERAS TO USE CASE ---------- */
     assignCameras: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string; error?: string },
       AssignCamerasPayload
     >({
       query: (body) => ({
@@ -111,7 +111,7 @@ export const useCaseManagerApi = baseProtectedApi.injectEndpoints({
 
     /* ---------- UNASSIGN CAMERA ---------- */
     unassignCamera: builder.mutation<
-      { status: string; message: string; data?: any; error?: string },
+      { status: string; message: string; data?: string; error?: string },
       UnassignCameraPayload
     >({
       query: (body) => ({
