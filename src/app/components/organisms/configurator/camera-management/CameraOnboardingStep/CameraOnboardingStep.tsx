@@ -190,9 +190,27 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
 
   const extractRtspChannelNumber = (rtspUrl: string): string => {
-  const match = RegExp(/Channels\/(\d+)/).exec(rtspUrl);
-  return match ? match[1] : "";
-};
+    const match = RegExp(/Channels\/(\d+)/).exec(rtspUrl);
+    return match ? match[1] : "";
+  };
+
+  const isDuplicateNvrCamera = (
+    ip: string,
+    channel: string,
+    cameras: OnboardingCamera[]
+  ) => {
+    return cameras.some(cam => {
+      if (cam.ipAddress !== ip) return false;
+
+      // Extract channel from existing camera name
+      // Example: MainNVR-CH-1
+      const match = cam.cameraname?.match(/CH-(\d+)/);
+      const existingChannel = match ? match[1] : null;
+
+      return existingChannel === channel;
+    });
+  };
+
 
 
 
@@ -375,6 +393,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         return "default";
     }
   };
+
+  
 
   const handleSaveAssignments = async () => {
     setIsSavingAssignments(true);
@@ -779,11 +799,15 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           const activeChannels = response?.activeChannels;
 
 
-                          if (!Array.isArray(activeChannels)) {
-                            showToast("No cameras detected from NVR", "warning");
+                          if (!Array.isArray(activeChannels) || activeChannels.length === 0) {
+                            showToast(
+                              "No active cameras found. Invalid RTSP or incorrect credentials.",
+                              "error"
+                            );
                             setNvrCameras([]);
                             return;
                           }
+
 
                           setNvrCameras(activeChannels);
 
@@ -842,34 +866,60 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           color="success"
                           fullWidth
                           sx={{ mt: 2 }}
+                          disabled={selectedNvrCams.length === 0}
                           onClick={() => {
                             const selected = nvrCameras.filter((cam) =>
                               selectedNvrCams.includes(cam.channel)
                             );
 
-                            const mapped = selected.map((cam) => ({
-                              // channel: cam.channel,
-                              channel:extractRtspChannelNumber(cam.rtspUrl), 
-                              // cameraName: `${nvrData.name}-Channel-${cam.channel}`,
+                            const mapped = selected
+                              .filter(cam => {
+                                const channel = extractRtspChannelNumber(cam.rtspUrl);
 
-                              rtspUrl: cam.rtspUrl, 
-                              cameraName: `${nvrData.name}-${cam.channel
-                                }-${Date.now()}`,
-                              // cameraIp: `${nvrData.ip}-${cam.channel}`,
-                              cameraIp: nvrData.ip,
-                              // channel: cam.channel,
+                                // 1️⃣ Already onboarded
+                                if (isDuplicateNvrCamera(nvrData.ip, channel, cameras)) {
+                                  showToast(
+                                    `Camera already onboarded (IP: ${nvrData.ip}, Channel: ${channel})`,
+                                    "warning"
+                                  );
+                                  return false;
+                                }
 
-                              username: nvrData.username,
-                              password: nvrData.password,
-                              port: nvrData.port,
-                              zoneId: "",
-                              locationId: "",
-                              locationOptions: [],
-                            }));
+                                // 2️⃣ Already selected in this batch
+                                if (
+                                  pendingAssignments.some(
+                                    p => p.cameraIp === nvrData.ip && p.channel === channel
+                                  )
+                                ) {
+                                  showToast(
+                                    `Camera already selected (Channel ${channel})`,
+                                    "warning"
+                                  );
+                                  return false;
+                                }
+
+                                return true;
+                              })
+
+                              .map(cam => ({
+                                channel: extractRtspChannelNumber(cam.rtspUrl),
+                                rtspUrl: cam.rtspUrl,
+                                cameraName: `${nvrData.name}-CH-${extractRtspChannelNumber(cam.rtspUrl)}`,
+                                cameraIp: nvrData.ip,
+                                username: nvrData.username,
+                                password: nvrData.password,
+                                port: nvrData.port,
+                                zoneId: "",
+                                locationId: "",
+                                locationOptions: [],
+                              }));
+
+                            if (mapped.length === 0) return;
 
                             setPendingAssignments(mapped);
                             setAssignDialogOpen(true);
                           }}
+
                         >
                           Add Selected Cameras
                         </Button>
