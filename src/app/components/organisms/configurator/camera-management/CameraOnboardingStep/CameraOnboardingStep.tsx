@@ -394,12 +394,22 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     }
   };
 
-  
+
 
   const handleSaveAssignments = async () => {
+
+
     setIsSavingAssignments(true);
     try {
       for (const cam of pendingAssignments) {
+
+        if (isDuplicateNvrCamera(nvrData.ip, cam.channel, cameras)) {
+          showToast(
+            `Duplicate camera skipped (IP: ${nvrData.ip}, Channel: ${cam.channel})`,
+            "error"
+          );
+          continue;
+        }
         if (!cam.zoneId) {
           alert(`Please select zone for ${cam.cameraName}`);
           return;
@@ -796,7 +806,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             rtsplink: nvrData.rtsplink,
                           }).unwrap();
 
-                          const activeChannels = response?.activeChannels;
+                          const activeChannels = response?.activeChannels as unknown as NvrCamera[];
 
 
                           if (!Array.isArray(activeChannels) || activeChannels.length === 0) {
