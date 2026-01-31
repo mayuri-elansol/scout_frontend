@@ -402,21 +402,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 
     console.log('⏰ Dialog opened, waiting for canvas...');
 
-    // wait for Dialog + container layout to finish
-    // const timeoutId = setTimeout(() => {
-    //   requestAnimationFrame(() => {
-    //     requestAnimationFrame(() => {
-    //       const canvas = canvasRef.current;
-    //       if (canvas) {
-    //         console.log('✅ Canvas is ready, calculating size...');
-    //         recalcCanvasSize();
-    //       } else {
-    //         console.log('❌ Canvas still not ready after delay');
-    //       }
-    //     });
-    //   });
-    // }, 150); // Give more time for dialog animation
-
     const delayedCanvasResize = () => {
       requestAnimationFrame(() => {
         requestAnimationFrame(recalcCanvasSize);

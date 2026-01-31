@@ -144,12 +144,11 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
           label="Short Description (optional)"
           fullWidth
           size="small"
-          multiline
-          minRows={2}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           sx={{ mb: 2 }}
         />
+
 
         <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
           <Button startIcon={<AddIcon />} variant="contained" onClick={handleAddLocalLocation} disabled={!name.trim()}>

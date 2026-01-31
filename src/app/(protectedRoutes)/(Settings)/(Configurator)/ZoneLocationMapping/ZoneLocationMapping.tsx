@@ -27,12 +27,18 @@ import {
 } from "@/app/components/organisms/configurator/zone-location";
 
 
+export type Location = {
+  id: string;
+  locationName: string;
+  description?: string;
+};
+
 type ZoneType = {
   id: string;
   name: string;
-  description?: string;
+  description?: string;  
+  locations?: Location[];
 
-  locations?: LocationItem[];   
   locationsCount?: number;      
   camerasCount?: number;        
 };
@@ -51,6 +57,7 @@ type LocationItem = {
   name: string;
   description?: string;
 };
+
 
 type ZoneFormData = {
   id?: string;
@@ -285,7 +292,14 @@ const ZoneLocationMapping: React.FC = () => {
         open={locationsDrawerOpen}
         onClose={() => setLocationsDrawerOpen(false)}
         zone={selectedZone}
-        existingLocations={selectedZone?.locations ?? []}
+        existingLocations={
+  (selectedZone?.locations ?? []).map((l) => ({
+    id: l.id,
+    name: l.locationName,        // ✅ FIX HERE
+    description: l.description, // ✅ FIX HERE
+  }))
+}
+
         onSave={handleSaveLocations}
       />
 
