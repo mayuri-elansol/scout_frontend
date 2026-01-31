@@ -26,11 +26,20 @@ export type DetectNvrChannelsPayload = {
   rtsplink?: string;
 };
 
+export type DetectNvrChannelsResponse = {
+  activeChannels?: number[];
+  noResponseChannels?: number[];
+};
+type DetectedNvrChannel = {
+  channel: number;
+  rtspUrl: string;
+};
+
 /* ---------- API ---------- */
 
 export const cameraManagementApi = baseProtectedApi.injectEndpoints({
   overrideExisting: true,
-  
+
   endpoints: (builder) => ({
 
     /* ---------- GET CAMERAS ---------- */
@@ -93,22 +102,31 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
     }),
 
     /* ---------- DETECT NVR CHANNELS ---------- */
+
+
     detectNvrChannels: builder.mutation<
       {
-        data: string; activeChannels: number[]; noResponseChannels?: number[] 
-},
+        data: string;
+        activeChannels: DetectedNvrChannel[];
+        noResponseChannels?: number[];
+      },
       DetectNvrChannelsPayload
     >({
+
       query: (body) => ({
         url: `${apiRoutes.configurator.root}/camera-manager/detect-nvr-channels`,
         method: "POST",
         body,
       }),
-      transformResponse: (response: any) => ({
-        data: response,
+      transformResponse: (response: {
+        activeChannels?: { channel: number; rtspUrl: string }[];
+        noResponseChannels?: number[];
+      }) => ({
+        data: "success",
         activeChannels: response.activeChannels ?? [],
         noResponseChannels: response.noResponseChannels ?? [],
       }),
+
     }),
 
 

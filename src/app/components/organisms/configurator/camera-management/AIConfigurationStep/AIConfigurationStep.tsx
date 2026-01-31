@@ -1,6 +1,6 @@
 'use client';
 
-import React, { SyntheticEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 import {
   useGetUsecasesQuery,
@@ -116,48 +116,52 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const [saveRoi, { isLoading: isSavingRoi }] = useSaveRoiMutation();
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
-  const loadAssignments = async (
-  mapped: UseCaseData[]
-): Promise<UseCaseData[]> => {
-  const res = await getCameraAssignments(camera.id).unwrap();
+  
+  const loadAssignments = React.useCallback(
+  async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
+    const res = await getCameraAssignments(camera.id).unwrap();
 
-  if (!Array.isArray(res)) {
-    return mapped;
-  }
+    if (!Array.isArray(res)) {
+      return mapped;
+    }
 
-  return mapped.map((uc) => ({
-    ...uc,
-    selected: res.some(
-      (a: { usecaseId: string }) => a.usecaseId === uc.id
-    ),
-  }));
-};
+    return mapped.map((uc) => ({
+      ...uc,
+      selected: res.some(
+        (a: { usecaseId: string }) => a.usecaseId === uc.id
+      ),
+    }));
+  },
+  [camera.id, getCameraAssignments]
+);
 
 
-const loadRoiForUseCases = async (
-  useCases: UseCaseData[]
-): Promise<UseCaseData[]> => {
-  return Promise.all(
-    useCases.map(async (uc) => {
-      if (!uc.selected) return uc;
 
-      try {
-        const rois = await getRoi({
-          cameraId: camera.id,
-          usecaseId: uc.id,
-        }).unwrap();
+const loadRoiForUseCases = React.useCallback(
+  async (useCases: UseCaseData[]): Promise<UseCaseData[]> => {
+    return Promise.all(
+      useCases.map(async (uc) => {
+        if (!uc.selected) return uc;
 
-        return {
-          ...uc,
-          roiConfigured: rois.length > 0,
-          roiShapes: rois,
-        };
-      } catch {
-        return uc;
-      }
-    })
-  );
-};
+        try {
+          const rois = await getRoi({
+            cameraId: camera.id,
+            usecaseId: uc.id,
+          }).unwrap();
+
+          return {
+            ...uc,
+            roiConfigured: rois.length > 0,
+            roiShapes: rois,
+          };
+        } catch {
+          return uc;
+        }
+      })
+    );
+  },
+  [camera.id, getRoi]
+);
 
 
 
@@ -197,10 +201,10 @@ const loadRoiForUseCases = async (
 }, [
   loadingUseCases,
   useCasesResponse,
-  camera.id,
-  getCameraAssignments,
-  getRoi,
+  loadAssignments,
+  loadRoiForUseCases,
 ]);
+
 
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
@@ -403,13 +407,14 @@ const loadRoiForUseCases = async (
     return useCase?.roiShapes ?? [];
   };
 
-  const getCameraFeedUrl = () => {
-    if (!camera?.id || !tenantId) {
-      console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
-      return '/img/siteimage.jpg';
-    }
-    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
-  };
+  const getCameraFeedUrl = React.useCallback(() => {
+  if (!camera?.id || !tenantId) {
+    console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
+    return '/img/siteimage.jpg';
+  }
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+}, [camera?.id, tenantId]);
+
 
   const renderCameraContent = () => {
     if (!showCameraView) {
@@ -453,26 +458,27 @@ const loadRoiForUseCases = async (
   };
 
   useEffect(() => {
-    if (!showCameraView) {
-      setFrameUrl(null);
-      return;
-    }
-
-    // initial frame
-    setFrameUrl(getCameraFeedUrl());
-
-    const interval = setInterval(() => {
-      setFrameUrl(getCameraFeedUrl());
-    }, 1000); // 🔁 1 frame per second (adjust if needed)
-
-    return () => clearInterval(interval);
-  }, [showCameraView, camera.id, tenantId]);
-
-
-
-  function handleCloseSnackbar(event: SyntheticEvent | Event, reason?: string): void {
-    setSnackbar(prev => ({ ...prev, open: false }));
+  if (!showCameraView) {
+    setFrameUrl(null);
+    return;
   }
+
+  setFrameUrl(getCameraFeedUrl());
+
+  const interval = setInterval(() => {
+    setFrameUrl(getCameraFeedUrl());
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [showCameraView, getCameraFeedUrl]);
+
+
+
+
+  function handleCloseSnackbar(): void {
+  setSnackbar(prev => ({ ...prev, open: false }));
+}
+
 
   return (
     <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>

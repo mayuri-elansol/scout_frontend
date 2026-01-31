@@ -1,6 +1,6 @@
 // Camera as stored & listed in organization
 export interface OrgCamera {
-  cameraName: any;
+  cameraName: string;
   id: string;
   ipAddress: string;
   username: string;

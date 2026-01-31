@@ -127,6 +127,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
 
   const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
+    void cameraId;
+    void aiConfig;
+    
     setSelectedCameraForConfig(null);
 
     setSnackbar({

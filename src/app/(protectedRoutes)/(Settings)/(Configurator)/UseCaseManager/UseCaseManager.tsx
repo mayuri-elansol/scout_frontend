@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Box,
   Container,
@@ -34,45 +34,48 @@ const UseCaseManager: React.FC = () => {
   const [fetchAssignments] = useLazyGetAssignmentsQuery();
   const [assignmentMap, setAssignmentMap] = useState<Record<string, string[]>>({});
 
-  
-const loadAssignmentsForUseCases = async (
-  useCases: Array<{ id: string }>
-): Promise<void> => {
-  const updates: Record<string, string[]> = {};
 
-  await Promise.all(
-    useCases.map(async (uc) => {
-      try {
-        const res = await fetchAssignments(uc.id).unwrap();
-        updates[uc.id] = Array.isArray(res)
-          ? res.map((a) => a.cameraId)
-          : [];
-      } catch {
-        updates[uc.id] = [];
-      }
-    })
+  const loadAssignmentsForUseCases = useCallback(
+    async (useCases: Array<{ id: string }>): Promise<void> => {
+      const updates: Record<string, string[]> = {};
+
+      await Promise.all(
+        useCases.map(async (uc) => {
+          try {
+            const res = await fetchAssignments(uc.id).unwrap();
+            updates[uc.id] = Array.isArray(res)
+              ? res.map((a) => a.cameraId)
+              : [];
+          } catch {
+            updates[uc.id] = [];
+          }
+        })
+      );
+
+      setAssignmentMap((prev) => ({
+        ...prev,
+        ...updates,
+      }));
+    },
+    [fetchAssignments] // 👈 correct dependency
   );
 
-  setAssignmentMap((prev) => ({
-    ...prev,
-    ...updates,
-  }));
-};
   // RTK Query hooks
-  const { 
-    data: useCasesResponse, 
+  const {
+    data: useCasesResponse,
     isLoading: isLoadingUseCases,
     error: useCasesError,
   } = useGetUsecasesQuery();
   useEffect(() => {
-  if (!Array.isArray(useCasesResponse)) return;
-  void loadAssignmentsForUseCases(useCasesResponse);
-}, [useCasesResponse]);
+
+    if (!Array.isArray(useCasesResponse)) return;
+    void loadAssignmentsForUseCases(useCasesResponse);
+  }, [useCasesResponse, loadAssignmentsForUseCases]);
 
 
 
-  const { 
-    data: camerasResponse, 
+  const {
+    data: camerasResponse,
     isLoading: isLoadingCameras,
   } = useGetCamerasQuery(undefined, {
     skip: !drawerOpen, // Only fetch when drawer opens
@@ -82,42 +85,42 @@ const loadAssignmentsForUseCases = async (
 
   // Process use cases data
   const useCases = useMemo(() => {
-  if (!Array.isArray(useCasesResponse)) return [];
+    if (!Array.isArray(useCasesResponse)) return [];
 
-  return useCasesResponse.map((uc) => ({
-    id: uc.id,
-    name: uc.usecaseName,
-    description: uc.description ?? "",
-    category: "AI",
-    enabled: true,
-    assignedCameraIds: assignmentMap[uc.id] ?? [],
+    return useCasesResponse.map((uc) => ({
+      id: uc.id,
+      name: uc.usecaseName,
+      description: uc.description ?? "",
+      category: "AI",
+      enabled: true,
+      assignedCameraIds: assignmentMap[uc.id] ?? [],
 
-  }));
-}, [useCasesResponse, assignmentMap]);
+    }));
+  }, [useCasesResponse, assignmentMap]);
 
   // Process cameras data
   const cameras = useMemo(() => {
-  if (!Array.isArray(camerasResponse)) return [];
+    if (!Array.isArray(camerasResponse)) return [];
 
-  return camerasResponse.map((cam) => ({
-    id: cam.id,
-    name: cam.cameraName,
-    position: cam.cameraZone ?? "",
-    location: cam.cameraZone ?? "",
-    ipAddress: cam.cameraIp,
-    port: String(cam.RTSPport),
-    make: cam.connectionType ?? "",
-    status: "connected" as const,
-  }));
-}, [camerasResponse]);
+    return camerasResponse.map((cam) => ({
+      id: cam.id,
+      name: cam.cameraName,
+      position: cam.cameraZone ?? "",
+      location: cam.cameraZone ?? "",
+      ipAddress: cam.cameraIp,
+      port: String(cam.RTSPport),
+      make: cam.connectionType ?? "",
+      status: "connected" as const,
+    }));
+  }, [camerasResponse]);
 
 
   // Handle save camera assignments
   const handleSaveCameraAssignments = async (useCaseId: string, selectedCameraIds: string[]) => {
     try {
-      await assignCameras({ 
-        usecaseId: useCaseId, 
-        cameraIds: selectedCameraIds 
+      await assignCameras({
+        usecaseId: useCaseId,
+        cameraIds: selectedCameraIds
       }).unwrap();
 
       const res = await fetchAssignments(useCaseId).unwrap();
@@ -133,7 +136,7 @@ const loadAssignmentsForUseCases = async (
         useCaseId,
         selectedCameraIds,
       });
-      
+
       // Close drawer on success
       handleCloseDrawer();
     } catch (err) {

@@ -46,13 +46,12 @@ import {
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 import type { OnboardingCamera } from "@/app/types/camera";
-import { channel } from "diagnostics_channel";
 interface LocationOption {
   id: string;
   locationName: string;
 }
 interface AssignmentItem {
-  channel: string;
+  channel: number;
   rtspUrl: string;
   cameraName: string;
   cameraIp: string;
@@ -96,10 +95,6 @@ interface FormErrors {
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
-  // zones = [],
-  // locations = [],
-  // onCameraAdd,
-  // onCameraBatchAdd,
   onCameraRemove,
   onNext,
   onBack,
@@ -178,25 +173,26 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   });
 
   type NvrCamera = {
-    channel: string;
+    channel: number;
     rtspUrl: string;
   };
 
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
-  const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+  const [selectedNvrCams, setSelectedNvrCams] = useState<number[]>([]);
   const { data: zonesData } = useGetZonesQuery();
   const [addCamera] = useAddCameraMutation();
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
 
-  const extractRtspChannelNumber = (rtspUrl: string): string => {
-    const match = RegExp(/Channels\/(\d+)/).exec(rtspUrl);
-    return match ? match[1] : "";
+  const extractRtspChannelNumber = (rtspUrl: string): number => {
+    const match = /Channels\/(\d+)/.exec(rtspUrl);
+    return match ? Number(match[1]) : -1;
   };
+
 
   const isDuplicateNvrCamera = (
     ip: string,
-    channel: string,
+    channel: number,
     cameras: OnboardingCamera[]
   ) => {
     return cameras.some(cam => {
@@ -205,7 +201,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       // Extract channel from existing camera name
       // Example: MainNVR-CH-1
       const match = cam.cameraname?.match(/CH-(\d+)/);
-      const existingChannel = match ? match[1] : null;
+      const existingChannel = match ? Number(match[1]) : null;
 
       return existingChannel === channel;
     });
@@ -333,7 +329,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsAdding(true);
 
     try {
-      const response = await addCamera({
+      await addCamera({
         cameraIp: formData.ipAddress.trim(),
         cameraName: formData.cameraname.trim(),
         userName: formData.username.trim(),
@@ -439,7 +435,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         };
 
         console.log("Final payload:", payload);
-        const response = await addCamera(payload).unwrap();
+        await addCamera(payload).unwrap();
 
         // 🔥 This updates UI instantly
       }
@@ -487,7 +483,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   };
 
 
-  const handleNvrCameraToggle = (channel: string) => {
+  const handleNvrCameraToggle = (channel: number) => {
     setSelectedNvrCams((prev) =>
       prev.includes(channel)
         ? prev.filter((ch) => ch !== channel)
@@ -796,7 +792,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                       onClick={async () => {
                         try {
                           setIsDiscovering(true);
-                          const response = await detectNvrChannels({
+                          const { activeChannels } = await detectNvrChannels({
                             nvrName: nvrData.name,
                             ip: nvrData.ip,
                             port: Number(nvrData.port),
@@ -805,9 +801,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             numberofchannels: Number(nvrData.numberofchannels),
                             rtsplink: nvrData.rtsplink,
                           }).unwrap();
-
-                          const activeChannels = response?.activeChannels as unknown as NvrCamera[];
-
 
                           if (!Array.isArray(activeChannels) || activeChannels.length === 0) {
                             showToast(
@@ -818,8 +811,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             return;
                           }
 
+                          const mappedCameras: NvrCamera[] = activeChannels.map((cam) => ({
+                            channel: cam.channel,
+                            rtspUrl: cam.rtspUrl,
+                          }));
 
-                          setNvrCameras(activeChannels);
+
+                          setNvrCameras(mappedCameras);
+
 
                         } catch (error) {
                           console.error("Detect NVR Error:", error);
