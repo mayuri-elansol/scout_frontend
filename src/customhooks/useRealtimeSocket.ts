@@ -45,3 +45,35 @@ export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
     };
   }, [url, options.topic, options.onData, options.onLiveFrame]);
 }
+
+//new code for the diffrent usehook like frames and roi
+// // src/hooks/useRealtimeSocket.ts
+// import { io, Socket } from "socket.io-client";
+// import { useEffect, useRef } from "react";
+
+// interface RealtimeSocketOptions {
+//   events: Record<string, (data: any) => void>;
+// }
+
+// export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
+//   const socketRef = useRef<Socket | null>(null);
+//   const handlersRef = useRef(options.events);
+
+//   handlersRef.current = options.events;
+
+//   useEffect(() => {
+//     const socket = io(url, { transports: ["websocket"] });
+//     socketRef.current = socket;
+
+//     console.log(`🟢 Connected → ${url}`);
+
+//     Object.keys(handlersRef.current).forEach((event) => {
+//       socket.on(event, (data) => handlersRef.current[event](data));
+//     });
+
+//     return () => {
+//       socket.disconnect();
+//       console.log(`🔴 Disconnected → ${url}`);
+//     };
+//   }, [url]);
+// }
