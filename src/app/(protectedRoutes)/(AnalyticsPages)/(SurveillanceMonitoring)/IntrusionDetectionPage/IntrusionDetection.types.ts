@@ -9,12 +9,12 @@ export interface IntrusionFilterParams {
   startDate?: string;
   endDate?: string;
 }
-
+export type KpiColour = "red" | "green" | "blue";
 /* ---------- KPI ---------- */
 export interface IntrusionKpiItem {
   title: keyof typeof intrusionKpiConfig;
   value: number | string;
-  colour: string;
+  colour: KpiColour;
 }
 
 export interface IntrusionKpiUi extends IntrusionKpiItem {

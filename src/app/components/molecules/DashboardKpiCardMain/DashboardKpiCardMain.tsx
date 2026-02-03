@@ -2,17 +2,13 @@
 
 import React from "react";
 import { Card, CardContent, Box, Typography } from "@mui/material";
-import { SvgIconComponent } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
 interface DashboardKpiCardProps {
   title: string;
   violationsCount: number;
-  lastDetection: string;
-  lastDetectionTime: string;
+
   route?: string;
-  icon: SvgIconComponent;
-  tooltipMessage?: string;
 
   // Optional custom colors
   color?: string;

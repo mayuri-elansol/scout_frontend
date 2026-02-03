@@ -47,11 +47,12 @@ export interface PPEKpi {
   icon: SvgIconComponent; // required, matches KpiCardProps
   tooltipMessage?: string;
 }
+export type KpiColour = "red" | "green" | "blue";
 
 export interface KpiItem {
   title: keyof typeof ppeKpiConfig;
   value: number | string;
-  colour: string;
+  colour: KpiColour;
 }
 export interface SubViolationInterface {
   label: string;

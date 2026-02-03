@@ -31,5 +31,9 @@ export const baseProtectedApi = createApi({
     "IntrusionRecentViolations",
     "IntrusionDetailedReport",
     "IntrusionReportPdf",
+    "EmployeeIdleTimeKpi",
+    "EmployeeIdleTimeZoneViolations",
+    "EmployeeIdleTimeDetailedReport",
+    "EmployeeIdleTimeRecentViolations",
   ],
 });
