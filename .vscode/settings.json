@@ -1,6 +1,2 @@
 {
-    "sonarlint.connectedMode.project": {
-        "connectionId": "https-cicd-elansoltech-in-sonar",
-        "projectKey": "scout_frontend"
-    }
 }
