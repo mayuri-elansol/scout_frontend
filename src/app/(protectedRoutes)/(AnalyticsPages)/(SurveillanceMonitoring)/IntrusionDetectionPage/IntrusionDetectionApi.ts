@@ -9,6 +9,7 @@ import {
 import { rtkAPIToast } from "@/utils/rtkAPIToast";
 
 export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getIntrusionKpi: builder.query({
       query: (body: IntrusionBaseRequest) => ({
@@ -96,14 +97,14 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
           const a = document.createElement("a");
 
           a.href = url;
-          a.download = `intrusion-violations-report-${Date.now()}.csv`;
+          a.download = `intrusion-csv-report-${Date.now()}.csv`;
           document.body.appendChild(a);
           a.click();
 
           a.remove();
           window.URL.revokeObjectURL(url);
 
-          return null; // ✅ MUST return something
+          return null;
         },
       }),
 

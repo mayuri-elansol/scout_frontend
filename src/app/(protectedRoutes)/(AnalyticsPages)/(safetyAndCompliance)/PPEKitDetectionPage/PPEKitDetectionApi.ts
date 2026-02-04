@@ -97,7 +97,7 @@ export const ppeKitDetectionApi = baseProtectedApi.injectEndpoints({
           const a = document.createElement("a");
 
           a.href = url;
-          a.download = `ppe-violations-report-${Date.now()}.csv`;
+          a.download = `ppe-csv-report-${Date.now()}.csv`;
           document.body.appendChild(a);
           a.click();
 

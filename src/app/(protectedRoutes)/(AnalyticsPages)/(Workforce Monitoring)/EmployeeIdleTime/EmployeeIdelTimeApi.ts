@@ -65,7 +65,7 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `ppe-single-report-${Date.now()}.pdf`;
+          a.download = `employee-idle-time-single-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
@@ -100,7 +100,7 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           const a = document.createElement("a");
 
           a.href = url;
-          a.download = `ppe-violations-report-${Date.now()}.csv`;
+          a.download = `employee-idle-time-csv-report-${Date.now()}.csv`;
           document.body.appendChild(a);
           a.click();
 
@@ -137,7 +137,7 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `ppe-detailed-report-${Date.now()}.pdf`;
+          a.download = `employee-idle-time-detailed-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
