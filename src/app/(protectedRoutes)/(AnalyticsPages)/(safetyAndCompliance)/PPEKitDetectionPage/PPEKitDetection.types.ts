@@ -54,6 +54,7 @@ export interface KpiItem {
   value: number | string;
   colour: KpiColour;
 }
+
 export interface SubViolationInterface {
   label: string;
   value: number;

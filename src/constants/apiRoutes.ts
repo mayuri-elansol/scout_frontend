@@ -46,8 +46,16 @@ export const apiRoutes = {
     deleteById: "delete-user",
   },
 
-  dashboard: {},
-
+  surveillanceMonitoringDashboard: {
+    root: "surveillanceDashboard",
+    getsurveillanceMonitoringDashboardAnalyticsKpi:
+      "get-surveillance-monitoring-dashboard-analytics-kpi",
+  },
+  WorkforceMonitoringDashboard: {
+    root: "workforceMonitoringDashboard",
+    getWorkforceMonitoringDashboardAnalyticsKpi:
+      "get-workforce-monitoring-dashboard-analytics-kpi",
+  },
   ppeKitDetection: {
     root: "ppeKitDetection",
     getPpeKitDetectionAnalyticsKpi: "get-ppe-kit-detection-analytics-kpi",

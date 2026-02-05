@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
 import { People, Security, VideocamOff } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
@@ -10,54 +10,142 @@ import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
+import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicViolationScatterChart, {
   ViolationData,
 } from "@/app/components/organisms/ScatterChart/ScatterChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useLazyGetSurveillanceMonitoringDashboardKpiDataQuery } from "./SurveillanceMonitoringDashboardApi";
+import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
+import { SurveillanceKpiData } from "./SurveillanceMonitoringDashboard.types";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 
 const SurveillanceMonitoring: React.FC = () => {
-  const kpiData = [
-    {
-      title: "Intrusion Detection",
-      violationsCount: 3,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
-      icon: Security,
-      route: "/IntrusionDetectionPage",
-      tooltipMessage:
-        "Shows detected intrusion incidents in monitored zones during restricted hours.",
-    },
-    {
-      title: "Unauthorized Access In Restrcited Areas",
-      violationsCount: 4,
-      lastDetection: "Zone C",
-      lastDetectionTime: "3:10 AM",
-      icon: People,
-      route: "/UnauthorizedAccessInRestrictedAreas",
-      tooltipMessage: "Displays unauthorized acess in restricted ares.",
-    },
-    {
-      title: "Camera Tempering Detection",
-      violationsCount: 2,
-      lastDetection: "Zone C",
-      lastDetectionTime: "2:42 PM",
-      icon: VideocamOff,
-      route: "/CameraTampering",
-      tooltipMessage:
-        "Displays people detected inside premises during shutdown hours.",
-    },
+  const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
 
-    {
-      title: "Movement During Shutdown",
-      violationsCount: 2,
-      lastDetection: "Warehouse Zone 4",
-      lastDetectionTime: "01:45 AM",
-      icon: People,
-      route: "/PeoplePresence",
-      tooltipMessage:
-        "Displays people detected inside premises during shutdown hours.",
+  /* ---------- STATE ---------- */
+  const [isLiveMode, setIsLiveMode] = useState(true);
+
+  const [displaySurveillanceKpi, setDisplaySurveillanceKpi] = useState<
+    SurveillanceKpiData[]
+  >([]);
+
+  /* ---------- API HOOKS ---------- */
+  const [fetchSurveillanceKpi, { isLoading: SurveillancekpiLoading }] =
+    useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
+  /* ---------- INITIAL LOAD ---------- */
+  useEffect(() => {
+    const load = async () => {
+      const [kpi] = await Promise.all([
+        fetchSurveillanceKpi({ tenantId }).unwrap(),
+      ]);
+
+      setDisplaySurveillanceKpi(kpi ?? []);
+    };
+
+    load().catch(console.error);
+  }, [tenantId, fetchSurveillanceKpi]);
+
+  /* ---------- SOCKET (LIVE ONLY) ---------- */
+  // useSocketEvent<PpeSocketPayload>({
+  //   tenantId,
+  //   enabled: isLiveMode,
+  //   event: SOCKET_EVENTS.PPE_UPDATE,
+  //   handler: (payload) => {
+  //     console.log("payload form the socket", payload);
+  //     setDisplayKpi(payload.kpi ?? []);
+  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
+  //     setRecentViolationsLive(payload.recentViolations ?? []);
+  //   },
+  // });
+
+  /* ---------- TIME FILTER ---------- */
+  const handleTimeRangeChange = useCallback(
+    async (range: { start?: string; end?: string }) => {
+      if (!range.start && !range.end) {
+        setIsLiveMode(true);
+        fetchSurveillanceKpi({ tenantId });
+        return;
+      }
+
+      setIsLiveMode(false);
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
+      const [kpi] = await Promise.all([fetchSurveillanceKpi(payload).unwrap()]);
+
+      setDisplaySurveillanceKpi(kpi ?? []);
     },
-  ];
+    [tenantId, fetchSurveillanceKpi],
+  );
+
+  const surveillanceKpiData = useMemo(
+    () =>
+      displaySurveillanceKpi.map((item) => {
+        const config = surveillanceDashboardConfig[item.title];
+
+        return {
+          ...item,
+          title: t(item.title),
+          icon: config?.icon || EngineeringIcon,
+          route: config?.route || "/",
+          tooltipMessage: config?.tooltipMessage || "",
+        };
+      }),
+    [displaySurveillanceKpi, t],
+  );
+  // const kpiData: SurveillanceKpiData[] = [
+  //   {
+  //     title: "Intrusion Detection",
+  //     violationsCount: 3,
+  //     lastDetection: "Zone B - Gate 2",
+  //     lastDetectionTime: "02:15 AM",
+  //     icon: Security,
+  //     route: "/IntrusionDetectionPage",
+  //     tooltipMessage:
+  //       "Shows detected intrusion incidents in monitored zones during restricted hours.",
+  //     colour: "red",
+  //   },
+  //   {
+  //     title: "Unauthorized Access In Restrcited Areas",
+  //     violationsCount: 4,
+  //     lastDetection: "Zone C",
+  //     lastDetectionTime: "3:10 AM",
+  //     icon: People,
+  //     route: "/UnauthorizedAccessInRestrictedAreas",
+  //     tooltipMessage: "Displays unauthorized acess in restricted ares.",
+  //     colour: "gray",
+  //   },
+  //   {
+  //     title: "Camera Tempering Detection",
+  //     violationsCount: 2,
+  //     lastDetection: "Zone C",
+  //     lastDetectionTime: "2:42 PM",
+  //     icon: VideocamOff,
+  //     route: "/CameraTampering",
+  //     tooltipMessage:
+  //       "Displays people detected inside premises during shutdown hours.",
+  //     colour: "red",
+  //   },
+  //   {
+  //     title: "Movement During Shutdown",
+  //     violationsCount: 2,
+  //     lastDetection: "Warehouse Zone 4",
+  //     lastDetectionTime: "01:45 AM",
+  //     icon: People,
+  //     route: "/PeoplePresence",
+  //     tooltipMessage:
+  //       "Displays people detected inside premises during shutdown hours.",
+  //     colour: "red",
+  //   },
+  // ];
 
   const violationData: ViolationData[] = [
     { time: "08:00", zone: "Zone A", count: 5 },
@@ -250,12 +338,12 @@ const SurveillanceMonitoring: React.FC = () => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter onRangeChange={() => console.log("on ranged changed")} />
+        <TimeFilter onRangeChange={handleTimeRangeChange} />
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
-        {kpiData.map((kpi, index) => (
+      {/* <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
+        {surveillanceKpiData.map((kpi, index) => (
           <Grid
             size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
@@ -263,6 +351,26 @@ const SurveillanceMonitoring: React.FC = () => {
             <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
+      </Grid> */}
+
+      <Grid container spacing={2.5} sx={{ mb: 4 }}>
+        {SurveillancekpiLoading
+          ? Array.from({ length: 4 }).map(() => (
+              <Grid
+                key={uuidv4()}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : surveillanceKpiData.map((kpi) => (
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Tabs Section */}
