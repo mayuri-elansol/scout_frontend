@@ -29,9 +29,10 @@ export const WithCameras: Story = {
         password: "admin123",
         port: "554",
         make: "Hikvision",
-        position: "Main Gate",
         rtspStream: "rtsp://example",
         status: "connected",
+        cameraName: undefined,
+        location: ""
       },
     ],
   },
@@ -55,9 +56,10 @@ export const ForceAIConfigScreen: Story = {
         password: "pass123",
         port: "554",
         make: "Dahua",
-        position: "Entrance",
         rtspStream: "",
         status: "pending",
+        cameraName: undefined,
+        location: ""
       },
     ],
     forceConfigureCamera: "cam2",

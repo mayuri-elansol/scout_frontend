@@ -412,7 +412,8 @@ const currentItem = allMenuItems.find(
                         variant="body2"
                         sx={{ color: "#6b7280", fontWeight: 400 }}
                       >
-                        Role : {user.roles.map((r) => r.roleName).join(", ")}
+                        {/* Role : {user.roles.map((r) => r.roleName).join(", ")} */}
+                        Role : {Array.isArray(user.roles) ? user.roles.map((r) => r.roleName).join(", ") : user.roles}
                       </Typography>
                     )}
                   </Box>

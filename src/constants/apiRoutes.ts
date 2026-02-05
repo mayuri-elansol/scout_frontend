@@ -11,7 +11,15 @@ export const apiRoutes = {
     forgotPassword: "/forgot-password",
     getNewPassword: "/get-new-password",
     resetPassword: "/reset-password",
-    validateToken: "/validate-token",
+    validateToken: '/validate-token'
+
+  },
+
+  configurator: {
+    root: "configurator",
+    cameraManager: "/camera-manager",
+    zoneMapping: "/zone-mapping",
+    useCaseManager: "/use-case-manager",
   },
 
   organisation: {

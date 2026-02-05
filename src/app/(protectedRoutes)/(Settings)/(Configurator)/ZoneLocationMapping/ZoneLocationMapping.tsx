@@ -1,9 +1,6 @@
 "use client";
-import { getZones, createZone, updateZone, deleteZone, createLocation } 
-  from "@/app/services/configurator/zoneLocationService";
 
-
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Container,
   Box,
@@ -28,7 +25,32 @@ import {
   AddEditZoneDrawer,
   AssignLocationsDrawer,
 } from "@/app/components/organisms/configurator/zone-location";
-import { Zone as ZoneType } from "@/app/data/mockZones";
+
+
+export type Location = {
+  id: string;
+  locationName: string;
+  description?: string;
+};
+
+type ZoneType = {
+  id: string;
+  name: string;
+  description?: string;  
+  locations?: Location[];
+
+  locationsCount?: number;      
+  camerasCount?: number;        
+};
+
+
+import {
+  useGetZonesQuery,
+  useCreateZoneMutation,
+  useUpdateZoneMutation,
+  useDeleteZoneMutation,
+  useCreateLocationMutation,
+} from "./ZoneLocationMappingApi";
 
 type LocationItem = {
   id: string;
@@ -37,26 +59,52 @@ type LocationItem = {
 };
 
 
+type ZoneFormData = {
+  id?: string;
+  name: string;
+  description?: string;
+};
 
 const ZoneLocationMapping: React.FC = () => {
-  // Normalize first: ensure each zone has .locations array
- const [zones, setZones] = useState<ZoneType[]>([]);
-
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedZone, setSelectedZone] = useState<typeof zones[number] | null>(null);
+  const [selectedZone, setSelectedZone] = useState<ZoneType | null>(null);
   const [zoneToDelete, setZoneToDelete] = useState<ZoneType | null>(null);
 
   // Drawer states
   const [addEditDrawerOpen, setAddEditDrawerOpen] = useState(false);
   const [locationsDrawerOpen, setLocationsDrawerOpen] = useState(false);
 
+  // RTK Query hooks
+  const { data: zonesResponse, isLoading, error } = useGetZonesQuery();
+  const [createZone, { isLoading: isCreating }] = useCreateZoneMutation();
+  const [updateZone] = useUpdateZoneMutation();
+  const [deleteZone, { isLoading: isDeleting }] = useDeleteZoneMutation();
+  const [createLocation] = useCreateLocationMutation();
+
+  // Process zones data
+  const zones = useMemo(() => {
+    if (!zonesResponse?.zones) return [];
+
+    return zonesResponse.zones.map((z) => ({
+  id: z.id,
+  name: z.zoneName,
+  description: z.description,
+
+  locations: z.locations,          // ✅ RESTORE
+  locationsCount: z.locationsCount,
+  camerasCount: z.camerasCount,
+}));
+
+  }, [zonesResponse]);
+
+
+
   // Filter zones
   const filteredZones = zones.filter(
-  (zone) =>
-    zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ?? 
-    (zone.description ?? "").toLowerCase().includes(searchQuery.toLowerCase())
-);
-
+    (zone) =>
+      zone.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (zone.description ?? "").toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Add new zone
   const handleAddZone = () => {
@@ -65,97 +113,95 @@ const ZoneLocationMapping: React.FC = () => {
   };
 
   // Edit zone
-  const handleEditZone = (zone: typeof zones[number]) => {
+  const handleEditZone = (zone: ZoneType) => {
     setSelectedZone(zone);
     setAddEditDrawerOpen(true);
   };
 
   // Delete zone
-  const handleDeleteZone = (zone: typeof zones[number]) => {
+  const handleDeleteZone = (zone: ZoneType) => {
     setZoneToDelete(zone);
   };
 
+  // Confirm delete
   const confirmDelete = async () => {
-  if (!zoneToDelete?.id) return;
+    if (!zoneToDelete?.id) return;
 
-  await deleteZone(zoneToDelete.id);
-  fetchZones();
-  setZoneToDelete(null);
-};
+    try {
+      await deleteZone(zoneToDelete.id).unwrap();
+      setZoneToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete zone", err);
+    }
+  };
 
-
-
-
-  const fetchZones = async () => {
-  try {
-    const { data } = await getZones();
-
-    setZones(
-      data.zones.map((z: Record<string, unknown>) => ({
-        id: String(z.id), 
-        name: z.zoneName,
-        description: z.description,
-        locations: z.locations ?? [],
-        cameraIds: z.cameras ?? []
-      }))
-    );
-  } catch (err) {
-    console.error("Failed to fetch zones", err);
-  }
-};
-
-useEffect(() => {
-  fetchZones();
-}, []);
-
-type ZoneFormData = {
-  id?: string;
-  name: string;
-  description?: string;
-};
   // Save zone (add or edit)
   const handleSaveZone = async (zoneData: ZoneFormData) => {
-  if (zoneData.id) {
-    await updateZone(zoneData.id, {
-      zoneName: zoneData.name,
-      description: zoneData.description ?? ""
-    });
-  } else {
-    await createZone({
-      zoneName: zoneData.name,
-      description: zoneData.description ?? ""
-    });
-  }
-
-  fetchZones();
-};
-
+    try {
+      if (zoneData.id) {
+        await updateZone({
+          id: zoneData.id,
+          data: {
+            zoneName: zoneData.name,
+            description: zoneData.description ?? "",
+          },
+        }).unwrap();
+      } else {
+        await createZone({
+          zoneName: zoneData.name,
+          description: zoneData.description ?? "",
+        }).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to save zone", err);
+    }
+  };
 
   // Assign locations (open drawer)
-  const handleAssignLocations = (zone: typeof zones[number]) => {
+  const handleAssignLocations = (zone: ZoneType) => {
     setSelectedZone(zone);
     setLocationsDrawerOpen(true);
   };
 
-  // Save locations: adds created locations to zone.locations array
+  // Save locations
   const handleSaveLocations = async (zoneId: string, locations: LocationItem[]) => {
-  for (const loc of locations) {
-    await createLocation({
-      zoneId,
-      locationName: loc.name,
-      description: loc.description ?? ""
-    });
-  }
-  fetchZones();
-};
-
-
-
+    try {
+      for (const loc of locations) {
+        await createLocation({
+          zoneId,
+          locationName: loc.name,
+          description: loc.description ?? "",
+        }).unwrap();
+      }
+    } catch (err) {
+      console.error("Failed to create location", err);
+    }
+  };
 
   // Calculate stats
   const totalZones = zones.length;
-  const configuredZones = zones.filter((z) => (z.locations?.length ?? 0) > 0 || (z.cameraIds?.length ?? 0) > 0).length;
-  const totalLocations = zones.reduce((sum, z) => sum + (z.locations?.length ?? 0), 0);
+  const configuredZones = zones.filter((z) => (z.locationsCount ?? 0) > 0 || (z.camerasCount ?? 0) > 0).length;
+  const totalLocations = zones.reduce((sum, z) => sum + (z.locationsCount ?? 0), 0);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Typography>Loading zones...</Typography>
+      </Container>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Alert severity="error">
+          Failed to load zones. Please try again later.
+        </Alert>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -202,7 +248,13 @@ type ZoneFormData = {
           slotProps={{ input: { startAdornment: (<InputAdornment position="start"><SearchIcon /></InputAdornment>) } }}
           sx={{ flex: 1, "& .MuiOutlinedInput-root": { backgroundColor: "white" } }}
         />
-        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddZone} sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddZone}
+          sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}
+          disabled={isCreating}
+        >
           Add Zone
         </Button>
       </Box>
@@ -218,25 +270,60 @@ type ZoneFormData = {
             Showing <strong>{filteredZones.length}</strong> of <strong>{zones.length}</strong> zones
           </Typography>
 
-          <ZoneTable zones={filteredZones} onAssignLocations={handleAssignLocations} onEdit={handleEditZone} onDelete={handleDeleteZone} />
+          <ZoneTable
+            zones={filteredZones}
+            onAssignLocations={handleAssignLocations}
+            onEdit={handleEditZone}
+            onDelete={handleDeleteZone}
+          />
         </Box>
       )}
 
       {/* Add/Edit Zone Drawer */}
-      <AddEditZoneDrawer open={addEditDrawerOpen} onClose={() => setAddEditDrawerOpen(false)} zone={selectedZone} onSave={handleSaveZone} />
+      <AddEditZoneDrawer
+        open={addEditDrawerOpen}
+        onClose={() => setAddEditDrawerOpen(false)}
+        zone={selectedZone}
+        onSave={handleSaveZone}
+      />
 
       {/* Assign Locations Drawer */}
-      <AssignLocationsDrawer open={locationsDrawerOpen} onClose={() => setLocationsDrawerOpen(false)} zone={selectedZone} onSave={handleSaveLocations} />
+      <AssignLocationsDrawer
+        open={locationsDrawerOpen}
+        onClose={() => setLocationsDrawerOpen(false)}
+        zone={selectedZone}
+        existingLocations={
+  (selectedZone?.locations ?? []).map((l) => ({
+    id: l.id,
+    name: l.locationName,        // ✅ FIX HERE
+    description: l.description, // ✅ FIX HERE
+  }))
+}
+
+        onSave={handleSaveLocations}
+      />
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={Boolean(zoneToDelete)} onClose={() => setZoneToDelete(null)}>
         <DialogTitle>Delete Zone?</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete <strong>{zoneToDelete?.name}</strong>? This action cannot be undone.</DialogContentText>
+          <DialogContentText>
+            Are you sure you want to delete <strong>{zoneToDelete?.name}</strong>? This action cannot be undone.
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setZoneToDelete(null)} sx={{ textTransform: "none" }}>Cancel</Button>
-          <Button onClick={confirmDelete} color="error" variant="contained" sx={{ textTransform: "none" }}>Delete</Button>
+          <Button onClick={() => setZoneToDelete(null)} sx={{ textTransform: "none" }}>
+            Cancel
+          </Button>
+          <Button
+            onClick={confirmDelete}
+            color="error"
+            variant="contained"
+            sx={{ textTransform: "none" }}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Box,
   Container,
@@ -12,117 +12,153 @@ import {
 import {
   Category as CategoryIcon,
 } from "@mui/icons-material";
-import { UseCase, Camera } from "@/app/types/useCaseManager";
-import { getUsecases, getCameras, assignCameras, getAssignments }
-  from "@/app/services/configurator/usecaseService";
+import { UseCase } from "@/app/types/useCaseManager";
+import {
+  useGetUsecasesQuery,
+  useGetCamerasQuery,
+  useAssignCamerasMutation,
+  useLazyGetAssignmentsQuery,
+} from "./UseCaseManagerAPI";
 
 import {
   UseCaseList,
   CameraSelectionDrawer,
 } from "@/app/components/organisms/configurator/use-case-manager";
 
+
+
 const UseCaseManager: React.FC = () => {
-  const [useCases, setUseCases] = useState<UseCase[]>([]);
-  const [cameras, setCameras] = useState<Camera[]>([]);
   const [selectedUseCase, setSelectedUseCase] = useState<UseCase | null>(null);
-
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [isLoadingUseCases, setIsLoadingUseCases] = useState(true);
-  const [isLoadingCameras, setIsLoadingCameras] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Assume organization ID is available from context or session
-  // const organizationId = "org-001";
-
-  // Load use cases on mount
-  useEffect(() => {
-    loadUseCases();
-  }, []);
-
-  const loadUseCases = async () => {
-    setIsLoadingUseCases(true);
-    try {
-      const res = await getUsecases();         // <-- real backend call
-      const usecases = res.data.map((uc: Record<string, unknown>) => ({
-        id: uc.id,
-        name: uc.usecaseName,
-        description: uc.description,
-        category: "AI",
-        enabled: true,
-        assignedCameraIds: [],
-      }));
-      console.log("UseCases API Response", res.data);
-      for (const uc of usecases) {
-        const assignments = await getAssignments(uc.id);
-        uc.assignedCameraIds = assignments.data.map((m: Record<string, unknown>) => String(m.cameraId));
-      }
-
-      setUseCases(usecases);
-    } catch (err) {
-
-      console.error("Error loading use cases:", err);
-      setError("Failed to load use cases. Please try again later.");
-    } finally {
-      setIsLoadingUseCases(false);
-    }
-  };
+  const [fetchAssignments] = useLazyGetAssignmentsQuery();
+  const [assignmentMap, setAssignmentMap] = useState<Record<string, string[]>>({});
 
 
-  const loadCameras = async () => {
-    setIsLoadingCameras(true);
-    try {
-      const res = await getCameras();
-      setCameras(
-        res.data.map((cam: Record<string, unknown>) => ({
-          id: cam.id,
-          name: cam.cameraName,
-          position: cam.cameraZone,
-          location: cam.cameraZone,
-          ipAddress: cam.cameraIp,
-          port: cam.RTSPport,
-          make: cam.connectionType,
-          status: "connected",
-        }))
+  const loadAssignmentsForUseCases = useCallback(
+    async (useCases: Array<{ id: string }>): Promise<void> => {
+      const updates: Record<string, string[]> = {};
+
+      await Promise.all(
+        useCases.map(async (uc) => {
+          try {
+            const res = await fetchAssignments(uc.id).unwrap();
+            updates[uc.id] = Array.isArray(res)
+              ? res.map((a) => a.cameraId)
+              : [];
+          } catch {
+            updates[uc.id] = [];
+          }
+        })
       );
-    } catch (err) {
-      console.error("Error loading cameras:", err);
-    } finally {
-      setIsLoadingCameras(false);
-    }
-  };
+
+      setAssignmentMap((prev) => ({
+        ...prev,
+        ...updates,
+      }));
+    },
+    [fetchAssignments] // 👈 correct dependency
+  );
+
+  // RTK Query hooks
+  const {
+    data: useCasesResponse,
+    isLoading: isLoadingUseCases,
+    error: useCasesError,
+  } = useGetUsecasesQuery();
+  useEffect(() => {
+
+    if (!Array.isArray(useCasesResponse)) return;
+    void loadAssignmentsForUseCases(useCasesResponse);
+  }, [useCasesResponse, loadAssignmentsForUseCases]);
 
 
+
+  const {
+    data: camerasResponse,
+    isLoading: isLoadingCameras,
+  } = useGetCamerasQuery(undefined, {
+    skip: !drawerOpen, // Only fetch when drawer opens
+  });
+
+  const [assignCameras, { isLoading: isAssigning }] = useAssignCamerasMutation();
+
+  // Process use cases data
+  const useCases = useMemo(() => {
+    if (!Array.isArray(useCasesResponse)) return [];
+
+    return useCasesResponse.map((uc) => ({
+      id: uc.id,
+      name: uc.usecaseName,
+      description: uc.description ?? "",
+      category: "AI",
+      enabled: true,
+      assignedCameraIds: assignmentMap[uc.id] ?? [],
+
+    }));
+  }, [useCasesResponse, assignmentMap]);
+
+  // Process cameras data
+  const cameras = useMemo(() => {
+    if (!Array.isArray(camerasResponse)) return [];
+
+    return camerasResponse.map((cam) => ({
+      id: cam.id,
+      name: cam.cameraName,
+      position: cam.cameraZone ?? "",
+      location: cam.cameraZone ?? "",
+      ipAddress: cam.cameraIp,
+      port: String(cam.RTSPport),
+      make: cam.connectionType ?? "",
+      status: "connected" as const,
+    }));
+  }, [camerasResponse]);
+
+
+  // Handle save camera assignments
   const handleSaveCameraAssignments = async (useCaseId: string, selectedCameraIds: string[]) => {
     try {
-      await assignCameras(useCaseId, selectedCameraIds);   // call backend
+      await assignCameras({
+        usecaseId: useCaseId,
+        cameraIds: selectedCameraIds
+      }).unwrap();
 
-      setUseCases((prev) =>
-        prev.map((uc) =>
-          uc.id === useCaseId ? { ...uc, assignedCameraIds: selectedCameraIds } : uc
-        )
-      );
+      const res = await fetchAssignments(useCaseId).unwrap();
+
+      setAssignmentMap((prev) => ({
+        ...prev,
+        [useCaseId]: Array.isArray(res) ? res.map(a => a.cameraId) : [],
+      }));
+
+
+
       console.log("Saved camera assignments:", {
         useCaseId,
         selectedCameraIds,
       });
+
+      // Close drawer on success
+      handleCloseDrawer();
     } catch (err) {
       console.error("Error saving Camera Assignment", err);
+      setError("Failed to save camera assignments. Please try again.");
     }
   };
 
-  const handleConfigureCameras = async (useCase: UseCase) => {
-  setSelectedUseCase(useCase);
-  setDrawerOpen(true);
+  // Handle configure cameras
+  const handleConfigureCameras = (useCase: UseCase) => {
+    setSelectedUseCase(useCase);
+    setDrawerOpen(true);
+    // Cameras will auto-fetch when drawer opens (skip: !drawerOpen)
+  };
 
-  if (cameras.length === 0) await loadCameras();
-};
-
-
+  // Handle close drawer
   const handleCloseDrawer = () => {
     setDrawerOpen(false);
     setSelectedUseCase(null);
   };
 
+  // Render content based on loading/error states
   const renderContent = () => {
     if (isLoadingUseCases) {
       return (
@@ -148,6 +184,14 @@ const UseCaseManager: React.FC = () => {
             ))}
           </Box>
         </Box>
+      );
+    }
+
+    if (useCasesError) {
+      return (
+        <Alert severity="error">
+          Failed to load use cases. Please try again later.
+        </Alert>
       );
     }
 
@@ -217,7 +261,6 @@ const UseCaseManager: React.FC = () => {
         </Typography>
         <Typography variant="body1" color="text.secondary">
           Configure and assign cameras to AI use cases based on your organization&apos;s
-
           license. Select cameras from Camera Management to enable specific detection
           and monitoring capabilities.
         </Typography>
@@ -240,7 +283,7 @@ const UseCaseManager: React.FC = () => {
         useCase={selectedUseCase}
         cameras={cameras}
         onSave={handleSaveCameraAssignments}
-        isLoading={isLoadingCameras}
+        isLoading={isLoadingCameras ?? isAssigning}
       />
     </Container>
   );

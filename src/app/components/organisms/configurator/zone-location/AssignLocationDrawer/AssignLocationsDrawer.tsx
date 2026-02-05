@@ -13,7 +13,12 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Close as CloseIcon, Delete as DeleteIcon, Add as AddIcon } from "@mui/icons-material";
-import { Zone } from "@/app/data/mockZones";
+
+type ZoneUI = {
+  id: string;
+  name: string;
+};
+
 
 export interface LocationItem {
   id: string;
@@ -24,7 +29,8 @@ export interface LocationItem {
 interface AddLocationDrawerProps {
   open: boolean;
   onClose: () => void;
-  zone: Zone | null;
+  zone: ZoneUI | null;
+  existingLocations: LocationItem[];
   onSave: (zoneId: string, locations: LocationItem[]) => void;
 }
 
@@ -33,10 +39,12 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
   open,
   onClose,
   zone,
+  existingLocations: initialExistingLocations,
   onSave,
 }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [existingLocations, setExistingLocations] = useState<LocationItem[]>([]);
   const [localLocations, setLocalLocations] = useState<LocationItem[]>([]);
 
   // Reset local form when drawer opens/closes
@@ -44,9 +52,10 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
     if (open) {
       setName("");
       setDescription("");
+      setExistingLocations(initialExistingLocations ?? []);
       setLocalLocations([]);
     }
-  }, [open]);
+  }, [open, initialExistingLocations]);
 
   // Add a location to local list (does NOT yet persist to parent)
   const handleAddLocalLocation = () => {
@@ -66,8 +75,8 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
   };
 
   const handleRemoveLocalLocation = (id: string) => {
-  setLocalLocations((prev) => prev.filter((l) => l.id !== id));
-};
+    setLocalLocations((prev) => prev.filter((l) => l.id !== id));
+  };
 
 
   const handleSave = () => {
@@ -87,16 +96,16 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
       open={open}
       onClose={onClose}
       sx={{
-        zIndex:1400,
+        zIndex: 1400,
       }}
-    slotProps={{
+      slotProps={{
         paper: {
-        sx: {
-          width: { xs: "100%", sm: 420, md: 520 },
-          display: "flex",
-          zIndex:1400,
-          flexDirection: "column",
-        },
+          sx: {
+            width: { xs: "100%", sm: 420, md: 520 },
+            display: "flex",
+            zIndex: 1400,
+            flexDirection: "column",
+          },
         },
       }}
     >
@@ -135,12 +144,11 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
           label="Short Description (optional)"
           fullWidth
           size="small"
-          multiline
-          minRows={2}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           sx={{ mb: 2 }}
         />
+
 
         <Box sx={{ display: "flex", gap: 1, mb: 2 }}>
           <Button startIcon={<AddIcon />} variant="contained" onClick={handleAddLocalLocation} disabled={!name.trim()}>
@@ -151,28 +159,66 @@ export const AssignLocationsDrawer: React.FC<AddLocationDrawerProps> = ({
           </Button>
         </Box>
 
-        {/* Local list of locations created in this session */}
+        {/* NEW locations (editable) */}
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           Locations to be created ({localLocations.length})
         </Typography>
 
-        <List sx={{ p: 0 }}>
+        <List sx={{ p: 0, mb: 3 }}>
           {localLocations.map((loc) => (
-            <ListItem key={loc.id} sx={{ borderRadius: 1, mb: 1, border: "1px solid", borderColor: "divider", backgroundColor: "white" }}>
+            <ListItem
+              key={loc.id}
+              sx={{
+                borderRadius: 1,
+                mb: 1,
+                border: "1px solid",
+                borderColor: "divider",
+                backgroundColor: "white",
+              }}
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  size="small"
+                  onClick={() => handleRemoveLocalLocation(loc.id)}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              }
+            >
               <ListItemText
                 primary={<Typography sx={{ fontWeight: 600 }}>{loc.name}</Typography>}
                 secondary={loc.description}
               />
-              <ListItem>
-                secondaryAction={
-                <IconButton edge="end" onClick={() => handleRemoveLocalLocation(loc.id)} size="small">
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-}
-              </ListItem>
             </ListItem>
           ))}
         </List>
+
+        {/* EXISTING locations (read-only) */}
+        <Typography variant="body2" sx={{ mt: 2, mb: 1 }}>
+          Existing Locations ({existingLocations.length})
+        </Typography>
+
+        <List sx={{ p: 0 }}>
+          {existingLocations.map((loc) => (
+            <ListItem
+              key={loc.id}
+              sx={{
+                border: "1px solid",
+                borderColor: "divider",
+                borderRadius: 1,
+                mb: 1,
+                backgroundColor: "#f5f5f5",
+              }}
+            >
+              <ListItemText
+                primary={<Typography fontWeight={600}>{loc.name}</Typography>}
+                secondary={loc.description}
+              />
+            </ListItem>
+          ))}
+        </List>
+
+
       </Box>
 
       {/* Footer */}

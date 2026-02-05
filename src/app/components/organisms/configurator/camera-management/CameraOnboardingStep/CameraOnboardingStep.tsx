@@ -30,12 +30,19 @@ import {
   Error as ErrorIcon,
 } from "@mui/icons-material";
 
+
+
+
 import {
-  addCamera,
-  detectNvrChannels,
-  fetchZones,
-  fetchLocations,
-} from "@/app/services/configurator/cameraService";
+  useAddCameraMutation,
+  useDetectNvrChannelsMutation,
+  useGetZonesQuery,
+  useGetLocationsByZoneQuery,
+  useLazyGetLocationsByZoneQuery
+
+} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+
+
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 import type { OnboardingCamera } from "@/app/types/camera";
@@ -44,7 +51,8 @@ interface LocationOption {
   locationName: string;
 }
 interface AssignmentItem {
-  channel: string;
+  channel: number;
+  rtspUrl: string;
   cameraName: string;
   cameraIp: string;
   username: string;
@@ -58,7 +66,7 @@ interface AssignmentItem {
 interface CameraOnboardingStepProps {
   cameras: OnboardingCamera[];
 
-  onCameraAdd: (camera: OnboardingCamera) => void;
+  // onCameraAdd: (camera: OnboardingCamera) => void;
 
   onCameraRemove: (cameraId: string) => void;
 
@@ -87,10 +95,6 @@ interface FormErrors {
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   cameras,
-  // zones = [],
-  // locations = [],
-  onCameraAdd,
-  // onCameraBatchAdd,
   onCameraRemove,
   onNext,
   onBack,
@@ -126,6 +130,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const [zoneList, setZoneList] = useState<ZoneItem[]>([]);
   const [locationList, setLocationList] = useState<LocationItem[]>([]);
+  const [fetchLocationsByZone] = useLazyGetLocationsByZoneQuery();
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isAdding, setIsAdding] = useState(false);
@@ -168,38 +173,61 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   });
 
   type NvrCamera = {
-    channel: string;
+    channel: number;
+    rtspUrl: string;
   };
 
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
-  const [selectedNvrCams, setSelectedNvrCams] = useState<string[]>([]);
+  const [selectedNvrCams, setSelectedNvrCams] = useState<number[]>([]);
+  const { data: zonesData } = useGetZonesQuery();
+  const [addCamera] = useAddCameraMutation();
+  const [detectNvrChannels] = useDetectNvrChannelsMutation();
+
+  const extractRtspChannelNumber = (rtspUrl: string): number => {
+    const match = /Channels\/(\d+)/.exec(rtspUrl);
+    return match ? Number(match[1]) : -1;
+  };
+
+
+  const isDuplicateNvrCamera = (
+    ip: string,
+    channel: number,
+    cameras: OnboardingCamera[]
+  ) => {
+    return cameras.some(cam => {
+      if (cam.ipAddress !== ip) return false;
+
+      // Extract channel from existing camera name
+      // Example: MainNVR-CH-1
+      const match = cam.cameraname?.match(/CH-(\d+)/);
+      const existingChannel = match ? Number(match[1]) : null;
+
+      return existingChannel === channel;
+    });
+  };
+
+
+
 
   useEffect(() => {
-    const loadZones = async () => {
-      try {
-        const res = await fetchZones();
-        setZoneList(res.data);
-      } catch (err) {
-        console.error("Error loading zones", err);
-      }
-    };
-    loadZones();
-  }, []);
+    if (Array.isArray(zonesData)) {
+      setZoneList(zonesData);
+    }
+  }, [zonesData]);
+
+
+  const { data: locationsData } = useGetLocationsByZoneQuery(selectedZone, {
+    skip: !selectedZone,
+  });
 
   useEffect(() => {
-    const loadLocations = async () => {
-      if (!selectedZone) return;
-      try {
-        const res = await fetchLocations(selectedZone); // backend service call
-        setLocationList(res.data);
-      } catch (err) {
-        console.error("Error loading locations", err);
-      }
-    };
+    if (Array.isArray(locationsData)) {
+      setLocationList(locationsData);
+    }
+  }, [locationsData]);
 
-    loadLocations();
-  }, [selectedZone]);
+
 
   useEffect(() => {
     const updateHeight = () => {
@@ -285,14 +313,14 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   const handleInputChange =
     (field: keyof CameraFormData) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({ ...prev, [field]: event.target.value }));
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prev) => ({ ...prev, [field]: event.target.value }));
 
-      // Clear error when user starts typing
-      // if (errors[field]) {
-      //   setErrors(prev => ({ ...prev, [field]: undefined }));
-      // }
-    };
+        // Clear error when user starts typing
+        // if (errors[field]) {
+        //   setErrors(prev => ({ ...prev, [field]: undefined }));
+        // }
+      };
 
   const handleAddCamera = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -301,38 +329,24 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsAdding(true);
 
     try {
-      const response = await addCamera({
+      await addCamera({
         cameraIp: formData.ipAddress.trim(),
         cameraName: formData.cameraname.trim(),
         userName: formData.username.trim(),
         password: formData.password.trim(),
         RTSPport: formData.port.trim(),
-        // cameraZone: selectedZone,
-        // channel: selectedLocation,
         cameraZone: zoneList.find((z) => z.id === selectedZone)?.zoneName ?? "",
-        channel:
-          locationList.find((l) => l.id === selectedLocation)?.locationName ??
-          "",
+        cameraLocation:
+          locationList.find((l) => l.id === selectedLocation)?.locationName ?? "",
 
+        channel: null,
         refreshRate: 10,
-        // connectionType: "DIRECT_TO_CAMERA",
-        connectionType: "DIRECT_TO_CAMERA" as const,
-      });
+        connectionType: "DIRECT_TO_CAMERA",
+      }).unwrap();
 
-      console.log(response); // or setState(response.data)
-      const createdCamera = response.data;
+      // ✅ NO onCameraAdd here
 
-      onCameraAdd({
-        id: createdCamera.id,
-        cameraname: createdCamera.cameraName,
-        ipAddress: createdCamera.cameraIp,
-        username: createdCamera.userName,
-        password: formData.password, // backend usually doesn’t return this
-        port: createdCamera.RTSPport,
-        zoneId: selectedZone,
-        locationId: selectedLocation,
-        status: "connected", // or pending if you want
-      });
+      showToast("Camera added successfully!", "success");
 
       setFormData({
         ipAddress: "",
@@ -345,6 +359,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       });
       setSelectedZone("");
       setSelectedLocation("");
+
       showToast("Camera added successfully!", "success");
     } catch (error) {
       console.error("Add camera error:", error);
@@ -375,10 +390,22 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     }
   };
 
+
+
   const handleSaveAssignments = async () => {
+
+
     setIsSavingAssignments(true);
     try {
       for (const cam of pendingAssignments) {
+
+        if (isDuplicateNvrCamera(nvrData.ip, cam.channel, cameras)) {
+          showToast(
+            `Duplicate camera skipped (IP: ${nvrData.ip}, Channel: ${cam.channel})`,
+            "error"
+          );
+          continue;
+        }
         if (!cam.zoneId) {
           alert(`Please select zone for ${cam.cameraName}`);
           return;
@@ -397,8 +424,10 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
           userName: cam.username,
           password: cam.password,
           RTSPport: cam.port,
+          channel: cam.channel,
+          rtspUrl: cam.rtspUrl,
           cameraZone: zoneList.find((z) => z.id === cam.zoneId)?.zoneName ?? "",
-          channel:
+          cameraLocation:
             cam.locationOptions.find((l) => l.id === cam.locationId)
               ?.locationName ?? "",
           connectionType: "NVR" as const,
@@ -406,20 +435,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         };
 
         console.log("Final payload:", payload);
-        const response = await addCamera(payload);
+        await addCamera(payload).unwrap();
 
         // 🔥 This updates UI instantly
-        onCameraAdd({
-          id: response.data.id,
-          ipAddress: response.data.cameraIp,
-          cameraname: response.data.cameraName,
-          username: response.data.userName,
-          password: response.data.password,
-          port: response.data.RTSPport,
-          zoneId: cam.zoneId,
-          locationId: cam.locationId,
-          status: "connected",
-        });
       }
 
       showToast("NVR cameras added successfully!", "success");
@@ -444,22 +462,28 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     setIsSavingAssignments(false);
   };
 
+
   const handleAssignmentZoneChange = async (index: number, zoneId: string) => {
     const updated = [...pendingAssignments];
+
     updated[index].zoneId = zoneId;
     updated[index].locationId = "";
+    updated[index].locationOptions = [];
     setPendingAssignments(updated);
 
     try {
-      const res = await fetchLocations(zoneId);
-      updated[index].locationOptions = res.data;
+      const res = await fetchLocationsByZone(zoneId).unwrap();
+      updated[index].locationOptions = Array.isArray(res) ? res : [];
       setPendingAssignments([...updated]);
     } catch (err) {
       console.error("Failed to load locations", err);
+      updated[index].locationOptions = [];
+      setPendingAssignments([...updated]);
     }
   };
 
-  const handleNvrCameraToggle = (channel: string) => {
+
+  const handleNvrCameraToggle = (channel: number) => {
     setSelectedNvrCams((prev) =>
       prev.includes(channel)
         ? prev.filter((ch) => ch !== channel)
@@ -739,7 +763,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                       <Grid size={{ xs: 12 }}>
                         <TextField
-                          label="rstp link"
+                          label="rtsp link"
                           required
                           fullWidth
                           size="small"
@@ -768,7 +792,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                       onClick={async () => {
                         try {
                           setIsDiscovering(true);
-                          const response = await detectNvrChannels({
+                          const { activeChannels } = await detectNvrChannels({
                             nvrName: nvrData.name,
                             ip: nvrData.ip,
                             port: Number(nvrData.port),
@@ -776,9 +800,26 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             password: nvrData.password,
                             numberofchannels: Number(nvrData.numberofchannels),
                             rtsplink: nvrData.rtsplink,
-                          });
+                          }).unwrap();
 
-                          setNvrCameras(response.data.activeChannels); // from backend
+                          if (!Array.isArray(activeChannels) || activeChannels.length === 0) {
+                            showToast(
+                              "No active cameras found. Invalid RTSP or incorrect credentials.",
+                              "error"
+                            );
+                            setNvrCameras([]);
+                            return;
+                          }
+
+                          const mappedCameras: NvrCamera[] = activeChannels.map((cam) => ({
+                            channel: cam.channel,
+                            rtspUrl: cam.rtspUrl,
+                          }));
+
+
+                          setNvrCameras(mappedCameras);
+
+
                         } catch (error) {
                           console.error("Detect NVR Error:", error);
                         } finally {
@@ -834,32 +875,60 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           color="success"
                           fullWidth
                           sx={{ mt: 2 }}
+                          disabled={selectedNvrCams.length === 0}
                           onClick={() => {
                             const selected = nvrCameras.filter((cam) =>
                               selectedNvrCams.includes(cam.channel)
                             );
 
-                            const mapped = selected.map((cam) => ({
-                              channel: cam.channel,
-                              // cameraName: `${nvrData.name}-Channel-${cam.channel}`,
-                              cameraName: `${nvrData.name}-${
-                                cam.channel
-                              }-${Date.now()}`,
-                              // cameraIp: `${nvrData.ip}-${cam.channel}`,
-                              cameraIp: nvrData.ip,
-                              // channel: cam.channel,
+                            const mapped = selected
+                              .filter(cam => {
+                                const channel = extractRtspChannelNumber(cam.rtspUrl);
 
-                              username: nvrData.username,
-                              password: nvrData.password,
-                              port: nvrData.port,
-                              zoneId: "",
-                              locationId: "",
-                              locationOptions: [],
-                            }));
+                                // 1️⃣ Already onboarded
+                                if (isDuplicateNvrCamera(nvrData.ip, channel, cameras)) {
+                                  showToast(
+                                    `Camera already onboarded (IP: ${nvrData.ip}, Channel: ${channel})`,
+                                    "warning"
+                                  );
+                                  return false;
+                                }
+
+                                // 2️⃣ Already selected in this batch
+                                if (
+                                  pendingAssignments.some(
+                                    p => p.cameraIp === nvrData.ip && p.channel === channel
+                                  )
+                                ) {
+                                  showToast(
+                                    `Camera already selected (Channel ${channel})`,
+                                    "warning"
+                                  );
+                                  return false;
+                                }
+
+                                return true;
+                              })
+
+                              .map(cam => ({
+                                channel: extractRtspChannelNumber(cam.rtspUrl),
+                                rtspUrl: cam.rtspUrl,
+                                cameraName: `${nvrData.name}-CH-${extractRtspChannelNumber(cam.rtspUrl)}`,
+                                cameraIp: nvrData.ip,
+                                username: nvrData.username,
+                                password: nvrData.password,
+                                port: nvrData.port,
+                                zoneId: "",
+                                locationId: "",
+                                locationOptions: [],
+                              }));
+
+                            if (mapped.length === 0) return;
 
                             setPendingAssignments(mapped);
                             setAssignDialogOpen(true);
                           }}
+
                         >
                           Add Selected Cameras
                         </Button>

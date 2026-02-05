@@ -13,9 +13,9 @@ export const FEATURE = {
   USER_MANAGEMENT: "SF007",
 
   // Configurator
-  CAMERA_MANAGEMENT: "SF008",
-  USE_CASE_MANAGER: "SF009",
-  ZONE_LOCATION_MAPPING: "SF010",
+  CAMERA_MANAGEMENT: "SF036",
+  USE_CASE_MANAGER: "SF038",
+  ZONE_LOCATION_MAPPING: "SF037",
 
   // Analytics – Safety & Compliance
   PPE_DETECTION: "SUC001",
@@ -50,7 +50,7 @@ export const FEATURE = {
   FACE_IDLE_MONITORING: "SUC022",
 
   // Live Streaming
-  LIVE_STREAMING: "SF033",
+  LIVE_STREAMING: "SF031",
 
   // Permissions FOR ROLE
   EDIT_ROLE: "SF011",//edit-feature same
@@ -60,7 +60,7 @@ export const FEATURE = {
 
   //PERMISSIONS FOR USER
   ADD_USER:"SF015",
-  EDIT_USER:"SF016",
+  EDIT_USER:"SF033",
   VIEW_USER:"SF017",
   DELETE_USER:"SF018",
 } as const;

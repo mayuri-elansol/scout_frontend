@@ -1,0 +1,109 @@
+import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
+import { ROIShape } from "@/app/types/roi";
+
+/* ---------- TYPES ---------- */
+
+export type SaveRoiPayload = {
+    cameraId: string;
+    usecaseId: string;
+    rois: {
+        type: ROIShape["type"];
+        label: string;
+        mode: ROIShape["mode"];
+        points: ROIShape["points"];
+    }[];
+};
+
+
+export type GetRoiParams = {
+    cameraId: string;
+    usecaseId: string;
+};
+
+export type RoiResponse = {
+    status?: string;
+    message?: string;
+    rois?: {
+        id: string;
+        type: ROIShape["type"];
+        label: string;
+        mode: ROIShape["mode"];
+        color: string;
+        points: ROIShape["points"];
+    }[];
+};
+
+
+/* ---------- API ---------- */
+
+export const roiApi = baseProtectedApi.injectEndpoints({
+    endpoints: (builder) => ({
+
+        /* ---------- GET ROI ---------- */
+        getRoi: builder.query<ROIShape[], GetRoiParams>({
+            query: ({ cameraId, usecaseId }) => ({
+                url: `/configurator/camera-roi/${cameraId}/${usecaseId}`,
+                method: "GET",
+            }),
+            transformResponse: (response: RoiResponse): ROIShape[] => {
+                if (!Array.isArray(response?.rois)) return [];
+
+                return response.rois.map((r, index) => ({
+                    id: r.id || `roi-${index}`,
+                    type: r.type,
+                    name: r.label,          // ✅ correct DB → UI mapping
+                    mode: r.mode,
+                    points: r.points,
+                    completed: true,
+                    color: r.color ?? "#00ff00",
+                }));
+            },
+        }),
+
+
+        /* ---------- SAVE ROI ---------- */
+        saveRoi: builder.mutation<RoiResponse, SaveRoiPayload>({
+            query: ({ cameraId, usecaseId, rois }) => ({
+                url: `/configurator/camera-roi`,
+                method: "POST",
+                body: {
+                    cameraId,
+                    usecaseId,
+                    rois,
+                },
+            }),
+        }),
+
+
+        /* ---------- UPDATE ROI ---------- */
+        updateRoi: builder.mutation<RoiResponse, SaveRoiPayload>({
+            query: ({ cameraId, usecaseId, rois }) => ({
+                url: `/configurator/camera-roi/${cameraId}/${usecaseId}`,
+                method: "PUT",
+                body: { rois },
+            }),
+        }),
+
+
+
+        /* ---------- DELETE ROI ---------- */
+        deleteRoi: builder.mutation<RoiResponse, GetRoiParams>({
+            query: ({ cameraId, usecaseId }) => ({
+                url: `/configurator/camera-roi/${cameraId}/${usecaseId}`,
+                method: "DELETE",
+            }),
+        }),
+
+
+    }),
+});
+
+/* ---------- HOOK EXPORTS ---------- */
+
+export const {
+    useGetRoiQuery,
+    useLazyGetRoiQuery,
+    useSaveRoiMutation,
+    useUpdateRoiMutation,
+    useDeleteRoiMutation,
+} = roiApi;
