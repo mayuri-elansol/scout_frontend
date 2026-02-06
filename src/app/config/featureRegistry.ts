@@ -1,3 +1,75 @@
+// export const FEATURE = {
+//   // Dashboards
+//   SAFETY_COMPLIANCE: "SF001",
+//   SURVEILLANCE_MONITORING: "SF002",
+//   OPERATIONAL_INSIGHTS: "SF003",
+//   WORKFORCE_MONITORING: "SF004",
+
+//   // Alerts
+//   ALERTS: "SF005",
+
+//   // Settings
+//   ROLE_MANAGEMENT: "SF006",
+//   USER_MANAGEMENT: "SF007",
+
+//   // Configurator
+//   CAMERA_MANAGEMENT: "SF008",
+//   USE_CASE_MANAGER: "SF009",
+//   ZONE_LOCATION_MAPPING: "SF010",
+
+//   // Analytics – Safety & Compliance
+//   PPE_DETECTION: "SUC001",
+//   FIRE_SMOKE: "SUC002",
+//   FALL_DETECTION: "SUC003",
+//   OBJECT_DETECTION: "SUC004",
+//   EMERGENCY_EXIT_BLOCKAGE: "SUC005",
+//   CROWD_DETECTION: "SUC006",
+
+//   // Surveillance Monitoring
+//   INTRUSION_DETECTION: "SUC007",
+//   UNAUTHORIZED_ACCESS: "SUC008",
+//   CAMERA_TAMPERING: "SUC009",
+//   PEOPLE_PRESENCE: "SUC010",
+
+//   // Workforce Monitoring
+//   EMPLOYEE_PRESENCE_CRITICAL_AREA: "SUC011",
+//   EMPLOYEE_PRESENCE_RESTRICTED_AREA: "SUC012",
+//   EMPLOYEE_IDLE_TIME: "SUC013",
+//   MOBILE_PHONE_USAGE: "SUC014",
+//   SLEEPING_SECURITY_PERSONNEL: "SUC015",
+
+//   // Operational Insight
+//   PEOPLE_COUNT: "SUC016",
+//   VEHICLE_COUNT: "SUC017",
+//   CANTEEN_USAGE: "SUC018",
+//   VEHICLE_UNLOADING_LOADING: "SUC019",
+//   UNAUTHORIZED_PARKING: "SUC020",
+
+//   // Face Recognition
+//   FACE_RECOGNITION: "SUC021",
+//   FACE_IDLE_MONITORING: "SUC022",
+
+//   // Live Streaming
+//   LIVE_STREAMING: "SF033",
+
+//   // Permissions FOR ROLE
+//   EDIT_ROLE: "SF011",//edit-feature same
+//   VIEW_ROLE: "SF012",
+//   DELETE_ROLE: "SF013",
+//   CREATE_ROLE:"SF014",
+
+//   //PERMISSIONS FOR USER
+//   ADD_USER:"SF015",
+//   EDIT_USER:"SF016",
+//   VIEW_USER:"SF017",
+//   DELETE_USER:"SF018",
+// } as const;
+
+// export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
+
+
+
+
 export const FEATURE = {
   // Dashboards
   SAFETY_COMPLIANCE: "SF001",
@@ -13,6 +85,9 @@ export const FEATURE = {
   USER_MANAGEMENT: "SF007",
 
   // Configurator
+  CAMERA_MANAGEMENT: "SF036",
+  USE_CASE_MANAGER: "SF038",
+  ZONE_LOCATION_MAPPING: "SF037",
   CAMERA_MANAGEMENT: "SF036",
   USE_CASE_MANAGER: "SF038",
   ZONE_LOCATION_MAPPING: "SF037",
@@ -51,12 +126,13 @@ export const FEATURE = {
 
   // Live Streaming
   LIVE_STREAMING: "SF031",
+  LIVE_STREAMING: "SF031",
 
   // Permissions FOR ROLE
-  EDIT_ROLE: "SF011",//edit-feature same
+  EDIT_ROLE: "SF011", //edit-feature same
   VIEW_ROLE: "SF012",
   DELETE_ROLE: "SF013",
-  CREATE_ROLE:"SF014",
+  CREATE_ROLE: "SF014",
 
   //PERMISSIONS FOR USER
   ADD_USER:"SF015",

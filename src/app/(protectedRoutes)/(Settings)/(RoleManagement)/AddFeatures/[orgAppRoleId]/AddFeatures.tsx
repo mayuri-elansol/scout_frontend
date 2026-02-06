@@ -23,7 +23,7 @@ import {
   useAssignFeatureToRoleMutation,
   useGetFeaturesByOrgIdQuery,
 } from "./AddFeaturesApi";
-import {Loader} from "@/app/components/atoms/Loader/Loader";
+import Loader from "@/app/components/atoms/Loader/Loader";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 
 
@@ -49,6 +49,7 @@ const { data: features = [], isLoading } = useGetFeaturesByOrgIdQuery(
     useAssignFeatureToRoleMutation();
 
   const [selectedFeatureIds, setSelectedFeatureIds] = useState<string[]>([]);
+  
 
   /* ---------------- Handlers ---------------- */
 

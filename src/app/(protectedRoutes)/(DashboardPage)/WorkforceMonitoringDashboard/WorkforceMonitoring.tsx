@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
 import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
@@ -10,60 +10,97 @@ import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
+import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicViolationScatterChart, {
   ViolationData,
 } from "@/app/components/organisms/ScatterChart/ScatterChart";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { WorkforceMonitoringKpiData } from "./WorkforceMonitoringDashboard.types";
+import { useLazyGetWorkforceMonitoringDashboardKpiDataQuery } from "./WorkforceMonitoringDashboardApi";
+import { WorkforceMonitoringConfig } from "./WorkforceMonitoringDashboardConfig";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 
 const WorkforceMonitoring: React.FC = () => {
-  const WorkForcekpiData = [
-    {
-      title: "Employee in Critical Area",
-      value: "7",
-      violationsCount: 7,
-      lastDetection: "Critical Zone A",
-      lastDetectionTime: "03:25 PM",
-      icon: People,
-      route: "/EmployeePresenceCriticalArea",
-      tooltipMessage:
-        "Shows the number of employees detected in critical areas where restricted access is enforced.",
-    },
+  const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
 
-    {
-      title: "Employee Idel Time",
-      value: "0",
-      violationsCount: 2,
-      lastDetection: "Production Floor A",
-      lastDetectionTime: "4:20 PM",
-      icon: Visibility,
-      route: "/EmployeeIdleTime",
-      tooltipMessage:
-        "Shows employee presence in areas that require special clearance.",
-    },
-    {
-      title: "Mobile Phone Usage in Critical Area",
-      value: "3",
-      violationsCount: 3,
-      lastDetection: "Critical Zone C",
-      lastDetectionTime: "01:50 PM",
-      icon: Smartphone,
-      route: "/MobilePhoneUsage",
-      tooltipMessage:
-        "Displays incidents of unauthorized mobile phone usage inside critical areas.",
-    },
+  /* ---------- STATE ---------- */
+  const [isLiveMode, setIsLiveMode] = useState(true);
 
-    {
-      title: "Sleeping / Absence of Security Personnel",
-      value: "2",
-      violationsCount: 2,
-      lastDetection: "Gate 2 - Shift B",
-      lastDetectionTime: "02:30 AM",
-      icon: Security,
-      route: "/SleepingSecurityPersonnel",
-      tooltipMessage:
-        "Shows detected cases of security personnel sleeping or absent from their post.",
+  const [displayWorkforceMonitoringKpi, setDisplayWorkforceMonitoringKpi] =
+    useState<WorkforceMonitoringKpiData[]>([]);
+
+  /* ---------- API HOOKS ---------- */
+  const [fetchWorkforceKpi, { isLoading: WorkforcekpiLoading }] =
+    useLazyGetWorkforceMonitoringDashboardKpiDataQuery();
+  /* ---------- INITIAL LOAD ---------- */
+  useEffect(() => {
+    const load = async () => {
+      const [kpi] = await Promise.all([
+        fetchWorkforceKpi({ tenantId }).unwrap(),
+      ]);
+
+      setDisplayWorkforceMonitoringKpi(kpi ?? []);
+    };
+
+    load().catch(console.error);
+  }, [tenantId, fetchWorkforceKpi]);
+
+  /* ---------- SOCKET (LIVE ONLY) ---------- */
+  // useSocketEvent<PpeSocketPayload>({
+  //   tenantId,
+  //   enabled: isLiveMode,
+  //   event: SOCKET_EVENTS.PPE_UPDATE,
+  //   handler: (payload) => {
+  //     console.log("payload form the socket", payload);
+  //     setDisplayKpi(payload.kpi ?? []);
+  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
+  //     setRecentViolationsLive(payload.recentViolations ?? []);
+  //   },
+  // });
+
+  /* ---------- TIME FILTER ---------- */
+  const handleworkforceTimeRangeChange = useCallback(
+    async (range: { start?: string; end?: string }) => {
+      if (!range.start && !range.end) {
+        setIsLiveMode(true);
+        fetchWorkforceKpi({ tenantId });
+        return;
+      }
+
+      setIsLiveMode(false);
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
+      const [kpi] = await Promise.all([fetchWorkforceKpi(payload).unwrap()]);
+
+      setDisplayWorkforceMonitoringKpi(kpi ?? []);
     },
-  ];
+    [tenantId, fetchWorkforceKpi],
+  );
+
+  const workforceKpiData = useMemo(
+    () =>
+      displayWorkforceMonitoringKpi.map((item) => {
+        const config = WorkforceMonitoringConfig[item.title];
+
+        return {
+          ...item,
+          title: t(item.title),
+          icon: config?.icon || EngineeringIcon,
+          route: config?.route || "/",
+          tooltipMessage: config?.tooltipMessage || "",
+        };
+      }),
+    [displayWorkforceMonitoringKpi, t],
+  );
+
   const violationData: ViolationData[] = [
     { time: "08:00", zone: "Zone A", count: 5 },
     { time: "09:00", zone: "Zone A", count: 8 },
@@ -280,19 +317,28 @@ const WorkforceMonitoring: React.FC = () => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter onRangeChange={() => console.log("on ranged changed")} />
+        <TimeFilter onRangeChange={handleworkforceTimeRangeChange} />
       </Box>
 
       {/* KPI Cards Grid */}
-      <Grid container spacing={1.5} sx={{ mb: 2 }} alignItems="stretch">
-        {WorkForcekpiData.map((kpi, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            key={uuidv4() + index}
-          >
-            <DashboardKpiCard {...kpi} />
-          </Grid>
-        ))}
+      <Grid container spacing={2.5} sx={{ mb: 4 }}>
+        {WorkforcekpiLoading
+          ? Array.from({ length: 4 }).map(() => (
+              <Grid
+                key={uuidv4()}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : workforceKpiData.map((kpi) => (
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
@@ -302,7 +348,6 @@ const WorkforceMonitoring: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          //  minHeight: 0,
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >

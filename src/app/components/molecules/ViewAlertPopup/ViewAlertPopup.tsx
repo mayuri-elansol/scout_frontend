@@ -14,7 +14,7 @@ import { Close } from "@mui/icons-material";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
 
 interface ViewAlertPopupProps<
-  T extends Record<string, string | number | boolean | undefined>
+  T extends Record<string, string | number | boolean | undefined>,
 > {
   readonly open: boolean;
   readonly handleClose: () => void;
@@ -24,7 +24,7 @@ interface ViewAlertPopupProps<
 }
 
 function ViewAlertPopup<
-  T extends Record<string, string | number | boolean | undefined>
+  T extends Record<string, string | number | boolean | undefined>,
 >({
   open,
   handleClose,
@@ -104,7 +104,7 @@ function ViewAlertPopup<
                 >
                   <strong>{key}:</strong> {String(value)}
                 </Typography>
-              ) : null
+              ) : null,
             )}
 
           {/* Download Button */}

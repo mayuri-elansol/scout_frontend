@@ -54,8 +54,16 @@ export const apiRoutes = {
     deleteById: "delete-user",
   },
 
-  dashboard: {},
-
+  surveillanceMonitoringDashboard: {
+    root: "surveillanceDashboard",
+    getsurveillanceMonitoringDashboardAnalyticsKpi:
+      "get-surveillance-monitoring-dashboard-analytics-kpi",
+  },
+  WorkforceMonitoringDashboard: {
+    root: "workforceMonitoringDashboard",
+    getWorkforceMonitoringDashboardAnalyticsKpi:
+      "get-workforce-monitoring-dashboard-analytics-kpi",
+  },
   ppeKitDetection: {
     root: "ppeKitDetection",
     getPpeKitDetectionAnalyticsKpi: "get-ppe-kit-detection-analytics-kpi",
@@ -221,18 +229,18 @@ export const apiRoutes = {
     root: "employeeIdleTimeMonitoring",
     getEmployeeIdleTimeMonitoringAnalyticsKpi:
       "get-employee-idle-time-monitoring-analytics-kpi",
-    getEmployeeIdleTimeMonitoringAnalyticsRecentVoliations:
-      "get-employee-idle-time-monitoring-analytics-recent-voliations",
-    getEmployeeIdleTimeMonitoringAnalyticsCameraStatusByZone:
-      "get-employee-idle-time-monitoring-analytics-camera-status-by-zone",
+    getEmployeeIdleTimeMonitoringAnalyticsRecentViolations:
+      "get-employee-idle-time-monitoring-analytics-recent-violations",
+    getEmployeeIdleTimeMonitoringAnalyticsZoneViolations:
+      "get-employee-idle-time-monitoring-analytics-zone-violations",
     getEmployeeIdleTimeMonitoringAnalyticsDetailedReport:
-      "get-employee-idle-time-monitoring-analytics-details-report",
-    getEmployeeIdleTimeMonitoringAnalyticsDownloadDetailedReport:
-      "get-employee-idle-time-monitoring-analytics-download-details-report",
+      "get-employee-idle-time-monitoring-analytics-detailed-report",
+    getEmployeeIdleTimeMonitoringAnalyticsDownloadDetailedPdfReport:
+      "get-employee-idle-time-monitoring-analytics-download-details-pdf-report",
+    getEmployeeIdleTimeMonitoringAnalyticsDownloadDetailedCsvReport:
+      "get-employee-idle-time-monitoring-analytics-download-details-csv-report",
     getEmployeeIdleTimeMonitoringAnalyticsDownloadDetailedReportForSingleId:
       "get-employee-idle-time-monitoring-analytics-download-details-report-for-single-id",
-    getEmployeeIdleTimeMonitoringAnalyticsDetailedReportForSingleId:
-      "get-employee-idle-time-monitoring-analytics-details-report-for-single-id",
   },
   employeePresenceDetectionInCriticalAreas: {
     root: "employeePresenceDetectionInCriticalAreas",
