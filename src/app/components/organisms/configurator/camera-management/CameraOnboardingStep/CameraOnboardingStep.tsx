@@ -36,9 +36,9 @@ import {
 import {
   useAddCameraMutation,
   useDetectNvrChannelsMutation,
-  useGetZonesQuery,
   useGetLocationsByZoneQuery,
-  useLazyGetLocationsByZoneQuery
+  useLazyGetLocationsByZoneQuery,
+  useGetCameraZonesQuery
 
 } from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
 
@@ -180,7 +180,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
   const [selectedNvrCams, setSelectedNvrCams] = useState<number[]>([]);
-  const { data: zonesData } = useGetZonesQuery();
+  const { data: zonesData } =useGetCameraZonesQuery()
+
   const [addCamera] = useAddCameraMutation();
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
 

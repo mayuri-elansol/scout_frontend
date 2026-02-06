@@ -52,6 +52,7 @@ import {
   useCreateLocationMutation,
 } from "./ZoneLocationMappingApi";
 
+
 type LocationItem = {
   id: string;
   name: string;
@@ -76,6 +77,7 @@ const ZoneLocationMapping: React.FC = () => {
 
   // RTK Query hooks
   const { data: zonesResponse, isLoading, error } = useGetZonesQuery();
+
   const [createZone, { isLoading: isCreating }] = useCreateZoneMutation();
   const [updateZone] = useUpdateZoneMutation();
   const [deleteZone, { isLoading: isDeleting }] = useDeleteZoneMutation();

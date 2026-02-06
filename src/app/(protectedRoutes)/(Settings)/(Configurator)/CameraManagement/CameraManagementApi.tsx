@@ -55,7 +55,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
     }),
 
     /* ---------- GET ZONES ---------- */
-    getZones: builder.query<
+    getCameraZones: builder.query<
       { status: string; message: string; data?: string[]; error?: string },
       void
     >({
@@ -65,6 +65,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["CameraManagement"],
     }),
+
 
     /* ---------- GET LOCATIONS BY ZONE ---------- */
     getLocationsByZone: builder.query<
@@ -137,7 +138,7 @@ export const cameraManagementApi = baseProtectedApi.injectEndpoints({
 
 export const {
   useGetAllCamerasQuery,
-  useGetZonesQuery,
+  useGetCameraZonesQuery,
   useGetLocationsByZoneQuery,
   useLazyGetLocationsByZoneQuery,
   useAddCameraMutation,
