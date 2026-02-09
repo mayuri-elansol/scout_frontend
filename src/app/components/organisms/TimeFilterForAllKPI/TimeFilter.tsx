@@ -228,7 +228,7 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
                   size: "small",
                 },
               }}
-              minDateTime={dayjs().subtract(3, "month").startOf("day")}
+              minDateTime={dayjs().subtract(1, "month").startOf("day")}
               maxDateTime={dayjs().endOf("day")}
               format="DD-MM-YYYY HH:mm"
             />

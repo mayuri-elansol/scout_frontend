@@ -119,19 +119,21 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
       icon: <SettingsSuggest sx={{ fontSize: 20 }} />,
       title: "Plug & Play Intelligence",
       description:
-        "Seamless integration with existing CCTV. Edge or cloud-based deployment with minimal hardware upgrades.",
+           "Seamless integration with existing CCTV. Edge-based deployment with minimal hardware upgrades.",
+
     },
     {
       icon: <NotificationsActive sx={{ fontSize: 20 }} />,
       title: "24/7 Instant Alerts",
       description:
-        "Continuous monitoring with real-time notifications via mobile, email, or dashboard.",
+        "Continuous monitoring with real-time notifications via dashboards.",
     },
     {
       icon: <TrendingUp sx={{ fontSize: 20 }} />,
       title: "Industry-Specific Analytics",
       description:
-        "Customized monitoring solutions with automated compliance documentation for your industry.",
+          "Get insights and monitoring data tailored to the compliance requirements of your industry.",
+
     },
     {
       icon: <Explore sx={{ fontSize: 20 }} />,

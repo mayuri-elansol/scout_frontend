@@ -36,10 +36,11 @@ const UserOverview: React.FC = () => {
   const tenantId = user?.org_id;
   const userId = user?.userId;
   
+
   /* ---------- PERMISSIONS ---------- */
   const canAddUser = features.includes(FEATURE.ADD_USER);
-  const canViewUser = features.includes(FEATURE.VIEW_USER);
-  const canEditUser = features.includes(FEATURE.EDIT_USER);
+  const canViewUser = features.includes(FEATURE.VIEW_USER) ;
+  const canEditUser = features.includes(FEATURE.EDIT_USER)  ;
   const canDeleteUser = features.includes(FEATURE.DELETE_USER);
 
   const { data, isLoading, isError, error } = useGetUserOverviewQuery(

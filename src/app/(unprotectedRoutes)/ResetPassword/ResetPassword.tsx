@@ -23,12 +23,32 @@ const ResetPassword: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  //12 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+
   const handleSubmit = async (data: ResetPasswordFormData) => {
     if (!sid) {
-      alert("Invalid or expired reset link");
+       dispatch(
+      showToast({
+        id: crypto.randomUUID(),
+        message:
+          "Invalid or expired reset link",
+        severity: "error",
+      })
+    );
       return;
     }
-
+ if (!passwordRegex.test(data.password)) {
+    dispatch(
+      showToast({
+        id: crypto.randomUUID(),
+        message:
+          "Password must be at least 12 characters, include uppercase, lowercase, number, and special character.",
+        severity: "error",
+      })
+    );
+    return;
+  }
     setIsLoading(true);
 
     try {
@@ -40,9 +60,7 @@ const ResetPassword: React.FC = () => {
 
       router.replace("/Login");
     } 
-    // catch (err) {
-    //   alert(err?.data?.message || "Failed to reset password");
-    // } 
+
     catch (err) {
           dispatch(
             showToast({

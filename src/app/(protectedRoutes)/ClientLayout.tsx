@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
 import Loader from "../components/atoms/Loader/Loader";
+import AuthGuard from "@/utils/auth-guard";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -63,7 +64,7 @@ export default function ClientLayout({
   }
 
   return (
-    // <AuthGuard>
+    <AuthGuard>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -102,6 +103,6 @@ export default function ClientLayout({
         </Box>
       </LocalizationProvider>
     </ThemeProvider>
-    //</AuthGuard> */}
+     </AuthGuard> 
   );
 }
