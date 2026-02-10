@@ -368,13 +368,14 @@ const DynamicViolationScatterChart: React.FC<Props> = ({
   console.log("timeLabels", timeLabels);
 
   /* ---------------- Empty state ---------------- */
-  if (!data.length) {
+  if (!data || data.length === 0) {
     return (
       <Box
         sx={{
           height: 300,
-          display: "grid",
-          placeItems: "center",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
           color: "text.secondary",
         }}
       >
