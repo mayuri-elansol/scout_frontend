@@ -1,4 +1,3 @@
-import { SvgIconComponent } from "@mui/icons-material";
 import { EmployeeIdelTimeKpiConfig } from "./EmployeeIdelTimeConfig";
 
 export interface Violation {

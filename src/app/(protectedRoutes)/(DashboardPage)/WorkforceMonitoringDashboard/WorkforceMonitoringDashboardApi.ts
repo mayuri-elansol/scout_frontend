@@ -6,7 +6,7 @@ export const surveillanceMonitoringDashboardApi =
     endpoints: (builder) => ({
       getWorkforceMonitoringDashboardKpiData: builder.query({
         query: (body) => ({
-          url: `${apiRoutes.WorkforceMonitoringDashboard.root}/${apiRoutes.WorkforceMonitoringDashboard.getWorkforceMonitoringDashboardAnalyticsKpi}`,
+          url: `${apiRoutes.WorkforceMonitoringDashboard.root}/${apiRoutes.WorkforceMonitoringDashboard.getWorkforceMonitoringDashboardAnalyticsgraphs}`,
           method: "POST",
           body,
         }),

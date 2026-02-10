@@ -21,7 +21,7 @@ export const useAuth = () => {
   const router = useRouter();
 
   const { user, features, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const [isLoading, setIsLoading] = useState(true);

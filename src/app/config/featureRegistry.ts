@@ -67,9 +67,6 @@
 
 // export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];
 
-
-
-
 export const FEATURE = {
   // Dashboards
   SAFETY_COMPLIANCE: "SF001",

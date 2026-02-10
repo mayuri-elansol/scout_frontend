@@ -67,5 +67,6 @@ export const baseProtectedApi = createApi({
     "EmployeeIdleTimeRecentViolations",
     "SurveillanceMonitoringDashboardKpi",
     "WorkforceMonitoringDashboardKpi",
+    "MainDashboardKpi",
   ],
 });
