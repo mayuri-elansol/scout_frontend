@@ -587,26 +587,7 @@ const SurveillanceMonitoring: React.FC = () => {
   //   },
   // ];
 
-  const violationData: ViolationData[] = [
-    { time: "08:00", zone: "Zone A", count: 5 },
-    { time: "09:00", zone: "Zone A", count: 8 },
-    { time: "10:00", zone: "Zone A", count: 3 },
-    { time: "11:00", zone: "Zone A", count: 12 },
-
-    { time: "08:00", zone: "Zone B", count: 7 },
-    { time: "09:00", zone: "Zone B", count: 4 },
-    { time: "10:00", zone: "Zone B", count: 9 },
-    { time: "11:00", zone: "Zone B", count: 6 },
-
-    { time: "12:00", zone: "Zone C", count: 2 },
-    { time: "01:00", zone: "Zone C", count: 11 },
-    { time: "03:00", zone: "Zone C", count: 5 },
-    { time: "04:00", zone: "Zone C", count: 8 },
-    { time: "05:00", zone: "Zone D", count: 2 },
-    { time: "06:00", zone: "Zone E", count: 11 },
-    { time: "07:00", zone: "Zone F", count: 5 },
-    { time: "08:00", zone: "Zone G", count: 8 },
-  ];
+  const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection",
@@ -679,25 +660,25 @@ const SurveillanceMonitoring: React.FC = () => {
             {
               title: "Online Cameras by Zone",
               data: [
-                { label: "Zone A", value: 12, color: "#A8E6CF" },
-                { label: "Zone B", value: 5, color: "#ffcdd2" },
-                { label: "Zone C", value: 2, color: "#FFEAA7" },
+                // { label: "Zone A", value: 12, color: "#A8E6CF" },
+                // { label: "Zone B", value: 5, color: "#ffcdd2" },
+                // { label: "Zone C", value: 2, color: "#FFEAA7" },
               ],
             },
             {
               title: "Offline Cameras by Zone",
               data: [
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
+                // { label: "Zone A", value: 20, color: "#A8E6CF" },
+                // { label: "Zone B", value: 3, color: "#ffcdd2" },
+                // { label: "Zone C", value: 1, color: "#FFEAA7" },
               ],
             },
             {
               title: "Tampered Cameras by Zone",
               data: [
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
+                // { label: "Zone A", value: 20, color: "#A8E6CF" },
+                // { label: "Zone B", value: 3, color: "#ffcdd2" },
+                // { label: "Zone C", value: 1, color: "#FFEAA7" },
               ],
             },
           ].map((chart, index) => (
