@@ -5,7 +5,6 @@ import { apiRoutes } from "@/constants/apiRoutes";
 import { ApiResponse } from "./AddUser.types";
 
 export interface AddUserPayload {
-  role: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -14,6 +13,7 @@ export interface AddUserPayload {
   userName: string;
   password: string;
   orgId: string;
+  orgAppRoleId:string
 }
 
 export const addUserApi = baseProtectedApi.injectEndpoints({

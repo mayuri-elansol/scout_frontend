@@ -51,7 +51,7 @@ export const userOverviewApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["UserList"],
+      invalidatesTags: ["UserOverview"],
     }),
   }),
 });

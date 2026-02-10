@@ -68,7 +68,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
   {users.map((user, index) => {
     const backendUser = backendUsers[index];
     const isSelf = backendUser?.userId === currentUserId;
-    //const isRoleAdmin = backendUser?.role === "Organisation_Admin_Scout";
+    const isRoleAdmin = backendUser?.role === "Organisation_Admin_Scout";
 
     return (
       <TableRow key={backendUser?.userId ?? index}>
@@ -94,7 +94,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
             <IconButton
               color="primary"
               onClick={() => onEdit(index)}
-              disabled={isSelf }   
+              disabled={isSelf}   
             >
               <Edit />
             </IconButton>
