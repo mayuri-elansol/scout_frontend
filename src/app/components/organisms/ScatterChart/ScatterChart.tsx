@@ -51,7 +51,7 @@ const DynamicViolationScatterChart: React.FC<
 
   const zoneLabels = React.useMemo(
     () => Array.from(new Set(data.map((d) => d.zone))),
-    [data]
+    [data],
   );
 
   // 🔹 Group by zone
@@ -80,16 +80,15 @@ const DynamicViolationScatterChart: React.FC<
   if (!data || data.length === 0) {
     return (
       <Box
-        ref={containerRef}
         sx={{
-          width: "100%",
-          // height: "100%",
+          height: 300,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          color: "text.secondary",
         }}
       >
-        No data
+        No data available
       </Box>
     );
   }

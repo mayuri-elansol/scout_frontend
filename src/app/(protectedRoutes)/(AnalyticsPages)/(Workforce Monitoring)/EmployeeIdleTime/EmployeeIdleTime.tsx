@@ -6,7 +6,6 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { AccessTime, Room } from "@mui/icons-material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import PersonOffIcon from "@mui/icons-material/PersonOff";
@@ -16,7 +15,6 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-
 import { RootState } from "@/app/store/store";
 import {
   EmployeeIdelTimeDetailedReportResponse,
@@ -38,10 +36,10 @@ import {
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { EmployeeIdelTimeKpiConfig } from "./EmployeeIdelTimeConfig";
-
 import { SvgIconComponent } from "@mui/icons-material";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
+
 const EmployeeIdleTime: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -230,11 +228,9 @@ const EmployeeIdleTime: React.FC = () => {
 
       const body = {
         tenantId: tenantId,
-
         violation: filters.violation || undefined,
         zone: filters.zone || undefined,
         cameraId: filters.cameraId || undefined,
-
         startDate: formatLocalDateTime(filters.startDate),
         endDate: formatLocalDateTime(filters.endDate),
       };
@@ -260,11 +256,9 @@ const EmployeeIdleTime: React.FC = () => {
       try {
         const payload = {
           tenantId,
-
           violation: filters.violation || undefined,
           zone: filters.zone || undefined,
           cameraId: filters.cameraId || undefined,
-
           startDate: formatLocalDateTime(filters.startDate),
           endDate: formatLocalDateTime(filters.endDate),
         };

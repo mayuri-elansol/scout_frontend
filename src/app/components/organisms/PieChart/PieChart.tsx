@@ -70,6 +70,21 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   const chartSize = Math.min(containerSize.width, containerSize.height);
   const outerRadius = count ? Math.max(chartSize / count, 40) : 40;
 
+  if (!data || data.length === 0) {
+    return (
+      <Box
+        sx={{
+          height: 300,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "text.secondary",
+        }}
+      >
+        No data available
+      </Box>
+    );
+  }
   return (
     <CardContent
       ref={containerRef}

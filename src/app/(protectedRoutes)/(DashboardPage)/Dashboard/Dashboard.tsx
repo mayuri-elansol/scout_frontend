@@ -1,309 +1,145 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import {
-  LocalFireDepartment,
-  HealthAndSafety,
-  DirectionsCar,
-  WarningAmber,
-  DoorFront,
-  Groups,
-  Shield,
-  Visibility,
-  People,
-  Security,
-  VideocamOff,
-  LocalShipping,
-  Block,
-  Smartphone,
-  VideocamOutlined,
-  WifiTethering,
-  WifiOff,
-  Domain,
-} from "@mui/icons-material";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import { v4 as uuidv4 } from "uuid";
+import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
 
+import { useLazyGetMainDashboardKpiDataQuery } from "./DashboardApi";
+import { MainDashboardConfig } from "./DashboardConfig";
+import { MainDashboardResponse } from "./Dashboard.types";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { v4 as uuidv4 } from "uuid";
 const Dashboard: React.FC = () => {
-  const kpiData = [
-    {
-      title: "PPE Violations",
-      violationsCount: 5,
-      lastDetection: "Zone A",
-      lastDetectionTime: "09:58 AM",
-      icon: HealthAndSafety,
-      route: "/PPEKitDetectionPage",
-      tooltipMessage: "Shows total PPE rule violations detected today.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Fire / Smoke / Gas / Oil Alerts",
-      violationsCount: 1,
-      lastDetection: "Zone B",
-      lastDetectionTime: "09:58 AM",
-      icon: LocalFireDepartment,
-      route: "/FireSmokeOilLeakDetection",
-      tooltipMessage:
-        "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
-    },
-    {
-      title: "Vehicle In Walkways",
-      violationsCount: 12,
-      lastDetection: "Parking Zone",
-      lastDetectionTime: "10:58 AM",
-      icon: DirectionsCar,
-      route: "/ObjectDetection",
-      tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Fall / Laydown Alerts",
-      violationsCount: 1,
-      lastDetection: "Production Floor",
-      lastDetectionTime: "10:40 AM",
-      icon: WarningAmber,
-      route: "/FallDetection",
-      tooltipMessage: "Indicates workers detected lying down or falling.",
-    },
-    {
-      title: "Emergency Exit Blockage",
-      violationsCount: 2,
-      lastDetection: "Exit 3",
-      lastDetectionTime: "9:28 AM",
-      icon: DoorFront,
-      route: "/EmergencyExitBlockage",
-      tooltipMessage: "Detects obstruction or blockage near emergency exits.",
-    },
-    {
-      title: "Crowd Gathering Alerts",
-      violationsCount: 0,
-      lastDetection: "Cafeteria",
-      lastDetectionTime: "11:05 AM",
-      icon: Groups,
-      route: "/CrowdGathering",
-      tooltipMessage:
-        "Identifies abnormal or unsafe crowd gathering in monitored areas.",
-    },
-  ];
+  const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
+  console.log("tenant id from the dashboard", tenantId);
+  /* ---------- STATE ---------- */
+  const [isDashboardLiveMode, setIsDashboardLiveMode] = useState(true);
 
-  const surveillanceDashboradkpiData = [
-    {
-      title: "Intrusion Detection",
-      violationsCount: 3,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
-      icon: Security,
-      route: "/IntrusionDetectionPage",
-      tooltipMessage:
-        "Shows detected intrusion incidents in monitored zones during restricted hours.",
-    },
-    {
-      title: "Unauthorized Access In Restrcited Areas",
-      violationsCount: 4,
-      lastDetection: "Zone C",
-      lastDetectionTime: "3:10 AM",
-      icon: People,
-      route: "/UnauthorizedAccessInRestrictedAreas",
-      tooltipMessage: "Displays unauthorized acess in restricted ares.",
-    },
-    {
-      title: "Camera Tempering Detection",
-      violationsCount: 2,
-      lastDetection: "Zone C",
-      lastDetectionTime: "2:42 PM",
-      icon: VideocamOff,
-      route: "/CameraTampering",
-      tooltipMessage:
-        "Displays people detected inside premises during shutdown hours.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Movement During Shutdown",
-      violationsCount: 2,
-      lastDetection: "Warehouse Zone 4",
-      lastDetectionTime: "01:45 AM",
-      icon: People,
-      route: "/PeoplePresence",
-      tooltipMessage:
-        "Displays people detected inside premises during shutdown hours.",
-    },
-  ];
-  const operationalDashboardkpiData = [
-    {
-      title: "People Count",
-      violationsCount: 53,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
-      icon: People,
-      route: "/PeopleCountPage",
-      tooltipMessage:
-        "Shows detected intrusion incidents in monitored zones during restricted hours.",
-    },
-    {
-      title: "Vehicle Count",
-      violationsCount: 2,
-      lastDetection: "Main Gate A",
-      lastDetectionTime: "10.20 PM",
-      icon: DirectionsCar,
-      route: "/VehicleCount",
-      tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Canteen Usage Monitoring",
-      violationsCount: 13,
-      lastDetection: "Main Canteen",
-      lastDetectionTime: "3:24 AM",
-      icon: RestaurantIcon,
-      route: "/MonitoringCanteenUsage&Timings",
-      tooltipMessage: "Displays canteen usage and monitoring.",
-    },
+  const [dashboardData, setDashboardData] =
+    useState<MainDashboardResponse | null>(null);
+  /* ---------- API HOOKS ---------- */
+  const [fetchMainDashboardKpi, { isLoading: MainDashboardkpiLoading }] =
+    useLazyGetMainDashboardKpiDataQuery();
+  /* ---------- INITIAL LOAD ---------- */
+  useEffect(() => {
+    const load = async () => {
+      const response = await fetchMainDashboardKpi({ tenantId }).unwrap();
+      setDashboardData(response);
+    };
+    load().catch(console.error);
+  }, [tenantId, fetchMainDashboardKpi]);
 
-    {
-      title: "Vehicle Loading Unloading Monitoring",
-      violationsCount: 8,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:10 PM",
-      icon: LocalShipping,
-      route: "/VehicleUnloadingLoading",
-      tooltipMessage: "Displays vehical loading and unloading oprations",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Unauthorised Parking / Blocking Aisles",
-      violationsCount: 5,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:27 PM",
-      icon: Block,
-      route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
-      tooltipMessage: "Shows unauthorized parking or equipment blocking.",
-    },
-  ];
-  const WorkForcekpiData = [
-    {
-      title: "Employee in Critical Area",
-      value: "7",
-      violationsCount: 7,
-      lastDetection: "Critical Zone A",
-      lastDetectionTime: "03:25 PM",
-      icon: People,
-      route: "/EmployeePresenceCriticalArea",
-      tooltipMessage:
-        "Shows the number of employees detected in critical areas where restricted access is enforced.",
-    },
+  /* ---------- SOCKET (LIVE ONLY) ---------- */
+  // useSocketEvent<PpeSocketPayload>({
+  //   tenantId,
+  //   enabled: isLiveMode,
+  //   event: SOCKET_EVENTS.PPE_UPDATE,
+  //   handler: (payload) => {
+  //     console.log("payload form the socket", payload);
+  //     setDisplayKpi(payload.kpi ?? []);
+  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
+  //     setRecentViolationsLive(payload.recentViolations ?? []);
+  //   },
+  // });
 
-    {
-      title: "Employee Idel Time",
-      value: "0",
-      violationsCount: 2,
-      lastDetection: "Production Floor A",
-      lastDetectionTime: "4:20 PM",
-      icon: Visibility,
-      route: "/EmployeeIdleTime",
-      tooltipMessage:
-        "Shows employee presence in areas that require special clearance.",
-    },
-    {
-      title: "Mobile Usage in Critical Area",
-      value: "3",
-      violationsCount: 3,
-      lastDetection: "Critical Zone C",
-      lastDetectionTime: "01:50 PM",
-      icon: Smartphone,
-      route: "/MobilePhoneUsage",
-      tooltipMessage:
-        "Displays incidents of unauthorized mobile phone usage inside critical areas.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
+  /* ---------- TIME FILTER ---------- */
+  const handleTimeRangeChange = useCallback(
+    async (range: { start?: string; end?: string }) => {
+      if (!range.start && !range.end) {
+        setIsDashboardLiveMode(true);
+        fetchMainDashboardKpi({ tenantId });
+        return;
+      }
 
-    {
-      title: "Sleeping / Absence  Security Personnel",
-      value: "2",
-      violationsCount: 2,
-      lastDetection: "Gate 2 - Shift B",
-      lastDetectionTime: "02:30 AM",
-      icon: Security,
-      route: "/SleepingSecurityPersonnel",
-      tooltipMessage:
-        "Shows detected cases of security personnel sleeping or absent from their post.",
+      setIsDashboardLiveMode(false);
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
+      const [kpi] = await Promise.all([
+        fetchMainDashboardKpi(payload).unwrap(),
+      ]);
+
+      setDashboardData(kpi ?? []);
     },
-  ];
-  const CamerakpiData = [
-    {
-      title: "Total Cameras",
-      violationsCount: 120,
-      lastDetection: "System Overview",
-      lastDetectionTime: "—",
-      icon: VideocamOutlined,
-      tooltipMessage:
-        "Total number of surveillance cameras connected to the system.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    },
-    {
-      title: "Cameras Online",
-      violationsCount: 105,
-      lastDetection: "Last Updated",
-      lastDetectionTime: "10:15 AM",
-      icon: WifiTethering,
-      tooltipMessage:
-        "Number of cameras currently active and transmitting data.",
-      color: "#4caf50",
-      bgColor: "#e8f5e9",
-      borderColor: "#4caf50",
-      iconBg: "#c8e6c9",
-    },
-    {
-      title: "Cameras Offline",
-      violationsCount: 15,
-      lastDetection: "Zone C - Entry Gate",
-      lastDetectionTime: "09:45 AM",
-      icon: WifiOff,
-      tooltipMessage: "Shows cameras currently not transmitting video feed.",
-    },
-    {
-      title: "Tampering Incidents Today",
-      violationsCount: 12,
-      lastDetection: "Zone B - Warehouse",
-      lastDetectionTime: "09:58 AM",
-      icon: WarningAmber,
-      tooltipMessage:
-        "Number of tampering incidents (blurred, covered, or offline) detected today.",
-    },
-    {
-      title: "Zones Affected",
-      violationsCount: 4,
-      lastDetection: "Zones B, C, D",
-      lastDetectionTime: "—",
-      icon: Domain,
-      tooltipMessage:
-        "Total number of zones currently affected by camera issues.",
-    },
-  ];
+    [tenantId, fetchMainDashboardKpi],
+  );
+
+  const safetyDashboardKpis = useMemo(() => {
+    if (!dashboardData?.safety) return [];
+
+    return dashboardData.safety.map((item) => {
+      const config =
+        item.title in MainDashboardConfig
+          ? MainDashboardConfig[item.title]
+          : undefined;
+
+      return {
+        ...item,
+        title: t(item.title),
+        route: config?.route || "/",
+      };
+    });
+  }, [dashboardData, t]);
+
+  const surveillanceDashboardKpis = useMemo(() => {
+    if (!dashboardData?.surveillance) return [];
+
+    return dashboardData.surveillance.map((item) => {
+      const config =
+        item.title in MainDashboardConfig
+          ? MainDashboardConfig[item.title]
+          : undefined;
+
+      return {
+        ...item,
+        title: t(item.title),
+        route: config?.route || "/",
+      };
+    });
+  }, [dashboardData, t]);
+  const operationalDashboardKpis = useMemo(() => {
+    if (!dashboardData?.operational) return [];
+
+    return dashboardData.operational.map((item) => {
+      const config =
+        item.title in MainDashboardConfig
+          ? MainDashboardConfig[item.title]
+          : undefined;
+
+      return {
+        ...item,
+        title: t(item.title),
+        route: config?.route || "/",
+      };
+    });
+  }, [dashboardData, t]);
+
+  const workforceDashboardKpis = useMemo(() => {
+    if (!dashboardData?.workforce) return [];
+
+    return dashboardData.workforce.map((item) => {
+      const config =
+        item.title in MainDashboardConfig
+          ? MainDashboardConfig[item.title]
+          : undefined;
+
+      return {
+        ...item,
+        title: t(item.title),
+        route: config?.route || "/",
+      };
+    });
+  }, [dashboardData, t]);
   return (
     <Paper
       sx={{
@@ -317,17 +153,15 @@ const Dashboard: React.FC = () => {
     >
       {/* Top Right Time Filter */}
       <Box sx={{ display: "flex", justifyContent: "end", mt: 0.5 }}>
-        <TimeFilter
-          onRangeChange={() => console.log("timefilter form the landing page")}
-        />
+        <TimeFilter onRangeChange={handleTimeRangeChange} />
       </Box>
 
       <Grid container spacing={1.5}>
-        {CamerakpiData.map((kpi, index) => (
+        {/* {CamerakpiData.map((kpi, index) => (
           <Grid key={uuidv4() + index} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
             <DashboardKpiCardMain {...kpi} />
           </Grid>
-        ))}
+        ))} */}
       </Grid>
 
       {/* Dashboard Sections Grid */}
@@ -357,12 +191,19 @@ const Dashboard: React.FC = () => {
               <Shield sx={{ color: "#1976d2", fontSize: 23 }} /> Safety And
               Compliance
             </Typography>
-            <Grid container spacing={1.5}>
-              {kpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
-                  <DashboardKpiCardMain {...kpi} />
-                </Grid>
-              ))}
+
+            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+              {MainDashboardkpiLoading
+                ? Array.from({ length: 4 }).map(() => (
+                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <KpiCardSkeleton />
+                    </Grid>
+                  ))
+                : safetyDashboardKpis.map((kpi) => (
+                    <Grid key={kpi.title} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <DashboardKpiCardMain {...kpi} />
+                    </Grid>
+                  ))}
             </Grid>
           </Paper>
         </Grid>
@@ -393,12 +234,18 @@ const Dashboard: React.FC = () => {
               <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
               Surveillance Monitoring
             </Typography>
-            <Grid container spacing={1.5}>
-              {surveillanceDashboradkpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
-                  <DashboardKpiCardMain {...kpi} />
-                </Grid>
-              ))}
+            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+              {MainDashboardkpiLoading
+                ? Array.from({ length: 4 }).map(() => (
+                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <KpiCardSkeleton />
+                    </Grid>
+                  ))
+                : surveillanceDashboardKpis.map((kpi) => (
+                    <Grid key={kpi.title} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <DashboardKpiCardMain {...kpi} />
+                    </Grid>
+                  ))}
             </Grid>
           </Paper>
         </Grid>
@@ -428,12 +275,18 @@ const Dashboard: React.FC = () => {
               <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
               Operational Insights
             </Typography>
-            <Grid container spacing={1.5}>
-              {operationalDashboardkpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
-                  <DashboardKpiCardMain {...kpi} />
-                </Grid>
-              ))}
+            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+              {MainDashboardkpiLoading
+                ? Array.from({ length: 4 }).map(() => (
+                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <KpiCardSkeleton />
+                    </Grid>
+                  ))
+                : operationalDashboardKpis.map((kpi) => (
+                    <Grid key={kpi.title} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <DashboardKpiCardMain {...kpi} />
+                    </Grid>
+                  ))}
             </Grid>
           </Paper>
         </Grid>
@@ -464,12 +317,18 @@ const Dashboard: React.FC = () => {
               <People sx={{ color: "#1976d2", fontSize: 23 }} /> Workforce
               Monitoring
             </Typography>
-            <Grid container spacing={1.5}>
-              {WorkForcekpiData.map((kpi, index) => (
-                <Grid size={{ xs: 12, md: 4, sm: 6 }} key={uuidv4() + index}>
-                  <DashboardKpiCardMain {...kpi} />
-                </Grid>
-              ))}
+            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+              {MainDashboardkpiLoading
+                ? Array.from({ length: 4 }).map(() => (
+                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <KpiCardSkeleton />
+                    </Grid>
+                  ))
+                : workforceDashboardKpis.map((kpi) => (
+                    <Grid key={kpi.title} size={{ xs: 12, md: 4, sm: 6 }}>
+                      <DashboardKpiCardMain {...kpi} />
+                    </Grid>
+                  ))}
             </Grid>
           </Paper>
         </Grid>

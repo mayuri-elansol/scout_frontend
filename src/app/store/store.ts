@@ -10,7 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     toasterGlobal: toasterReducer,
     language: languageReducer,
-  routeLoader: routeLoaderReducer,
+    routeLoader: routeLoaderReducer,
 
     // ✅ RTK Query reducers
     [basePublicApi.reducerPath]: basePublicApi.reducer,
@@ -19,7 +19,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       basePublicApi.middleware,
-      baseProtectedApi.middleware
+      baseProtectedApi.middleware,
     ),
 });
 
