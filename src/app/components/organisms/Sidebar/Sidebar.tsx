@@ -360,7 +360,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { features } = useAuth();
-
+ 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
