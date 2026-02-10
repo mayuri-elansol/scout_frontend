@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
@@ -40,10 +38,23 @@ export const useAuth = () => {
 
       try {
         const parsedUser: StoredUser = JSON.parse(storedUser);
+        const decoded = jwtDecode<JwtPayload>(token);
 
-        // ✅ Do not validate token here; just restore state
-        dispatch(restoreUser(parsedUser));
-        dispatch(setUserFromToken(jwtDecode<JwtPayload>(token)));
+        // ✅ FIXED: Pass correct payload structure
+        dispatch(restoreUser({ 
+          user: parsedUser, 
+          token: token 
+        }));
+
+        // ✅ FIXED: Build complete payload for setUserFromToken
+        dispatch(setUserFromToken({
+          token: token,
+          user: parsedUser,
+          roles: decoded.roles,
+          licenses: decoded.licenses,
+          features: decoded.features ?? []
+        }));
+
       } catch (err) {
         console.error("Auth restore failed", err);
         localStorage.removeItem(STORAGE_USER_KEY);
@@ -62,23 +73,13 @@ export const useAuth = () => {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
 
-      //  FORCE RESET FLOW
+      // FORCE RESET FLOW
       if (decoded.sid) {
         router.push(`/ResetPassword/${decoded.sid}`);
         return { type: "RESET_REQUIRED" as const };
       }
 
-      // ✅ NORMAL LOGIN FLOW (NO sid)
-
-      const userForState: JwtPayload = {
-        userId: decoded.userId,
-        userName: decoded.userName,
-        roles: decoded.roles,
-        licenses: decoded.licenses,
-        features: decoded.features ?? [],
-        org_id: decoded.org_id,
-      };
-
+      // ✅ NORMAL LOGIN FLOW
       const userForStorage: StoredUser = {
         userId: decoded.userId,
         userName: decoded.userName,
@@ -86,21 +87,27 @@ export const useAuth = () => {
         org_id: decoded.org_id,
       };
 
-      // Store ONLY when sid is NOT present
+      // Store in localStorage
       localStorage.setItem(STORAGE_TOKEN_KEY, token);
       localStorage.setItem(STORAGE_USER_KEY, JSON.stringify(userForStorage));
 
-      dispatch(setUserFromToken(userForState));
+      // ✅ FIXED: Pass complete payload
+      dispatch(setUserFromToken({
+        token: token,
+        user: userForStorage,
+        roles: decoded.roles,
+        licenses: decoded.licenses,
+        features: decoded.features ?? []
+      }));
 
       router.push("/Dashboard");
-      // return userForState;
-      return { type: "LOGIN_SUCCESS" as const, user: userForState };
+      return { type: "LOGIN_SUCCESS" as const };
     } catch (err) {
       console.error("Invalid token", err);
+      return { type: "LOGIN_FAILED" as const };
     }
   };
 
-  // 🚪 LOGOUT
   const logout = () => {
     localStorage.removeItem(STORAGE_USER_KEY);
     localStorage.removeItem(STORAGE_TOKEN_KEY);
@@ -108,7 +115,6 @@ export const useAuth = () => {
     router.push("/Login");
   };
 
-  // 🔒 Client-side auth guard
   const requireAuth = (redirectTo = "/Login") => {
     if (!isLoading && !isAuthenticated) {
       router.push(redirectTo);
@@ -127,3 +133,4 @@ export const useAuth = () => {
     requireAuth,
   };
 };
+

@@ -29,7 +29,6 @@ interface UserHistoryTableProps {
   canView: boolean;
   canEdit: boolean;
   canDelete: boolean;
-  canAddFeature?:boolean;
   onView: (index: number) => void;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
@@ -69,6 +68,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
   {users.map((user, index) => {
     const backendUser = backendUsers[index];
     const isSelf = backendUser?.userId === currentUserId;
+    //const isRoleAdmin = backendUser?.role === "Organisation_Admin_Scout";
 
     return (
       <TableRow key={backendUser?.userId ?? index}>
@@ -94,7 +94,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
             <IconButton
               color="primary"
               onClick={() => onEdit(index)}
-              disabled={isSelf}   
+              disabled={isSelf }   
             >
               <Edit />
             </IconButton>
@@ -105,7 +105,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
             <IconButton
               color="error"
               onClick={() => onDelete(index)}
-              disabled={isSelf}   
+              disabled={isSelf }   
             >
               <Delete />
             </IconButton>

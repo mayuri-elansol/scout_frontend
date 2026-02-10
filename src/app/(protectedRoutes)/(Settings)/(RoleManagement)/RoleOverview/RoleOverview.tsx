@@ -32,7 +32,7 @@ export default function RoleOverview() {
   const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId = user?.org_id;
   const userId = user?.userId;
-  const roleName = user?.roles?.[0]?.roleName;
+  const roleName = user?.role;
 
   /* ---------- PERMISSIONS ---------- */
   const canAddRole = features.includes(FEATURE.CREATE_ROLE);

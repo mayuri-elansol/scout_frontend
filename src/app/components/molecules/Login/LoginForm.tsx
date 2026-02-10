@@ -37,6 +37,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
     mode: "onChange",
   });
   const router = useRouter();
+  //12 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -115,12 +118,17 @@ const LoginForm: React.FC<LoginFormProps> = ({
             helperText={errors.password?.message}
             {...register("password", {
               required: "Password is required",
+              // pattern: {
+              //   value: passwordRegex,
+              //   message:
+              //     "Password must be at least 12 characters and include uppercase, lowercase, number, and special character",
+              // },
             })}
             slotProps={{
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Lock sx={{ color: "#6b7280" }} />
+                    <Lock sx={{ color: "#353c4a" }} />
                   </InputAdornment>
                 ),
                 endAdornment: (
