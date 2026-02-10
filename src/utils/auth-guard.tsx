@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState, ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -23,7 +23,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const { isLoading: authLoading } = useAuth();
 
   const { token, user, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
+    (state: RootState) => state.auth,
   );
 
   const [isChecking, setIsChecking] = useState(true);
@@ -41,7 +41,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token, orgId: user.org_id }),
-        }
+        },
       );
 
       const data = await res.json();
@@ -52,9 +52,11 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       dispatch(
         showToast({
           message:
-            err instanceof Error ? err.message : "Session expired. Please login again.",
+            err instanceof Error
+              ? err.message
+              : "Session expired. Please login again.",
           severity: "error",
-        })
+        }),
       );
       return false;
     }
@@ -62,8 +64,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     const checkAuth = async () => {
-    
-
       // ✅ Wait for useAuth to finish restoring
       if (authLoading) {
         return;
@@ -78,7 +78,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
       // ✅ Check if we're still waiting for restoration from localStorage
       const storedToken = localStorage.getItem("scout_access_token");
-      
+
       // Case 1: Has stored token but Redux hasn't restored yet → Wait
       if (storedToken && !isAuthenticated) {
         return;
@@ -102,7 +102,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
       // Case 4: Everything ready → Validate token
       const valid = await validateToken();
-      
+
       if (!valid) {
         localStorage.removeItem("scout_user");
         localStorage.removeItem("scout_access_token");
@@ -121,7 +121,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   // Show loader while checking auth
   if (authLoading || isChecking) return <Loader />;
-  
+
   // Block invalid routes
   if (!isValid) return null;
 

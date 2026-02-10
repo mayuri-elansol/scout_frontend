@@ -415,7 +415,10 @@ import { useLazyGetSurveillanceMonitoringDashboardKpiDataQuery } from "./Surveil
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { SurveillanceDashboardResponse } from "./SurveillanceMonitoringDashboard.types";
+import {
+  IntrusionTrendResponse,
+  SurveillanceDashboardResponse,
+} from "./SurveillanceMonitoringDashboard.types";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -515,6 +518,29 @@ const SurveillanceMonitoring: React.FC = () => {
   }, [displaySurveillanceKpi, t]);
 
   console.log("surveillanceKpiData", surveillanceKpiData);
+
+  const buildScatterData = (graph?: IntrusionTrendResponse) => {
+    if (!graph) return [];
+
+    return graph.series.flatMap((series) =>
+      series.data.map((point) => ({
+        time: point.label,
+        zone: series.zone,
+        count: point.count,
+      })),
+    );
+  };
+
+  const intrusionDashboard = displaySurveillanceKpi.find(
+    (d) => d.title === "Intrusion Detection",
+  );
+
+  const intrusionScatterData = useMemo(
+    () => buildScatterData(intrusionDashboard?.graphs.data),
+    [intrusionDashboard],
+  );
+
+  console.log("intrusionScatterData", intrusionScatterData);
   // const kpiData: SurveillanceKpiData[] = [
   //   {
   //     title: "Intrusion Detection",
@@ -604,7 +630,7 @@ const SurveillanceMonitoring: React.FC = () => {
               },
             }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
+            <DynamicViolationScatterChart data={intrusionScatterData} />,
           </Grid>
         </Grid>
       ),
