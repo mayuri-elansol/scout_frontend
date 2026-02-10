@@ -36,6 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   } = useForm<LoginFormData>({
     mode: "onChange",
   });
+  
   const router = useRouter();
   //12 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
@@ -118,11 +119,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
             helperText={errors.password?.message}
             {...register("password", {
               required: "Password is required",
-              // pattern: {
-              //   value: passwordRegex,
-              //   message:
-              //     "Password must be at least 12 characters and include uppercase, lowercase, number, and special character",
-              // },
+              pattern: {
+                value: passwordRegex,
+                message:
+                  "Password must be at least 12 characters and include uppercase, lowercase, number, and special character",
+              },
             })}
             slotProps={{
               input: {
