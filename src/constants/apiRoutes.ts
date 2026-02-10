@@ -55,6 +55,22 @@ export const apiRoutes = {
     root: "workforceMonitoringDashboard",
     getWorkforceMonitoringDashboardAnalyticsKpi:
       "get-workforce-monitoring-dashboard-analytics-kpi",
+    getWorkforceMonitoringDashboardAnalyticsgraphs:
+      "get-workforce-monitoring-dashboard-analytics-graphs",
+  },
+  OperationalMonitoringDashboard: {
+    root: "operationalMonitoringDashboard",
+    getOperationalMonitoringDashboardAnalyticsKpi:
+      "get-operational-monitoring-dashboard-analytics-kpi",
+  },
+  SafetyMonitoringDashboard: {
+    root: "safetyMonitoringDashboard",
+    getSafetyMonitoringDashboardAnalyticsKpi:
+      "get-safety-monitoring-dashboard-analytics-kpi",
+  },
+  MainDashboard: {
+    root: "mainDashboard",
+    getMainDashboardAnalyticsKpi: "get-main-dashboard-analytics-kpi",
   },
   ppeKitDetection: {
     root: "ppeKitDetection",

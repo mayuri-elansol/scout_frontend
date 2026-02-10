@@ -1,4 +1,4 @@
-// ppeKpiConfig.ts
+// workforceKpiConfig.ts
 
 import { People, Security, Smartphone, Visibility } from "@mui/icons-material";
 

@@ -24,14 +24,12 @@ export default function ClientLayout({
   const pathname = usePathname();
 
   const [mounted, setMounted] = useState(false);
-  const [currentPage, setCurrentPage] = useState<PageType>(
-    "dashboard"
-  );
+  const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
 
   const sidebartheme = useTheme();
   const isTabletOrPhone = useMediaQuery(
     sidebartheme.breakpoints.down("lg"),
-    {}
+    {},
   );
 
   useEffect(() => {
@@ -46,10 +44,9 @@ export default function ClientLayout({
       ...analyticsMenu.flatMap((category) => category.items),
     ];
 
-   const currentItem = allMenuItems.find(
-  (item) => pathname && item.path?.toLowerCase() === pathname.toLowerCase()
-);
-
+    const currentItem = allMenuItems.find(
+      (item) => pathname && item.path?.toLowerCase() === pathname.toLowerCase(),
+    );
 
     setCurrentPage(currentItem ? currentItem.page! : "dashboard");
   }, [pathname]);
@@ -60,11 +57,10 @@ export default function ClientLayout({
   };
 
   if (!mounted) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
-    <AuthGuard>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -97,12 +93,11 @@ export default function ClientLayout({
           >
             <FeatureGuardProvider>
               {/* <RouteLoader/> */}
-                {children}
+              {children}
             </FeatureGuardProvider>
           </Box>
         </Box>
       </LocalizationProvider>
     </ThemeProvider>
-     </AuthGuard> 
   );
 }

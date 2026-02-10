@@ -1,12 +1,7 @@
 // EmployeeIdelTimeKpiConfig.ts
-import {
-  LocationOn,
-  AccessTime,
-  Construction, // ✅ replaces invalid 'Engineering'
-  Checkroom,
-  Visibility,
-  Room,
-} from "@mui/icons-material";
+import { AccessTime, Room } from "@mui/icons-material";
+import WorkIcon from "@mui/icons-material/Work";
+import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
 
 export const EmployeeIdelTimeKpiConfig = {
   "Total Idle Events": {
@@ -22,11 +17,11 @@ export const EmployeeIdelTimeKpiConfig = {
     tooltipMessage: "The zone where the most recent idle event was detected.",
   },
   "Total Working Events": {
-    icon: Checkroom,
+    icon: WorkIcon,
     tooltipMessage: "Total number of working events detected by the system.",
   },
   "Total Not Working Events": {
-    icon: Visibility,
+    icon: PauseCircleFilledIcon,
     tooltipMessage:
       "Total number of non-working events detected by the system.",
   },
