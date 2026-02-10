@@ -299,6 +299,10 @@ const DynamicViolationScatterChart: React.FC<Props> = ({
   reverseY = false,
   colors = ["#f44336", "#2196f3", "#4caf50", "#ff9800"],
 }) => {
+  console.log("=== CHART RENDER ===");
+  console.log("Title:", title);
+  console.log("Data received:", data);
+  console.log("Data length:", data.length)
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -360,6 +364,9 @@ const DynamicViolationScatterChart: React.FC<Props> = ({
   }, [data, colors, isMobile, zoneLabels, timeLabels]);
 
   console.log("series", series);
+    console.log("zoneLabels", zoneLabels);
+  console.log("timeLabels", timeLabels);
+
   /* ---------------- Empty state ---------------- */
   if (!data.length) {
     return (
@@ -386,6 +393,7 @@ const DynamicViolationScatterChart: React.FC<Props> = ({
         borderRadius: 2,
         p: 2,
         background: "#fff",
+        m:2
       }}
     >
       <Typography fontWeight={600} mb={1}>
