@@ -208,19 +208,19 @@ const Header: React.FC = () => {
 
 
     const allMenuItems = [
-  ...liveStreamingMenu,
-  ...dashboardMenu.flatMap(c => c.items),
-  ...alertMenu,
-  ...analyticsMenu.flatMap(c => c.items),
-  ...settingsMenu.flatMap(c => c.items),
-];
+      ...liveStreamingMenu,
+      ...dashboardMenu.flatMap(c => c.items),
+      ...alertMenu,
+      ...analyticsMenu.flatMap(c => c.items),
+      ...settingsMenu.flatMap(c => c.items),
+    ];
 
-  
-const currentItem = allMenuItems.find(
-  (item): item is LinkMenuItem =>
-    item.type === "link" &&
+
+    const currentItem = allMenuItems.find(
+      (item): item is LinkMenuItem =>
+        item.type === "link" &&
         item.path.toLowerCase() === pathname.toLowerCase()
-);
+    );
     setCurrentPage(
       currentItem ? currentItem.page! : "safety-compliance-dashboard"
     );
@@ -407,13 +407,12 @@ const currentItem = allMenuItems.find(
                         {user.userName}
                       </Typography>
                     )}
-                    {user.roles?.length > 0 && (
+                    {user.role && (
                       <Typography
                         variant="body2"
                         sx={{ color: "#6b7280", fontWeight: 400 }}
                       >
-                        {/* Role : {user.roles.map((r) => r.roleName).join(", ")} */}
-                        Role : {Array.isArray(user.roles) ? user.roles.map((r) => r.roleName).join(", ") : user.roles}
+                        Role: {user.role}
                       </Typography>
                     )}
                   </Box>

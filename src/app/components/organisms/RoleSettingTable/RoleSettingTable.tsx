@@ -74,7 +74,7 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
                       }
                       disabled={isSelfRole}
                     >
-                      <EditIcon />
+                      <EditIcon  />
                     </IconButton>
                   )}
 

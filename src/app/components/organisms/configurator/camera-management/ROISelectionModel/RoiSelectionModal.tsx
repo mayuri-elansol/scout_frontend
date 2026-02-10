@@ -44,6 +44,9 @@ import {
   Menu as MenuIcon,
 } from '@mui/icons-material';
 import { ROIShape } from '@/app/types/roi';
+import { showToast } from '@/app/store/slices/toasterSlice';
+import { getErrorMessage } from '@/utils/getErrorMessage';
+import { useDispatch } from 'react-redux';
 
 type DrawingTool = 'rectangle' | 'polygon' | 'freehand';
 
@@ -93,6 +96,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   labels
 }) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const prevUseCaseRef = useRef<string>('');
 
@@ -1290,7 +1295,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                 startIcon={<SaveIcon />}
                 onClick={() => {
                   if (roiShapes.length === 0) {
-                    alert('Please draw at least one ROI region before saving.');
+                     dispatch(
+                                showToast({
+                                  id: crypto.randomUUID(),
+                                  message: getErrorMessage("Please draw at least one ROI region before saving.") ,
+                                  severity: "error",
+                                })
+                              );
                     return;
                   }
 
@@ -1468,7 +1479,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                 startIcon={<SaveIcon />}
                 onClick={() => {
                   if (roiShapes.length === 0) {
-                    alert('Please draw at least one ROI region before saving.');
+                    dispatch(
+                                showToast({
+                                  id: crypto.randomUUID(),
+                                  message: getErrorMessage("Please draw at least one ROI region before saving.") ,
+                                  severity: "error",
+                                })
+                              );
                     return;
                   }
 

@@ -45,8 +45,30 @@ interface UserFormValues {
   password: string;
 }
 
-const generatePassword = () => Math.random().toString(36).slice(-10) + "@A1";
+const generatePassword = (length = 12): string => {
+  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lower = 'abcdefghijklmnopqrstuvwxyz';
+  const numbers = '0123456789';
+  const special = '@$!%*?&';
+  const all = upper + lower + numbers + special;
 
+  const cryptoRandom = (set: string) =>
+    set[crypto.getRandomValues(new Uint32Array(1))[0] % set.length];
+
+  const passwordArray = [
+    cryptoRandom(upper),
+    cryptoRandom(numbers),
+    cryptoRandom(special),
+  ];
+
+  for (let i = passwordArray.length; i < length; i++) {
+    passwordArray.push(cryptoRandom(all));
+  }
+
+  return passwordArray
+    .sort(() => crypto.getRandomValues(new Uint32Array(1))[0] - 0.5)
+    .join('');
+};
 const AddUser: React.FC = () => {
   const dispatch = useDispatch();
   const router = useRouter();
