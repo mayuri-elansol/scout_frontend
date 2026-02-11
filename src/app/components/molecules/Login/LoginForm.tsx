@@ -119,11 +119,11 @@ const LoginForm: React.FC<LoginFormProps> = ({
             helperText={errors.password?.message}
             {...register("password", {
               required: "Password is required",
-              pattern: {
-                value: passwordRegex,
-                message:
-                  "Password must be at least 12 characters and include uppercase, lowercase, number, and special character",
-              },
+              // pattern: {
+              //   value: passwordRegex,
+              //   message:
+              //     "Password must be at least 12 characters and include uppercase, lowercase, number, and special character",
+              // },
             })}
             slotProps={{
               input: {

@@ -12,9 +12,7 @@ import DashboardTabs, {
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
-import DynamicViolationScatterChart, {
-  ViolationData,
-} from "@/app/components/organisms/ScatterChart/ScatterChart";
+import DynamicViolationScatterChart from "@/app/components/organisms/ScatterChart/ScatterChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -56,7 +54,6 @@ const SurveillanceMonitoring: React.FC = () => {
     load().catch(console.error);
   }, [tenantId, fetchSurveillanceKpi]);
 
-  console.log("displaySurveillanceKpi", displaySurveillanceKpi);
 
 
   /* ---------- TIME FILTER ---------- */
@@ -99,34 +96,32 @@ const SurveillanceMonitoring: React.FC = () => {
     });
   }, [displaySurveillanceKpi, t]);
 
-  console.log("surveillanceKpiData", surveillanceKpiData);
 
-  // const buildScatterData = (graph?: IntrusionTrendResponse) => {
-  //   if (!graph) return [];
 
-  //   return graph.series.flatMap((series) =>
-  //     series.data.map((point) => ({
-  //       time: `${point.label}:00`, 
-  //       zone: series.zone,
-  //       count: point.count,
-  //     })),
-  //   );
-  // };
-const buildScatterData = (graph?: IntrusionTrendResponse) => {
-  if (!graph) return [];
+  const buildScatterData = (graph?: IntrusionTrendResponse) => {
+    if (!graph || !graph.series) return [];
 
-  return graph.series.flatMap((series) =>
-    series.data
-      .filter((point) => point.count > 0) // ✅ Filter zeros HERE
-      .map((point) => ({
-        time: `${point.label}:00`,
+    return graph.series.flatMap((series) =>
+      series.data.map((point) => ({
+        time: point.label.includes(":") ? point.label : `${point.label}:00`,
         zone: series.zone,
         count: point.count,
-      })),
-  );
-};
+      }))
+    );
+  };
   const intrusionDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Intrusion Detection",
+  );
+  const unauthorizedDashboard = displaySurveillanceKpi.find(
+    (d) => d.title === "Unauthorized Access",
+  );
+
+  const movementDashboard = displaySurveillanceKpi.find(
+    (d) => d.title === "Movement During Shutdown",
+  );
+
+  const tamperingDashboard = displaySurveillanceKpi.find(
+    (d) => d.title === "Camera Tempering Detection",
   );
 
   const intrusionScatterData = useMemo(
@@ -134,54 +129,7 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
     [intrusionDashboard],
   );
 
-  console.log("intrusionScatterData", intrusionScatterData);
-  // const kpiData: SurveillanceKpiData[] = [
-  //   {
-  //     title: "Intrusion Detection",
-  //     violationsCount: 3,
-  //     lastDetection: "Zone B - Gate 2",
-  //     lastDetectionTime: "02:15 AM",
-  //     icon: Security,
-  //     route: "/IntrusionDetectionPage",
-  //     tooltipMessage:
-  //       "Shows detected intrusion incidents in monitored zones during restricted hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Unauthorized Access In Restrcited Areas",
-  //     violationsCount: 4,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "3:10 AM",
-  //     icon: People,
-  //     route: "/UnauthorizedAccessInRestrictedAreas",
-  //     tooltipMessage: "Displays unauthorized acess in restricted ares.",
-  //     colour: "gray",
-  //   },
-  //   {
-  //     title: "Camera Tempering Detection",
-  //     violationsCount: 2,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "2:42 PM",
-  //     icon: VideocamOff,
-  //     route: "/CameraTampering",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Movement During Shutdown",
-  //     violationsCount: 2,
-  //     lastDetection: "Warehouse Zone 4",
-  //     lastDetectionTime: "01:45 AM",
-  //     icon: People,
-  //     route: "/PeoplePresence",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  // ];
 
-  const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection",
@@ -205,12 +153,12 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
               },
             }}
           >
-            {/* <DynamicViolationScatterChart data={intrusionScatterData} />, */}
-             <DynamicViolationScatterChart 
-            key="intrusion-chart"  // ✅ Add unique key
-            data={intrusionScatterData} 
-            title="Intrusion Detection Trends"
-          />
+
+            {intrusionDashboard && (
+              <DynamicViolationScatterChart
+                item={intrusionDashboard}
+              />
+            )}
           </Grid>
         </Grid>
       ),
@@ -237,8 +185,9 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
               },
             }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
-          </Grid>
+            {unauthorizedDashboard && (
+              <DynamicViolationScatterChart item={unauthorizedDashboard} />
+            )}          </Grid>
         </Grid>
       ),
     },
@@ -283,7 +232,7 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
           ].map((chart, index) => (
             <Grid
               key={index + 1}
-              size={{ xs: 12, md: 4 }} // ✅ full width on mobile, 3 columns on desktop
+              size={{ xs: 12, md: 4 }}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -317,9 +266,12 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
           {/* Left side */}
           <Grid
             size={{ xs: 12 }}
+            
             sx={{
               display: "flex",
-              height: { xs: "50vh", md: "100%" },
+             // height: { xs: "50vh", md: "100%" },
+                 height: { xs: "50vh", md: "360px" }, // ensure enough height
+
               width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
@@ -327,8 +279,9 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
             }}
             padding={{ xs: "10px" }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
-          </Grid>
+            {movementDashboard && (
+              <DynamicViolationScatterChart item={movementDashboard} />
+            )}          </Grid>
         </Grid>
       ),
     },
@@ -361,36 +314,26 @@ const buildScatterData = (graph?: IntrusionTrendResponse) => {
         <TimeFilter onRangeChange={handleTimeRangeChange} />
       </Box>
 
-      {/* KPI Cards Grid */}
-      {/* <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
-        {surveillanceKpiData.map((kpi, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            key={uuidv4() + index}
-          >
-            <DashboardKpiCard {...kpi} />
-          </Grid>
-        ))}
-      </Grid> */}
+      
 
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {SurveillancekpiLoading
           ? Array.from({ length: 4 }).map(() => (
-              <Grid
-                key={uuidv4()}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+            <Grid
+              key={uuidv4()}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : surveillanceKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <DashboardKpiCard {...kpi} />
-              </Grid>
-            ))}
+            <Grid
+              key={kpi.title}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <DashboardKpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Tabs Section */}

@@ -9,7 +9,7 @@ export const surveillanceDashboardConfig = {
     tooltipMessage:
       "Shows detected intrusion incidents in monitored zones during restricted hours.",
   },
-  "Unauthorized Access In Restrcited Areas": {
+  "Unauthorized Access": {
     icon: People,
     route: "/UnauthorizedAccessInRestrictedAreas",
     tooltipMessage: "Displays unauthorized acess in restricted ares.",
