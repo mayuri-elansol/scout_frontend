@@ -24,7 +24,10 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import {
   IntrusionTrendResponse,
   SurveillanceDashboardResponse,
+  SurveillanceSocketPayload,
 } from "./SurveillanceMonitoringDashboard.types";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -54,7 +57,19 @@ const SurveillanceMonitoring: React.FC = () => {
     load().catch(console.error);
   }, [tenantId, fetchSurveillanceKpi]);
 
-
+  console.log("displaySurveillanceKpi", displaySurveillanceKpi);
+  /* ---------- SOCKET (LIVE ONLY) ---------- */
+  // useSocketEvent<PpeSocketPayload>({
+  //   tenantId,
+  //   enabled: isLiveMode,
+  //   event: SOCKET_EVENTS.PPE_UPDATE,
+  //   handler: (payload) => {
+  //     console.log("payload form the socket", payload);
+  //     setDisplayKpi(payload.kpi ?? []);
+  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
+  //     setRecentViolationsLive(payload.recentViolations ?? []);
+  //   },
+  // });
 
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(

@@ -115,7 +115,7 @@ const EmployeeIdleTime: React.FC = () => {
   useSocketEvent<EmployeeIdleTimeSocketPayload>({
     tenantId,
     enabled: isLiveMode,
-    event: SOCKET_EVENTS.EMPLOYEE_IDLE_TIME_UPDATE,
+    event: SOCKET_EVENTS.EMPLOYEE_IDLE_UPDATE,
     handler: (payload) => {
       console.log("payload form the socket", payload);
       setDisplayEmployeeIdelTimeKpi(payload.kpi ?? []);

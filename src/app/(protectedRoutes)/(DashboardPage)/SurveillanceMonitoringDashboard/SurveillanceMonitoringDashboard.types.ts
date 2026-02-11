@@ -38,3 +38,10 @@ export interface SurveillanceDashboardResponse {
     data: IntrusionTrendResponse;
   };
 }
+
+export interface SurveillanceSocketPayload {
+  type: "SURVEILLANCE_UPDATE";
+  tenantId: string;
+  serverTimestamp: string;
+  data: SurveillanceDashboardResponse[];
+}
