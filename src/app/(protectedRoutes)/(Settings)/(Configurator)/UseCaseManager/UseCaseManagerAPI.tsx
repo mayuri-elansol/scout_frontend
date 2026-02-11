@@ -4,6 +4,7 @@ import { apiRoutes } from "@/constants/apiRoutes";
 /* ---------- TYPES ---------- */
 
 export type UseCase = {
+  is_threshold: boolean;
   id: string;
   usecaseName: string;
   description?: string;

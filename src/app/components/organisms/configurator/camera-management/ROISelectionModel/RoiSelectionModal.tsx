@@ -23,6 +23,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress,
+  InputBase,
 } from '@mui/material';
 
 import {
@@ -42,6 +43,8 @@ import {
   Block as ExcludeIcon,
   ArrowDropDown as ArrowDropDownIcon,
   Menu as MenuIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
 } from '@mui/icons-material';
 import { ROIShape } from '@/app/types/roi';
 
@@ -60,6 +63,10 @@ interface RoiSelectionModalProps {
   existingROI?: ROIShape[];
   onSave: (roiShapes: ROIShape[]) => void;
   labels: string[];
+
+  enableThreshold?: boolean;
+  thresholdValue?: number | null;
+  onThresholdChange?: (value: number | null) => void;
 }
 
 /* ----------------------------- Constants ----------------------------- */
@@ -90,7 +97,10 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   useCaseName,
   existingROI,
   onSave,
-  labels
+  labels,
+  enableThreshold,
+  thresholdValue,
+  onThresholdChange,
 }) => {
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
@@ -1148,7 +1158,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 0.25, mt: 0.5, columnGap:'4px', rowGap:'8px' }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 0.25, mt: 0.5, columnGap: '4px', rowGap: '8px' }}>
                 {ROI_COLORS.map((color) => (
                   <Box
                     key={color}
@@ -1167,6 +1177,91 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                 ))}
               </Box>
             </Box>
+
+            {enableThreshold && (
+  <Box
+    sx={{
+      px: 1.5,
+      py: 1,
+      borderBottom: '1px solid',
+      borderColor: 'divider',
+    }}
+  >
+    <Typography
+      variant="caption"
+      sx={{ fontWeight: 600, fontSize: '0.78rem', mb: 0.5 }}
+    >
+      Set Threshold
+    </Typography>
+
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        border: '1px solid',
+        borderColor: 'grey.400',
+        borderRadius: 1,
+        height: 32,
+        px: 1,
+        width: '100%',
+      }}
+    >
+      {/* − */}
+      <IconButton
+        size="small"
+        sx={{ p: 0.25 }}
+        onClick={() =>
+          onThresholdChange?.(Math.max(0, (thresholdValue ?? 0) - 1))
+        }
+      >
+        –
+      </IconButton>
+
+      {/* CENTER VALUE */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <InputBase
+          value={thresholdValue ?? 0}
+          onChange={(e) => {
+            const v = parseInt(e.target.value, 10);
+            onThresholdChange?.(isNaN(v) ? 0 : v);
+          }}
+          inputProps={{
+            inputMode: 'numeric',
+            pattern: '[0-9]*',
+            style: {
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              width: 40,
+            },
+          }}
+        />
+      </Box>
+
+      {/* + */}
+      <IconButton
+        size="small"
+        sx={{ p: 0.25 }}
+        onClick={() =>
+          onThresholdChange?.((thresholdValue ?? 0) + 1)
+        }
+      >
+        +
+      </IconButton>
+    </Box>
+  </Box>
+)}
+
+
+
+
+
+
 
             <Box sx={{ flex: 1, overflow: 'auto', p: 1 }}>
               <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
@@ -1353,6 +1448,31 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
+
+              <Box
+  sx={{
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+  }}
+>
+  <InputBase
+    value={thresholdValue ?? 0}
+    inputProps={{
+      inputMode: 'numeric',
+      style: {
+        textAlign: 'center',
+        fontSize: '0.75rem',
+        width: 34,
+      },
+    }}
+  />
+</Box>
+
+
+
+
+
               <Box sx={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(5, 20px)',

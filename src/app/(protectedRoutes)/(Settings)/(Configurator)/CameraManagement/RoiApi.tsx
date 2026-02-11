@@ -6,6 +6,7 @@ import { ROIShape } from "@/app/types/roi";
 export type SaveRoiPayload = {
     cameraId: string;
     usecaseId: string;
+    modelThreshold?: number;
     rois: {
         type: ROIShape["type"];
         label: string;
@@ -20,17 +21,32 @@ export type GetRoiParams = {
     usecaseId: string;
 };
 
+// export type RoiResponse = {
+//     status?: string;
+//     message?: string;
+//     modelThreshold?: number;
+//     rois?: {
+//         id: string;
+//         type: ROIShape["type"];
+//         label: string;
+//         mode: ROIShape["mode"];
+//         color: string;
+//         points: ROIShape["points"];
+//     }[];
+// };
+
 export type RoiResponse = {
-    status?: string;
-    message?: string;
-    rois?: {
-        id: string;
-        type: ROIShape["type"];
-        label: string;
-        mode: ROIShape["mode"];
-        color: string;
-        points: ROIShape["points"];
+  roiCordinates?: {
+    rois: {
+      id?: string;
+      type: ROIShape["type"];
+      label: string;
+      mode: ROIShape["mode"];
+      color?: string;
+      points: ROIShape["points"];
     }[];
+  };
+  modelThreshold?: number;
 };
 
 
@@ -40,39 +56,44 @@ export const roiApi = baseProtectedApi.injectEndpoints({
     endpoints: (builder) => ({
 
         /* ---------- GET ROI ---------- */
-        getRoi: builder.query<ROIShape[], GetRoiParams>({
-            query: ({ cameraId, usecaseId }) => ({
-                url: `/configurator/camera-roi/${cameraId}/${usecaseId}`,
-                method: "GET",
-            }),
-            transformResponse: (response: RoiResponse): ROIShape[] => {
-                if (!Array.isArray(response?.rois)) return [];
+        getRoi: builder.query<
+  { rois: ROIShape[]; modelThreshold?: number },
+  GetRoiParams
+>({
+  query: ({ cameraId, usecaseId }) => ({
+    url: `/configurator/camera-roi/${cameraId}/${usecaseId}`,
+    method: "GET",
+  }),
+  transformResponse: (response: RoiResponse) => ({
+    modelThreshold: response.modelThreshold,
+    rois: (response.roiCordinates?.rois ?? []).map((r, index) => ({
+      id: r.id || `roi-${index}`,
+      type: r.type,
+      name: r.label,
+      mode: r.mode,
+      points: r.points,
+      completed: true,
+      color: r.color ?? "#00ff00",
+    })),
+  }),
+}),
 
-                return response.rois.map((r, index) => ({
-                    id: r.id || `roi-${index}`,
-                    type: r.type,
-                    name: r.label,          // ✅ correct DB → UI mapping
-                    mode: r.mode,
-                    points: r.points,
-                    completed: true,
-                    color: r.color ?? "#00ff00",
-                }));
-            },
-        }),
 
 
         /* ---------- SAVE ROI ---------- */
         saveRoi: builder.mutation<RoiResponse, SaveRoiPayload>({
-            query: ({ cameraId, usecaseId, rois }) => ({
+            query: ({ cameraId, usecaseId, rois, modelThreshold }) => ({
                 url: `/configurator/camera-roi`,
                 method: "POST",
                 body: {
                     cameraId,
                     usecaseId,
                     rois,
+                    modelThreshold, // ✅ ADD
                 },
             }),
         }),
+
 
 
         /* ---------- UPDATE ROI ---------- */
