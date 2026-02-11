@@ -418,7 +418,10 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import {
   IntrusionTrendResponse,
   SurveillanceDashboardResponse,
+  SurveillanceSocketPayload,
 } from "./SurveillanceMonitoringDashboard.types";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -462,6 +465,20 @@ const SurveillanceMonitoring: React.FC = () => {
   //   },
   // });
 
+  useSocketEvent<SurveillanceSocketPayload>({
+    tenantId,
+    enabled: isLiveMode,
+    event: SOCKET_EVENTS.SURVEILLANCE_UPDATE,
+    handler: (payload) => {
+      console.log("📡 Surveillance socket payload:", payload);
+
+      // Safety check
+      if (!payload?.data) return;
+
+      // Update full dashboard (KPI + graphs)
+      setDisplaySurveillanceKpi(payload.data);
+    },
+  });
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -483,22 +500,6 @@ const SurveillanceMonitoring: React.FC = () => {
     },
     [tenantId, fetchSurveillanceKpi],
   );
-
-  // const surveillanceKpiData = useMemo(
-  //   () =>
-  //     displaySurveillanceKpi.map((item) => {
-  //       const config = surveillanceDashboardConfig[item.title];
-
-  //       return {
-  //         ...item,
-  //         title: t(item.title),
-  //         icon: config?.icon || EngineeringIcon,
-  //         route: config?.route || "/",
-  //         tooltipMessage: config?.tooltipMessage || "",
-  //       };
-  //     }),
-  //   [displaySurveillanceKpi, t],
-  // );
 
   const surveillanceKpiData = useMemo(() => {
     return displaySurveillanceKpi.map((item) => {
@@ -541,51 +542,6 @@ const SurveillanceMonitoring: React.FC = () => {
   );
 
   console.log("intrusionScatterData", intrusionScatterData);
-  // const kpiData: SurveillanceKpiData[] = [
-  //   {
-  //     title: "Intrusion Detection",
-  //     violationsCount: 3,
-  //     lastDetection: "Zone B - Gate 2",
-  //     lastDetectionTime: "02:15 AM",
-  //     icon: Security,
-  //     route: "/IntrusionDetectionPage",
-  //     tooltipMessage:
-  //       "Shows detected intrusion incidents in monitored zones during restricted hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Unauthorized Access In Restrcited Areas",
-  //     violationsCount: 4,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "3:10 AM",
-  //     icon: People,
-  //     route: "/UnauthorizedAccessInRestrictedAreas",
-  //     tooltipMessage: "Displays unauthorized acess in restricted ares.",
-  //     colour: "gray",
-  //   },
-  //   {
-  //     title: "Camera Tempering Detection",
-  //     violationsCount: 2,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "2:42 PM",
-  //     icon: VideocamOff,
-  //     route: "/CameraTampering",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Movement During Shutdown",
-  //     violationsCount: 2,
-  //     lastDetection: "Warehouse Zone 4",
-  //     lastDetectionTime: "01:45 AM",
-  //     icon: People,
-  //     route: "/PeoplePresence",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  // ];
 
   const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
