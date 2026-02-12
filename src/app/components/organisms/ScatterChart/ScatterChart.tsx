@@ -28,6 +28,11 @@ interface ApiItem {
 interface Props {
   item: ApiItem; // Pass any single card object
 }
+// Function to generate pastel colors
+const generatePastelColor = (index: number, total: number) => {
+  const hue = (index * 360) / total;
+  return `hsl(${hue}, 70%, 80%)`; 
+};
 
 export default function DynamicViolationScatterChart({ item }: Props) {
   const zoneSeries = item?.graphs?.data?.series ?? [];
@@ -65,9 +70,10 @@ const yIndexMap = Object.fromEntries(
   
 
 const series: ScatterSeries[] = useMemo(() => {
-  return zoneSeries.map((zoneItem) => ({
+  return zoneSeries.map((zoneItem,index) => ({
     label: zoneItem.zone,
     markerSize: 8,
+      color: generatePastelColor(index, zoneSeries.length), // dynamic pastel color
 
     valueFormatter: (params: any) => {
       const yLabel = yLabels[params.y];

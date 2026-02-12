@@ -45,31 +45,31 @@ const SurveillanceMonitoring: React.FC = () => {
   const [fetchSurveillanceKpi, { isLoading: SurveillancekpiLoading }] =
     useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
-  useEffect(() => {
-    const load = async () => {
-      const [kpi] = await Promise.all([
-        fetchSurveillanceKpi({ tenantId }).unwrap(),
-      ]);
+useEffect(() => {
+  const load = async () => {
+    const kpi = await fetchSurveillanceKpi({ tenantId }).unwrap();
+    setDisplaySurveillanceKpi(kpi ?? []);
+  };
 
-      setDisplaySurveillanceKpi(kpi ?? []);
-    };
-
-    load().catch(console.error);
-  }, [tenantId, fetchSurveillanceKpi]);
-
+  load();
+}, [tenantId]);
   console.log("displaySurveillanceKpi", displaySurveillanceKpi);
+
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
+ useSocketEvent<SurveillanceSocketPayload>({
+    tenantId,
+    enabled: isLiveMode,
+    event: SOCKET_EVENTS.SURVEILLANCE_UPDATE,
+    handler: (payload) => {
+      console.log("📡 Surveillance socket payload:", payload);
+
+      // Safety check
+      if (!payload?.data) return;
+
+      // Update full dashboard (KPI + graphs)
+      setDisplaySurveillanceKpi(payload.data);
+    },
+  });
 
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
