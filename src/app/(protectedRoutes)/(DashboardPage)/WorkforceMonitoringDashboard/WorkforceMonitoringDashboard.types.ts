@@ -29,3 +29,10 @@ export interface WorkforceMonitoringDashboardResponse {
   };
 }
 [];
+
+export interface WorkforceMonitoringSocketPayload {
+  type: "WORKFORCE_UPDATE";
+  tenantId: string;
+  serverTimestamp: string;
+  data: WorkforceMonitoringDashboardResponse[];
+}

@@ -383,7 +383,12 @@ import { useLazyGetWorkforceMonitoringDashboardKpiDataQuery } from "./WorkforceM
 import { WorkforceMonitoringConfig } from "./WorkforceMonitoringDashboardConfig";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 
-import { WorkforceMonitoringDashboardResponse } from "./WorkforceMonitoringDashboard.types";
+import {
+  WorkforceMonitoringDashboardResponse,
+  WorkforceMonitoringSocketPayload,
+} from "./WorkforceMonitoringDashboard.types";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
 const WorkforceMonitoring: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -425,6 +430,20 @@ const WorkforceMonitoring: React.FC = () => {
   //   },
   // });
 
+  useSocketEvent<WorkforceMonitoringSocketPayload>({
+    tenantId,
+    enabled: isLiveMode,
+    event: SOCKET_EVENTS.WORKFORCE_UPDATE,
+    handler: (payload) => {
+      console.log("📡 Workforce Monitoring socket payload:", payload);
+
+      // Safety check
+      if (!payload?.data) return;
+
+      // Update full dashboard (KPI + graphs)
+      setDashboardData(payload.data);
+    },
+  });
   /* ---------- TIME FILTER ---------- */
   const handleworkforceTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {

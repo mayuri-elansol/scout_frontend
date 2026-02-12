@@ -453,17 +453,6 @@ const SurveillanceMonitoring: React.FC = () => {
 
   console.log("displaySurveillanceKpi", displaySurveillanceKpi);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
 
   useSocketEvent<SurveillanceSocketPayload>({
     tenantId,
