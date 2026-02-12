@@ -56,7 +56,8 @@ useEffect(() => {
   console.log("displaySurveillanceKpi", displaySurveillanceKpi);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
- useSocketEvent<SurveillanceSocketPayload>({
+
+  useSocketEvent<SurveillanceSocketPayload>({
     tenantId,
     enabled: isLiveMode,
     event: SOCKET_EVENTS.SURVEILLANCE_UPDATE,
