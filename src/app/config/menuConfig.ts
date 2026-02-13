@@ -12,7 +12,6 @@ import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import PeopleIcon from "@mui/icons-material/People";
 import TuneIcon from "@mui/icons-material/Tune";
-import VideocamIcon from "@mui/icons-material/Videocam";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 
 import { OverridableComponent } from "@mui/material/OverridableComponent";

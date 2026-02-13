@@ -18,6 +18,7 @@ import {
   Chip,
   useTheme,
   Divider,
+  Skeleton,
 } from "@mui/material";
 import {
   BarChart,
@@ -39,6 +40,10 @@ import { PageType } from "@/app/types";
 import { useAuth } from "@/customhooks/useAuth";
 import { hasFeature } from "@/utils/hasFeature";
 import theme from "../../../theme/theme";
+import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/AddUser/AddUserApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import Loader from "../../atoms/Loader/Loader";
 
 interface SidebarProps {
   currentPage: PageType;
@@ -162,8 +167,8 @@ const SubMenuItem = React.memo<{
             sx: {
               fontSize:
                 categoryTitle === "Dashboard" ||
-                categoryTitle === "Analytics" ||
-                categoryTitle === "Settings"
+                  categoryTitle === "Analytics" ||
+                  categoryTitle === "Settings"
                   ? "14px"
                   : "12px",
               color: pathname === item.path ? "white" : "#6b7280",
@@ -356,62 +361,83 @@ ConfiguratorGroup.displayName = "ConfiguratorGroup";
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const theme = useTheme();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
+  const LoggedInUser: string = user?.userId ?? "";
+
   const drawerWidth: string = "315px";
   const router = useRouter();
   const pathname = usePathname();
   const { features } = useAuth();
- 
+
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
     {}
   );
 
-const handleCategoryToggle = useCallback(
-  (title: string, isTopLevel: boolean = true) => {
-    setOpenCategories((prev) => {
-      const isCurrentlyOpen = !!prev[title];
 
-      if (isTopLevel) {
-        // Close all other top-level categories
-        const newState: Record<string, boolean> = {};
-        if (!isCurrentlyOpen) {
-          newState[title] = true;
-        }
-        return newState;
-      } else {
-        // Nested toggle: just toggle this item
-        return {
-          ...prev,
-          [title]: !isCurrentlyOpen,
-        };
-      }
-    });
+  const {
+  data,
+  isLoading,
+  isError,
+} = useGetOrgAndUserLogoQuery(
+  {
+    LoggedInUserId: LoggedInUser,
+    tenantId: tenantId,
   },
-  []
+  {
+    skip: !LoggedInUser || !tenantId, 
+  }
 );
+  // Fallback image if API fails or loading
+  const orgLogo =
+    data?.logoPath?.orgLogo ?? "./CustomerLogo1.png";
+  const handleCategoryToggle = useCallback(
+    (title: string, isTopLevel: boolean = true) => {
+      setOpenCategories((prev) => {
+        const isCurrentlyOpen = !!prev[title];
 
-const handleAnalyticsToggle = useCallback(() => {
-  const willOpen = !analyticsOpen;
-  
-  if (willOpen) {
-    setOpenCategories({});
-    setSettingsOpen(false);
-  }
-  
-  setAnalyticsOpen((prev) => !prev);
-}, [analyticsOpen]);
+        if (isTopLevel) {
+          // Close all other top-level categories
+          const newState: Record<string, boolean> = {};
+          if (!isCurrentlyOpen) {
+            newState[title] = true;
+          }
+          return newState;
+        } else {
+          // Nested toggle: just toggle this item
+          return {
+            ...prev,
+            [title]: !isCurrentlyOpen,
+          };
+        }
+      });
+    },
+    []
+  );
 
-const handleSettingsToggle = useCallback(() => {
-  const willOpen = !settingsOpen;
-  
-  if (willOpen) {
-    setOpenCategories({});
-    setAnalyticsOpen(false);
-  }
-  
-  setSettingsOpen((prev) => !prev);
-}, [settingsOpen]);
+  const handleAnalyticsToggle = useCallback(() => {
+    const willOpen = !analyticsOpen;
+
+    if (willOpen) {
+      setOpenCategories({});
+      setSettingsOpen(false);
+    }
+
+    setAnalyticsOpen((prev) => !prev);
+  }, [analyticsOpen]);
+
+  const handleSettingsToggle = useCallback(() => {
+    const willOpen = !settingsOpen;
+
+    if (willOpen) {
+      setOpenCategories({});
+      setAnalyticsOpen(false);
+    }
+
+    setSettingsOpen((prev) => !prev);
+  }, [settingsOpen]);
   const filteredMenus = useMemo(() => {
     const filterCategoryItems = (items: MenuItemConfig[]) => {
       return items
@@ -506,7 +532,7 @@ const handleSettingsToggle = useCallback(() => {
               }
               return (
                 // <Box key={uuidv4() + index} sx={{ mb: 1 }}>
-                  <Box key={category.title} sx={{ mb: 1 }}>
+                <Box key={category.title} sx={{ mb: 1 }}>
 
                   <ListItem disablePadding>
                     <ListItemButton
@@ -559,7 +585,7 @@ const handleSettingsToggle = useCallback(() => {
                   </ListItem>
 
                   <Collapse in={isOpen} timeout="auto" >
-                  
+
                     <List sx={{ pl: 2 }}>
                       {getAllLinkItems(category.items).map((item) => (
                         <SubMenuItem
@@ -771,14 +797,34 @@ const handleSettingsToggle = useCallback(() => {
           alignItems: "center",
         }}
       >
-        <Box
+        {/* <Box
           component="img"
-          src="./CustomerLogo1.png"
+          src={orgLogo}
           alt="Customer Logo"
           sx={{
             height: 46,
           }}
-        />
+        /> */}
+{isLoading ? (
+  <Skeleton
+    variant="rectangular"
+    width={260}   
+    height={46}
+    sx={{ borderRadius: 1 }}
+  />
+) : (
+  <Box
+    component="img"
+    src={orgLogo}
+    alt="Customer Logo"
+    sx={{ height: 46 ,width:180,ml:2,pb:1}}
+  />
+)}
+
+
+
+
+
       </Box>
 
       {/* Divider */}

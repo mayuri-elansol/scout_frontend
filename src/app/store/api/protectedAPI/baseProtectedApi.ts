@@ -38,5 +38,6 @@ export const baseProtectedApi = createApi({
     "SurveillanceMonitoringDashboardKpi",
     "WorkforceMonitoringDashboardKpi",
     "MainDashboardKpi",
+    "OrgLogo"
   ],
 });

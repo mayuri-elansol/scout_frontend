@@ -23,10 +23,12 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 
 import {
   WorkforceMonitoringDashboardResponse,
+  WorkforceMonitoringDashboardResponseForScatterChart,
   WorkforceMonitoringSocketPayload,
 } from "./WorkforceMonitoringDashboard.types";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import DynamicViolationScatterChartForWorkforce from "@/app/components/organisms/ScatterChart/DynamicViolationScatterChartForWorkforce";
 const WorkforceMonitoring: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -84,6 +86,11 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
       setDashboardData(payload.data);
     },
   });
+
+
+
+
+  
   /* ---------- TIME FILTER ---------- */
   const handleworkforceTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
