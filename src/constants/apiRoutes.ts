@@ -215,22 +215,24 @@ export const apiRoutes = {
       "get-crowd-gathering-in-hazardous-zones-analytics-details-report-for-single-id",
   },
 
-  peoplePresenceDuringShutdownHours: {
-    root: "peoplePresenceDuringShutdownHours",
-    getPeoplePresenceDuringShutdownHoursAnalyticsKpi:
-      "get-people-presence-during-shutdown-hours-analytics-kpi",
-    getPeoplePresenceDuringShutdownHoursAnalyticsRecentVoliations:
-      "get-people-presence-during-shutdown-hours-analytics-recent-voliations",
-    getPeoplePresenceDuringShutdownHoursAnalyticsCameraStatusByZone:
-      "get-people-presence-during-shutdown-hours-analytics-camera-status-by-zone",
-    getPeoplePresenceDuringShutdownHoursAnalyticsDetailedReport:
-      "get-people-presence-during-shutdown-hours-analytics-details-report",
-    getPeoplePresenceDuringShutdownHoursAnalyticsDownloadDetailedReport:
-      "get-people-presence-during-shutdown-hours-analytics-download-details-report",
-    getPeoplePresenceDuringShutdownHoursAnalyticsDownloadDetailedReportForSingleId:
-      "get-people-presence-during-shutdown-hours-analytics-download-details-report-for-single-id",
-    getPeoplePresenceDuringShutdownHoursAnalyticsDetailedReportForSingleId:
-      "get-people-presence-during-shutdown-hours-analytics-details-report-for-single-id",
+  MovementDuringShutdownHours: {
+    root: "movementDuringShutdownHours",
+    getMovementDuringShutdownHoursAnalyticsKpi:
+      "get-movement-during-shutdown-hours-analytics-kpi",
+    getMovementDuringShutdownHoursAnalyticsRecentViolations:
+      "get-movement-during-shutdown-hours-analytics-recent-violations",
+    getMovementDuringShutdownHoursAnalyticsZoneViolations:
+      "get-movement-during-shutdown-hours-analytics-zone-violations",
+    getMovementDuringShutdownHoursAnalyticsDetailedReport:
+      "get-movement-during-shutdown-hours-analytics-details-report",
+    getMovementDuringShutdownHoursAnalyticsDownloadDetailedPdfReport:
+      "get-movement-during-shutdown-hours-analytics-download-details-pdf-report",
+    getMovementDuringShutdownHoursAnalyticsDownloadDetailedCsvReport:
+      "get-movement-during-shutdown-hours-analytics-download-details-csv-report",
+    getMovementDuringShutdownHoursAnalyticsDownloadDetailedReportForSingleId:
+      "get-movement-during-shutdown-hours-analytics-download-details-report-for-single-id",
+    getMovementDuringShutdownHoursAnalyticsDetailedReportForSingleId:
+      "get-movement-during-shutdown-hours-analytics-details-report-for-single-id",
   },
 
   employeeIdleTimeMonitoring: {

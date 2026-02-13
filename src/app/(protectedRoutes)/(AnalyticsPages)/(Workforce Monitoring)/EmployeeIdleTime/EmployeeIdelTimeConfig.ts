@@ -1,12 +1,12 @@
 // EmployeeIdelTimeKpiConfig.ts
 import { AccessTime, Room } from "@mui/icons-material";
 import WorkIcon from "@mui/icons-material/Work";
-import PauseCircleFilledIcon from "@mui/icons-material/PauseCircleFilled";
+import WorkOffIcon from "@mui/icons-material/WorkOff";
 
 export const EmployeeIdelTimeKpiConfig = {
-  "Total Idle Events": {
+  "Total Idle Time": {
     icon: AccessTime,
-    tooltipMessage: "Total number of idle time events detected by the system.",
+    tooltipMessage: "Total idle time detected by the system.",
   },
   "Last Idle Detection Time": {
     icon: AccessTime,
@@ -16,13 +16,12 @@ export const EmployeeIdelTimeKpiConfig = {
     icon: Room,
     tooltipMessage: "The zone where the most recent idle event was detected.",
   },
-  "Total Working Events": {
+  "Total Working Time": {
     icon: WorkIcon,
-    tooltipMessage: "Total number of working events detected by the system.",
+    tooltipMessage: "Total working time detected by the system.",
   },
-  "Total Not Working Events": {
-    icon: PauseCircleFilledIcon,
-    tooltipMessage:
-      "Total number of non-working events detected by the system.",
+  "Total Not Working Time": {
+    icon: WorkOffIcon,
+    tooltipMessage: "Total non-working time detected by the system.",
   },
 };
