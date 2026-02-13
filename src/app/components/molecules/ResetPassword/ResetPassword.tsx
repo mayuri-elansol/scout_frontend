@@ -32,7 +32,8 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
   } = useForm<ResetPasswordFormData>({
     mode: "onChange",
   });
-
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
   return (
     <CardContent sx={{ padding: 4 }}>
       <Typography
@@ -114,9 +115,10 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             helperText={errors.password?.message}
             {...register("password", {
               required: "New password is required",
-              minLength: {
-                value: 5,
-                message: "Password must be at least 5 characters",
+              pattern: {
+                value: passwordRegex,
+                message:
+                  "Password must be at least 12 characters and include atleast 1 uppercase, 1 lowercase, 1 number, and 1 special character",
               },
             })}
             slotProps={{
@@ -204,25 +206,25 @@ const ResetPasswordForm: React.FC<ResetPasswordFormProps> = ({
             fontWeight: 600,
             backgroundColor:
               isLoading ||
-              !watch("userName") ||
-              !watch("password") ||
-              !watch("confirmPassword")
+                !watch("userName") ||
+                !watch("password") ||
+                !watch("confirmPassword")
                 ? "#e5e7eb"
                 : "#1976d2",
             color:
               isLoading ||
-              !watch("userName") ||
-              !watch("password") ||
-              !watch("confirmPassword")
+                !watch("userName") ||
+                !watch("password") ||
+                !watch("confirmPassword")
                 ? "#9ca3af"
                 : "#ffffff",
             border: "none",
             borderRadius: "8px",
             cursor:
               isLoading ||
-              !watch("userName") ||
-              !watch("password") ||
-              !watch("confirmPassword")
+                !watch("userName") ||
+                !watch("password") ||
+                !watch("confirmPassword")
                 ? "not-allowed"
                 : "pointer",
             boxShadow: "0 2px 8px rgba(25, 118, 210, 0.2)",

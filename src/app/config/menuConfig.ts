@@ -265,7 +265,7 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         type: "link",
         name: "Movement During Shutdown Hours",
-        path: "/PeoplePresence",
+        path: "/movementDuringShutdownHours",
         featureId: FEATURE.PEOPLE_PRESENCE,
       },
     ],

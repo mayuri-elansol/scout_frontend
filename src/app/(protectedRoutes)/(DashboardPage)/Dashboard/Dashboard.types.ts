@@ -1,14 +1,52 @@
 import { MainDashboardConfig } from "./DashboardConfig";
 
-export interface DashboardKpiData {
+export interface KpiCard {
   title: keyof typeof MainDashboardConfig;
+  colour: "red" | "green" | "gray" | "blue";
   violationsCount?: number;
-  colour: "red" | "green" | "blue" | "gray";
+  lastDetection?: string;
+  lastDetectionTime?: string;
 }
 
-export type MainDashboardResponse = {
-  safety: DashboardKpiData[];
-  surveillance: DashboardKpiData[];
-  workforce: DashboardKpiData[];
-  operational: DashboardKpiData[];
-};
+export interface DashboardGraphs {
+  data: any;
+}
+
+export interface DashboardItem {
+  title: string;
+  kpi: KpiCard;
+  graphs: DashboardGraphs;
+}
+
+export interface MainDashboardResponse {
+  surveillance: DashboardItem[];
+  workforce: DashboardItem[];
+  safety: DashboardItem[];
+  operational: DashboardItem[];
+}
+export interface MainDashboardResponse {
+  title: keyof typeof MainDashboardConfig;
+  enabled?: boolean;
+  kpi: {
+    title: string;
+    colour: "red" | "green" | "blue" | "gray";
+    violationsCount?: number;
+    lastDetection?: string;
+    lastDetectionTime?: string;
+  };
+  graphs?: {
+    data?: {
+      gate: string;
+      idleCount: number;
+      workingCount: number;
+      notPresentCount: number;
+    }[];
+  };
+}
+[];
+export interface DashboardMonitoringSocketPayload {
+  type: "MAIN_DASHBOARD_UPDATE";
+  tenantId: string;
+  serverTimestamp: string;
+  data: MainDashboardResponse;
+}

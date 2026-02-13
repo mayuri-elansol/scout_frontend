@@ -16,7 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { formatDate } from '@/utils/dateUtils';
 import { RoleSettingTableProps } from './RoleSettingTable.types';
- 
+
 
 const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
   rows,
@@ -29,6 +29,19 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
   onEdit,
   onDelete,
 }) => {
+
+ const filteredRows = rows.filter((row) => {
+  const rowRole = row.role_id?.name?.toLowerCase();
+  const currentUserRole = roleName?.toLowerCase();
+
+  // Hide Organisation_Admin_Scout from everyone except itself
+  if (rowRole === "organisation_admin_scout") {
+    return currentUserRole === "organisation_admin_scout";
+  }
+
+  return true;
+});
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -43,7 +56,11 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
         </TableHead>
 
         <TableBody>
-          {rows.map((row) => {
+          {/* {rows.map((row) => {
+            const isSelfRole =
+              row.role_id?.name?.toLowerCase() === roleName?.toLowerCase(); */}
+
+          {filteredRows.map((row) => {
             const isSelfRole =
               row.role_id?.name?.toLowerCase() === roleName?.toLowerCase();
 
@@ -74,11 +91,11 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
                       }
                       disabled={isSelfRole}
                     >
-                      <EditIcon  />
+                      <EditIcon />
                     </IconButton>
                   )}
 
-                  {canDelete &&  (
+                  {canDelete && (
                     <IconButton
                       color="error"
                       onClick={() => onDelete(row.role_id.role_id)}

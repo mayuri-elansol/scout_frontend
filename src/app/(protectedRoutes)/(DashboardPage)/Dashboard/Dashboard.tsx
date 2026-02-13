@@ -9,12 +9,18 @@ import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMai
 
 import { useLazyGetMainDashboardKpiDataQuery } from "./DashboardApi";
 import { MainDashboardConfig } from "./DashboardConfig";
-import { MainDashboardResponse } from "./Dashboard.types";
+import {
+  DashboardItem,
+  DashboardMonitoringSocketPayload,
+  MainDashboardResponse,
+} from "./Dashboard.types";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { v4 as uuidv4 } from "uuid";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -23,7 +29,7 @@ const Dashboard: React.FC = () => {
   /* ---------- STATE ---------- */
   const [isDashboardLiveMode, setIsDashboardLiveMode] = useState(true);
 
-  const [dashboardData, setDashboardData] =
+  const [mainDashboardData, setMainDashboardData] =
     useState<MainDashboardResponse | null>(null);
   /* ---------- API HOOKS ---------- */
   const [fetchMainDashboardKpi, { isLoading: MainDashboardkpiLoading }] =
@@ -32,23 +38,26 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       const response = await fetchMainDashboardKpi({ tenantId }).unwrap();
-      setDashboardData(response);
+      setMainDashboardData(response);
     };
     load().catch(console.error);
   }, [tenantId, fetchMainDashboardKpi]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
+  useSocketEvent<DashboardMonitoringSocketPayload>({
+    tenantId,
+    enabled: isDashboardLiveMode,
+    event: SOCKET_EVENTS.MAIN_DASHBOARD_UPDATE,
+    handler: (payload) => {
+      console.log("📡 MAIN DASHBOARD Monitoring socket payload:", payload);
+
+      // Safety check
+      if (!payload?.data) return;
+
+      // Update full dashboard (KPI + graphs)
+      setMainDashboardData(payload.data);
+    },
+  });
 
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
@@ -65,81 +74,64 @@ const Dashboard: React.FC = () => {
         startDate: range.start,
         endDate: range.end,
       };
-      const [kpi] = await Promise.all([
-        fetchMainDashboardKpi(payload).unwrap(),
-      ]);
+      const kpi = await fetchMainDashboardKpi(payload).unwrap();
 
-      setDashboardData(kpi ?? []);
+      setMainDashboardData(kpi ?? []);
     },
     [tenantId, fetchMainDashboardKpi],
   );
 
+  const mapDashboardItemToKpiCard = (item: DashboardItem, route?: string) => ({
+    title: item.kpi.title,
+    colour: item.kpi.colour,
+    violationsCount: item.kpi.violationsCount,
+    lastDetection: item.kpi.lastDetection,
+    lastDetectionTime: item.kpi.lastDetectionTime,
+    route,
+  });
   const safetyDashboardKpis = useMemo(() => {
-    if (!dashboardData?.safety) return [];
+    if (!mainDashboardData?.safety) return [];
 
-    return dashboardData.safety.map((item) => {
+    return mainDashboardData.safety.map((item) => {
       const config =
-        item.title in MainDashboardConfig
-          ? MainDashboardConfig[item.title]
-          : undefined;
+        MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
 
-      return {
-        ...item,
-        title: t(item.title),
-        route: config?.route || "/",
-      };
+      return mapDashboardItemToKpiCard(item, config?.route || "/");
     });
-  }, [dashboardData, t]);
+  }, [mainDashboardData, t]);
 
   const surveillanceDashboardKpis = useMemo(() => {
-    if (!dashboardData?.surveillance) return [];
+    if (!mainDashboardData?.surveillance) return [];
 
-    return dashboardData.surveillance.map((item) => {
+    return mainDashboardData.surveillance.map((item) => {
       const config =
-        item.title in MainDashboardConfig
-          ? MainDashboardConfig[item.title]
-          : undefined;
+        MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
 
-      return {
-        ...item,
-        title: t(item.title),
-        route: config?.route || "/",
-      };
+      return mapDashboardItemToKpiCard(item, config?.route || "/");
     });
-  }, [dashboardData, t]);
+  }, [mainDashboardData, t]);
+
   const operationalDashboardKpis = useMemo(() => {
-    if (!dashboardData?.operational) return [];
+    if (!mainDashboardData?.operational) return [];
 
-    return dashboardData.operational.map((item) => {
+    return mainDashboardData.operational.map((item) => {
       const config =
-        item.title in MainDashboardConfig
-          ? MainDashboardConfig[item.title]
-          : undefined;
+        MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
 
-      return {
-        ...item,
-        title: t(item.title),
-        route: config?.route || "/",
-      };
+      return mapDashboardItemToKpiCard(item, config?.route || "/");
     });
-  }, [dashboardData, t]);
+  }, [mainDashboardData, t]);
 
   const workforceDashboardKpis = useMemo(() => {
-    if (!dashboardData?.workforce) return [];
+    if (!mainDashboardData?.workforce) return [];
 
-    return dashboardData.workforce.map((item) => {
+    return mainDashboardData.workforce.map((item) => {
       const config =
-        item.title in MainDashboardConfig
-          ? MainDashboardConfig[item.title]
-          : undefined;
+        MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
 
-      return {
-        ...item,
-        title: t(item.title),
-        route: config?.route || "/",
-      };
+      return mapDashboardItemToKpiCard(item, config?.route || "/");
     });
-  }, [dashboardData, t]);
+  }, [mainDashboardData, t]);
   return (
     <Paper
       sx={{
@@ -156,13 +148,7 @@ const Dashboard: React.FC = () => {
         <TimeFilter onRangeChange={handleTimeRangeChange} />
       </Box>
 
-      <Grid container spacing={1.5}>
-        {/* {CamerakpiData.map((kpi, index) => (
-          <Grid key={uuidv4() + index} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
-            <DashboardKpiCardMain {...kpi} />
-          </Grid>
-        ))} */}
-      </Grid>
+      <Grid container spacing={1.5}></Grid>
 
       {/* Dashboard Sections Grid */}
       <Grid container spacing={2} sx={{ mb: 1.3 }}>

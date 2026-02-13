@@ -77,17 +77,17 @@ const AddUser: React.FC = () => {
   const tenantId = user?.org_id;
   const userId = user?.userId;
 
- 
+
   const [addUser, { isLoading: isSubmitting }] = useAddUserMutation();
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-const { data, isLoading } = useRoleListQuery(
-  tenantId && userId
-    ? { tenantId, userId }
-    : skipToken
-);
+  const { data, isLoading } = useRoleListQuery(
+    tenantId && userId
+      ? { tenantId, userId }
+      : skipToken
+  );
 
 
   const { control, handleSubmit, reset, setValue } =
@@ -130,6 +130,7 @@ const { data, isLoading } = useRoleListQuery(
       await addUser({
         payload: {
           ...formData,
+          orgAppRoleId: formData.role, 
           orgId: tenantId!,
         },
         image: profileImage ?? undefined,
@@ -180,15 +181,14 @@ const { data, isLoading } = useRoleListQuery(
                   rules={{ required: "Role is required" }}
                   render={({ field }) => (
                     <Select {...field} label="Role" disabled={isLoading}>
-                   {data?.data?.data?.map((r: OrgAppRole) => (
-  <MenuItem
-    key={r.org_app_role_id}
-    value={r.role_id.name}
-  >
-    {r.role_id.name}
-  </MenuItem>
-))}
-
+                      {data?.data?.data?.map((r: OrgAppRole) => (
+                        <MenuItem
+                          key={r.org_app_role_id}
+                          value={r.org_app_role_id}
+                        >
+                          {r.role_id.name}
+                        </MenuItem>
+                      ))}
                     </Select>
                   )}
                 />

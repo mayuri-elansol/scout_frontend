@@ -415,7 +415,13 @@ import { useLazyGetSurveillanceMonitoringDashboardKpiDataQuery } from "./Surveil
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { SurveillanceDashboardResponse } from "./SurveillanceMonitoringDashboard.types";
+import {
+  IntrusionTrendResponse,
+  SurveillanceDashboardResponse,
+  SurveillanceSocketPayload,
+} from "./SurveillanceMonitoringDashboard.types";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -447,18 +453,21 @@ const SurveillanceMonitoring: React.FC = () => {
 
   console.log("displaySurveillanceKpi", displaySurveillanceKpi);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
 
+  useSocketEvent<SurveillanceSocketPayload>({
+    tenantId,
+    enabled: isLiveMode,
+    event: SOCKET_EVENTS.SURVEILLANCE_UPDATE,
+    handler: (payload) => {
+      console.log("📡 Surveillance socket payload:", payload);
+
+      // Safety check
+      if (!payload?.data) return;
+
+      // Update full dashboard (KPI + graphs)
+      setDisplaySurveillanceKpi(payload.data);
+    },
+  });
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -481,22 +490,6 @@ const SurveillanceMonitoring: React.FC = () => {
     [tenantId, fetchSurveillanceKpi],
   );
 
-  // const surveillanceKpiData = useMemo(
-  //   () =>
-  //     displaySurveillanceKpi.map((item) => {
-  //       const config = surveillanceDashboardConfig[item.title];
-
-  //       return {
-  //         ...item,
-  //         title: t(item.title),
-  //         icon: config?.icon || EngineeringIcon,
-  //         route: config?.route || "/",
-  //         tooltipMessage: config?.tooltipMessage || "",
-  //       };
-  //     }),
-  //   [displaySurveillanceKpi, t],
-  // );
-
   const surveillanceKpiData = useMemo(() => {
     return displaySurveillanceKpi.map((item) => {
       const config = surveillanceDashboardConfig[item.title];
@@ -515,72 +508,31 @@ const SurveillanceMonitoring: React.FC = () => {
   }, [displaySurveillanceKpi, t]);
 
   console.log("surveillanceKpiData", surveillanceKpiData);
-  // const kpiData: SurveillanceKpiData[] = [
-  //   {
-  //     title: "Intrusion Detection",
-  //     violationsCount: 3,
-  //     lastDetection: "Zone B - Gate 2",
-  //     lastDetectionTime: "02:15 AM",
-  //     icon: Security,
-  //     route: "/IntrusionDetectionPage",
-  //     tooltipMessage:
-  //       "Shows detected intrusion incidents in monitored zones during restricted hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Unauthorized Access In Restrcited Areas",
-  //     violationsCount: 4,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "3:10 AM",
-  //     icon: People,
-  //     route: "/UnauthorizedAccessInRestrictedAreas",
-  //     tooltipMessage: "Displays unauthorized acess in restricted ares.",
-  //     colour: "gray",
-  //   },
-  //   {
-  //     title: "Camera Tempering Detection",
-  //     violationsCount: 2,
-  //     lastDetection: "Zone C",
-  //     lastDetectionTime: "2:42 PM",
-  //     icon: VideocamOff,
-  //     route: "/CameraTampering",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  //   {
-  //     title: "Movement During Shutdown",
-  //     violationsCount: 2,
-  //     lastDetection: "Warehouse Zone 4",
-  //     lastDetectionTime: "01:45 AM",
-  //     icon: People,
-  //     route: "/PeoplePresence",
-  //     tooltipMessage:
-  //       "Displays people detected inside premises during shutdown hours.",
-  //     colour: "red",
-  //   },
-  // ];
 
-  const violationData: ViolationData[] = [
-    { time: "08:00", zone: "Zone A", count: 5 },
-    { time: "09:00", zone: "Zone A", count: 8 },
-    { time: "10:00", zone: "Zone A", count: 3 },
-    { time: "11:00", zone: "Zone A", count: 12 },
+  const buildScatterData = (graph?: IntrusionTrendResponse) => {
+    if (!graph) return [];
 
-    { time: "08:00", zone: "Zone B", count: 7 },
-    { time: "09:00", zone: "Zone B", count: 4 },
-    { time: "10:00", zone: "Zone B", count: 9 },
-    { time: "11:00", zone: "Zone B", count: 6 },
+    return graph.series.flatMap((series) =>
+      series.data.map((point) => ({
+        time: point.label,
+        zone: series.zone,
+        count: point.count,
+      })),
+    );
+  };
 
-    { time: "12:00", zone: "Zone C", count: 2 },
-    { time: "01:00", zone: "Zone C", count: 11 },
-    { time: "03:00", zone: "Zone C", count: 5 },
-    { time: "04:00", zone: "Zone C", count: 8 },
-    { time: "05:00", zone: "Zone D", count: 2 },
-    { time: "06:00", zone: "Zone E", count: 11 },
-    { time: "07:00", zone: "Zone F", count: 5 },
-    { time: "08:00", zone: "Zone G", count: 8 },
-  ];
+  const intrusionDashboard = displaySurveillanceKpi.find(
+    (d) => d.title === "Intrusion Detection",
+  );
+
+  const intrusionScatterData = useMemo(
+    () => buildScatterData(intrusionDashboard?.graphs.data),
+    [intrusionDashboard],
+  );
+
+  console.log("intrusionScatterData", intrusionScatterData);
+
+  const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection",
@@ -604,7 +556,7 @@ const SurveillanceMonitoring: React.FC = () => {
               },
             }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
+            <DynamicViolationScatterChart data={intrusionScatterData} />,
           </Grid>
         </Grid>
       ),
@@ -653,25 +605,25 @@ const SurveillanceMonitoring: React.FC = () => {
             {
               title: "Online Cameras by Zone",
               data: [
-                { label: "Zone A", value: 12, color: "#A8E6CF" },
-                { label: "Zone B", value: 5, color: "#ffcdd2" },
-                { label: "Zone C", value: 2, color: "#FFEAA7" },
+                // { label: "Zone A", value: 12, color: "#A8E6CF" },
+                // { label: "Zone B", value: 5, color: "#ffcdd2" },
+                // { label: "Zone C", value: 2, color: "#FFEAA7" },
               ],
             },
             {
               title: "Offline Cameras by Zone",
               data: [
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
+                // { label: "Zone A", value: 20, color: "#A8E6CF" },
+                // { label: "Zone B", value: 3, color: "#ffcdd2" },
+                // { label: "Zone C", value: 1, color: "#FFEAA7" },
               ],
             },
             {
               title: "Tampered Cameras by Zone",
               data: [
-                { label: "Zone A", value: 20, color: "#A8E6CF" },
-                { label: "Zone B", value: 3, color: "#ffcdd2" },
-                { label: "Zone C", value: 1, color: "#FFEAA7" },
+                // { label: "Zone A", value: 20, color: "#A8E6CF" },
+                // { label: "Zone B", value: 3, color: "#ffcdd2" },
+                // { label: "Zone C", value: 1, color: "#FFEAA7" },
               ],
             },
           ].map((chart, index) => (
