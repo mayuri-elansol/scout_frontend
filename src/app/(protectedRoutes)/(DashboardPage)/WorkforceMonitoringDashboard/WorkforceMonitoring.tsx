@@ -37,9 +37,8 @@ const WorkforceMonitoring: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<
     WorkforceMonitoringDashboardResponse[]
   >([]);
-const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState<
-    WorkforceMonitoringDashboardResponseForScatterChart[]
-  >([]);
+  const [dashboardDataForScatterChart, setDashboardDataForScatterChart] =
+    useState<WorkforceMonitoringDashboardResponseForScatterChart[]>([]);
   /* ---------- API HOOKS ---------- */
   const [fetchWorkforceKpi, { isLoading: WorkforcekpiLoading }] =
     useLazyGetWorkforceMonitoringDashboardKpiDataQuery();
@@ -61,7 +60,7 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
     enabled: isLiveMode,
     event: SOCKET_EVENTS.WORKFORCE_UPDATE,
     handler: (payload) => {
-      console.log("📡 Workforce Monitoring socket payload:", payload);
+      console.log("📡 Workforce Monitoring dashboard socket payload:", payload);
 
       // Safety check
       if (!payload?.data) return;
@@ -71,10 +70,6 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
     },
   });
 
-
-
-
-  
   /* ---------- TIME FILTER ---------- */
   const handleworkforceTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -130,13 +125,13 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
   }, [dashboardData]);
   console.log("employeeIdleGraphData", employeeIdleGraphData);
 
-const employeeInCriticalAreaGraphData = useMemo(() => {
-  const usecase = dashboardDataForScatterChart.find(
-    (d) => d.title === "Employee in Critical Area"
-  );
+  const employeeInCriticalAreaGraphData = useMemo(() => {
+    const usecase = dashboardDataForScatterChart.find(
+      (d) => d.title === "Employee in Critical Area",
+    );
 
-  return usecase?.graphs?.data?.data ?? [];
-}, [dashboardDataForScatterChart]);
+    return usecase?.graphs?.data?.data ?? [];
+  }, [dashboardDataForScatterChart]);
   console.log(
     "employeenCriticalAreaGraphData",
     employeeInCriticalAreaGraphData,
@@ -158,13 +153,13 @@ const employeeInCriticalAreaGraphData = useMemo(() => {
   }, [dashboardData]);
   console.log("mobileUsageGraphData", mobileUsageGraphData);
 
-const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
-  const usecase = dashboardDataForScatterChart.find(
-    (d) => d.title === "Mobile Phone Usage in Critical Area"
-  );
+  const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
+    const usecase = dashboardDataForScatterChart.find(
+      (d) => d.title === "Mobile Phone Usage in Critical Area",
+    );
 
-  return usecase?.graphs?.data?.data ?? [];
-}, [dashboardDataForScatterChart]);
+    return usecase?.graphs?.data?.data ?? [];
+  }, [dashboardDataForScatterChart]);
 
   const sleepingAbsenceGraphData = useMemo(() => {
     const idleUsecase = dashboardData.find(
@@ -181,7 +176,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
     );
   }, [dashboardData]);
   console.log("sleepingAbsenceGraphData", sleepingAbsenceGraphData);
-  const violationData: ViolationData[] = [];
+
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
@@ -206,13 +201,14 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
             }}
             padding={{ xs: "10px" }}
           >
-<DynamicViolationScatterChartForWorkforce data={employeeInCriticalAreaGraphData} />
-            
+            <DynamicViolationScatterChartForWorkforce
+              data={employeeInCriticalAreaGraphData}
+            />
           </Grid>
         </Grid>
       ),
     },
-   
+
     {
       label: "Employee Monitoring",
       content: (
@@ -226,7 +222,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
               }}
             >
               <DynamicBarChart
-               // key={employeeIdleGraphData.length > 0 ? 'data-loaded' : 'loading'}
+                // key={employeeIdleGraphData.length > 0 ? 'data-loaded' : 'loading'}
 
                 data={employeeIdleGraphData}
                 xAxisKey="gate"
@@ -278,7 +274,10 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
             }}
             padding={{ xs: "10px" }}
           >
-            <DynamicViolationScatterChartForWorkforce data={mobilePhoneUsageInCriticalAreaGraphData} />,
+            <DynamicViolationScatterChartForWorkforce
+              data={mobilePhoneUsageInCriticalAreaGraphData}
+            />
+            ,
           </Grid>
         </Grid>
       ),
@@ -340,7 +339,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
         borderRadius: 2,
         flex: 1,
         // minHeight: 0,
-        
+
         minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
@@ -361,21 +360,21 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {WorkforcekpiLoading
           ? Array.from({ length: 4 }).map(() => (
-            <Grid
-              key={uuidv4()}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <KpiCardSkeleton />
-            </Grid>
-          ))
+              <Grid
+                key={uuidv4()}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
           : workforceKpiData.map((kpi) => (
-            <Grid
-              key={kpi.title}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <DashboardKpiCard {...kpi} />
-            </Grid>
-          ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
@@ -387,7 +386,8 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
           flex: 1,
         }}
       >
-        <DashboardTabs tabs={tabs} />lll
+        <DashboardTabs tabs={tabs} />
+        lll
       </Box>
     </Paper>
   );
