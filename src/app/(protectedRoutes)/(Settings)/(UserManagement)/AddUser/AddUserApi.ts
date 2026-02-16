@@ -40,7 +40,28 @@ export const addUserApi = baseProtectedApi.injectEndpoints({
       
       invalidatesTags: ["AddUser"],
     }),
+
+
+  getOrgAndUserLogo: builder.query<
+  {
+    success: boolean;
+    logoPath: {
+      userLogo: string | null;
+      orgLogo: string | null;
+    };
+  },
+  { LoggedInUserId: string; tenantId: string }
+>({
+  query: (body) => ({
+    url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgAndUserLogo}`,
+    method: "POST",
+    body,
   }),
+  providesTags: ["OrgLogo"],
+}),
+  }),
+
+
 });
 
-export const { useAddUserMutation } = addUserApi;
+export const { useAddUserMutation,useGetOrgAndUserLogoQuery } = addUserApi;

@@ -35,6 +35,9 @@ import {
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
 import { usePathname } from "next/navigation";
+import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/AddUser/AddUserApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 interface SystemHealthData {
   message: string[];
@@ -121,7 +124,11 @@ const SystemHealthTooltipContent: React.FC<{
 
 const Header: React.FC = () => {
   const theme = useTheme();
-  const { user, isLoading, logout } = useAuth();
+  const { isLoading, logout } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  const tenantId: string = user?.org_id ?? "";
+  const LoggedInUser: string = user?.userId ?? "oo";
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -137,6 +144,22 @@ const Header: React.FC = () => {
   );
   const [openHealth, setOpenHealth] = useState(false);
   const healthTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const {
+    data,
+    isLoading: loadingLogo,
+    isError,
+  } = useGetOrgAndUserLogoQuery(
+    {
+      LoggedInUserId: LoggedInUser,
+      tenantId: tenantId,
+    },
+    {
+      skip: !LoggedInUser || !tenantId,
+    }
+  );
+  // Fallback image if API fails or loading
+  const userLogo = data?.logoPath.userLogo ?? "./userLogo.png";
 
   const handleHealthMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     if (healthTimerRef.current) clearTimeout(healthTimerRef.current);
@@ -193,18 +216,6 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    // const allMenuItems = [
-    //   ...dashboardMenu.flatMap((category) => category.items),
-    //   ...alertMenu,
-    //   ...analyticsMenu.flatMap((category) => category.items),
-    // ];
-
-
-    // const currentItem = allMenuItems.find(
-    //   (item): item is LinkMenuItem =>
-    //     item.type === "link" &&
-    //     item.path.toLowerCase() === pathname.toLowerCase()
-    // );
 
 
     const allMenuItems = [
@@ -353,7 +364,7 @@ const Header: React.FC = () => {
                 {!isLoading && user && (
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <IconButton onClick={handleClick} size="small">
-                      <Avatar
+                      {/* <Avatar
                         sx={{
                           width: 40,
                           height: 40,
@@ -362,7 +373,20 @@ const Header: React.FC = () => {
                           fontWeight: 600,
                         }}
                       >
-                        {user.userName?.charAt(0).toUpperCase() ?? "?"}
+                        {userLogo ?? user.userName?.charAt(0).toUpperCase() ?? "?"}
+                      </Avatar> */}
+                      <Avatar
+                        src={data?.logoPath?.userLogo || undefined}
+                        sx={{
+                          width: 40,
+                          height: 40,
+                          backgroundColor: "#3072b0",
+                          fontSize: "14px",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {!data?.logoPath?.userLogo &&
+                          (user.userName?.charAt(0).toUpperCase() ?? "?")}
                       </Avatar>
                     </IconButton>
                   </Box>

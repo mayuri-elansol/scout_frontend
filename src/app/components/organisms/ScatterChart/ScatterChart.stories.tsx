@@ -1,9 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DynamicViolationScatterChart, {
-  DynamicViolationScatterChartProps,
-  ViolationData,
-} from "./ScatterChart";
+import DynamicViolationScatterChart from "./ScatterChart";
 
 const meta: Meta<typeof DynamicViolationScatterChart> = {
   title: "Components/Organisms/DynamicViolationScatterChart",
@@ -36,42 +33,80 @@ const meta: Meta<typeof DynamicViolationScatterChart> = {
 
 export default meta;
 
-type Story = StoryObj<DynamicViolationScatterChartProps>;
+// Use typeof component props for type
+type Story = StoryObj<React.ComponentProps<typeof DynamicViolationScatterChart>>;
 
-// ✅ Sample demo data
-const demoData: ViolationData[] = [
-  { time: "08:00", zone: "Zone A", count: 3 },
-  { time: "09:00", zone: "Zone A", count: 5 },
-  { time: "10:00", zone: "Zone A", count: 7 },
-  { time: "08:00", zone: "Zone B", count: 1 },
-  { time: "09:00", zone: "Zone B", count: 6 },
-  { time: "10:00", zone: "Zone B", count: 4 },
-  { time: "11:00", zone: "Zone B", count: 3 },
-  { time: "08:00", zone: "Zone C", count: 2 },
-  { time: "09:00", zone: "Zone C", count: 4 },
-  { time: "10:00", zone: "Zone C", count: 8 },
-  { time: "11:00", zone: "Zone C", count: 5 },
-  { time: "09:00", zone: "Zone D", count: 2 },
-  { time: "10:00", zone: "Zone D", count: 3 },
-  { time: "11:00", zone: "Zone D", count: 6 },
-];
+// ✅ Sample demo data for Storybook
+const demoItem = {
+  title: "Employee Violations",
+  graphs: {
+    data: {
+      granularity: "Hour",
+      series: [
+        {
+          zone: "Zone A",
+          data: [
+            { label: "08:00", count: 3 },
+            { label: "09:00", count: 5 },
+            { label: "10:00", count: 7 },
+          ],
+        },
+        {
+          zone: "Zone B",
+          data: [
+            { label: "08:00", count: 1 },
+            { label: "09:00", count: 6 },
+            { label: "10:00", count: 4 },
+            { label: "11:00", count: 3 },
+          ],
+        },
+        {
+          zone: "Zone C",
+          data: [
+            { label: "08:00", count: 2 },
+            { label: "09:00", count: 4 },
+            { label: "10:00", count: 8 },
+            { label: "11:00", count: 5 },
+          ],
+        },
+      ],
+    },
+  },
+};
 
 export const Default: Story = {
   args: {
-    data: demoData,
-    colors: ["#f44336", "#2196f3", "#4caf50", "#ff9800"],
+    item: demoItem,
   },
 };
 
 export const EmptyData: Story = {
   args: {
-    data: [],
+    item: {
+      title: "Empty Violations",
+      graphs: { data: { series: [] } },
+    },
   },
 };
 
-export const CustomColors: Story = {
+export const SingleZone: Story = {
   args: {
-    data: demoData,
-    colors: ["#8e44ad", "#3498db", "#27ae60", "#e67e22"],
+    item: {
+      title: "Single Zone Violations",
+      graphs: {
+        data: {
+          granularity: "Hour",
+          series: [
+            {
+              zone: "Zone A",
+              data: [
+                { label: "08:00", count: 2 },
+                { label: "09:00", count: 4 },
+              ],
+            },
+          ],
+        },
+      },
+    },
   },
 };

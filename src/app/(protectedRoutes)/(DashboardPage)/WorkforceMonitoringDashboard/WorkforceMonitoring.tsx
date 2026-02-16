@@ -11,9 +11,6 @@ import DashboardTabs, {
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
-import DynamicViolationScatterChart, {
-  ViolationData,
-} from "@/app/components/organisms/ScatterChart/ScatterChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
@@ -23,10 +20,12 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 
 import {
   WorkforceMonitoringDashboardResponse,
+  WorkforceMonitoringDashboardResponseForScatterChart,
   WorkforceMonitoringSocketPayload,
 } from "./WorkforceMonitoringDashboard.types";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import DynamicViolationScatterChartForWorkforce from "@/app/components/organisms/ScatterChart/DynamicViolationScatterChartForWorkforce";
 const WorkforceMonitoring: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -38,7 +37,9 @@ const WorkforceMonitoring: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<
     WorkforceMonitoringDashboardResponse[]
   >([]);
-
+const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState<
+    WorkforceMonitoringDashboardResponseForScatterChart[]
+  >([]);
   /* ---------- API HOOKS ---------- */
   const [fetchWorkforceKpi, { isLoading: WorkforcekpiLoading }] =
     useLazyGetWorkforceMonitoringDashboardKpiDataQuery();
@@ -69,6 +70,11 @@ const WorkforceMonitoring: React.FC = () => {
       setDashboardData(payload.data);
     },
   });
+
+
+
+
+  
   /* ---------- TIME FILTER ---------- */
   const handleworkforceTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -124,20 +130,13 @@ const WorkforceMonitoring: React.FC = () => {
   }, [dashboardData]);
   console.log("employeeIdleGraphData", employeeIdleGraphData);
 
-  const employeeInCriticalAreaGraphData = useMemo(() => {
-    const idleUsecase = dashboardData.find(
-      (d) => d.title === "Employee in Critical Area",
-    );
+const employeeInCriticalAreaGraphData = useMemo(() => {
+  const usecase = dashboardDataForScatterChart.find(
+    (d) => d.title === "Employee in Critical Area"
+  );
 
-    return (
-      idleUsecase?.graphs?.data?.map((g) => ({
-        gate: g.gate,
-        Idle: g.idleCount,
-        Working: g.workingCount,
-        NotPresent: g.notPresentCount,
-      })) ?? []
-    );
-  }, [dashboardData]);
+  return usecase?.graphs?.data?.data ?? [];
+}, [dashboardDataForScatterChart]);
   console.log(
     "employeenCriticalAreaGraphData",
     employeeInCriticalAreaGraphData,
@@ -158,6 +157,14 @@ const WorkforceMonitoring: React.FC = () => {
     );
   }, [dashboardData]);
   console.log("mobileUsageGraphData", mobileUsageGraphData);
+
+const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
+  const usecase = dashboardDataForScatterChart.find(
+    (d) => d.title === "Mobile Phone Usage in Critical Area"
+  );
+
+  return usecase?.graphs?.data?.data ?? [];
+}, [dashboardDataForScatterChart]);
 
   const sleepingAbsenceGraphData = useMemo(() => {
     const idleUsecase = dashboardData.find(
@@ -199,60 +206,13 @@ const WorkforceMonitoring: React.FC = () => {
             }}
             padding={{ xs: "10px" }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
+<DynamicViolationScatterChartForWorkforce data={employeeInCriticalAreaGraphData} />
+            
           </Grid>
         </Grid>
       ),
     },
-    // {
-    //   label: "Employee Monitoring",
-    //   content: (
-    //     <Grid
-    //       container
-    //       sx={{
-    //         alignItems: "stretch",
-    //         height: "100%",
-    //       }}
-    //     >
-    //       {/* Left side */}
-    //       <Grid
-    //         size={{ xs: 12 }}
-    //         sx={{
-    //           display: "flex",
-    //           height: { xs: "50vh", md: "100%" },
-    //           width: "100%",
-    //           "& .MuiCardContent-root": {
-    //             height: "100%",
-    //           },
-    //         }}
-    //       >
-    //         <DynamicBarChart
-    //           data={employeeIdleGraphData}
-    //           xAxisKey="gate"
-    //           series={[
-    //             {
-    //               dataKey: "Idle",
-    //               label: "Idle Count",
-    //               color: "#FFD1DC",
-    //             },
-    //             {
-    //               dataKey: "Working",
-    //               label: "Working Count",
-    //               color: "#AEEEEE",
-    //             },
-    //             {
-    //               dataKey: "NotPresent",
-    //               label: "Not Present Count",
-    //               color: "#FFF5BA",
-    //             },
-    //           ]}
-    //           yAxisLabel="Count"
-    //           stackId="exitStatus"
-    //         />
-    //       </Grid>
-    //     </Grid>
-    //   ),
-    // },
+   
     {
       label: "Employee Monitoring",
       content: (
@@ -266,6 +226,8 @@ const WorkforceMonitoring: React.FC = () => {
               }}
             >
               <DynamicBarChart
+               // key={employeeIdleGraphData.length > 0 ? 'data-loaded' : 'loading'}
+
                 data={employeeIdleGraphData}
                 xAxisKey="gate"
                 series={[
@@ -316,7 +278,7 @@ const WorkforceMonitoring: React.FC = () => {
             }}
             padding={{ xs: "10px" }}
           >
-            <DynamicViolationScatterChart data={violationData} />,
+            <DynamicViolationScatterChartForWorkforce data={mobilePhoneUsageInCriticalAreaGraphData} />,
           </Grid>
         </Grid>
       ),
@@ -378,6 +340,7 @@ const WorkforceMonitoring: React.FC = () => {
         borderRadius: 2,
         flex: 1,
         // minHeight: 0,
+        
         minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
@@ -398,21 +361,21 @@ const WorkforceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {WorkforcekpiLoading
           ? Array.from({ length: 4 }).map(() => (
-              <Grid
-                key={uuidv4()}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+            <Grid
+              key={uuidv4()}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : workforceKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <DashboardKpiCard {...kpi} />
-              </Grid>
-            ))}
+            <Grid
+              key={kpi.title}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <DashboardKpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Activity Feed and Camera Status */}
@@ -422,10 +385,9 @@ const WorkforceMonitoring: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        <DashboardTabs tabs={tabs} />lll
       </Box>
     </Paper>
   );

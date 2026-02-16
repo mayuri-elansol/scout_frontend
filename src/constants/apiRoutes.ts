@@ -11,15 +11,9 @@ export const apiRoutes = {
     forgotPassword: "/forgot-password",
     getNewPassword: "/get-new-password",
     resetPassword: "/reset-password",
-    validateToken: '/validate-token'
+    validateToken: "/validate-token",
+    getOrgAndUserLogo:'get-org-user-logo'
 
-  },
-
-  configurator: {
-    root: "configurator",
-    cameraManager: "/camera-manager",
-    zoneMapping: "/zone-mapping",
-    useCaseManager: "/use-case-manager",
   },
 
   organisation: {
@@ -27,6 +21,14 @@ export const apiRoutes = {
     getOrganisationDetails: "/get-organisation-details",
     editOrganisationDetailsById: "/edit-organisation-details-by-id",
   },
+
+    configurator: {
+    root: "configurator",
+    cameraManager: "/camera-manager",
+    zoneMapping: "/zone-mapping",
+    useCaseManager: "/use-case-manager",
+  },
+  
   roleInformation: {
     root: "/role-information",
     getList: "get-role-list",
