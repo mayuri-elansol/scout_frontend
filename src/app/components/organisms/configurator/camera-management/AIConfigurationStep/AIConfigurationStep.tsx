@@ -96,6 +96,10 @@ interface UseCaseData {
   fineTuned: boolean;
   enabled: boolean;
   labels: string[];
+
+  
+  is_threshold?: boolean;
+  modelThreshold?: number | null;
 }
 
 const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
@@ -116,94 +120,104 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const [saveRoi, { isLoading: isSavingRoi }] = useSaveRoiMutation();
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
-  
+
   const loadAssignments = React.useCallback(
-  async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
-    const res = await getCameraAssignments(camera.id).unwrap();
+    async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
+      const res = await getCameraAssignments(camera.id).unwrap();
 
-    if (!Array.isArray(res)) {
-      return mapped;
-    }
+      if (!Array.isArray(res)) {
+        return mapped;
+      }
 
-    return mapped.map((uc) => ({
-      ...uc,
-      selected: res.some(
-        (a: { usecaseId: string }) => a.usecaseId === uc.id
-      ),
-    }));
-  },
-  [camera.id, getCameraAssignments]
-);
+      return mapped.map((uc) => ({
+        ...uc,
+        selected: res.some(
+          (a: { usecaseId: string }) => a.usecaseId === uc.id
+        ),
+      }));
+    },
+    [camera.id, getCameraAssignments]
+  );
 
 
 
-const loadRoiForUseCases = React.useCallback(
-  async (useCases: UseCaseData[]): Promise<UseCaseData[]> => {
-    return Promise.all(
-      useCases.map(async (uc) => {
-        if (!uc.selected) return uc;
+  const loadRoiForUseCases = React.useCallback(
+    
+    async (useCases: UseCaseData[]): Promise<UseCaseData[]> => {
+      
+      return Promise.all(
+        useCases.map(async (uc) => {
+          console.log('RAW usecase from API:', uc);
 
-        try {
-          const rois = await getRoi({
-            cameraId: camera.id,
-            usecaseId: uc.id,
-          }).unwrap();
+          if (!uc.selected) return uc;
 
-          return {
-            ...uc,
-            roiConfigured: rois.length > 0,
-            roiShapes: rois,
-          };
-        } catch {
-          return uc;
-        }
-      })
-    );
-  },
-  [camera.id, getRoi]
-);
+          try {
+            const res = await getRoi({
+              cameraId: camera.id,
+              usecaseId: uc.id,
+            }).unwrap();
+
+            return {
+              ...uc,
+              roiConfigured: res.rois.length > 0,
+              roiShapes: res.rois,
+              modelThreshold: res.modelThreshold ?? null,
+            };
+
+          } catch (error) {
+            return uc;
+          }
+        })
+      );
+    },
+    [camera.id, getRoi]
+  );
 
 
 
   useEffect(() => {
-  if (
-    loadingUseCases ||
-    !useCasesResponse ||
-    !Array.isArray(useCasesResponse)
-  ) {
-    return;
-  }
-
-  const run = async () => {
-    const mapped: UseCaseData[] = useCasesResponse.map((uc) => ({
-      id: uc.id,
-      name: uc.usecaseName,
-      description: uc.description ?? '',
-      selected: false,
-      roiConfigured: false,
-      fineTuned: false,
-      enabled: false,
-      roiShapes: [],
-      labels: uc.labels ?? [],
-    }));
-
-    try {
-      const withAssignments = await loadAssignments(mapped);
-      const withROI = await loadRoiForUseCases(withAssignments);
-      setUseCases(withROI);
-    } catch (err) {
-      console.error('Failed to load assignments', err);
-      setUseCases(mapped);
+    
+    if (
+      loadingUseCases ||
+      !useCasesResponse ||
+      !Array.isArray(useCasesResponse)
+    ) {
+      return;
     }
-  };
 
-  void run();
-}, [
-  loadingUseCases,
-  useCasesResponse,
-  loadAssignments,
-  loadRoiForUseCases,
-]);
+    const run = async () => {
+      const mapped: UseCaseData[] = useCasesResponse.map((uc) => ({
+        id: uc.id,
+        name: uc.usecaseName,
+        description: uc.description ?? '',
+        selected: false,
+        roiConfigured: false,
+        fineTuned: false,
+        enabled: false,
+        roiShapes: [],
+        labels: uc.labels ?? [],
+
+        is_threshold: uc.is_threshold ?? false, // 🔥 IMPORTANT
+        modelThreshold: null,
+      }));
+
+      try {
+        const withAssignments = await loadAssignments(mapped);
+        const withROI = await loadRoiForUseCases(withAssignments);
+        setUseCases(withROI);
+      } catch (err) {
+        console.error('Failed to load assignments', err);
+        setUseCases(mapped);
+      }
+    };
+
+    void run();
+  }, [
+    loadingUseCases,
+    useCasesResponse,
+    loadAssignments,
+    loadRoiForUseCases,
+  ]);
 
 
 
@@ -282,15 +296,16 @@ const loadRoiForUseCases = React.useCallback(
 
     try {
       // Use RTK Query to get ROI
-      const rois = await getRoi({
+      const res = await getRoi({
         cameraId: camera.id,
         usecaseId: useCaseId,
       }).unwrap();
 
+
       setUseCases(prev =>
         prev.map(uc =>
           uc.id === useCaseId
-            ? { ...uc, roiShapes: rois, roiConfigured: rois.length > 0 }
+            ? { ...uc, roiShapes: res.rois, roiConfigured: res.rois.length > 0, modelThreshold: res.modelThreshold ?? null }
             : uc
         )
       );
@@ -309,9 +324,12 @@ const loadRoiForUseCases = React.useCallback(
     try {
       setLoading(true);
 
+      const currentUC = useCases.find(u => u.id === currentUseCaseForROI);
+
       await saveRoi({
         cameraId: camera.id,
         usecaseId: currentUseCaseForROI,
+        modelThreshold: currentUC?.modelThreshold ?? undefined,
         rois: roiShapes.map(r => ({
           type: r.type,
           label: r.name,
@@ -320,6 +338,7 @@ const loadRoiForUseCases = React.useCallback(
           points: r.points,
         })),
       }).unwrap();
+
 
       const rois = await getRoi({
         cameraId: camera.id,
@@ -331,8 +350,9 @@ const loadRoiForUseCases = React.useCallback(
           uc.id === currentUseCaseForROI
             ? {
               ...uc,
-              roiConfigured: rois.length > 0,
-              roiShapes: rois,
+              roiConfigured: rois.rois.length > 0,
+              roiShapes: rois.rois,
+              modelThreshold: rois.modelThreshold ?? null,
             }
             : uc
         )
@@ -408,12 +428,12 @@ const loadRoiForUseCases = React.useCallback(
   };
 
   const getCameraFeedUrl = React.useCallback(() => {
-  if (!camera?.id || !tenantId) {
-    console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
-    return '/img/siteimage.jpg';
-  }
-  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
-}, [camera?.id, tenantId]);
+    if (!camera?.id || !tenantId) {
+      console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
+      return '/img/siteimage.jpg';
+    }
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+  }, [camera?.id, tenantId]);
 
 
   const renderCameraContent = () => {
@@ -458,26 +478,26 @@ const loadRoiForUseCases = React.useCallback(
   };
 
   useEffect(() => {
-  if (!showCameraView) {
-    setFrameUrl(null);
-    return;
-  }
+    if (!showCameraView) {
+      setFrameUrl(null);
+      return;
+    }
 
-  setFrameUrl(getCameraFeedUrl());
-
-  const interval = setInterval(() => {
     setFrameUrl(getCameraFeedUrl());
-  }, 1000);
 
-  return () => clearInterval(interval);
-}, [showCameraView, getCameraFeedUrl]);
+    const interval = setInterval(() => {
+      setFrameUrl(getCameraFeedUrl());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [showCameraView, getCameraFeedUrl]);
 
 
 
 
   function handleCloseSnackbar(): void {
-  setSnackbar(prev => ({ ...prev, open: false }));
-}
+    setSnackbar(prev => ({ ...prev, open: false }));
+  }
 
 
   return (
@@ -752,7 +772,24 @@ const loadRoiForUseCases = React.useCallback(
         existingROI={getExistingROI()}
         onSave={handleROISave}
         labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels ?? []}
+
+        enableThreshold={
+          useCases.find(u => u.id === currentUseCaseForROI)?.is_threshold ?? false
+        }
+        thresholdValue={
+          useCases.find(u => u.id === currentUseCaseForROI)?.modelThreshold ?? null
+        }
+        onThresholdChange={(value) => {
+          setUseCases(prev =>
+            prev.map(u =>
+              u.id === currentUseCaseForROI
+                ? { ...u, modelThreshold: value }
+                : u
+            )
+          );
+        }}
       />
+
 
       <Snackbar
         open={snackbar.open}
