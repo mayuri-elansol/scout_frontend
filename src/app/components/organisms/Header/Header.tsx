@@ -134,33 +134,28 @@ const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [currentPage, setCurrentPage] = useState<PageType>(
-    "safety-compliance-dashboard"
+    "safety-compliance-dashboard",
   );
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [anchorElHealth, setAnchorElHealth] = useState<null | HTMLElement>(
-    null
+    null,
   );
   const [openHealth, setOpenHealth] = useState(false);
   const healthTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const {
-    data,
-    isLoading: loadingLogo,
-    isError,
-  } = useGetOrgAndUserLogoQuery(
+  const { data } = useGetOrgAndUserLogoQuery(
     {
       LoggedInUserId: LoggedInUser,
       tenantId: tenantId,
     },
     {
       skip: !LoggedInUser || !tenantId,
-    }
+    },
   );
   // Fallback image if API fails or loading
-  const userLogo = data?.logoPath.userLogo ?? "./userLogo.png";
 
   const handleHealthMouseEnter = (event: React.MouseEvent<HTMLElement>) => {
     if (healthTimerRef.current) clearTimeout(healthTimerRef.current);
@@ -261,24 +256,21 @@ const getPageTitle = () => {
   return "Dashboard";
 };
   useEffect(() => {
-
-
     const allMenuItems = [
       ...liveStreamingMenu,
-      ...dashboardMenu.flatMap(c => c.items),
+      ...dashboardMenu.flatMap((c) => c.items),
       ...alertMenu,
-      ...analyticsMenu.flatMap(c => c.items),
-      ...settingsMenu.flatMap(c => c.items),
+      ...analyticsMenu.flatMap((c) => c.items),
+      ...settingsMenu.flatMap((c) => c.items),
     ];
-
 
     const currentItem = allMenuItems.find(
       (item): item is LinkMenuItem =>
         item.type === "link" &&
-        item.path.toLowerCase() === pathname.toLowerCase()
+        item.path.toLowerCase() === pathname.toLowerCase(),
     );
     setCurrentPage(
-      currentItem ? currentItem.page! : "safety-compliance-dashboard"
+      currentItem ? currentItem.page! : "safety-compliance-dashboard",
     );
   }, [pathname]);
 
@@ -302,7 +294,7 @@ const getPageTitle = () => {
           minute: "2-digit",
           second: "2-digit",
           hour12: false,
-        })
+        }),
       );
       setSystemHealth((prev: SystemHealthData) => ({
         ...prev,

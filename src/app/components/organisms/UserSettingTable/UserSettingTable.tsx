@@ -25,8 +25,8 @@ export interface User {
 
 interface UserHistoryTableProps {
   users: User[];
-  backendUsers: BackendUser[];   // ✅ ADD
-  currentUserId?: string;        // ✅ ADD
+  backendUsers: BackendUser[]; // ✅ ADD
+  currentUserId?: string; // ✅ ADD
   canView: boolean;
   canEdit: boolean;
   canDelete: boolean;
@@ -37,7 +37,7 @@ interface UserHistoryTableProps {
 
 const UserSettingTable: React.FC<UserHistoryTableProps> = ({
   users,
-    backendUsers,
+  backendUsers,
   currentUserId,
   canView,
   canEdit,
@@ -74,9 +74,9 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
       <TableRow key={backendUser?.userId ?? index}>
         <TableCell>{index + 1}.</TableCell>
 
-        <TableCell>
-          {user.firstName} {user.lastName}
-        </TableCell>
+                  <TableCell>
+                    {user.firstName} {user.lastName}
+                  </TableCell>
 
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.phone}</TableCell>

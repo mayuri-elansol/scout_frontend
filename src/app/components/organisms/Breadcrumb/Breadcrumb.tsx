@@ -8,7 +8,6 @@ import { ChevronRight } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 interface BreadcrumbProps {
   currentPage: PageType;
-  onPageChange: (page: PageType) => void;
 }
 
 interface BreadcrumbItem {
@@ -23,7 +22,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
     // Only show breadcrumb for Analytics or Settings pages
     // Assuming you have a settingsMenu similar to analyticsMenu
     const isAnalyticsPage = analyticsMenu.some((category) =>
-      category.items.some((item) => item.page === currentPage)
+      category.items.some((item) => item.page === currentPage),
     );
 
     const isSettingsPage = false; // Replace with your settingsMenu logic if exists
@@ -38,12 +37,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ currentPage }) => {
     if (isAnalyticsPage) {
       for (const category of analyticsMenu) {
         const pageItem = category.items.find(
-          (item) => item.page === currentPage
+          (item) => item.page === currentPage,
         );
         if (pageItem) {
           items.push({ label: "Analytics", clickable: false });
-          items.push({ label: category.title, clickable: false });
-          items.push({ label: pageItem.name, clickable: false });
           return items;
         }
       }

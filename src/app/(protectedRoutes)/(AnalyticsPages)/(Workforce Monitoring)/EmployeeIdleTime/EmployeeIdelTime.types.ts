@@ -45,7 +45,7 @@ export interface EmployeeIdleZoneViolation {
   }[];
 }
 
-export interface EmployeeIdelTimeDetailedReportResponse {
+export interface EmployeeIdleTimeDetailedReportResponse {
   data: EmployeeIdleViolation[];
   zones: string[];
   cameras: string[];
@@ -83,3 +83,13 @@ export type EmployeeIdleTimeCsvReportRequest = {
   zone?: string;
   cameraId?: string;
 };
+
+export interface ShiftType {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
+}

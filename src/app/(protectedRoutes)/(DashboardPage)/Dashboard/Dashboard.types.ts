@@ -9,7 +9,7 @@ export interface KpiCard {
 }
 
 export interface DashboardGraphs {
-  data: any;
+  data: string;
 }
 
 export interface DashboardItem {
@@ -43,7 +43,6 @@ export interface MainDashboardResponse {
     }[];
   };
 }
-[];
 export interface DashboardMonitoringSocketPayload {
   type: "MAIN_DASHBOARD_UPDATE";
   tenantId: string;

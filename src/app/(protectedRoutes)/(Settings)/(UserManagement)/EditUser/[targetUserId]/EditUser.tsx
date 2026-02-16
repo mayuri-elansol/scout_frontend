@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -62,17 +60,18 @@ const EditUser: React.FC = () => {
 
   const { data: userData, isLoading: isUserLoading } = useGetUserByIdQuery(
     { tenantId: tenantId!, userId: targetUserId },
-    { skip: !tenantId || !loggedInUserId || !targetUserId }
+    { skip: !tenantId || !loggedInUserId || !targetUserId },
   );
 
-  const { data: userRoleData,isLoading: isUserRoleLoading } = useGetUserRoleByUserIdQuery(
-    { userId: targetUserId!, orgId: tenantId! },
-    { skip: !tenantId || !targetUserId }
-  );
+  const { data: userRoleData, isLoading: isUserRoleLoading } =
+    useGetUserRoleByUserIdQuery(
+      { userId: targetUserId, orgId: tenantId! },
+      { skip: !tenantId || !targetUserId },
+    );
 
-  const { data: roleData,isLoading: isRoleLoading } = useRoleListQuery(
+  const { data: roleData, isLoading: isRoleLoading } = useRoleListQuery(
     { tenantId: tenantId!, userId: loggedInUserId! },
-    { skip: !tenantId || !loggedInUserId }
+    { skip: !tenantId || !loggedInUserId },
   );
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -151,7 +150,7 @@ const EditUser: React.FC = () => {
           id: crypto.randomUUID(),
           message: "User updated successfully",
           severity: "success",
-        })
+        }),
       );
 
       router.push("/UserOverview");
@@ -161,180 +160,187 @@ const EditUser: React.FC = () => {
           id: crypto.randomUUID(),
           message: getErrorMessage(err, "Failed to update user"),
           severity: "error",
-        })
+        }),
       );
     }
   };
-const isPageLoading =
-  isUserLoading || isUserRoleLoading || isRoleLoading;
+  const isPageLoading = isUserLoading || isUserRoleLoading || isRoleLoading;
 
   return (
     <>
-    {isPageLoading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <Loader />
+      {isPageLoading ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Loader />
+        </Box>
+      ) : (
+        <Paper sx={{ p: 2, m: 1.5 }}>
+          <Box className={styles.formWrapper}>
+            {/* ROLE */}
+            <Box className={styles.section}>
+              <Box className={styles.sectionHeader}>
+                <AssignmentInd color="primary" />
+                <Typography variant="subtitle1">Role</Typography>
+              </Box>
+              <Controller
+                name="orgAppRoleId"
+                control={control}
+                render={() => {
+                  const selectedOrgAppRoleId =
+                    watch("orgAppRoleId") || userOrgAppRoleId;
+
+                  return (
+                    <TextField
+                      select
+                      fullWidth
+                      required
+                      disabled
+                      label="Role"
+                      value={selectedOrgAppRoleId}
+                      slotProps={{
+                        select: {
+                          displayEmpty: true,
+                          renderValue: (value: unknown) => {
+                            const selected = value as string;
+
+                            if (selected === userOrgAppRoleId) {
+                              return userRoleName;
+                            }
+
+                            const role = roleData?.data?.data?.find(
+                              (r) => r.org_app_role_id === selected,
+                            );
+
+                            return role?.role_id?.name || "";
+                          },
+                        },
+                      }}
+                    >
+                      {userOrgAppRoleId && (
+                        <MenuItem
+                          value={userOrgAppRoleId}
+                          sx={{ display: "none" }}
+                        >
+                          {userRoleName}
+                        </MenuItem>
+                      )}
+
+                      {roleData?.data?.data?.map((role) => (
+                        <MenuItem
+                          key={role.org_app_role_id}
+                          value={role.org_app_role_id}
+                        >
+                          {role.role_id.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  );
+                }}
+              />
             </Box>
-          ) : (
-    <Paper sx={{ p: 2, m: 1.5 }}>
-      <Box className={styles.formWrapper}>
-        {/* ROLE */}
-        <Box className={styles.section}>
-          <Box className={styles.sectionHeader}>
-            <AssignmentInd color="primary" />
-            <Typography variant="subtitle1">Role</Typography>
-          </Box>
-          <Controller
-            name="orgAppRoleId"
-            control={control}
-            render={() => {
-              const selectedOrgAppRoleId = watch("orgAppRoleId") || userOrgAppRoleId;
 
-              return (
-                <TextField
-                  select
-                  fullWidth
-                  required
-                  disabled
-                  label="Role"
-                  value={selectedOrgAppRoleId}
-                  SelectProps={{
-                    displayEmpty: true,
-                    renderValue: (value) => {
-                      const selected = value as string; // cast unknown -> string
+            {/* REST OF FORM — UNCHANGED */}
+            {/* ... everything else stays exactly the same ... */}
+            <Box className={styles.section}>
+              <Box className={styles.sectionHeader}>
+                <Person color="primary" />
+                <Typography variant="subtitle1">User Information</Typography>
+              </Box>
 
-                      if (selected === userOrgAppRoleId) return userRoleName;
+              <Grid container spacing={3}>
+                {[
+                  ["firstName", "First Name"],
+                  ["lastName", "Last Name"],
+                  ["employeeId", "Employee ID"],
+                  ["email", "Email"],
+                  ["phone", "Phone"],
+                ].map(([name, label]) => (
+                  <Grid key={name} size={{ xs: 12, md: 3 }}>
+                    <Controller
+                      name={name as keyof UserFormValues}
+                      control={control}
+                      render={({ field }) => (
+                        <TextField {...field} label={label} fullWidth />
+                      )}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
 
-                      const role = roleData?.data?.data?.find(
-                        (r) => r.org_app_role_id === selected
-                      );
+            {/* USERNAME */}
+            <Box className={styles.section}>
+              <Box className={styles.sectionHeader}>
+                <Lock color="primary" />
+                <Typography variant="subtitle1">Credentials</Typography>
+              </Box>
 
-                      return role?.role_id?.name || "";
+              <Controller
+                name="userName"
+                control={control}
+                render={({ field }) => (
+                  <TextField {...field} label="Username" fullWidth />
+                )}
+              />
+            </Box>
+
+            {/* IMAGE */}
+            <Box className={styles.section}>
+              <Box className={styles.sectionHeader}>
+                <CameraAlt color="primary" />
+                <Typography variant="subtitle1">Profile Picture</Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                {/* <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} /> */}
+                <Avatar
+                  src={imagePreview ?? ""}
+                  sx={{ width: 100, height: 100 }}
+                  slotProps={{
+                    img: {
+                      referrerPolicy: "no-referrer",
                     },
                   }}
-                >
-                  {userOrgAppRoleId && (
-                    <MenuItem value={userOrgAppRoleId} sx={{ display: "none" }}>
-                      {userRoleName}
-                    </MenuItem>
-                  )}
-
-                  {roleData?.data?.data?.map((role) => (
-                    <MenuItem
-                      key={role.org_app_role_id}
-                      value={role.org_app_role_id}
-                    >
-                      {role.role_id.name}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              );
-            }}
-          />
-
-
-        </Box>
-
-        {/* REST OF FORM — UNCHANGED */}
-        {/* ... everything else stays exactly the same ... */}
-        <Box className={styles.section}>
-          <Box className={styles.sectionHeader}>
-            <Person color="primary" />
-            <Typography variant="subtitle1">User Information</Typography>
-          </Box>
-
-          <Grid container spacing={3}>
-            {[
-              ["firstName", "First Name"],
-              ["lastName", "Last Name"],
-              ["employeeId", "Employee ID"],
-              ["email", "Email"],
-              ["phone", "Phone"],
-            ].map(([name, label]) => (
-              <Grid key={name} size={{ xs: 12, md: 3 }}>
-                <Controller
-                  name={name as keyof UserFormValues}
-                  control={control}
-                  render={({ field }) => (
-                    <TextField {...field} label={label} fullWidth />
-                  )}
                 />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<CloudUpload />}
+                >
+                  Upload
+                  {/* Wrap the input so JSX spacing is unambiguous */}
+                  <input
+                    type="file"
+                    hidden
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ display: "none" }}
+                  />
+                </Button>
+              </Box>
+            </Box>
 
-        {/* USERNAME */}
-        <Box className={styles.section}>
-          <Box className={styles.sectionHeader}>
-            <Lock color="primary" />
-            <Typography variant="subtitle1">Credentials</Typography>
-          </Box>
-
-          <Controller
-            name="userName"
-            control={control}
-            render={({ field }) => (
-              <TextField {...field} label="Username" fullWidth />
-            )}
-          />
-        </Box>
-
-        {/* IMAGE */}
-        <Box className={styles.section}>
-          <Box className={styles.sectionHeader}>
-            <CameraAlt color="primary" />
-            <Typography variant="subtitle1">Profile Picture</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* <Avatar src={imagePreview ?? ""} sx={{ width: 100, height: 100 }} /> */}
-            <Avatar
-              src={imagePreview ?? ""}
-              sx={{ width: 100, height: 100 }}
-              imgProps={{
-                referrerPolicy: "no-referrer",
-              }}
-            />
-            <Button
-              variant="outlined"
-              component="label"
-              startIcon={<CloudUpload />}
+            {/* ACTIONS */}
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}
             >
-              Upload
-              {/* Wrap the input so JSX spacing is unambiguous */}
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: "none" }}
-              />
-            </Button>
-
+              <Button
+                variant="outlined"
+                onClick={() => router.push("/UserOverview")}
+              >
+                Back
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleSubmit(onSubmit)}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Saving..." : "Update"}
+              </Button>
+            </Box>
           </Box>
-        </Box>
-
-        {/* ACTIONS */}
-        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
-          <Button
-            variant="outlined"
-            onClick={() => router.push("/UserOverview")}
-          >
-            Back
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Saving..." : "Update"}
-          </Button>
-        </Box>
-      </Box>
-    </Paper>
-          )}
+        </Paper>
+      )}
     </>
-        
   );
 };
 

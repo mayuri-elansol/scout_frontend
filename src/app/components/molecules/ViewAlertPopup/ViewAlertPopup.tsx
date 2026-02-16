@@ -94,8 +94,9 @@ function ViewAlertPopup<
           }}
         >
           {details &&
-            Object.entries(details).map(([key, value]) =>
-              key !== String(imageKey) ? (
+            Object.entries(details)
+              .filter(([key]) => key !== String(imageKey))
+              .map(([key, value]) => (
                 <Typography
                   key={key}
                   variant="body2"
@@ -104,9 +105,7 @@ function ViewAlertPopup<
                 >
                   <strong>{key}:</strong> {String(value)}
                 </Typography>
-              ) : null,
-            )}
-
+              ))}
           {/* Download Button */}
           {/* {imageUrl && ( */}
           <IconButton

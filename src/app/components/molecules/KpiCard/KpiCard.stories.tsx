@@ -45,7 +45,6 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
   },
   tags: ["autodocs"],
   argTypes: {
- 
     size: {
       control: "select",
       options: ["small", "medium", "large"],
@@ -59,11 +58,7 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
       control: "text",
       description: "Main metric value display",
     },
- 
-    trendColor: {
-      control: "color",
-      description: "Color for trend indicator chip",
-    },
+
     customWidth: {
       control: { type: "range", min: 200, max: 600, step: 10 },
       description: "Custom card width (px) - overrides size preset",
@@ -71,7 +66,6 @@ Features color-coded variants, interactive hover effects, and responsive sizing 
         category: "Layout Controls",
       },
     },
-    
   },
 };
 
@@ -82,7 +76,7 @@ export const InteractiveSizing: StoryObj<typeof meta> = {
   args: {
     title: "PPE Compliance",
     value: "87.5%",
-    
+
     icon: Shield,
     size: "medium",
     customWidth: 280,
@@ -137,7 +131,7 @@ export const Default: Story = {
   args: {
     title: "PPE Compliance",
     value: "87.5%",
-   
+
     icon: Shield,
   },
   decorators: [
@@ -170,7 +164,6 @@ export const Success: Story = {
     value: "98.5%",
 
     icon: TrendingUp,
-
   },
   decorators: [
     (Story) => (
@@ -202,7 +195,6 @@ export const Info: Story = {
     value: "94.2%",
 
     icon: Visibility,
-  
   },
   decorators: [
     (Story) => (
@@ -348,84 +340,38 @@ export const DashboardLayout: Story = {
         }}
       >
         <Box>
-          <KpiCard
-            title="PPE Compliance"
-            value="87.5%"
-  
-            icon={Shield}
-          />
+          <KpiCard title="PPE Compliance" value="87.5%" icon={Shield} />
         </Box>
         <Box>
           <KpiCard
             title="Fire Incidents"
             value="0"
-
             icon={LocalFireDepartment}
           />
         </Box>
         <Box>
-          <KpiCard
-            title="Security Breach"
-            value="1"
-
-            icon={Security}
-          />
+          <KpiCard title="Security Breach" value="1" icon={Security} />
         </Box>
         <Box>
-          <KpiCard
-            title="Employees Present"
-            value="234"
-    
-            icon={People}
-          />
+          <KpiCard title="Employees Present" value="234" icon={People} />
         </Box>
         <Box>
-          <KpiCard
-            title="Total People"
-            value="267"
-    
-            icon={People}
-          />
+          <KpiCard title="Total People" value="267" icon={People} />
         </Box>
         <Box>
-          <KpiCard
-            title="Avg Speed (km/h)"
-            value="15"
-
-            icon={DirectionsCar}
-          />
+          <KpiCard title="Avg Speed (km/h)" value="15" icon={DirectionsCar} />
         </Box>
         <Box>
-          <KpiCard
-            title="Vehicles Tracked"
-            value="45"
-   
-            icon={DirectionsCar}
-          />
+          <KpiCard title="Vehicles Tracked" value="45" icon={DirectionsCar} />
         </Box>
         <Box>
-          <KpiCard
-            title="Avg Work Hours"
-            value="7.2"
-    
-            icon={Schedule}
-          />
+          <KpiCard title="Avg Work Hours" value="7.2" icon={Schedule} />
         </Box>
         <Box>
-          <KpiCard
-            title="Zone Occupancy"
-            value="85%"
-  
-            icon={Place}
-          />
+          <KpiCard title="Zone Occupancy" value="85%" icon={Place} />
         </Box>
         <Box>
-          <KpiCard
-            title="Crowd Alert"
-            value="1"
-     
-            icon={People}
-          />
+          <KpiCard title="Crowd Alert" value="1" icon={People} />
         </Box>
       </Box>
     </Box>
@@ -451,26 +397,15 @@ export const AnalyticsPageLayout: Story = {
       </Typography>
       <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <KpiCard
-            title="PPE Compliance Rate"
-            value="87.5%"
-       
-            icon={Shield}
-          />
+          <KpiCard title="PPE Compliance Rate" value="87.5%" icon={Shield} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <KpiCard
-            title="PPE Violations Per Day"
-            value="12"
-        
-            icon={Warning}
-          />
+          <KpiCard title="PPE Violations Per Day" value="12" icon={Warning} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, md: 3 }}>
           <KpiCard
             title="PPE Detection Accuracy"
             value="94.2%"
-           
             icon={CheckCircle}
           />
         </Grid>
@@ -478,7 +413,6 @@ export const AnalyticsPageLayout: Story = {
           <KpiCard
             title="Time Since Last Violation"
             value="2h 34m"
-            
             icon={Schedule}
           />
         </Grid>
@@ -506,36 +440,16 @@ export const AllVariantsComparison: Story = {
       </Typography>
       <Grid container spacing={2.5}>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <KpiCard
-            title="System Health"
-            value="98.5%"
-            
-            icon={TrendingUp}
-          />
+          <KpiCard title="System Health" value="98.5%" icon={TrendingUp} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <KpiCard
-            title="Camera Uptime"
-            value="94.2%"
-            
-            icon={Visibility}
-          />
+          <KpiCard title="Camera Uptime" value="94.2%" icon={Visibility} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <KpiCard
-            title="Security Alerts"
-            value="5"
-          
-            icon={Security}
-          />
+          <KpiCard title="Security Alerts" value="5" icon={Security} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <KpiCard
-            title="PPE Compliance"
-            value="87.5%"
-         
-            icon={Shield}
-          />
+          <KpiCard title="PPE Compliance" value="87.5%" icon={Shield} />
         </Grid>
       </Grid>
     </Box>

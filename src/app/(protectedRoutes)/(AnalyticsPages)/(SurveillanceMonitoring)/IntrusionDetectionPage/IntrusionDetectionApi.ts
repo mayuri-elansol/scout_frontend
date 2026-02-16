@@ -5,11 +5,12 @@ import {
   IntrusionCsvReportRequest,
   IntrusionDetailedReportRequest,
   IntrusionSingleReportRequest,
+  ShiftType,
 } from "./IntrusionDetection.types";
 import { rtkAPIToast } from "@/utils/rtkAPIToast";
 
 export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
-  overrideExisting: true,
+  // overrideExisting: true,
   endpoints: (builder) => ({
     getIntrusionKpi: builder.query({
       query: (body: IntrusionBaseRequest) => ({
@@ -59,14 +60,14 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
           const blob = await response.blob();
 
           // ✅ Create browser download
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
           a.download = `intrusion-single-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null; // ✅ Must return something serializable
         },
@@ -93,7 +94,7 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
         responseHandler: async (response) => {
           const blob = await response.blob();
 
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
 
           a.href = url;
@@ -102,7 +103,7 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
           a.click();
 
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null;
         },
@@ -131,14 +132,14 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
           const blob = await response.blob();
 
           // ✅ Create browser download inside the mutation
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
           a.download = `intrusion-detailed-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null; // ✅ Must return something serializable for Redux
         },
@@ -154,21 +155,22 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
       },
     }),
 
-
-      getOrgShiftTimeData: builder.query<any, { tenantId: string }>({
-          query: (body) => ({
-            url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
-            method: "POST",
-            body,
-          }),
-          providesTags: ["orgShiftTime"],
-        }),
+    getOrgShiftTimeIntrusionData: builder.query<
+      ShiftType[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
+    }),
   }),
-
 });
 
 export const {
-  useGetOrgShiftTimeDataQuery,
+  useGetOrgShiftTimeIntrusionDataQuery,
   useLazyGetIntrusionKpiQuery,
   useLazyGetIntrusionZoneViolationsQuery,
   useLazyGetIntrusionRecentViolationsQuery,

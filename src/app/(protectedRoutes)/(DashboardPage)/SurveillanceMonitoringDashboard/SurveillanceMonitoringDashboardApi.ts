@@ -1,5 +1,6 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { ShiftType } from "../../(AnalyticsPages)/(SurveillanceMonitoring)/IntrusionDetectionPage/IntrusionDetection.types";
 
 export const surveillanceMonitoringDashboardApi =
   baseProtectedApi.injectEndpoints({
@@ -12,8 +13,21 @@ export const surveillanceMonitoringDashboardApi =
         }),
         providesTags: ["SurveillanceMonitoringDashboardKpi"],
       }),
+      getOrgShiftTimeSurveillanceData: builder.query<
+        ShiftType[],
+        { tenantId: string }
+      >({
+        query: (body) => ({
+          url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+          method: "POST",
+          body,
+        }),
+        providesTags: ["orgShiftTime"],
+      }),
     }),
   });
 
-export const { useLazyGetSurveillanceMonitoringDashboardKpiDataQuery } =
-  surveillanceMonitoringDashboardApi;
+export const {
+  useLazyGetSurveillanceMonitoringDashboardKpiDataQuery,
+  useGetOrgShiftTimeSurveillanceDataQuery,
+} = surveillanceMonitoringDashboardApi;

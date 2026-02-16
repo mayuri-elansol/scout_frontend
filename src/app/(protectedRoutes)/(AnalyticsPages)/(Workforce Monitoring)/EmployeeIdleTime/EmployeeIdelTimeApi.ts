@@ -5,6 +5,7 @@ import { rtkAPIToast } from "@/utils/rtkAPIToast";
 import {
   EmployeeIdleTimeCsvReportRequest,
   EmployeeIdleTimeSingleReportRequest,
+  ShiftType,
 } from "./EmployeeIdelTime.types";
 export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -62,14 +63,14 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           const blob = await response.blob();
 
           // ✅ Create browser download
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
           a.download = `employee-idle-time-single-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null; // ✅ Must return something serializable
         },
@@ -96,7 +97,7 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
         responseHandler: async (response) => {
           const blob = await response.blob();
 
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
 
           a.href = url;
@@ -105,7 +106,7 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           a.click();
 
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null; // ✅ MUST return something
         },
@@ -134,14 +135,14 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
           const blob = await response.blob();
 
           // ✅ Create browser download inside the mutation
-          const url = window.URL.createObjectURL(blob);
+          const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
           a.download = `employee-idle-time-detailed-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
-          window.URL.revokeObjectURL(url);
+          globalThis.URL.revokeObjectURL(url);
 
           return null; // ✅ Must return something serializable for Redux
         },
@@ -156,10 +157,23 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
+    getOrgShiftTimeEmpIdelData: builder.query<
+      ShiftType[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
+    }),
   }),
 });
 
 export const {
+  useGetOrgShiftTimeEmpIdelDataQuery,
   useLazyGetEmployeeIdleTimeDetectionKpiDataQuery,
   useLazyGetEmployeeIdleTimeDetectionZoneViolationsQuery,
   useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery,

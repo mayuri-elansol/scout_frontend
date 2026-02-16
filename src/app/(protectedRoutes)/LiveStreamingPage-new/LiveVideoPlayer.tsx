@@ -51,7 +51,7 @@ const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   };
 
   const handleFullscreenToggle = () => {
-    if (!document.fullscreenElement) {
+    if (document.fullscreenElement === null) {
       videoContainerRef.current?.requestFullscreen();
       setIsFullscreen(true);
     } else {
