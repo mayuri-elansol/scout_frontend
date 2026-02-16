@@ -181,7 +181,6 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
     );
   }, [dashboardData]);
   console.log("sleepingAbsenceGraphData", sleepingAbsenceGraphData);
-  const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",

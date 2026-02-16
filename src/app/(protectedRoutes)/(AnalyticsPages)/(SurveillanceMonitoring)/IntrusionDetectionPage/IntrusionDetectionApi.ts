@@ -153,10 +153,22 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
+
+      getOrgShiftTimeData: builder.query<any, { tenantId: string }>({
+          query: (body) => ({
+            url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+            method: "POST",
+            body,
+          }),
+          providesTags: ["orgShiftTime"],
+        }),
   }),
+
 });
 
 export const {
+  useGetOrgShiftTimeDataQuery,
   useLazyGetIntrusionKpiQuery,
   useLazyGetIntrusionZoneViolationsQuery,
   useLazyGetIntrusionRecentViolationsQuery,

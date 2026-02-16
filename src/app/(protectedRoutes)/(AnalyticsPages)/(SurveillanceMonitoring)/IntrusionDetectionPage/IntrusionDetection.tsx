@@ -17,6 +17,7 @@ import {
   useGetIntrusionDetectionDetailedCsvReportMutation,
   useGetIntrusionDetectionDetailedPdfReportMutation,
   useGetIntrusionDetectionSingleReportPdfMutation,
+  useGetOrgShiftTimeDataQuery,
   useLazyGetIntrusionDetailedReportQuery,
   useLazyGetIntrusionKpiQuery,
   useLazyGetIntrusionRecentViolationsQuery,
@@ -61,7 +62,9 @@ const IntrusionDetection: React.FC = () => {
   );
 
   /*-------intrusion api ----------*/
-
+const { data: orgShifts } = useGetOrgShiftTimeDataQuery({
+  tenantId,
+});
   const [fetchIntrusionKpi, { isLoading: intrusionkpiLoading }] =
     useLazyGetIntrusionKpiQuery();
 
