@@ -73,7 +73,7 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange, shifts }) => {
 
     const shiftOptions =
       activeShifts?.map((shift) => {
-        let startDateTime = `${today} ${shift.startTime}`;
+        const startDateTime = `${today} ${shift.startTime}`;
         let endDateTime = `${today} ${shift.endTime}`;
 
         // 🔥 Night shift handling
@@ -148,7 +148,7 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange, shifts }) => {
     if (selectedShift) {
       const today = dayjs().format("YYYY-MM-DD");
 
-      let start = `${today} ${selectedShift.startTime}`;
+      const start = `${today} ${selectedShift.startTime}`;
       let end = `${today} ${selectedShift.endTime}`;
 
       // 🔥 Night shift handling

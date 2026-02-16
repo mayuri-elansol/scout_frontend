@@ -1,5 +1,3 @@
-
-
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
@@ -43,7 +41,6 @@ import theme from "../../../theme/theme";
 import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/AddUser/AddUserApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import Loader from "../../atoms/Loader/Loader";
 
 interface SidebarProps {
   currentPage: PageType;
@@ -51,11 +48,11 @@ interface SidebarProps {
 }
 
 const isLink = (
-  item: MenuItemConfig
+  item: MenuItemConfig,
 ): item is Extract<MenuItemConfig, { type: "link" }> => item.type === "link";
 
 const isGroup = (
-  item: MenuItemConfig
+  item: MenuItemConfig,
 ): item is Extract<MenuItemConfig, { type: "group" }> => item.type === "group";
 
 const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
@@ -65,14 +62,14 @@ const getAllLinkItems = (items: MenuItemConfig[]): LinkMenuItem[] =>
     return [];
   });
 
-
 // Helper function to filter children by feature
 const filterChildrenByFeature = (
   items: MenuItemConfig[],
-  features: string[]
+  features: string[],
 ): LinkMenuItem[] => {
   return items.filter(
-    (sub): sub is LinkMenuItem => isLink(sub) && hasFeature(features, sub.featureId)
+    (sub): sub is LinkMenuItem =>
+      isLink(sub) && hasFeature(features, sub.featureId),
   );
 };
 
@@ -167,8 +164,8 @@ const SubMenuItem = React.memo<{
             sx: {
               fontSize:
                 categoryTitle === "Dashboard" ||
-                  categoryTitle === "Analytics" ||
-                  categoryTitle === "Settings"
+                categoryTitle === "Analytics" ||
+                categoryTitle === "Settings"
                   ? "14px"
                   : "12px",
               color: pathname === item.path ? "white" : "#6b7280",
@@ -285,77 +282,78 @@ CategorySection.displayName = "CategorySection";
 const ConfiguratorGroup = React.memo<{
   item: Extract<MenuItemConfig, { type: "group" }>;
   openCategories: Record<string, boolean>;
-  setOpenCategories: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  setOpenCategories: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
   pathname: string;
   theme: typeof theme;
   categoryTitle: string;
-}>(({ item, openCategories, setOpenCategories, pathname, theme, categoryTitle }) => {
-  const isConfiguratorOpen = openCategories[item.name] ?? false;
+}>(
+  ({
+    item,
+    openCategories,
+    setOpenCategories,
+    pathname,
+    theme,
+    categoryTitle,
+  }) => {
+    const isConfiguratorOpen = openCategories[item.name] ?? false;
 
-  const handleToggle = useCallback(() => {
-    setOpenCategories((prev) => ({
-      ...prev,
-      [item.name]: !prev[item.name],
-    }));
-  }, [item.name, setOpenCategories]);
+    const handleToggle = useCallback(() => {
+      setOpenCategories((prev) => ({
+        ...prev,
+        [item.name]: !prev[item.name],
+      }));
+    }, [item.name, setOpenCategories]);
 
-  return (
-    <Box>
-      <ListItem disablePadding>
-        <ListItemButton
-          onClick={handleToggle}
-          sx={{
-            pl: 1,
-            borderRadius: 1,
-            py: 0.75,
-            fontSize: "14px",
-            "&:hover": {
-              backgroundColor: "rgba(25,118,210,0.08)",
-            },
-          }}
-        >
-          {item.icon && (
-            <ListItemIcon
-              sx={{ minWidth: 28, color: "#6b7280" }}
-            >
-              <item.icon fontSize="small" />
-            </ListItemIcon>
-          )}
-          <ListItemText
-            primary={item.name}
+    return (
+      <Box>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={handleToggle}
             sx={{
+              pl: 1,
+              borderRadius: 1,
+              py: 0.75,
               fontSize: "14px",
-              color: "#6b7280",
+              "&:hover": {
+                backgroundColor: "rgba(25,118,210,0.08)",
+              },
             }}
-          />
-          {isConfiguratorOpen ? (
-            <ExpandLess />
-          ) : (
-            <ExpandMore />
-          )}
-        </ListItemButton>
-      </ListItem>
-
-      <Collapse
-        in={isConfiguratorOpen}
-        timeout="auto"
-        unmountOnExit
-      >
-        <List sx={{ pl: 3 }}>
-          {getAllLinkItems(item.items).map((subItem) => (
-            <SubMenuItem
-              key={subItem.path}
-              item={subItem}
-              pathname={pathname}
-              theme={theme}
-              categoryTitle={categoryTitle}
+          >
+            {item.icon && (
+              <ListItemIcon sx={{ minWidth: 28, color: "#6b7280" }}>
+                <item.icon fontSize="small" />
+              </ListItemIcon>
+            )}
+            <ListItemText
+              primary={item.name}
+              sx={{
+                fontSize: "14px",
+                color: "#6b7280",
+              }}
             />
-          ))}
-        </List>
-      </Collapse>
-    </Box>
-  );
-});
+            {isConfiguratorOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse in={isConfiguratorOpen} timeout="auto" unmountOnExit>
+          <List sx={{ pl: 3 }}>
+            {getAllLinkItems(item.items).map((subItem) => (
+              <SubMenuItem
+                key={subItem.path}
+                item={subItem}
+                pathname={pathname}
+                theme={theme}
+                categoryTitle={categoryTitle}
+              />
+            ))}
+          </List>
+        </Collapse>
+      </Box>
+    );
+  },
+);
 
 ConfiguratorGroup.displayName = "ConfiguratorGroup";
 
@@ -373,26 +371,20 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
 
-
-  const {
-  data,
-  isLoading,
-  isError,
-} = useGetOrgAndUserLogoQuery(
-  {
-    LoggedInUserId: LoggedInUser,
-    tenantId: tenantId,
-  },
-  {
-    skip: !LoggedInUser || !tenantId, 
-  }
-);
+  const { data, isLoading, isError } = useGetOrgAndUserLogoQuery(
+    {
+      LoggedInUserId: LoggedInUser,
+      tenantId: tenantId,
+    },
+    {
+      skip: !LoggedInUser || !tenantId,
+    },
+  );
   // Fallback image if API fails or loading
-  const orgLogo =
-    data?.logoPath?.orgLogo ?? "./CustomerLogo1.png";
+  const orgLogo = data?.logoPath?.orgLogo ?? "./CustomerLogo1.png";
   const handleCategoryToggle = useCallback(
     (title: string, isTopLevel: boolean = true) => {
       setOpenCategories((prev) => {
@@ -414,7 +406,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
         }
       });
     },
-    []
+    [],
   );
 
   const handleAnalyticsToggle = useCallback(() => {
@@ -456,7 +448,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     };
 
     const liveStreamingFlags: MenuItemConfig[] = liveStreamingMenu.filter(
-      (item) => hasFeature(features, item.featureId)
+      (item) => hasFeature(features, item.featureId),
     );
 
     const dashboardFlags = dashboardMenu
@@ -467,7 +459,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       .filter((category) => category.items.length > 0);
 
     const alertFlags: MenuItemConfig[] = alertMenu.filter((item) =>
-      hasFeature(features, item.featureId)
+      hasFeature(features, item.featureId),
     );
 
     const analyticsFlags = analyticsMenu
@@ -495,13 +487,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
   const isAnalyticsActive = useMemo(() => {
     return filteredMenus.analyticsFlags.some((category) =>
-      getAllLinkItems(category.items).some((link) => pathname === link.path)
+      getAllLinkItems(category.items).some((link) => pathname === link.path),
     );
   }, [pathname, filteredMenus.analyticsFlags]);
 
   const isSettingsActive = useMemo(() => {
     return filteredMenus.settingsFlags.some((category) =>
-      getAllLinkItems(category.items).some((link) => pathname === link.path)
+      getAllLinkItems(category.items).some((link) => pathname === link.path),
     );
   }, [pathname, filteredMenus.settingsFlags]);
 
@@ -521,7 +513,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 (item) =>
                   item.type === "link" &&
                   (pathname === item.path ||
-                    pathname.startsWith(`${item.path}/`))
+                    pathname.startsWith(`${item.path}/`)),
               );
               let iconColor = "#5c6b7d";
 
@@ -533,7 +525,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
               return (
                 // <Box key={uuidv4() + index} sx={{ mb: 1 }}>
                 <Box key={category.title} sx={{ mb: 1 }}>
-
                   <ListItem disablePadding>
                     <ListItemButton
                       selected={isDashboardRoot}
@@ -584,8 +575,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     </ListItemButton>
                   </ListItem>
 
-                  <Collapse in={isOpen} timeout="auto" >
-
+                  <Collapse in={isOpen} timeout="auto">
                     <List sx={{ pl: 2 }}>
                       {getAllLinkItems(category.items).map((item) => (
                         <SubMenuItem
@@ -603,15 +593,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
             })}
           </List>
         )}
-
-
-
-
-
-
-
-
-
 
         {/* Analytics */}
         {filteredMenus.analyticsFlags.length > 0 && (
@@ -746,7 +727,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     }
 
                     return null;
-                  })
+                  }),
                 )}
               </List>
             </Collapse>
@@ -767,7 +748,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
       handleCategoryToggle,
       isAnalyticsActive,
       isSettingsActive,
-    ]
+    ],
   );
 
   return (
@@ -805,26 +786,21 @@ const Sidebar: React.FC<SidebarProps> = () => {
             height: 46,
           }}
         /> */}
-{isLoading ? (
-  <Skeleton
-    variant="rectangular"
-    width={260}   
-    height={46}
-    sx={{ borderRadius: 1 }}
-  />
-) : (
-  <Box
-    component="img"
-    src={orgLogo}
-    alt="Customer Logo"
-    sx={{ height: 46 ,width:180,ml:2,pb:1}}
-  />
-)}
-
-
-
-
-
+        {isLoading ? (
+          <Skeleton
+            variant="rectangular"
+            width={260}
+            height={46}
+            sx={{ borderRadius: 1 }}
+          />
+        ) : (
+          <Box
+            component="img"
+            src={orgLogo}
+            alt="Customer Logo"
+            sx={{ height: 46, width: 180, ml: 2, pb: 1 }}
+          />
+        )}
       </Box>
 
       {/* Divider */}

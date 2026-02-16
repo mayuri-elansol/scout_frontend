@@ -85,8 +85,6 @@ const DashboardKpiCardMain: React.FC<DashboardKpiCardProps> = ({
     };
   };
 
-  const auto = getAutoStyles();
-
   const variantStyles = KPI_STYLES[colour];
   const isDisabled = colour === "gray";
   return (
