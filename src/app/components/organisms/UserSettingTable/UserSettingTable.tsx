@@ -20,6 +20,7 @@ export interface User {
   lastName: string;
   email: string;
   phone: string;
+  roleName:string;
 }
 
 interface UserHistoryTableProps {
@@ -59,6 +60,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
+                <TableCell>Role Name</TableCell>
                 <TableCell align="center">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -67,9 +69,7 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
 <TableBody>
   {users.map((user, index) => {
     const backendUser = backendUsers[index];
-    const isSelf = backendUser?.userId === currentUserId;
-    const isRoleAdmin = backendUser?.role === "Organisation_Admin_Scout";
-
+   const isSelf = backendUser.userId === currentUserId;
     return (
       <TableRow key={backendUser?.userId ?? index}>
         <TableCell>{index + 1}.</TableCell>
@@ -80,17 +80,25 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
 
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.phone}</TableCell>
+        <TableCell>  {user.roleName?.toLowerCase().replace(/-/g, " ")}
+</TableCell>
 
         <TableCell align="center">
           {/* VIEW */}
-          {canView && (
+          {/* {canView && (
             <IconButton color="info" onClick={() => onView(index)}>
               <Visibility />
             </IconButton>
-          )}
-
+          )} */}
+<IconButton
+  color="primary"
+  onClick={() => onView(index)}
+  disabled={!canView}
+>
+  <Visibility />
+</IconButton>
           {/* EDIT */}
-          {canEdit && (
+          {/* {canEdit && (
             <IconButton
               color="primary"
               onClick={() => onEdit(index)}
@@ -98,10 +106,16 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
             >
               <Edit />
             </IconButton>
-          )}
-
+          )} */}
+<IconButton
+  color="secondary"
+  onClick={() => onEdit(index)}
+  disabled={!canEdit || isSelf}
+>
+  <Edit/>
+</IconButton>
           {/* DELETE */}
-          {canDelete && (
+          {/* {canDelete && (
             <IconButton
               color="error"
               onClick={() => onDelete(index)}
@@ -109,7 +123,14 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
             >
               <Delete />
             </IconButton>
-          )}
+          )} */}
+          <IconButton
+  color="error"
+  onClick={() => onDelete(index)}
+  disabled={!canDelete || isSelf}
+>
+  <Delete />
+</IconButton>
         </TableCell>
       </TableRow>
     );

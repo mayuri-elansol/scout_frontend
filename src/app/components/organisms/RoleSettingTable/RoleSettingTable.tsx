@@ -30,23 +30,27 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
   onDelete,
 }) => {
 
- const filteredRows = rows.filter((row) => {
-  const rowRole = row.role_id?.name?.toLowerCase();
-  const currentUserRole = roleName?.toLowerCase();
+  const filteredRows = rows.filter((row) => {
+    const rowRole = row.role_id?.name?.toLowerCase();
+    const currentUserRole = roleName?.toLowerCase();
 
-  // Hide Organisation_Admin_Scout from everyone except itself
-  if (rowRole === "organisation_admin_scout") {
-    return currentUserRole === "organisation_admin_scout";
-  }
+    // Hide Organisation_Admin_Scout from everyone except itself
+    if (rowRole === "organisation_admin_scout") {
+      return currentUserRole === "organisation_admin_scout";
+    }
 
-  return true;
-});
+    return true;
+  });
+
+
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow sx={{ background: 'rgba(169,177,184,0.2)' }}>
+                            <TableCell>Sr No</TableCell>
+            
             <TableCell>ROLE NAME</TableCell>
             <TableCell>ROLE ID</TableCell>
             <TableCell>CREATED AT</TableCell>
@@ -60,51 +64,51 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
             const isSelfRole =
               row.role_id?.name?.toLowerCase() === roleName?.toLowerCase(); */}
 
-          {filteredRows.map((row) => {
+          {filteredRows.map((row,index) => {
             const isSelfRole =
               row.role_id?.name?.toLowerCase() === roleName?.toLowerCase();
 
             return (
               <TableRow key={row.org_app_role_id}>
-                <TableCell>{row.role_id.name}</TableCell>
+              <TableCell>{index + 1} .</TableCell> 
+                
+                <TableCell>{row.role_id.name.toLowerCase().replace(/-/g, " ")}</TableCell>
                 <TableCell>{row.role_id.role_id}</TableCell>
                 <TableCell>{formatDate(row.createdAt)}</TableCell>
                 <TableCell>{formatDate(row.updatedAt)}</TableCell>
 
+               
                 <TableCell>
-                  {canView && (
-                    <IconButton
-                      color="primary"
-                      onClick={() =>
-                        onView(row.org_app_role_id, row.role_id.role_id)
-                      }
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    color="primary"
+                    onClick={() =>
+                      onView(row.org_app_role_id, row.role_id.role_id)
+                    }
+                    disabled={!canView}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
 
-                  {canEdit && (
-                    <IconButton
-                      color="secondary"
-                      onClick={() =>
-                        onEdit(row.org_app_role_id, row.role_id.role_id)
-                      }
-                      disabled={isSelfRole}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    color="secondary"
+                    onClick={() =>
+                      onEdit(row.org_app_role_id, row.role_id.role_id)
+                    }
+                    disabled={!canEdit || isSelfRole}
+                  >
+                    <EditIcon />
+                  </IconButton>
 
-                  {canDelete && (
-                    <IconButton
-                      color="error"
-                      onClick={() => onDelete(row.role_id.role_id)}
-                      disabled={isSelfRole || isDeleting}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
+                  <IconButton
+                    color="error"
+                    onClick={() => onDelete(row.role_id.role_id)}
+                    disabled={!canDelete || isSelfRole || isDeleting}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </TableCell>
+
+
               </TableRow>
             );
           })}

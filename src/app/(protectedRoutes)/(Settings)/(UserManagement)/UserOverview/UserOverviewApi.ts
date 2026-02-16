@@ -1,5 +1,6 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
+import { ApiResponse, UserRoleResponse } from "./UserOverview.types";
 
 
 
@@ -11,12 +12,29 @@ export interface BackendUser {
   phoneNumber: string;
   createdAt: string;
   updatedAt: string;
-  role?: string; 
+  roleName?: string; 
 }
 export interface UserOverviewResponse {
   status: string;
   message: string;
   data: BackendUser[];
+}
+
+
+
+
+export interface PaginatedUsers {
+  data: BackendUser[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface GetUserOverviewResponse {
+  statusCode: number;
+  status: string;
+  message: string;
+  data: PaginatedUsers;
 }
 export interface DeleteUserPayload {
   tenantId: string;
@@ -25,16 +43,10 @@ export interface DeleteUserPayload {
 }
 export const userOverviewApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    getUserOverview: builder.query<
-      {
-        statusCode: number;
-        status: string;
-        message: string;
-        data?: BackendUser[];
-        error?: string;
-      },
-      { tenantId: string; userId: string }
-    >({
+getUserOverview: builder.query<
+  GetUserOverviewResponse,
+  { tenantId: string; userId: string }
+>({
       query: (body) => ({
         url: `${apiRoutes.userInformation.root}/${apiRoutes.userInformation.getList}`,
         method: "POST",
@@ -53,10 +65,21 @@ export const userOverviewApi = baseProtectedApi.injectEndpoints({
       }),
       invalidatesTags: ["UserOverview"],
     }),
+
+
+        getUserRoleByUserId: builder.query<ApiResponse<UserRoleResponse>, { userId: string; orgId: string }>({
+          query: (body) => ({
+            url: `${apiRoutes.roleInformation.root}/${apiRoutes.roleInformation.getUserRoleByUserId}`,
+            method: "POST",
+            body,
+          }),
+          providesTags: ["UserOverview"],
+        }),
   }),
 });
 
 export const {
   useGetUserOverviewQuery,
   useDeleteUserMutation,
+  useGetUserRoleByUserIdQuery
 } = userOverviewApi;

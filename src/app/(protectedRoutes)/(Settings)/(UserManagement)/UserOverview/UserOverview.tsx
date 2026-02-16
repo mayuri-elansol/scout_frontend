@@ -47,6 +47,7 @@ const UserOverview: React.FC = () => {
     { tenantId: tenantId!, userId: userId! },
     { skip: !tenantId || !userId }
   );
+ 
 
   const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
@@ -54,52 +55,106 @@ const UserOverview: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   /** ----- FILTERED USERS ----- */
+  const loggedInUserRole =
+  data?.data?.data?.find((u) => u.userId === userId)?.roleName ?? null;
+  
+  // const { filteredBackendUsers, filteredTableUsers } = useMemo(() => {
+  // const backendUsers: BackendUser[] = data?.data?.data ?? [];    
+  //   if (!searchQuery.trim()) {
+  //     // No search query - return all users
+  //     const tableUsers = backendUsers.map((u) => ({
+  //       firstName: u.first_name ?? "",
+  //       lastName: u.last_name ?? "",
+  //       email: u.email,
+  //       phone: u.phoneNumber,
+  //     }));
+  //     return {
+  //       filteredBackendUsers: backendUsers,
+  //       filteredTableUsers: tableUsers,
+  //     };
+  //   }
+
+  //   // Filter users based on search query
+  //   const query = searchQuery.toLowerCase();
+  //   const filtered = backendUsers.filter((u) => {
+  //     const firstName = (u.first_name ?? "").toLowerCase();
+  //     const lastName = (u.last_name ?? "").toLowerCase();
+  //     const email = (u.email ?? "").toLowerCase();
+  //     const phone = (u.phoneNumber ?? "").toLowerCase();
+      
+  //     return (
+  //       firstName.includes(query) ||
+  //       lastName.includes(query) ||
+  //       email.includes(query) ||
+  //       phone.includes(query)
+  //     );
+  //   });
+
+  //   const tableUsers = filtered.map((u) => ({
+  //     firstName: u.first_name ?? "",
+  //     lastName: u.last_name ?? "",
+  //     email: u.email,
+  //     phone: u.phoneNumber,
+  //   }));
+
+  //   return {
+  //     filteredBackendUsers: filtered,
+  //     filteredTableUsers: tableUsers,
+  //   };
+  // }, [data?.data, searchQuery]);
+
   const { filteredBackendUsers, filteredTableUsers } = useMemo(() => {
-    const backendUsers: BackendUser[] = data?.data ?? [];
-    
-    if (!searchQuery.trim()) {
-      // No search query - return all users
-      const tableUsers = backendUsers.map((u) => ({
+  const backendUsers: BackendUser[] = data?.data?.data ?? [];
+
+  // 🔥 Hide Organisation_Admin_Scout users if logged-in user is not Organisation_Admin_Scout
+  const roleFilteredUsers = backendUsers.filter((u) => {
+    if (
+      u.roleName === "Organisation_Admin_Scout" &&
+      loggedInUserRole !== "Organisation_Admin_Scout"
+    ) {
+      return false;
+    }
+    return true;
+  });
+
+  if (!searchQuery.trim()) {
+    return {
+      filteredBackendUsers: roleFilteredUsers,
+      filteredTableUsers: roleFilteredUsers.map((u) => ({
         firstName: u.first_name ?? "",
         lastName: u.last_name ?? "",
         email: u.email,
-        phone: u.phoneNumber,
-      }));
-      return {
-        filteredBackendUsers: backendUsers,
-        filteredTableUsers: tableUsers,
-      };
-    }
+        phone: u.phoneNumber ?? "",
+        roleName:u.roleName??""
+      })),
+    };
+  }
 
-    // Filter users based on search query
-    const query = searchQuery.toLowerCase();
-    const filtered = backendUsers.filter((u) => {
-      const firstName = (u.first_name ?? "").toLowerCase();
-      const lastName = (u.last_name ?? "").toLowerCase();
-      const email = (u.email ?? "").toLowerCase();
-      const phone = (u.phoneNumber ?? "").toLowerCase();
-      
-      return (
-        firstName.includes(query) ||
-        lastName.includes(query) ||
-        email.includes(query) ||
-        phone.includes(query)
-      );
-    });
+  const query = searchQuery.toLowerCase();
 
-    const tableUsers = filtered.map((u) => ({
+  const searchedUsers = roleFilteredUsers.filter((u) => {
+    return (
+      (u.first_name ?? "").toLowerCase().includes(query) ||
+      (u.last_name ?? "").toLowerCase().includes(query) ||
+      (u.email ?? "").toLowerCase().includes(query) ||
+      (u.phoneNumber ?? "").toLowerCase().includes(query)||
+            (u.roleName ?? "").toLowerCase().includes(query)
+
+    );
+  });
+
+  return {
+    filteredBackendUsers: searchedUsers,
+    filteredTableUsers: searchedUsers.map((u) => ({
       firstName: u.first_name ?? "",
       lastName: u.last_name ?? "",
       email: u.email,
-      phone: u.phoneNumber,
-    }));
+      phone: u.phoneNumber ?? "",
+              roleName:u.roleName??""
 
-    return {
-      filteredBackendUsers: filtered,
-      filteredTableUsers: tableUsers,
-    };
-  }, [data?.data, searchQuery]);
-
+    })),
+  };
+}, [data?.data?.data, searchQuery, loggedInUserRole]);
   /** ----- DIALOG STATE ----- */
   const [openConfirm, setOpenConfirm] = useState(false);
   const [selectedUserIndex, setSelectedUserIndex] = useState<number | null>(null);
