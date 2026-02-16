@@ -9,7 +9,7 @@ export interface KpiCard {
 }
 
 export interface DashboardGraphs {
-  data: any;
+  data: string;
 }
 
 export interface DashboardItem {

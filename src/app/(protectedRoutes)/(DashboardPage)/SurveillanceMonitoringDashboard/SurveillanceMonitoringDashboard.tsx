@@ -1,9 +1,7 @@
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
-import { People, Security, VideocamOff } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
@@ -17,7 +15,10 @@ import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useLazyGetSurveillanceMonitoringDashboardKpiDataQuery } from "./SurveillanceMonitoringDashboardApi";
+import {
+  useGetOrgShiftTimeSurveillanceDataQuery,
+  useLazyGetSurveillanceMonitoringDashboardKpiDataQuery,
+} from "./SurveillanceMonitoringDashboardApi";
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
@@ -42,17 +43,23 @@ const SurveillanceMonitoring: React.FC = () => {
   >([]);
 
   /* ---------- API HOOKS ---------- */
+
+  const { data: orgShifts } = useGetOrgShiftTimeSurveillanceDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
   const [fetchSurveillanceKpi, { isLoading: SurveillancekpiLoading }] =
     useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
-useEffect(() => {
-  const load = async () => {
-    const kpi = await fetchSurveillanceKpi({ tenantId }).unwrap();
-    setDisplaySurveillanceKpi(kpi ?? []);
-  };
+  useEffect(() => {
+    if (!tenantId) return;
+    const load = async () => {
+      const kpi = await fetchSurveillanceKpi({ tenantId }).unwrap();
+      setDisplaySurveillanceKpi(kpi ?? []);
+    };
 
-  load();
-}, [tenantId]);
+    load();
+  }, [tenantId]);
   console.log("displaySurveillanceKpi", displaySurveillanceKpi);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
@@ -94,7 +101,6 @@ useEffect(() => {
     [tenantId, fetchSurveillanceKpi],
   );
 
-
   const surveillanceKpiData = useMemo(() => {
     return displaySurveillanceKpi.map((item) => {
       const config = surveillanceDashboardConfig[item.title];
@@ -112,8 +118,6 @@ useEffect(() => {
     });
   }, [displaySurveillanceKpi, t]);
 
-
-
   const buildScatterData = (graph?: IntrusionTrendResponse) => {
     if (!graph || !graph.series) return [];
 
@@ -122,7 +126,7 @@ useEffect(() => {
         time: point.label.includes(":") ? point.label : `${point.label}:00`,
         zone: series.zone,
         count: point.count,
-      }))
+      })),
     );
   };
   const intrusionDashboard = displaySurveillanceKpi.find(
@@ -144,7 +148,6 @@ useEffect(() => {
     () => buildScatterData(intrusionDashboard?.graphs.data),
     [intrusionDashboard],
   );
-
 
   const tabs: TabConfig[] = [
     {
@@ -169,11 +172,8 @@ useEffect(() => {
               },
             }}
           >
-
             {intrusionDashboard && (
-              <DynamicViolationScatterChart
-                item={intrusionDashboard}
-              />
+              <DynamicViolationScatterChart item={intrusionDashboard} />
             )}
           </Grid>
         </Grid>
@@ -203,7 +203,8 @@ useEffect(() => {
           >
             {unauthorizedDashboard && (
               <DynamicViolationScatterChart item={unauthorizedDashboard} />
-            )}          </Grid>
+            )}{" "}
+          </Grid>
         </Grid>
       ),
     },
@@ -282,11 +283,10 @@ useEffect(() => {
           {/* Left side */}
           <Grid
             size={{ xs: 12 }}
-            
             sx={{
               display: "flex",
-             // height: { xs: "50vh", md: "100%" },
-                 height: { xs: "50vh", md: "360px" }, // ensure enough height
+              // height: { xs: "50vh", md: "100%" },
+              height: { xs: "50vh", md: "360px" }, // ensure enough height
 
               width: "100%",
               "& .MuiCardContent-root": {
@@ -297,7 +297,8 @@ useEffect(() => {
           >
             {movementDashboard && (
               <DynamicViolationScatterChart item={movementDashboard} />
-            )}          </Grid>
+            )}{" "}
+          </Grid>
         </Grid>
       ),
     },
@@ -327,29 +328,30 @@ useEffect(() => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter onRangeChange={handleTimeRangeChange} />
+        <TimeFilter
+          onRangeChange={handleTimeRangeChange}
+          shifts={orgShifts || []}
+        />
       </Box>
-
-      
 
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {SurveillancekpiLoading
           ? Array.from({ length: 4 }).map(() => (
-            <Grid
-              key={uuidv4()}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <KpiCardSkeleton />
-            </Grid>
-          ))
+              <Grid
+                key={uuidv4()}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
           : surveillanceKpiData.map((kpi) => (
-            <Grid
-              key={kpi.title}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <DashboardKpiCard {...kpi} />
-            </Grid>
-          ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Tabs Section */}
@@ -369,4 +371,3 @@ useEffect(() => {
 };
 
 export default SurveillanceMonitoring;
-

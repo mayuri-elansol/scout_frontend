@@ -8,7 +8,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -29,6 +29,7 @@ import {
   useGetEmployeeIdleTimeDetectionDetailedCsvReportMutation,
   useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation,
   useGetEmployeeIdleTimeDetectionSingleReportPdfMutation,
+  useGetOrgShiftTimeEmpIdelDataQuery,
   useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery,
   useLazyGetEmployeeIdleTimeDetectionKpiDataQuery,
   useLazyGetEmployeeIdleTimeDetectionRecentViolationsQuery,
@@ -67,6 +68,13 @@ const EmployeeIdleTime: React.FC = () => {
     useState<EmployeeIdelTimeDetailedReportResponse | null>(null);
 
   /* ---------- API HOOKS ---------- */
+  // const { data: orgShifts } = useGetOrgShiftTimeEmpIdelDataQuery({
+  //   tenantId,
+  // });
+  const { data: orgShifts } = useGetOrgShiftTimeEmpIdelDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
   const [fetchEmployeeIdelTimeKpi, { isLoading: EmployeeIdelTimeKpiLoading }] =
     useLazyGetEmployeeIdleTimeDetectionKpiDataQuery();
   const [
@@ -90,6 +98,7 @@ const EmployeeIdleTime: React.FC = () => {
     useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
+    if (!tenantId) return;
     const load = async () => {
       const [kpi, zones, recent, detailed] = await Promise.all([
         fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
@@ -334,7 +343,10 @@ const EmployeeIdleTime: React.FC = () => {
       <Paper sx={{ p: 3, backgroundColor: "#fff", borderRadius: 2 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <Typography variant="h6">📊 {t("Overview")}</Typography>
-          <TimeFilter onRangeChange={handleEmpIdelTimeRangeChange} />
+          <TimeFilter
+            onRangeChange={handleEmpIdelTimeRangeChange}
+            shifts={orgShifts || []}
+          />
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>

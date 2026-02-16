@@ -9,7 +9,7 @@ import {
 } from "./movementDuringShutdownHours.types";
 
 export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
-  overrideExisting: true,
+  // overrideExisting: true,
   endpoints: (builder) => ({
     getMovementDuringShutdownHoursKpi: builder.query({
       query: (body: MovemnetDuringShutDownHrBaseRequest) => ({

@@ -7,7 +7,10 @@ import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
 
-import { useLazyGetMainDashboardKpiDataQuery } from "./DashboardApi";
+import {
+  useGetOrgShiftTimeDashboardDataQuery,
+  useLazyGetMainDashboardKpiDataQuery,
+} from "./DashboardApi";
 import { MainDashboardConfig } from "./DashboardConfig";
 import {
   DashboardItem,
@@ -32,10 +35,20 @@ const Dashboard: React.FC = () => {
   const [mainDashboardData, setMainDashboardData] =
     useState<MainDashboardResponse | null>(null);
   /* ---------- API HOOKS ---------- */
+  // const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery({
+  //   tenantId,
+
+  // });
+  const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
+
   const [fetchMainDashboardKpi, { isLoading: MainDashboardkpiLoading }] =
     useLazyGetMainDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
+    if (!tenantId) return;
     const load = async () => {
       const response = await fetchMainDashboardKpi({ tenantId }).unwrap();
       setMainDashboardData(response);
@@ -137,15 +150,21 @@ const Dashboard: React.FC = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        px: 2,
+        pt: 2,
+        px: 3,
         backgroundColor: "#ffffff",
-        gap: 1.5,
-        height: "auto",
+        borderRadius: 2,
+        flex: 1,
+        // minHeight: 0,
+        minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
       {/* Top Right Time Filter */}
       <Box sx={{ display: "flex", justifyContent: "end", mt: 0.5 }}>
-        <TimeFilter onRangeChange={handleTimeRangeChange} />
+        <TimeFilter
+          onRangeChange={handleTimeRangeChange}
+          shifts={orgShifts || []}
+        />
       </Box>
 
       <Grid container spacing={1.5}></Grid>

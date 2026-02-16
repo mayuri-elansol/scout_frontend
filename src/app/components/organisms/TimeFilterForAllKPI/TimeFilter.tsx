@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Button,
@@ -16,13 +16,96 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { v4 as uuidv4 } from "uuid";
-// In TimeFilter component props:
-interface TimeFilterProps {
-  onRangeChange: (range: { start: string; end: string }) => void;
+
+/* ---------------- TYPES ---------------- */
+
+interface ShiftType {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
 }
 
-const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
-  const [endDateError, setEndDateError] = useState<string>("");
+interface TimeFilterProps {
+  onRangeChange: (range: { start: string; end: string }) => void;
+  shifts?: ShiftType[];
+}
+
+/* ---------------- COMPONENT ---------------- */
+
+const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange, shifts }) => {
+  const todayStart = dayjs().startOf("day");
+  const now = dayjs();
+
+  /* ---------- STATE ---------- */
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [customDialogOpen, setCustomDialogOpen] = useState(false);
+  const [endDateError, setEndDateError] = useState("");
+
+  const [selectedTimeRange, setSelectedTimeRange] = useState(
+    `${todayStart.format("YYYY-MM-DD HH:mm")} - ${now.format(
+      "YYYY-MM-DD HH:mm",
+    )}`,
+  );
+
+  const [customRange, setCustomRange] = useState<{
+    start: Dayjs | null;
+    end: Dayjs | null;
+  }>({ start: null, end: null });
+
+  /* ---------- FILTER ACTIVE SHIFTS ---------- */
+
+  const activeShifts = useMemo(() => {
+    return shifts
+      ?.filter((shift) => shift.status === "ACTIVE")
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+  }, [shifts]);
+
+  /* ---------- BUILD MENU OPTIONS ---------- */
+
+  const timeFilters = useMemo(() => {
+    console.log("shiftss to the timefitler", shifts);
+    const today = dayjs().format("YYYY-MM-DD");
+
+    const shiftOptions =
+      activeShifts?.map((shift) => {
+        let startDateTime = `${today} ${shift.startTime}`;
+        let endDateTime = `${today} ${shift.endTime}`;
+
+        // 🔥 Night shift handling
+        if (shift.endTime < shift.startTime) {
+          endDateTime =
+            dayjs(today).add(1, "day").format("YYYY-MM-DD") +
+            ` ${shift.endTime}`;
+        }
+
+        return `${shift.name} (${startDateTime} - ${endDateTime})`;
+      }) || [];
+
+    return [
+      "Live",
+      `${todayStart.format("YYYY-MM-DD HH:mm")} - ${now.format(
+        "YYYY-MM-DD HH:mm",
+      )}`,
+      ...shiftOptions,
+      "Select Your Own Time",
+    ];
+  }, [activeShifts, todayStart, now]);
+
+  /* ---------- MENU HANDLERS ---------- */
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const validateStartEnd = (start: Dayjs | null, end: Dayjs | null) => {
     if (!start || !end) {
       setEndDateError("");
@@ -38,88 +121,51 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
     return true;
   };
 
-  const [timePickerOpen, setTimePickerOpen] = useState(false);
-  const [customDialogOpen, setCustomDialogOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const todayStart = dayjs().startOf("day");
-  const now = dayjs();
-
-  const [selectedTimeRange, setSelectedTimeRange] = useState<string>(
-    `${todayStart.format("YYYY-MM-DD HH:mm")} - ${now.format(
-      "YYYY-MM-DD HH:mm"
-    )}`
-  );
-
-  const [customRange, setCustomRange] = useState<{
-    start: Dayjs | null;
-    end: Dayjs | null;
-  }>({ start: null, end: null });
-
-  const timeFilters = [
-    "Live",
-    `${todayStart.format("YYYY-MM-DD HH:mm")} - ${now.format(
-      "YYYY-MM-DD HH:mm"
-    )}`,
-    `Shift 1 (${dayjs().format("YYYY-MM-DD")} 06:00 - 14:00)`,
-    `Shift 2 (${dayjs().format("YYYY-MM-DD")} 14:00 - 22:00)`,
-    "Select Your Own Time",
-  ];
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    setTimePickerOpen(true);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-    setTimePickerOpen(false);
-  };
+  /* ---------- SELECTION LOGIC ---------- */
 
   const handleSelect = (range: string) => {
     setSelectedTimeRange(range);
 
+    // LIVE
     if (range === "Live") {
       onRangeChange({ start: "", end: "" });
       handleClose();
       return;
     }
+
+    // CUSTOM
     if (range === "Select Your Own Time") {
       setCustomRange({ start: null, end: null });
       setCustomDialogOpen(true);
       return;
     }
 
-    /** ---- SHIFT LOGIC ---- **/
-    if (range.includes("Shift 1")) {
-      const date = dayjs().format("YYYY-MM-DD");
+    // SHIFT SELECTION
+    const selectedShift = activeShifts?.find((shift) =>
+      range.startsWith(shift.name),
+    );
 
-      const start = `${date} 06:00:00`;
-      const end = `${date} 14:00:00`;
+    if (selectedShift) {
+      const today = dayjs().format("YYYY-MM-DD");
 
-      setSelectedTimeRange(`Shift 1 (${start} - ${end})`);
+      let start = `${today} ${selectedShift.startTime}`;
+      let end = `${today} ${selectedShift.endTime}`;
 
-      onRangeChange({ start, end });
-      handleClose();
-      return;
-    }
+      // 🔥 Night shift handling
+      if (selectedShift.endTime < selectedShift.startTime) {
+        end =
+          dayjs(today).add(1, "day").format("YYYY-MM-DD") +
+          ` ${selectedShift.endTime}`;
+      }
 
-    if (range.includes("Shift 2")) {
-      const date = dayjs().format("YYYY-MM-DD");
-
-      const start = `${date} 14:00:00`;
-      const end = `${date} 22:00:00`;
-
-      setSelectedTimeRange(`Shift 2 (${start} - ${end})`);
+      setSelectedTimeRange(`${selectedShift.name} (${start} - ${end})`);
 
       onRangeChange({ start, end });
       handleClose();
       return;
     }
 
-    /** ---- DEFAULT (Today Range) ---- **/
-    setSelectedTimeRange(range);
-
+    // DEFAULT (TODAY RANGE)
     const [start, end] = range.split(" - ");
 
     onRangeChange({
@@ -130,20 +176,23 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
     handleClose();
   };
 
+  /* ---------- APPLY CUSTOM RANGE ---------- */
+
   const applyCustomRange = () => {
     if (customRange.start && customRange.end) {
-      const start = customRange.start.format("YYYY-MM-DD HH:mm");
-      const end = customRange.end.format("YYYY-MM-DD HH:mm");
+      const start = customRange.start.format("YYYY-MM-DD HH:mm:ss");
+      const end = customRange.end.format("YYYY-MM-DD HH:mm:ss");
 
       setSelectedTimeRange(`${start} - ${end}`);
 
-      // 🔥 Trigger parent APIs
       onRangeChange({ start, end });
 
       setCustomDialogOpen(false);
       setCustomRange({ start: null, end: null });
     }
   };
+
+  /* ---------------- RENDER ---------------- */
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -157,42 +206,31 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
             color: "#374151",
             borderColor: "#d1d5db",
             backgroundColor: "white",
-            fontSize: { xs: "12px", sm: "14px" },
-            px: { xs: 1, sm: 2 },
             "&:hover": { borderColor: "#9ca3af", backgroundColor: "#f9fafb" },
           }}
         >
           {selectedTimeRange}
         </Button>
 
-        {/* Dropdown Menu */}
         <Menu
           anchorEl={anchorEl}
-          open={timePickerOpen}
+          open={Boolean(anchorEl)}
           onClose={handleClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          slotProps={{ paper: { sx: { width: 300, maxHeight: 400, mt: 0.5 } } }}
         >
-          {timeFilters.map((range, index) => (
+          {timeFilters.map((range) => (
             <MenuItem
-              key={uuidv4() + index}
+              key={uuidv4()}
               selected={selectedTimeRange === range}
               onClick={() => handleSelect(range)}
-              sx={{
-                fontSize: "14px",
-                "&.Mui-selected": {
-                  backgroundColor: "#f3f4f6",
-                  color: "primary.main",
-                },
-              }}
             >
               {range}
             </MenuItem>
           ))}
         </Menu>
 
-        {/* Popup Dialog for Custom Range */}
+        {/* Custom Date Dialog */}
         <Dialog
           open={customDialogOpen}
           onClose={() => setCustomDialogOpen(false)}
@@ -201,13 +239,7 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange }) => {
         >
           <DialogTitle>Select Custom Range</DialogTitle>
           <DialogContent
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              mt: 1,
-              overflow: "visible",
-            }}
+            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
           >
             <DateTimePicker
               label="Start"

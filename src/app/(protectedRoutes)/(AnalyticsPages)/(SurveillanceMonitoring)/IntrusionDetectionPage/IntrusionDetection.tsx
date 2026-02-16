@@ -17,6 +17,7 @@ import {
   useGetIntrusionDetectionDetailedCsvReportMutation,
   useGetIntrusionDetectionDetailedPdfReportMutation,
   useGetIntrusionDetectionSingleReportPdfMutation,
+  useGetOrgShiftTimeIntrusionDataQuery,
   useLazyGetIntrusionDetailedReportQuery,
   useLazyGetIntrusionKpiQuery,
   useLazyGetIntrusionRecentViolationsQuery,
@@ -62,6 +63,10 @@ const IntrusionDetection: React.FC = () => {
 
   /*-------intrusion api ----------*/
 
+  const { data: orgShifts } = useGetOrgShiftTimeIntrusionDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
   const [fetchIntrusionKpi, { isLoading: intrusionkpiLoading }] =
     useLazyGetIntrusionKpiQuery();
 
@@ -84,6 +89,7 @@ const IntrusionDetection: React.FC = () => {
 
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
+    if (!tenantId) return;
     const load = async () => {
       const [kpi, zones, recent, detailed] = await Promise.all([
         fetchIntrusionKpi({ tenantId }).unwrap(),
@@ -334,7 +340,10 @@ const IntrusionDetection: React.FC = () => {
       <Paper sx={{ p: 3, backgroundColor: "#fff", borderRadius: 2 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <Typography variant="h6">📊 {t("Overview")}</Typography>
-          <TimeFilter onRangeChange={handleTimeRangeChange} />
+          <TimeFilter
+            onRangeChange={handleTimeRangeChange}
+            shifts={orgShifts || []}
+          />
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>

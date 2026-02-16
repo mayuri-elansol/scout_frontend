@@ -5,11 +5,12 @@ import {
   IntrusionCsvReportRequest,
   IntrusionDetailedReportRequest,
   IntrusionSingleReportRequest,
+  ShiftType,
 } from "./IntrusionDetection.types";
 import { rtkAPIToast } from "@/utils/rtkAPIToast";
 
 export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
-  overrideExisting: true,
+  // overrideExisting: true,
   endpoints: (builder) => ({
     getIntrusionKpi: builder.query({
       query: (body: IntrusionBaseRequest) => ({
@@ -153,10 +154,23 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
+    getOrgShiftTimeIntrusionData: builder.query<
+      ShiftType[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
+    }),
   }),
 });
 
 export const {
+  useGetOrgShiftTimeIntrusionDataQuery,
   useLazyGetIntrusionKpiQuery,
   useLazyGetIntrusionZoneViolationsQuery,
   useLazyGetIntrusionRecentViolationsQuery,

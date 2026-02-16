@@ -14,7 +14,10 @@ import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { useLazyGetWorkforceMonitoringDashboardKpiDataQuery } from "./WorkforceMonitoringDashboardApi";
+import {
+  useGetOrgShiftTimeWorkforceDataQuery,
+  useLazyGetWorkforceMonitoringDashboardKpiDataQuery,
+} from "./WorkforceMonitoringDashboardApi";
 import { WorkforceMonitoringConfig } from "./WorkforceMonitoringDashboardConfig";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 
@@ -40,10 +43,19 @@ const WorkforceMonitoring: React.FC = () => {
   const [dashboardDataForScatterChart, setDashboardDataForScatterChart] =
     useState<WorkforceMonitoringDashboardResponseForScatterChart[]>([]);
   /* ---------- API HOOKS ---------- */
+  // const { data: orgShifts } = useGetOrgShiftTimeWorkforceDataQuery({
+  //   tenantId,
+  // });
+  const { data: orgShifts } = useGetOrgShiftTimeWorkforceDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
+
   const [fetchWorkforceKpi, { isLoading: WorkforcekpiLoading }] =
     useLazyGetWorkforceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
+    if (!tenantId) return;
     const load = async () => {
       const kpi = await fetchWorkforceKpi({ tenantId }).unwrap();
 
@@ -353,7 +365,10 @@ const WorkforceMonitoring: React.FC = () => {
         }}
       >
         {/* Right: Time Filter */}
-        <TimeFilter onRangeChange={handleworkforceTimeRangeChange} />
+        <TimeFilter
+          onRangeChange={handleworkforceTimeRangeChange}
+          shifts={orgShifts || []}
+        />
       </Box>
 
       {/* KPI Cards Grid */}

@@ -85,3 +85,13 @@ export interface IntrusionSocketPayload {
   zoneViolations: IntrusionZoneViolation[];
   recentViolations: IntrusionViolation[];
 }
+
+export interface ShiftType {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
+}

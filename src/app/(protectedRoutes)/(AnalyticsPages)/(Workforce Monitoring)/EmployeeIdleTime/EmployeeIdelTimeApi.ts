@@ -5,6 +5,7 @@ import { rtkAPIToast } from "@/utils/rtkAPIToast";
 import {
   EmployeeIdleTimeCsvReportRequest,
   EmployeeIdleTimeSingleReportRequest,
+  ShiftType,
 } from "./EmployeeIdelTime.types";
 export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -156,10 +157,23 @@ export const employeeIdleTimeMonitoringApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
+    getOrgShiftTimeEmpIdelData: builder.query<
+      ShiftType[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
+    }),
   }),
 });
 
 export const {
+  useGetOrgShiftTimeEmpIdelDataQuery,
   useLazyGetEmployeeIdleTimeDetectionKpiDataQuery,
   useLazyGetEmployeeIdleTimeDetectionZoneViolationsQuery,
   useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery,

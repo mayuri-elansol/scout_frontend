@@ -42,6 +42,7 @@ export const baseProtectedApi = createApi({
     "MovementDuringShutdownHoursZoneViolations",
     "MovementDuringShutdownHoursRecentViolations",
     "MovementDuringShutdownHoursDetailedReport",
-    "OrgLogo"
+    "OrgLogo",
+    "orgShiftTime"
   ],
 });
