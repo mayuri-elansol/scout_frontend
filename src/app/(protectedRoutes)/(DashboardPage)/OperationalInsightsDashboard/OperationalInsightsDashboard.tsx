@@ -37,6 +37,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       route: "/PeopleCountPage",
       tooltipMessage:
         "Shows detected intrusion incidents in monitored zones during restricted hours.",
+      colour: "red",
     },
     {
       title: "Vehicle Count",
@@ -46,6 +47,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
+      colour: "red",
     },
     {
       title: "Canteen Usage Monitoring",
@@ -55,6 +57,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
+      colour: "red",
     },
 
     {
@@ -64,7 +67,9 @@ const OperationalInsightsDashboard: React.FC = () => {
       lastDetectionTime: "10:10 PM",
       icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
+
       tooltipMessage: "Displays vehical loading and unloading oprations",
+      colour: "red",
     },
     {
       title: "Unauthorised Parking / Blocking Aisles",
@@ -74,6 +79,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
+      colour: "red",
     },
   ];
 

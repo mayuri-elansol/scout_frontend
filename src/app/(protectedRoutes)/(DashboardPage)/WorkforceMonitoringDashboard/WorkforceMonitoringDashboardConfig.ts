@@ -9,7 +9,7 @@ export const WorkforceMonitoringConfig = {
     tooltipMessage:
       "Shows the number of employees detected in critical areas where restricted access is enforced.",
   },
-  "Employee Idel Time": {
+  "Employee Idle Time": {
     icon: Visibility,
     route: "/EmployeeIdleTime",
     tooltipMessage:

@@ -122,7 +122,7 @@ const WorkforceMonitoring: React.FC = () => {
 
   const employeeIdleGraphData = useMemo(() => {
     const idleUsecase = dashboardData.find(
-      (d) => d.title === "Employee Idel Time",
+      (d) => d.title === "Employee Idle Time",
     );
 
     return (
