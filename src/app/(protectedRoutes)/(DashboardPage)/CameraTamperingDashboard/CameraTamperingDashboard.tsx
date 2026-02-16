@@ -10,7 +10,9 @@ import {
 } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardKpiCard, {
+  DashboardKpiCardProps,
+} from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
@@ -19,48 +21,49 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import CameraStatusDonutChart from "@/app/components/organisms/DonutChart/DonutChart";
 
 /* -------------------- KPI DATA -------------------- */
-const kpiData = [
-  {
-    title: "Total Cameras",
-    violationsCount: 120,
-    lastDetection: "System Overview",
-    lastDetectionTime: "—",
-    icon: VideocamOutlined,
-    colour: "green",
-  },
-  {
-    title: "Cameras Online",
-    violationsCount: 105,
-    lastDetection: "Last Updated",
-    lastDetectionTime: "10:15 AM",
-    icon: WifiTethering,
-    colour: "green",
-  },
-  {
-    title: "Cameras Offline",
-    violationsCount: 15,
-    lastDetection: "Zone C - Entry Gate",
-    lastDetectionTime: "09:45 AM",
-    icon: WifiOff,
-    colour: "red",
-  },
-  {
-    title: "Tampering Incidents Today",
-    violationsCount: 12,
-    lastDetection: "Zone B - Warehouse",
-    lastDetectionTime: "09:58 AM",
-    icon: WarningAmber,
-    colour: "blue",
-  },
-  {
-    title: "Zones Affected",
-    violationsCount: 4,
-    lastDetection: "Zones B, C, D",
-    lastDetectionTime: "—",
-    icon: Domain,
-    colour: "blue",
-  },
-];
+const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
+  [
+    {
+      title: "Total Cameras",
+      violationsCount: 120,
+      lastDetection: "System Overview",
+      lastDetectionTime: "—",
+      icon: VideocamOutlined,
+      colour: "green",
+    },
+    {
+      title: "Cameras Online",
+      violationsCount: 105,
+      lastDetection: "Last Updated",
+      lastDetectionTime: "10:15 AM",
+      icon: WifiTethering,
+      colour: "green",
+    },
+    {
+      title: "Cameras Offline",
+      violationsCount: 15,
+      lastDetection: "Zone C - Entry Gate",
+      lastDetectionTime: "09:45 AM",
+      icon: WifiOff,
+      colour: "red",
+    },
+    {
+      title: "Tampering Incidents Today",
+      violationsCount: 12,
+      lastDetection: "Zone B - Warehouse",
+      lastDetectionTime: "09:58 AM",
+      icon: WarningAmber,
+      colour: "blue",
+    },
+    {
+      title: "Zones Affected",
+      violationsCount: 4,
+      lastDetection: "Zones B, C, D",
+      lastDetectionTime: "—",
+      icon: Domain,
+      colour: "blue",
+    },
+  ];
 
 /* -------------------- DATA -------------------- */
 

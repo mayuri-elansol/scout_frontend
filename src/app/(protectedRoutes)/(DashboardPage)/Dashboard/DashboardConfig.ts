@@ -5,7 +5,7 @@ export const MainDashboardConfig = {
   "Employee in Critical Area": {
     route: "/EmployeePresenceCriticalArea",
   },
-  "Employee Idel Time": {
+  "Employee Idle Time": {
     route: "/EmployeeIdleTime",
   },
   "Mobile Phone Usage in Critical Area": {
