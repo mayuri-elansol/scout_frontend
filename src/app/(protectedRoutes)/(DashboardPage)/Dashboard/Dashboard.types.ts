@@ -43,7 +43,6 @@ export interface MainDashboardResponse {
     }[];
   };
 }
-[];
 export interface DashboardMonitoringSocketPayload {
   type: "MAIN_DASHBOARD_UPDATE";
   tenantId: string;

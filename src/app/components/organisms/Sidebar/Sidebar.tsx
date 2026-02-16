@@ -374,7 +374,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     {},
   );
 
-  const { data, isLoading, isError } = useGetOrgAndUserLogoQuery(
+  const { data, isLoading } = useGetOrgAndUserLogoQuery(
     {
       LoggedInUserId: LoggedInUser,
       tenantId: tenantId,

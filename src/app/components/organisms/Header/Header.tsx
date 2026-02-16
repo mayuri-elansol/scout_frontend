@@ -132,7 +132,9 @@ const Header: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [setCurrentPage] = useState<PageType>("safety-compliance-dashboard");
+  const [currentPage, setCurrentPage] = useState<PageType>(
+    "safety-compliance-dashboard",
+  );
   const pathname = usePathname();
 
   const [mobileOpen, setMobileOpen] = useState(false);

@@ -12,10 +12,12 @@ export interface WorkforceGatePoint {
 }
 
 interface Props {
-  data: WorkforceGatePoint[];
+  readonly data: WorkforceGatePoint[];
 }
 
-export default function DynamicViolationScatterChartForWorkforce({ data }: Props) {
+export default function DynamicViolationScatterChartForWorkforce({
+  data,
+}: Props) {
   // If no data
   if (!data.length) {
     return (
@@ -25,9 +27,7 @@ export default function DynamicViolationScatterChartForWorkforce({ data }: Props
         justifyContent="center"
         alignItems="center"
       >
-        <Typography color="text.secondary">
-          No data available
-        </Typography>
+        <Typography color="text.secondary">No data available</Typography>
       </Stack>
     );
   }
@@ -37,11 +37,11 @@ export default function DynamicViolationScatterChartForWorkforce({ data }: Props
   const statusLabels = ["Idle", "Working", "Not Present"];
 
   const gateIndexMap = Object.fromEntries(
-    gates.map((gate, index) => [gate, index])
+    gates.map((gate, index) => [gate, index]),
   );
 
   const statusIndexMap = Object.fromEntries(
-    statusLabels.map((label, index) => [label, index])
+    statusLabels.map((label, index) => [label, index]),
   );
 
   const series: ScatterSeries[] = useMemo(() => {
@@ -101,8 +101,7 @@ export default function DynamicViolationScatterChartForWorkforce({ data }: Props
             tickMinStep: 1,
             label: "Status",
             width: 100,
-            valueFormatter: (value: any) =>
-              statusLabels[value] ?? "",
+            valueFormatter: (value: any) => statusLabels[value] ?? "",
           },
         ]}
         grid={{ horizontal: true, vertical: true }}

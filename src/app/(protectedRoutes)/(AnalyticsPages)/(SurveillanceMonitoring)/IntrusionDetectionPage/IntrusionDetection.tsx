@@ -237,16 +237,16 @@ const IntrusionDetection: React.FC = () => {
   const handleSubmitFilter = useCallback(
     async (filters: IntrusionFilterParams) => {
       console.log("filter params", filters);
-
+      const alarmValue =
+        filters.alarmTriggered === undefined
+          ? undefined
+          : filters.alarmTriggered === "True";
       const body = {
         tenantId: tenantId,
         zone: filters.zone || undefined,
         cameraId: filters.cameraId || undefined,
 
-        alarmTriggered:
-          filters.alarmTriggered !== undefined
-            ? filters.alarmTriggered === "True"
-            : undefined,
+        alarmTriggered: alarmValue,
 
         startDate: formatLocalDateTime(filters.startDate),
         endDate: formatLocalDateTime(filters.endDate),
@@ -276,9 +276,9 @@ const IntrusionDetection: React.FC = () => {
           cameraId: filters.cameraId || undefined,
 
           alarmTriggered:
-            filters.alarmTriggered !== undefined
-              ? filters.alarmTriggered === "True"
-              : undefined,
+            filters.alarmTriggered === undefined
+              ? undefined
+              : filters.alarmTriggered === "True",
 
           startDate: formatLocalDateTime(filters.startDate),
           endDate: formatLocalDateTime(filters.endDate),

@@ -45,7 +45,7 @@ export interface EmployeeIdleZoneViolation {
   }[];
 }
 
-export interface EmployeeIdelTimeDetailedReportResponse {
+export interface EmployeeIdleTimeDetailedReportResponse {
   data: EmployeeIdleViolation[];
   zones: string[];
   cameras: string[];

@@ -238,10 +238,9 @@ const PPEDetection: React.FC = () => {
         cameraId: filters.cameraId || undefined,
 
         alarmTriggered:
-          filters.alarmTriggered !== undefined
-            ? filters.alarmTriggered === "True"
-            : undefined,
-
+          filters.alarmTriggered === undefined
+            ? undefined
+            : filters.alarmTriggered === "True",
         startDate: formatLocalDateTime(filters.startDate),
         endDate: formatLocalDateTime(filters.endDate),
       };
@@ -272,9 +271,9 @@ const PPEDetection: React.FC = () => {
           cameraId: filters.cameraId || undefined,
 
           alarmTriggered:
-            filters.alarmTriggered !== undefined
-              ? filters.alarmTriggered === "True"
-              : undefined,
+            filters.alarmTriggered === undefined
+              ? undefined
+              : filters.alarmTriggered === "True",
 
           startDate: formatLocalDateTime(filters.startDate),
           endDate: formatLocalDateTime(filters.endDate),

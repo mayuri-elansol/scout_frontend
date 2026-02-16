@@ -55,36 +55,6 @@ const DashboardKpiCardMain: React.FC<DashboardKpiCardProps> = ({
     },
   };
 
-  // existing auto-color logic
-  const getAutoStyles = () => {
-    const numericValue = Number(violationsCount);
-
-    if (!isNaN(numericValue)) {
-      if (numericValue === 0) {
-        return {
-          color: "#4caf50",
-          bgColor: "#e8f5e9",
-          borderColor: "#4caf50",
-          iconBg: "#c8e6c9",
-        };
-      } else if (numericValue > 0) {
-        return {
-          color: "#f44336",
-          bgColor: "#ffebee",
-          borderColor: "#f44336",
-          iconBg: "#ffcdd2",
-        };
-      }
-    }
-
-    return {
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
-    };
-  };
-
   const variantStyles = KPI_STYLES[colour];
   const isDisabled = colour === "gray";
   return (

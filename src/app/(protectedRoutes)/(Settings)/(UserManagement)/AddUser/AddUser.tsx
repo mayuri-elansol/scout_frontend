@@ -46,10 +46,10 @@ interface UserFormValues {
 }
 
 const generatePassword = (length = 12): string => {
-  const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const lower = 'abcdefghijklmnopqrstuvwxyz';
-  const numbers = '0123456789';
-  const special = '@$!%*?&';
+  const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const lower = "abcdefghijklmnopqrstuvwxyz";
+  const numbers = "0123456789";
+  const special = "@$!%*?&";
   const all = upper + lower + numbers + special;
 
   const cryptoRandom = (set: string) =>
@@ -66,8 +66,8 @@ const generatePassword = (length = 12): string => {
   }
 
   return passwordArray
-    .sort(() => crypto.getRandomValues(new Uint32Array(1))[0] - 0.5)
-    .join('');
+    .toSorted(() => crypto.getRandomValues(new Uint32Array(1))[0] - 0.5)
+    .join("");
 };
 const AddUser: React.FC = () => {
   const dispatch = useDispatch();
@@ -77,40 +77,33 @@ const AddUser: React.FC = () => {
   const tenantId = user?.org_id;
   const userId = user?.userId;
 
-
   const [addUser, { isLoading: isSubmitting }] = useAddUserMutation();
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { data, isLoading } = useRoleListQuery(
-    tenantId && userId
-      ? { tenantId, userId }
-      : skipToken
+    tenantId && userId ? { tenantId, userId } : skipToken,
   );
 
-
-  const { control, handleSubmit, reset, setValue } =
-    useForm<UserFormValues>({
-      defaultValues: {
-        role: "",
-        firstName: "",
-        lastName: "",
-        email: "",
-        employeeId: "",
-        phone: "",
-        userName: "",
-        password: "",
-      },
-    });
+  const { control, handleSubmit, reset, setValue } = useForm<UserFormValues>({
+    defaultValues: {
+      role: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      employeeId: "",
+      phone: "",
+      userName: "",
+      password: "",
+    },
+  });
 
   useEffect(() => {
     setValue("password", generatePassword());
   }, [setValue]);
 
-  const handleImageUpload = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0] ?? null;
     setProfileImage(file);
 
@@ -120,8 +113,7 @@ const AddUser: React.FC = () => {
     }
 
     const reader = new FileReader();
-    reader.onloadend = () =>
-      setImagePreview(reader.result as string);
+    reader.onloadend = () => setImagePreview(reader.result as string);
     reader.readAsDataURL(file);
   };
 
@@ -130,7 +122,7 @@ const AddUser: React.FC = () => {
       await addUser({
         payload: {
           ...formData,
-          orgAppRoleId: formData.role, 
+          orgAppRoleId: formData.role,
           orgId: tenantId!,
         },
         image: profileImage ?? undefined,
@@ -141,7 +133,7 @@ const AddUser: React.FC = () => {
           id: crypto.randomUUID(),
           message: "User added successfully",
           severity: "success",
-        })
+        }),
       );
 
       reset();
@@ -154,7 +146,7 @@ const AddUser: React.FC = () => {
           id: crypto.randomUUID(),
           message: getErrorMessage(error, "Failed to add user"),
           severity: "error",
-        })
+        }),
       );
     }
   };

@@ -14,7 +14,10 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import { formatDate } from "@/utils/dateUtils";
 import Loader from "@/app/components/atoms/Loader/Loader";
-import { useGetUserDetailsByUserIdQuery, useGetUserRoleQuery } from "./ViewUserApi";
+import {
+  useGetUserDetailsByUserIdQuery,
+  useGetUserRoleQuery,
+} from "./ViewUserApi";
 import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import { BackendUser } from "./viewUser.types";
@@ -37,10 +40,9 @@ export default function ViewUserPage() {
     isLoading: roleListLoading,
     isError: roleListError,
   } = useGetUserRoleQuery(
-    { tenantId: tenantId!, userId: targetUserId! },
-    { skip: !tenantId || !targetUserId }
+    { tenantId: tenantId!, userId: targetUserId },
+    { skip: !tenantId || !targetUserId },
   );
-
 
   // Fetch user details
   const {
@@ -48,8 +50,8 @@ export default function ViewUserPage() {
     isLoading: userLoading,
     isError: userError,
   } = useGetUserDetailsByUserIdQuery(
-    { tenantId: tenantId!, userId: targetUserId! },
-    { skip: !tenantId || !userId }
+    { tenantId: tenantId!, userId: targetUserId },
+    { skip: !tenantId || !userId },
   );
   // Handle errors
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function ViewUserPage() {
           id: crypto.randomUUID(),
           message: "Failed to fetch roles.",
           severity: "error",
-        })
+        }),
       );
     }
     if (userError) {
@@ -68,7 +70,7 @@ export default function ViewUserPage() {
           id: crypto.randomUUID(),
           message: "Failed to fetch user information.",
           severity: "error",
-        })
+        }),
       );
     }
   }, [roleListError, userError, dispatch]);
@@ -79,7 +81,7 @@ export default function ViewUserPage() {
   const selectedRole = useMemo(() => {
     const roles = roleListData?.data?.data ?? [];
     return roles.length
-      ? roles.map(r => r.orgAppRole.role_id.name).join(", ")
+      ? roles.map((r) => r.orgAppRole.role_id.name).join(", ")
       : "-";
   }, [roleListData]);
 

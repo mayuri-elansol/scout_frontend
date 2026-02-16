@@ -69,7 +69,7 @@ const KpiCardComponent: React.FC<KpiCardProps> = ({
     /** 🟡 2. Optional fallback (for older dashboards / PPE etc) */
     const numericValue = Number(value);
 
-    if (!isNaN(numericValue)) {
+    if (!Number.isNaN(numericValue)) {
       return numericValue > 0 ? COLOUR_THEME_MAP.red : COLOUR_THEME_MAP.green;
     }
 

@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import WorkOffIcon from "@mui/icons-material/WorkOff";
 import {
-  EmployeeIdelTimeDetailedReportResponse,
+  EmployeeIdleTimeDetailedReportResponse,
   EmployeeIdelTimeFilterParams,
   EmployeeIdleKpiItem,
   EmployeeIdleTimeSocketPayload,
@@ -64,13 +64,12 @@ const EmployeeIdleTime: React.FC = () => {
   const [recentViolationsLive, setRecentViolationsLive] = useState<
     EmployeeIdleTimeViolation[]
   >([]);
-  const [employeeIdelTimedetailedReport, setEmployeeIdelTimeDetailedReport] =
-    useState<EmployeeIdelTimeDetailedReportResponse | null>(null);
+
+  const [employeeIdleTimeDetailedReport, setEmployeeIdleTimeDetailedReport] =
+    useState<EmployeeIdleTimeDetailedReportResponse | null>(null);
 
   /* ---------- API HOOKS ---------- */
-  // const { data: orgShifts } = useGetOrgShiftTimeEmpIdelDataQuery({
-  //   tenantId,
-  // });
+
   const { data: orgShifts } = useGetOrgShiftTimeEmpIdelDataQuery(
     { tenantId },
     { skip: !tenantId },
@@ -110,7 +109,7 @@ const EmployeeIdleTime: React.FC = () => {
       setDisplayEmployeeIdelTimeKpi(kpi ?? []);
       setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
-      setEmployeeIdelTimeDetailedReport(detailed);
+      setEmployeeIdleTimeDetailedReport(detailed);
     };
 
     load().catch(console.error);
@@ -218,14 +217,14 @@ const EmployeeIdleTime: React.FC = () => {
       label: t("Zone"),
       type: "select" as const,
 
-      options: employeeIdelTimedetailedReport?.zones || [],
+      options: employeeIdleTimeDetailedReport?.zones || [],
     },
     {
       id: "cameraId",
       label: t("Cameras"),
       type: "select" as const,
 
-      options: employeeIdelTimedetailedReport?.cameras || [],
+      options: employeeIdleTimeDetailedReport?.cameras || [],
     },
 
     { id: "startDate", label: t("Start Date"), type: "date" as const },
@@ -249,7 +248,7 @@ const EmployeeIdleTime: React.FC = () => {
 
       const response =
         await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
-      setEmployeeIdelTimeDetailedReport(response);
+      setEmployeeIdleTimeDetailedReport(response);
     },
     [tenantId, fetchEmployeeIdelTimeDetailedReportApi, formatLocalDateTime],
   );
@@ -258,7 +257,7 @@ const EmployeeIdleTime: React.FC = () => {
     const response = await fetchEmployeeIdelTimeDetailedReportApi({
       tenantId: tenantId,
     }).unwrap();
-    setEmployeeIdelTimeDetailedReport(response);
+    setEmployeeIdleTimeDetailedReport(response);
   }, [tenantId, fetchEmployeeIdelTimeDetailedReportApi]);
 
   const handleExport = useCallback(
@@ -394,7 +393,7 @@ const EmployeeIdleTime: React.FC = () => {
       <ReportTable
         title={t("Detailed Report")}
         tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
-        data={employeeIdelTimedetailedReport?.data || []}
+        data={employeeIdleTimeDetailedReport?.data || []}
         columns={tableColumns}
         filters={tableFilters}
         onSubmit={handleSubmitFilter}

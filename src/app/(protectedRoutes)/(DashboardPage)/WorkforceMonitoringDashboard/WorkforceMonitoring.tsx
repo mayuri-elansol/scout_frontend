@@ -40,12 +40,11 @@ const WorkforceMonitoring: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<
     WorkforceMonitoringDashboardResponse[]
   >([]);
-  const [dashboardDataForScatterChart, setDashboardDataForScatterChart] =
-    useState<WorkforceMonitoringDashboardResponseForScatterChart[]>([]);
+  const [dashboardDataForScatterChart] = useState<
+    WorkforceMonitoringDashboardResponseForScatterChart[]
+  >([]);
   /* ---------- API HOOKS ---------- */
-  // const { data: orgShifts } = useGetOrgShiftTimeWorkforceDataQuery({
-  //   tenantId,
-  // });
+
   const { data: orgShifts } = useGetOrgShiftTimeWorkforceDataQuery(
     { tenantId },
     { skip: !tenantId },

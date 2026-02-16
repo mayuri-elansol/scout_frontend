@@ -23,7 +23,6 @@ import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardCo
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import {
-  IntrusionTrendResponse,
   SurveillanceDashboardResponse,
   SurveillanceSocketPayload,
 } from "./SurveillanceMonitoringDashboard.types";
@@ -94,8 +93,7 @@ const SurveillanceMonitoring: React.FC = () => {
         startDate: range.start,
         endDate: range.end,
       };
-      const [kpi] = await Promise.all([fetchSurveillanceKpi(payload).unwrap()]);
-
+      const kpi = await fetchSurveillanceKpi(payload).unwrap();
       setDisplaySurveillanceKpi(kpi ?? []);
     },
     [tenantId, fetchSurveillanceKpi],
@@ -118,17 +116,6 @@ const SurveillanceMonitoring: React.FC = () => {
     });
   }, [displaySurveillanceKpi, t]);
 
-  const buildScatterData = (graph?: IntrusionTrendResponse) => {
-    if (!graph || !graph.series) return [];
-
-    return graph.series.flatMap((series) =>
-      series.data.map((point) => ({
-        time: point.label.includes(":") ? point.label : `${point.label}:00`,
-        zone: series.zone,
-        count: point.count,
-      })),
-    );
-  };
   const intrusionDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Intrusion Detection",
   );
@@ -138,15 +125,6 @@ const SurveillanceMonitoring: React.FC = () => {
 
   const movementDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Movement During Shutdown",
-  );
-
-  const tamperingDashboard = displaySurveillanceKpi.find(
-    (d) => d.title === "Camera Tempering Detection",
-  );
-
-  const intrusionScatterData = useMemo(
-    () => buildScatterData(intrusionDashboard?.graphs.data),
-    [intrusionDashboard],
   );
 
   const tabs: TabConfig[] = [

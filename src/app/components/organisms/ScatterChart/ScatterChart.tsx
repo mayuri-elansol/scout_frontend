@@ -25,7 +25,7 @@ interface ApiItem {
 }
 
 interface Props {
-  item: ApiItem; // Pass any single card object
+  readonly item: ApiItem; // Pass any single card object
 }
 // Function to generate pastel colors
 const generatePastelColor = (index: number, total: number) => {
