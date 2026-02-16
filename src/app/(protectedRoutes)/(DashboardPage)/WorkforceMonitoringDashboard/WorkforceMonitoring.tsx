@@ -1,10 +1,7 @@
-
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
-import { Visibility, Smartphone, Security, People } from "@mui/icons-material";
 import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
@@ -49,9 +46,7 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     const load = async () => {
-      const [kpi] = await Promise.all([
-        fetchWorkforceKpi({ tenantId }).unwrap(),
-      ]);
+      const kpi = await fetchWorkforceKpi({ tenantId }).unwrap();
 
       setDashboardData(kpi ?? []);
     };
@@ -60,17 +55,6 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
   }, [tenantId, fetchWorkforceKpi]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<PpeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.PPE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayKpi(payload.kpi ?? []);
-  //     setDisplayZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
 
   useSocketEvent<WorkforceMonitoringSocketPayload>({
     tenantId,
@@ -106,7 +90,7 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
         startDate: range.start,
         endDate: range.end,
       };
-      const [kpi] = await Promise.all([fetchWorkforceKpi(payload).unwrap()]);
+      const kpi = await fetchWorkforceKpi(payload).unwrap();
 
       setDashboardData(kpi ?? []);
     },
@@ -129,21 +113,6 @@ const [dashboardDataForScatterChart, setDashboardDataForScatterChart] = useState
       };
     });
   }, [dashboardData, t]);
-
-  // const employeeIdleGraphData = useMemo(() => {
-  //   const idleUsecase = dashboardData.find(
-  //     (d) => d.title === "Employee Idel Time",
-  //   );
-
-  //   return (
-  //     idleUsecase?.graphs?.data?.map((g) => ({
-  //       gate: g.gate,
-  //       Idle: g.idleCount,
-  //       Working: g.workingCount,
-  //       NotPresent: g.notPresentCount,
-  //     })) ?? []
-  //   );
-  // }, [dashboardData]);
 
   const employeeIdleGraphData = useMemo(() => {
     const idleUsecase = dashboardData.find(
@@ -212,7 +181,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
     );
   }, [dashboardData]);
   console.log("sleepingAbsenceGraphData", sleepingAbsenceGraphData);
-
+  const violationData: ViolationData[] = [];
   const tabs: TabConfig[] = [
     {
       label: "Employee Presence (Critical Areas)",
@@ -252,7 +221,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
             <Box
               sx={{
                 width: "100%",
-                height: 420, // ✅ REQUIRED
+                height: 420,
                 p: 2,
               }}
             >
@@ -337,15 +306,7 @@ const mobilePhoneUsageInCriticalAreaGraphData = useMemo(() => {
             }}
           >
             <DynamicBarChart
-              data={
-                [
-                  // { gate: "Production Gate", Absent: 5, Present: 19 },
-                  // { gate: "Warehouse Gate", Absent: 3, Present: 21 },
-                  // { gate: "Parking Gate", Absent: 2, Present: 22 },
-                  // { gate: "Main Entrance", Absent: 4, Present: 20 },
-                  // { gate: "Side Exit", Absent: 1, Present: 23 },
-                ]
-              }
+              data={[]}
               xAxisKey="gate"
               series={[
                 {

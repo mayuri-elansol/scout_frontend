@@ -38,6 +38,10 @@ export const baseProtectedApi = createApi({
     "SurveillanceMonitoringDashboardKpi",
     "WorkforceMonitoringDashboardKpi",
     "MainDashboardKpi",
+    "MovementDuringShutdownHoursKpi",
+    "MovementDuringShutdownHoursZoneViolations",
+    "MovementDuringShutdownHoursRecentViolations",
+    "MovementDuringShutdownHoursDetailedReport",
     "OrgLogo"
   ],
 });

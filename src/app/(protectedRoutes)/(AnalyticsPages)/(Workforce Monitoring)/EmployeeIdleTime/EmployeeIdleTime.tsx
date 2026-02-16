@@ -16,6 +16,7 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import WorkOffIcon from "@mui/icons-material/WorkOff";
 import {
   EmployeeIdelTimeDetailedReportResponse,
   EmployeeIdelTimeFilterParams,
@@ -175,7 +176,7 @@ const EmployeeIdleTime: React.FC = () => {
     const iconMap: Record<string, SvgIconComponent> = {
       Idle: AccessTimeIcon,
       Working: WorkOutlineIcon,
-      "Not Present": PersonOffIcon,
+      "Not Working": WorkOffIcon,
     };
 
     return displayEmployeeIdelTimeZoneViolations.map((z) => ({
