@@ -195,21 +195,6 @@ const Header: React.FC = () => {
     lastChecked: new Date().toLocaleTimeString(),
   });
 
-  // const getPageTitle = () => {
-  //   const allMenuItems = [
-  //     ...dashboardMenu.flatMap((category) => category.items),
-  //     ...alertMenu,
-  //     ...analyticsMenu.flatMap((category) => category.items),
-  //   ];
-
-  //   const currentItem = allMenuItems.find(
-  //     (item): item is LinkMenuItem =>
-  //       item.type === "link" &&
-  //       item.path.toLowerCase() === pathname.toLowerCase()
-  //   );
-
-  //   return currentItem?.name ?? "Dashboard";
-  // };
 
 const pageTitleMap: Record<string, string> = {
   "/AddUser": "Add User",
@@ -473,7 +458,7 @@ const getPageTitle = () => {
                         variant="body2"
                         sx={{ color: "#6b7280", fontWeight: 400 }}
                       >
-                        Role: {user.role.toLowerCase().replace(/-/g, " ")}
+                        Role: {user.role.toLowerCase().replaceAll(/[-_]/g, " ")}
 
                       </Typography>
                     )}

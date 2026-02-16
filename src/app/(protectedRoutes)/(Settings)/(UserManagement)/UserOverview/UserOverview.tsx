@@ -57,51 +57,6 @@ const UserOverview: React.FC = () => {
   /** ----- FILTERED USERS ----- */
   const loggedInUserRole =
   data?.data?.data?.find((u) => u.userId === userId)?.roleName ?? null;
-  
-  // const { filteredBackendUsers, filteredTableUsers } = useMemo(() => {
-  // const backendUsers: BackendUser[] = data?.data?.data ?? [];    
-  //   if (!searchQuery.trim()) {
-  //     // No search query - return all users
-  //     const tableUsers = backendUsers.map((u) => ({
-  //       firstName: u.first_name ?? "",
-  //       lastName: u.last_name ?? "",
-  //       email: u.email,
-  //       phone: u.phoneNumber,
-  //     }));
-  //     return {
-  //       filteredBackendUsers: backendUsers,
-  //       filteredTableUsers: tableUsers,
-  //     };
-  //   }
-
-  //   // Filter users based on search query
-  //   const query = searchQuery.toLowerCase();
-  //   const filtered = backendUsers.filter((u) => {
-  //     const firstName = (u.first_name ?? "").toLowerCase();
-  //     const lastName = (u.last_name ?? "").toLowerCase();
-  //     const email = (u.email ?? "").toLowerCase();
-  //     const phone = (u.phoneNumber ?? "").toLowerCase();
-      
-  //     return (
-  //       firstName.includes(query) ||
-  //       lastName.includes(query) ||
-  //       email.includes(query) ||
-  //       phone.includes(query)
-  //     );
-  //   });
-
-  //   const tableUsers = filtered.map((u) => ({
-  //     firstName: u.first_name ?? "",
-  //     lastName: u.last_name ?? "",
-  //     email: u.email,
-  //     phone: u.phoneNumber,
-  //   }));
-
-  //   return {
-  //     filteredBackendUsers: filtered,
-  //     filteredTableUsers: tableUsers,
-  //   };
-  // }, [data?.data, searchQuery]);
 
   const { filteredBackendUsers, filteredTableUsers } = useMemo(() => {
   const backendUsers: BackendUser[] = data?.data?.data ?? [];

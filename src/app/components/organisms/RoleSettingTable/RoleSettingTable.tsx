@@ -72,7 +72,7 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
               <TableRow key={row.org_app_role_id}>
               <TableCell>{index + 1} .</TableCell> 
                 
-                <TableCell>{row.role_id.name.toLowerCase().replace(/-/g, " ")}</TableCell>
+                <TableCell>{row.role_id.name.toLowerCase().replaceAll(/[-_]/g, " ")}</TableCell>
                 <TableCell>{row.role_id.role_id}</TableCell>
                 <TableCell>{formatDate(row.createdAt)}</TableCell>
                 <TableCell>{formatDate(row.updatedAt)}</TableCell>
