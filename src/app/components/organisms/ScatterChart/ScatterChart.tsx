@@ -33,49 +33,28 @@ const generatePastelColor = (index: number, total: number) => {
   return `hsl(${hue}, 70%, 80%)`;
 };
 
+
 export default function DynamicViolationScatterChart({ item }: Props) {
   const zoneSeries = item?.graphs?.data?.series ?? [];
   const name = item?.graphs?.data?.granularity ?? "";
 
-  if (!zoneSeries.length) {
-    return (
-      <Stack
-        width="100%"
-        // height={400}
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Typography color="text.secondary">No data available</Typography>
-      </Stack>
-    );
-  }
   // Get zone names dynamically
   const zones = zoneSeries.map((s) => s.zone);
+  const zoneIndexMap = Object.fromEntries(zones.map((zone, index) => [zone, index]));
+  const yLabels = Array.from(new Set(zoneSeries.flatMap((z) => z.data.map((d) => d.label))));
+  const yIndexMap = Object.fromEntries(yLabels.map((label, index) => [label, index]));
 
-  // Create zone -> index mapping
-  const zoneIndexMap = Object.fromEntries(
-    zones.map((zone, index) => [zone, index]),
-  );
-  const yLabels = Array.from(
-    new Set(zoneSeries.flatMap((z) => z.data.map((d) => d.label))),
-  );
-  const yIndexMap = Object.fromEntries(
-    yLabels.map((label, index) => [label, index]),
-  );
-
+  // ✅ Compute series with useMemo safely
   const series: ScatterSeries[] = useMemo(() => {
     return zoneSeries.map((zoneItem, index) => ({
       label: zoneItem.zone,
       markerSize: 8,
-      color: generatePastelColor(index, zoneSeries.length), // dynamic pastel color
-
+      color: generatePastelColor(index, zoneSeries.length),
       valueFormatter: (params: any) => {
         const yLabel = yLabels[params.y];
         const count = params.z;
-
         return `${name}: ${yLabel} | Count: ${count}`;
       },
-
       data: zoneItem.data
         .filter((d) => d.count > 0)
         .map((d) => ({
@@ -84,22 +63,29 @@ export default function DynamicViolationScatterChart({ item }: Props) {
           z: d.count,
         })),
     }));
-  }, [zoneSeries, yLabels]);
+  }, [zoneSeries, yLabels, name, zoneIndexMap, yIndexMap]);
+
+  // Early return for no data
+  if (!zoneSeries.length) {
+    return (
+      <Stack width="100%" justifyContent="center" alignItems="center">
+        <Typography color="text.secondary">No data available</Typography>
+      </Stack>
+    );
+  }
+
   return (
     <Stack width="100%">
       <Typography align="center" fontWeight={600}>
         {item.title} (zone vs {name})
       </Typography>
-
       <ScatterChart
         height={620}
         series={series}
         xAxis={[
           {
-            // min: 0,
-            // max: zones.length - 1,
-            min: -0.5, // 👈 add left spacing
-            max: zones.length - 0.5, // 👈 add right spacing
+            min: -0.5,
+            max: zones.length - 0.5,
             tickMinStep: 1,
             valueFormatter: (value: any) => zones[value] ?? "",
           },
