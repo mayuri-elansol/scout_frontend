@@ -401,7 +401,6 @@ const WorkforceMonitoring: React.FC = () => {
         }}
       >
         <DashboardTabs tabs={tabs} />
-        lll
       </Box>
     </Paper>
   );

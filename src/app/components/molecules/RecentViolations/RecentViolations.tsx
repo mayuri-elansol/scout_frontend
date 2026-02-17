@@ -23,7 +23,7 @@ interface RecentViolationsProps {
 }
 
 export default function RecentViolations(
-  props: Readonly<RecentViolationsProps>
+  props: Readonly<RecentViolationsProps>,
 ) {
   const {
     tooltipMessage,
@@ -35,7 +35,7 @@ export default function RecentViolations(
   } = props;
 
   const [selectedViolation, setSelectedViolation] = useState<Violation | null>(
-    null
+    null,
   );
   const [open, setOpen] = useState(false);
 
@@ -48,7 +48,7 @@ export default function RecentViolations(
     setOpen(false);
     setSelectedViolation(null);
   };
-
+  console.log("popup data from the recent violations", selectedViolation);
   /* ---------------- Render Helpers ---------------- */
 
   const renderSkeletons = () => (
