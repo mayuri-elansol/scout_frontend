@@ -41,8 +41,9 @@ const LoginForm: React.FC<LoginFormProps> = ({
   //12 characters, at least 1 uppercase, 1 lowercase, 1 number, 1 special
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
-
+    
   return (
+    
     <CardContent sx={{ padding: 4 }}>
       <Typography
         variant="h4"

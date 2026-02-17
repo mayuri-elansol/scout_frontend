@@ -4,11 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { CssBaseline, Card, Container } from "@mui/material";
 import { theme } from "@/app/theme/theme";
 import LoginForm from "./LoginForm";
-
-interface LoginFormData {
-  username: string;
-  password: string;
-}
+import type { LoginFormData } from "./Login.types"; // ✅ use shared type
 
 interface LoginFormProps {
   formData: LoginFormData;
@@ -16,17 +12,18 @@ interface LoginFormProps {
   isLoading: boolean;
   error: string;
   onInputChange: (
-    field: keyof LoginFormData,
+    field: keyof LoginFormData
   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
   onTogglePassword: () => void;
-  onSubmit: (data: LoginFormData) => void;
+  onSubmit: (data: LoginFormData) => void | Promise<void>; // match LoginForm
   onForgotPassword: () => void;
   setError: React.Dispatch<React.SetStateAction<string>>;
 }
 
+// Wrapper to manage state for Storybook
 const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
   const [formData, setFormData] = useState<LoginFormData>({
-    username: "",
+    userName: "",
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -41,18 +38,20 @@ const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
       if (error) setError("");
     };
 
-  const handleSubmit = (data: LoginFormData) => {
+  const handleSubmit: (data: LoginFormData) => Promise<void> = (data) => {
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      if (data.username === "demo" && data.password === "password") {
-        console.log("Login successful!", data);
-      } else {
-        setError("Invalid username or password");
-      }
-    }, 1500);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setIsLoading(false);
+        if (data.userName === "demo" && data.password === "password") {
+          console.log("Login successful!", data);
+        } else {
+          setError("Invalid username or password");
+        }
+        resolve();
+      }, 1500);
+    });
   };
 
   const handleTogglePassword = () => setShowPassword((prev) => !prev);
@@ -74,6 +73,7 @@ const LoginFormWrapper = (args: Partial<LoginFormProps>) => {
   );
 };
 
+// Storybook meta
 const meta: Meta<typeof LoginForm> = {
   title: "Components/Molecules/LoginForm",
   component: LoginForm,
@@ -134,6 +134,7 @@ const meta: Meta<typeof LoginForm> = {
 export default meta;
 type Story = StoryObj<typeof LoginForm>;
 
+// Default story
 export const Default: Story = {
   render: () => <LoginFormWrapper />,
   parameters: {
@@ -146,6 +147,7 @@ export const Default: Story = {
   },
 };
 
+// Story with error state
 export const WithError: Story = {
   render: () => <LoginFormWrapper />,
   parameters: {
@@ -158,6 +160,7 @@ export const WithError: Story = {
   },
 };
 
+// Loading state story
 export const Loading: Story = {
   render: () => <LoginFormWrapper />,
   parameters: {

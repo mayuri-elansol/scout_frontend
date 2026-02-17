@@ -23,7 +23,11 @@ interface ApiItem {
     };
   };
 }
-
+interface ScatterPoint {
+  x: number; // zone index
+  y: number; // label index
+  z?: number; // count/value
+}
 interface Props {
   readonly item: ApiItem; // Pass any single card object
 }
@@ -35,9 +39,18 @@ const generatePastelColor = (index: number, total: number) => {
 
 
 export default function DynamicViolationScatterChart({ item }: Props) {
-  const zoneSeries = item?.graphs?.data?.series ?? [];
-  const name = item?.graphs?.data?.granularity ?? "";
+  // const zoneSeries = item?.graphs?.data?.series ?? [];
+  
+  // const name = item?.graphs?.data?.granularity ?? "";
+const zoneSeries = useMemo(
+  () => item?.graphs?.data?.series ?? [],
+  [item?.graphs?.data?.series] // only recompute if the reference actually changes
+);
 
+const name = useMemo(
+  () => item?.graphs?.data?.granularity ?? "",
+  [item?.graphs?.data?.granularity]
+);
   // Get zone names dynamically
   const zones = zoneSeries.map((s) => s.zone);
   const zoneIndexMap = Object.fromEntries(zones.map((zone, index) => [zone, index]));
@@ -45,26 +58,50 @@ export default function DynamicViolationScatterChart({ item }: Props) {
   const yIndexMap = Object.fromEntries(yLabels.map((label, index) => [label, index]));
 
   // ✅ Compute series with useMemo safely
-  const series: ScatterSeries[] = useMemo(() => {
-    return zoneSeries.map((zoneItem, index) => ({
-      label: zoneItem.zone,
-      markerSize: 8,
-      color: generatePastelColor(index, zoneSeries.length),
-      valueFormatter: (params: any) => {
-        const yLabel = yLabels[params.y];
-        const count = params.z;
-        return `${name}: ${yLabel} | Count: ${count}`;
-      },
-      data: zoneItem.data
-        .filter((d) => d.count > 0)
-        .map((d) => ({
-          x: zoneIndexMap[zoneItem.zone],
-          y: yIndexMap[d.label],
-          z: d.count,
-        })),
-    }));
-  }, [zoneSeries, yLabels, name, zoneIndexMap, yIndexMap]);
-
+  // const series: ScatterSeries[] = useMemo(() => {
+  //   return zoneSeries.map((zoneItem, index) => ({
+  //     label: zoneItem.zone,
+  //     markerSize: 8,
+  //     color: generatePastelColor(index, zoneSeries.length),
+  //     valueFormatter: (params: any) => {
+  //       const yLabel = yLabels[params.y];
+  //       const count = params.z;
+  //       return `${name}: ${yLabel} | Count: ${count}`;
+  //     },
+  //     data: zoneItem.data
+  //       .filter((d) => d.count > 0)
+  //       .map((d) => ({
+  //         x: zoneIndexMap[zoneItem.zone],
+  //         y: yIndexMap[d.label],
+  //         z: d.count,
+  //       })),
+  //   }));
+  // }, [zoneSeries, yLabels, name, zoneIndexMap, yIndexMap]);
+ const formatScatterValue = (
+  params: ScatterPoint | null,
+  yLabels: string[],
+  zoneName: string
+) => {
+  if (!params) return ""; // handle null safely
+  const yLabel = yLabels[params.y] ?? "Unknown";
+  const count = params.z ?? 0; // default to 0 if undefined
+  return `${zoneName}: ${yLabel} | Count: ${count}`;
+};
+const series: ScatterSeries[] = useMemo(() => {
+  return zoneSeries.map((zoneItem, index) => ({
+    label: zoneItem.zone,
+    markerSize: 8,
+    color: generatePastelColor(index, zoneSeries.length),
+    valueFormatter: (params) => formatScatterValue(params, yLabels, name),
+    data: zoneItem.data
+      .filter((d) => d.count > 0)
+      .map((d) => ({
+        x: zoneIndexMap[zoneItem.zone],
+        y: yIndexMap[d.label],
+        z: d.count,
+      })),
+  }));
+}, [zoneSeries, yLabels, name, zoneIndexMap, yIndexMap]);
   // Early return for no data
   if (!zoneSeries.length) {
     return (
@@ -80,14 +117,14 @@ export default function DynamicViolationScatterChart({ item }: Props) {
         {item.title} (zone vs {name})
       </Typography>
       <ScatterChart
-        height={620}
+        height={550}
         series={series}
         xAxis={[
           {
             min: -0.5,
             max: zones.length - 0.5,
             tickMinStep: 1,
-            valueFormatter: (value: any) => zones[value] ?? "",
+            valueFormatter: (value: number) => zones[value] ?? "",
           },
         ]}
         yAxis={[
@@ -97,7 +134,7 @@ export default function DynamicViolationScatterChart({ item }: Props) {
             tickMinStep: 1,
             label: name,
             width: 80,
-            valueFormatter: (value: any) => yLabels[value] ?? "",
+            valueFormatter: (value: number) => yLabels[value] ?? "",
           },
         ]}
         grid={{ horizontal: true, vertical: true }}

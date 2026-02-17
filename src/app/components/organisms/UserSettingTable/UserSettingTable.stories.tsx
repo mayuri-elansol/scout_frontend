@@ -4,22 +4,18 @@ import SettingTable, { User } from "./UserSettingTable";
 // Sample user data
 const sampleUsers: User[] = [
   {
-    name: "John Doe",
+    firstName: "John",
+    lastName: "Doe",
     email: "john@example.com",
     phone: "1234567890",
-    role: "Organisation Admin",
-    site: "Headquarters",
-    department: "IT",
-    profileImage: "https://randomuser.me/api/portraits/men/1.jpg",
+    roleName: "Organisation Admin",
   },
   {
-    name: "Jane Smith",
+    firstName: "Jane",
+    lastName: "Smith",
     email: "jane@example.com",
     phone: "9876543210",
-    role: "Team Lead",
-    site: "Mumbai Office",
-    department: "HR",
-    profileImage: "https://randomuser.me/api/portraits/women/2.jpg",
+    roleName: "Team Lead",
   },
 ];
 
