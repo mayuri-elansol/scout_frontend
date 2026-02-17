@@ -25,20 +25,33 @@ import {
   CheckCircle as CheckCircleIcon,
   Warning as WarningIcon,
 } from "@mui/icons-material";
-import { Zone } from "@/app/data/mockZones";
+
+type ZoneUI = {
+  id: string;
+  name: string;
+  description?: string;
+
+  locationsCount?: number;
+  camerasCount?: number;
+};
+
+
 
 interface ZoneTableProps {
-  zones: Zone[];
-  onAssignLocations: (zone: Zone) => void;
-  onEdit: (zone: Zone) => void;
-  onDelete: (zone: Zone) => void;
+  zones: ZoneUI[];
+  onAssignLocations: (zone: ZoneUI) => void;
+  onEdit: (zone: ZoneUI) => void;
+  onDelete: (zone: ZoneUI) => void;
 }
+
+
 
 export const ZoneTable: React.FC<ZoneTableProps> = ({ zones, onAssignLocations, onEdit, onDelete }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedZone, setSelectedZone] = React.useState<Zone | null>(null);
+  const [selectedZone, setSelectedZone] = React.useState<ZoneUI | null>(null);
+  
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, zone: Zone) => {
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, zone: ZoneUI) => {
     setAnchorEl(event.currentTarget);
     setSelectedZone(zone);
   };
@@ -78,9 +91,10 @@ export const ZoneTable: React.FC<ZoneTableProps> = ({ zones, onAssignLocations, 
 
           <TableBody>
             {zones.map((zone) => {
-              const locationCount = zone.locations ? zone.locations.length : 0;
+              const locationCount = zone.locationsCount ?? 0;
               const hasLocations = locationCount > 0;
-              const cameraCount = zone.cameraIds ? zone.cameraIds.length : 0;
+              const cameraCount = zone.camerasCount ?? 0;
+
               const hasCameras = cameraCount > 0;
 
               return (

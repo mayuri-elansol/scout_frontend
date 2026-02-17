@@ -174,8 +174,9 @@ export const UseCaseList: React.FC<UseCaseListProps> = ({
 
       {/* Search Bar */}
       <Box sx={{ mb: 3 }}>
-        disabled={isLoading}
+        {/* disabled={isLoading} */}
         <TextField
+        disabled={isLoading}
           fullWidth
           placeholder="Search use cases by name or description..."
           value={searchQuery}

@@ -23,6 +23,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress,
+  InputBase,
 } from '@mui/material';
 
 import {
@@ -42,6 +43,8 @@ import {
   Block as ExcludeIcon,
   ArrowDropDown as ArrowDropDownIcon,
   Menu as MenuIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
 } from '@mui/icons-material';
 import { ROIShape } from '@/app/types/roi';
 import { showToast } from '@/app/store/slices/toasterSlice';
@@ -63,6 +66,10 @@ interface RoiSelectionModalProps {
   existingROI?: ROIShape[];
   onSave: (roiShapes: ROIShape[]) => void;
   labels: string[];
+
+  enableThreshold?: boolean;
+  thresholdValue?: number | null;
+  onThresholdChange?: (value: number | null) => void;
 }
 
 /* ----------------------------- Constants ----------------------------- */
@@ -93,7 +100,10 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   useCaseName,
   existingROI,
   onSave,
-  labels
+  labels,
+  enableThreshold,
+  thresholdValue,
+  onThresholdChange,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -154,9 +164,10 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     shapes: ROIShape[],
     canvas: HTMLCanvasElement
   ): ROIShape[] => {
-    return shapes.map(shape => ({
+    return shapes.map((shape, index) => ({
       ...shape,
-       id: shape.id ?? crypto.randomUUID(),
+      id: shape.id ?? crypto.randomUUID(),
+      color: shape.color ?? ROI_COLORS[index % ROI_COLORS.length],
       points: shape.points.map(p => ({
         x: +(p.x * canvas.width).toFixed(2),
         y: +(p.y * canvas.height).toFixed(2),
@@ -182,115 +193,115 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   const drawBaseShape = (
-  ctx: CanvasRenderingContext2D,
-  shape: ROIShape,
-  color: string,
-  isSelected: boolean
-) => {
-  const points = shape.points;
-  const isExclude = shape.mode === 'exclude';
+    ctx: CanvasRenderingContext2D,
+    shape: ROIShape,
+    color: string,
+    isSelected: boolean
+  ) => {
+    const points = shape.points;
+    const isExclude = shape.mode === 'exclude';
 
-  ctx.strokeStyle = isSelected ? '#0066ff' : color;
-  ctx.lineWidth = isSelected ? 4 : 2;
-  ctx.setLineDash(isExclude ? [8, 4] : []);
+    ctx.strokeStyle = isSelected ? '#0066ff' : color;
+    ctx.lineWidth = isSelected ? 4 : 2;
+    ctx.setLineDash(isExclude ? [8, 4] : []);
 
-  if (shape.type === 'rectangle' && points.length === 2) {
-    const width = points[1].x - points[0].x;
-    const height = points[1].y - points[0].y;
-    ctx.strokeRect(points[0].x, points[0].y, width, height);
-    ctx.fillRect(points[0].x, points[0].y, width, height);
-    return;
-  }
+    if (shape.type === 'rectangle' && points.length === 2) {
+      const width = points[1].x - points[0].x;
+      const height = points[1].y - points[0].y;
+      ctx.strokeRect(points[0].x, points[0].y, width, height);
+      ctx.fillRect(points[0].x, points[0].y, width, height);
+      return;
+    }
 
-  if ((shape.type === 'polygon' || shape.type === 'freehand') && points.length > 1) {
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
-    if (shape.completed) ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-  }
-};
-
-
-const drawPolygonHandles = (
-  ctx: CanvasRenderingContext2D,
-  shape: ROIShape,
-  color: string
-) => {
-  if (shape.type !== 'polygon' || shape.completed) return;
-
-  shape.points.forEach((point, index) => {
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = index === 0 ? '#ffffff' : color;
-    ctx.fill();
-    ctx.strokeStyle = '#000000';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  });
-};
+    if ((shape.type === 'polygon' || shape.type === 'freehand') && points.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      points.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+      if (shape.completed) ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+  };
 
 
-const drawShapeLabel = (
-  ctx: CanvasRenderingContext2D,
-  shape: ROIShape,
-  label: number | null
-) => {
-  if (shape.points.length === 0) return;
+  const drawPolygonHandles = (
+    ctx: CanvasRenderingContext2D,
+    shape: ROIShape,
+    color: string
+  ) => {
+    if (shape.type !== 'polygon' || shape.completed) return;
 
-  const centerX = shape.points.reduce((s, p) => s + p.x, 0) / shape.points.length;
-  const centerY = shape.points.reduce((s, p) => s + p.y, 0) / shape.points.length;
+    shape.points.forEach((point, index) => {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = index === 0 ? '#ffffff' : color;
+      ctx.fill();
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  };
 
-  const fallbackLabel = `ROI ${label ?? ''}`;
-  const text = `${shape.mode === 'exclude' ? '❌' : '✓'} ${shape.name || fallbackLabel}`;
 
-  ctx.setLineDash([]);
-  ctx.font = 'bold 12px Arial';
+  const drawShapeLabel = (
+    ctx: CanvasRenderingContext2D,
+    shape: ROIShape,
+    label: number | null
+  ) => {
+    if (shape.points.length === 0) return;
 
-  const padding = 8;
-  const width = ctx.measureText(text).width + padding;
+    const centerX = shape.points.reduce((s, p) => s + p.x, 0) / shape.points.length;
+    const centerY = shape.points.reduce((s, p) => s + p.y, 0) / shape.points.length;
 
-  ctx.fillStyle = shape.mode === 'exclude'
-    ? 'rgba(255,0,0,0.9)'
-    : 'rgba(0,0,0,0.7)';
+    const fallbackLabel = `ROI ${label ?? ''}`;
+    const text = `${shape.mode === 'exclude' ? '❌' : '✓'} ${shape.name || fallbackLabel}`;
 
-  ctx.fillRect(centerX - width / 2, centerY - 12, width, 24);
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, centerX, centerY);
-};
+    ctx.setLineDash([]);
+    ctx.font = 'bold 12px Arial';
+
+    const padding = 8;
+    const width = ctx.measureText(text).width + padding;
+
+    ctx.fillStyle = shape.mode === 'exclude'
+      ? 'rgba(255,0,0,0.9)'
+      : 'rgba(0,0,0,0.7)';
+
+    ctx.fillRect(centerX - width / 2, centerY - 12, width, 24);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, centerX, centerY);
+  };
 
 
 
   // Helper function to draw shapes  
-  
-const drawShape = useCallback((
-  ctx: CanvasRenderingContext2D,
-  shape: ROIShape,
-  color: string,
-  label: number | null,
-  _isActive: boolean,
-  isSelected: boolean
-) => {
-  if (shape.points.length === 0) return;
 
-  ctx.save();
+  const drawShape = useCallback((
+    ctx: CanvasRenderingContext2D,
+    shape: ROIShape,
+    color: string,
+    label: number | null,
+    _isActive: boolean,
+    isSelected: boolean
+  ) => {
+    if (shape.points.length === 0) return;
 
-  ctx.fillStyle = (() => {
-    const r = Number.parseInt(color.slice(1, 3), 16);
-    const g = Number.parseInt(color.slice(3, 5), 16);
-    const b = Number.parseInt(color.slice(5, 7), 16);
-    return `rgba(${r},${g},${b},${shape.mode === 'exclude' ? 0.18 : 0.25})`;
-  })();
+    ctx.save();
 
-  drawBaseShape(ctx, shape, color, isSelected);
-  drawPolygonHandles(ctx, shape, color);
-  drawShapeLabel(ctx, shape, label);
+    ctx.fillStyle = (() => {
+      const r = Number.parseInt(color.slice(1, 3), 16);
+      const g = Number.parseInt(color.slice(3, 5), 16);
+      const b = Number.parseInt(color.slice(5, 7), 16);
+      return `rgba(${r},${g},${b},${shape.mode === 'exclude' ? 0.18 : 0.25})`;
+    })();
 
-  ctx.restore();
-}, []);
+    drawBaseShape(ctx, shape, color, isSelected);
+    drawPolygonHandles(ctx, shape, color);
+    drawShapeLabel(ctx, shape, label);
+
+    ctx.restore();
+  }, []);
 
 
   // ✅ FIX: Separate function to draw canvas content
@@ -405,21 +416,6 @@ const drawShape = useCallback((
     if (open === false) return;
 
     console.log('⏰ Dialog opened, waiting for canvas...');
-
-    // wait for Dialog + container layout to finish
-    // const timeoutId = setTimeout(() => {
-    //   requestAnimationFrame(() => {
-    //     requestAnimationFrame(() => {
-    //       const canvas = canvasRef.current;
-    //       if (canvas) {
-    //         console.log('✅ Canvas is ready, calculating size...');
-    //         recalcCanvasSize();
-    //       } else {
-    //         console.log('❌ Canvas still not ready after delay');
-    //       }
-    //     });
-    //   });
-    // }, 150); // Give more time for dialog animation
 
     const delayedCanvasResize = () => {
       requestAnimationFrame(() => {
@@ -1152,8 +1148,8 @@ const drawShape = useCallback((
         {isMdUp && (
           <Box
             sx={{
-              width: '240px',
-              flex: '0 0 240px',
+              width: '220px',
+              flex: '0 0 220px',
               display: 'flex',
               flexDirection: 'column',
               borderLeft: '1px solid',
@@ -1167,25 +1163,110 @@ const drawShape = useCallback((
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0.5, mt: 0.5 }}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 0.25, mt: 0.5, columnGap: '4px', rowGap: '8px' }}>
                 {ROI_COLORS.map((color) => (
                   <Box
                     key={color}
                     onClick={() => setSelectedColor(color)}
                     sx={{
-                      width: 24,
-                      height: 24,
+                      width: 18,
+                      height: 18,
                       bgcolor: color,
-                      border: selectedColor === color ? '3px solid #0066ff' : '1px solid grey',
-                      borderRadius: '4px',
+                      border: selectedColor === color ? '2px solid #0066ff' : '1px solid grey',
+                      borderRadius: '3px',
                       cursor: 'pointer',
-                      '&:hover': { transform: 'scale(1.05)' },
-                      transition: 'transform 0.15s',
+                      '&:hover': { transform: 'scale(1.08)' },
+                      transition: 'transform 0.12s',
                     }}
                   />
                 ))}
               </Box>
             </Box>
+
+            {enableThreshold && (
+  <Box
+    sx={{
+      px: 1.5,
+      py: 1,
+      borderBottom: '1px solid',
+      borderColor: 'divider',
+    }}
+  >
+    <Typography
+      variant="caption"
+      sx={{ fontWeight: 600, fontSize: '0.78rem', mb: 0.5 }}
+    >
+      Set Threshold
+    </Typography>
+
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        border: '1px solid',
+        borderColor: 'grey.400',
+        borderRadius: 1,
+        height: 32,
+        px: 1,
+        width: '100%',
+      }}
+    >
+      {/* − */}
+      <IconButton
+        size="small"
+        sx={{ p: 0.25 }}
+        onClick={() =>
+          onThresholdChange?.(Math.max(0, (thresholdValue ?? 0) - 1))
+        }
+      >
+        –
+      </IconButton>
+
+      {/* CENTER VALUE */}
+      <Box
+        sx={{
+          flex: 1,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <InputBase
+          value={thresholdValue ?? 0}
+          onChange={(e) => {
+            const v = parseInt(e.target.value, 10);
+            onThresholdChange?.(isNaN(v) ? 0 : v);
+          }}
+          inputProps={{
+            inputMode: 'numeric',
+            pattern: '[0-9]*',
+            style: {
+              textAlign: 'center',
+              fontSize: '0.85rem',
+              width: 40,
+            },
+          }}
+        />
+      </Box>
+
+      {/* + */}
+      <IconButton
+        size="small"
+        sx={{ p: 0.25 }}
+        onClick={() =>
+          onThresholdChange?.((thresholdValue ?? 0) + 1)
+        }
+      >
+        +
+      </IconButton>
+    </Box>
+  </Box>
+)}
+
+
+
+
+
+
 
             <Box sx={{ flex: 1, overflow: 'auto', p: 1 }}>
               <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
@@ -1237,7 +1318,7 @@ const drawShape = useCallback((
                             variant="standard"
                             sx={{
                               fontSize: '0.75rem',
-                              '& select': { fontSize: '0.75rem', padding: '2px 4px' },
+                              '& select': { fontSize: '0.75rem', padding: '4px 4px' },
                             }}
                           >
                             {(labels.length > 0 ? labels : ['ROI']).map((labelOption) => (
@@ -1252,29 +1333,32 @@ const drawShape = useCallback((
                             primary={
                               <Typography
                                 variant="caption"
-                                sx={{ fontWeight: 500, fontSize: '0.75rem' }}
-                              >
-                                {shape.name}
-                              </Typography>
-                            }
-                            secondary={
-                              <Typography
-                                variant="caption"
                                 sx={{
-                                  fontSize: '0.65rem',
-                                  color: shape.mode === 'include' ? 'success.main' : 'error.main',
                                   fontWeight: 500,
+                                  fontSize: '0.75rem',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 0.5, // ✅ GAP HERE
                                 }}
                               >
-                                {shape.mode === 'include' ? 'Include' : 'Exclude'}
+                                <span>{shape.name}</span>
+                                <span style={{ opacity: 0.5 }}>•</span>
+                                <span
+                                  style={{
+                                    color:
+                                      shape.mode === 'include'
+                                        ? theme.palette.success.main
+                                        : theme.palette.error.main,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {shape.mode === 'include' ? 'Include' : 'Exclude'}
+                                </span>
                               </Typography>
                             }
                             sx={{ m: 0 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingNameIndex(index);
-                            }}
                           />
+
 
                         )}
                         <IconButton
@@ -1375,10 +1459,37 @@ const drawShape = useCallback((
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
+
+              <Box
+  sx={{
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+  }}
+>
+  <InputBase
+    value={thresholdValue ?? 0}
+    inputProps={{
+      inputMode: 'numeric',
+      style: {
+        textAlign: 'center',
+        fontSize: '0.75rem',
+        width: 34,
+      },
+    }}
+  />
+</Box>
+
+
+
+
+
               <Box sx={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(5, 20px)',
-                gap: '8px',
+                // gap: '8px',
+                columnGap: '4px',
+                rowGap: '8px',
                 mt: 0.75,
                 justifyContent: 'center'
               }}>
@@ -1443,7 +1554,7 @@ const drawShape = useCallback((
                               {shape.name}
                             </Typography>
                           }
-                          
+
                           secondary={
                             <Typography
                               variant="caption"
