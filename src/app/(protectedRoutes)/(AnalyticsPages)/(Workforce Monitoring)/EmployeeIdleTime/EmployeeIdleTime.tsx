@@ -296,6 +296,7 @@ const EmployeeIdleTime: React.FC = () => {
   const handleDownloadSingle = useCallback(
     async (row: EmployeeIdleTimeViolation) => {
       try {
+        console.log("row for the employee idel time", row);
         const payload = {
           tenantId,
           violation: String(row.violation),
@@ -414,6 +415,7 @@ const EmployeeIdleTime: React.FC = () => {
         imageKey="imageUrl"
         onDownload={(url) => {
           if (!viewPopupData) return;
+
           handleDownloadViolation(url, viewPopupData);
         }}
       />
