@@ -8,7 +8,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { v4 as uuidv4 } from "uuid";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import WorkOffIcon from "@mui/icons-material/WorkOff";
 import {
-  EmployeeIdelTimeDetailedReportResponse,
+  EmployeeIdleTimeDetailedReportResponse,
   EmployeeIdelTimeFilterParams,
   EmployeeIdleKpiItem,
   EmployeeIdleTimeSocketPayload,
@@ -29,6 +29,7 @@ import {
   useGetEmployeeIdleTimeDetectionDetailedCsvReportMutation,
   useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation,
   useGetEmployeeIdleTimeDetectionSingleReportPdfMutation,
+  useGetOrgShiftTimeEmpIdelDataQuery,
   useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery,
   useLazyGetEmployeeIdleTimeDetectionKpiDataQuery,
   useLazyGetEmployeeIdleTimeDetectionRecentViolationsQuery,
@@ -63,10 +64,16 @@ const EmployeeIdleTime: React.FC = () => {
   const [recentViolationsLive, setRecentViolationsLive] = useState<
     EmployeeIdleTimeViolation[]
   >([]);
-  const [employeeIdelTimedetailedReport, setEmployeeIdelTimeDetailedReport] =
-    useState<EmployeeIdelTimeDetailedReportResponse | null>(null);
+
+  const [employeeIdleTimeDetailedReport, setEmployeeIdleTimeDetailedReport] =
+    useState<EmployeeIdleTimeDetailedReportResponse | null>(null);
 
   /* ---------- API HOOKS ---------- */
+
+  const { data: orgShifts } = useGetOrgShiftTimeEmpIdelDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
   const [fetchEmployeeIdelTimeKpi, { isLoading: EmployeeIdelTimeKpiLoading }] =
     useLazyGetEmployeeIdleTimeDetectionKpiDataQuery();
   const [
@@ -90,6 +97,7 @@ const EmployeeIdleTime: React.FC = () => {
     useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
+    if (!tenantId) return;
     const load = async () => {
       const [kpi, zones, recent, detailed] = await Promise.all([
         fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
@@ -101,7 +109,7 @@ const EmployeeIdleTime: React.FC = () => {
       setDisplayEmployeeIdelTimeKpi(kpi ?? []);
       setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
-      setEmployeeIdelTimeDetailedReport(detailed);
+      setEmployeeIdleTimeDetailedReport(detailed);
     };
 
     load().catch(console.error);
@@ -209,14 +217,14 @@ const EmployeeIdleTime: React.FC = () => {
       label: t("Zone"),
       type: "select" as const,
 
-      options: employeeIdelTimedetailedReport?.zones || [],
+      options: employeeIdleTimeDetailedReport?.zones || [],
     },
     {
       id: "cameraId",
       label: t("Cameras"),
       type: "select" as const,
 
-      options: employeeIdelTimedetailedReport?.cameras || [],
+      options: employeeIdleTimeDetailedReport?.cameras || [],
     },
 
     { id: "startDate", label: t("Start Date"), type: "date" as const },
@@ -240,7 +248,7 @@ const EmployeeIdleTime: React.FC = () => {
 
       const response =
         await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
-      setEmployeeIdelTimeDetailedReport(response);
+      setEmployeeIdleTimeDetailedReport(response);
     },
     [tenantId, fetchEmployeeIdelTimeDetailedReportApi, formatLocalDateTime],
   );
@@ -249,7 +257,7 @@ const EmployeeIdleTime: React.FC = () => {
     const response = await fetchEmployeeIdelTimeDetailedReportApi({
       tenantId: tenantId,
     }).unwrap();
-    setEmployeeIdelTimeDetailedReport(response);
+    setEmployeeIdleTimeDetailedReport(response);
   }, [tenantId, fetchEmployeeIdelTimeDetailedReportApi]);
 
   const handleExport = useCallback(
@@ -334,7 +342,10 @@ const EmployeeIdleTime: React.FC = () => {
       <Paper sx={{ p: 3, backgroundColor: "#fff", borderRadius: 2 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <Typography variant="h6">📊 {t("Overview")}</Typography>
-          <TimeFilter onRangeChange={handleEmpIdelTimeRangeChange} />
+          <TimeFilter
+            onRangeChange={handleEmpIdelTimeRangeChange}
+            shifts={orgShifts || []}
+          />
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
@@ -382,7 +393,7 @@ const EmployeeIdleTime: React.FC = () => {
       <ReportTable
         title={t("Detailed Report")}
         tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
-        data={employeeIdelTimedetailedReport?.data || []}
+        data={employeeIdleTimeDetailedReport?.data || []}
         columns={tableColumns}
         filters={tableFilters}
         onSubmit={handleSubmitFilter}

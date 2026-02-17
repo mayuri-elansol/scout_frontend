@@ -2,13 +2,16 @@
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef } from "react";
 
-interface RealtimeSocketOptions {
+interface RealtimeSocketOptions<TData, TFrame = unknown> {
   topic: string;
-  onData: (data: any) => void;
-  onLiveFrame?: (frame: any) => void;
+  onData: (data: TData) => void;
+  onLiveFrame?: (frame: TFrame) => void;
 }
 
-export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
+export function useRealtimeSocket<TData, TFrame = unknown>(
+  url: string,
+  options: RealtimeSocketOptions<TData, TFrame>,
+) {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -20,10 +23,8 @@ export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
 
     console.log(`🟢 Connected to WebSocket → ${url}`);
 
-    // ✅ Main topic listener (PPE, violations, etc.)
     socket.on(options.topic, options.onData);
 
-    // ✅ Live frame listener
     if (options.onLiveFrame) {
       socket.on("Live_Frame", options.onLiveFrame);
       console.log(`🎥 Subscribed to Live_Frame`);
@@ -45,35 +46,3 @@ export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
     };
   }, [url, options.topic, options.onData, options.onLiveFrame]);
 }
-
-//new code for the diffrent usehook like frames and roi
-// // src/hooks/useRealtimeSocket.ts
-// import { io, Socket } from "socket.io-client";
-// import { useEffect, useRef } from "react";
-
-// interface RealtimeSocketOptions {
-//   events: Record<string, (data: any) => void>;
-// }
-
-// export function useRealtimeSocket(url: string, options: RealtimeSocketOptions) {
-//   const socketRef = useRef<Socket | null>(null);
-//   const handlersRef = useRef(options.events);
-
-//   handlersRef.current = options.events;
-
-//   useEffect(() => {
-//     const socket = io(url, { transports: ["websocket"] });
-//     socketRef.current = socket;
-
-//     console.log(`🟢 Connected → ${url}`);
-
-//     Object.keys(handlersRef.current).forEach((event) => {
-//       socket.on(event, (data) => handlersRef.current[event](data));
-//     });
-
-//     return () => {
-//       socket.disconnect();
-//       console.log(`🔴 Disconnected → ${url}`);
-//     };
-//   }, [url]);
-// }

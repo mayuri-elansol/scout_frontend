@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import CameraStatusDonutChart from "./DonutChart";
 
 const meta: Meta<typeof CameraStatusDonutChart> = {

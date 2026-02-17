@@ -11,7 +11,7 @@ import { clearUser } from "@/app/store/slices/authSlice";
 import { useAuth } from "@/customhooks/useAuth"; // ✅ Import this
 
 type AuthGuardProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 export default function AuthGuard({ children }: AuthGuardProps) {

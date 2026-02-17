@@ -8,14 +8,14 @@ import { RootState } from "@/app/store/store";
 import { Slide, SlideProps } from "@mui/material";
 
 // Slide transition component
-function SlideTransition(props: SlideProps) {
+function SlideTransition(props: Readonly<SlideProps>) {
   return <Slide {...props} direction="left" />;
 }
 
 export default function Toaster() {
   const dispatch = useDispatch();
   const { open, severity, message } = useSelector(
-    (state: RootState) => state.toasterGlobal
+    (state: RootState) => state.toasterGlobal,
   );
   const [isMounted, setIsMounted] = useState(false);
 
@@ -26,7 +26,7 @@ export default function Toaster() {
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason
+    reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") return;
     dispatch(hideToast());
@@ -34,6 +34,15 @@ export default function Toaster() {
 
   if (!isMounted) {
     return null;
+  }
+  let backgroundColor = "#0353a4";
+
+  if (severity === "success") {
+    backgroundColor = "#4caf50";
+  } else if (severity === "error") {
+    backgroundColor = "#e71d36";
+  } else if (severity === "warning") {
+    backgroundColor = "#fcca46";
   }
 
   return (
@@ -45,7 +54,7 @@ export default function Toaster() {
       open={open}
       autoHideDuration={4000}
       onClose={handleClose}
-      TransitionComponent={SlideTransition}
+      slots={{ transition: SlideTransition }}
       sx={{
         top: "65px",
         right: "10px",
@@ -69,14 +78,7 @@ export default function Toaster() {
           "& .MuiAlert-icon": {
             color: "#FFFFFF !important",
           },
-          backgroundColor:
-            severity === "success"
-              ? "#4caf50"
-              : severity === "error"
-              ? "#e71d36"
-              : severity === "warning"
-              ? "#fcca46"
-              : "#0353a4",
+          backgroundColor,
           margin: {
             xs: "0px 0px",
             sm: "-14px",

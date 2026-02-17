@@ -21,7 +21,6 @@ import { RootState } from "@/app/store/store";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import {
   useAssignFeatureToRoleMutation,
- 
   useGetFeaturesOfRoleByRoleIdQuery,
   useGetFeaturesByOrgIdQuery,
   useUnmappedFeatureFromRoleByRoleIdMutation,
@@ -47,34 +46,28 @@ const EditRole: React.FC = () => {
 
   const orgAppRoleId =
     typeof params?.orgAppRoleId === "string" ? params.orgAppRoleId : undefined;
-  const roleId =
-    typeof params?.roleId === "string" ? params.roleId : undefined;
+  const roleId = typeof params?.roleId === "string" ? params.roleId : undefined;
 
   const tenantId = useSelector((state: RootState) => state.auth.user?.org_id);
   const userId = useSelector((state: RootState) => state.auth.user?.userId);
 
   /* ---------------- API hooks ---------------- */
- const {
-  data: allFeaturesRes,
-  isLoading: isAllLoading,
-} = useGetFeaturesByOrgIdQuery(
-  { userId: userId!, orgId: tenantId! },
-  { skip: !userId || !tenantId }
-);
+  const { data: allFeaturesRes, isLoading: isAllLoading } =
+    useGetFeaturesByOrgIdQuery(
+      { userId: userId!, orgId: tenantId! },
+      { skip: !userId || !tenantId },
+    );
 
-const {
-  data: roleFeaturesRes,
-  isLoading: isRoleLoading,
-} = useGetFeaturesOfRoleByRoleIdQuery(
-  { tenantId: tenantId!, roleId: roleId!, orgAppRoleId: orgAppRoleId! },
-  { skip: !tenantId || !roleId || !orgAppRoleId }
-);
+  const { data: roleFeaturesRes, isLoading: isRoleLoading } =
+    useGetFeaturesOfRoleByRoleIdQuery(
+      { tenantId: tenantId!, roleId: roleId!, orgAppRoleId: orgAppRoleId! },
+      { skip: !tenantId || !roleId || !orgAppRoleId },
+    );
 
   const [assignFeatureToRole, { isLoading: isAssigning }] =
     useAssignFeatureToRoleMutation();
 
-  const [unmapFeatureFromRole] =
-    useUnmappedFeatureFromRoleByRoleIdMutation();
+  const [unmapFeatureFromRole] = useUnmappedFeatureFromRoleByRoleIdMutation();
 
   /* ---------------- State ---------------- */
   const [features, setFeatures] = useState<Feature[]>([]);
@@ -82,29 +75,30 @@ const {
   const [initialFeatureIds, setInitialFeatureIds] = useState<string[]>([]);
 
   /* ---------------- Fetch Data ---------------- */
-useEffect(() => {
-  if (allFeaturesRes?.data?.data) {
-    setFeatures(allFeaturesRes.data.data);
-  }
-}, [allFeaturesRes]);
+  useEffect(() => {
+    if (allFeaturesRes?.data?.data) {
+      setFeatures(allFeaturesRes.data.data);
+    }
+  }, [allFeaturesRes]);
 
-useEffect(() => {
-  const assigned =
-    roleFeaturesRes?.data?.data?.map(
-      (item: RoleFeature) =>
-        item.feature_id ?? item.feature?.feature_id
-    ).filter((id): id is string => Boolean(id)) ?? [];
+  useEffect(() => {
+    const assigned =
+      roleFeaturesRes?.data?.data
+        ?.map(
+          (item: RoleFeature) => item.feature_id ?? item.feature?.feature_id,
+        )
+        .filter((id): id is string => Boolean(id)) ?? [];
 
-  setSelectedFeatureIds(assigned);
-  setInitialFeatureIds(assigned);
-}, [roleFeaturesRes]);
+    setSelectedFeatureIds(assigned);
+    setInitialFeatureIds(assigned);
+  }, [roleFeaturesRes]);
   /* ---------------- Loading ---------------- */
   const isPageLoading = isAllLoading || isRoleLoading;
 
   /* ---------------- Handlers ---------------- */
   const toggleFeature = (id: string) => {
     setSelectedFeatureIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
 
@@ -112,69 +106,66 @@ useEffect(() => {
     setSelectedFeatureIds(
       selectedFeatureIds.length === features.length
         ? []
-        : features.map((f) => f.feature_id)
+        : features.map((f) => f.feature_id),
     );
   };
 
-
   const handleSave = async () => {
-  if (!tenantId || !orgAppRoleId) return;
+    if (!tenantId || !orgAppRoleId) return;
 
-  const toAssign = selectedFeatureIds.filter(
-    (id) => !initialFeatureIds.includes(id)
-  );
-
-  const toUnmap = initialFeatureIds.filter(
-    (id) => !selectedFeatureIds.includes(id)
-  );
-  
-
-  // ✅ NOTHING CHANGED → DO NOTHING
-  if (toAssign.length === 0 && toUnmap.length === 0) {
-    return;
-  }
-
-  try {
-    if (toUnmap.length > 0) {
-      await unmapFeatureFromRole({
-        tenantId,
-        orgAppRoleId,
-        featureIds: toUnmap,
-      }).unwrap();
-    }
-
-    if (toAssign.length > 0) {
-      await assignFeatureToRole({
-        tenantId,
-        orgAppRoleId,
-        featureIds: toAssign,
-      }).unwrap();
-    }
-
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: "Permissions updated successfully",
-        severity: "success",
-      })
+    const toAssign = selectedFeatureIds.filter(
+      (id) => !initialFeatureIds.includes(id),
     );
 
-    router.push("/RoleOverview");
-  } catch (err) {
-    dispatch(
-      showToast({
-        id: crypto.randomUUID(),
-        message: getErrorMessage(err),
-        severity: "error",
-      })
+    const toUnmap = initialFeatureIds.filter(
+      (id) => !selectedFeatureIds.includes(id),
     );
-  }
-};
+
+    // ✅ NOTHING CHANGED → DO NOTHING
+    if (toAssign.length === 0 && toUnmap.length === 0) {
+      return;
+    }
+
+    try {
+      if (toUnmap.length > 0) {
+        await unmapFeatureFromRole({
+          tenantId,
+          orgAppRoleId,
+          featureIds: toUnmap,
+        }).unwrap();
+      }
+
+      if (toAssign.length > 0) {
+        await assignFeatureToRole({
+          tenantId,
+          orgAppRoleId,
+          featureIds: toAssign,
+        }).unwrap();
+      }
+
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: "Permissions updated successfully",
+          severity: "success",
+        }),
+      );
+
+      router.push("/RoleOverview");
+    } catch (err) {
+      dispatch(
+        showToast({
+          id: crypto.randomUUID(),
+          message: getErrorMessage(err),
+          severity: "error",
+        }),
+      );
+    }
+  };
 
   const hasChanges =
-    initialFeatureIds.sort().join(",") !==
-    selectedFeatureIds.sort().join(",");
-
+    initialFeatureIds.toSorted((a, b) => a.localeCompare(b)).join(",") !==
+    selectedFeatureIds.toSorted((a, b) => a.localeCompare(b)).join(",");
   return (
     <Box sx={{ py: 2, px: { xs: 2, sm: 3, md: 4 } }}>
       {isPageLoading ? (
@@ -244,7 +235,7 @@ useEffect(() => {
               {Array.isArray(features) &&
                 features.map((feature) => {
                   const checked = selectedFeatureIds.includes(
-                    feature.feature_id
+                    feature.feature_id,
                   );
 
                   return (
@@ -266,7 +257,6 @@ useEffect(() => {
                           },
                         }}
                         onClick={() => toggleFeature(feature.feature_id)}
-                        
                       >
                         <Box
                           sx={{
@@ -329,7 +319,7 @@ useEffect(() => {
             <Button
               variant="contained"
               size="large"
-                  onClick={handleSave}
+              onClick={handleSave}
               disabled={!hasChanges || isAssigning}
               // sx={{ px: 8, py: 1.5 }}
             >

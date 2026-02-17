@@ -12,8 +12,8 @@ export const apiRoutes = {
     getNewPassword: "/get-new-password",
     resetPassword: "/reset-password",
     validateToken: "/validate-token",
-    getOrgAndUserLogo:'get-org-user-logo'
-
+    getOrgAndUserLogo: "get-org-user-logo",
+    getOrgShiftTiming: "get-org-shift-time",
   },
 
   organisation: {
@@ -47,7 +47,7 @@ export const apiRoutes = {
     editUserRoleById: "/edit-user-role-by-id",
     getFeaturesByOrgId: "get-features-by-org-id",
   },
-  //TODO: Get it done today
+
   userInformation: {
     root: "user-information",
     getList: "get-user-list",

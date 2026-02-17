@@ -24,8 +24,8 @@ export interface User {
 
 interface UserHistoryTableProps {
   users: User[];
-  backendUsers: BackendUser[];   // ✅ ADD
-  currentUserId?: string;        // ✅ ADD
+  backendUsers: BackendUser[]; // ✅ ADD
+  currentUserId?: string; // ✅ ADD
   canView: boolean;
   canEdit: boolean;
   canDelete: boolean;
@@ -36,7 +36,7 @@ interface UserHistoryTableProps {
 
 const UserSettingTable: React.FC<UserHistoryTableProps> = ({
   users,
-    backendUsers,
+  backendUsers,
   currentUserId,
   canView,
   canEdit,
@@ -47,79 +47,73 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
 }) => {
   if (users.length === 0) return null;
   return (
-    
+    <Box mt={5} className={styles.section}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead sx={{ backgroundColor: "#f9fafc" }}>
+            <TableRow>
+              {/* ✅ Sr No column */}
+              <TableCell>Sr No</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
 
-      <Box mt={5} className={styles.section}>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead sx={{ backgroundColor: "#f9fafc" }}>
-              <TableRow>
-                {/* ✅ Sr No column */}
-                <TableCell>Sr No</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
+          <TableBody>
+            {users.map((user, index) => {
+              const backendUser = backendUsers[index];
+              const isSelf = backendUser?.userId === currentUserId;
 
+              return (
+                <TableRow key={backendUser?.userId ?? index}>
+                  <TableCell>{index + 1}.</TableCell>
 
-<TableBody>
-  {users.map((user, index) => {
-    const backendUser = backendUsers[index];
-    const isSelf = backendUser?.userId === currentUserId;
-    const isRoleAdmin = backendUser?.role === "Organisation_Admin_Scout";
+                  <TableCell>
+                    {user.firstName} {user.lastName}
+                  </TableCell>
 
-    return (
-      <TableRow key={backendUser?.userId ?? index}>
-        <TableCell>{index + 1}.</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
 
-        <TableCell>
-          {user.firstName} {user.lastName}
-        </TableCell>
+                  <TableCell align="center">
+                    {/* VIEW */}
+                    {canView && (
+                      <IconButton color="info" onClick={() => onView(index)}>
+                        <Visibility />
+                      </IconButton>
+                    )}
 
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.phone}</TableCell>
+                    {/* EDIT */}
+                    {canEdit && (
+                      <IconButton
+                        color="primary"
+                        onClick={() => onEdit(index)}
+                        disabled={isSelf}
+                      >
+                        <Edit />
+                      </IconButton>
+                    )}
 
-        <TableCell align="center">
-          {/* VIEW */}
-          {canView && (
-            <IconButton color="info" onClick={() => onView(index)}>
-              <Visibility />
-            </IconButton>
-          )}
-
-          {/* EDIT */}
-          {canEdit && (
-            <IconButton
-              color="primary"
-              onClick={() => onEdit(index)}
-              disabled={isSelf}   
-            >
-              <Edit />
-            </IconButton>
-          )}
-
-          {/* DELETE */}
-          {canDelete && (
-            <IconButton
-              color="error"
-              onClick={() => onDelete(index)}
-              disabled={isSelf }   
-            >
-              <Delete />
-            </IconButton>
-          )}
-        </TableCell>
-      </TableRow>
-    );
-  })}
-</TableBody>
-
-          </Table>
-        </TableContainer>
-      </Box>
-    
+                    {/* DELETE */}
+                    {canDelete && (
+                      <IconButton
+                        color="error"
+                        onClick={() => onDelete(index)}
+                        disabled={isSelf}
+                      >
+                        <Delete />
+                      </IconButton>
+                    )}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 };
 

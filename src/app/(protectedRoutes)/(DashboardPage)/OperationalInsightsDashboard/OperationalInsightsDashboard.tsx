@@ -18,15 +18,11 @@ import DashboardTabs, {
 import CanteenUsageChart, {
   WorkingSlot,
 } from "@/app/components/organisms/LineChart/LineCharts";
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import JointBarGraphChart, {
   VehicleChartData,
 } from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
-import DynamicViolationScatterChart, {
-  ViolationData,
-} from "@/app/components/organisms/ScatterChart/ScatterChart";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
@@ -38,6 +34,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       route: "/PeopleCountPage",
       tooltipMessage:
         "Shows detected intrusion incidents in monitored zones during restricted hours.",
+      colour: "red",
     },
     {
       title: "Vehicle Count",
@@ -47,6 +44,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
+      colour: "red",
     },
     {
       title: "Canteen Usage Monitoring",
@@ -56,6 +54,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
+      colour: "red",
     },
 
     {
@@ -65,7 +64,9 @@ const OperationalInsightsDashboard: React.FC = () => {
       lastDetectionTime: "10:10 PM",
       icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
+
       tooltipMessage: "Displays vehical loading and unloading oprations",
+      colour: "red",
     },
     {
       title: "Unauthorised Parking / Blocking Aisles",
@@ -75,6 +76,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
+      colour: "red",
     },
   ];
 
@@ -89,7 +91,7 @@ const OperationalInsightsDashboard: React.FC = () => {
     { startTime: 12, stopTime: 13, label: "Lunch Time" },
     { startTime: 15, stopTime: 16, label: "Tea Break" },
   ];
-  const violationData: ViolationData[] = [
+  const violationData = [
     { time: "08:00", zone: "Zone A", count: 5 },
     { time: "09:00", zone: "Zone A", count: 8 },
     { time: "10:00", zone: "Zone A", count: 3 },
@@ -244,7 +246,7 @@ const OperationalInsightsDashboard: React.FC = () => {
               },
             }}
           >
-            <DynamicViolationScatterChart data={violationData} />
+            {/* <DynamicViolationScatterChart data={violationData} /> */}
           </Grid>
         </Grid>
       ),
@@ -286,7 +288,7 @@ const OperationalInsightsDashboard: React.FC = () => {
             size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
-            <DashboardKpiCard {...kpi} />
+            {/* <DashboardKpiCard {...kpi} /> */}
           </Grid>
         ))}
       </Grid>

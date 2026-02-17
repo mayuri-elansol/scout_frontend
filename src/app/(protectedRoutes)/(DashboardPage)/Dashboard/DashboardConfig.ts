@@ -1,29 +1,11 @@
 // workforceKpiConfig.ts
 
-import {
-  People,
-  Security,
-  Smartphone,
-  Visibility,
-  VideocamOff,
-  LocalFireDepartment,
-  HealthAndSafety,
-  DirectionsCar,
-  WarningAmber,
-  LocalShipping,
-  Block,
-  DoorFront,
-  Groups,
-} from "@mui/icons-material";
-
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-
 export const MainDashboardConfig = {
   //workfocemonitoring
   "Employee in Critical Area": {
     route: "/EmployeePresenceCriticalArea",
   },
-  "Employee Idel Time": {
+  "Employee Idle Time": {
     route: "/EmployeeIdleTime",
   },
   "Mobile Phone Usage in Critical Area": {
