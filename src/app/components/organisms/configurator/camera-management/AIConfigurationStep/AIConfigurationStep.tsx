@@ -2,7 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
-import { assignCameras, getCameraAssignments, getUsecases, unassignCamera } from '@/app/services/configurator/usecaseService';
+import {
+  useGetUsecasesQuery,
+  useAssignCamerasMutation,
+  useUnassignCameraMutation,
+  useLazyGetCameraAssignmentsQuery,
+} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/UseCaseManager/UseCaseManagerAPI';
+import {
+  useLazyGetRoiQuery,
+  useSaveRoiMutation,
+} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/RoiApi';
 
 import {
   Box,
@@ -32,13 +41,9 @@ import {
   Settings as SettingsIcon,
   Tune as TuneIcon,
   RadioButtonUnchecked as ROIIcon,
-  // CloudUpload as SaveIcon,
 } from '@mui/icons-material';
 
-import { roiService } from '@/app/services/roiService';
-
 import { ROIShape } from '@/app/types/roi';
-
 
 interface ROIData {
   configured: boolean;
@@ -67,7 +72,8 @@ interface CameraData {
   password: string;
   port: string;
   make: string;
-  position: string;
+  cameraname: string;
+  location?: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: AIConfig
@@ -77,6 +83,7 @@ interface AIConfigurationStepProps {
   camera: CameraData;
   onSave: (aiConfig: AIConfig) => void;
   onBack: () => void;
+  tenantId: string;
 }
 
 interface UseCaseData {
@@ -89,105 +96,137 @@ interface UseCaseData {
   fineTuned: boolean;
   enabled: boolean;
   labels: string[];
+
+  
+  is_threshold?: boolean;
+  modelThreshold?: number | null;
 }
 
 const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   camera,
   onSave,
   onBack,
+  tenantId,
 }) => {
 
+  // RTK Query hooks
+  const { data: useCasesResponse, isLoading: loadingUseCases } = useGetUsecasesQuery();
+  const [assignCameras] = useAssignCamerasMutation();
+  const [unassignCamera] = useUnassignCameraMutation();
+  const [getCameraAssignments] = useLazyGetCameraAssignmentsQuery();
+
+  // ROI RTK Query hooks
+  const [getRoi] = useLazyGetRoiQuery();
+  const [saveRoi, { isLoading: isSavingRoi }] = useSaveRoiMutation();
 
   const [useCases, setUseCases] = useState<UseCaseData[]>([]);
-  const [loadingUseCases, setLoadingUseCases] = useState(true);
+
+  const loadAssignments = React.useCallback(
+    async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
+      const res = await getCameraAssignments(camera.id).unwrap();
+
+      if (!Array.isArray(res)) {
+        return mapped;
+      }
+
+      return mapped.map((uc) => ({
+        ...uc,
+        selected: res.some(
+          (a: { usecaseId: string }) => a.usecaseId === uc.id
+        ),
+      }));
+    },
+    [camera.id, getCameraAssignments]
+  );
+
+
+
+  const loadRoiForUseCases = React.useCallback(
+    
+    async (useCases: UseCaseData[]): Promise<UseCaseData[]> => {
+      
+      return Promise.all(
+        useCases.map(async (uc) => {
+          console.log('RAW usecase from API:', uc);
+
+          if (!uc.selected) return uc;
+
+          try {
+            const res = await getRoi({
+              cameraId: camera.id,
+              usecaseId: uc.id,
+            }).unwrap();
+
+            return {
+              ...uc,
+              roiConfigured: res.rois.length > 0,
+              roiShapes: res.rois,
+              modelThreshold: res.modelThreshold ?? null,
+            };
+
+          } catch (error) {
+            return uc;
+          }
+        })
+      );
+    },
+    [camera.id, getRoi]
+  );
+
+
+
   useEffect(() => {
-    loadUseCases();
-  }, []);
+    
+    if (
+      loadingUseCases ||
+      !useCasesResponse ||
+      !Array.isArray(useCasesResponse)
+    ) {
+      return;
+    }
 
-
-  const loadUseCases = async () => {
-    try {
-      setLoadingUseCases(true);
-
-      const response = await getUsecases();
-      const apiUseCases = response.data;
-
-      // Map DB → Component structure
-      const mapped = apiUseCases.map((uc: Record<string, unknown>) => ({
+    const run = async () => {
+      const mapped: UseCaseData[] = useCasesResponse.map((uc) => ({
         id: uc.id,
         name: uc.usecaseName,
-        description: uc.description,
+        description: uc.description ?? '',
         selected: false,
         roiConfigured: false,
         fineTuned: false,
         enabled: false,
         roiShapes: [],
         labels: uc.labels ?? [],
+
+        is_threshold: uc.is_threshold ?? false, // 🔥 IMPORTANT
+        modelThreshold: null,
       }));
 
-      setUseCases(mapped);
-    } catch (error) {
-      console.error("❌ Failed to load use cases:", error);
-    } finally {
-      setLoadingUseCases(false);
-    }
-  };
+      try {
+        const withAssignments = await loadAssignments(mapped);
+        const withROI = await loadRoiForUseCases(withAssignments);
+        setUseCases(withROI);
+      } catch (err) {
+        console.error('Failed to load assignments', err);
+        setUseCases(mapped);
+      }
+    };
 
-
-const loadAssignedUsecases = async () => {
-  try {
-    const res = await getCameraAssignments(camera.id);
-    const assigned = res.data;
-
-    // Step 1: mark selected use cases
-    const withSelection = useCases.map(uc => ({
-      ...uc,
-      selected: assigned.some(
-        (a: { usecaseId: string }) => a.usecaseId === uc.id
-      ),
-    }));
-
-    // Step 2: load ROI ONLY for selected use cases
-    const withROI = await Promise.all(
-      withSelection.map(async (uc) => {
-        if (!uc.selected) return uc;
-
-        try {
-          const shapes = await roiService.getRoi(camera.id, uc.id);
-          return {
-            ...uc,
-            roiConfigured: shapes.length > 0,
-            roiShapes: shapes,
-          };
-        } catch {
-          return uc;
-        }
-      })
-    );
-
-    // ✅ ONE setState only
-    setUseCases(withROI);
-
-  } catch (e) {
-    console.error('Failed to load assignments', e);
-  }
-};
-
-
-
- useEffect(() => {
-  if (!loadingUseCases && useCases.length > 0) {
-    loadAssignedUsecases();
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [loadingUseCases]);
-
+    void run();
+  }, [
+    loadingUseCases,
+    useCasesResponse,
+    loadAssignments,
+    loadRoiForUseCases,
+  ]);
 
 
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
-  const [showCameraView, setShowCameraView] = useState(false);
+  const [showCameraView, setShowCameraView] = useState(true);
+
+  const [frameUrl, setFrameUrl] = useState<string | null>(null);
+
 
   // ROI Modal state
   const [roiModalOpen, setRoiModalOpen] = useState(false);
@@ -201,12 +240,11 @@ const loadAssignedUsecases = async () => {
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
-
-
   const handleUseCaseSelect = async (usecaseId: string) => {
     const useCase = useCases.find(uc => uc.id === usecaseId);
     const isSelected = !useCase?.selected;
 
+    // Optimistic update
     setUseCases(prev =>
       prev.map(uc =>
         uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
@@ -216,10 +254,16 @@ const loadAssignedUsecases = async () => {
     try {
       if (isSelected) {
         // ASSIGN
-        await assignCameras(usecaseId, [camera.id]);
+        await assignCameras({
+          usecaseId: usecaseId,
+          cameraIds: [camera.id]
+        }).unwrap();
       } else {
         // UNASSIGN
-        await unassignCamera(usecaseId, camera.id);
+        await unassignCamera({
+          usecaseId: usecaseId,
+          cameraId: camera.id
+        }).unwrap();
       }
 
       setSnackbar({
@@ -231,6 +275,14 @@ const loadAssignedUsecases = async () => {
       });
     } catch (error) {
       console.error(error);
+
+      // Revert optimistic update on error
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === usecaseId ? { ...uc, selected: !isSelected } : uc
+        )
+      );
+
       setSnackbar({
         open: true,
         severity: "error",
@@ -239,22 +291,26 @@ const loadAssignedUsecases = async () => {
     }
   };
 
-
-
-
   const handleAddROI = async (useCaseId: string) => {
     setCurrentUseCaseForROI(useCaseId);
 
     try {
-      const shapes = await roiService.getRoi(camera.id, useCaseId);
+      // Use RTK Query to get ROI
+      const res = await getRoi({
+        cameraId: camera.id,
+        usecaseId: useCaseId,
+      }).unwrap();
+
 
       setUseCases(prev =>
         prev.map(uc =>
           uc.id === useCaseId
-            ? { ...uc, roiShapes: shapes, roiConfigured: true }
+            ? { ...uc, roiShapes: res.rois, roiConfigured: res.rois.length > 0, modelThreshold: res.modelThreshold ?? null }
             : uc
         )
       );
+
+
     } catch {
       // No ROI exists yet → open empty canvas
     }
@@ -262,32 +318,48 @@ const loadAssignedUsecases = async () => {
     setRoiModalOpen(true);
   };
 
-
   const handleROISave = async (roiShapes: ROIShape[]) => {
     if (!currentUseCaseForROI) return;
 
     try {
       setLoading(true);
 
-      // 🔥 SAVE TO BACKEND
-      await roiService.saveRoi(
-        camera.id,
-        currentUseCaseForROI,
-        roiShapes
-      );
+      const currentUC = useCases.find(u => u.id === currentUseCaseForROI);
 
-      // 🔁 Update local UI state
+      await saveRoi({
+        cameraId: camera.id,
+        usecaseId: currentUseCaseForROI,
+        modelThreshold: currentUC?.modelThreshold ?? undefined,
+        rois: roiShapes.map(r => ({
+          type: r.type,
+          label: r.name,
+          mode: r.mode,
+          color: r.color,
+          points: r.points,
+        })),
+      }).unwrap();
+
+
+      const rois = await getRoi({
+        cameraId: camera.id,
+        usecaseId: currentUseCaseForROI,
+      }).unwrap();
+
       setUseCases(prev =>
         prev.map(uc =>
           uc.id === currentUseCaseForROI
             ? {
               ...uc,
-              roiConfigured: true,
-              roiShapes,
+              roiConfigured: rois.rois.length > 0,
+              roiShapes: rois.rois,
+              modelThreshold: rois.modelThreshold ?? null,
             }
             : uc
         )
       );
+
+
+
 
       setSnackbar({
         open: true,
@@ -309,7 +381,6 @@ const loadAssignedUsecases = async () => {
     }
   };
 
-
   const handleROIClose = () => {
     setRoiModalOpen(false);
     setCurrentUseCaseForROI(null);
@@ -322,7 +393,6 @@ const loadAssignedUsecases = async () => {
       )
     );
   };
-
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
@@ -357,53 +427,82 @@ const loadAssignedUsecases = async () => {
     return useCase?.roiShapes ?? [];
   };
 
-  const getCameraFeedUrl = () => {
-    // Try to use camera snapshot/feed URL if available
-    // Priority: rtspStream > specific snapshot URL > fallback image
-    if (camera.rtspStream && camera.rtspStream.trim() !== '') {
-      // Convert RTSP to HTTP snapshot if needed
-      // Example: rtsp://192.168.1.100:554/stream -> http://192.168.1.100/snapshot.jpg
-      const rtspUrl = camera.rtspStream;
-      
-      // If it's already an HTTP URL, use it directly
-      if (rtspUrl.startsWith('http')) {
-        return rtspUrl;
-      }
-      
-      // Try to construct snapshot URL from camera IP
-      if (camera.ipAddress) {
-        // Common snapshot endpoints for different camera makes
-        const snapshotPaths: Record<string, string> = {
-          'hikvision': '/ISAPI/Streaming/channels/101/picture',
-          'dahua': '/cgi-bin/snapshot.cgi',
-          'axis': '/axis-cgi/jpg/image.cgi',
-          'default': '/snapshot.jpg'
-        };
-        
-        const make = camera.make?.toLowerCase() ?? 'default';
-        const path = snapshotPaths[make] ?? snapshotPaths['default'];
-        
-        // Construct HTTP URL with authentication if needed
-        if (camera.username && camera.password) {
-          return `http://${camera.username}:${camera.password}@${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-        } else {
-          return `http://${camera.ipAddress}:${camera.port ?? '80'}${path}`;
-        }
-      }
+  const getCameraFeedUrl = React.useCallback(() => {
+    if (!camera?.id || !tenantId) {
+      console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
+      return '/img/siteimage.jpg';
     }
-    
-    // Fallback to default image
-    return '/img/siteimage.jpg';
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+  }, [camera?.id, tenantId]);
+
+
+  const renderCameraContent = () => {
+    if (!showCameraView) {
+      return (
+        <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+          <Typography variant="body2">
+            Click &apos;Show Camera View&apos; to display feed
+          </Typography>
+        </Box>
+      );
+    }
+
+    if (frameUrl) {
+      return (
+        <Box
+          component="img"
+          src={frameUrl}
+          alt="Live Camera Frame"
+          sx={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            borderRadius: 1,
+          }}
+          onError={() => {
+            console.error('Failed to load camera frame');
+            setFrameUrl(null);
+          }}
+        />
+      );
+    }
+
+    return (
+      <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
+        <CircularProgress />
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Loading camera feed...
+        </Typography>
+      </Box>
+    );
   };
 
-  const handleCloseSnackbar = () => {
+  useEffect(() => {
+    if (!showCameraView) {
+      setFrameUrl(null);
+      return;
+    }
+
+    setFrameUrl(getCameraFeedUrl());
+
+    const interval = setInterval(() => {
+      setFrameUrl(getCameraFeedUrl());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [showCameraView, getCameraFeedUrl]);
+
+
+
+
+  function handleCloseSnackbar(): void {
     setSnackbar(prev => ({ ...prev, open: false }));
-  };
+  }
+
 
   return (
     <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>
-      {/* Loading Overlay */}
-      {loading && (
+      {(loading || isSavingRoi) && (
         <Box
           sx={{
             position: 'absolute',
@@ -426,8 +525,6 @@ const loadAssignedUsecases = async () => {
       )}
 
       <Grid container spacing={1.5}>
-        {/* Left Panel - Camera Info and Controls */}
-
         <Grid size={{ xs: 12, lg: 5 }}>
           <Card variant="outlined" sx={{ mb: 2 }}>
             <CardContent>
@@ -444,9 +541,9 @@ const loadAssignedUsecases = async () => {
                 <Typography variant="body2" color="text.secondary">
                   <strong>Camera ID:</strong> {camera.id}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Position:</strong> {camera.position}
-                </Typography>
+                {/* <Typography variant="body2" color="text.secondary">
+                  <strong>Location:</strong> {camera.location || 'N/A'}
+                </Typography> */}
                 <Typography variant="body2" color="text.secondary">
                   <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
                 </Typography>
@@ -476,7 +573,6 @@ const loadAssignedUsecases = async () => {
             </CardContent>
           </Card>
 
-          {/* Camera View Placeholder */}
           <Card variant="outlined" sx={{ bgcolor: 'grey.900', minHeight: 350 }}>
             <CardContent
               sx={{
@@ -486,27 +582,10 @@ const loadAssignedUsecases = async () => {
                 minHeight: 320,
               }}
             >
-              {showCameraView ? (
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-                  <Typography variant="h6" gutterBottom>
-                    Live Camera Feed
-                  </Typography>
-                  <Typography variant="body2">
-                    Click &apos;View&apos; on a camera row
-                  </Typography>
-                </Box>
-              ) : (
-                <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-                  <Typography variant="body2">
-                    Click &apos;Show Camera View&apos; to display feed
-                  </Typography>
-                </Box>
-              )}
+              {renderCameraContent()}
             </CardContent>
           </Card>
         </Grid>
-
-        {/* Right Panel - Use Cases Configuration */}
 
         <Grid size={{ xs: 12, lg: 7 }}>
           <Card variant="outlined" sx={{ height: '100%' }}>
@@ -684,11 +763,7 @@ const loadAssignedUsecases = async () => {
         </Box>
       </Box>
 
-      {/* ROI Selection Modal */}
       <RoiSelectionModal
-        // key={`${currentUseCaseForROI}-${roiModalOpen}-${Date.now()}`}
-        // key={`${currentUseCaseForROI}-${roiModalOpen}`} 
-        // key={roiModalKey}
         key={`${camera.id}-${currentUseCaseForROI}`}
         open={roiModalOpen}
         onClose={handleROIClose}
@@ -697,9 +772,25 @@ const loadAssignedUsecases = async () => {
         existingROI={getExistingROI()}
         onSave={handleROISave}
         labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels ?? []}
+
+        enableThreshold={
+          useCases.find(u => u.id === currentUseCaseForROI)?.is_threshold ?? false
+        }
+        thresholdValue={
+          useCases.find(u => u.id === currentUseCaseForROI)?.modelThreshold ?? null
+        }
+        onThresholdChange={(value) => {
+          setUseCases(prev =>
+            prev.map(u =>
+              u.id === currentUseCaseForROI
+                ? { ...u, modelThreshold: value }
+                : u
+            )
+          );
+        }}
       />
 
-      {/* Success/Error Snackbar */}
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}

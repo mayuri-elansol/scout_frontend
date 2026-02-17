@@ -12,7 +12,6 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
@@ -699,7 +698,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
             key={uuidv4() + index}
           >
-            <DashboardKpiCard {...kpi} />
+            {/* <DashboardKpiCard {...kpi} /> */}
           </Grid>
         ))}
       </Grid>

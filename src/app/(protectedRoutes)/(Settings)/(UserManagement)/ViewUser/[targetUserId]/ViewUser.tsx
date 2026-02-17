@@ -192,7 +192,7 @@ export default function ViewUserPage() {
               <Grid size={{ xs: 12, sm: 6, md: 3 }}>
                 <CardForSettings
                   title="Role"
-                  text={viewUser.role}
+                  text={viewUser.role.toLowerCase().replaceAll(/[-_]/g, " ")}
                   icon={<ManageAccountsIcon />}
                 />
               </Grid>

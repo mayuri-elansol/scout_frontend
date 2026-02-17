@@ -1,6 +1,6 @@
 'use client';
-
-import React, { useState, useCallback } from 'react';
+import React, { useState} from 'react';
+import { useAuth } from "@/customhooks/useAuth";
 
 import {
   Box,
@@ -26,7 +26,12 @@ import {
   Videocam as VideocamIcon,
 } from '@mui/icons-material';
 
-import { getCameras, deleteCamera } from "@/app/services/configurator/cameraService";
+import {
+  useGetAllCamerasQuery,
+  useDeleteCameraMutation,
+} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+
+
 
 import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
 import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
@@ -38,15 +43,18 @@ interface OrganizationCameraManagementProps {
   forceConfigureCamera?: string;
 }
 
+interface CameraData extends OrgCamera {
+  cameraname: string;
+}
+
 
 const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> = ({
   initialCameras = [],
   forceAddCamera = false,
   forceConfigureCamera,
 }) => {
-
-  const [cameras, setCameras] = useState<OrgCamera[]>(initialCameras);
-
+  const { user } = useAuth();
+  const tenantId = user?.org_id ?? '';
   const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
     forceConfigureCamera ?? null
   );
@@ -61,63 +69,32 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
     severity: 'success',
   });
 
-  const fetchCameras = useCallback(async () => {
-    const res = await getCameras();
+  const { data, isLoading } = useGetAllCamerasQuery();
+  const [deleteCamera] = useDeleteCameraMutation();
 
-    setCameras(
-      (res.data as CameraApiResponse[]).map((cam) => ({
+
+  const cameras: OrgCamera[] =
+  Array.isArray(data)
+    ? data.map((cam: CameraApiResponse) => ({
         id: cam.id,
         ipAddress: cam.cameraIp,
         username: cam.userName,
         password: cam.password,
         port: String(cam.RTSPport),
         make: cam.connectionType,
-        position: cam.cameraName,
+        location: cam.Cameralocation ?? "",
+        cameraName: cam.cameraName,
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
       }))
-    );
-  }, []);
-
-
-
-  React.useEffect(() => {
-    fetchCameras();
-  }, [fetchCameras]);
-
-
-  const handleCameraAdd = (camera: OnboardingCamera) => {
-    setCameras((prev) => [
-      ...prev,
-      {
-        id: camera.id,
-        ipAddress: camera.ipAddress,
-        username: camera.username,
-        password: camera.password,
-        port: camera.port,
-        make: "DIRECT_TO_CAMERA",
-        position: camera.cameraname,
-        rtspStream: "",
-        status: camera.status,
-      },
-    ]);
-
-    setSnackbar({
-      open: true,
-      message: "Camera added successfully!",
-      severity: "success",
-    });
-  };
+    : initialCameras;
 
 
 
 
   const handleCameraRemove = async (cameraId: string) => {
     try {
-      await deleteCamera(cameraId);
-
-
-      setCameras((prev) => prev.filter((c) => c.id !== cameraId));
+      await deleteCamera(cameraId).unwrap();
 
       setSnackbar({
         open: true,
@@ -150,12 +127,9 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
 
   const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
-    setCameras((prev) =>
-      prev.map((camera) =>
-        camera.id === cameraId ? { ...camera, aiConfig } : camera
-      )
-    );
-
+    void cameraId;
+    void aiConfig;
+    
     setSelectedCameraForConfig(null);
 
     setSnackbar({
@@ -164,6 +138,16 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
       severity: 'success',
     });
   };
+
+
+  if (isLoading) {
+  return (
+    <Box sx={{ height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <VideocamIcon sx={{ fontSize: 40 }} />
+    </Box>
+  );
+}
+
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -182,11 +166,12 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
   // 1) AI CONFIGURATION SCREEN
   if (selectedCameraForConfig) {
-    const camera = cameras.find((c) => c.id === selectedCameraForConfig);
+    const camera = cameras.find((c) => c.id === selectedCameraForConfig) as CameraData | undefined;
     return (
       <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
         <AIConfigurationStep
           camera={camera!}
+          tenantId={tenantId}   
           onSave={(aiConfig) => handleAIConfigSave(selectedCameraForConfig, aiConfig)}
           onBack={() => setSelectedCameraForConfig(null)}
         />
@@ -198,7 +183,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
   const onboardingCameras: OnboardingCamera[] = cameras.map((cam) => ({
     id: cam.id,
-    cameraname: cam.position,
+    cameraname: cam.cameraName,
     ipAddress: cam.ipAddress,
     username: cam.username,
     password: cam.password,
@@ -215,7 +200,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         <CameraOnboardingStep
           cameras={onboardingCameras}
 
-          onCameraAdd={handleCameraAdd}
+          // onCameraAdd={handleCameraAdd}
 
           onCameraRemove={handleCameraRemove}
           onNext={() => setAddingCamera(false)}
@@ -295,7 +280,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
                 <TableBody>
                   {cameras.map((camera) => (
                     <TableRow key={camera.id} hover>
-                      <TableCell>{camera.position}</TableCell>
+                      <TableCell>{camera.cameraName}</TableCell>
                       <TableCell>{camera.ipAddress}</TableCell>
                       <TableCell>{camera.port}</TableCell>
                       <TableCell>{camera.make}</TableCell>

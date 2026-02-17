@@ -99,8 +99,6 @@ type Story = StoryObj<typeof CameraOnboardingStep>;
 export const Default: Story = {
   args: {
     cameras: [],
-    onCameraAdd: (camera) => console.log("Camera added:", camera),
-
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -111,8 +109,6 @@ export const Default: Story = {
 export const WithCameras: Story = {
   args: {
     cameras: mockCameras,
-    onCameraAdd: (camera) => console.log("Camera added:", camera),
-    
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -122,8 +118,6 @@ export const WithCameras: Story = {
 export const Optional: Story = {
   args: {
     cameras: [],
-    onCameraAdd: (camera) => console.log("Camera added:", camera),
-   
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),
@@ -149,8 +143,6 @@ export const WithMixedStatus: Story = {
         status: "pending",
       },
     ],
-    onCameraAdd: (camera) => console.log("Camera added:", camera),
-   
     onCameraRemove: (id) => console.log("Camera removed:", id),
     onNext: () => console.log("Next clicked"),
     onBack: () => console.log("Back clicked"),

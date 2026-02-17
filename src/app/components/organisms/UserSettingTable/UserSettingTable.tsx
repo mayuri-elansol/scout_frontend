@@ -20,6 +20,7 @@ export interface User {
   lastName: string;
   email: string;
   phone: string;
+  roleName: string;
 }
 
 interface UserHistoryTableProps {
@@ -47,6 +48,8 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
 }) => {
   if (users.length === 0) return null;
   return (
+
+
     <Box mt={5} className={styles.section}>
       <TableContainer component={Paper}>
         <Table>
@@ -57,15 +60,16 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Phone</TableCell>
+              <TableCell>Role Name</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
 
+
           <TableBody>
             {users.map((user, index) => {
               const backendUser = backendUsers[index];
-              const isSelf = backendUser?.userId === currentUserId;
-
+              const isSelf = backendUser.userId === currentUserId;
               return (
                 <TableRow key={backendUser?.userId ?? index}>
                   <TableCell>{index + 1}.</TableCell>
@@ -76,44 +80,47 @@ const UserSettingTable: React.FC<UserHistoryTableProps> = ({
 
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.phone}</TableCell>
+                  <TableCell>  {user.roleName?.toLowerCase().replaceAll(/[-_]/g, " ")}
+                  </TableCell>
 
                   <TableCell align="center">
                     {/* VIEW */}
-                    {canView && (
-                      <IconButton color="info" onClick={() => onView(index)}>
-                        <Visibility />
-                      </IconButton>
-                    )}
 
+                    <IconButton
+                      color="primary"
+                      onClick={() => onView(index)}
+                      disabled={!canView}
+                    >
+                      <Visibility />
+                    </IconButton>
                     {/* EDIT */}
-                    {canEdit && (
-                      <IconButton
-                        color="primary"
-                        onClick={() => onEdit(index)}
-                        disabled={isSelf}
-                      >
-                        <Edit />
-                      </IconButton>
-                    )}
 
+                    <IconButton
+                      color="secondary"
+                      onClick={() => onEdit(index)}
+                      disabled={!canEdit || isSelf}
+                    >
+                      <Edit />
+                    </IconButton>
                     {/* DELETE */}
-                    {canDelete && (
-                      <IconButton
-                        color="error"
-                        onClick={() => onDelete(index)}
-                        disabled={isSelf}
-                      >
-                        <Delete />
-                      </IconButton>
-                    )}
+
+                    <IconButton
+                      color="error"
+                      onClick={() => onDelete(index)}
+                      disabled={!canDelete || isSelf}
+                    >
+                      <Delete />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
+
         </Table>
       </TableContainer>
     </Box>
+
   );
 };
 

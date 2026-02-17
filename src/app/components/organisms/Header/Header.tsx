@@ -31,6 +31,7 @@ import {
   dashboardMenu,
   LinkMenuItem,
   liveStreamingMenu,
+  MenuItemConfig,
   settingsMenu,
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
@@ -194,22 +195,51 @@ const Header: React.FC = () => {
     lastChecked: new Date().toLocaleTimeString(),
   });
 
-  const getPageTitle = () => {
-    const allMenuItems = [
-      ...dashboardMenu.flatMap((category) => category.items),
-      ...alertMenu,
-      ...analyticsMenu.flatMap((category) => category.items),
-    ];
 
-    const currentItem = allMenuItems.find(
-      (item): item is LinkMenuItem =>
-        item.type === "link" &&
-        item.path.toLowerCase() === pathname.toLowerCase(),
-    );
+const pageTitleMap: Record<string, string> = {
+  "/AddUser": "Add User",
+  "/EditUser": "Edit User",
+  "/UserOverview":"User Overview",
+  "/ViewUser":"View User",
+   "/AddRole": "Add Role",
+  "/EditRole": "Edit Role",
+  "/RoleOverview":"Role Overview",
+  "/ViewRole":"View Role"
+};
 
-    return currentItem?.name ?? "Dashboard";
+
+const getPageTitle = () => {
+  const flattenMenuItems = (menu: MenuItemConfig[]): LinkMenuItem[] => {
+    return menu.flatMap((item) => {
+      if (item.type === "link") return [item];
+      if (item.type === "group") return flattenMenuItems(item.items);
+      return [];
+    });
   };
 
+  const allMenuItems: LinkMenuItem[] = [
+    ...flattenMenuItems(liveStreamingMenu),
+    ...dashboardMenu.flatMap((c) => flattenMenuItems(c.items)),
+    ...flattenMenuItems(alertMenu),
+    ...analyticsMenu.flatMap((c) => flattenMenuItems(c.items)),
+    ...settingsMenu.flatMap((c) => flattenMenuItems(c.items)),
+  ];
+
+  const currentItem = allMenuItems.find(
+    (item) => pathname.toLowerCase().startsWith(item.path.toLowerCase())
+  );
+
+  if (currentItem) return currentItem.name;
+
+  // fallback to pageTitleMap
+  for (const basePath in pageTitleMap) {
+    if (pathname.toLowerCase().startsWith(basePath.toLowerCase())) {
+      return pageTitleMap[basePath];
+    }
+  }
+
+  return "Dashboard";
+};
   useEffect(() => {
     const allMenuItems = [
       ...liveStreamingMenu,
@@ -428,7 +458,8 @@ const Header: React.FC = () => {
                         variant="body2"
                         sx={{ color: "#6b7280", fontWeight: 400 }}
                       >
-                        Role: {user.role}
+                        Role: {user.role.toLowerCase().replaceAll(/[-_]/g, " ")}
+
                       </Typography>
                     )}
                   </Box>

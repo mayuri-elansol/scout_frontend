@@ -38,7 +38,7 @@ export const addUserApi = baseProtectedApi.injectEndpoints({
       },
 
       
-      invalidatesTags: ["AddUser"],
+      invalidatesTags: ["UserOverview"],
     }),
 
 

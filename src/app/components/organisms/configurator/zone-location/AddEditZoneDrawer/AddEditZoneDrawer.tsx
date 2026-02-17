@@ -10,14 +10,22 @@ import {
   IconButton,
 } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { Zone } from "@/app/data/mockZones";
+
+
+type ZoneUI = {
+  id: string;
+  name: string;
+  description?: string;
+};
+
 
 interface AddEditZoneDrawerProps {
   open: boolean;
   onClose: () => void;
-  zone: Zone | null;
-  onSave: (zone: Omit<Zone, "id" | "createdAt" | "updatedAt"> | Zone) => void;
+  zone: ZoneUI | null;
+  onSave: (zone: { name: string; description?: string; id?: string }) => void;
 }
+
 
 export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
   open,
@@ -88,11 +96,9 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
       // Create new zone
       onSave({
         name: formData.name.trim(),
-        type: "General", // Default type
         description: formData.description.trim(),
-        locationIds: [],
-        cameraIds: [],
       });
+
     }
 
     onClose();
@@ -153,7 +159,7 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
             value={formData.name}
             onChange={(e) => handleChange("name", e.target.value)}
             error={!!errors.name}
-            sx={{mb:2}}
+            sx={{mb:1}}
            
             placeholder="e.g., Main Entrance, Production Floor"
           />
@@ -162,8 +168,6 @@ export const AddEditZoneDrawer: React.FC<AddEditZoneDrawerProps> = ({
           <TextField
             label="Description"
             fullWidth
-            multiline
-            minRows={2}
             value={formData.description}
             onChange={(e) => handleChange("description", e.target.value)}
             // placeholder="Enter zone description (optional)"

@@ -21,6 +21,14 @@ export const apiRoutes = {
     getOrganisationDetails: "/get-organisation-details",
     editOrganisationDetailsById: "/edit-organisation-details-by-id",
   },
+
+    configurator: {
+    root: "configurator",
+    cameraManager: "/camera-manager",
+    zoneMapping: "/zone-mapping",
+    useCaseManager: "/use-case-manager",
+  },
+  
   roleInformation: {
     root: "/role-information",
     getList: "get-role-list",
