@@ -6,6 +6,7 @@ import {
   MovemnetDuringShutDownHrCsvReportRequest,
   MovemnetDuringShutDownHrDetailedReportRequest,
   MovemnetDuringShutDownHrSingleReportRequest,
+  ShiftTypeMovement,
 } from "./movementDuringShutdownHours.types";
 
 export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
@@ -153,6 +154,18 @@ export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
         });
       },
     }),
+
+    getOrgShiftTimeMovementData: builder.query<
+      ShiftTypeMovement[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
+    }),
   }),
 });
 
@@ -164,4 +177,5 @@ export const {
   useGetMovementDuringShutdownHoursSingleReportPdfMutation,
   useGetMovementDuringShutdownHoursDetailedCsvReportMutation,
   useGetMovementDuringShutdownHoursDetailedPdfReportMutation,
+  useGetOrgShiftTimeMovementDataQuery,
 } = movemnetDuringShutDownHrApi;

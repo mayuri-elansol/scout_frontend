@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
@@ -11,122 +11,329 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import PeopleIcon from "@mui/icons-material/People";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
+import EngineeringIcon from "@mui/icons-material/Engineering";
+import {
+  MovemnetDuringShutDownHrDetailedReportResponse,
+  MovemnetDuringShutDownHrFilterParams,
+  MovemnetDuringShutDownHrKpiItem,
+  MovemnetDuringShutDownHrViolation,
+  MovemnetDuringShutDownHrZoneViolation,
+} from "./movementDuringShutdownHours.types";
+import {
+  useGetMovementDuringShutdownHoursDetailedCsvReportMutation,
+  useGetMovementDuringShutdownHoursDetailedPdfReportMutation,
+  useGetMovementDuringShutdownHoursSingleReportPdfMutation,
+  useGetOrgShiftTimeMovementDataQuery,
+  useLazyGetMovementDuringShutdownHoursDetailedReportQuery,
+  useLazyGetMovementDuringShutdownHoursKpiQuery,
+  useLazyGetMovementDuringShutdownHoursRecentViolationsQuery,
+  useLazyGetMovementDuringShutdownHoursZoneViolationsQuery,
+} from "./movementDuringShutdownHoursApi";
+import { movemnetDuringShutDownHrKpiConfig } from "./movementDuringShutdownHoursConfig";
+import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 const MovementDuringShutdownHours: React.FC = () => {
-  interface PeoplePresenceViolation {
-    incident: string;
-    zone: string;
-    time: string;
-    imageUrl: string;
-    cameraId: string;
-    peopleCount: number;
-    alarmTriggered: boolean;
-    [key: string]: string | number | boolean;
-  }
+  const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
+  /* ---------- STATE ---------- */
+  const [isMovementLiveMode, setIsMovementLiveMode] = useState(true);
 
-  const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] =
-    useState<PeoplePresenceViolation | null>(null);
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  const [displayMovementKpi, setDisplayMovementKpi] = useState<
+    MovemnetDuringShutDownHrKpiItem[]
+  >([]);
+  const [displayMovementZoneViolations, setDisplayMovementZoneViolations] =
+    useState<MovemnetDuringShutDownHrZoneViolation[]>([]);
+  const [recentMovementViolationsLive, setRecentMovementViolationsLive] =
+    useState<MovemnetDuringShutDownHrViolation[]>([]);
+  const [detailedMovementReport, setDetailedMovementReport] =
+    useState<MovemnetDuringShutDownHrDetailedReportResponse | null>(null);
 
-  const PeoplePresenceKpiData = [
-    {
-      title: "Total People Count",
-      value: "87",
-      icon: Groups,
-      tooltipMessage:
-        "Shows the total number of people detected in monitored zones.",
-    },
-    {
-      title: "Detected Zones",
-      value: "Zone A, Zone B",
-      icon: LocationOn,
-      tooltipMessage: "Lists the zones where people are currently detected.",
-    },
-    {
-      title: "Last Incidence",
-      value: "10:25 AM",
-      icon: AccessTime,
-      tooltipMessage:
-        "Shows the time when the most recent people presence was detected.",
-    },
-  ];
-  const backendPeoplePresenceData = [
-    {
-      id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
-      zone: "Production Floor",
-      camera: "CAM-31",
-      count: 15,
-      alarmTriggered: true,
-      createdAt: "2025-09-23 21:05",
-      updatedAt: "2025-09-23 21:06",
-    },
-    {
-      id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
-      zone: "Loading Dock",
-      camera: "CAM-32",
-      count: 7,
-      alarmTriggered: true,
-      createdAt: "2025-09-23 21:15",
-      updatedAt: "2025-09-23 21:16",
-    },
-  ];
+  const [viewMovementPopupOpen, setViewMovementPopupOpen] = useState(false);
 
-  const recentPeoplePresence = backendPeoplePresenceData.map((item) => {
-    const incidentMsg = `People detected: ${item.count}`;
+  const [viewMovementPopupData, setViewMovementPopupData] =
+    useState<MovemnetDuringShutDownHrViolation | null>(null);
 
-    return {
-      incident: incidentMsg,
-      zone: item.zone,
-      time: item.createdAt,
-      imageUrl: item.snapshot,
-      cameraId: item.camera,
-      peopleCount: item.count,
-      alarmTriggered: item.alarmTriggered,
+  /*-------movement api ----------*/
+
+  const { data: orgShifts } = useGetOrgShiftTimeMovementDataQuery(
+    { tenantId },
+    { skip: !tenantId },
+  );
+  const [fetchMovementKpi, { isLoading: movementkpiLoading }] =
+    useLazyGetMovementDuringShutdownHoursKpiQuery();
+
+  const [fetchMovementRecent, { isLoading: movementrecentLoading }] =
+    useLazyGetMovementDuringShutdownHoursRecentViolationsQuery();
+
+  const [fetchMovementZoneViolations, { isLoading: movementzoneLoading }] =
+    useLazyGetMovementDuringShutdownHoursZoneViolationsQuery();
+
+  const [fetchDetailedMovementReportApi, { isLoading: movementreportLoading }] =
+    useLazyGetMovementDuringShutdownHoursDetailedReportQuery();
+
+  const [downloadMovementSinglePdf] =
+    useGetMovementDuringShutdownHoursSingleReportPdfMutation();
+
+  const [downloadMovementCsvReport] =
+    useGetMovementDuringShutdownHoursDetailedCsvReportMutation();
+  const [downloadMovementPdfReport] =
+    useGetMovementDuringShutdownHoursDetailedPdfReportMutation();
+
+  /* ---------- INITIAL LOAD ---------- */
+  useEffect(() => {
+    if (!tenantId) return;
+    const load = async () => {
+      const [kpi, zones, recent, detailed] = await Promise.all([
+        fetchMovementKpi({ tenantId }).unwrap(),
+        fetchMovementZoneViolations({ tenantId }).unwrap(),
+        fetchMovementRecent({ tenantId }).unwrap(),
+        fetchDetailedMovementReportApi({ tenantId }).unwrap(),
+      ]);
+
+      setDisplayMovementKpi(kpi ?? []);
+      setDisplayMovementZoneViolations(zones ?? []);
+      setRecentMovementViolationsLive(recent ?? []);
+      setDetailedMovementReport(detailed);
     };
-  });
 
-  const zoneViolationsData = [
-    {
-      zone: "Production Floor",
-      peopleCount: 15,
-      icons: {
-        peopleCount: PeopleIcon,
-      },
+    load().catch(console.error);
+  }, [
+    tenantId,
+    fetchMovementKpi,
+    fetchMovementZoneViolations,
+    fetchMovementRecent,
+    fetchDetailedMovementReportApi,
+  ]);
+
+  /* ---------- SOCKET (LIVE ONLY) ---------- */
+  // useSocketEvent<IntrusionSocketPayload>({
+  //   tenantId,
+  //   enabled: isIntrusionLiveMode,
+  //   event: SOCKET_EVENTS.INTRUSION_UPDATE,
+  //   handler: (payload) => {
+  //     console.log("payload form the socket", payload);
+  //     setDisplayIntrusionKpi(payload.kpi ?? []);
+  //     setDisplayIntrusionZoneViolations(payload.zoneViolations ?? []);
+  //     setRecentIntrusionViolationsLive(payload.recentViolations ?? []);
+  //   },
+  // });
+
+  /* ---------- TIME FILTER ---------- */
+  const handleMovementTimeRangeChange = useCallback(
+    async (range: { start?: string; end?: string }) => {
+      if (!range.start && !range.end) {
+        setIsMovementLiveMode(true);
+        fetchMovementKpi({ tenantId });
+
+        return;
+      }
+
+      setIsMovementLiveMode(false);
+      const payload = {
+        tenantId: tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      };
+      const [kpi, zones, recent] = await Promise.all([
+        fetchMovementKpi(payload).unwrap(),
+        fetchMovementZoneViolations(payload).unwrap(),
+        fetchMovementRecent(payload).unwrap(),
+      ]);
+
+      setDisplayMovementKpi(kpi ?? []);
+      setDisplayMovementZoneViolations(zones ?? []);
+      setRecentMovementViolationsLive(recent ?? []);
     },
-    {
-      zone: "Loading Dock",
-      peopleCount: 7,
-      icons: {
-        peopleCount: PeopleIcon,
-      },
-    },
+    [tenantId, fetchMovementKpi],
+  );
+
+  const MovementKpiData = useMemo(
+    () =>
+      displayMovementKpi.map((item) => {
+        const config = movemnetDuringShutDownHrKpiConfig[item.title];
+
+        return {
+          ...item,
+          title: t(item.title),
+          icon: config?.icon || EngineeringIcon,
+          tooltipMessage: config?.tooltipMessage || "",
+        };
+      }),
+    [displayMovementKpi, t],
+  );
+  const MovementZoneViolationsForUi = useMemo(() => {
+    return displayMovementZoneViolations.map((z) => ({
+      zone: z.zone,
+      incident: z.peopleCount,
+    }));
+  }, [displayMovementZoneViolations]);
+  // recent violation
+  const handleDownloadMovementViolation = async (
+    url: string,
+    violation: Violation,
+  ) => {
+    if (!violation) return;
+    const MovementViolation = violation as MovemnetDuringShutDownHrViolation;
+    try {
+      const payload = {
+        tenantId: tenantId,
+        violation: String(MovementViolation.violation),
+        zone: MovementViolation.zone,
+        time: MovementViolation.time,
+        cameraId: MovementViolation.cameraId,
+        alarmTriggered: MovementViolation.alarmTriggered,
+        imageUrl: url,
+        peopleCount: MovementViolation.peopleCount,
+      };
+
+      //  await downloadMovementSinglePdf(payload);
+    } catch (err) {
+      console.error("PDF download failed", err);
+    }
+  };
+
+  //detailed report handlers
+
+  const movementTableColumns = [
+    { id: "violation", label: t("Incident") },
+    { id: "peopleCount", label: t("People Count") },
+    { id: "time", label: t("Time") },
+    { id: "zone", label: t("Zone") },
+    { id: "cameraId", label: t("Cameras") },
+    { id: "alarmTriggered", label: t("Alarm Triggered") },
   ];
+  const movementTableFilters = [
+    {
+      id: "zone",
+      label: t("Zone"),
+      type: "select" as const,
 
-  interface FilterParams {
-    status?: string;
-    employeeName?: string;
-    startDate?: string;
-    endDate?: string;
-  }
-  const handleSubmitFilter = async (filters: FilterParams) => {
-    console.log("Selected Filters:", filters);
-  };
+      options: detailedMovementReport?.zones || [],
+    },
+    {
+      id: "cameraId",
+      label: t("Cameras"),
+      type: "select" as const,
 
-  const handleReset = () => {
-    console.log("reset button clickedd");
-  };
+      options: detailedMovementReport?.cameras || [],
+    },
+    {
+      id: "alarmTriggered",
+      label: t("Alarm Triggered"),
+      type: "select" as const,
+      options: ["True", "False"],
+    },
+    { id: "startDate", label: t("Start Date"), type: "date" as const },
+    { id: "endDate", label: t("End Date"), type: "date" as const },
+  ];
+  const handleMovementSubmitFilter = useCallback(
+    async (filters: MovemnetDuringShutDownHrFilterParams) => {
+      console.log("filter params", filters);
+      const alarmValue =
+        filters.alarmTriggered === undefined
+          ? undefined
+          : filters.alarmTriggered === "True";
+      const body = {
+        tenantId: tenantId,
+        zone: filters.zone || undefined,
+        cameraId: filters.cameraId || undefined,
 
-  const handleExport = (format: "csv" | "pdf") => {
-    console.log("Export requested clikcedd:", format);
-  };
-  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
-    const violation = row as PeoplePresenceViolation;
-    setViewPopupData(violation);
-    setViewPopupOpen(true);
-  };
-  const KpiCardLoading = false;
+        alarmTriggered: alarmValue,
+
+        startDate: formatLocalDateTime(filters.startDate),
+        endDate: formatLocalDateTime(filters.endDate),
+      };
+
+      console.log("🚀 Sending payload:", body);
+
+      const response = await fetchDetailedMovementReportApi(body).unwrap();
+      setDetailedMovementReport(response);
+    },
+    [tenantId, fetchDetailedMovementReportApi, formatLocalDateTime],
+  );
+  const handleMovementReset = useCallback(async () => {
+    const response = await fetchDetailedMovementReportApi({
+      tenantId: tenantId,
+    }).unwrap();
+    setDetailedMovementReport(response);
+  }, [tenantId, fetchDetailedMovementReportApi]);
+
+  const handleMovementExport = useCallback(
+    async (
+      format: "csv" | "pdf",
+      filters: MovemnetDuringShutDownHrFilterParams,
+    ) => {
+      try {
+        const payload = {
+          tenantId,
+          zone: filters.zone || undefined,
+          cameraId: filters.cameraId || undefined,
+
+          alarmTriggered:
+            filters.alarmTriggered === undefined
+              ? undefined
+              : filters.alarmTriggered === "True",
+
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
+        };
+
+        // ================= CSV =================
+        if (format === "csv") {
+          await downloadMovementCsvReport(payload);
+        }
+
+        // ================= PDF =================
+        if (format === "pdf") {
+          await downloadMovementPdfReport(payload).unwrap();
+        }
+      } catch (error) {
+        console.error("❌ Export failed:", error);
+      }
+    },
+    [
+      tenantId,
+      downloadMovementCsvReport,
+      downloadMovementPdfReport,
+      formatLocalDateTime,
+    ],
+  );
+
+  const handleDownloadMovementSingle = useCallback(
+    async (row: MovemnetDuringShutDownHrViolation) => {
+      try {
+        const payload = {
+          tenantId,
+          violation: String(row.violation),
+          zone: row.zone,
+          time: row.time,
+          cameraId: row.cameraId,
+          alarmTriggered: row.alarmTriggered,
+          imageUrl: row.imageUrl,
+          peopleCount: row.peopleCount,
+        };
+
+        await downloadMovementSinglePdf(payload);
+      } catch (error) {
+        console.error("❌ Single PDF download failed", error);
+      }
+    },
+    [tenantId, downloadMovementSinglePdf],
+  );
+
+  const handleViewMovementSingle = useCallback(
+    (row: MovemnetDuringShutDownHrViolation) => {
+      console.log("view single row", row);
+      setViewMovementPopupData(row);
+      setViewMovementPopupOpen(true);
+    },
+    [], // setState functions are stable
+  );
   return (
     <Box>
       <Paper
@@ -153,41 +360,42 @@ const MovementDuringShutdownHours: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
+          <TimeFilter
+            onRangeChange={handleMovementTimeRangeChange}
+            shifts={orgShifts || []}
+          />
         </Box>
         {/* KPI Cards */}
 
-        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-          {KpiCardLoading
-            ? // Show skeletons while loading
-              skeletonKeys.map((index) => (
+        <Grid container spacing={2.5} sx={{ mb: 4 }}>
+          {movementkpiLoading
+            ? Array.from({ length: 6 }).map(() => (
                 <Grid
+                  key={uuidv4()}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={uuidv4() + index}
                 >
                   <KpiCardSkeleton />
                 </Grid>
               ))
-            : // Show actual KPI cards
-              PeoplePresenceKpiData.map((kpi, index) => (
+            : MovementKpiData.map((kpi) => (
                 <Grid
+                  key={kpi.title}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                  key={uuidv4() + index}
                 >
                   <KpiCard {...kpi} />
                 </Grid>
               ))}
         </Grid>
-
         {/* Content Grid */}
         <Grid container spacing={3}>
           {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Incident"
-              violations={recentPeoplePresence}
-              loading={false}
-              tooltipMessage="Latest 20 people detection during shutdown hours with details."
+              violations={recentMovementViolationsLive}
+              loading={movementrecentLoading}
+              onDownload={handleDownloadMovementViolation}
+              tooltipMessage="Latest 20 movement detection during shutdown hours with details."
             />
           </Grid>
           {/*  Compliance by Zone */}
@@ -195,8 +403,8 @@ const MovementDuringShutdownHours: React.FC = () => {
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
               label="Zone Incident"
-              violationsZone={zoneViolationsData}
-              loading={false}
+              violationsZone={MovementZoneViolationsForUi}
+              loading={movementzoneLoading}
               tooltipMessage="Shows people presence during shutdown hours incidents per zone"
             />
           </Grid>
@@ -204,61 +412,36 @@ const MovementDuringShutdownHours: React.FC = () => {
       </Paper>
 
       {/*  Violations Report */}
+
       <ReportTable
-        title="Detailed Report"
-        columns={[
-          { id: "incident", label: "Incident", minWidth: 200 },
-          { id: "peopleCount", label: "People Count", minWidth: 120 },
-          { id: "time", label: "Time", minWidth: 150 },
-          { id: "zone", label: "Zone", minWidth: 150 },
-          { id: "cameraId", label: "Cameras", minWidth: 120 },
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
-        ]}
-        data={recentPeoplePresence}
-        filters={[
-          {
-            id: "zone",
-            label: "Zone",
-            type: "select",
-            options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.zone)),
-            ),
-          },
-          {
-            id: "cameraId",
-            label: "Camera",
-            type: "select",
-            options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.cameraId)),
-            ),
-          },
-          {
-            id: "alarmTriggered",
-            label: "Alarm Triggered",
-            type: "select",
-            options: ["True", "False"],
-          },
-          { id: "time", label: "Start Date", type: "date" },
-          { id: "time", label: "End Date", type: "date" },
-        ]}
-        downloadFileName="people-presence-shutdown-report"
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        loading={false}
-        onView={handleViewSingle}
+        title={t("Detailed Report")}
         tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options."
+        data={detailedMovementReport?.data || []}
+        columns={movementTableColumns}
+        filters={movementTableFilters}
+        onSubmit={handleMovementSubmitFilter}
+        onReset={handleMovementReset}
+        onExport={handleMovementExport}
+        onDownload={(row) =>
+          handleDownloadMovementSingle(row as MovemnetDuringShutDownHrViolation)
+        }
+        onView={(row) =>
+          handleViewMovementSingle(row as MovemnetDuringShutDownHrViolation)
+        }
+        downloadFileName="movement-during-shutdown-hr-violations-report"
+        loading={movementreportLoading}
       />
       {/* View Alert Popup */}
-      {viewPopupData && (
-        <ViewAlertPopup
-          open={viewPopupOpen}
-          handleClose={() => setViewPopupOpen(false)}
-          details={viewPopupData}
-          imageKey="imageUrl"
-          onDownload={(url) => console.log("Download:", url)}
-        />
-      )}
+      <ViewAlertPopup
+        open={viewMovementPopupOpen}
+        handleClose={() => setViewMovementPopupOpen(false)}
+        details={viewMovementPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => {
+          if (!viewMovementPopupData) return;
+          handleDownloadMovementViolation(url, viewMovementPopupData);
+        }}
+      />
     </Box>
   );
 };
