@@ -83,7 +83,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         port: String(cam.RTSPport),
         make: cam.connectionType,
         location: cam.Cameralocation ?? "",
-        cameraName: cam.cameraName,
+        cameraname: cam.cameraName,
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
       }))
@@ -183,7 +183,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
 
   const onboardingCameras: OnboardingCamera[] = cameras.map((cam) => ({
     id: cam.id,
-    cameraname: cam.cameraName,
+    cameraname: cam.cameraname,
     ipAddress: cam.ipAddress,
     username: cam.username,
     password: cam.password,
@@ -280,7 +280,7 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
                 <TableBody>
                   {cameras.map((camera) => (
                     <TableRow key={camera.id} hover>
-                      <TableCell>{camera.cameraName}</TableCell>
+                      <TableCell>{camera.cameraname}</TableCell>
                       <TableCell>{camera.ipAddress}</TableCell>
                       <TableCell>{camera.port}</TableCell>
                       <TableCell>{camera.make}</TableCell>

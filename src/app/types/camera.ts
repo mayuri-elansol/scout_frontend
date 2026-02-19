@@ -1,13 +1,15 @@
 // Camera as stored & listed in organization
 export interface OrgCamera {
-  cameraName: string;
+  // cameraName: string;
   id: string;
   ipAddress: string;
   username: string;
   password: string;
   port: string;
   make: string;
-  location: string;
+  // location: string;
+  cameraname: string;   // ← renamed from cameraName (matches AIConfigurationStep)
+  location?: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
   aiConfig?: {

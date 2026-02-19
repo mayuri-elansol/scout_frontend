@@ -1,16 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs";
 import AIConfigurationStep from "./AIConfigurationStep";
 
-// ✅ Import the real CameraData type
-
 import type { OrgCamera } from "@/app/types/camera";
-
-// interface AIConfigurationStepProps {
-//   camera: OrgCamera;
-//   onSave: (aiConfig: any) => void;
-//   onBack: () => void;
-// }
-
 
 // ---- MOCK CAMERA ----
 const mockCamera: OrgCamera = {
@@ -20,7 +11,9 @@ const mockCamera: OrgCamera = {
   password: "admin123",
   port: "554",
   make: "Hikvision",
-  position: "Main Gate", // ✔ valid because string | undefined
+  // position: "Main Gate", // ✔ valid because string | undefined
+  cameraname: "Main Gate Camera",   // ← required field in CameraData
+  location: "Main Gate",
   rtspStream: "rtsp://192.168.1.10/stream",
   status: "connected",
   aiConfig: {

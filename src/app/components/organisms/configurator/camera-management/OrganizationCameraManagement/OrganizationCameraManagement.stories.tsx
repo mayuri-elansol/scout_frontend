@@ -31,7 +31,7 @@ export const WithCameras: Story = {
         make: "Hikvision",
         rtspStream: "rtsp://example",
         status: "connected",
-        cameraName: undefined,
+        cameraname: "hikvision1",
         location: ""
       },
     ],
@@ -58,7 +58,7 @@ export const ForceAIConfigScreen: Story = {
         make: "Dahua",
         rtspStream: "",
         status: "pending",
-        cameraName: undefined,
+        cameraname: "hikvision2",
         location: ""
       },
     ],

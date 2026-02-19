@@ -310,7 +310,7 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
                   <Grid container spacing={{ xs: 2, md: 3 }}>
                     {features.map((feature, index) => (
-                      <Grid size={{ xs: 12, md: 6 }} key={uuidv4() + index}>
+                      <Grid size={{ xs: 12, md: 6 }} key={feature.title}>
                         <FeatureCard
                           icon={feature.icon}
                           title={feature.title}

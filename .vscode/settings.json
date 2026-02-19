@@ -1,2 +1,6 @@
 {
+    "sonarlint.connectedMode.project": {
+        "connectionId": "https-cicd-elansoltech-in-sonar",
+        "projectKey": "S-SCT-03-SW-Scout-Frontend-1.0.0"
+    }
 }
