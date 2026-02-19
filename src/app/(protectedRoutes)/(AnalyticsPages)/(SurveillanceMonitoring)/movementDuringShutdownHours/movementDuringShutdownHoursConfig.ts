@@ -1,10 +1,9 @@
 import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 
 export const movemnetDuringShutDownHrKpiConfig = {
-  "Total People Count": {
+  "Total Movement Events": {
     icon: Groups,
-    tooltipMessage:
-      "Shows the total number of people detected in monitored zones.",
+    tooltipMessage: "Shows the total movement detected in monitored zones.",
   },
   "Detected Zones": {
     icon: LocationOn,

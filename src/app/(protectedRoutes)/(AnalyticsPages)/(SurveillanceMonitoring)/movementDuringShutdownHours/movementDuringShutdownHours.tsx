@@ -3,14 +3,12 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import PeopleIcon from "@mui/icons-material/People";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
@@ -129,7 +127,6 @@ const MovementDuringShutdownHours: React.FC = () => {
       if (!range.start && !range.end) {
         setIsMovementLiveMode(true);
         fetchMovementKpi({ tenantId });
-
         return;
       }
 
@@ -169,7 +166,7 @@ const MovementDuringShutdownHours: React.FC = () => {
   const MovementZoneViolationsForUi = useMemo(() => {
     return displayMovementZoneViolations.map((z) => ({
       zone: z.zone,
-      incident: z.peopleCount,
+      peopleCount: z.peopleCount,
     }));
   }, [displayMovementZoneViolations]);
   // recent violation
@@ -191,7 +188,7 @@ const MovementDuringShutdownHours: React.FC = () => {
         peopleCount: MovementViolation.peopleCount,
       };
 
-      //  await downloadMovementSinglePdf(payload);
+      await downloadMovementSinglePdf(payload);
     } catch (err) {
       console.error("PDF download failed", err);
     }
@@ -332,7 +329,7 @@ const MovementDuringShutdownHours: React.FC = () => {
       setViewMovementPopupData(row);
       setViewMovementPopupOpen(true);
     },
-    [], // setState functions are stable
+    [],
   );
   return (
     <Box>
@@ -412,7 +409,6 @@ const MovementDuringShutdownHours: React.FC = () => {
       </Paper>
 
       {/*  Violations Report */}
-
       <ReportTable
         title={t("Detailed Report")}
         tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options."
