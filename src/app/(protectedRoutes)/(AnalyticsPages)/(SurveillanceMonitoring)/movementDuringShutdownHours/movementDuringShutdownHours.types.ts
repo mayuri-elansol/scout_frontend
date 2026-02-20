@@ -11,7 +11,7 @@ export interface MovemnetDuringShutDownHrKpiItem {
 /* ---------- ZONE VIOLATIONS ---------- */
 export interface MovemnetDuringShutDownHrZoneViolation {
   zone: string;
-  peopleCount: number;
+  MovementEvents: number;
 }
 
 /* ---------- Recent VIOLATION ---------- */
@@ -66,9 +66,28 @@ export type MovemnetDuringShutDownHrCsvReportRequest = {
   alarmTriggered?: boolean;
 };
 
-export interface IntrusionSocketPayload {
+export interface MovemnetDuringShutDownHrSocketPayload {
   serverTimestamp: string;
   kpi: MovemnetDuringShutDownHrKpiItem[];
   zoneViolations: MovemnetDuringShutDownHrZoneViolation[];
   recentViolations: MovemnetDuringShutDownHrViolation[];
+}
+
+export interface ShiftTypeMovement {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
+}
+
+/* ---------- FILTERS ---------- */
+export interface MovemnetDuringShutDownHrFilterParams {
+  zone?: string;
+  cameraId?: string;
+  alarmTriggered?: string;
+  startDate?: string;
+  endDate?: string;
 }

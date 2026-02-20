@@ -6,6 +6,7 @@ import {
   MovemnetDuringShutDownHrCsvReportRequest,
   MovemnetDuringShutDownHrDetailedReportRequest,
   MovemnetDuringShutDownHrSingleReportRequest,
+  ShiftTypeMovement,
 } from "./movementDuringShutdownHours.types";
 
 export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
@@ -62,21 +63,21 @@ export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
           const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `intrusion-single-report-${Date.now()}.pdf`;
+          a.download = `movement-during-shutdown-hour-single-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
           globalThis.URL.revokeObjectURL(url);
 
-          return null; // ✅ Must return something serializable
+          return null;
         },
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await rtkAPIToast(queryFulfilled, dispatch, {
           successMessage:
-            "Intrusion detection single PDF report downloaded successfully.",
+            "Movement during shutdown hour single PDF report downloaded successfully.",
           errorMessage:
-            "Failed to download the Intrusion detection single PDF report.",
+            "Failed to download the movement during shutdown hour single PDF report.",
           duration: 4000,
         });
       },
@@ -97,7 +98,7 @@ export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
           const a = document.createElement("a");
 
           a.href = url;
-          a.download = `intrusion-csv-report-${Date.now()}.csv`;
+          a.download = `movement-during-shutdown-hour-csv-report-${Date.now()}.csv`;
           document.body.appendChild(a);
           a.click();
 
@@ -111,9 +112,9 @@ export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await rtkAPIToast(queryFulfilled, dispatch, {
           successMessage:
-            "Intrusion detection detailed CSV report downloaded successfully.",
+            "Movement during shutdown hour detailed CSV report downloaded successfully.",
           errorMessage:
-            "Failed to download the Intrusion detection detailed CSV report.",
+            "Failed to download the movement during shutdown hour detailed CSV report.",
           duration: 4000,
         });
       },
@@ -134,24 +135,36 @@ export const movemnetDuringShutDownHrApi = baseProtectedApi.injectEndpoints({
           const url = globalThis.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `intrusion-detailed-report-${Date.now()}.pdf`;
+          a.download = `movement-during-shutdown-hour-detailed-report-${Date.now()}.pdf`;
           document.body.appendChild(a);
           a.click();
           a.remove();
           globalThis.URL.revokeObjectURL(url);
 
-          return null; // ✅ Must return something serializable for Redux
+          return null;
         },
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         await rtkAPIToast(queryFulfilled, dispatch, {
           successMessage:
-            "Intrusion detection detailed report has been downloaded successfully.",
+            "Movement during shutdown hour detailed report has been downloaded successfully.",
           errorMessage:
-            "Failed to download the Intrusion detailed report. Please try again.",
+            "Failed to download the movement during shutdown hour report. Please try again.",
           duration: 4000,
         });
       },
+    }),
+
+    getOrgShiftTimeMovementData: builder.query<
+      ShiftTypeMovement[],
+      { tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgShiftTiming}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["orgShiftTime"],
     }),
   }),
 });
@@ -164,4 +177,5 @@ export const {
   useGetMovementDuringShutdownHoursSingleReportPdfMutation,
   useGetMovementDuringShutdownHoursDetailedCsvReportMutation,
   useGetMovementDuringShutdownHoursDetailedPdfReportMutation,
+  useGetOrgShiftTimeMovementDataQuery,
 } = movemnetDuringShutDownHrApi;
