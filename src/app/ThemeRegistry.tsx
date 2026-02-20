@@ -1,30 +1,24 @@
 "use client";
 
 import * as React from "react";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "@/app/theme/theme";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 
-
-function createEmotionCache() {
-  return createCache({ key: "css", prepend: true });
-}
 
 export default function ThemeRegistry({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
-  const cache = React.useMemo(() => createEmotionCache(), []);
 
   return (
-    <CacheProvider value={cache}>
+        <AppRouterCacheProvider>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
-    </CacheProvider>
+        </AppRouterCacheProvider>
   );
 }
