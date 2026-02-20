@@ -11,7 +11,7 @@ export interface MovemnetDuringShutDownHrKpiItem {
 /* ---------- ZONE VIOLATIONS ---------- */
 export interface MovemnetDuringShutDownHrZoneViolation {
   zone: string;
-  peopleCount: number;
+  MovementEvents: number;
 }
 
 /* ---------- Recent VIOLATION ---------- */

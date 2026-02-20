@@ -19,6 +19,7 @@ import {
   MovemnetDuringShutDownHrDetailedReportResponse,
   MovemnetDuringShutDownHrFilterParams,
   MovemnetDuringShutDownHrKpiItem,
+  MovemnetDuringShutDownHrSocketPayload,
   MovemnetDuringShutDownHrViolation,
   MovemnetDuringShutDownHrZoneViolation,
 } from "./movementDuringShutdownHours.types";
@@ -34,6 +35,8 @@ import {
 } from "./movementDuringShutdownHoursApi";
 import { movemnetDuringShutDownHrKpiConfig } from "./movementDuringShutdownHoursConfig";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
 const MovementDuringShutdownHours: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -109,17 +112,17 @@ const MovementDuringShutdownHours: React.FC = () => {
   ]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<IntrusionSocketPayload>({
-  //   tenantId,
-  //   enabled: isIntrusionLiveMode,
-  //   event: SOCKET_EVENTS.INTRUSION_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayIntrusionKpi(payload.kpi ?? []);
-  //     setDisplayIntrusionZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentIntrusionViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
+  useSocketEvent<MovemnetDuringShutDownHrSocketPayload>({
+    tenantId,
+    enabled: isMovementLiveMode,
+    event: SOCKET_EVENTS.MOVEMENT_DURING_SHUTDOWN_HR_UPDATE,
+    handler: (payload) => {
+      console.log("payload form the socket for movement", payload);
+      setDisplayMovementKpi(payload.kpi ?? []);
+      setDisplayMovementZoneViolations(payload.zoneViolations ?? []);
+      setRecentMovementViolationsLive(payload.recentViolations ?? []);
+    },
+  });
 
   /* ---------- TIME FILTER ---------- */
   const handleMovementTimeRangeChange = useCallback(
@@ -166,7 +169,7 @@ const MovementDuringShutdownHours: React.FC = () => {
   const MovementZoneViolationsForUi = useMemo(() => {
     return displayMovementZoneViolations.map((z) => ({
       zone: z.zone,
-      peopleCount: z.peopleCount,
+      incident: z.MovementEvents,
     }));
   }, [displayMovementZoneViolations]);
   // recent violation
