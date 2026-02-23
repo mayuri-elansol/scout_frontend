@@ -1,4 +1,4 @@
-// ppeKpiConfig.ts
+// survilanceKpiConfig.ts
 
 import { People, Security, VideocamOff } from "@mui/icons-material";
 
@@ -22,8 +22,8 @@ export const surveillanceDashboardConfig = {
   },
   "Movement During Shutdown": {
     icon: People,
-    route: "/peoplePresence",
+    route: "/movementDuringShutdownHours",
     tooltipMessage:
-      "Displays people detected inside premises during shutdown hours.",
+      "Displays movement detected inside premises during shutdown hours.",
   },
 };
