@@ -31,6 +31,7 @@ export interface MainDashboardResponse {
   workforce: DashboardItem[];
   safety: DashboardItem[];
   operational: DashboardItem[];
+  cameraTampering: CameraTamperingKpiCard[];
 }
 export interface MainDashboardResponse {
   title: keyof typeof MainDashboardConfig;

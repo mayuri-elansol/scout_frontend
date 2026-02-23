@@ -108,6 +108,7 @@ const Dashboard: React.FC = () => {
 
       // Update full dashboard (KPI + graphs)
       setMainDashboardData(payload.data);
+      setCameraTamperingKpis(payload.data.cameraTampering || []);
     },
   });
 
