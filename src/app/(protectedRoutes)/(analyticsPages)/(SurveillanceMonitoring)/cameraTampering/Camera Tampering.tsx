@@ -294,7 +294,7 @@ const CameraTampering: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.voilation))
+              new Set(recentTamperingEvents.map((v) => v.voilation)),
             ),
           },
           {
@@ -302,7 +302,7 @@ const CameraTampering: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.zone))
+              new Set(recentTamperingEvents.map((v) => v.zone)),
             ),
           },
           {
@@ -310,7 +310,7 @@ const CameraTampering: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.cameraId))
+              new Set(recentTamperingEvents.map((v) => v.cameraId)),
             ),
           },
           {
