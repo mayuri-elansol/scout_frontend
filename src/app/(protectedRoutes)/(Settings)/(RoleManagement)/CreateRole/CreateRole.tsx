@@ -64,7 +64,7 @@ const CreateRole: React.FC = () => {
       );
 
       // ✅ pass real ID
-      router.push(`/AddFeatures/${orgAppRoleId}`);
+      router.push(`/addFeatures/${orgAppRoleId}`);
     } catch (err) {
       dispatch(
         showToast({

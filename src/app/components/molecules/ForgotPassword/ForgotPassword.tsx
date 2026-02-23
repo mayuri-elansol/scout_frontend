@@ -94,7 +94,7 @@ const ForgotPasswordForm: React.FC<Props> = ({
         <Link
           component="button"
           variant="body2"
-          onClick={() => router.push("/Login")}
+          onClick={() => router.push("/login")}
           sx={{
             cursor: "pointer",
             fontWeight: 500,

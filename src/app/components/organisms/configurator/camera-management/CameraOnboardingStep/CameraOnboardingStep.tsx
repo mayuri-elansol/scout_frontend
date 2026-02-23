@@ -40,7 +40,7 @@ import {
   useLazyGetLocationsByZoneQuery,
   useGetCameraZonesQuery
 
-} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+} from "@/app/(protectedRoutes)/(settings)/(configurator)/cameraManagement/CameraManagementApi";
 
 
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";

@@ -3,69 +3,69 @@
 export const MainDashboardConfig = {
   //workfocemonitoring
   "Employee in Critical Area": {
-    route: "/EmployeePresenceCriticalArea",
+    route: "/employeePresenceCriticalArea",
   },
   "Employee Idle Time": {
-    route: "/EmployeeIdleTime",
+    route: "/employeeIdleTime",
   },
   "Mobile Phone Usage in Critical Area": {
-    route: "/MobilePhoneUsage",
+    route: "/mobilePhoneUsage",
   },
   "Sleeping / Absence of Security Personnel": {
-    route: "/SleepingSecurityPersonnel",
+    route: "/sleepingSecurityPersonnel",
   },
 
   //survilance monitoring
   "Intrusion Detection": {
-    route: "/IntrusionDetectionPage",
+    route: "/intrusionDetectionPage",
   },
   "Unauthorized Access In Restrcited Areas": {
-    route: "/UnauthorizedAccessInRestrictedAreas",
+    route: "/unauthorizedAccessInRestrictedAreas",
   },
   "Camera Tempering Detection": {
-    route: "/CameraTampering",
+    route: "/cameraTampering",
   },
   "Movement During Shutdown": {
-    route: "/PeoplePresence",
+    route: "/peoplePresence",
   },
 
   //safty monitoring
 
   "PPE Violations": {
-    route: "/PPEKitDetectionPage",
+    route: "/ppeKitDetectionPage",
   },
   "Fire / Smoke / Gas / Oil Alerts": {
-    route: "/FireSmokeOilLeakDetection",
+    route: "/fireSmokeOilLeakDetection",
   },
   "Vehicle In Walkways": {
-    route: "/VehicalSpeedMonitoring",
+    route: "/vehicalSpeedMonitoring",
   },
   "Fall / Laydown Alerts": {
-    route: "/FallDetection",
+    route: "/fallDetection",
   },
 
   "Emergency Exit Blockage": {
-    route: "/EmergencyExitBlockage",
+    route: "/emergencyExitBlockage",
   },
   "Crowd Gathering Alerts": {
-    route: "/CrowdGathering",
+    route: "/crowdGathering",
   },
 
   //opretation monitoring
 
   "People Count": {
-    route: "/PeopleCountPage",
+    route: "/peopleCountPage",
   },
   "Vehicle Count": {
-    route: "/VehicleCount",
+    route: "/vehicleCount",
   },
   "Canteen Usage Monitoring": {
-    route: "/MonitoringCanteenUsage&Timings",
+    route: "/monitoringCanteenUsage&Timings",
   },
   "Vehicle Loading/Unloading Monitoring": {
-    route: "/VehicleUnloadingLoading",
+    route: "/vehicleUnloadingLoading",
   },
   "Unauthorised Parking / Blocking Aisles": {
-    route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
+    route: "/unauthorizedParkingOrEquipmentBlockingAisles",
   },
 };

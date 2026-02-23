@@ -46,7 +46,7 @@ const ResetPassword: React.FC = () => {
         sid,
       }).unwrap();
 
-      router.replace("/Login");
+      router.replace("/login");
     } 
 
     catch (err) {

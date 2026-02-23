@@ -34,7 +34,7 @@ const ForgotPasswordPage: React.FC = () => {
       triggerToast(response.message, "success");
 
       // ✅ redirect to Login
-      router.push("/Login");
+      router.push("/login");
 
     } catch (err) {
       const fetchError = err as FetchBaseQueryError & {

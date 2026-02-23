@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import styles from "./UserSettingTable.module.css";
-import { BackendUser } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/ViewUser/[targetUserId]/viewUser.types";
+import { BackendUser } from "@/app/(protectedRoutes)/(settings)/(userManagement)/viewUser/[targetUserId]/viewUser.types";
 
 export interface User {
   firstName: string;

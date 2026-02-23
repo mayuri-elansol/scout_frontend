@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useRef, useCallback } from "react";
 import { Box, Typography, IconButton, Tooltip, Paper } from "@mui/material";
 import { Fullscreen, FullscreenExit, Videocam } from "@mui/icons-material";

@@ -96,7 +96,7 @@ const { data: features = [], isLoading } = useGetFeaturesByOrgIdQuery(
         })
       );
 
-      router.push("/RoleOverview");
+      router.push("/roleOverview");
 } catch (err) {
       dispatch(
         showToast({

@@ -20,7 +20,7 @@ import { useRoleListQuery, useDeleteRoleByIdMutation } from './RoleOverviewApi';
 import { FEATURE } from '@/app/config/featureRegistry';
 import Loader from "@/app/components/atoms/Loader/Loader";
 import { showToast } from '@/app/store/slices/toasterSlice';
-import AddRole from '../AddRole/AddRole';
+import AddRole from '../addRole/AddRole';
 import RoleSettingTable from '@/app/components/organisms/RoleSettingTable/RoleSettingTable';
 import { getErrorMessage } from '@/utils/getErrorMessage';
 
@@ -113,10 +113,10 @@ const rows = useMemo(() => {
 
   /* ---------- HANDLERS ---------- */
   const handleView = (orgAppRoleId: string, roleId: string) =>
-    router.push(`/ViewRole/${orgAppRoleId}/${roleId}`);
+    router.push(`/viewRole/${orgAppRoleId}/${roleId}`);
 
   const handleEdit = (orgAppRoleId: string, roleId: string) =>
-    router.push(`/EditRole/${orgAppRoleId}/${roleId}`);
+    router.push(`/editRole/${orgAppRoleId}/${roleId}`);
 
   const handleOpenConfirm = (roleId: string) => {
     setSelectedRoleId(roleId);
@@ -187,7 +187,7 @@ if (!isLoading && !isFetching && rows.length === 0) {
         {canAddRole && (
           <Button
             variant="contained"
-            onClick={() => router.push("/CreateRole")}
+            onClick={() => router.push("/createRole")}
           >
             Add Role
           </Button>

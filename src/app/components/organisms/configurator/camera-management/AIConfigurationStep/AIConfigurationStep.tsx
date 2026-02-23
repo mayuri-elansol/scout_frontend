@@ -7,11 +7,11 @@ import {
   useAssignCamerasMutation,
   useUnassignCameraMutation,
   useLazyGetCameraAssignmentsQuery,
-} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/UseCaseManager/UseCaseManagerAPI';
+} from '@/app/(protectedRoutes)/(settings)/(configurator)/useCaseManager/UseCaseManagerAPI';
 import {
   useLazyGetRoiQuery,
   useSaveRoiMutation,
-} from '@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/RoiApi';
+} from '@/app/(protectedRoutes)/(settings)/(configurator)/cameraManagement/RoiApi';
 
 import {
   Box,

@@ -29,7 +29,7 @@ import {
 import {
   useGetAllCamerasQuery,
   useDeleteCameraMutation,
-} from "@/app/(protectedRoutes)/(Settings)/(Configurator)/CameraManagement/CameraManagementApi";
+} from "@/app/(protectedRoutes)/(settings)/(configurator)/cameraManagement/CameraManagementApi";
 
 
 

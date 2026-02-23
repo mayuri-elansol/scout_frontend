@@ -12,34 +12,34 @@ import {
 export const SafetyMonitoringConfig = {
   "PPE Violations": {
     icon: HealthAndSafety,
-    route: "/PPEKitDetectionPage",
+    route: "/ppeKitDetectionPage",
     tooltipMessage: "Shows total PPE rule violations detected today.",
   },
   "Fire / Smoke / Gas / Oil Alerts": {
     icon: LocalFireDepartment,
-    route: "/FireSmokeOilLeakDetection",
+    route: "/fireSmokeOilLeakDetection",
     tooltipMessage:
       "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
   },
   "Vehicle In Walkways": {
     icon: DirectionsCar,
-    route: "/VehicalSpeedMonitoring",
+    route: "/vehicalSpeedMonitoring",
     tooltipMessage: "Shows vehical or forklift driving incidents in walkways.",
   },
   "Fall / Laydown Alerts": {
     icon: WarningAmber,
-    route: "/FallDetection",
+    route: "/fallDetection",
     tooltipMessage: "Indicates workers detected lying down or falling.",
   },
 
   "Emergency Exit Blockage": {
     icon: DoorFront,
-    route: "/EmergencyExitBlockage",
+    route: "/emergencyExitBlockage",
     tooltipMessage: "Detects obstruction or blockage near emergency exits.",
   },
   "Crowd Gathering Alerts": {
     icon: Groups,
-    route: "/CrowdGathering",
+    route: "/crowdGathering",
     tooltipMessage:
       "Identifies abnormal or unsafe crowd gathering in monitored areas.",
   },

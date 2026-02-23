@@ -102,8 +102,8 @@ export default function ViewUserPage() {
     return <Loader />;
   }
 
-  const handleEdit = () => router.push(`/EditUser/${targetUserId}`);
-  const handleBack = () => router.push("/UserOverview");
+  const handleEdit = () => router.push(`/editUser/${targetUserId}`);
+  const handleBack = () => router.push("/userOverview");
 
   return (
     <Box

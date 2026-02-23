@@ -151,7 +151,7 @@ const EditRole: React.FC = () => {
         }),
       );
 
-      router.push("/RoleOverview");
+      router.push("/roleOverview");
     } catch (err) {
       dispatch(
         showToast({

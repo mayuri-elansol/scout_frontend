@@ -30,7 +30,7 @@ import {
   useGetUserByIdQuery,
   useGetUserRoleByUserIdQuery,
 } from "./EditUserApi";
-import { useRoleListQuery } from "../../../(RoleManagement)/RoleOverview/RoleOverviewApi";
+import { useRoleListQuery } from "../../../(roleManagement)/roleOverview/RoleOverviewApi";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import Loader from "@/app/components/atoms/Loader/Loader";
 
@@ -153,7 +153,7 @@ const EditUser: React.FC = () => {
         }),
       );
 
-      router.push("/UserOverview");
+      router.push("/userOverview");
     } catch (err) {
       dispatch(
         showToast({
@@ -325,7 +325,7 @@ const EditUser: React.FC = () => {
             >
               <Button
                 variant="outlined"
-                onClick={() => router.push("/UserOverview")}
+                onClick={() => router.push("/userOverview")}
               >
                 Back
               </Button>

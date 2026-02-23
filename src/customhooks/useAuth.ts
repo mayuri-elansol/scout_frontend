@@ -11,7 +11,7 @@ import {
 import {
   JwtPayload,
   StoredUser,
-} from "@/app/(unprotectedRoutes)/Login/Login.types";
+} from "@/app/(unprotectedRoutes)/login/Login.types";
 
 const STORAGE_USER_KEY = "scout_user";
 const STORAGE_TOKEN_KEY = "scout_access_token";
@@ -60,7 +60,7 @@ export const useAuth = () => {
         localStorage.removeItem(STORAGE_USER_KEY);
         localStorage.removeItem(STORAGE_TOKEN_KEY);
         dispatch(clearUser());
-        router.push("/Login");
+        router.push("/login");
       } finally {
         setIsLoading(false);
       }
@@ -75,7 +75,7 @@ export const useAuth = () => {
 
       // FORCE RESET FLOW
       if (decoded.sid) {
-        router.push(`/ResetPassword/${decoded.sid}`);
+        router.push(`/resetPassword/${decoded.sid}`);
         return { type: "RESET_REQUIRED" as const };
       }
 
@@ -100,7 +100,8 @@ export const useAuth = () => {
         features: decoded.features ?? []
       }));
 
-      router.push("/Dashboard");
+     // router.push("/Dashboard");
+      router.replace("/dashboard");
       return { type: "LOGIN_SUCCESS" as const };
     } catch (err) {
       console.error("Invalid token", err);
@@ -112,10 +113,10 @@ export const useAuth = () => {
     localStorage.removeItem(STORAGE_USER_KEY);
     localStorage.removeItem(STORAGE_TOKEN_KEY);
     dispatch(clearUser());
-    router.push("/Login");
+    router.push("/login");
   };
 
-  const requireAuth = (redirectTo = "/Login") => {
+  const requireAuth = (redirectTo = "/login") => {
     if (!isLoading && !isAuthenticated) {
       router.push(redirectTo);
       return false;

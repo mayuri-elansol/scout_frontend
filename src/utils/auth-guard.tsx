@@ -83,7 +83,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       if (storedToken === null || !isAuthenticated) {
         setIsChecking(false);
         setIsValid(false);
-        router.replace("/Login");
+        router.replace("/login");
         return;
       }
 
@@ -91,7 +91,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       if (user === null || token === null) {
         setIsChecking(false);
         setIsValid(false);
-        router.replace("/Login");
+        router.replace("/login");
         return;
       }
 
@@ -105,7 +105,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         localStorage.removeItem("scout_access_token");
         dispatch(clearUser());
         setIsValid(false);
-        router.replace("/Login");
+        router.replace("/login");
       }
 
       setIsChecking(false);

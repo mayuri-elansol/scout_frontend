@@ -178,7 +178,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         <Link
           component="button"
           variant="body2"
-          onClick={() => router.push("/ForgotPassword")}
+          onClick={() => router.push("/forgotPassword")}
           sx={{
             cursor: "pointer",
             fontWeight: 500,

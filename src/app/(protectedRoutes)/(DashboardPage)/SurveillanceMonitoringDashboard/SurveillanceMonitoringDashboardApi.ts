@@ -1,6 +1,6 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
-import { ShiftType } from "../../(AnalyticsPages)/(SurveillanceMonitoring)/IntrusionDetectionPage/IntrusionDetection.types";
+import { ShiftType } from "../../(analyticsPages)/(SurveillanceMonitoring)/intrusionDetectionPage/IntrusionDetection.types";
 
 export const surveillanceMonitoringDashboardApi =
   baseProtectedApi.injectEndpoints({

@@ -36,7 +36,7 @@ import {
 } from "@/app/config/menuConfig";
 import { PageType } from "@/app/types";
 import { usePathname } from "next/navigation";
-import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(Settings)/(UserManagement)/AddUser/AddUserApi";
+import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(settings)/(userManagement)/addUser/AddUserApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 

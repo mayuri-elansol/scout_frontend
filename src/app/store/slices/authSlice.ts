@@ -2,7 +2,7 @@
 
 // src/store/slices/authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StoredUser } from "@/app/(unprotectedRoutes)/Login/Login.types";
+import { StoredUser } from "@/app/(unprotectedRoutes)/login/Login.types";
 export interface Role {
   appId: string;
   roleId: string;

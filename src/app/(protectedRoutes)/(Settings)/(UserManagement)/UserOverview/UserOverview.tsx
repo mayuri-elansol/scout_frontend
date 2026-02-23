@@ -117,13 +117,13 @@ const UserOverview: React.FC = () => {
   const handleView = (index: number) => {
     const selectedUser = filteredBackendUsers[index];
     if (!selectedUser) return;
-    router.push(`/ViewUser/${selectedUser.userId}`);
+    router.push(`/viewUser/${selectedUser.userId}`);
   };
 
   const handleEdit = (index: number) => {
     const selectedUser = filteredBackendUsers[index];
     if (!selectedUser) return;
-    router.push(`/EditUser/${selectedUser.userId}`);
+    router.push(`/editUser/${selectedUser.userId}`);
   };
 
   const handleOpenConfirm = (index: number) => {
@@ -190,7 +190,7 @@ const UserOverview: React.FC = () => {
         {canAddUser && (
           <Button
             variant="contained"
-            onClick={() => router.push("/AddUser")}
+            onClick={() => router.push("/addUser")}
           >
             Add User
           </Button>

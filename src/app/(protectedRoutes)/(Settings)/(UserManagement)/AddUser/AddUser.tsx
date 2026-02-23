@@ -29,7 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAddUserMutation } from "./AddUserApi";
 import { showToast } from "@/app/store/slices/toasterSlice";
 import Loader from "@/app/components/atoms/Loader/Loader";
-import { useRoleListQuery } from "../../(RoleManagement)/RoleOverview/RoleOverviewApi";
+import { useRoleListQuery } from "../../(roleManagement)/roleOverview/RoleOverviewApi";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { OrgAppRole } from "./AddUser.types";
@@ -139,7 +139,7 @@ const AddUser: React.FC = () => {
       reset();
       setProfileImage(null);
       setImagePreview(null);
-      router.push("/UserOverview");
+      router.push("/userOverview");
     } catch (error) {
       dispatch(
         showToast({
@@ -295,7 +295,7 @@ const AddUser: React.FC = () => {
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 3 }}>
           <Button
             variant="outlined"
-            onClick={() => router.push("/UserOverview")}
+            onClick={() => router.push("/userOverview")}
           >
             Back
           </Button>

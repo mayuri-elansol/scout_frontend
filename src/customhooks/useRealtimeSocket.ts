@@ -1,4 +1,5 @@
 // src/hooks/useRealtimeSocket.ts
+"use client"
 import { io, Socket } from "socket.io-client";
 import { useEffect, useRef } from "react";
 
