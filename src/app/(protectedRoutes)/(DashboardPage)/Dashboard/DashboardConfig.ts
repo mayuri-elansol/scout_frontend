@@ -26,7 +26,7 @@ export const MainDashboardConfig = {
     route: "/CameraTampering",
   },
   "Movement During Shutdown": {
-    route: "/PeoplePresence",
+    route: "/movementDuringShutdownHours",
   },
 
   //safty monitoring
