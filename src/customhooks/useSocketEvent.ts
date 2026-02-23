@@ -17,8 +17,7 @@ export const useSocketEvent = <T>({
   handler,
 }: UseSocketEventParams<T>) => {
   useEffect(() => {
-    if (!enabled) return;
-
+ if (!enabled || !tenantId) return;
     const socket = getSocket(tenantId);
 
     socket.on(event, handler);

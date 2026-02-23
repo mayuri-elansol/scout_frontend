@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
@@ -314,9 +313,9 @@ const SurveillanceMonitoring: React.FC = () => {
 
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {SurveillancekpiLoading
-          ? Array.from({ length: 4 }).map(() => (
+          ? Array.from({ length: 4 }).map((_, index) => (
               <Grid
-                key={uuidv4()}
+                key={index+1}
                 size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
               >
                 <KpiCardSkeleton />

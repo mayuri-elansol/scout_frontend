@@ -369,9 +369,9 @@ const MovementDuringShutdownHours: React.FC = () => {
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {movementkpiLoading
-            ? Array.from({ length: 6 }).map(() => (
+            ? Array.from({ length: 6 }).map((_, index) => (
                 <Grid
-                  key={uuidv4()}
+                  key={index+1}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 >
                   <KpiCardSkeleton />

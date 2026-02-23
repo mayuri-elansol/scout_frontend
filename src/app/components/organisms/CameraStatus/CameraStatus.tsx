@@ -114,9 +114,9 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           </Box>
 
           {/* Zone List */}
-          {rows.map((zone) => (
+          {rows.map((zone,index) => (
             <Box
-              key={uuidv4()}
+              key={index+1}
               sx={{
                 display: "flex",
                 alignItems: "center",

@@ -199,8 +199,8 @@ const Dashboard: React.FC = () => {
 
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
               {MainDashboardkpiLoading
-                ? Array.from({ length: 4 }).map(() => (
-                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -241,8 +241,8 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
               {MainDashboardkpiLoading
-                ? Array.from({ length: 4 }).map(() => (
-                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -282,8 +282,8 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
               {MainDashboardkpiLoading
-                ? Array.from({ length: 4 }).map(() => (
-                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -324,8 +324,8 @@ const Dashboard: React.FC = () => {
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
               {MainDashboardkpiLoading
-                ? Array.from({ length: 4 }).map(() => (
-                    <Grid key={uuidv4()} size={{ xs: 12, md: 4, sm: 6 }}>
+                ? Array.from({ length: 4 }).map((_, index) => (
+                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
