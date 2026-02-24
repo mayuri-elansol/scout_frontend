@@ -228,15 +228,6 @@ const Dashboard: React.FC = () => {
     });
   }, [mainDashboardData, t]);
 
-  const cameraTamperingDashboardKpis = useMemo(() => {
-    if (!cameraTamperingKpis) return [];
-
-    return cameraTamperingKpis.map((item) => ({
-      title: item.title,
-      colour: item.colour,
-      violationsCount: item.violationsCount,
-    }));
-  }, [cameraTamperingKpis]);
   return (
     <Paper
       sx={{
@@ -274,7 +265,7 @@ const Dashboard: React.FC = () => {
               ))} */}
           {CameraTamperingDashboardkpiLoading
             ? Array.from({ length: 5 }).map((_, index) => (
-                <Grid key={index} size={{ xs: 12, md: 2, sm: 6 }}>
+                <Grid key={index} size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
                   <KpiCardSkeleton />
                 </Grid>
               ))
@@ -282,7 +273,10 @@ const Dashboard: React.FC = () => {
                 const config = CameraTamperingDashboardConfig[item.title];
 
                 return (
-                  <Grid key={item.title} size={{ xs: 12, md: 2, sm: 6 }}>
+                  <Grid
+                    key={item.title}
+                    size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}
+                  >
                     <DashboardKpiCardMain
                       title={item.title}
                       colour={item.colour}
