@@ -76,18 +76,18 @@ export const CameraTamperingDashboardConfig = {
   //camera tampering
 
   "Total Cameras": {
-    route: "/",
+    route: "/dashboard",
   },
   "Total Online Cameras": {
-    route: "/",
+    route: "/dashboard",
   },
   "Total Offline Cameras": {
-    route: "/",
+    route: "/dashboard",
   },
   "Tampering Incidents Detected": {
-    route: "/",
+    route: "/dashboard",
   },
   "Zones Affected": {
-    route: "/",
+    route: "/dashboard",
   },
 };

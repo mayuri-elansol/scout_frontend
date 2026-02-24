@@ -46,12 +46,12 @@ const Dashboard: React.FC = () => {
     { skip: !tenantId },
   );
 
-  const [fetchMainDashboardKpi, { isLoading: MainDashboardkpiLoading }] =
+  const [fetchMainDashboardKpi, { isFetching: MainDashboardkpiLoading }] =
     useLazyGetMainDashboardKpiDataQuery();
 
   const [
     fetchCameraTamperingDashboardKpi,
-    { isLoading: CameraTamperingDashboardkpiLoading },
+    { isFetching: CameraTamperingDashboardkpiLoading },
   ] = useLazyGetCameraTamperingDashboardKpiDataQuery();
 
   //initial load
@@ -218,7 +218,7 @@ const Dashboard: React.FC = () => {
       </Box>
 
       <Grid container spacing={2.5} sx={{ my: 1 }}>
-        {CameraTamperingDashboardkpiLoading
+        {CameraTamperingDashboardkpiLoading || !cameraTamperingKpis.length
           ? Array.from({ length: 5 }).map((_, index) => (
               <Grid key={index + 1} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
                 <KpiCardSkeleton />
@@ -269,7 +269,7 @@ const Dashboard: React.FC = () => {
             </Typography>
 
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
@@ -311,7 +311,7 @@ const Dashboard: React.FC = () => {
               Surveillance Monitoring
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
@@ -352,7 +352,7 @@ const Dashboard: React.FC = () => {
               Operational Insights
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
@@ -394,7 +394,7 @@ const Dashboard: React.FC = () => {
               Monitoring
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
