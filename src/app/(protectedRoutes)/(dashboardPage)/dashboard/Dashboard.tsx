@@ -3,10 +3,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
-
 import {
   useGetOrgShiftTimeDashboardDataQuery,
   useLazyGetMainDashboardKpiDataQuery,
@@ -26,7 +24,6 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { v4 as uuidv4 } from "uuid";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 const Dashboard: React.FC = () => {
@@ -43,10 +40,7 @@ const Dashboard: React.FC = () => {
     CameraTamperingKpiCard[]
   >([]);
   /* ---------- API HOOKS ---------- */
-  // const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery({
-  //   tenantId,
 
-  // });
   const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery(
     { tenantId },
     { skip: !tenantId },
@@ -61,14 +55,7 @@ const Dashboard: React.FC = () => {
   ] = useLazyGetCameraTamperingDashboardKpiDataQuery();
 
   //initial load
-  // useEffect(() => {
-  //   if (!tenantId) return;
-  //   const load = async () => {
-  //     const response = await fetchMainDashboardKpi({ tenantId }).unwrap();
-  //     setMainDashboardData(response);
-  //   };
-  //   load().catch(console.error);
-  // }, [tenantId, fetchMainDashboardKpi]);
+
   useEffect(() => {
     if (!tenantId) return;
 
@@ -113,26 +100,6 @@ const Dashboard: React.FC = () => {
   });
 
   /* ---------- TIME FILTER ---------- */
-  // const handleTimeRangeChange = useCallback(
-  //   async (range: { start?: string; end?: string }) => {
-  //     if (!range.start && !range.end) {
-  //       setIsDashboardLiveMode(true);
-  //       fetchMainDashboardKpi({ tenantId });
-  //       return;
-  //     }
-
-  //     setIsDashboardLiveMode(false);
-  //     const payload = {
-  //       tenantId: tenantId,
-  //       startDate: range.start,
-  //       endDate: range.end,
-  //     };
-  //     const kpi = await fetchMainDashboardKpi(payload).unwrap();
-
-  //     setMainDashboardData(kpi ?? []);
-  //   },
-  //   [tenantId, fetchMainDashboardKpi],
-  // );
 
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -250,43 +217,27 @@ const Dashboard: React.FC = () => {
         />
       </Box>
 
-      <Grid container spacing={1.5}>
-        <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {/* {CameraTamperingDashboardkpiLoading
-            ? Array.from({ length: 4 }).map((_, index) => (
-                <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
-            : safetyDashboardKpis.map((kpi) => (
-                <Grid key={kpi.title} size={{ xs: 12, md: 4, sm: 6 }}>
-                  <DashboardKpiCardMain {...kpi} />
-                </Grid>
-              ))} */}
-          {CameraTamperingDashboardkpiLoading
-            ? Array.from({ length: 5 }).map((_, index) => (
-                <Grid key={index} size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}>
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
-            : cameraTamperingKpis.map((item) => {
-                const config = CameraTamperingDashboardConfig[item.title];
+      <Grid container spacing={2.5} sx={{ my: 1 }}>
+        {CameraTamperingDashboardkpiLoading
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <Grid key={index + 1} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : cameraTamperingKpis.map((item) => {
+              const config = CameraTamperingDashboardConfig[item.title];
 
-                return (
-                  <Grid
-                    key={item.title}
-                    size={{ xs: 12, sm: 6, md: 4, lg: 2.4 }}
-                  >
-                    <DashboardKpiCardMain
-                      title={item.title}
-                      colour={item.colour}
-                      violationsCount={item.violationsCount}
-                      route={config?.route || "/"}
-                    />
-                  </Grid>
-                );
-              })}
-        </Grid>
+              return (
+                <Grid key={item.title} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
+                  <DashboardKpiCardMain
+                    title={item.title}
+                    colour={item.colour}
+                    violationsCount={item.violationsCount}
+                    route={config?.route || "/"}
+                  />
+                </Grid>
+              );
+            })}
       </Grid>
 
       {/* Dashboard Sections Grid */}
