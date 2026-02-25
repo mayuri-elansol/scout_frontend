@@ -93,7 +93,6 @@ export default function ClientLayout({
             }}
           >
             <FeatureGuardProvider>
-              {/* <RouteLoader/> */}
               {children}
             </FeatureGuardProvider>
           </Box>

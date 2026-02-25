@@ -50,13 +50,19 @@ export default function DynamicTabs({
   onTabChange,
   features
 }: DynamicTabsProps) {
-  const [value, setValue] = useState(defaultTab);
+
+const firstEnabledIndex = tabs.findIndex(
+    (tab) => !tab.featureId || hasFeature(features, tab.featureId)
+  );
+
+  const initialTab = firstEnabledIndex >= 0 ? firstEnabledIndex : defaultTab;
+
+  const [value, setValue] = useState(initialTab);
 
   const handleChange = (newValue: number) => {
     setValue(newValue);
     onTabChange?.(newValue);
   };
-
   if (!tabs || tabs.length === 0) {
     return (
       <Box sx={{ p: 3, textAlign: "center", color: "text.secondary" }}>
@@ -78,68 +84,6 @@ export default function DynamicTabs({
     >
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
-          {/* {tabs.map((tab, index) => (
-            <React.Fragment key={index + 1}>
-              <button
-                className={`${styles.tab} ${
-                  value === index ? styles.tabActive : ""
-                }`}
-                onClick={() => handleChange(index)}
-                role="tab"
-                aria-selected={value === index}
-                id={`tab-${index}`}
-              >
-                <span className={styles.tabLabel}>{tab.label}</span>
-                <div className={styles.tabBackground}></div>
-              </button>
-              {index < tabs.length - 1 &&
-                value !== index &&
-                value !== index + 1 && (
-                  <div className={styles.tabDivider}></div>
-                )}
-            </React.Fragment>
-          ))} */}
-          {/* {tabs.map((tab, index) => {
-  const enabled = tab.featureId
-    ? hasFeature(features, tab.featureId)
-    : true;
-
-  return (
-    <React.Fragment key={index}>
-      <button
-        className={`${styles.tab} ${
-          value === index ? styles.tabActive : ""
-        }`}
-        onClick={() => {
-          if (enabled) {
-            handleChange(index);
-          }
-        }}
-        role="tab"
-        aria-selected={value === index}
-        id={`tab-${index}`}
-        disabled={!enabled}
-        
-        style={{
-          opacity: enabled ? 1 : 0.4,
-          cursor: enabled ? "pointer" : "default",
-          pointerEvents: enabled ? "auto" : "none", 
-        }}
-      >
-        <span className={styles.tabLabel}>{tab.label}</span>
-        <div className={styles.tabBackground}></div>
-
-        
-      </button>
-
-      {index < tabs.length - 1 &&
-        value !== index &&
-        value !== index + 1 && (
-          <div className={styles.tabDivider}></div>
-        )}
-    </React.Fragment>
-  );
-})} */}
 
 {tabs.map((tab, index) => {
   const enabled = tab.featureId

@@ -1065,7 +1065,7 @@ const SubMenuItem = React.memo<{
                 ? {}
                 : {
                     backgroundColor: "rgba(241, 245, 249, 0.7)",
-                    "&.Mui-disabled": { opacity: 1 },
+                    "&.Mui-disabled": { opacity: 0.9 },
                   }),
               "&.Mui-selected": {
                 backgroundColor: theme.palette.primary.main,
