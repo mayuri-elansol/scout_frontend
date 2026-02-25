@@ -73,7 +73,23 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
   const [deleteCamera] = useDeleteCameraMutation();
 
 
-  const cameras: OrgCamera[] =
+  // const cameras: OrgCamera[] =
+  // Array.isArray(data)
+  //   ? data.map((cam: CameraApiResponse) => ({
+  //       id: cam.id,
+  //       ipAddress: cam.cameraIp,
+  //       username: cam.userName,
+  //       password: cam.password,
+  //       port: String(cam.RTSPport),
+  //       make: cam.connectionType,
+  //       location: cam.Cameralocation ?? "",
+  //       cameraname: cam.cameraName,
+  //       rtspStream: cam.rtspStream ?? "",
+  //       status: "connected",
+  //     }))
+  //   : initialCameras;
+
+const cameras: OrgCamera[] =
   Array.isArray(data)
     ? data.map((cam: CameraApiResponse) => ({
         id: cam.id,
@@ -82,15 +98,13 @@ const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> 
         password: cam.password,
         port: String(cam.RTSPport),
         make: cam.connectionType,
-        location: cam.Cameralocation ?? "",
+        location: cam.cameraLocation ?? "",
+        zone: cam.cameraZone ?? "",          // ✅ ADD THIS
         cameraname: cam.cameraName,
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
       }))
     : initialCameras;
-
-
-
 
   const handleCameraRemove = async (cameraId: string) => {
     try {
