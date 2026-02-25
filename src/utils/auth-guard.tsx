@@ -53,7 +53,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         showToast({
           message:
             err instanceof Error
-              ? err.message
+             // ? err.message //backend message
+                           ? "Please login"
+
               : "Session expired. Please login again.",
           severity: "error",
         }),
