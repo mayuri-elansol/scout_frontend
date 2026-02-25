@@ -58,6 +58,13 @@ const KpiCardComponent: React.FC<KpiCardProps> = ({
       borderColor: "#2196f3",
       iconBg: "rgba(33, 150, 243, 0.1)",
     },
+    yellow: {
+      trendColor: "#ffb300",
+      color: "#fbc02d",
+      bgColor: "#fffde7",
+      borderColor: "#fbc02d",
+      iconBg: "rgba(251, 192, 45, 0.1)",
+    },
   } as const;
 
   const getVariantStyles = () => {
