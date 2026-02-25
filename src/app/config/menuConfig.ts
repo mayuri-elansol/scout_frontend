@@ -80,24 +80,10 @@ export const dashboardMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "Safety And Compliance",
-        page: "safety-compliance-dashboard",
-        path: "/safetyAndComplianceDashboard",
-        featureId: FEATURE.SAFETY_COMPLIANCE,
-      },
-      {
-        type: "link",
         name: "Surveillance Monitoring",
         page: "surveillance-monitoring-dashboard",
         path: "/surveillanceMonitoringDashboard",
         featureId: FEATURE.SURVEILLANCE_MONITORING,
-      },
-      {
-        type: "link",
-        name: "Operational Insights",
-        page: "operational-insights-dashboard",
-        path: "/operationalInsightsDashboard",
-        featureId: FEATURE.OPERATIONAL_INSIGHTS,
       },
       {
         type: "link",
@@ -106,6 +92,21 @@ export const dashboardMenu: CategoryConfig[] = [
         path: "/workforceMonitoringDashboard",
         featureId: FEATURE.WORKFORCE_MONITORING,
       },
+      {
+        type: "link",
+        name: "Safety And Compliance",
+        page: "safety-compliance-dashboard",
+        path: "/safetyAndComplianceDashboard",
+        featureId: FEATURE.SAFETY_COMPLIANCE,
+      },
+      {
+        type: "link",
+        name: "Operational Insights",
+        page: "operational-insights-dashboard",
+        path: "/operationalInsightsDashboard",
+        featureId: FEATURE.OPERATIONAL_INSIGHTS,
+      },
+
       {
         type: "link",
         name: "Camera Tampering",
