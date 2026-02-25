@@ -20,8 +20,14 @@ import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
 import { hourlyData } from "@/app/config/chartDataConfig";
+import { RootState } from "@/app/store/store";
+import { useSelector } from "react-redux";
+import { FEATURE } from "@/app/config/featureRegistry";
 
 const SafetyAndComplianceDashboard: React.FC = () => {
+   const { user,features } = useSelector((state: RootState) => state.auth);
+    const tenantId: string = user?.org_id ?? "";
+  
   const tabs: TabConfig[] = [
     {
       label: "PPE Compliance",
@@ -124,6 +130,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId: FEATURE.PPE_DETECTION,
+      
     },
     {
       label: "Hazardous Zone Activity",
@@ -244,6 +252,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+       featureId: FEATURE.FIRE_SMOKE
     },
     {
       label: "Vehicle In Walkways",
@@ -336,6 +345,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+       featureId: FEATURE.OBJECT_DETECTION,
     },
     {
       label: "Fall Incidents",
@@ -417,6 +427,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.FALL_DETECTION
     },
     {
       label: "Emergency Exit Status",
@@ -509,6 +520,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.EMERGENCY_EXIT_BLOCKAGE
     },
     {
       label: "Crowd Gathering",
@@ -601,6 +613,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.CROWD_DETECTION
     },
   ];
 
@@ -714,7 +727,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        <DashboardTabs tabs={tabs}  features={features} />
       </Box>
     </Paper>
   );

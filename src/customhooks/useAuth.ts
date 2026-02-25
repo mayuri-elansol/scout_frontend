@@ -100,8 +100,7 @@ export const useAuth = () => {
         features: decoded.features ?? []
       }));
 
-     // router.push("/Dashboard");
-      router.replace("/dashboard");
+     router.push("/dashboard");
       return { type: "LOGIN_SUCCESS" as const };
     } catch (err) {
       console.error("Invalid token", err);

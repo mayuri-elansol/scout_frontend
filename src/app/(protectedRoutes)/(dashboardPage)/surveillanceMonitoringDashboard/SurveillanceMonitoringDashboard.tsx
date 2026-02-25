@@ -27,10 +27,11 @@ import {
 } from "./SurveillanceMonitoringDashboard.types";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { FEATURE } from "@/app/config/featureRegistry";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user,features } = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
@@ -155,6 +156,7 @@ const SurveillanceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId: FEATURE.INTRUSION_DETECTION,
     },
 
     {
@@ -218,6 +220,7 @@ const SurveillanceMonitoring: React.FC = () => {
           ))}
         </Grid>
       ),
+      featureId: FEATURE.CAMERA_TAMPERING,
     },
     {
       label: "Movement During shutdown",
@@ -250,6 +253,7 @@ const SurveillanceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
     },
     {
       label: "Unauthorized Access ",
@@ -279,6 +283,7 @@ const SurveillanceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId: FEATURE.UNAUTHORIZED_ACCESS,
     },
   ];
 
@@ -342,7 +347,7 @@ const SurveillanceMonitoring: React.FC = () => {
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        <DashboardTabs tabs={tabs} features={features}  />
       </Box>
     </Paper>
   );

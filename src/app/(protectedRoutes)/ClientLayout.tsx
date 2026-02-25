@@ -61,6 +61,7 @@ export default function ClientLayout({
   }
 
   return (
+    // <AuthGuard>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -91,13 +92,11 @@ export default function ClientLayout({
               minHeight: 0,
             }}
           >
-            <FeatureGuardProvider>
-              {/* <RouteLoader/> */}
-              {children}
-            </FeatureGuardProvider>
+            <FeatureGuardProvider>{children}</FeatureGuardProvider>
           </Box>
         </Box>
       </LocalizationProvider>
     </ThemeProvider>
+    // </AuthGuard>
   );
 }

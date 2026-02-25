@@ -23,9 +23,14 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import JointBarGraphChart, {
   VehicleChartData,
 } from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { FEATURE } from "@/app/config/featureRegistry";
 const OperationalInsightsDashboard: React.FC = () => {
 
-
+ const { user,features } = useSelector((state: RootState) => state.auth);
+    const tenantId: string = user?.org_id ?? "";
+  
   
   const kpiData = [
     {
@@ -122,6 +127,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.PEOPLE_COUNT
     },
     {
       label: "Vehicle Count & ANPR",
@@ -149,6 +155,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.VEHICLE_COUNT
     },
     {
       label: "Canteen Usage",
@@ -180,6 +187,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.CANTEEN_USAGE
     },
     {
       label: "Vehicle Monitoring",
@@ -207,6 +215,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.VEHICLE_UNLOADING_LOADING
     },
     {
       label: "Unauthorized parking",
@@ -234,6 +243,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.UNAUTHORIZED_PARKING
     },
   ];
 
@@ -287,7 +297,7 @@ const OperationalInsightsDashboard: React.FC = () => {
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        <DashboardTabs tabs={tabs}  features={features}/>
       </Box>
     </Paper>
   );

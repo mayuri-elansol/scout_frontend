@@ -26,9 +26,10 @@ import {
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import DynamicViolationScatterChartForWorkforce from "@/app/components/organisms/ScatterChart/DynamicViolationScatterChartForWorkforce";
+import { FEATURE } from "@/app/config/featureRegistry";
 const WorkforceMonitoring: React.FC = () => {
   const { t } = useTranslation();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user ,features} = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
@@ -215,6 +216,7 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA
     },
 
     {
@@ -258,6 +260,7 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.EMPLOYEE_IDLE_TIME
     },
     {
       label: "Mobile Phone Usage",
@@ -289,6 +292,7 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.MOBILE_PHONE_USAGE
     },
     {
       label: "Security Personnel Status",
@@ -333,6 +337,7 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.SLEEPING_SECURITY_PERSONNEL
     },
   ];
 
@@ -397,7 +402,7 @@ const WorkforceMonitoring: React.FC = () => {
           flex: 1,
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        <DashboardTabs tabs={tabs}  features={features} />
       </Box>
     </Paper>
   );

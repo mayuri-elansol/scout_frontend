@@ -83,7 +83,7 @@ const AddRole: React.FC = () => {
                 backgroundColor: "#265d8f",
               },
             }}
-            onClick={() => router.push("/CreateRole")}
+            onClick={() => router.push("/createRole")}
           >
             Add Role
           </Button>
