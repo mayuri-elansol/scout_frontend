@@ -46,7 +46,7 @@ const SurveillanceMonitoring: React.FC = () => {
     { tenantId },
     { skip: !tenantId },
   );
-  const [fetchSurveillanceKpi, { isLoading: SurveillancekpiLoading }] =
+  const [fetchSurveillanceKpi, { isFetching: SurveillancekpiLoading }] =
     useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
@@ -156,35 +156,7 @@ const SurveillanceMonitoring: React.FC = () => {
         </Grid>
       ),
     },
-    {
-      label: "Unauthorized Access ",
-      content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            {unauthorizedDashboard && (
-              <DynamicViolationScatterChart item={unauthorizedDashboard} />
-            )}{" "}
-          </Grid>
-        </Grid>
-      ),
-    },
+
     {
       label: "Camera Tempering Detection",
       content: (
@@ -279,6 +251,35 @@ const SurveillanceMonitoring: React.FC = () => {
         </Grid>
       ),
     },
+    {
+      label: "Unauthorized Access ",
+      content: (
+        <Grid
+          container
+          sx={{
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+            {unauthorizedDashboard && (
+              <DynamicViolationScatterChart item={unauthorizedDashboard} />
+            )}{" "}
+          </Grid>
+        </Grid>
+      ),
+    },
   ];
 
   return (
@@ -312,10 +313,10 @@ const SurveillanceMonitoring: React.FC = () => {
       </Box>
 
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {SurveillancekpiLoading
+        {SurveillancekpiLoading || !displaySurveillanceKpi.length
           ? Array.from({ length: 4 }).map((_, index) => (
               <Grid
-                key={index+1}
+                key={index + 1}
                 size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
               >
                 <KpiCardSkeleton />

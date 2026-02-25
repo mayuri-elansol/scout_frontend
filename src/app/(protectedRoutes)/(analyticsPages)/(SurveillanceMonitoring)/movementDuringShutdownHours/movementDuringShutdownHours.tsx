@@ -5,7 +5,7 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { v4 as uuidv4 } from "uuid";
+
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
@@ -65,7 +65,7 @@ const MovementDuringShutdownHours: React.FC = () => {
     { tenantId },
     { skip: !tenantId },
   );
-  const [fetchMovementKpi, { isLoading: movementkpiLoading }] =
+  const [fetchMovementKpi, { isFetching: movementkpiLoading }] =
     useLazyGetMovementDuringShutdownHoursKpiQuery();
 
   const [fetchMovementRecent, { isLoading: movementrecentLoading }] =
@@ -368,10 +368,10 @@ const MovementDuringShutdownHours: React.FC = () => {
         {/* KPI Cards */}
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {movementkpiLoading
+          {movementkpiLoading || !MovementKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
                 <Grid
-                  key={index+1}
+                  key={index + 1}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 >
                   <KpiCardSkeleton />

@@ -1,4 +1,7 @@
-import { MainDashboardConfig } from "./DashboardConfig";
+import {
+  CameraTamperingDashboardConfig,
+  MainDashboardConfig,
+} from "./DashboardConfig";
 
 export interface KpiCard {
   title: keyof typeof MainDashboardConfig;
@@ -6,6 +9,11 @@ export interface KpiCard {
   violationsCount?: number;
   lastDetection?: string;
   lastDetectionTime?: string;
+}
+export interface CameraTamperingKpiCard {
+  title: keyof typeof CameraTamperingDashboardConfig;
+  colour: "red" | "green" | "gray" | "blue";
+  violationsCount?: number;
 }
 
 export interface DashboardGraphs {
@@ -23,6 +31,7 @@ export interface MainDashboardResponse {
   workforce: DashboardItem[];
   safety: DashboardItem[];
   operational: DashboardItem[];
+  cameraTampering: CameraTamperingKpiCard[];
 }
 export interface MainDashboardResponse {
   title: keyof typeof MainDashboardConfig;

@@ -1,5 +1,3 @@
-
-
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
 import { ApiResponse } from "./AddUser.types";
@@ -13,7 +11,7 @@ export interface AddUserPayload {
   userName: string;
   password: string;
   orgId: string;
-  orgAppRoleId:string
+  orgAppRoleId: string;
 }
 
 export const addUserApi = baseProtectedApi.injectEndpoints({
@@ -37,31 +35,27 @@ export const addUserApi = baseProtectedApi.injectEndpoints({
         };
       },
 
-      
       invalidatesTags: ["UserOverview"],
     }),
 
-
-  getOrgAndUserLogo: builder.query<
-  {
-    success: boolean;
-    logoPath: {
-      userLogo: string | null;
-      orgLogo: string | null;
-    };
-  },
-  { LoggedInUserId: string; tenantId: string }
->({
-  query: (body) => ({
-    url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgAndUserLogo}`,
-    method: "POST",
-    body,
+    getOrgAndUserLogo: builder.query<
+      {
+        success: boolean;
+        logoPath: {
+          userLogo: string | null;
+          orgLogo: string | null;
+        };
+      },
+      { LoggedInUserId: string; tenantId: string }
+    >({
+      query: (body) => ({
+        url: `${apiRoutes.authentication.root}/${apiRoutes.authentication.getOrgAndUserLogo}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["OrgLogo"],
+    }),
   }),
-  providesTags: ["OrgLogo"],
-}),
-  }),
-
-
 });
 
-export const { useAddUserMutation,useGetOrgAndUserLogoQuery } = addUserApi;
+export const { useAddUserMutation, useGetOrgAndUserLogoQuery } = addUserApi;

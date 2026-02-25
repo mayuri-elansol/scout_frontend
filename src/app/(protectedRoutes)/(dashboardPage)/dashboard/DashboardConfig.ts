@@ -1,6 +1,8 @@
 // workforceKpiConfig.ts
 
 export const MainDashboardConfig = {
+  //camera tampering
+
   //workfocemonitoring
   "Employee in Critical Area": {
     route: "/employeePresenceCriticalArea",
@@ -67,5 +69,25 @@ export const MainDashboardConfig = {
   },
   "Unauthorised Parking / Blocking Aisles": {
     route: "/unauthorizedParkingOrEquipmentBlockingAisles",
+  },
+};
+
+export const CameraTamperingDashboardConfig = {
+  //camera tampering
+
+  "Total Cameras": {
+    route: "/dashboard",
+  },
+  "Total Online Cameras": {
+    route: "/dashboard",
+  },
+  "Total Offline Cameras": {
+    route: "/dashboard",
+  },
+  "Tampering Incidents Detected": {
+    route: "/dashboard",
+  },
+  "Zones Affected": {
+    route: "/dashboard",
   },
 };

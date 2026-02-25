@@ -7,7 +7,6 @@ import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/Dashbo
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import { useTranslation } from "react-i18next";
@@ -19,7 +18,6 @@ import {
 } from "./WorkforceMonitoringDashboardApi";
 import { WorkforceMonitoringConfig } from "./WorkforceMonitoringDashboardConfig";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-
 import {
   WorkforceMonitoringDashboardResponse,
   WorkforceMonitoringDashboardResponseForScatterChart,
@@ -49,7 +47,7 @@ const WorkforceMonitoring: React.FC = () => {
     { skip: !tenantId },
   );
 
-  const [fetchWorkforceKpi, { isLoading: WorkforcekpiLoading }] =
+  const [fetchWorkforceKpi, { isFetching: WorkforcekpiLoading }] =
     useLazyGetWorkforceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
@@ -371,10 +369,10 @@ const WorkforceMonitoring: React.FC = () => {
 
       {/* KPI Cards Grid */}
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {WorkforcekpiLoading
-          ? Array.from({ length: 4 }).map((_, index)=> (
+        {WorkforcekpiLoading || !dashboardData.length
+          ? Array.from({ length: 4 }).map((_, index) => (
               <Grid
-                key={index+1}
+                key={index + 1}
                 size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
               >
                 <KpiCardSkeleton />

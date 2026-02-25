@@ -12,7 +12,14 @@ export const MainDashboardApi = baseProtectedApi.injectEndpoints({
       }),
       providesTags: ["MainDashboardKpi"],
     }),
-
+    getCameraTamperingDashboardKpiData: builder.query({
+      query: (body) => ({
+        url: `${apiRoutes.CameraTamperingDashboard.root}/${apiRoutes.CameraTamperingDashboard.getCameraTamperingDashboardAnalyticsKpi}`,
+        method: "POST",
+        body,
+      }),
+      providesTags: ["CameraTamperingDashboardKpi"],
+    }),
     getOrgShiftTimeDashboardData: builder.query<
       ShiftType[],
       { tenantId: string }
@@ -29,5 +36,6 @@ export const MainDashboardApi = baseProtectedApi.injectEndpoints({
 
 export const {
   useLazyGetMainDashboardKpiDataQuery,
+  useLazyGetCameraTamperingDashboardKpiDataQuery,
   useGetOrgShiftTimeDashboardDataQuery,
 } = MainDashboardApi;

@@ -82,14 +82,14 @@ export const dashboardMenu: CategoryConfig[] = [
         type: "link",
         name: "Safety And Compliance",
         page: "safety-compliance-dashboard",
-        path: "/SafetyAndComplianceDashboard",
+        path: "/safetyAndComplianceDashboard",
         featureId: FEATURE.SAFETY_COMPLIANCE,
       },
       {
         type: "link",
         name: "Surveillance Monitoring",
         page: "surveillance-monitoring-dashboard",
-        path: "/SurveillanceMonitoringDashboard",
+        path: "/surveillanceMonitoringDashboard",
         featureId: FEATURE.SURVEILLANCE_MONITORING,
       },
       {

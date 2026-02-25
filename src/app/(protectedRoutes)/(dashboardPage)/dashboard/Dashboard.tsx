@@ -3,16 +3,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
-
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
-
 import {
   useGetOrgShiftTimeDashboardDataQuery,
   useLazyGetMainDashboardKpiDataQuery,
+  useLazyGetCameraTamperingDashboardKpiDataQuery,
 } from "./DashboardApi";
-import { MainDashboardConfig } from "./DashboardConfig";
 import {
+  CameraTamperingDashboardConfig,
+  MainDashboardConfig,
+} from "./DashboardConfig";
+import {
+  CameraTamperingKpiCard,
   DashboardItem,
   DashboardMonitoringSocketPayload,
   MainDashboardResponse,
@@ -21,7 +24,6 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { v4 as uuidv4 } from "uuid";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 const Dashboard: React.FC = () => {
@@ -34,27 +36,51 @@ const Dashboard: React.FC = () => {
 
   const [mainDashboardData, setMainDashboardData] =
     useState<MainDashboardResponse | null>(null);
+  const [cameraTamperingKpis, setCameraTamperingKpis] = useState<
+    CameraTamperingKpiCard[]
+  >([]);
   /* ---------- API HOOKS ---------- */
-  // const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery({
-  //   tenantId,
 
-  // });
   const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery(
     { tenantId },
     { skip: !tenantId },
   );
 
-  const [fetchMainDashboardKpi, { isLoading: MainDashboardkpiLoading }] =
+  const [fetchMainDashboardKpi, { isFetching: MainDashboardkpiLoading }] =
     useLazyGetMainDashboardKpiDataQuery();
-  /* ---------- INITIAL LOAD ---------- */
+
+  const [
+    fetchCameraTamperingDashboardKpi,
+    { isFetching: CameraTamperingDashboardkpiLoading },
+  ] = useLazyGetCameraTamperingDashboardKpiDataQuery();
+
+  //initial load
+
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const response = await fetchMainDashboardKpi({ tenantId }).unwrap();
-      setMainDashboardData(response);
+
+    const loadDashboardData = async () => {
+      try {
+        const [mainDashboardResponse, cameraTamperingResponse] =
+          await Promise.all([
+            fetchMainDashboardKpi({ tenantId }).unwrap(),
+            fetchCameraTamperingDashboardKpi({ tenantId }).unwrap(),
+          ]);
+
+        setMainDashboardData(mainDashboardResponse);
+        setCameraTamperingKpis(cameraTamperingResponse);
+        console.log(
+          "Initial Main Dashboard KPI Response:",
+          mainDashboardResponse,
+          cameraTamperingResponse,
+        );
+      } catch (error) {
+        console.error("Dashboard API Error:", error);
+      }
     };
-    load().catch(console.error);
-  }, [tenantId, fetchMainDashboardKpi]);
+
+    loadDashboardData();
+  }, [tenantId, fetchMainDashboardKpi, fetchCameraTamperingDashboardKpi]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<DashboardMonitoringSocketPayload>({
@@ -69,31 +95,53 @@ const Dashboard: React.FC = () => {
 
       // Update full dashboard (KPI + graphs)
       setMainDashboardData(payload.data);
+      setCameraTamperingKpis(payload.data.cameraTampering || []);
     },
   });
 
   /* ---------- TIME FILTER ---------- */
+
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
-      if (!range.start && !range.end) {
-        setIsDashboardLiveMode(true);
-        fetchMainDashboardKpi({ tenantId });
-        return;
+      if (!tenantId) return;
+
+      try {
+        if (!range.start && !range.end) {
+          setIsDashboardLiveMode(true);
+
+          const [mainDashboardResponse, cameraTamperingResponse] =
+            await Promise.all([
+              fetchMainDashboardKpi({ tenantId }).unwrap(),
+              fetchCameraTamperingDashboardKpi({ tenantId }).unwrap(),
+            ]);
+
+          setMainDashboardData(mainDashboardResponse);
+          setCameraTamperingKpis(cameraTamperingResponse);
+          return;
+        }
+
+        setIsDashboardLiveMode(false);
+
+        const payload = {
+          tenantId,
+          startDate: range.start,
+          endDate: range.end,
+        };
+
+        const [mainDashboardResponse, cameraTamperingResponse] =
+          await Promise.all([
+            fetchMainDashboardKpi(payload).unwrap(),
+            fetchCameraTamperingDashboardKpi(payload).unwrap(),
+          ]);
+
+        setMainDashboardData(mainDashboardResponse);
+        setCameraTamperingKpis(cameraTamperingResponse);
+      } catch (error) {
+        console.error("Dashboard filter error:", error);
       }
-
-      setIsDashboardLiveMode(false);
-      const payload = {
-        tenantId: tenantId,
-        startDate: range.start,
-        endDate: range.end,
-      };
-      const kpi = await fetchMainDashboardKpi(payload).unwrap();
-
-      setMainDashboardData(kpi ?? []);
     },
-    [tenantId, fetchMainDashboardKpi],
+    [tenantId, fetchMainDashboardKpi, fetchCameraTamperingDashboardKpi],
   );
-
   const mapDashboardItemToKpiCard = (item: DashboardItem, route?: string) => ({
     title: item.kpi.title,
     colour: item.kpi.colour,
@@ -102,6 +150,7 @@ const Dashboard: React.FC = () => {
     lastDetectionTime: item.kpi.lastDetectionTime,
     route,
   });
+
   const safetyDashboardKpis = useMemo(() => {
     if (!mainDashboardData?.safety) return [];
 
@@ -145,6 +194,7 @@ const Dashboard: React.FC = () => {
       return mapDashboardItemToKpiCard(item, config?.route || "/");
     });
   }, [mainDashboardData, t]);
+
   return (
     <Paper
       sx={{
@@ -167,7 +217,28 @@ const Dashboard: React.FC = () => {
         />
       </Box>
 
-      <Grid container spacing={1.5}></Grid>
+      <Grid container spacing={2.5} sx={{ my: 1 }}>
+        {CameraTamperingDashboardkpiLoading || !cameraTamperingKpis.length
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <Grid key={index + 1} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : cameraTamperingKpis.map((item) => {
+              const config = CameraTamperingDashboardConfig[item.title];
+
+              return (
+                <Grid key={item.title} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
+                  <DashboardKpiCardMain
+                    title={item.title}
+                    colour={item.colour}
+                    violationsCount={item.violationsCount}
+                    route={config?.route || "/"}
+                  />
+                </Grid>
+              );
+            })}
+      </Grid>
 
       {/* Dashboard Sections Grid */}
       <Grid container spacing={2} sx={{ mb: 1.3 }}>
@@ -198,9 +269,9 @@ const Dashboard: React.FC = () => {
             </Typography>
 
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
+                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -240,9 +311,9 @@ const Dashboard: React.FC = () => {
               Surveillance Monitoring
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
+                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -281,9 +352,9 @@ const Dashboard: React.FC = () => {
               Operational Insights
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
+                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))
@@ -323,9 +394,9 @@ const Dashboard: React.FC = () => {
               Monitoring
             </Typography>
             <Grid container spacing={2.5} sx={{ mb: 4 }}>
-              {MainDashboardkpiLoading
+              {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index+1} size={{ xs: 12, md: 4, sm: 6 }}>
+                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
                       <KpiCardSkeleton />
                     </Grid>
                   ))

@@ -5,7 +5,7 @@ import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { v4 as uuidv4 } from "uuid";
+
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 
@@ -74,7 +74,7 @@ const EmployeeIdleTime: React.FC = () => {
     { tenantId },
     { skip: !tenantId },
   );
-  const [fetchEmployeeIdelTimeKpi, { isLoading: EmployeeIdelTimeKpiLoading }] =
+  const [fetchEmployeeIdelTimeKpi, { isFetching: EmployeeIdelTimeKpiLoading }] =
     useLazyGetEmployeeIdleTimeDetectionKpiDataQuery();
   const [
     fetchEmployeeIdelTimeZoneViolations,
@@ -350,10 +350,10 @@ const EmployeeIdleTime: React.FC = () => {
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {EmployeeIdelTimeKpiLoading
+          {EmployeeIdelTimeKpiLoading || !employeeIdleTimeKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
                 <Grid
-                  key={index+1}
+                  key={index + 1}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 >
                   <KpiCardSkeleton />

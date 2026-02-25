@@ -6,7 +6,7 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { v4 as uuidv4 } from "uuid";
+
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
@@ -67,7 +67,7 @@ const IntrusionDetection: React.FC = () => {
     { tenantId },
     { skip: !tenantId },
   );
-  const [fetchIntrusionKpi, { isLoading: intrusionkpiLoading }] =
+  const [fetchIntrusionKpi, { isFetching: intrusionkpiLoading }] =
     useLazyGetIntrusionKpiQuery();
 
   const [fetchIntrusionRecent, { isLoading: intrusionrecentLoading }] =
@@ -347,10 +347,10 @@ const IntrusionDetection: React.FC = () => {
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {intrusionkpiLoading
+          {intrusionkpiLoading || !IntrusionKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
                 <Grid
-                  key={index+1}
+                  key={index + 1}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 >
                   <KpiCardSkeleton />

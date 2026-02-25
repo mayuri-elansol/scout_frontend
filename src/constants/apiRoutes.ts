@@ -22,13 +22,13 @@ export const apiRoutes = {
     editOrganisationDetailsById: "/edit-organisation-details-by-id",
   },
 
-    configurator: {
+  configurator: {
     root: "configurator",
     cameraManager: "/camera-manager",
     zoneMapping: "/zone-mapping",
     useCaseManager: "/use-case-manager",
   },
-  
+
   roleInformation: {
     root: "/role-information",
     getList: "get-role-list",
@@ -77,6 +77,11 @@ export const apiRoutes = {
     root: "safetyMonitoringDashboard",
     getSafetyMonitoringDashboardAnalyticsKpi:
       "get-safety-monitoring-dashboard-analytics-kpi",
+  },
+  CameraTamperingDashboard: {
+    root: "cameraTamperingDashboard",
+    getCameraTamperingDashboardAnalyticsKpi:
+      "get-camera-tampering-dashboard-analytics-kpi",
   },
   MainDashboard: {
     root: "mainDashboard",
