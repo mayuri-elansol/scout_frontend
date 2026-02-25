@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState, ReactNode } from "react";
-import { Box, Paper } from "@mui/material";
+import { Box, Paper, Tooltip } from "@mui/material";
 import styles from "./DashboardTabs.module.css";
-
+import { hasFeature } from "@/utils/hasFeature";
 // Tab configuration
 export interface TabConfig {
   label: string | ReactNode;
   content: ReactNode;
+  featureId?: string;
 }
 
 interface DynamicTabsProps {
   readonly tabs: TabConfig[];
   readonly defaultTab?: number;
   readonly onTabChange?: (index: number) => void;
+  readonly features: string[];
 }
 
 // Type-safe props for TabPanel
@@ -46,6 +48,7 @@ export default function DynamicTabs({
   tabs = [],
   defaultTab = 0,
   onTabChange,
+  features
 }: DynamicTabsProps) {
   const [value, setValue] = useState(defaultTab);
 
@@ -75,7 +78,7 @@ export default function DynamicTabs({
     >
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
-          {tabs.map((tab, index) => (
+          {/* {tabs.map((tab, index) => (
             <React.Fragment key={index + 1}>
               <button
                 className={`${styles.tab} ${
@@ -95,7 +98,95 @@ export default function DynamicTabs({
                   <div className={styles.tabDivider}></div>
                 )}
             </React.Fragment>
-          ))}
+          ))} */}
+          {/* {tabs.map((tab, index) => {
+  const enabled = tab.featureId
+    ? hasFeature(features, tab.featureId)
+    : true;
+
+  return (
+    <React.Fragment key={index}>
+      <button
+        className={`${styles.tab} ${
+          value === index ? styles.tabActive : ""
+        }`}
+        onClick={() => {
+          if (enabled) {
+            handleChange(index);
+          }
+        }}
+        role="tab"
+        aria-selected={value === index}
+        id={`tab-${index}`}
+        disabled={!enabled}
+        
+        style={{
+          opacity: enabled ? 1 : 0.4,
+          cursor: enabled ? "pointer" : "default",
+          pointerEvents: enabled ? "auto" : "none", 
+        }}
+      >
+        <span className={styles.tabLabel}>{tab.label}</span>
+        <div className={styles.tabBackground}></div>
+
+        
+      </button>
+
+      {index < tabs.length - 1 &&
+        value !== index &&
+        value !== index + 1 && (
+          <div className={styles.tabDivider}></div>
+        )}
+    </React.Fragment>
+  );
+})} */}
+
+{tabs.map((tab, index) => {
+  const enabled = tab.featureId
+    ? hasFeature(features, tab.featureId)
+    : true;
+
+  const tabButton = (
+    <button
+      className={`${styles.tab} ${value === index ? styles.tabActive : ""}`}
+      onClick={() => {
+        if (enabled) handleChange(index);
+      }}
+      role="tab"
+      aria-selected={value === index}
+      id={`tab-${index}`}
+      disabled={!enabled}
+      style={{
+        opacity: enabled ? 1 : 0.4,
+        cursor: enabled ? "pointer" : "default",
+        pointerEvents: enabled ? "auto" : "none",
+        position: "relative",
+      }}
+    >
+      <span className={styles.tabLabel}>{tab.label}</span>
+      <div className={styles.tabBackground}></div>
+    </button>
+  );
+
+  return (
+     <React.Fragment key={index}>
+      {!enabled ? (
+        <Tooltip title="Upgrade your plan to access chart" arrow placement="top">
+          {/* Wrap in a span to satisfy Tooltip requirement */}
+          <span style={{ display: "inline-block" }}>{tabButton}</span>
+        </Tooltip>
+      ) : (
+        tabButton
+      )}
+
+      {index < tabs.length - 1 &&
+        value !== index &&
+        value !== index + 1 && (
+          <div className={styles.tabDivider}></div>
+        )}
+    </React.Fragment>
+  );
+})}
         </div>
         <div className={styles.tabsUnderline}></div>
       </div>
