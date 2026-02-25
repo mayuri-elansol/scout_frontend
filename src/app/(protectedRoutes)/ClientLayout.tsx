@@ -13,6 +13,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
 import Loader from "../components/atoms/Loader/Loader";
 import AuthGuard from "@/utils/auth-guard";
+import PageTransitionWrapper from "@/customhooks/PageTransitionWrapper";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -93,7 +94,9 @@ export default function ClientLayout({
             }}
           >
             <FeatureGuardProvider>
+              <PageTransitionWrapper>
               {children}
+              </PageTransitionWrapper>
             </FeatureGuardProvider>
           </Box>
         </Box>
