@@ -219,7 +219,11 @@ const SubMenuItem = React.memo<{
                       categoryTitle === "Settings"
                         ? "14px"
                         : "12px",
-                    color: isSelected ? "white" : enabled ? "#6b7280" : "#94a3b8",
+                    color: isSelected
+                      ? "white"
+                      : enabled
+                        ? "#6b7280"
+                        : "#94a3b8",
                     lineHeight: 1.4,
                   },
                 },
@@ -288,7 +292,11 @@ const CategorySection = React.memo<{
         </ListItemButton>
       </ListItem>
 
-      <Collapse in={openCategories[category.title]} timeout="auto" unmountOnExit>
+      <Collapse
+        in={openCategories[category.title]}
+        timeout="auto"
+        unmountOnExit
+      >
         <List sx={{ pl: 3 }}>
           {filteredItems.map((item, index) => {
             if (isLink(item)) {
@@ -338,58 +346,73 @@ CategorySection.displayName = "CategorySection";
 const ConfiguratorGroup = React.memo<{
   item: Extract<MenuItemConfig, { type: "group" }>;
   openCategories: Record<string, boolean>;
-  setOpenCategories: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  setOpenCategories: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >;
   pathname: string;
   theme: typeof theme;
   categoryTitle: string;
   features: string[];
-}>(({ item, openCategories, setOpenCategories, pathname, theme, categoryTitle, features }) => {
-  const isConfiguratorOpen = openCategories[item.name] ?? false;
+}>(
+  ({
+    item,
+    openCategories,
+    setOpenCategories,
+    pathname,
+    theme,
+    categoryTitle,
+    features,
+  }) => {
+    const isConfiguratorOpen = openCategories[item.name] ?? false;
 
-  const handleToggle = useCallback(() => {
-    setOpenCategories((prev) => ({ ...prev, [item.name]: !prev[item.name] }));
-  }, [item.name, setOpenCategories]);
+    const handleToggle = useCallback(() => {
+      setOpenCategories((prev) => ({ ...prev, [item.name]: !prev[item.name] }));
+    }, [item.name, setOpenCategories]);
 
-  return (
-    <Box>
-      <ListItem disablePadding>
-        <ListItemButton
-          onClick={handleToggle}
-          sx={{
-            pl: 1,
-            borderRadius: 1,
-            py: 0.75,
-            fontSize: "14px",
-            "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
-          }}
-        >
-          {item.icon && (
-            <ListItemIcon sx={{ minWidth: 28, color: "#6b7280" }}>
-              <item.icon fontSize="small" />
-            </ListItemIcon>
-          )}
-          <ListItemText primary={item.name} sx={{ fontSize: "14px", color: "#6b7280" }} />
-          {isConfiguratorOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-      </ListItem>
-
-      <Collapse in={isConfiguratorOpen} timeout="auto" unmountOnExit>
-        <List sx={{ pl: 3 }}>
-          {getAllLinkItems(item.items).map((subItem) => (
-            <SubMenuItem
-              key={subItem.path}
-              item={subItem}
-              pathname={pathname}
-              theme={theme}
-              categoryTitle={categoryTitle}
-              features={features}
+    return (
+      <Box>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={handleToggle}
+            sx={{
+              pl: 1,
+              borderRadius: 1,
+              py: 0.75,
+              fontSize: "14px",
+              "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
+            }}
+          >
+            {item.icon && (
+              <ListItemIcon sx={{ minWidth: 28, color: "#6b7280" }}>
+                <item.icon fontSize="small" />
+              </ListItemIcon>
+            )}
+            <ListItemText
+              primary={item.name}
+              sx={{ fontSize: "14px", color: "#6b7280" }}
             />
-          ))}
-        </List>
-      </Collapse>
-    </Box>
-  );
-});
+            {isConfiguratorOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItem>
+
+        <Collapse in={isConfiguratorOpen} timeout="auto" unmountOnExit>
+          <List sx={{ pl: 3 }}>
+            {getAllLinkItems(item.items).map((subItem) => (
+              <SubMenuItem
+                key={subItem.path}
+                item={subItem}
+                pathname={pathname}
+                theme={theme}
+                categoryTitle={categoryTitle}
+                features={features}
+              />
+            ))}
+          </List>
+        </Collapse>
+      </Box>
+    );
+  },
+);
 ConfiguratorGroup.displayName = "ConfiguratorGroup";
 
 // ─── Sidebar ───────────────────────────────────────────────────────────────────
@@ -433,13 +456,19 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
   const handleAnalyticsToggle = useCallback(() => {
     const willOpen = !analyticsOpen;
-    if (willOpen) { setOpenCategories({}); setSettingsOpen(false); }
+    if (willOpen) {
+      setOpenCategories({});
+      setSettingsOpen(false);
+    }
     setAnalyticsOpen((prev) => !prev);
   }, [analyticsOpen]);
 
   const handleSettingsToggle = useCallback(() => {
     const willOpen = !settingsOpen;
-    if (willOpen) { setOpenCategories({}); setAnalyticsOpen(false); }
+    if (willOpen) {
+      setOpenCategories({});
+      setAnalyticsOpen(false);
+    }
     setSettingsOpen((prev) => !prev);
   }, [settingsOpen]);
 
@@ -478,11 +507,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
           <List sx={{ p: 0, mt: 1 }}>
             {filteredMenus.dashboardFlags.map((category) => {
               const isOpen = openCategories[category.title] ?? false;
-              const isDashboardRoot = !!category.path && pathname === category.path;
+              const isDashboardRoot =
+                !!category.path && pathname === category.path;
               const isDashboardChild = category.items.some(
                 (item) =>
                   item.type === "link" &&
-                  (pathname === item.path || pathname.startsWith(`${item.path}/`)),
+                  (pathname === item.path ||
+                    pathname.startsWith(`${item.path}/`)),
               );
               let iconColor = "#5c6b7d";
               if (isDashboardRoot) iconColor = "white";
@@ -499,21 +530,35 @@ const Sidebar: React.FC<SidebarProps> = () => {
                         "&.Mui-selected": {
                           backgroundColor: theme.palette.primary.main,
                           color: "white",
-                          "&:hover": { backgroundColor: theme.palette.primary.dark },
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.dark,
+                          },
                         },
                         "&:hover": { backgroundColor: "rgba(25,118,210,0.08)" },
                       }}
-                      onClick={() => { if (category.path) router.push(category.path); }}
+                      onClick={() => {
+                        if (category.path) router.push(category.path);
+                      }}
                     >
                       {category.icon && (
                         <ListItemIcon sx={{ minWidth: 36, color: iconColor }}>
                           <category.icon />
                         </ListItemIcon>
                       )}
-                      <ListItemText primary={category.title} sx={{ color: iconColor }} />
+                      <ListItemText
+                        primary={category.title}
+                        sx={{ color: iconColor }}
+                      />
                       <Box
-                        onClick={(e) => { e.stopPropagation(); handleCategoryToggle(category.title); }}
-                        sx={{ display: "flex", alignItems: "center", color: iconColor }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCategoryToggle(category.title);
+                        }}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          color: iconColor,
+                        }}
                       >
                         {isOpen ? <ExpandLess /> : <ExpandMore />}
                       </Box>
@@ -526,7 +571,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
                       category.items.some(
                         (item) =>
                           item.type === "link" &&
-                          (pathname === item.path || pathname.startsWith(`${item.path}/`)),
+                          (pathname === item.path ||
+                            pathname.startsWith(`${item.path}/`)),
                       )
                     }
                     timeout="auto"
@@ -575,7 +621,10 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleAnalyticsToggle}
-                selected={isAnalyticsActive && !Object.values(openCategories).some(Boolean)}
+                selected={
+                  isAnalyticsActive &&
+                  !Object.values(openCategories).some(Boolean)
+                }
                 sx={{
                   borderRadius: 1,
                   "&.Mui-selected": {
@@ -583,11 +632,18 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     color: "white",
                     "&:hover": { backgroundColor: theme.palette.primary.dark },
                   },
-                  color: isAnalyticsActive ? theme.palette.primary.main : "inherit",
+                  color: isAnalyticsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
                 }}
               >
                 <ListItemIcon
-                  sx={{ minWidth: 36, color: isAnalyticsActive ? theme.palette.primary.main : "inherit" }}
+                  sx={{
+                    minWidth: 36,
+                    color: isAnalyticsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
                 >
                   <BarChart />
                 </ListItemIcon>
@@ -617,7 +673,13 @@ const Sidebar: React.FC<SidebarProps> = () => {
         {/* Live Streaming / Alerts */}
         <List sx={{ p: 0, mt: 1 }}>
           {filteredMenus.liveStreamingFlags.filter(isLink).map((item) => (
-            <MenuItem key={item.path} item={item} pathname={pathname} theme={theme} features={features} />
+            <MenuItem
+              key={item.path}
+              item={item}
+              pathname={pathname}
+              theme={theme}
+              features={features}
+            />
           ))}
         </List>
 
@@ -634,15 +696,25 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     color: "white",
                     "&:hover": { backgroundColor: theme.palette.primary.dark },
                   },
-                  color: isSettingsActive ? theme.palette.primary.main : "inherit",
+                  color: isSettingsActive
+                    ? theme.palette.primary.main
+                    : "inherit",
                 }}
               >
                 <ListItemIcon
-                  sx={{ minWidth: 36, color: isSettingsActive ? theme.palette.primary.main : "inherit" }}
+                  sx={{
+                    minWidth: 36,
+                    color: isSettingsActive
+                      ? theme.palette.primary.main
+                      : "inherit",
+                  }}
                 >
                   <Settings />
                 </ListItemIcon>
-                <ListItemText primary="Settings" sx={{ fontSize: "14px", color: "#5c6b7d" }} />
+                <ListItemText
+                  primary="Settings"
+                  sx={{ fontSize: "14px", color: "#5c6b7d" }}
+                />
                 {settingsOpen ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
             </ListItem>
@@ -687,10 +759,19 @@ const Sidebar: React.FC<SidebarProps> = () => {
       </>
     ),
     [
-      filteredMenus, pathname, theme, router,
-      analyticsOpen, settingsOpen, openCategories,
-      handleAnalyticsToggle, handleSettingsToggle, handleCategoryToggle,
-      isAnalyticsActive, isSettingsActive, features,
+      filteredMenus,
+      pathname,
+      theme,
+      router,
+      analyticsOpen,
+      settingsOpen,
+      openCategories,
+      handleAnalyticsToggle,
+      handleSettingsToggle,
+      handleCategoryToggle,
+      isAnalyticsActive,
+      isSettingsActive,
+      features,
     ],
   );
 
@@ -713,9 +794,16 @@ const Sidebar: React.FC<SidebarProps> = () => {
         },
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}>
+      <Box
+        sx={{ display: "flex", justifyContent: "left", alignItems: "center" }}
+      >
         {isLoading ? (
-          <Skeleton variant="rectangular" width={260} height={46} sx={{ borderRadius: 1 }} />
+          <Skeleton
+            variant="rectangular"
+            width={260}
+            height={46}
+            sx={{ borderRadius: 1 }}
+          />
         ) : (
           <Box
             component="img"
@@ -730,8 +818,23 @@ const Sidebar: React.FC<SidebarProps> = () => {
 
       <Box sx={{ flex: 1, overflowY: "auto" }}>{menuContent}</Box>
 
-      <Box sx={{ pt: 2, display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: 1 }}>
-        <Box component="img" src="/scoutLogo.png" alt="Elansol Logo" sx={{ height: 46, width: "auto" }} loading="lazy" />
+      <Box
+        sx={{
+          pt: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 1,
+        }}
+      >
+        <Box
+          component="img"
+          src="/scoutLogo.png"
+          alt="Elansol Logo"
+          sx={{ height: 46, width: "auto" }}
+          loading="lazy"
+        />
         <Typography sx={{ fontSize: "13px", color: "#666" }}>
           &copy; 2025 Elansol Technologies. <br />
           All rights reserved.
