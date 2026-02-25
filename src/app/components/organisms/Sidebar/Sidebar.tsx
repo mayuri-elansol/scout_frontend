@@ -45,6 +45,7 @@ import theme from "../../../theme/theme";
 import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(settings)/(userManagement)/addUser/AddUserApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import { FEATURE } from "@/app/config/featureRegistry";
 
 interface SidebarProps {
   currentPage: PageType;
@@ -719,7 +720,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
               </ListItemButton>
             </ListItem>
 
-            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+            {/* <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
               <List sx={{ pl: 2 }}>
                 {filteredMenus.settingsFlags.map((category) =>
                   category.items.map((item) => {
@@ -753,7 +754,54 @@ const Sidebar: React.FC<SidebarProps> = () => {
                   }),
                 )}
               </List>
-            </Collapse>
+            </Collapse> */}
+
+            <Collapse in={settingsOpen} timeout="auto" unmountOnExit>
+  <List sx={{ pl: 2 }}>
+    {filteredMenus.settingsFlags.map((category) =>
+      category.items
+        .filter((item) => {
+          // Hide only ROLE_MANAGEMENT and USER_MANAGEMENT if feature is not enabled
+          if (
+            item.featureId === FEATURE.ROLE_MANAGEMENT ||
+            item.featureId === FEATURE.USER_MANAGEMENT
+          ) {
+            return hasFeature(features, item.featureId);
+          }
+          return true; // keep all other settings items
+        })
+        .map((item) => {
+          if (isLink(item)) {
+            return (
+              <SubMenuItem
+                key={item.path}
+                item={item}
+                pathname={pathname}
+                theme={theme}
+                categoryTitle={category.title}
+                features={features}
+              />
+            );
+          }
+          if (isGroup(item)) {
+            return (
+              <ConfiguratorGroup
+                key={item.name}
+                item={item}
+                openCategories={openCategories}
+                setOpenCategories={setOpenCategories}
+                pathname={pathname}
+                theme={theme}
+                categoryTitle={category.title}
+                features={features}
+              />
+            );
+          }
+          return null;
+        }),
+    )}
+  </List>
+</Collapse>
           </List>
         )}
       </>

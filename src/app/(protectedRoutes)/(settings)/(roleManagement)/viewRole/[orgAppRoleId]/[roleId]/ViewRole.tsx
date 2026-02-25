@@ -57,7 +57,6 @@ export default function ViewRolePage() {
       });
   }, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
 
-  /* ---------------- LOADING ---------------- */
 
   /* ---------------- ERROR ---------------- */
   if (isError) {

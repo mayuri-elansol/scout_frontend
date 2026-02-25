@@ -222,7 +222,7 @@ const SystemAlerts: React.FC = () => {
       </Grid>
 
       {/* Dashboard Tabs */}
-      <DynamicTabs tabs={tabs} />
+      {/* <DynamicTabs tabs={tabs} /> */}
     </Paper>
   );
 };
