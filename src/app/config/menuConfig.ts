@@ -80,24 +80,10 @@ export const dashboardMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "Safety And Compliance",
-        page: "safety-compliance-dashboard",
-        path: "/safetyAndComplianceDashboard",
-        featureId: FEATURE.SAFETY_COMPLIANCE,
-      },
-      {
-        type: "link",
         name: "Surveillance Monitoring",
         page: "surveillance-monitoring-dashboard",
         path: "/surveillanceMonitoringDashboard",
         featureId: FEATURE.SURVEILLANCE_MONITORING,
-      },
-      {
-        type: "link",
-        name: "Operational Insights",
-        page: "operational-insights-dashboard",
-        path: "/operationalInsightsDashboard",
-        featureId: FEATURE.OPERATIONAL_INSIGHTS,
       },
       {
         type: "link",
@@ -106,6 +92,21 @@ export const dashboardMenu: CategoryConfig[] = [
         path: "/workforceMonitoringDashboard",
         featureId: FEATURE.WORKFORCE_MONITORING,
       },
+      {
+        type: "link",
+        name: "Safety And Compliance",
+        page: "safety-compliance-dashboard",
+        path: "/safetyAndComplianceDashboard",
+        featureId: FEATURE.SAFETY_COMPLIANCE,
+      },
+      {
+        type: "link",
+        name: "Operational Insights",
+        page: "operational-insights-dashboard",
+        path: "/operationalInsightsDashboard",
+        featureId: FEATURE.OPERATIONAL_INSIGHTS,
+      },
+
       {
         type: "link",
         name: "Camera Tampering",
@@ -162,6 +163,12 @@ export const settingsMenu: CategoryConfig[] = [
         icon: TuneIcon,
         featureFlag: true,
         items: [
+            {
+            type: "link",
+            name: "Zone-Location Mapping",
+            path: "/zoneLocationMapping",
+            featureId: FEATURE.ZONE_LOCATION_MAPPING,
+          },
           {
             type: "link",
             name: "Camera Management",
@@ -174,12 +181,7 @@ export const settingsMenu: CategoryConfig[] = [
             path: "/useCaseManager",
             featureId: FEATURE.USE_CASE_MANAGER,
           },
-          {
-            type: "link",
-            name: "Zone-Location Mapping",
-            path: "/zoneLocationMapping",
-            featureId: FEATURE.ZONE_LOCATION_MAPPING,
-          },
+        
         ],
       },
     ],
@@ -257,15 +259,15 @@ export const analyticsMenu: CategoryConfig[] = [
       },
       {
         type: "link",
-        name: "Unauthorized Access In Restricted Areas",
-        path: "/unauthorizedAccessInRestrictedAreas",
-        featureId: FEATURE.UNAUTHORIZED_ACCESS,
-      },
-      {
-        type: "link",
         name: "Movement During Shutdown Hours",
         path: "/movementDuringShutdownHours",
         featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
+      },
+      {
+        type: "link",
+        name: "Unauthorized Access In Restricted Areas",
+        path: "/unauthorizedAccessInRestrictedAreas",
+        featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
     ],
   },
@@ -273,6 +275,12 @@ export const analyticsMenu: CategoryConfig[] = [
     title: "Workforce Monitoring",
     icon: People,
     items: [
+      {
+        type: "link",
+        name: "Employee Idle Time Monitoring",
+        path: "/employeeIdleTime",
+        featureId: FEATURE.EMPLOYEE_IDLE_TIME,
+      },
       {
         type: "link",
         name: "Employee Presence In Critical Areas",
@@ -285,12 +293,7 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/employeePresenceRestrictedArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
-      {
-        type: "link",
-        name: "Employee Idle Time Monitoring",
-        path: "/employeeIdleTime",
-        featureId: FEATURE.EMPLOYEE_IDLE_TIME,
-      },
+      
       {
         type: "link",
         name: "Mobile Phone Usage In Restricted Zones",

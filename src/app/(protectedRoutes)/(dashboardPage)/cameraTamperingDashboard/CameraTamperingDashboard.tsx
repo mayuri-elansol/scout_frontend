@@ -276,7 +276,7 @@ export default function CameraTamperingDashboard() {
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} />
+        {/* <DashboardTabs tabs={tabs} /> */}
       </Box>
     </Paper>
   );

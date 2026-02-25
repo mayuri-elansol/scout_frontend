@@ -31,36 +31,32 @@ export default function ViewRolePage() {
 
   /* ---------------- ROLE OVERVIEW API ---------------- */
   const { data, isLoading: isLoadingForRole } = useGetRoleQuery(
-    tenantId && userId ? { tenantId, userId } : skipToken
+    tenantId && userId ? { tenantId, userId } : skipToken,
   );
 
   const selectedRole = useMemo<OrgAppRole | undefined>(() => {
-  const roleList = data?.data?.data ?? [];
-  return roleList.find(
-    (item) => item.org_app_role_id === orgAppRoleId
-  );
-}, [data, orgAppRoleId]);
+    const roleList = data?.data?.data ?? [];
+    return roleList.find((item) => item.org_app_role_id === orgAppRoleId);
+  }, [data, orgAppRoleId]);
 
   /* ---------------- FEATURE API ---------------- */
   const [fetchFeatures, { isLoading, isError }] =
     useGetFeatureOfRoleByRoleIdMutation();
 
-const [features, setFeatures] = useState<RoleFeature[]>([]);
+  const [features, setFeatures] = useState<RoleFeature[]>([]);
 
   /* ---------------- FETCH FEATURES ---------------- */
 
-useEffect(() => {
-  if (!tenantId || !roleId || !orgAppRoleId) return;
+  useEffect(() => {
+    if (!tenantId || !roleId || !orgAppRoleId) return;
 
-  fetchFeatures({ tenantId, roleId, orgAppRoleId })
-    .unwrap()
-    .then((res) => {
-      setFeatures(res.data.data);
-    });
-}, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
+    fetchFeatures({ tenantId, roleId, orgAppRoleId })
+      .unwrap()
+      .then((res) => {
+        setFeatures(res.data.data);
+      });
+  }, [tenantId, roleId, orgAppRoleId, fetchFeatures]);
 
-
-  /* ---------------- LOADING ---------------- */
 
   /* ---------------- ERROR ---------------- */
   if (isError) {
@@ -73,76 +69,85 @@ useEffect(() => {
 
   /* ---------------- UI ---------------- */
   return (
-    
     <Box className="viewRole" sx={{ p: 2 }}>
       {/* ---------------- ROLE DETAILS ---------------- */}
-        {isLoadingForRole || isLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center",alignItems:"center", mt: 20 }}>
-            <Loader />
-          </Box>
-        ) : (
-      <>
-      <Typography variant="h6" mb={2}>
-        Role Details :
-      </Typography>
+      {isLoadingForRole || isLoading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: 20,
+          }}
+        >
+          <Loader />
+        </Box>
+      ) : (
+        <>
+          <Typography variant="h6" mb={2}>
+            Role Details :
+          </Typography>
 
-      <Grid container spacing={2} mb={4}>
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <CardForSettings
-            title="Role Name"
-            text={selectedRole?.role_id?.name}
-          />
-        </Grid>
+          <Grid container spacing={2} mb={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <CardForSettings
+                title="Role Name"
+                text={selectedRole?.role_id?.name}
+              />
+            </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <CardForSettings
-            title="Created At"
-            text={formatDate(selectedRole?.createdAt)}
-          />
-        </Grid>
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <CardForSettings
+                title="Created At"
+                text={formatDate(selectedRole?.createdAt)}
+              />
+            </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-          <CardForSettings
-            title="Updated At"
-            text={formatDate(selectedRole?.updatedAt)}
-          />
-        </Grid>
-      </Grid>
-
-      {/* ---------------- ASSIGNED FEATURES ---------------- */}
-      <Typography variant="h6" mb={2}>
-        Assigned Features :
-      </Typography>
-
-      <Grid container spacing={2}>
-        {features.map((item) => (
-          <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.role_feature_id}>
-            <CardForSettings
-              title={item.feature?.name}
-              icon={<CheckCircleOutlineIcon color="primary" />}
-              text={
-                <Typography variant="body2">
-                  {item.feature?.description}
-                </Typography>
-              }
-            />
+            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+              <CardForSettings
+                title="Updated At"
+                text={formatDate(selectedRole?.updatedAt)}
+              />
+            </Grid>
           </Grid>
-        ))}
-      </Grid>
-      {/* ---------------- BACK BUTTON ---------------- */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-start",
-          mt: 4,
-        }}
-      >
-        <Button variant="outlined" onClick={() => router.push("/roleOverview")}>
-          Back
-        </Button>
-      </Box>
-      </>
-        )}
+
+          {/* ---------------- ASSIGNED FEATURES ---------------- */}
+          <Typography variant="h6" mb={2}>
+            Assigned Features :
+          </Typography>
+
+          <Grid container spacing={2}>
+            {features.map((item) => (
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={item.role_feature_id}>
+                <CardForSettings
+                  title={item.feature?.name}
+                  icon={<CheckCircleOutlineIcon color="primary" />}
+                  text={
+                    <Typography variant="body2">
+                      {item.feature?.description}
+                    </Typography>
+                  }
+                />
+              </Grid>
+            ))}
+          </Grid>
+          {/* ---------------- BACK BUTTON ---------------- */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              mt: 4,
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={() => router.push("/roleOverview")}
+            >
+              Back
+            </Button>
+          </Box>
+        </>
+      )}
     </Box>
   );
 }
