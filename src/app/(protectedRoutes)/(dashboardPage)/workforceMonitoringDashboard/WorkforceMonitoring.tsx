@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Grid, Paper } from "@mui/material";
+import { Box, CircularProgress, Grid, Paper } from "@mui/material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
@@ -187,6 +187,56 @@ const WorkforceMonitoring: React.FC = () => {
   console.log("sleepingAbsenceGraphData", sleepingAbsenceGraphData);
 
   const tabs: TabConfig[] = [
+
+      {
+      label: "Employee Monitoring",
+      content: (
+        <Grid container>
+          <Grid size={{ xs: 12 }}>
+            <Box
+              sx={{
+                width: "100%",
+                height: 420,
+                p: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+              }}
+            >
+               {WorkforcekpiLoading ? (
+            <CircularProgress />
+          ) : (
+              <DynamicBarChart
+
+                data={employeeIdleGraphData}
+                xAxisKey="gate"
+                series={[
+                  {
+                    dataKey: "Idle",
+                    label: "Idle Count",
+                    color: "#FFD1DC",
+                  },
+                  {
+                    dataKey: "Working",
+                    label: "Working Count",
+                    color: "#AEEEEE",
+                  },
+                  {
+                    dataKey: "NotPresent",
+                    label: "Not Present Count",
+                    color: "#FFF5BA",
+                  },
+                ]}
+                yAxisLabel="Count"
+                stackId="exitStatus"
+              />
+          )}
+            </Box>
+          </Grid>
+        </Grid>
+      ),
+      featureId:FEATURE.EMPLOYEE_IDLE_TIME
+    },
     {
       label: "Employee Presence (Critical Areas)",
       content: (
@@ -219,48 +269,7 @@ const WorkforceMonitoring: React.FC = () => {
       featureId:FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA
     },
 
-    {
-      label: "Employee Monitoring",
-      content: (
-        <Grid container>
-          <Grid size={{ xs: 12 }}>
-            <Box
-              sx={{
-                width: "100%",
-                height: 420,
-                p: 2,
-              }}
-            >
-              <DynamicBarChart
-
-                data={employeeIdleGraphData}
-                xAxisKey="gate"
-                series={[
-                  {
-                    dataKey: "Idle",
-                    label: "Idle Count",
-                    color: "#FFD1DC",
-                  },
-                  {
-                    dataKey: "Working",
-                    label: "Working Count",
-                    color: "#AEEEEE",
-                  },
-                  {
-                    dataKey: "NotPresent",
-                    label: "Not Present Count",
-                    color: "#FFF5BA",
-                  },
-                ]}
-                yAxisLabel="Count"
-                stackId="exitStatus"
-              />
-            </Box>
-          </Grid>
-        </Grid>
-      ),
-      featureId:FEATURE.EMPLOYEE_IDLE_TIME
-    },
+  
     {
       label: "Mobile Phone Usage",
       content: (
@@ -336,6 +345,7 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
+      featureId:FEATURE.SAFETY_COMPLIANCE
     },
   ];
 

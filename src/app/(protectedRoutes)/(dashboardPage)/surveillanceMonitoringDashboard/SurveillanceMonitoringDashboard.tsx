@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Grid, Paper } from "@mui/material";
+import { Box, CircularProgress, Grid, Paper } from "@mui/material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, {
@@ -31,7 +31,7 @@ import { FEATURE } from "@/app/config/featureRegistry";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
-  const { user,features } = useSelector((state: RootState) => state.auth);
+  const { user, features } = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
@@ -150,15 +150,80 @@ const SurveillanceMonitoring: React.FC = () => {
               },
             }}
           >
-            {intrusionDashboard && (
+            {/* {intrusionDashboard && (
               <DynamicViolationScatterChart item={intrusionDashboard} />
+            )} */}
+            {SurveillancekpiLoading ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              intrusionDashboard && (
+                <DynamicViolationScatterChart item={intrusionDashboard} />
+              )
             )}
           </Grid>
         </Grid>
       ),
       featureId: FEATURE.INTRUSION_DETECTION,
     },
+ {
+      label: "Movement During shutdown",
+      content: (
+        <Grid
+          container
+          sx={{
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              // height: { xs: "50vh", md: "100%" },
+              height: { xs: "50vh", md: "360px" }, // ensure enough height
 
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+            padding={{ xs: "10px" }}
+          >
+            {/* {movementDashboard && (
+              <DynamicViolationScatterChart item={movementDashboard} />
+            )}{" "} */}
+
+            {SurveillancekpiLoading ? (
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              movementDashboard && (
+                <DynamicViolationScatterChart item={movementDashboard} />
+              )
+            )}
+          </Grid>
+        </Grid>
+      ),
+      featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
+    },
     {
       label: "Camera Tempering Detection",
       content: (
@@ -222,39 +287,7 @@ const SurveillanceMonitoring: React.FC = () => {
       ),
       featureId: FEATURE.CAMERA_TAMPERING,
     },
-    {
-      label: "Movement During shutdown",
-      content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              // height: { xs: "50vh", md: "100%" },
-              height: { xs: "50vh", md: "360px" }, // ensure enough height
-
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-            padding={{ xs: "10px" }}
-          >
-            {movementDashboard && (
-              <DynamicViolationScatterChart item={movementDashboard} />
-            )}{" "}
-          </Grid>
-        </Grid>
-      ),
-      featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
-    },
+   
     {
       label: "Unauthorized Access ",
       content: (
@@ -320,21 +353,21 @@ const SurveillanceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {SurveillancekpiLoading || !displaySurveillanceKpi.length
           ? Array.from({ length: 4 }).map((_, index) => (
-              <Grid
-                key={index + 1}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+            <Grid
+              key={index + 1}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : surveillanceKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <DashboardKpiCard {...kpi} />
-              </Grid>
-            ))}
+            <Grid
+              key={kpi.title}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <DashboardKpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Tabs Section */}
@@ -347,7 +380,7 @@ const SurveillanceMonitoring: React.FC = () => {
           minHeight: { xs: "500px", sm: "600px", md: 0 },
         }}
       >
-        <DashboardTabs tabs={tabs} features={features}  />
+        <DashboardTabs tabs={tabs} features={features} />
       </Box>
     </Paper>
   );
