@@ -7,6 +7,8 @@ export interface OrgCamera {
   password: string;
   port: string;
   make: string;
+  // location?: string;
+  zone?: string;  
   // location: string;
   cameraname: string;   // ← renamed from cameraName (matches AIConfigurationStep)
   location?: string;

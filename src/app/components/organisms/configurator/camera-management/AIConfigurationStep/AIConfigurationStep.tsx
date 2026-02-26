@@ -65,6 +65,20 @@ interface AIConfig {
   viewName?: string;
 }
 
+// interface CameraData {
+//   id: string;
+//   ipAddress: string;
+//   username: string;
+//   password: string;
+//   port: string;
+//   make: string;
+//   cameraname: string;
+//   location?: string;
+//   rtspStream: string;
+//   status: 'connected' | 'failed' | 'pending';
+//   aiConfig?: AIConfig
+// }
+
 interface CameraData {
   id: string;
   ipAddress: string;
@@ -73,6 +87,7 @@ interface CameraData {
   port: string;
   make: string;
   cameraname: string;
+  zone?: string;          // ✅ ADD THIS
   location?: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
@@ -538,19 +553,30 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
               </Typography>
 
               <Box sx={{ mb: 2 }}>
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Camera ID:</strong> {camera.id}
-                </Typography>
-                {/* <Typography variant="body2" color="text.secondary">
-                  <strong>Location:</strong> {camera.location || 'N/A'}
-                </Typography> */}
-                <Typography variant="body2" color="text.secondary">
-                  <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  <strong>Make:</strong> {camera.make}
-                </Typography>
-              </Box>
+  <Typography variant="body2" color="text.secondary">
+    <strong>Camera Name:</strong> {camera.cameraname}
+  </Typography>
+
+  <Typography variant="body2" color="text.secondary">
+    <strong>Camera ID:</strong> {camera.id}
+  </Typography>
+
+  <Typography variant="body2" color="text.secondary">
+    <strong>Zone:</strong> {camera.zone ?? "N/A"}
+  </Typography>
+
+  <Typography variant="body2" color="text.secondary">
+    <strong>Location:</strong> {camera.location ?? "N/A"}
+  </Typography>
+
+  <Typography variant="body2" color="text.secondary">
+    <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
+  </Typography>
+
+  <Typography variant="body2" color="text.secondary">
+    <strong>Connection Type:</strong> {camera.make}
+  </Typography>
+</Box>
 
               <TextField
                 label="View Name"
