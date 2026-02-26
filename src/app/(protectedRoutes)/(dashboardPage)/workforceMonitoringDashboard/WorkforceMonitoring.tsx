@@ -232,7 +232,6 @@ const WorkforceMonitoring: React.FC = () => {
               }}
             >
               <DynamicBarChart
-                // key={employeeIdleGraphData.length > 0 ? 'data-loaded' : 'loading'}
 
                 data={employeeIdleGraphData}
                 xAxisKey="gate"
@@ -337,7 +336,6 @@ const WorkforceMonitoring: React.FC = () => {
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.SLEEPING_SECURITY_PERSONNEL
     },
   ];
 
