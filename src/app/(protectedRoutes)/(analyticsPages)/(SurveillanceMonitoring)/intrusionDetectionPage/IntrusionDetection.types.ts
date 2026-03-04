@@ -30,11 +30,11 @@ export interface IntrusionZoneViolation {
 
 /* ---------- VIOLATION ---------- */
 export interface IntrusionViolation {
-  violation: string;
+  incident: string;
   zone: string;
   time: string;
   imageUrl: string;
-  cameraId: string;
+  camera: string;
   alarmTriggered: boolean;
   [key: string]: string | number | boolean;
 }

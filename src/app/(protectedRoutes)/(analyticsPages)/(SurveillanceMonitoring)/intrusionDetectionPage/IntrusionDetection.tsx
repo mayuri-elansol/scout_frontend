@@ -186,10 +186,10 @@ const IntrusionDetection: React.FC = () => {
     try {
       const payload = {
         tenantId: tenantId,
-        violation: String(IntrusionViolation.violation),
+        violation: String(IntrusionViolation.incident),
         zone: IntrusionViolation.zone,
         time: IntrusionViolation.time,
-        cameraId: IntrusionViolation.cameraId,
+        cameraId: IntrusionViolation.camera,
         alarmTriggered: IntrusionViolation.alarmTriggered,
         imageUrl: url,
       };
@@ -310,10 +310,10 @@ const IntrusionDetection: React.FC = () => {
       try {
         const payload = {
           tenantId,
-          violation: String(row.violation),
+          violation: String(row.incident),
           zone: row.zone,
           time: row.time,
-          cameraId: row.cameraId,
+          cameraId: row.camera,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
         };

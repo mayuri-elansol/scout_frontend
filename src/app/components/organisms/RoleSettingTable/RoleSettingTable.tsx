@@ -40,7 +40,6 @@ const RoleSettingTable: React.FC<RoleSettingTableProps> = ({
     if (rowRole === "organisation_admin_scout") {
       return currentUserRole === "organisation_admin_scout";
     }
-
     return true;
   });
 
