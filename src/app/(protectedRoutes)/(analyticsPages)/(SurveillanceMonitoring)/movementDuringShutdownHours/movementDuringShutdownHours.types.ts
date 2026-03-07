@@ -16,11 +16,11 @@ export interface MovemnetDuringShutDownHrZoneViolation {
 
 /* ---------- Recent VIOLATION ---------- */
 export interface MovemnetDuringShutDownHrViolation {
-  violation: string;
+  incident: string;
   zone: string;
   time: string;
   imageUrl: string;
-  cameraId: string;
+  camera: string;
   alarmTriggered: boolean;
   peopleCount: number;
   [key: string]: string | number | boolean;
