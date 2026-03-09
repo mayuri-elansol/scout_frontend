@@ -199,7 +199,7 @@ const EmployeeIdleTime: React.FC = () => {
   /* ---------- REPORT HANDLERS ---------- */
 
   const tableColumns = [
-    { id: "violation", label: t("Incident") },
+    { id: "violation", label: t("Violation") },
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
     { id: "cameraId", label: t("Cameras") },
@@ -208,7 +208,7 @@ const EmployeeIdleTime: React.FC = () => {
   const tableFilters = [
     {
       id: "violation",
-      label: t("Incident"),
+      label: t("Violation"),
       type: "select" as const,
       options: ["Employee Idle", "Employee Working", "Employee Not Present"],
     },
@@ -323,13 +323,14 @@ const EmployeeIdleTime: React.FC = () => {
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;
     const empViolation = violation as EmployeeIdleTimeViolation;
+    console.log('employee idel time single data=============',empViolation)
     try {
       const payload = {
         tenantId: tenantId,
         violation: String(empViolation.violation),
         zone: empViolation.zone,
         time: empViolation.time,
-        cameraId: empViolation.cameraId,
+        cameraId: empViolation.cameraId ,
         imageUrl: url,
       };
 

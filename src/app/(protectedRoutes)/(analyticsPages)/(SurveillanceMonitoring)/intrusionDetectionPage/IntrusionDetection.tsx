@@ -112,7 +112,7 @@ const IntrusionDetection: React.FC = () => {
     fetchIntrusionRecent,
     fetchDetailedIntrusionReportApi,
   ]);
-
+console.log('receent vgilation data intioal load',recentIntrusionViolationsLive)
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<IntrusionSocketPayload>({
     tenantId,
@@ -184,13 +184,17 @@ const IntrusionDetection: React.FC = () => {
   ) => {
     if (!violation) return;
     const IntrusionViolation = violation as IntrusionViolation;
+    console.log('intruion incident violation',IntrusionViolation)
     try {
       const payload = {
         tenantId: tenantId,
-        violation: String(IntrusionViolation.incident),
+        // violation: String(IntrusionViolation.incident),
+          violation: String(
+    IntrusionViolation.incident ?? IntrusionViolation.violation
+  ),
         zone: IntrusionViolation.zone,
         time: IntrusionViolation.time,
-        cameraId: IntrusionViolation.camera,
+        cameraId: IntrusionViolation.camera ?? IntrusionViolation.cameraId,
         alarmTriggered: IntrusionViolation.alarmTriggered,
         imageUrl: url,
       };
@@ -308,13 +312,14 @@ const IntrusionDetection: React.FC = () => {
 
   const handleDownloadSingle = useCallback(
     async (row: IntrusionViolation) => {
+      console.log('roww from intrusion===============',row)
       try {
         const payload = {
           tenantId,
-          violation: String(row.incident),
+          violation: String(row.incident ?? row.violation),
           zone: row.zone,
           time: row.time,
-          cameraId: row.camera,
+          cameraId: row.camera?? row.cameraId,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
         };

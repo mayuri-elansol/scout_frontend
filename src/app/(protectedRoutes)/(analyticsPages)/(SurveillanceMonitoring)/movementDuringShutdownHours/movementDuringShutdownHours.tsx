@@ -185,10 +185,13 @@ const MovementDuringShutdownHours: React.FC = () => {
     try {
       const payload = {
         tenantId: tenantId,
-        violation: String(MovementViolation.incident),
+        // violation: String(MovementViolation.incident),
+        violation: String(
+    MovementViolation.incident ?? MovementViolation.violation
+  ),
         zone: MovementViolation.zone,
         time: MovementViolation.time,
-        cameraId: MovementViolation.camera,
+        cameraId: MovementViolation.camera ?? MovementViolation.cameraId,
         alarmTriggered: MovementViolation.alarmTriggered,
         imageUrl: url,
         peopleCount: MovementViolation.peopleCount,
@@ -312,10 +315,12 @@ const MovementDuringShutdownHours: React.FC = () => {
       try {
         const payload = {
           tenantId,
-          violation: String(row.incident),
+          // violation: String(row.incident ),
+           violation: String(row.incident ?? row.violation),
           zone: row.zone,
           time: row.time,
-          cameraId: row.camera,
+          // cameraId: row.camera,
+          cameraId: row.camera?? row.cameraId,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
           peopleCount: row.peopleCount,
