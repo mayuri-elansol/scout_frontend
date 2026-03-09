@@ -99,7 +99,7 @@ export default function DynamicViolationScatterChart({ item }: Props) {
         {item.title} (zone vs {name})
       </Typography>
       <ScatterChart
-        height={520}
+        height={495}
         series={series}
         xAxis={[
           {

@@ -74,7 +74,7 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
         }}
       >
         <BarChart
-          height={620} // ✅ REQUIRED
+          height={520} // ✅ REQUIRED
           series={chartSeries}
           xAxis={[
             {
