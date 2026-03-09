@@ -130,6 +130,9 @@ const MovementDuringShutdownHours: React.FC = () => {
       if (!range.start && !range.end) {
         setIsMovementLiveMode(true);
         fetchMovementKpi({ tenantId });
+         fetchMovementZoneViolations({ tenantId }),
+    fetchMovementRecent({ tenantId })
+
         return;
       }
 

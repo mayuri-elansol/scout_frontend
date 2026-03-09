@@ -132,7 +132,8 @@ const IntrusionDetection: React.FC = () => {
       if (!range.start && !range.end) {
         setIsIntrusionLiveMode(true);
         fetchIntrusionKpi({ tenantId });
-
+ fetchIntrusionZoneViolations({ tenantId }),
+    fetchIntrusionRecent({ tenantId })
         return;
       }
 
