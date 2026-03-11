@@ -43,6 +43,9 @@ const IntrusionDetection: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+
   const [isIntrusionLiveMode, setIsIntrusionLiveMode] = useState(true);
 
   const [displayIntrusionKpi, setDisplayIntrusionKpi] = useState<
@@ -95,7 +98,11 @@ const IntrusionDetection: React.FC = () => {
         fetchIntrusionKpi({ tenantId }).unwrap(),
         fetchIntrusionZoneViolations({ tenantId }).unwrap(),
         fetchIntrusionRecent({ tenantId }).unwrap(),
-        fetchDetailedIntrusionReportApi({ tenantId }).unwrap(),
+        fetchDetailedIntrusionReportApi({
+          tenantId,
+          page: page + 1,
+          limit,
+        }).unwrap(),
       ]);
 
       setDisplayIntrusionKpi(kpi ?? []);
@@ -111,6 +118,8 @@ const IntrusionDetection: React.FC = () => {
     fetchIntrusionZoneViolations,
     fetchIntrusionRecent,
     fetchDetailedIntrusionReportApi,
+    page,
+    limit,
   ]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
@@ -401,6 +410,14 @@ const IntrusionDetection: React.FC = () => {
         onView={(row) => handleViewSingle(row as IntrusionViolation)}
         downloadFileName="intrusion-violations-report"
         loading={intrusionreportLoading}
+        totalCount={detailedIntrusionReport?.total || 0}
+        page={page}
+        rowsPerPage={limit}
+        onPageChange={(newPage) => setPage(newPage)}
+        onRowsPerPageChange={(rows) => {
+          setLimit(rows);
+          setPage(0);
+        }}
       />
 
       <ViewAlertPopup

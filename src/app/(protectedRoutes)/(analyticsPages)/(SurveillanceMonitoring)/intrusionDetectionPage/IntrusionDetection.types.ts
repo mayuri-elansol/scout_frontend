@@ -44,6 +44,7 @@ export interface IntrusionDetailedReportResponse {
   data: IntrusionViolation[];
   zones: string[];
   cameras: string[];
+  total: number;
 }
 
 /* ---------- API REQUESTS ---------- */
@@ -51,6 +52,8 @@ export interface IntrusionBaseRequest {
   tenantId: string;
   startDate?: string;
   endDate?: string;
+  page?: number; // ✅ add
+  limit?: number;
 }
 
 export interface IntrusionDetailedReportRequest extends IntrusionBaseRequest {

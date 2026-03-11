@@ -8,12 +8,12 @@ export interface OrgCamera {
   port: string;
   make: string;
   // location?: string;
-  zone?: string;  
+  zone?: string;
   // location: string;
-  cameraname: string;   // ← renamed from cameraName (matches AIConfigurationStep)
+  cameraname: string; // ← renamed from cameraName (matches AIConfigurationStep)
   location?: string;
   rtspStream: string;
-  status: 'connected' | 'failed' | 'pending';
+  status: "connected" | "failed" | "pending";
   aiConfig?: {
     useCases: string[];
     roiData: Record<string, { configured: boolean }>;
@@ -33,7 +33,7 @@ export interface OnboardingCamera {
   port: string;
   zoneId: string;
   locationId: string;
-  status: 'connected' | 'failed' | 'pending';
+  status: "connected" | "failed" | "pending";
 }
 
 // Backend response shape
@@ -45,6 +45,6 @@ export interface CameraApiResponse {
   password: string;
   RTSPport: string | number;
   Cameralocation?: string;
-  connectionType: 'DIRECT_TO_CAMERA' | 'NVR';
+  connectionType: "DIRECT_TO_CAMERA" | "NVR";
   rtspStream?: string;
 }
