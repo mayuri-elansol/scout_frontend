@@ -49,6 +49,7 @@ export interface EmployeeIdleTimeDetailedReportResponse {
   data: EmployeeIdleViolation[];
   zones: string[];
   cameras: string[];
+  total: number;
 }
 export interface EmployeeIdleTimeSocketPayload {
   serverTimestamp: string;

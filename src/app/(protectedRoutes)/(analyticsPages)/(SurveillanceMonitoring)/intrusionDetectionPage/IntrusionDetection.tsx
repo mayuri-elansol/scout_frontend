@@ -91,36 +91,6 @@ const IntrusionDetection: React.FC = () => {
     useGetIntrusionDetectionDetailedPdfReportMutation();
 
   /* ---------- INITIAL LOAD ---------- */
-  // useEffect(() => {
-  //   if (!tenantId) return;
-  //   const load = async () => {
-  //     const [kpi, zones, recent, detailed] = await Promise.all([
-  //       fetchIntrusionKpi({ tenantId }).unwrap(),
-  //       fetchIntrusionZoneViolations({ tenantId }).unwrap(),
-  //       fetchIntrusionRecent({ tenantId }).unwrap(),
-  //       fetchDetailedIntrusionReportApi({
-  //         tenantId,
-  //         page: page + 1,
-  //         limit,
-  //       }).unwrap(),
-  //     ]);
-
-  //     setDisplayIntrusionKpi(kpi ?? []);
-  //     setDisplayIntrusionZoneViolations(zones ?? []);
-  //     setRecentIntrusionViolationsLive(recent ?? []);
-  //     setDetailedIntrusionReport(detailed);
-  //   };
-
-  //   load().catch(console.error);
-  // }, [
-  //   tenantId,
-  // fetchIntrusionKpi,
-  // fetchIntrusionZoneViolations,
-  // fetchIntrusionRecent,
-  // fetchDetailedIntrusionReportApi,
-  // page,
-  // limit,
-  // ]);
   useEffect(() => {
     if (!tenantId) return;
 
@@ -231,10 +201,12 @@ const IntrusionDetection: React.FC = () => {
     try {
       const payload = {
         tenantId: tenantId,
-        violation: String(IntrusionViolation.incident),
+        violation: String(
+          IntrusionViolation.incident ?? IntrusionViolation.violation,
+        ),
         zone: IntrusionViolation.zone,
         time: IntrusionViolation.time,
-        cameraId: IntrusionViolation.camera,
+        cameraId: IntrusionViolation.camera ?? IntrusionViolation.cameraId,
         alarmTriggered: IntrusionViolation.alarmTriggered,
         imageUrl: url,
       };
@@ -352,13 +324,14 @@ const IntrusionDetection: React.FC = () => {
 
   const handleDownloadSingle = useCallback(
     async (row: IntrusionViolation) => {
+      console.log("download single row=================", row);
       try {
         const payload = {
           tenantId,
-          violation: String(row.incident),
+          violation: String(row.incident ?? row.violation),
           zone: row.zone,
           time: row.time,
-          cameraId: row.camera,
+          cameraId: row.camera ?? row.cameraId,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
         };
