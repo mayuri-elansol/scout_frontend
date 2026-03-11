@@ -38,6 +38,8 @@ export interface OnboardingCamera {
 
 // Backend response shape
 export interface CameraApiResponse {
+  cameraLocation: string;
+  cameraZone: string;
   id: string;
   cameraIp: string;
   cameraName: string;
