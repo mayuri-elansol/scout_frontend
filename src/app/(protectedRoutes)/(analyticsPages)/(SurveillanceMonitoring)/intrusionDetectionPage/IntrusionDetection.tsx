@@ -80,7 +80,7 @@ const IntrusionDetection: React.FC = () => {
 
   const [
     fetchDetailedIntrusionReportApi,
-    { isLoading: intrusionreportLoading },
+    { isFetching: intrusionreportLoading },
   ] = useLazyGetIntrusionDetailedReportQuery();
   const [downloadIntrusionSinglePdf] =
     useGetIntrusionDetectionSingleReportPdfMutation();
@@ -91,37 +91,73 @@ const IntrusionDetection: React.FC = () => {
     useGetIntrusionDetectionDetailedPdfReportMutation();
 
   /* ---------- INITIAL LOAD ---------- */
+  // useEffect(() => {
+  //   if (!tenantId) return;
+  //   const load = async () => {
+  //     const [kpi, zones, recent, detailed] = await Promise.all([
+  //       fetchIntrusionKpi({ tenantId }).unwrap(),
+  //       fetchIntrusionZoneViolations({ tenantId }).unwrap(),
+  //       fetchIntrusionRecent({ tenantId }).unwrap(),
+  //       fetchDetailedIntrusionReportApi({
+  //         tenantId,
+  //         page: page + 1,
+  //         limit,
+  //       }).unwrap(),
+  //     ]);
+
+  //     setDisplayIntrusionKpi(kpi ?? []);
+  //     setDisplayIntrusionZoneViolations(zones ?? []);
+  //     setRecentIntrusionViolationsLive(recent ?? []);
+  //     setDetailedIntrusionReport(detailed);
+  //   };
+
+  //   load().catch(console.error);
+  // }, [
+  //   tenantId,
+  // fetchIntrusionKpi,
+  // fetchIntrusionZoneViolations,
+  // fetchIntrusionRecent,
+  // fetchDetailedIntrusionReportApi,
+  // page,
+  // limit,
+  // ]);
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
+
+    const loadInitial = async () => {
+      const [kpi, zones, recent] = await Promise.all([
         fetchIntrusionKpi({ tenantId }).unwrap(),
         fetchIntrusionZoneViolations({ tenantId }).unwrap(),
         fetchIntrusionRecent({ tenantId }).unwrap(),
-        fetchDetailedIntrusionReportApi({
-          tenantId,
-          page: page + 1,
-          limit,
-        }).unwrap(),
       ]);
 
       setDisplayIntrusionKpi(kpi ?? []);
       setDisplayIntrusionZoneViolations(zones ?? []);
       setRecentIntrusionViolationsLive(recent ?? []);
-      setDetailedIntrusionReport(detailed);
     };
 
-    load().catch(console.error);
+    loadInitial().catch(console.error);
   }, [
     tenantId,
     fetchIntrusionKpi,
     fetchIntrusionZoneViolations,
     fetchIntrusionRecent,
-    fetchDetailedIntrusionReportApi,
-    page,
-    limit,
   ]);
+  useEffect(() => {
+    if (!tenantId) return;
 
+    const loadDetailedReport = async () => {
+      const detailed = await fetchDetailedIntrusionReportApi({
+        tenantId,
+        page: page + 1,
+        limit,
+      }).unwrap();
+
+      setDetailedIntrusionReport(detailed);
+    };
+
+    loadDetailedReport().catch(console.error);
+  }, [tenantId, fetchDetailedIntrusionReportApi, page, limit]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<IntrusionSocketPayload>({
     tenantId,
