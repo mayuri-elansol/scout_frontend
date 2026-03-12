@@ -43,6 +43,9 @@ const IntrusionDetection: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(10);
+
   const [isIntrusionLiveMode, setIsIntrusionLiveMode] = useState(true);
 
   const [displayIntrusionKpi, setDisplayIntrusionKpi] = useState<
@@ -77,7 +80,7 @@ const IntrusionDetection: React.FC = () => {
 
   const [
     fetchDetailedIntrusionReportApi,
-    { isLoading: intrusionreportLoading },
+    { isFetching: intrusionreportLoading },
   ] = useLazyGetIntrusionDetailedReportQuery();
   const [downloadIntrusionSinglePdf] =
     useGetIntrusionDetectionSingleReportPdfMutation();
@@ -90,29 +93,41 @@ const IntrusionDetection: React.FC = () => {
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
+
+    const loadInitial = async () => {
+      const [kpi, zones, recent] = await Promise.all([
         fetchIntrusionKpi({ tenantId }).unwrap(),
         fetchIntrusionZoneViolations({ tenantId }).unwrap(),
         fetchIntrusionRecent({ tenantId }).unwrap(),
-        fetchDetailedIntrusionReportApi({ tenantId }).unwrap(),
       ]);
 
       setDisplayIntrusionKpi(kpi ?? []);
       setDisplayIntrusionZoneViolations(zones ?? []);
       setRecentIntrusionViolationsLive(recent ?? []);
-      setDetailedIntrusionReport(detailed);
     };
 
-    load().catch(console.error);
+    loadInitial().catch(console.error);
   }, [
     tenantId,
     fetchIntrusionKpi,
     fetchIntrusionZoneViolations,
     fetchIntrusionRecent,
-    fetchDetailedIntrusionReportApi,
   ]);
-console.log('receent vgilation data intioal load',recentIntrusionViolationsLive)
+  useEffect(() => {
+    if (!tenantId) return;
+
+    const loadDetailedReport = async () => {
+      const detailed = await fetchDetailedIntrusionReportApi({
+        tenantId,
+        page: page + 1,
+        limit,
+      }).unwrap();
+
+      setDetailedIntrusionReport(detailed);
+    };
+
+    loadDetailedReport().catch(console.error);
+  }, [tenantId, fetchDetailedIntrusionReportApi, page, limit]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<IntrusionSocketPayload>({
     tenantId,
@@ -188,10 +203,9 @@ console.log('receent vgilation data intioal load',recentIntrusionViolationsLive)
     try {
       const payload = {
         tenantId: tenantId,
-        // violation: String(IntrusionViolation.incident),
-          violation: String(
-    IntrusionViolation.incident ?? IntrusionViolation.violation
-  ),
+        violation: String(
+          IntrusionViolation.incident ?? IntrusionViolation.violation,
+        ),
         zone: IntrusionViolation.zone,
         time: IntrusionViolation.time,
         cameraId: IntrusionViolation.camera ?? IntrusionViolation.cameraId,
@@ -312,14 +326,14 @@ console.log('receent vgilation data intioal load',recentIntrusionViolationsLive)
 
   const handleDownloadSingle = useCallback(
     async (row: IntrusionViolation) => {
-      console.log('roww from intrusion===============',row)
+      console.log("download single row=================", row);
       try {
         const payload = {
           tenantId,
           violation: String(row.incident ?? row.violation),
           zone: row.zone,
           time: row.time,
-          cameraId: row.camera?? row.cameraId,
+          cameraId: row.camera ?? row.cameraId,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
         };
@@ -407,6 +421,14 @@ console.log('receent vgilation data intioal load',recentIntrusionViolationsLive)
         onView={(row) => handleViewSingle(row as IntrusionViolation)}
         downloadFileName="intrusion-violations-report"
         loading={intrusionreportLoading}
+        totalCount={detailedIntrusionReport?.total || 0}
+        page={page}
+        rowsPerPage={limit}
+        onPageChange={(newPage) => setPage(newPage)}
+        onRowsPerPageChange={(rows) => {
+          setLimit(rows);
+          setPage(0);
+        }}
       />
 
       <ViewAlertPopup

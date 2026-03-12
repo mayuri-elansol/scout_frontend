@@ -48,6 +48,8 @@ const EmployeeIdleTime: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [empIdelPage, setEmpIdelPage] = useState(0);
+  const [empIdelLimit, setEmpIdelLimit] = useState(10);
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
@@ -96,28 +98,78 @@ const EmployeeIdleTime: React.FC = () => {
   const [downloadEmpIdelTimePdfReport] =
     useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
   /* ---------- INITIAL LOAD ---------- */
+  // useEffect(() => {
+  //   if (!tenantId) return;
+  //   const load = async () => {
+  //     const [kpi, zones, recent, detailed] = await Promise.all([
+  // fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
+  // fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
+  // fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
+  //       fetchEmployeeIdelTimeDetailedReportApi({ tenantId }).unwrap(),
+  //     ]);
+
+  // setDisplayEmployeeIdelTimeKpi(kpi ?? []);
+  // setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
+  // setRecentViolationsLive(recent ?? []);
+  //     setEmployeeIdleTimeDetailedReport(detailed);
+  //   };
+
+  //   load().catch(console.error);
+  // }, [
+  //   tenantId,
+  // fetchEmployeeIdelTimeKpi,
+  // fetchEmployeeIdelTimeZoneViolations,
+  // fetchEmployeeIdelTimeRecent,
+  //   fetchEmployeeIdelTimeDetailedReportApi,
+  // ]);
+
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
+
+    const loadInitial = async () => {
+      const [kpi, zones, recent] = await Promise.all([
         fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
         fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
         fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
-        fetchEmployeeIdelTimeDetailedReportApi({ tenantId }).unwrap(),
       ]);
 
       setDisplayEmployeeIdelTimeKpi(kpi ?? []);
       setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
-      setEmployeeIdleTimeDetailedReport(detailed);
     };
 
-    load().catch(console.error);
+    loadInitial().catch(console.error);
   }, [
     tenantId,
     fetchEmployeeIdelTimeKpi,
     fetchEmployeeIdelTimeZoneViolations,
     fetchEmployeeIdelTimeRecent,
+  ]);
+  useEffect(() => {
+    if (!tenantId) return;
+
+    const loadDetailedReport = async () => {
+      try {
+        const response = await fetchEmployeeIdelTimeDetailedReportApi({
+          tenantId,
+          page: empIdelPage + 1,
+          limit: empIdelLimit,
+        }).unwrap();
+
+        setEmployeeIdleTimeDetailedReport(response);
+      } catch (error) {
+        console.error(
+          "Failed to load employee idle time detailed report:",
+          error,
+        );
+      }
+    };
+
+    loadDetailedReport();
+  }, [
+    tenantId,
+    empIdelPage,
+    empIdelLimit,
     fetchEmployeeIdelTimeDetailedReportApi,
   ]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
@@ -407,6 +459,14 @@ const EmployeeIdleTime: React.FC = () => {
         onView={(row) => handleViewSingle(row as EmployeeIdleTimeViolation)}
         downloadFileName="employee-idle-time-report"
         loading={EmployeeIdelTimeDetailedReportLoading}
+        totalCount={employeeIdleTimeDetailedReport?.total || 0}
+        page={empIdelPage}
+        rowsPerPage={empIdelLimit}
+        onPageChange={(newPage) => setEmpIdelPage(newPage)}
+        onRowsPerPageChange={(rows) => {
+          setEmpIdelLimit(rows);
+          setEmpIdelPage(0);
+        }}
       />
 
       <ViewAlertPopup
