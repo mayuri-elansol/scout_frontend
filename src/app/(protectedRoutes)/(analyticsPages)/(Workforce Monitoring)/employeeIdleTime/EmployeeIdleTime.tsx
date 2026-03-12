@@ -48,6 +48,9 @@ const EmployeeIdleTime: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [empIdelFilters, setEmpIdelFilters] =
+    useState<EmployeeIdelTimeFilterParams>({});
+
   const [empIdelPage, setEmpIdelPage] = useState(0);
   const [empIdelLimit, setEmpIdelLimit] = useState(10);
 
@@ -98,30 +101,6 @@ const EmployeeIdleTime: React.FC = () => {
   const [downloadEmpIdelTimePdfReport] =
     useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
   /* ---------- INITIAL LOAD ---------- */
-  // useEffect(() => {
-  //   if (!tenantId) return;
-  //   const load = async () => {
-  //     const [kpi, zones, recent, detailed] = await Promise.all([
-  // fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
-  // fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
-  // fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
-  //       fetchEmployeeIdelTimeDetailedReportApi({ tenantId }).unwrap(),
-  //     ]);
-
-  // setDisplayEmployeeIdelTimeKpi(kpi ?? []);
-  // setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
-  // setRecentViolationsLive(recent ?? []);
-  //     setEmployeeIdleTimeDetailedReport(detailed);
-  //   };
-
-  //   load().catch(console.error);
-  // }, [
-  //   tenantId,
-  // fetchEmployeeIdelTimeKpi,
-  // fetchEmployeeIdelTimeZoneViolations,
-  // fetchEmployeeIdelTimeRecent,
-  //   fetchEmployeeIdelTimeDetailedReportApi,
-  // ]);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -149,27 +128,29 @@ const EmployeeIdleTime: React.FC = () => {
     if (!tenantId) return;
 
     const loadDetailedReport = async () => {
-      try {
-        const response = await fetchEmployeeIdelTimeDetailedReportApi({
-          tenantId,
-          page: empIdelPage + 1,
-          limit: empIdelLimit,
-        }).unwrap();
+      const body = {
+        tenantId,
+        page: empIdelPage + 1,
+        limit: empIdelLimit,
+        violation: empIdelFilters?.violation || undefined,
+        zone: empIdelFilters?.zone || undefined,
+        cameraId: empIdelFilters?.cameraId || undefined,
+        startDate: formatLocalDateTime(empIdelFilters?.startDate),
+        endDate: formatLocalDateTime(empIdelFilters?.endDate),
+      };
 
-        setEmployeeIdleTimeDetailedReport(response);
-      } catch (error) {
-        console.error(
-          "Failed to load employee idle time detailed report:",
-          error,
-        );
-      }
+      const response =
+        await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
+
+      setEmployeeIdleTimeDetailedReport(response);
     };
 
-    loadDetailedReport();
+    loadDetailedReport().catch(console.error);
   }, [
     tenantId,
     empIdelPage,
     empIdelLimit,
+    empIdelFilters,
     fetchEmployeeIdelTimeDetailedReportApi,
   ]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
@@ -284,33 +265,18 @@ const EmployeeIdleTime: React.FC = () => {
   ];
 
   const handleSubmitFilter = useCallback(
-    async (filters: EmployeeIdelTimeFilterParams) => {
+    (filters: EmployeeIdelTimeFilterParams) => {
       console.log("filter params", filters);
-
-      const body = {
-        tenantId: tenantId,
-        violation: filters.violation || undefined,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-      };
-
-      console.log("🚀 Sending payload:", body);
-
-      const response =
-        await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
-      setEmployeeIdleTimeDetailedReport(response);
+      setEmpIdelPage(0); // ← set page FIRST
+      setEmpIdelFilters(filters); // ← then filters
+      // React batches both → useEffect fires exactly ONCE
     },
-    [tenantId, fetchEmployeeIdelTimeDetailedReportApi, formatLocalDateTime],
+    [], // no deps needed
   );
-
-  const handleReset = useCallback(async () => {
-    const response = await fetchEmployeeIdelTimeDetailedReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setEmployeeIdleTimeDetailedReport(response);
-  }, [tenantId, fetchEmployeeIdelTimeDetailedReportApi]);
+  const handleReset = useCallback(() => {
+    setEmpIdelFilters({});
+    setEmpIdelPage(0);
+  }, []);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: EmployeeIdelTimeFilterParams) => {
