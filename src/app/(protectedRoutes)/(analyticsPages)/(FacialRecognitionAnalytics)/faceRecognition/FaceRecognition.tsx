@@ -193,6 +193,9 @@ const FaceRecognition: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "firstName", label: "First Name", minWidth: 120 },

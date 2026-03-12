@@ -23,7 +23,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<UnauthorizedAccess | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
@@ -238,6 +238,9 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[

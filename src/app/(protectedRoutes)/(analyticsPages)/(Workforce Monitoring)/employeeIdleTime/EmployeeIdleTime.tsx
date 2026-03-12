@@ -88,7 +88,7 @@ const EmployeeIdleTime: React.FC = () => {
   ] = useLazyGetEmployeeIdleTimeDetectionRecentViolationsQuery();
   const [
     fetchEmployeeIdelTimeDetailedReportApi,
-    { isLoading: EmployeeIdelTimeDetailedReportLoading },
+    { isFetching: EmployeeIdelTimeDetailedReportLoading },
   ] = useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery();
 
   const [downloadEmpIdelTimeSinglePdf] =

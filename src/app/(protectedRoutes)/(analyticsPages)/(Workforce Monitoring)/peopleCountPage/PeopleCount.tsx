@@ -259,6 +259,9 @@ const PeopleCount: React.FC = () => {
       </Paper>
       {/* People Count Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
@@ -282,7 +285,7 @@ const PeopleCount: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

@@ -272,6 +272,9 @@ const VehicleUnloadingLoading: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed vehicle loading/unloading events report with filter, reset, and export options."
         columns={[
@@ -288,7 +291,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.incident))
+              new Set(recentLoadingEvents.map((v) => v.incident)),
             ),
           },
           {
@@ -296,7 +299,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.zone))
+              new Set(recentLoadingEvents.map((v) => v.zone)),
             ),
           },
           {
@@ -304,7 +307,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.cameraId))
+              new Set(recentLoadingEvents.map((v) => v.cameraId)),
             ),
           },
           {

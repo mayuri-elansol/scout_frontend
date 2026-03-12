@@ -244,6 +244,9 @@ const CrowdGathering: React.FC = () => {
 
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
@@ -260,7 +263,7 @@ const CrowdGathering: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentCrowdViolations.map((item) => item.zone))
+              new Set(recentCrowdViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -268,7 +271,7 @@ const CrowdGathering: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentCrowdViolations.map((item) => item.cameraId))
+              new Set(recentCrowdViolations.map((item) => item.cameraId)),
             ),
           },
           {

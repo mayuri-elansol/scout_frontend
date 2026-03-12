@@ -118,7 +118,7 @@ const EmergencyExitBlockage: React.FC = () => {
 
   console.log(
     "emergency exit bolockage voilation",
-    recentExitBlockageViolations
+    recentExitBlockageViolations,
   );
 
   const zoneViolationsData = [
@@ -231,6 +231,9 @@ const EmergencyExitBlockage: React.FC = () => {
 
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
@@ -257,7 +260,9 @@ const EmergencyExitBlockage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentExitBlockageViolations.map((item) => item.cameraId))
+              new Set(
+                recentExitBlockageViolations.map((item) => item.cameraId),
+              ),
             ),
           },
           {

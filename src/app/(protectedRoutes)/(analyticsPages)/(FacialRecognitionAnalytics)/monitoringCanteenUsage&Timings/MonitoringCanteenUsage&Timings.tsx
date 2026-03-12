@@ -267,6 +267,9 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       </Paper>
       {/* Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed canteen usage report with filters and export options."
         columns={[
@@ -282,7 +285,7 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
             label: "Usage Type",
             type: "select",
             options: Array.from(
-              new Set(recentCanteenUsage.map((v) => v.usage))
+              new Set(recentCanteenUsage.map((v) => v.usage)),
             ),
           },
           {
