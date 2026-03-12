@@ -118,6 +118,9 @@ const SystemAlerts: React.FC = () => {
     ),
     content: (
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         key={t.key}
         title={""}
         columns={[

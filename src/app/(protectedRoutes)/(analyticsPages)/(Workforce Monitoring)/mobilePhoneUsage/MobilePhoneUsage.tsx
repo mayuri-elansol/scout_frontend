@@ -23,7 +23,7 @@ const MobilePhoneUsage: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const MobilePhoneUsageKpiData = [
@@ -247,6 +247,9 @@ const MobilePhoneUsage: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 150 },
@@ -263,7 +266,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.zone))
+              new Set(recentMobilePhoneViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -271,7 +274,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.cameraId))
+              new Set(recentMobilePhoneViolations.map((v) => v.cameraId)),
             ),
           },
           {

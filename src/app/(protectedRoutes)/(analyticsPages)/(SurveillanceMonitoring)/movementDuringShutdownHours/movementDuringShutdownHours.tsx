@@ -77,8 +77,10 @@ const MovementDuringShutdownHours: React.FC = () => {
   const [fetchMovementZoneViolations, { isLoading: movementzoneLoading }] =
     useLazyGetMovementDuringShutdownHoursZoneViolationsQuery();
 
-  const [fetchDetailedMovementReportApi, { isLoading: movementreportLoading }] =
-    useLazyGetMovementDuringShutdownHoursDetailedReportQuery();
+  const [
+    fetchDetailedMovementReportApi,
+    { isFetching: movementreportLoading },
+  ] = useLazyGetMovementDuringShutdownHoursDetailedReportQuery();
 
   const [downloadMovementSinglePdf] =
     useGetMovementDuringShutdownHoursSingleReportPdfMutation();

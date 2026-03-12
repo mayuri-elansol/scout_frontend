@@ -395,6 +395,9 @@ const PPEDetection: React.FC = () => {
       </Paper>
 
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title={t("Detailed Report")}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         data={detailedReport?.data || []}

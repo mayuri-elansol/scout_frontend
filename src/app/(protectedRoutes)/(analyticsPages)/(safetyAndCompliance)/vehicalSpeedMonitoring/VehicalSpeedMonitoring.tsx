@@ -27,7 +27,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleViolation | null>(
-    null
+    null,
   );
   const backendVehicleData = [
     {
@@ -226,6 +226,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
 
       {/*  Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
@@ -245,7 +248,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.zone))
+              new Set(recentVehicleViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -253,7 +256,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((v) => v.cameraId))
+              new Set(recentVehicleViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -267,7 +270,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Type",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.vehicleType))
+              new Set(recentVehicleViolations.map((item) => item.vehicleType)),
             ),
           },
           {
@@ -275,7 +278,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.vehicleNumber))
+              new Set(
+                recentVehicleViolations.map((item) => item.vehicleNumber),
+              ),
             ),
           },
           { id: "time", label: "Start Date", type: "date" },

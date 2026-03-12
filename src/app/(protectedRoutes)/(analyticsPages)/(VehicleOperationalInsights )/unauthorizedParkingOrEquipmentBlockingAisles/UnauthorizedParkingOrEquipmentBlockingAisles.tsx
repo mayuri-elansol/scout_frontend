@@ -272,6 +272,9 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
@@ -289,7 +292,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
             label: "Voilation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.eventMessage))
+              new Set(recentViolations.map((v) => v.eventMessage)),
             ),
           },
 
@@ -304,7 +307,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

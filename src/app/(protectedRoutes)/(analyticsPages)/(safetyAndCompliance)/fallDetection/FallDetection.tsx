@@ -263,6 +263,9 @@ const FallDetection: React.FC = () => {
 
       {/* Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
@@ -279,7 +282,7 @@ const FallDetection: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentLaydownViolations.map((item) => item.zone))
+              new Set(recentLaydownViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -287,7 +290,7 @@ const FallDetection: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentLaydownViolations.map((item) => item.cameraId))
+              new Set(recentLaydownViolations.map((item) => item.cameraId)),
             ),
           },
           {

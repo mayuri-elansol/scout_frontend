@@ -262,6 +262,9 @@ const ObjectDetection: React.FC = () => {
       </Paper>
       {/* Object detection Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed detection events for forklifts/vehicles in walkways with filter, reset, and export options."
         columns={[
@@ -280,7 +283,7 @@ const ObjectDetection: React.FC = () => {
             label: "Object Name",
             type: "select",
             options: Array.from(
-              new Set(recentDetections.map((v) => v.objectName))
+              new Set(recentDetections.map((v) => v.objectName)),
             ),
           },
           {
@@ -294,7 +297,7 @@ const ObjectDetection: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentDetections.map((v) => v.cameraId))
+              new Set(recentDetections.map((v) => v.cameraId)),
             ),
           },
           {
