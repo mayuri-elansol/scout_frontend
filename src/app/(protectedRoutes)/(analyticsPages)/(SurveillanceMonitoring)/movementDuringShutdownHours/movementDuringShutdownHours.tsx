@@ -287,39 +287,49 @@ const MovementDuringShutdownHours: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
+  // const handleMovementSubmitFilter = useCallback(
+  //   async (filters: MovemnetDuringShutDownHrFilterParams) => {
+  //     console.log("filter params", filters);
+  //     setMovementFilters(filters);
+  //     const alarmValue =
+  //       filters.alarmTriggered === undefined
+  //         ? undefined
+  //         : filters.alarmTriggered === "True";
+  //     const body = {
+  //       tenantId: tenantId,
+  //       zone: filters.zone || undefined,
+  //       cameraId: filters.cameraId || undefined,
+
+  //       alarmTriggered: alarmValue,
+
+  //       startDate: formatLocalDateTime(filters.startDate),
+  //       endDate: formatLocalDateTime(filters.endDate),
+  //       page: 1,
+  //       limit: movementLimit,
+  //     };
+
+  //     console.log("🚀 Sending payload:", body);
+
+  //     const response = await fetchDetailedMovementReportApi(body).unwrap();
+  //     setMovementPage(0);
+  //     setDetailedMovementReport(response);
+  //   },
+  //   [
+  //     tenantId,
+  //     fetchDetailedMovementReportApi,
+  //     formatLocalDateTime,
+  //     movementLimit,
+  //   ],
+  // );
+
   const handleMovementSubmitFilter = useCallback(
-    async (filters: MovemnetDuringShutDownHrFilterParams) => {
+    (filters: MovemnetDuringShutDownHrFilterParams) => {
       console.log("filter params", filters);
-      setMovementFilters(filters);
-      const alarmValue =
-        filters.alarmTriggered === undefined
-          ? undefined
-          : filters.alarmTriggered === "True";
-      const body = {
-        tenantId: tenantId,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
-
-        alarmTriggered: alarmValue,
-
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-        page: 1,
-        limit: movementLimit,
-      };
-
-      console.log("🚀 Sending payload:", body);
-
-      const response = await fetchDetailedMovementReportApi(body).unwrap();
-      setMovementPage(0);
-      setDetailedMovementReport(response);
+      setMovementPage(0); // ← set page FIRST
+      setMovementFilters(filters); // ← then filters
+      // React batches both → useEffect fires exactly ONCE
     },
-    [
-      tenantId,
-      fetchDetailedMovementReportApi,
-      formatLocalDateTime,
-      movementLimit,
-    ],
+    [], // no deps needed
   );
 
   const handleMovementReset = useCallback(() => {
