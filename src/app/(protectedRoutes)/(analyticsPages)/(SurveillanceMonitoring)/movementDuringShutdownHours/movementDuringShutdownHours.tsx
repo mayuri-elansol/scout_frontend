@@ -42,6 +42,8 @@ const MovementDuringShutdownHours: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
   /* ---------- STATE ---------- */
+  const [movementFilters, setMovementFilters] =
+    useState<MovemnetDuringShutDownHrFilterParams>({});
   const [movementPage, setMovementPage] = useState(0);
   const [movementLimit, setMovementLimit] = useState(10);
 
@@ -113,25 +115,53 @@ const MovementDuringShutdownHours: React.FC = () => {
     fetchMovementZoneViolations,
     fetchMovementRecent,
   ]);
+  // useEffect(() => {
+  //   if (!tenantId) return;
+
+  //   const loadDetailedReport = async () => {
+  //     try {
+  //       const response = await fetchDetailedMovementReportApi({
+  //         tenantId,
+  //         page: movementPage + 1,
+  //         limit: movementLimit,
+  //       }).unwrap();
+
+  //       setDetailedMovementReport(response);
+  //     } catch (error) {
+  //       console.error("Failed to load movement detailed report:", error);
+  //     }
+  //   };
+
+  //   loadDetailedReport();
+  // }, [tenantId, movementPage, movementLimit, fetchDetailedMovementReportApi]);
   useEffect(() => {
     if (!tenantId) return;
 
     const loadDetailedReport = async () => {
-      try {
-        const response = await fetchDetailedMovementReportApi({
-          tenantId,
-          page: movementPage + 1,
-          limit: movementLimit,
-        }).unwrap();
+      const alarmValue =
+        movementFilters?.alarmTriggered === undefined
+          ? undefined
+          : movementFilters.alarmTriggered === "True";
 
-        setDetailedMovementReport(response);
-      } catch (error) {
-        console.error("Failed to load movement detailed report:", error);
-      }
+      const body = {
+        tenantId,
+        page: movementPage + 1,
+        limit: movementLimit,
+
+        zone: movementFilters?.zone || undefined,
+        cameraId: movementFilters?.cameraId || undefined,
+        alarmTriggered: alarmValue,
+        startDate: formatLocalDateTime(movementFilters?.startDate),
+        endDate: formatLocalDateTime(movementFilters?.endDate),
+      };
+
+      const response = await fetchDetailedMovementReportApi(body).unwrap();
+
+      setDetailedMovementReport(response);
     };
 
     loadDetailedReport();
-  }, [tenantId, movementPage, movementLimit, fetchDetailedMovementReportApi]);
+  }, [tenantId, movementPage, movementLimit, movementFilters]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<MovemnetDuringShutDownHrSocketPayload>({
     tenantId,
@@ -257,6 +287,7 @@ const MovementDuringShutdownHours: React.FC = () => {
   const handleMovementSubmitFilter = useCallback(
     async (filters: MovemnetDuringShutDownHrFilterParams) => {
       console.log("filter params", filters);
+      setMovementFilters(filters);
       const alarmValue =
         filters.alarmTriggered === undefined
           ? undefined
@@ -270,21 +301,28 @@ const MovementDuringShutdownHours: React.FC = () => {
 
         startDate: formatLocalDateTime(filters.startDate),
         endDate: formatLocalDateTime(filters.endDate),
+        page: 1,
+        limit: movementLimit,
       };
 
       console.log("🚀 Sending payload:", body);
 
       const response = await fetchDetailedMovementReportApi(body).unwrap();
+      setMovementPage(0);
       setDetailedMovementReport(response);
     },
-    [tenantId, fetchDetailedMovementReportApi, formatLocalDateTime],
+    [
+      tenantId,
+      fetchDetailedMovementReportApi,
+      formatLocalDateTime,
+      movementLimit,
+    ],
   );
-  const handleMovementReset = useCallback(async () => {
-    const response = await fetchDetailedMovementReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setDetailedMovementReport(response);
-  }, [tenantId, fetchDetailedMovementReportApi]);
+
+  const handleMovementReset = useCallback(() => {
+    setMovementFilters({});
+    setMovementPage(0);
+  }, []);
 
   const handleMovementExport = useCallback(
     async (

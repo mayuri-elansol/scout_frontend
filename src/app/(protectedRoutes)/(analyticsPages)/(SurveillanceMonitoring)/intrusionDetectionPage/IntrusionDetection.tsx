@@ -43,6 +43,8 @@ const IntrusionDetection: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [intrusionFilters, setIntrusionFilters] =
+    useState<IntrusionFilterParams>({});
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
 
@@ -117,17 +119,37 @@ const IntrusionDetection: React.FC = () => {
     if (!tenantId) return;
 
     const loadDetailedReport = async () => {
-      const detailed = await fetchDetailedIntrusionReportApi({
+      const alarmValue =
+        intrusionFilters?.alarmTriggered === undefined
+          ? undefined
+          : intrusionFilters.alarmTriggered === "True";
+
+      const body = {
         tenantId,
         page: page + 1,
         limit,
-      }).unwrap();
+
+        zone: intrusionFilters?.zone || undefined,
+        cameraId: intrusionFilters?.cameraId || undefined,
+        alarmTriggered: alarmValue,
+
+        startDate: formatLocalDateTime(intrusionFilters?.startDate),
+        endDate: formatLocalDateTime(intrusionFilters?.endDate),
+      };
+
+      const detailed = await fetchDetailedIntrusionReportApi(body).unwrap();
 
       setDetailedIntrusionReport(detailed);
     };
 
     loadDetailedReport().catch(console.error);
-  }, [tenantId, fetchDetailedIntrusionReportApi, page, limit]);
+  }, [
+    tenantId,
+    page,
+    limit,
+    intrusionFilters,
+    fetchDetailedIntrusionReportApi,
+  ]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<IntrusionSocketPayload>({
     tenantId,
@@ -254,6 +276,9 @@ const IntrusionDetection: React.FC = () => {
   const handleSubmitFilter = useCallback(
     async (filters: IntrusionFilterParams) => {
       console.log("filter params", filters);
+
+      setIntrusionFilters(filters);
+
       const alarmValue =
         filters.alarmTriggered === undefined
           ? undefined
@@ -267,22 +292,23 @@ const IntrusionDetection: React.FC = () => {
 
         startDate: formatLocalDateTime(filters.startDate),
         endDate: formatLocalDateTime(filters.endDate),
+        page: 1,
+        limit: limit,
       };
 
       console.log("🚀 Sending payload:", body);
 
       const response = await fetchDetailedIntrusionReportApi(body).unwrap();
+      setPage(0);
       setDetailedIntrusionReport(response);
     },
-    [tenantId, fetchDetailedIntrusionReportApi, formatLocalDateTime],
+    [tenantId, fetchDetailedIntrusionReportApi, formatLocalDateTime, limit],
   );
 
-  const handleReset = useCallback(async () => {
-    const response = await fetchDetailedIntrusionReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setDetailedIntrusionReport(response);
-  }, [tenantId, fetchDetailedIntrusionReportApi]);
+  const handleReset = useCallback(() => {
+    setIntrusionFilters({});
+    setPage(0);
+  }, []);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: IntrusionFilterParams) => {
