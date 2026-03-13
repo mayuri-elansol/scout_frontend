@@ -115,6 +115,42 @@ const IntrusionDetection: React.FC = () => {
     fetchIntrusionZoneViolations,
     fetchIntrusionRecent,
   ]);
+  // useEffect(() => {
+  //   if (!tenantId) return;
+
+  //   const loadDetailedReport = async () => {
+  //     const alarmValue =
+  //       intrusionFilters?.alarmTriggered === undefined
+  //         ? undefined
+  //         : intrusionFilters.alarmTriggered === "True";
+
+  //     const body = {
+  //       tenantId,
+  //       page: page + 1,
+  //       limit,
+
+  //       zone: intrusionFilters?.zone || undefined,
+  //       cameraId: intrusionFilters?.cameraId || undefined,
+  //       alarmTriggered: alarmValue,
+
+  //       startDate: formatLocalDateTime(intrusionFilters?.startDate),
+  //       endDate: formatLocalDateTime(intrusionFilters?.endDate),
+  //     };
+
+  //     const detailed = await fetchDetailedIntrusionReportApi(body).unwrap();
+
+  //     setDetailedIntrusionReport(detailed);
+  //   };
+
+  //   loadDetailedReport().catch(console.error);
+  // }, [
+  //   tenantId,
+  //   page,
+  //   limit,
+  //   intrusionFilters,
+  //   fetchDetailedIntrusionReportApi,
+  // ]);
+
   useEffect(() => {
     if (!tenantId) return;
 
@@ -128,17 +164,14 @@ const IntrusionDetection: React.FC = () => {
         tenantId,
         page: page + 1,
         limit,
-
         zone: intrusionFilters?.zone || undefined,
         cameraId: intrusionFilters?.cameraId || undefined,
         alarmTriggered: alarmValue,
-
         startDate: formatLocalDateTime(intrusionFilters?.startDate),
         endDate: formatLocalDateTime(intrusionFilters?.endDate),
       };
 
       const detailed = await fetchDetailedIntrusionReportApi(body).unwrap();
-
       setDetailedIntrusionReport(detailed);
     };
 
@@ -275,37 +308,43 @@ const IntrusionDetection: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
-  const handleSubmitFilter = useCallback(
-    async (filters: IntrusionFilterParams) => {
-      console.log("filter params", filters);
+  // const handleSubmitFilter = useCallback(
+  //   async (filters: IntrusionFilterParams) => {
+  //     console.log("filter params", filters);
 
-      setIntrusionFilters(filters);
+  //     setIntrusionFilters(filters);
 
-      const alarmValue =
-        filters.alarmTriggered === undefined
-          ? undefined
-          : filters.alarmTriggered === "True";
-      const body = {
-        tenantId: tenantId,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
+  //     const alarmValue =
+  //       filters.alarmTriggered === undefined
+  //         ? undefined
+  //         : filters.alarmTriggered === "True";
+  //     const body = {
+  //       tenantId: tenantId,
+  //       zone: filters.zone || undefined,
+  //       cameraId: filters.cameraId || undefined,
 
-        alarmTriggered: alarmValue,
+  //       alarmTriggered: alarmValue,
 
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-        page: 1,
-        limit: limit,
-      };
+  //       startDate: formatLocalDateTime(filters.startDate),
+  //       endDate: formatLocalDateTime(filters.endDate),
+  //       page: 1,
+  //       limit: limit,
+  //     };
 
-      console.log("🚀 Sending payload:", body);
+  //     console.log("🚀 Sending payload:", body);
 
-      const response = await fetchDetailedIntrusionReportApi(body).unwrap();
-      setPage(0);
-      setDetailedIntrusionReport(response);
-    },
-    [tenantId, fetchDetailedIntrusionReportApi, formatLocalDateTime, limit],
-  );
+  //     const response = await fetchDetailedIntrusionReportApi(body).unwrap();
+  //     setPage(0);
+  //     setDetailedIntrusionReport(response);
+  //   },
+  //   [tenantId, fetchDetailedIntrusionReportApi, formatLocalDateTime, limit],
+  // );
+
+  // ✅ Just update state — let the useEffect do the fetching
+  const handleSubmitFilter = useCallback((filters: IntrusionFilterParams) => {
+    setIntrusionFilters(filters);
+    setPage(0); // this + intrusionFilters change will trigger the useEffect once
+  }, []);
 
   const handleReset = useCallback(() => {
     setIntrusionFilters({});
