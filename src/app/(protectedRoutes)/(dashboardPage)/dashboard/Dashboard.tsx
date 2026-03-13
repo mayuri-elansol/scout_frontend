@@ -270,7 +270,7 @@ const Dashboard: React.FC = () => {
               Compliance
             </Typography>
 
-            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
               {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
@@ -312,7 +312,7 @@ const Dashboard: React.FC = () => {
               <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
               Surveillance Monitoring
             </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
               {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
@@ -353,7 +353,7 @@ const Dashboard: React.FC = () => {
               <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
               Operational Insights
             </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
               {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
@@ -395,7 +395,7 @@ const Dashboard: React.FC = () => {
               <People sx={{ color: "#1976d2", fontSize: 23 }} /> Workforce
               Monitoring
             </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 4 }}>
+            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
               {MainDashboardkpiLoading || !mainDashboardData
                 ? Array.from({ length: 4 }).map((_, index) => (
                     <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
