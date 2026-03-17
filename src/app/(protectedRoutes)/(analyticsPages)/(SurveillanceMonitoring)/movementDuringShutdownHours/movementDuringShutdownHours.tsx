@@ -180,10 +180,20 @@ const MovementDuringShutdownHours: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsMovementLiveMode(true);
-        fetchMovementKpi({ tenantId });
+
+        // ✅ CALL ALL APIs + SET STATE
+        const [kpi, zones, recent] = await Promise.all([
+          fetchMovementKpi({ tenantId }).unwrap(),
+          fetchMovementZoneViolations({ tenantId }).unwrap(),
+          fetchMovementRecent({ tenantId }).unwrap(),
+        ]);
+
+        setDisplayMovementKpi(kpi ?? []);
+        setDisplayMovementZoneViolations(zones ?? []);
+        setRecentMovementViolationsLive(recent ?? []);
+
         return;
       }
-
       setIsMovementLiveMode(false);
       const payload = {
         tenantId: tenantId,
@@ -200,7 +210,12 @@ const MovementDuringShutdownHours: React.FC = () => {
       setDisplayMovementZoneViolations(zones ?? []);
       setRecentMovementViolationsLive(recent ?? []);
     },
-    [tenantId, fetchMovementKpi],
+    [
+      tenantId,
+      fetchMovementKpi,
+      fetchMovementZoneViolations,
+      fetchMovementRecent,
+    ],
   );
 
   const MovementKpiData = useMemo(

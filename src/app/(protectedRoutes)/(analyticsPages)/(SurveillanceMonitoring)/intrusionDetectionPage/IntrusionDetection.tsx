@@ -197,21 +197,62 @@ const IntrusionDetection: React.FC = () => {
   });
 
   /* ---------- TIME FILTER ---------- */
+  // const handleTimeRangeChange = useCallback(
+  //   async (range: { start?: string; end?: string }) => {
+  //     if (!range.start && !range.end) {
+  //       setIsIntrusionLiveMode(true);
+  //       fetchIntrusionKpi({ tenantId });
+
+  //       return;
+  //     }
+
+  //     setIsIntrusionLiveMode(false);
+  //     const payload = {
+  //       tenantId: tenantId,
+  //       startDate: range.start,
+  //       endDate: range.end,
+  //     };
+  //     const [kpi, zones, recent] = await Promise.all([
+  //       fetchIntrusionKpi(payload).unwrap(),
+  //       fetchIntrusionZoneViolations(payload).unwrap(),
+  //       fetchIntrusionRecent(payload).unwrap(),
+  //     ]);
+
+  //     setDisplayIntrusionKpi(kpi ?? []);
+  //     setDisplayIntrusionZoneViolations(zones ?? []);
+  //     setRecentIntrusionViolationsLive(recent ?? []);
+  //   },
+  //   [tenantId, fetchIntrusionKpi],
+  // );
+
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsIntrusionLiveMode(true);
-        fetchIntrusionKpi({ tenantId });
+
+        // ✅ CALL ALL APIs + SET STATE
+        const [kpi, zones, recent] = await Promise.all([
+          fetchIntrusionKpi({ tenantId }).unwrap(),
+          fetchIntrusionZoneViolations({ tenantId }).unwrap(),
+          fetchIntrusionRecent({ tenantId }).unwrap(),
+        ]);
+
+        setDisplayIntrusionKpi(kpi ?? []);
+        setDisplayIntrusionZoneViolations(zones ?? []);
+        setRecentIntrusionViolationsLive(recent ?? []);
 
         return;
       }
 
+      // NON-LIVE
       setIsIntrusionLiveMode(false);
+
       const payload = {
-        tenantId: tenantId,
+        tenantId,
         startDate: range.start,
         endDate: range.end,
       };
+
       const [kpi, zones, recent] = await Promise.all([
         fetchIntrusionKpi(payload).unwrap(),
         fetchIntrusionZoneViolations(payload).unwrap(),
@@ -222,9 +263,13 @@ const IntrusionDetection: React.FC = () => {
       setDisplayIntrusionZoneViolations(zones ?? []);
       setRecentIntrusionViolationsLive(recent ?? []);
     },
-    [tenantId, fetchIntrusionKpi],
+    [
+      tenantId,
+      fetchIntrusionKpi,
+      fetchIntrusionZoneViolations,
+      fetchIntrusionRecent,
+    ],
   );
-
   const IntrusionKpiData = useMemo(
     () =>
       displayIntrusionKpi.map((item) => {

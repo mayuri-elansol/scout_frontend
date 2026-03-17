@@ -170,9 +170,17 @@ const EmployeeIdleTime: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsLiveMode(true);
-        fetchEmployeeIdelTimeKpi({ tenantId });
-        fetchEmployeeIdelTimeZoneViolations({ tenantId });
-        fetchEmployeeIdelTimeRecent({ tenantId });
+
+        // ✅ CALL ALL APIs + SET STATE
+        const [kpi, zones, recent] = await Promise.all([
+          fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
+          fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
+          fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
+        ]);
+
+        setDisplayEmployeeIdelTimeKpi(kpi ?? []);
+        setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
+        setRecentViolationsLive(recent ?? []);
         return;
       }
 
