@@ -425,6 +425,39 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const drawerWidth: string = "315px";
   const router = useRouter();
   const pathname = usePathname();
+  
+//  const previousPath = React.useRef<string | null>(null);
+
+// React.useEffect(() => {
+
+//   const isConfigurator = pathname.includes("cameraManagement");
+//   const wasConfigurator =
+//     previousPath.current && previousPath.current.includes("cameraManagement");
+
+//   if (isConfigurator && !wasConfigurator) {
+
+//     console.log("Entering Camera Management → stopping MediaServer");
+
+//     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/system/mediaserver/stop`, {
+//       method: "POST",
+//     }).catch(err => console.error("Stop MediaServer failed", err));
+
+//   }
+
+//   if (!isConfigurator && wasConfigurator) {
+
+//     console.log("Leaving Camera Management → starting MediaServer");
+
+//     fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/system/mediaserver/start`, {
+//       method: "POST",
+//     }).catch(err => console.error("Start MediaServer failed", err));
+
+//   }
+
+//   previousPath.current = pathname;
+
+// }, [pathname]);
+
   const { features } = useAuth();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
@@ -809,7 +842,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
             component="img"
             src={orgLogo}
             alt="Customer Logo"
-            sx={{ height: 46, width: 180, ml: 2, pb: 1 }}
+            sx={{ height: 46, width: 170, ml: 2, pb: 1 }}
           />
         )}
       </Box>

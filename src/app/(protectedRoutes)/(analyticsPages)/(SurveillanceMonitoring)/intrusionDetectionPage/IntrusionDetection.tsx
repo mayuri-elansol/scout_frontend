@@ -298,6 +298,7 @@ const IntrusionDetection: React.FC = () => {
   ) => {
     if (!violation) return;
     const IntrusionViolation = violation as IntrusionViolation;
+    console.log("intruion incident violation", IntrusionViolation);
     try {
       const payload = {
         tenantId: tenantId,

@@ -349,13 +349,14 @@ const EmployeeIdleTime: React.FC = () => {
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;
     const empViolation = violation as EmployeeIdleTimeViolation;
+    console.log('employee idel time single data=============',empViolation)
     try {
       const payload = {
         tenantId: tenantId,
         violation: String(empViolation.violation),
         zone: empViolation.zone,
         time: empViolation.time,
-        cameraId: empViolation.cameraId,
+        cameraId: empViolation.cameraId ,
         imageUrl: url,
       };
 

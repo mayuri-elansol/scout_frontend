@@ -499,6 +499,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     }
 
     setFrameUrl(getCameraFeedUrl());
+    // setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
 
     const interval = setInterval(() => {
       setFrameUrl(getCameraFeedUrl());

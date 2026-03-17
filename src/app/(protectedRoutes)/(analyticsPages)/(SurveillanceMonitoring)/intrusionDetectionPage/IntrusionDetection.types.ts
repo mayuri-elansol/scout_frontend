@@ -38,7 +38,14 @@ export interface IntrusionViolation {
   alarmTriggered: boolean;
   [key: string]: string | number | boolean;
 }
-
+export interface IntrusionDetailedRow {
+  violation: string;
+  zone: string;
+  time: string;
+  imageUrl: string;
+  cameraId: string;
+  alarmTriggered: boolean;
+}
 /* ---------- DETAILED REPORT ---------- */
 export interface IntrusionDetailedReportResponse {
   data: IntrusionViolation[];
