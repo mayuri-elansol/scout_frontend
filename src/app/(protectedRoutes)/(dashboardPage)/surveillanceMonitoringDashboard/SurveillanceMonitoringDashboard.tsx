@@ -83,10 +83,11 @@ const SurveillanceMonitoring: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsLiveMode(true);
-        fetchSurveillanceKpi({ tenantId });
+        const res= await fetchSurveillanceKpi({ tenantId }).unwrap();
+       setDisplaySurveillanceKpi(res ?? []);
         return;
       }
-
+ 
       setIsLiveMode(false);
       const payload = {
         tenantId: tenantId,
