@@ -219,9 +219,9 @@ const TimeFilter: React.FC<TimeFilterProps> = ({ onRangeChange, shifts }) => {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
-          {timeFilters.map((range,index) => (
+          {timeFilters.map((range, index) => (
             <MenuItem
-              key={index+1}
+              key={index + 1}
               selected={selectedTimeRange === range}
               onClick={() => handleSelect(range)}
             >
