@@ -207,6 +207,7 @@ const IntrusionDetection: React.FC = () => {
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
     { id: "cameraId", label: t("Cameras") },
+
     { id: "alarmTriggered", label: t("Alarm Triggered") },
   ];
 
