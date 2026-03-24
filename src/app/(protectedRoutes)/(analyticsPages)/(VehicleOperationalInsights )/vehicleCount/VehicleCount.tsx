@@ -34,7 +34,7 @@ const VehicleCount: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleCountEvent | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
@@ -321,6 +321,9 @@ const VehicleCount: React.FC = () => {
       </Paper>
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed vehicle count report with filters, reset, and export options."
         columns={[
@@ -340,7 +343,7 @@ const VehicleCount: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.vehicleNumber))
+              new Set(vehicleViolations.map((v) => v.vehicleNumber)),
             ),
           },
           {
@@ -348,7 +351,7 @@ const VehicleCount: React.FC = () => {
             label: "status",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.status))
+              new Set(vehicleViolations.map((v) => v.status)),
             ),
           },
           {
@@ -356,7 +359,7 @@ const VehicleCount: React.FC = () => {
             label: "Valid Number",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.validNumber))
+              new Set(vehicleViolations.map((v) => v.validNumber)),
             ),
           },
           {
@@ -370,7 +373,7 @@ const VehicleCount: React.FC = () => {
             label: "camera",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.cameraId))
+              new Set(vehicleViolations.map((v) => v.cameraId)),
             ),
           },
           {

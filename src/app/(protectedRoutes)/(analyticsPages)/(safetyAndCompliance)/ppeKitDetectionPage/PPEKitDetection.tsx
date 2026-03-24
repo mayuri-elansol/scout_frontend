@@ -2,7 +2,6 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { v4 as uuidv4 } from "uuid";
 import { useTranslation } from "react-i18next";
 
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -357,7 +356,7 @@ const PPEDetection: React.FC = () => {
           {kpiLoading
             ? Array.from({ length: 6 }).map((_, index) => (
                 <Grid
-                  key={index+1}
+                  key={index + 1}
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                 >
                   <KpiCardSkeleton />
@@ -396,6 +395,9 @@ const PPEDetection: React.FC = () => {
       </Paper>
 
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title={t("Detailed Report")}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         data={detailedReport?.data || []}

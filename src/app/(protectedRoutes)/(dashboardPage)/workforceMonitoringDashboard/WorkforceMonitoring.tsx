@@ -82,12 +82,13 @@ const WorkforceMonitoring: React.FC = () => {
   /* ---------- TIME FILTER ---------- */
   const handleworkforceTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
-      if (!range.start && !range.end) {
+     
+ if (!range.start && !range.end) {
         setIsLiveMode(true);
-        fetchWorkforceKpi({ tenantId });
+        const res= await fetchWorkforceKpi({ tenantId }).unwrap();
+       setDashboardData(res ?? []);
         return;
       }
-
       setIsLiveMode(false);
       const payload = {
         tenantId: tenantId,

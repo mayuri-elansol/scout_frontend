@@ -184,7 +184,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
         </Grid>
       </Paper>
       {/*  Violations Report */}
-      <ReportTable
+      {/* <ReportTable
         title="Report Table"
         columns={[
           { id: "violationId", label: "Violation ID", minWidth: 120 },
@@ -270,7 +270,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
         downloadFileName="ppe-violations-report"
         loading={false}
         tooltipMessage="report table"
-      />
+      /> */}
     </Box>
   );
 };

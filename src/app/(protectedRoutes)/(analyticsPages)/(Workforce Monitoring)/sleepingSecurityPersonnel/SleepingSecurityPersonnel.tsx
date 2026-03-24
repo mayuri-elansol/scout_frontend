@@ -253,6 +253,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
 
       {/*  Violations Report */}
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
@@ -269,7 +272,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.voilation))
+              new Set(recentViolations.map((item) => item.voilation)),
             ),
           },
           {
@@ -277,7 +280,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.zone))
+              new Set(recentViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -285,7 +288,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

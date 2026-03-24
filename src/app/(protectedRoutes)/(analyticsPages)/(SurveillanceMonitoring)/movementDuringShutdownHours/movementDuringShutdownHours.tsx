@@ -42,6 +42,11 @@ const MovementDuringShutdownHours: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
   /* ---------- STATE ---------- */
+  const [movementFilters, setMovementFilters] =
+    useState<MovemnetDuringShutDownHrFilterParams>({});
+  const [movementPage, setMovementPage] = useState(0);
+  const [movementLimit, setMovementLimit] = useState(10);
+
   const [isMovementLiveMode, setIsMovementLiveMode] = useState(true);
 
   const [displayMovementKpi, setDisplayMovementKpi] = useState<
@@ -74,8 +79,10 @@ const MovementDuringShutdownHours: React.FC = () => {
   const [fetchMovementZoneViolations, { isLoading: movementzoneLoading }] =
     useLazyGetMovementDuringShutdownHoursZoneViolationsQuery();
 
-  const [fetchDetailedMovementReportApi, { isLoading: movementreportLoading }] =
-    useLazyGetMovementDuringShutdownHoursDetailedReportQuery();
+  const [
+    fetchDetailedMovementReportApi,
+    { isFetching: movementreportLoading },
+  ] = useLazyGetMovementDuringShutdownHoursDetailedReportQuery();
 
   const [downloadMovementSinglePdf] =
     useGetMovementDuringShutdownHoursSingleReportPdfMutation();
@@ -88,29 +95,73 @@ const MovementDuringShutdownHours: React.FC = () => {
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
+
+    const loadInitial = async () => {
+      const [kpi, zones, recent] = await Promise.all([
         fetchMovementKpi({ tenantId }).unwrap(),
         fetchMovementZoneViolations({ tenantId }).unwrap(),
         fetchMovementRecent({ tenantId }).unwrap(),
-        fetchDetailedMovementReportApi({ tenantId }).unwrap(),
       ]);
 
       setDisplayMovementKpi(kpi ?? []);
       setDisplayMovementZoneViolations(zones ?? []);
       setRecentMovementViolationsLive(recent ?? []);
-      setDetailedMovementReport(detailed);
     };
 
-    load().catch(console.error);
+    loadInitial().catch(console.error);
   }, [
     tenantId,
     fetchMovementKpi,
     fetchMovementZoneViolations,
     fetchMovementRecent,
-    fetchDetailedMovementReportApi,
   ]);
+  // useEffect(() => {
+  //   if (!tenantId) return;
 
+  //   const loadDetailedReport = async () => {
+  //     try {
+  //       const response = await fetchDetailedMovementReportApi({
+  //         tenantId,
+  //         page: movementPage + 1,
+  //         limit: movementLimit,
+  //       }).unwrap();
+
+  //       setDetailedMovementReport(response);
+  //     } catch (error) {
+  //       console.error("Failed to load movement detailed report:", error);
+  //     }
+  //   };
+
+  //   loadDetailedReport();
+  // }, [tenantId, movementPage, movementLimit, fetchDetailedMovementReportApi]);
+  useEffect(() => {
+    if (!tenantId) return;
+
+    const loadDetailedReport = async () => {
+      const alarmValue =
+        movementFilters?.alarmTriggered === undefined
+          ? undefined
+          : movementFilters.alarmTriggered === "True";
+
+      const body = {
+        tenantId,
+        page: movementPage + 1,
+        limit: movementLimit,
+
+        zone: movementFilters?.zone || undefined,
+        cameraId: movementFilters?.cameraId || undefined,
+        alarmTriggered: alarmValue,
+        startDate: formatLocalDateTime(movementFilters?.startDate),
+        endDate: formatLocalDateTime(movementFilters?.endDate),
+      };
+
+      const response = await fetchDetailedMovementReportApi(body).unwrap();
+
+      setDetailedMovementReport(response);
+    };
+
+    loadDetailedReport();
+  }, [tenantId, movementPage, movementLimit, movementFilters]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
   useSocketEvent<MovemnetDuringShutDownHrSocketPayload>({
     tenantId,
@@ -129,10 +180,20 @@ const MovementDuringShutdownHours: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsMovementLiveMode(true);
-        fetchMovementKpi({ tenantId });
+
+        // ✅ CALL ALL APIs + SET STATE
+        const [kpi, zones, recent] = await Promise.all([
+          fetchMovementKpi({ tenantId }).unwrap(),
+          fetchMovementZoneViolations({ tenantId }).unwrap(),
+          fetchMovementRecent({ tenantId }).unwrap(),
+        ]);
+
+        setDisplayMovementKpi(kpi ?? []);
+        setDisplayMovementZoneViolations(zones ?? []);
+        setRecentMovementViolationsLive(recent ?? []);
+
         return;
       }
-
       setIsMovementLiveMode(false);
       const payload = {
         tenantId: tenantId,
@@ -149,7 +210,12 @@ const MovementDuringShutdownHours: React.FC = () => {
       setDisplayMovementZoneViolations(zones ?? []);
       setRecentMovementViolationsLive(recent ?? []);
     },
-    [tenantId, fetchMovementKpi],
+    [
+      tenantId,
+      fetchMovementKpi,
+      fetchMovementZoneViolations,
+      fetchMovementRecent,
+    ],
   );
 
   const MovementKpiData = useMemo(
@@ -182,10 +248,12 @@ const MovementDuringShutdownHours: React.FC = () => {
     try {
       const payload = {
         tenantId: tenantId,
-        violation: String(MovementViolation.violation),
+        violation: String(
+          MovementViolation.incident ?? MovementViolation.violation,
+        ),
         zone: MovementViolation.zone,
         time: MovementViolation.time,
-        cameraId: MovementViolation.cameraId,
+        cameraId: MovementViolation.camera ?? MovementViolation.cameraId,
         alarmTriggered: MovementViolation.alarmTriggered,
         imageUrl: url,
         peopleCount: MovementViolation.peopleCount,
@@ -231,37 +299,55 @@ const MovementDuringShutdownHours: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
+  // const handleMovementSubmitFilter = useCallback(
+  //   async (filters: MovemnetDuringShutDownHrFilterParams) => {
+  //     console.log("filter params", filters);
+  //     setMovementFilters(filters);
+  //     const alarmValue =
+  //       filters.alarmTriggered === undefined
+  //         ? undefined
+  //         : filters.alarmTriggered === "True";
+  //     const body = {
+  //       tenantId: tenantId,
+  //       zone: filters.zone || undefined,
+  //       cameraId: filters.cameraId || undefined,
+
+  //       alarmTriggered: alarmValue,
+
+  //       startDate: formatLocalDateTime(filters.startDate),
+  //       endDate: formatLocalDateTime(filters.endDate),
+  //       page: 1,
+  //       limit: movementLimit,
+  //     };
+
+  //     console.log("🚀 Sending payload:", body);
+
+  //     const response = await fetchDetailedMovementReportApi(body).unwrap();
+  //     setMovementPage(0);
+  //     setDetailedMovementReport(response);
+  //   },
+  //   [
+  //     tenantId,
+  //     fetchDetailedMovementReportApi,
+  //     formatLocalDateTime,
+  //     movementLimit,
+  //   ],
+  // );
+
   const handleMovementSubmitFilter = useCallback(
-    async (filters: MovemnetDuringShutDownHrFilterParams) => {
+    (filters: MovemnetDuringShutDownHrFilterParams) => {
       console.log("filter params", filters);
-      const alarmValue =
-        filters.alarmTriggered === undefined
-          ? undefined
-          : filters.alarmTriggered === "True";
-      const body = {
-        tenantId: tenantId,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
-
-        alarmTriggered: alarmValue,
-
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-      };
-
-      console.log("🚀 Sending payload:", body);
-
-      const response = await fetchDetailedMovementReportApi(body).unwrap();
-      setDetailedMovementReport(response);
+      setMovementPage(0); // ← set page FIRST
+      setMovementFilters(filters); // ← then filters
+      // React batches both → useEffect fires exactly ONCE
     },
-    [tenantId, fetchDetailedMovementReportApi, formatLocalDateTime],
+    [], // no deps needed
   );
-  const handleMovementReset = useCallback(async () => {
-    const response = await fetchDetailedMovementReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setDetailedMovementReport(response);
-  }, [tenantId, fetchDetailedMovementReportApi]);
+
+  const handleMovementReset = useCallback(() => {
+    setMovementFilters({});
+    setMovementPage(0);
+  }, []);
 
   const handleMovementExport = useCallback(
     async (
@@ -309,10 +395,10 @@ const MovementDuringShutdownHours: React.FC = () => {
       try {
         const payload = {
           tenantId,
-          violation: String(row.violation),
+          violation: String(row.incident ?? row.violation),
           zone: row.zone,
           time: row.time,
-          cameraId: row.cameraId,
+          cameraId: row.camera ?? row.cameraId,
           alarmTriggered: row.alarmTriggered,
           imageUrl: row.imageUrl,
           peopleCount: row.peopleCount,
@@ -429,6 +515,14 @@ const MovementDuringShutdownHours: React.FC = () => {
         }
         downloadFileName="movement-during-shutdown-hr-violations-report"
         loading={movementreportLoading}
+        totalCount={detailedMovementReport?.total || 0}
+        page={movementPage}
+        rowsPerPage={movementLimit}
+        onPageChange={(newPage) => setMovementPage(newPage)}
+        onRowsPerPageChange={(rows) => {
+          setMovementLimit(rows);
+          setMovementPage(0);
+        }}
       />
       {/* View Alert Popup */}
       <ViewAlertPopup

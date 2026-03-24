@@ -400,13 +400,13 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     try {
       for (const cam of pendingAssignments) {
 
-        if (isDuplicateNvrCamera(nvrData.ip, cam.channel, cameras)) {
-          showToast(
-            `Duplicate camera skipped (IP: ${nvrData.ip}, Channel: ${cam.channel})`,
-            "error"
-          );
-          continue;
-        }
+        // if (isDuplicateNvrCamera(nvrData.ip, cam.channel, cameras)) {
+        //   showToast(
+        //     `Duplicate camera skipped (IP: ${nvrData.ip}, Channel: ${cam.channel})`,
+        //     "error"
+        //   );
+        //   continue;
+        // }
         if (!cam.zoneId) {
           alert(`Please select zone for ${cam.cameraName}`);
           return;
@@ -886,27 +886,27 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                               .filter(cam => {
                                 const channel = extractRtspChannelNumber(cam.rtspUrl);
 
-                                // 1️⃣ Already onboarded
-                                if (isDuplicateNvrCamera(nvrData.ip, channel, cameras)) {
-                                  showToast(
-                                    `Camera already onboarded (IP: ${nvrData.ip}, Channel: ${channel})`,
-                                    "warning"
-                                  );
-                                  return false;
-                                }
+                                // // 1️⃣ Already onboarded
+                                // if (isDuplicateNvrCamera(nvrData.ip, channel, cameras)) {
+                                //   showToast(
+                                //     `Camera already onboarded (IP: ${nvrData.ip}, Channel: ${channel})`,
+                                //     "warning"
+                                //   );
+                                //   return false;
+                                // }
 
-                                // 2️⃣ Already selected in this batch
-                                if (
-                                  pendingAssignments.some(
-                                    p => p.cameraIp === nvrData.ip && p.channel === channel
-                                  )
-                                ) {
-                                  showToast(
-                                    `Camera already selected (Channel ${channel})`,
-                                    "warning"
-                                  );
-                                  return false;
-                                }
+                                // // 2️⃣ Already selected in this batch
+                                // if (
+                                //   pendingAssignments.some(
+                                //     p => p.cameraIp === nvrData.ip && p.channel === channel
+                                //   )
+                                // ) {
+                                //   showToast(
+                                //     `Camera already selected (Channel ${channel})`,
+                                //     "warning"
+                                //   );
+                                //   return false;
+                                // }
 
                                 return true;
                               })

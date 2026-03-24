@@ -48,6 +48,11 @@ const EmployeeIdleTime: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
+  const [empIdelFilters, setEmpIdelFilters] =
+    useState<EmployeeIdelTimeFilterParams>({});
+
+  const [empIdelPage, setEmpIdelPage] = useState(0);
+  const [empIdelLimit, setEmpIdelLimit] = useState(10);
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
@@ -86,7 +91,7 @@ const EmployeeIdleTime: React.FC = () => {
   ] = useLazyGetEmployeeIdleTimeDetectionRecentViolationsQuery();
   const [
     fetchEmployeeIdelTimeDetailedReportApi,
-    { isLoading: EmployeeIdelTimeDetailedReportLoading },
+    { isFetching: EmployeeIdelTimeDetailedReportLoading },
   ] = useLazyGetEmployeeIdleTimeDetectionDetailedReportQuery();
 
   const [downloadEmpIdelTimeSinglePdf] =
@@ -96,28 +101,56 @@ const EmployeeIdleTime: React.FC = () => {
   const [downloadEmpIdelTimePdfReport] =
     useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
   /* ---------- INITIAL LOAD ---------- */
+
   useEffect(() => {
     if (!tenantId) return;
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
+
+    const loadInitial = async () => {
+      const [kpi, zones, recent] = await Promise.all([
         fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
         fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
         fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
-        fetchEmployeeIdelTimeDetailedReportApi({ tenantId }).unwrap(),
       ]);
 
       setDisplayEmployeeIdelTimeKpi(kpi ?? []);
       setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
       setRecentViolationsLive(recent ?? []);
-      setEmployeeIdleTimeDetailedReport(detailed);
     };
 
-    load().catch(console.error);
+    loadInitial().catch(console.error);
   }, [
     tenantId,
     fetchEmployeeIdelTimeKpi,
     fetchEmployeeIdelTimeZoneViolations,
     fetchEmployeeIdelTimeRecent,
+  ]);
+  useEffect(() => {
+    if (!tenantId) return;
+
+    const loadDetailedReport = async () => {
+      const body = {
+        tenantId,
+        page: empIdelPage + 1,
+        limit: empIdelLimit,
+        violation: empIdelFilters?.violation || undefined,
+        zone: empIdelFilters?.zone || undefined,
+        cameraId: empIdelFilters?.cameraId || undefined,
+        startDate: formatLocalDateTime(empIdelFilters?.startDate),
+        endDate: formatLocalDateTime(empIdelFilters?.endDate),
+      };
+
+      const response =
+        await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
+
+      setEmployeeIdleTimeDetailedReport(response);
+    };
+
+    loadDetailedReport().catch(console.error);
+  }, [
+    tenantId,
+    empIdelPage,
+    empIdelLimit,
+    empIdelFilters,
     fetchEmployeeIdelTimeDetailedReportApi,
   ]);
   /* ---------- SOCKET (LIVE ONLY) ---------- */
@@ -137,9 +170,17 @@ const EmployeeIdleTime: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsLiveMode(true);
-        fetchEmployeeIdelTimeKpi({ tenantId });
-        fetchEmployeeIdelTimeZoneViolations({ tenantId });
-        fetchEmployeeIdelTimeRecent({ tenantId });
+
+        // ✅ CALL ALL APIs + SET STATE
+        const [kpi, zones, recent] = await Promise.all([
+          fetchEmployeeIdelTimeKpi({ tenantId }).unwrap(),
+          fetchEmployeeIdelTimeZoneViolations({ tenantId }).unwrap(),
+          fetchEmployeeIdelTimeRecent({ tenantId }).unwrap(),
+        ]);
+
+        setDisplayEmployeeIdelTimeKpi(kpi ?? []);
+        setDisplayEmployeeIdelTimeZoneViolations(zones ?? []);
+        setRecentViolationsLive(recent ?? []);
         return;
       }
 
@@ -199,7 +240,7 @@ const EmployeeIdleTime: React.FC = () => {
   /* ---------- REPORT HANDLERS ---------- */
 
   const tableColumns = [
-    { id: "violation", label: t("Incident") },
+    { id: "violation", label: t("Violation") },
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
     { id: "cameraId", label: t("Cameras") },
@@ -208,7 +249,7 @@ const EmployeeIdleTime: React.FC = () => {
   const tableFilters = [
     {
       id: "violation",
-      label: t("Incident"),
+      label: t("Violation"),
       type: "select" as const,
       options: ["Employee Idle", "Employee Working", "Employee Not Present"],
     },
@@ -232,33 +273,18 @@ const EmployeeIdleTime: React.FC = () => {
   ];
 
   const handleSubmitFilter = useCallback(
-    async (filters: EmployeeIdelTimeFilterParams) => {
+    (filters: EmployeeIdelTimeFilterParams) => {
       console.log("filter params", filters);
-
-      const body = {
-        tenantId: tenantId,
-        violation: filters.violation || undefined,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-      };
-
-      console.log("🚀 Sending payload:", body);
-
-      const response =
-        await fetchEmployeeIdelTimeDetailedReportApi(body).unwrap();
-      setEmployeeIdleTimeDetailedReport(response);
+      setEmpIdelPage(0); // ← set page FIRST
+      setEmpIdelFilters(filters); // ← then filters
+      // React batches both → useEffect fires exactly ONCE
     },
-    [tenantId, fetchEmployeeIdelTimeDetailedReportApi, formatLocalDateTime],
+    [], // no deps needed
   );
-
-  const handleReset = useCallback(async () => {
-    const response = await fetchEmployeeIdelTimeDetailedReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setEmployeeIdleTimeDetailedReport(response);
-  }, [tenantId, fetchEmployeeIdelTimeDetailedReportApi]);
+  const handleReset = useCallback(() => {
+    setEmpIdelFilters({});
+    setEmpIdelPage(0);
+  }, []);
 
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: EmployeeIdelTimeFilterParams) => {
@@ -323,13 +349,14 @@ const EmployeeIdleTime: React.FC = () => {
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;
     const empViolation = violation as EmployeeIdleTimeViolation;
+    console.log('employee idel time single data=============',empViolation)
     try {
       const payload = {
         tenantId: tenantId,
         violation: String(empViolation.violation),
         zone: empViolation.zone,
         time: empViolation.time,
-        cameraId: empViolation.cameraId,
+        cameraId: empViolation.cameraId ,
         imageUrl: url,
       };
 
@@ -406,6 +433,14 @@ const EmployeeIdleTime: React.FC = () => {
         onView={(row) => handleViewSingle(row as EmployeeIdleTimeViolation)}
         downloadFileName="employee-idle-time-report"
         loading={EmployeeIdelTimeDetailedReportLoading}
+        totalCount={employeeIdleTimeDetailedReport?.total || 0}
+        page={empIdelPage}
+        rowsPerPage={empIdelLimit}
+        onPageChange={(newPage) => setEmpIdelPage(newPage)}
+        onRowsPerPageChange={(rows) => {
+          setEmpIdelLimit(rows);
+          setEmpIdelPage(0);
+        }}
       />
 
       <ViewAlertPopup

@@ -262,6 +262,9 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       {/*  Fire, Smoke, Oil and Gas Leak Detection Report */}
 
       <ReportTable
+        totalCount={4}
+        page={0}
+        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[

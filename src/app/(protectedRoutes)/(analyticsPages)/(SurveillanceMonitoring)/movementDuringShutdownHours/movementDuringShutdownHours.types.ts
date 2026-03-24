@@ -16,11 +16,11 @@ export interface MovemnetDuringShutDownHrZoneViolation {
 
 /* ---------- Recent VIOLATION ---------- */
 export interface MovemnetDuringShutDownHrViolation {
-  violation: string;
+  incident: string;
   zone: string;
   time: string;
   imageUrl: string;
-  cameraId: string;
+  camera: string;
   alarmTriggered: boolean;
   peopleCount: number;
   [key: string]: string | number | boolean;
@@ -30,6 +30,7 @@ export interface MovemnetDuringShutDownHrDetailedReportResponse {
   data: MovemnetDuringShutDownHrViolation[];
   zones: string[];
   cameras: string[];
+  total: number;
 }
 
 /* ---------- API REQUESTS ---------- */
@@ -43,6 +44,8 @@ export interface MovemnetDuringShutDownHrDetailedReportRequest extends MovemnetD
   zone?: string;
   cameraId?: string;
   alarmTriggered?: boolean;
+  page?: number; // ✅ add
+  limit?: number;
 }
 
 export type MovemnetDuringShutDownHrSingleReportRequest = {

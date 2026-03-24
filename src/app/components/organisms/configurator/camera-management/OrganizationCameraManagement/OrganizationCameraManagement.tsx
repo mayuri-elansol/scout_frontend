@@ -1,5 +1,5 @@
-'use client';
-import React, { useState} from 'react';
+"use client";
+import React, { useState } from "react";
 import { useAuth } from "@/customhooks/useAuth";
 
 import {
@@ -17,25 +17,27 @@ import {
   Tooltip,
   Snackbar,
   Alert,
-} from '@mui/material';
+} from "@mui/material";
 import {
   Add as AddIcon,
   Settings as SettingsIcon,
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
   Videocam as VideocamIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 import {
   useGetAllCamerasQuery,
   useDeleteCameraMutation,
 } from "@/app/(protectedRoutes)/(settings)/(configurator)/cameraManagement/CameraManagementApi";
 
-
-
-import CameraOnboardingStep from '../CameraOnboardingStep/CameraOnboardingStep';
-import AIConfigurationStep from '../AIConfigurationStep/AIConfigurationStep';
-import { OrgCamera, OnboardingCamera, CameraApiResponse } from "@/app/types/camera";
+import CameraOnboardingStep from "../CameraOnboardingStep/CameraOnboardingStep";
+import AIConfigurationStep from "../AIConfigurationStep/AIConfigurationStep";
+import {
+  OrgCamera,
+  OnboardingCamera,
+  CameraApiResponse,
+} from "@/app/types/camera";
 
 interface OrganizationCameraManagementProps {
   initialCameras?: OrgCamera[];
@@ -47,33 +49,29 @@ interface CameraData extends OrgCamera {
   cameraname: string;
 }
 
-
-const OrganizationCameraManagement: React.FC<OrganizationCameraManagementProps> = ({
-  initialCameras = [],
-  forceAddCamera = false,
-  forceConfigureCamera,
-}) => {
+const OrganizationCameraManagement: React.FC<
+  OrganizationCameraManagementProps
+> = ({ initialCameras = [], forceAddCamera = false, forceConfigureCamera }) => {
   const { user } = useAuth();
-  const tenantId = user?.org_id ?? '';
-  const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<string | null>(
-    forceConfigureCamera ?? null
-  );
+  const tenantId = user?.org_id ?? "";
+  const [selectedCameraForConfig, setSelectedCameraForConfig] = useState<
+    string | null
+  >(forceConfigureCamera ?? null);
   const [addingCamera, setAddingCamera] = useState(forceAddCamera);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error' | 'warning';
+    severity: "success" | "error" | "warning";
   }>({
     open: false,
-    message: '',
-    severity: 'success',
+    message: "",
+    severity: "success",
   });
 
   const { data, isLoading } = useGetAllCamerasQuery();
   const [deleteCamera] = useDeleteCameraMutation();
 
-const cameras: OrgCamera[] =
-  Array.isArray(data)
+  const cameras: OrgCamera[] = Array.isArray(data)
     ? data.map((cam: CameraApiResponse) => ({
         id: cam.id,
         ipAddress: cam.cameraIp,
@@ -82,7 +80,7 @@ const cameras: OrgCamera[] =
         port: String(cam.RTSPport),
         make: cam.connectionType,
         location: cam.cameraLocation ?? "",
-        zone: cam.cameraZone ?? "",          
+        zone: cam.cameraZone ?? "",
         cameraname: cam.cameraName,
         rtspStream: cam.rtspStream ?? "",
         status: "connected",
@@ -107,8 +105,6 @@ const cameras: OrgCamera[] =
     }
   };
 
-
-
   const handleCameraConfigureClick = (cameraId: string) => {
     setSelectedCameraForConfig(cameraId);
   };
@@ -122,35 +118,39 @@ const cameras: OrgCamera[] =
     aiConfig?: AICameraConfig;
   }
 
-
   const handleAIConfigSave = (cameraId: string, aiConfig: AICameraConfig) => {
     void cameraId;
     void aiConfig;
-    
+
     setSelectedCameraForConfig(null);
 
     setSnackbar({
       open: true,
-      message: 'AI configuration saved successfully!',
-      severity: 'success',
+      message: "AI configuration saved successfully!",
+      severity: "success",
     });
   };
 
-
   if (isLoading) {
-  return (
-    <Box sx={{ height: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <VideocamIcon sx={{ fontSize: 40 }} />
-    </Box>
-  );
-}
-
+    return (
+      <Box
+        sx={{
+          height: "60vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <VideocamIcon sx={{ fontSize: 40 }} />
+      </Box>
+    );
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'connected':
+      case "connected":
         return <CheckCircleIcon color="success" fontSize="small" />;
-      case 'failed':
+      case "failed":
         return <ErrorIcon color="error" fontSize="small" />;
       default:
         return <VideocamIcon color="action" fontSize="small" />;
@@ -163,13 +163,17 @@ const cameras: OrgCamera[] =
 
   // 1) AI CONFIGURATION SCREEN
   if (selectedCameraForConfig) {
-    const camera = cameras.find((c) => c.id === selectedCameraForConfig) as CameraData | undefined;
+    const camera = cameras.find((c) => c.id === selectedCameraForConfig) as
+      | CameraData
+      | undefined;
     return (
-      <Box sx={{ flexGrow: 1, minHeight: '100vh' }}>
+      <Box sx={{ flexGrow: 1, minHeight: "100vh" }}>
         <AIConfigurationStep
           camera={camera!}
-          tenantId={tenantId}   
-          onSave={(aiConfig) => handleAIConfigSave(selectedCameraForConfig, aiConfig)}
+          tenantId={tenantId}
+          onSave={(aiConfig) =>
+            handleAIConfigSave(selectedCameraForConfig, aiConfig)
+          }
           onBack={() => setSelectedCameraForConfig(null)}
         />
       </Box>
@@ -190,13 +194,11 @@ const cameras: OrgCamera[] =
     status: cam.status,
   }));
 
-
   if (addingCamera) {
     return (
       <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
         <CameraOnboardingStep
           cameras={onboardingCameras}
-
           // onCameraAdd={handleCameraAdd}
 
           onCameraRemove={handleCameraRemove}
@@ -213,9 +215,18 @@ const cameras: OrgCamera[] =
 
   return (
     <Box sx={{ flexGrow: 1, p: { xs: 2, sm: 3 } }}>
-      <Paper variant="outlined" sx={{ height: '600px', display: 'flex', flexDirection: 'column' }}>
-        <Box sx={{ p: 3, borderBottom: '1px solid', borderColor: 'divider' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Paper
+        variant="outlined"
+        sx={{ height: "600px", display: "flex", flexDirection: "column" }}
+      >
+        <Box sx={{ p: 3, borderBottom: "1px solid", borderColor: "divider" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Typography variant="h6" fontWeight={600}>
               All Cameras
             </Typography>
@@ -229,7 +240,6 @@ const cameras: OrgCamera[] =
           </Box>
         </Box>
 
-
         {!cameras || cameras.length === 0 ? (
           <Box
             sx={{
@@ -242,7 +252,9 @@ const cameras: OrgCamera[] =
               p: 4,
             }}
           >
-            <VideocamIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
+            <VideocamIcon
+              sx={{ fontSize: 64, color: "text.secondary", mb: 2 }}
+            />
 
             <Typography variant="h6" color="text.secondary" gutterBottom>
               No Cameras Configured
@@ -261,7 +273,7 @@ const cameras: OrgCamera[] =
             </Button>
           </Box>
         ) : (
-          <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
+          <Box sx={{ flexGrow: 1, overflow: "auto" }}>
             <TableContainer>
               <Table size="small" stickyHeader>
                 <TableHead>
@@ -282,11 +294,17 @@ const cameras: OrgCamera[] =
                       <TableCell>{camera.port}</TableCell>
                       <TableCell>{camera.make}</TableCell>
                       <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
                           {getStatusIcon(camera.status)}
                           <Typography
                             variant="body2"
-                            color={camera.status === 'connected' ? 'success.main' : 'error.main'}
+                            color={
+                              camera.status === "connected"
+                                ? "success.main"
+                                : "error.main"
+                            }
                           >
                             {camera.status}
                           </Typography>
@@ -294,7 +312,12 @@ const cameras: OrgCamera[] =
                       </TableCell>
                       <TableCell align="center">
                         <Tooltip title="Configure Camera & AI Settings">
-                          <IconButton color="primary" onClick={() => handleCameraConfigureClick(camera.id)}>
+                          <IconButton
+                            color="primary"
+                            onClick={() =>
+                              handleCameraConfigureClick(camera.id)
+                            }
+                          >
                             <SettingsIcon />
                           </IconButton>
                         </Tooltip>

@@ -30,20 +30,28 @@ export interface IntrusionZoneViolation {
 
 /* ---------- VIOLATION ---------- */
 export interface IntrusionViolation {
+  incident: string;
+  zone: string;
+  time: string;
+  imageUrl: string;
+  camera: string;
+  alarmTriggered: boolean;
+  [key: string]: string | number | boolean;
+}
+export interface IntrusionDetailedRow {
   violation: string;
   zone: string;
   time: string;
   imageUrl: string;
   cameraId: string;
   alarmTriggered: boolean;
-  [key: string]: string | number | boolean;
 }
-
 /* ---------- DETAILED REPORT ---------- */
 export interface IntrusionDetailedReportResponse {
   data: IntrusionViolation[];
   zones: string[];
   cameras: string[];
+  total: number;
 }
 
 /* ---------- API REQUESTS ---------- */
@@ -51,6 +59,8 @@ export interface IntrusionBaseRequest {
   tenantId: string;
   startDate?: string;
   endDate?: string;
+  page?: number; // ✅ add
+  limit?: number;
 }
 
 export interface IntrusionDetailedReportRequest extends IntrusionBaseRequest {

@@ -114,9 +114,9 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
           </Box>
 
           {/* Zone List */}
-          {rows.map((zone,index) => (
+          {rows.map((zone, index) => (
             <Box
-              key={index+1}
+              key={index + 1}
               sx={{
                 display: "flex",
                 alignItems: "center",
@@ -219,6 +219,9 @@ const CameraStatus: React.FC<CameraStatusProps> = ({
       >
         <DialogContent>
           <ReportTable
+            totalCount={4}
+            page={0}
+            rowsPerPage={10}
             title="Camera Zones Details"
             columns={[
               { id: "timeStamp", label: "TimeStamp" },

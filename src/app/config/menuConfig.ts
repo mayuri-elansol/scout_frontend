@@ -163,7 +163,7 @@ export const settingsMenu: CategoryConfig[] = [
         icon: TuneIcon,
         featureFlag: true,
         items: [
-            {
+          {
             type: "link",
             name: "Zone-Location Mapping",
             path: "/zoneLocationMapping",
@@ -181,7 +181,6 @@ export const settingsMenu: CategoryConfig[] = [
             path: "/useCaseManager",
             featureId: FEATURE.USE_CASE_MANAGER,
           },
-        
         ],
       },
     ],
@@ -293,7 +292,7 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/employeePresenceRestrictedArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
-      
+
       {
         type: "link",
         name: "Mobile Phone Usage In Restricted Zones",
