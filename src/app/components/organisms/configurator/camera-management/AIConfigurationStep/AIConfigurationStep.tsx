@@ -514,9 +514,15 @@ useEffect(() => {
     return;
   }
 
-  setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+    // setFrameUrl(getCameraFeedUrl());
+    setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
 
-}, [showCameraView, getCameraFeedUrl]);
+    const interval = setInterval(() => {
+      setFrameUrl(getCameraFeedUrl());
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [showCameraView, getCameraFeedUrl]);
 
 
   function handleCloseSnackbar(): void {
