@@ -161,7 +161,6 @@ const IntrusionDetection: React.FC = () => {
     },
   });
 
-  /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
@@ -262,6 +261,7 @@ const IntrusionDetection: React.FC = () => {
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
     { id: "cameraId", label: t("Cameras") },
+
     { id: "alarmTriggered", label: t("Alarm Triggered") },
   ];
 
@@ -289,6 +289,8 @@ const IntrusionDetection: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
+
+  // ✅ Just update state — let the useEffect do the fetching
   const handleSubmitFilter = useCallback((filters: IntrusionFilterParams) => {
     setIntrusionFilters(filters);
     setPage(0); // this + intrusionFilters change will trigger the useEffect once

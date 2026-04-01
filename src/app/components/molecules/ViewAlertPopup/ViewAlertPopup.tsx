@@ -103,8 +103,13 @@ function ViewAlertPopup<
                   sx={{ mb: 0.5 }}
                   component="div"
                 >
-                  <strong>{key}:</strong> {String(value)}
+                  {/* <strong>{key}:</strong> */}
+                                    <strong>{key === "cameraId" ? "Camera" : key}:</strong>
+
+                   {String(value)}
                 </Typography>
+
+                
               ))}
           {/* Download Button */}
           {/* {imageUrl && ( */}
