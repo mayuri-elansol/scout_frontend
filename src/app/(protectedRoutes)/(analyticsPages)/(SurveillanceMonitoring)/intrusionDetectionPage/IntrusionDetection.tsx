@@ -115,41 +115,6 @@ const IntrusionDetection: React.FC = () => {
     fetchIntrusionZoneViolations,
     fetchIntrusionRecent,
   ]);
-  // useEffect(() => {
-  //   if (!tenantId) return;
-
-  //   const loadDetailedReport = async () => {
-  //     const alarmValue =
-  //       intrusionFilters?.alarmTriggered === undefined
-  //         ? undefined
-  //         : intrusionFilters.alarmTriggered === "True";
-
-  //     const body = {
-  //       tenantId,
-  //       page: page + 1,
-  //       limit,
-
-  //       zone: intrusionFilters?.zone || undefined,
-  //       cameraId: intrusionFilters?.cameraId || undefined,
-  //       alarmTriggered: alarmValue,
-
-  //       startDate: formatLocalDateTime(intrusionFilters?.startDate),
-  //       endDate: formatLocalDateTime(intrusionFilters?.endDate),
-  //     };
-
-  //     const detailed = await fetchDetailedIntrusionReportApi(body).unwrap();
-
-  //     setDetailedIntrusionReport(detailed);
-  //   };
-
-  //   loadDetailedReport().catch(console.error);
-  // }, [
-  //   tenantId,
-  //   page,
-  //   limit,
-  //   intrusionFilters,
-  //   fetchDetailedIntrusionReportApi,
-  // ]);
 
   useEffect(() => {
     if (!tenantId) return;
@@ -197,34 +162,6 @@ const IntrusionDetection: React.FC = () => {
   });
 
   /* ---------- TIME FILTER ---------- */
-  // const handleTimeRangeChange = useCallback(
-  //   async (range: { start?: string; end?: string }) => {
-  //     if (!range.start && !range.end) {
-  //       setIsIntrusionLiveMode(true);
-  //       fetchIntrusionKpi({ tenantId });
-
-  //       return;
-  //     }
-
-  //     setIsIntrusionLiveMode(false);
-  //     const payload = {
-  //       tenantId: tenantId,
-  //       startDate: range.start,
-  //       endDate: range.end,
-  //     };
-  //     const [kpi, zones, recent] = await Promise.all([
-  //       fetchIntrusionKpi(payload).unwrap(),
-  //       fetchIntrusionZoneViolations(payload).unwrap(),
-  //       fetchIntrusionRecent(payload).unwrap(),
-  //     ]);
-
-  //     setDisplayIntrusionKpi(kpi ?? []);
-  //     setDisplayIntrusionZoneViolations(zones ?? []);
-  //     setRecentIntrusionViolationsLive(recent ?? []);
-  //   },
-  //   [tenantId, fetchIntrusionKpi],
-  // );
-
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
@@ -352,39 +289,6 @@ const IntrusionDetection: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
-  // const handleSubmitFilter = useCallback(
-  //   async (filters: IntrusionFilterParams) => {
-  //     console.log("filter params", filters);
-
-  //     setIntrusionFilters(filters);
-
-  //     const alarmValue =
-  //       filters.alarmTriggered === undefined
-  //         ? undefined
-  //         : filters.alarmTriggered === "True";
-  //     const body = {
-  //       tenantId: tenantId,
-  //       zone: filters.zone || undefined,
-  //       cameraId: filters.cameraId || undefined,
-
-  //       alarmTriggered: alarmValue,
-
-  //       startDate: formatLocalDateTime(filters.startDate),
-  //       endDate: formatLocalDateTime(filters.endDate),
-  //       page: 1,
-  //       limit: limit,
-  //     };
-
-  //     console.log("🚀 Sending payload:", body);
-
-  //     const response = await fetchDetailedIntrusionReportApi(body).unwrap();
-  //     setPage(0);
-  //     setDetailedIntrusionReport(response);
-  //   },
-  //   [tenantId, fetchDetailedIntrusionReportApi, formatLocalDateTime, limit],
-  // );
-
-  // ✅ Just update state — let the useEffect do the fetching
   const handleSubmitFilter = useCallback((filters: IntrusionFilterParams) => {
     setIntrusionFilters(filters);
     setPage(0); // this + intrusionFilters change will trigger the useEffect once
