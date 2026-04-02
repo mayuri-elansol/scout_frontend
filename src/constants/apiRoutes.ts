@@ -126,22 +126,38 @@ export const apiRoutes = {
       "get-object-detection-in-walking-bays-analytics-details-report-for-single-id",
   },
 
-  fireSmokeOilAndGasLeakDetection: {
-    root: "fireSmokeOilAndGasLeakDetection",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsKpi:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-kpi",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsRecentVoliations:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-recent-voliations",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsCameraStatusByZone:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-camera-status-by-zone",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReport:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReport:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReportForSingleId:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report-for-single-id",
-    getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReportForSingleId:
-      "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report-for-single-id",
+  // fireSmokeOilAndGasLeakDetection: {
+  //   root: "fireSmokeOilAndGasLeakDetection",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsKpi:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-kpi",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsRecentVoliations:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-recent-voliations",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsCameraStatusByZone:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-camera-status-by-zone",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReport:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReport:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReportForSingleId:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report-for-single-id",
+  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReportForSingleId:
+  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report-for-single-id",
+  // },
+  fireSmokeDetection: {
+    root: "fireSmokeDetection",
+    getFireSmokeDetectionAnalyticsKpi: "get-fireSmoke-detection-analytics-kpi",
+    getFireSmokeDetectionAnalyticsRecentViolations:
+      "get-fireSmoke-detection-analytics-recent-violations",
+    getFireSmokeDetectionAnalyticsZoneViolations:
+      "get-fireSmoke-detection-analytics-zone-violations",
+    getFireSmokeDetectionAnalyticsDetailedReport:
+      "get-fireSmoke-detection-analytics-details-report",
+    getFireSmokeDetectionAnalyticsDownloadDetailedReport:
+      "get-fireSmoke-detection-analytics-download-details-report",
+    getFireSmokeDetectionAnalyticsDownloadDetailedReportForSingleId:
+      "get-fireSmoke-detection-analytics-download-details-report-for-single-id",
+    getFireSmokeDetectionAnalyticsDetailedReportForSingleId:
+      "get-fireSmoke-detection-analytics-details-report-for-single-id",
   },
   vehicleSpeedMonitoringInsidePremises: {
     root: "vehicleSpeedMonitoringInsidePremises",

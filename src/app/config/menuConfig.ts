@@ -216,8 +216,8 @@ export const analyticsMenu: CategoryConfig[] = [
       },
       {
         type: "link",
-        name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
-        path: "/fireSmokeOilLeakDetection",
+        name: "Fire And Smoke Detection",
+        path: "/fireSmokeDetection",
         featureId: FEATURE.FIRE_SMOKE,
       },
       {

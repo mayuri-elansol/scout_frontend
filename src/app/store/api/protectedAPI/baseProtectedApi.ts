@@ -77,5 +77,10 @@ export const baseProtectedApi = createApi({
     "OrgLogo",
     "orgShiftTime",
     "CameraTamperingDashboardKpi",
+
+    "FireSmokeDetectionKpi",
+    "FireSmokeDetectionZoneViolations",
+    "FireSmokeDetectionDetailedReport",
+    "FireSmokeDetectionRecentViolations",
   ],
 });
