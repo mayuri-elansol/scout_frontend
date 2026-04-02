@@ -10,6 +10,10 @@ export interface KpiData {
   violationsCount?: number;
   lastDetection?: string;
   lastDetectionTime?: string;
+
+  // ✅ ADD THESE
+  totalFireCount?: number;
+  totalSmokeCount?: number;
 }
 
 // ─── Fire & Smoke ─────────────────────────────────────────────────────────────
