@@ -17,7 +17,7 @@ export const SafetyMonitoringConfig = {
   },
   "Fire & Smoke  Alerts": {
     icon: LocalFireDepartment,
-    route: "/fireSmokeOilLeakDetection",
+    route: "/fireSmokeDetection",
     tooltipMessage:
       "Displays fire, smoke, gas, or oil leakage alerts detected on site.",
   },

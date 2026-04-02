@@ -36,8 +36,8 @@ export const MainDashboardConfig = {
   "PPE Violations": {
     route: "/ppeKitDetectionPage",
   },
-  "Fire / Smoke / Gas / Oil Alerts": {
-    route: "/fireSmokeOilLeakDetection",
+  "Fire & Smoke  Alerts": {
+    route: "/fireSmokeDetection",
   },
   "Vehicle In Walkways": {
     route: "/vehicalSpeedMonitoring",
