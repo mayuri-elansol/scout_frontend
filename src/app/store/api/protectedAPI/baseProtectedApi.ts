@@ -82,5 +82,6 @@ export const baseProtectedApi = createApi({
     "FireSmokeDetectionZoneViolations",
     "FireSmokeDetectionDetailedReport",
     "FireSmokeDetectionRecentViolations",
+    "SafetyAndComplianceDashboardKpi",
   ],
 });

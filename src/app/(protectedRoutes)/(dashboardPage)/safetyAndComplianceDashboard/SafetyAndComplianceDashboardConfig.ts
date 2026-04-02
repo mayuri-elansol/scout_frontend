@@ -15,7 +15,7 @@ export const SafetyMonitoringConfig = {
     route: "/ppeKitDetectionPage",
     tooltipMessage: "Shows total PPE rule violations detected today.",
   },
-  "Fire / Smoke / Gas / Oil Alerts": {
+  "Fire & Smoke  Alerts": {
     icon: LocalFireDepartment,
     route: "/fireSmokeOilLeakDetection",
     tooltipMessage:

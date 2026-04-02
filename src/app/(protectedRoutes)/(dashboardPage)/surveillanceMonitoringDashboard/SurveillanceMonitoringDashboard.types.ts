@@ -1,7 +1,4 @@
-
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
-
-
 
 export interface IntrusionTrendPoint {
   label: string;

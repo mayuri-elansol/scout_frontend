@@ -75,8 +75,7 @@ export const apiRoutes = {
   },
   SafetyMonitoringDashboard: {
     root: "safetyMonitoringDashboard",
-    getSafetyMonitoringDashboardAnalyticsKpi:
-      "get-safety-monitoring-dashboard-analytics-kpi",
+    getSafetyMonitoringDashboardData: "get-safety-monitoring-dashboard-data",
   },
   CameraTamperingDashboard: {
     root: "cameraTamperingDashboard",

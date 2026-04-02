@@ -16,7 +16,6 @@ export const FEATURE = {
   CAMERA_MANAGEMENT: "SF017",
   USE_CASE_MANAGER: "SF015",
   ZONE_LOCATION_MAPPING: "SF016",
- 
 
   // Analytics – Safety & Compliance
   PPE_DETECTION: "SUC001",
@@ -59,14 +58,11 @@ export const FEATURE = {
   DELETE_ROLE: "SF020",
   EDIT_ROLE: "SF021",
 
-  
-
   //PERMISSIONS FOR USER
-  ADD_USER:"SF010",
-  EDIT_USER:"SF011",
-  DELETE_USER:"SF012",
-  VIEW_USER:"SF013",
- 
+  ADD_USER: "SF010",
+  EDIT_USER: "SF011",
+  DELETE_USER: "SF012",
+  VIEW_USER: "SF013",
 } as const;
 
 export type FeatureId = (typeof FEATURE)[keyof typeof FEATURE];

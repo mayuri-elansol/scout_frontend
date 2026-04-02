@@ -24,6 +24,7 @@ import {
   FireSmokeDetectionDetailedReportResponse,
   FireSmokeDetectionFilterParams,
   FireSmokeDetectionKpiItem,
+  FireSmokeDetectionSocketPayload,
   FireSmokeDetectionViolation,
   FireSmokeDetectionZoneViolation,
 } from "./fireSmokeDetection.types";
@@ -37,6 +38,8 @@ import {
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 import { fireSmokeDetectionKpiConfig } from "./fireSmokeDetectionConfig";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
 const FireSmokeDetection: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
@@ -150,17 +153,17 @@ const FireSmokeDetection: React.FC = () => {
   ]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
-  // useSocketEvent<EmployeeIdleTimeSocketPayload>({
-  //   tenantId,
-  //   enabled: isLiveMode,
-  //   event: SOCKET_EVENTS.EMPLOYEE_IDLE_UPDATE,
-  //   handler: (payload) => {
-  //     console.log("payload form the socket", payload);
-  //     setDisplayEmployeeIdelTimeKpi(payload.kpi ?? []);
-  //     setDisplayEmployeeIdelTimeZoneViolations(payload.zoneViolations ?? []);
-  //     setRecentViolationsLive(payload.recentViolations ?? []);
-  //   },
-  // });
+  useSocketEvent<FireSmokeDetectionSocketPayload>({
+    tenantId,
+    enabled: isFireSmokeLiveMode,
+    event: SOCKET_EVENTS.FIRE_SMOKE_UPDATE,
+    handler: (payload) => {
+      console.log("payload form the socket", payload);
+      setDisplayFireSmokeKpi(payload.kpi ?? []);
+      setDisplayFireSmokeZoneViolations(payload.zoneViolations ?? []);
+      setFireSmokeRecentViolationsLive(payload.recentViolations ?? []);
+    },
+  });
 
   /* ---------- TIME FILTER ---------- */
   const handleFireSmokeRangeChange = useCallback(

@@ -1,9 +1,12 @@
-
-
 "use client";
 
 import React from "react";
-import { CardContent, useTheme, useMediaQuery, Typography } from "@mui/material";
+import {
+  CardContent,
+  useTheme,
+  useMediaQuery,
+  Typography,
+} from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { Box } from "@mui/system";
 
@@ -32,21 +35,22 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (!data || data.length === 0) {
-    return  (<CardContent
-      sx={{
-        width: "100%",
-        height: 620, // same as chart height
-        display: "flex",          // ✅ flex container
-        justifyContent: "center", // ✅ horizontal centering
-        alignItems: "center",     // ✅ vertical centering
-        p: 0,
-      }}
-    >
-      <Typography color="text.secondary" align="center">
-        No data available
-      </Typography>
-    </CardContent>
-  );
+    return (
+      <CardContent
+        sx={{
+          width: "100%",
+          height: 620, // same as chart height
+          display: "flex", // ✅ flex container
+          justifyContent: "center", // ✅ horizontal centering
+          alignItems: "center", // ✅ vertical centering
+          p: 0,
+        }}
+      >
+        <Typography color="text.secondary" align="center">
+          No data available
+        </Typography>
+      </CardContent>
+    );
   }
 
   const xLabels = data.map((d) => String(d[xAxisKey]));

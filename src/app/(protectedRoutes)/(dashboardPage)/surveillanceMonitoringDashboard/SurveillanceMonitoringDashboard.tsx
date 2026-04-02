@@ -83,11 +83,11 @@ const SurveillanceMonitoring: React.FC = () => {
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
         setIsLiveMode(true);
-        const res= await fetchSurveillanceKpi({ tenantId }).unwrap();
-       setDisplaySurveillanceKpi(res ?? []);
+        const res = await fetchSurveillanceKpi({ tenantId }).unwrap();
+        setDisplaySurveillanceKpi(res ?? []);
         return;
       }
- 
+
       setIsLiveMode(false);
       const payload = {
         tenantId: tenantId,
@@ -175,7 +175,7 @@ const SurveillanceMonitoring: React.FC = () => {
       ),
       featureId: FEATURE.INTRUSION_DETECTION,
     },
- {
+    {
       label: "Movement During shutdown",
       content: (
         <Grid
@@ -288,7 +288,7 @@ const SurveillanceMonitoring: React.FC = () => {
       ),
       featureId: FEATURE.CAMERA_TAMPERING,
     },
-   
+
     {
       label: "Unauthorized Access ",
       content: (
@@ -354,21 +354,21 @@ const SurveillanceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {SurveillancekpiLoading || !displaySurveillanceKpi.length
           ? Array.from({ length: 4 }).map((_, index) => (
-            <Grid
-              key={index + 1}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <KpiCardSkeleton />
-            </Grid>
-          ))
+              <Grid
+                key={index + 1}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
           : surveillanceKpiData.map((kpi) => (
-            <Grid
-              key={kpi.title}
-              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            >
-              <DashboardKpiCard {...kpi} />
-            </Grid>
-          ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+              >
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
       {/* Tabs Section */}
