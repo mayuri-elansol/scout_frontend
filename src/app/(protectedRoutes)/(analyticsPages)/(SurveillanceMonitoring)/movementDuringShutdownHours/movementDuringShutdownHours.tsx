@@ -115,25 +115,7 @@ const MovementDuringShutdownHours: React.FC = () => {
     fetchMovementZoneViolations,
     fetchMovementRecent,
   ]);
-  // useEffect(() => {
-  //   if (!tenantId) return;
 
-  //   const loadDetailedReport = async () => {
-  //     try {
-  //       const response = await fetchDetailedMovementReportApi({
-  //         tenantId,
-  //         page: movementPage + 1,
-  //         limit: movementLimit,
-  //       }).unwrap();
-
-  //       setDetailedMovementReport(response);
-  //     } catch (error) {
-  //       console.error("Failed to load movement detailed report:", error);
-  //     }
-  //   };
-
-  //   loadDetailedReport();
-  // }, [tenantId, movementPage, movementLimit, fetchDetailedMovementReportApi]);
   useEffect(() => {
     if (!tenantId) return;
 

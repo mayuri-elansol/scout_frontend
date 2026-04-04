@@ -4,14 +4,11 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import {
   LocalFireDepartment,
   SmokeFree,
-  LocationOn,
-  AccessTime,
   SvgIconComponent,
 } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 
-import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";

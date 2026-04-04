@@ -124,24 +124,23 @@ export const apiRoutes = {
     getObjectDetectionInWalkingBaysAnalyticsDetailedReportForSingleId:
       "get-object-detection-in-walking-bays-analytics-details-report-for-single-id",
   },
-
-  // fireSmokeOilAndGasLeakDetection: {
-  //   root: "fireSmokeOilAndGasLeakDetection",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsKpi:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-kpi",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsRecentVoliations:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-recent-voliations",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsCameraStatusByZone:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-camera-status-by-zone",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReport:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReport:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDownloadDetailedReportForSingleId:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-download-details-report-for-single-id",
-  //   getFireSmokeOilAndGasLeakDetectionAnalyticsDetailedReportForSingleId:
-  //     "get-fireSmoke-oil-and-gas-leak-detection-analytics-details-report-for-single-id",
-  // },
+  fallLaydownDetection: {
+    root: "fallLaydownDetection",
+    getFallLaydownDetectionAnalyticsKpi:
+      "get-fall-laydown-detection-analytics-kpi",
+    getFallLaydownDetectionAnalyticsRecentViolations:
+      "get-fall-laydown-detection-analytics-recent-violations",
+    getFallLaydownDetectionAnalyticsZoneViolations:
+      "get-fall-laydown-detection-analytics-zone-violations",
+    getFallLaydownDetectionAnalyticsDetailedReport:
+      "get-fall-laydown-detection-analytics-details-report",
+    getFallLaydownDetectionAnalyticsDownloadDetailedReport:
+      "get-fall-laydown-detection-analytics-download-details-report",
+    getFallLaydownDetectionAnalyticsDownloadDetailedReportForSingleId:
+      "get-fall-laydown--detection-analytics-download-details-report-for-single-id",
+    getFallLaydownDetectionAnalyticsDetailedReportForSingleId:
+      "get-fall-laydown-detection-analytics-details-report-for-single-id",
+  },
   fireSmokeDetection: {
     root: "fireSmokeDetection",
     getFireSmokeDetectionAnalyticsKpi: "get-fireSmoke-detection-analytics-kpi",

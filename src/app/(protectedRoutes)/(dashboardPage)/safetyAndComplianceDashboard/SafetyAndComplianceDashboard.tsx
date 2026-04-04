@@ -1,15 +1,6 @@
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper } from "@mui/material";
-import {
-  LocalFireDepartment,
-  HealthAndSafety,
-  DirectionsCar,
-  WarningAmber,
-  DoorFront,
-  Groups,
-} from "@mui/icons-material";
-import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardTabs, {
@@ -913,60 +904,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
   ];
 
   return (
-    // <Paper
-    //   sx={{
-    //     display: "flex",
-    //     flexDirection: "column",
-    //     pt: 2,
-    //     px: 3,
-    //     backgroundColor: "#ffffff",
-    //     borderRadius: 2,
-    //     flex: 1,
-    //     // minHeight: 0,
-
-    //     minHeight: { xs: "auto", sm: "auto", md: 0 },
-    //   }}
-    // >
-    //   {/* Top Right Time Filter */}
-    //   <Box
-    //     sx={{
-    //       display: "flex",
-    //       alignItems: "center",
-    //       justifyContent: "end",
-    //       flexWrap: "wrap",
-    //       mb: 2,
-    //     }}
-    //   >
-    //     <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
-    //   </Box>
-
-    //   {/* KPI Cards Grid */}
-    //   <Grid container spacing={1.5} sx={{ mb: 2 }} alignItems="stretch">
-    //     {kpiData.map((kpi, index) => (
-    //       <Grid
-    //         size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-    //         key={uuidv4() + index}
-    //       >
-    //         {/* <DashboardKpiCard {...kpi} /> */}
-    //       </Grid>
-    //     ))}
-    //   </Grid>
-
-    //   {/* Tabs Section */}
-    //   <Box
-    //     sx={{
-    //       display: "flex",
-    //       flexDirection: "column",
-    //       flex: 1,
-    //       //  minHeight: 0,
-
-    //       minHeight: { xs: "500px", sm: "600px", md: 0 },
-    //     }}
-    //   >
-    //     <DashboardTabs tabs={tabs} features={features} />
-    //   </Box>
-    // </Paper>
-
     <Paper
       sx={{
         display: "flex",

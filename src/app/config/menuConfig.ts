@@ -222,7 +222,7 @@ export const analyticsMenu: CategoryConfig[] = [
       },
       {
         type: "link",
-        name: "Fall / Laydown Detection",
+        name: "Fall Detection",
         path: "/fallDetection",
         featureId: FEATURE.FALL_DETECTION,
       },

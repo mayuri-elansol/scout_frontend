@@ -4,6 +4,8 @@ export const SOCKET_EVENTS = {
   CROWD_UPDATE: "crowd_update",
 
   FIRE_SMOKE_UPDATE: "Fire_Smoke_Update",
+
+  FALL_DETECTION_UPDATE: "Fall_Detection_Update",
   SAFETY_DASHBOARD_UPDATE: "Safety_Dashboard_Update",
   INTRUSION_UPDATE: "intrusion_update",
   EMPLOYEE_IDLE_UPDATE: "employee_idle_time_update",

@@ -94,9 +94,7 @@ export default function ClientLayout({
             }}
           >
             <FeatureGuardProvider>
-              <PageTransitionWrapper>
-              {children}
-              </PageTransitionWrapper>
+              <PageTransitionWrapper>{children}</PageTransitionWrapper>
             </FeatureGuardProvider>
           </Box>
         </Box>
