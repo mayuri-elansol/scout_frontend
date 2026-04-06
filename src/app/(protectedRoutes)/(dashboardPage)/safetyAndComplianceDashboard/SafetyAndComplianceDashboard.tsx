@@ -199,6 +199,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       color: "#8884d8", // choose any distinct color
     },
   ];
+
+  /* ================= FALL DETECTION ================= */
+
+  const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
+
+  const fallHourlyData = fallSeries.map((item: any) => ({
+    time: item.label,
+    falls: item.count,
+  }));
+
   const tabs: TabConfig[] = [
     {
       label: "PPE Compliance",
@@ -645,7 +655,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               },
             }}
           >
-            <DynamicBarChart
+            {/* <DynamicBarChart
               data={hourlyData}
               xAxisKey="time"
               series={[
@@ -656,6 +666,20 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 },
               ]}
               yAxisLabel="Incident Count"
+              stackId="fall"
+            /> */}
+
+            <DynamicBarChart
+              data={fallHourlyData}
+              xAxisKey="time"
+              series={[
+                {
+                  dataKey: "falls",
+                  label: "Fall Incidents",
+                  color: "#FFCBB3",
+                },
+              ]}
+              yAxisLabel="Count"
               stackId="fall"
             />
           </Grid>
