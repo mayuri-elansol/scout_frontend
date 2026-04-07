@@ -69,7 +69,7 @@ export const intrusionDetectionApi = baseProtectedApi.injectEndpoints({
           a.remove();
           globalThis.URL.revokeObjectURL(url);
 
-          return null; // ✅ Must return something serializable
+          return null; 
         },
       }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
