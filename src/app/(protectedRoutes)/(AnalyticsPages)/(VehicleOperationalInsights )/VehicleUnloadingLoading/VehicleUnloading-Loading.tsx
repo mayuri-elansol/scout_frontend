@@ -58,7 +58,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 301,
       trackId: "TRK-001",
       loadingState: "Start",
-      snapshot: "https://picsum.photos/400/200?random=21",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v2.jpg",
       zone: "Loading Bay A",
       camera: "CAM-21",
       alarmTriggered: true,
@@ -69,7 +69,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 302,
       trackId: "TRK-002",
       loadingState: "Stop",
-      snapshot: "https://picsum.photos/400/200?random=22",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v4.jpg",
       zone: "Loading Bay B",
       camera: "CAM-22",
       alarmTriggered: false,
@@ -80,7 +80,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 303,
       trackId: "TRK-003",
       loadingState: "Start",
-      snapshot: "https://picsum.photos/400/200?random=23",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v2.jpg",
       zone: "Unloading Bay A",
       camera: "CAM-23",
       alarmTriggered: true,
@@ -91,7 +91,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 304,
       trackId: "TRK-004",
       loadingState: "Stop",
-      snapshot: "https://picsum.photos/400/200?random=24",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v1.webp",
       zone: "Unloading Bay B",
       camera: "CAM-24",
       alarmTriggered: false,
@@ -102,7 +102,7 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 305,
       trackId: "TRK-005",
       loadingState: "Start",
-      snapshot: "https://picsum.photos/400/200?random=25",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v3.webp",
       zone: "Loading Bay C",
       camera: "CAM-25",
       alarmTriggered: true,
@@ -290,7 +290,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.incident))
+              new Set(recentLoadingEvents.map((v) => v.incident)),
             ),
           },
           {
@@ -298,7 +298,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.zone))
+              new Set(recentLoadingEvents.map((v) => v.zone)),
             ),
           },
           {
@@ -306,7 +306,7 @@ const VehicleUnloadingLoading: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentLoadingEvents.map((v) => v.cameraId))
+              new Set(recentLoadingEvents.map((v) => v.cameraId)),
             ),
           },
           {

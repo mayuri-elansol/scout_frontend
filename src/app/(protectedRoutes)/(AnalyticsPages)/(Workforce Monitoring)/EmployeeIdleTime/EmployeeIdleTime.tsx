@@ -27,10 +27,9 @@ const EmployeeIdleTime: React.FC = () => {
     [key: string]: string | number | boolean;
   }
 
-  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
-    null
+    null,
   );
   const EmployeeIdleTimeKpiData = [
     {
@@ -61,7 +60,7 @@ const EmployeeIdleTime: React.FC = () => {
       notPresent: false,
       trackingId: "TRK-01",
       zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=21",
+      snapshot: "/img/employee-idle-time-monitoring/i1.png",
       cameraid: "CAM-I01",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:55",
@@ -73,7 +72,7 @@ const EmployeeIdleTime: React.FC = () => {
       notPresent: false,
       trackingId: "TRK-02",
       zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=22",
+      snapshot: "/img/employee-idle-time-monitoring/i2.jpg",
       cameraid: "CAM-I02",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:45",
@@ -85,7 +84,7 @@ const EmployeeIdleTime: React.FC = () => {
       notPresent: false,
       trackingId: "TRK-03",
       zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=23",
+      snapshot: "/img/employee-idle-time-monitoring/i1.png",
       cameraid: "CAM-I03",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:35",
@@ -97,7 +96,7 @@ const EmployeeIdleTime: React.FC = () => {
       notPresent: true,
       trackingId: "TRK-04",
       zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=24",
+      snapshot: "/img/employee-idle-time-monitoring/i2.jpg",
       cameraid: "CAM-I04",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:25",
@@ -109,7 +108,7 @@ const EmployeeIdleTime: React.FC = () => {
       notPresent: false,
       trackingId: "TRK-05",
       zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=25",
+      snapshot: "/img/employee-idle-time-monitoring/i1.png",
       cameraid: "CAM-I05",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:15",
@@ -299,7 +298,7 @@ const EmployeeIdleTime: React.FC = () => {
             label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.incident))
+              new Set(recentIdleEvents.map((v) => v.incident)),
             ),
           },
           {
@@ -313,7 +312,7 @@ const EmployeeIdleTime: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.cameraId))
+              new Set(recentIdleEvents.map((v) => v.cameraId)),
             ),
           },
 

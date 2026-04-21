@@ -24,7 +24,7 @@ const MobilePhoneUsage: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const MobilePhoneUsageKpiData = [
@@ -60,7 +60,7 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 201,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/mobile-usage-restricted-zones/m1.avif",
       zone: "Assembly Line",
       cameraid: "CAM-11",
       alarmTriggered: true,
@@ -70,7 +70,7 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 202,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/mobile-usage-restricted-zones/m2.jpg",
       zone: "Production Floor A",
       cameraid: "CAM-12",
       alarmTriggered: false,
@@ -80,7 +80,7 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 203,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/mobile-usage-restricted-zones/m3.png",
       zone: "Warehouse",
       cameraid: "CAM-13",
       alarmTriggered: false,
@@ -90,7 +90,7 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 204,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/mobile-usage-restricted-zones/m2.jpg",
       zone: "Main Entrance",
       cameraid: "CAM-14",
       alarmTriggered: true,
@@ -100,7 +100,7 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 205,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=15",
+      snapshot: "/img/mobile-usage-restricted-zones/m1.avif",
       zone: "Parking Area",
       cameraid: "CAM-15",
       alarmTriggered: false,
@@ -264,7 +264,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.zone))
+              new Set(recentMobilePhoneViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -272,7 +272,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.cameraId))
+              new Set(recentMobilePhoneViolations.map((v) => v.cameraId)),
             ),
           },
           {

@@ -74,7 +74,7 @@ const CameraTampering: React.FC = () => {
       id: 201,
       tamperingType: "Lens Covered",
       zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T01",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -83,17 +83,8 @@ const CameraTampering: React.FC = () => {
       id: 202,
       tamperingType: "Blur Vision",
       zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/camera-tampering-detection/blur.jpg",
       cameraid: "CAM-T02",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-    {
-      id: 203,
-      tamperingType: "Disconnected",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=13",
-      cameraid: "CAM-T03",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
     },
@@ -101,7 +92,7 @@ const CameraTampering: React.FC = () => {
       id: 204,
       tamperingType: "Offline",
       zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -110,7 +101,7 @@ const CameraTampering: React.FC = () => {
       id: 205,
       tamperingType: "Lens Obstructed",
       zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=15",
+      snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T05",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -119,25 +110,17 @@ const CameraTampering: React.FC = () => {
       id: 202,
       tamperingType: "Blur Vision",
       zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/camera-tampering-detection/blur2.jpg",
       cameraid: "CAM-T02",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
     },
-    {
-      id: 203,
-      tamperingType: "Disconnected",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=13",
-      cameraid: "CAM-T03",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
+
     {
       id: 204,
       tamperingType: "Offline",
       zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -322,7 +305,7 @@ const CameraTampering: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.voilation))
+              new Set(recentTamperingEvents.map((v) => v.voilation)),
             ),
           },
           {
@@ -330,7 +313,7 @@ const CameraTampering: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.zone))
+              new Set(recentTamperingEvents.map((v) => v.zone)),
             ),
           },
           {
@@ -338,7 +321,7 @@ const CameraTampering: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.cameraId))
+              new Set(recentTamperingEvents.map((v) => v.cameraId)),
             ),
           },
           {

@@ -65,7 +65,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     {
       id: 201,
       typeOf: "Car",
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/unauthorised-parking-blocking-aisles/p2.jpg",
       zone: "Loading Bay A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
@@ -74,7 +74,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     {
       id: 202,
       typeOf: "Not Car",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/unauthorised-parking-blocking-aisles/p1.jpg",
       zone: "Warehouse Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
@@ -83,7 +83,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     {
       id: 203,
       typeOf: "Car",
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/unauthorised-parking-blocking-aisles/p3.jpg",
       zone: "Assembly Area C",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
@@ -92,7 +92,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     {
       id: 204,
       typeOf: "Not Car",
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/unauthorised-parking-blocking-aisles/p2.jpg",
       zone: "Maintenance Area",
       camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
@@ -101,7 +101,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
     {
       id: 205,
       typeOf: "Car",
-      snapshot: "https://picsum.photos/400/200?random=15",
+      snapshot: "/img/unauthorised-parking-blocking-aisles/p1.jpg",
       zone: "Parking Zone D",
       camera: "CAM-15",
       createdAt: getOneHourBefore().fullDate,
@@ -291,7 +291,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
             label: "Voilation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.eventMessage))
+              new Set(recentViolations.map((v) => v.eventMessage)),
             ),
           },
 
@@ -306,7 +306,7 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

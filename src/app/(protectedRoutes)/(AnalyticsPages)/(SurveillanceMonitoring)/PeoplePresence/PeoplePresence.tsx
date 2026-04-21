@@ -54,7 +54,7 @@ const PeoplePresence: React.FC = () => {
   const backendPeoplePresenceData = [
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
+      snapshot: "/img/movement-shutdown-hours/m1.jpg",
       zone: "Production Floor",
       camera: "CAM-31",
       count: 15,
@@ -64,7 +64,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
+      snapshot: "/img/movement-shutdown-hours/m2.jpg",
       zone: "Loading Dock",
       camera: "CAM-32",
       count: 7,
@@ -74,7 +74,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
+      snapshot: "/img/movement-shutdown-hours/u2.jpg",
       zone: "Production Floor",
       camera: "CAM-31",
       count: 15,
@@ -84,7 +84,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
+      snapshot: "/img/movement-shutdown-hours/u1.jpg",
       zone: "Loading Dock",
       camera: "CAM-32",
       count: 7,
@@ -94,7 +94,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
+      snapshot: "/img/movement-shutdown-hours/m2.jpg",
       zone: "Production Floor",
       camera: "CAM-31",
       count: 15,
@@ -104,7 +104,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
+      snapshot: "/img/movement-shutdown-hours/u3.jpg",
       zone: "Loading Dock",
       camera: "CAM-32",
       count: 7,
@@ -114,7 +114,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
+      snapshot: "/img/movement-shutdown-hours/m1.jpg",
       zone: "Production Floor",
       camera: "CAM-31",
       count: 15,
@@ -124,7 +124,7 @@ const PeoplePresence: React.FC = () => {
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
+      snapshot: "/img/movement-shutdown-hours/u1.jpg",
       zone: "Loading Dock",
       camera: "CAM-32",
       count: 7,
@@ -282,7 +282,7 @@ const PeoplePresence: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.zone))
+              new Set(recentPeoplePresence.map((item) => item.zone)),
             ),
           },
           {
@@ -290,7 +290,7 @@ const PeoplePresence: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.cameraId))
+              new Set(recentPeoplePresence.map((item) => item.cameraId)),
             ),
           },
           {

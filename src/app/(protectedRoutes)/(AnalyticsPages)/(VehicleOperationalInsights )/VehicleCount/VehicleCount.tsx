@@ -36,7 +36,7 @@ const VehicleCount: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleCountEvent | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const VehicleCountKpiData = [
@@ -101,8 +101,8 @@ const VehicleCount: React.FC = () => {
       id: 201,
       numberDetected: "MH12AB1234",
       status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      validNumber: false,
+      snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
       zone: "Main Gate A",
       camera: "CAM-ENTRY-01",
       createdAt: getOneHourBefore().fullDate,
@@ -114,7 +114,7 @@ const VehicleCount: React.FC = () => {
       numberDetected: "MH14XY7890",
       status: "Exit",
       validNumber: false,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/vehicle-count-anpr-gates/v2.jpg",
       zone: "Exit Gate B",
       camera: "CAM-EXIT-02",
       createdAt: getOneHourBefore().fullDate,
@@ -125,8 +125,8 @@ const VehicleCount: React.FC = () => {
       id: 203,
       numberDetected: "GJ05TR5678",
       status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      validNumber: false,
+      snapshot: "/img/vehicle-count-anpr-gates/v3.png",
       zone: "Warehouse Entry",
       camera: "CAM-ENTRY-03",
       createdAt: getOneHourBefore().fullDate,
@@ -138,24 +138,12 @@ const VehicleCount: React.FC = () => {
       numberDetected: "DL09GH4567",
       status: "Exit",
       validNumber: false,
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
       zone: "Service Exit",
       camera: "CAM-EXIT-04",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 10:32",
       alarmTriggered: true,
-    },
-    {
-      id: 205,
-      numberDetected: "MH15PQ2345",
-      status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=15",
-      zone: "Visitor Gate",
-      camera: "CAM-ENTRY-05",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 11:02",
-      alarmTriggered: false,
     },
   ];
 
@@ -342,7 +330,7 @@ const VehicleCount: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.vehicleNumber))
+              new Set(vehicleViolations.map((v) => v.vehicleNumber)),
             ),
           },
           {
@@ -350,7 +338,7 @@ const VehicleCount: React.FC = () => {
             label: "status",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.status))
+              new Set(vehicleViolations.map((v) => v.status)),
             ),
           },
           {
@@ -358,7 +346,7 @@ const VehicleCount: React.FC = () => {
             label: "Valid Number",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.validNumber))
+              new Set(vehicleViolations.map((v) => v.validNumber)),
             ),
           },
           {
@@ -372,7 +360,7 @@ const VehicleCount: React.FC = () => {
             label: "camera",
             type: "select",
             options: Array.from(
-              new Set(vehicleViolations.map((v) => v.cameraId))
+              new Set(vehicleViolations.map((v) => v.cameraId)),
             ),
           },
           {

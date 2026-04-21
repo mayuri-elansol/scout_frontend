@@ -63,7 +63,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 901,
       sleeping: true,
       absence: false,
-      snapshot: "https://picsum.photos/400/200?random=51",
+      snapshot: "/img/sleeping-absence-security-guards/s2.avif",
       zone: "Main Gate",
       camera: "CAM-51",
       createdAt: getOneHourBefore().fullDate,
@@ -73,7 +73,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 902,
       sleeping: false,
       absence: true,
-      snapshot: "https://picsum.photos/400/200?random=52",
+
+      snapshot: "/img/sleeping-absence-security-guards/s1.jpg",
       zone: "Assembly Line A",
       camera: "CAM-52",
       createdAt: getOneHourBefore().fullDate,
@@ -83,7 +84,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 901,
       sleeping: true,
       absence: false,
-      snapshot: "https://picsum.photos/400/200?random=51",
+
+      snapshot: "/img/sleeping-absence-security-guards/s2.avif",
       zone: "Main Gate",
       camera: "CAM-51",
       createdAt: getOneHourBefore().fullDate,
@@ -93,7 +95,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 902,
       sleeping: false,
       absence: true,
-      snapshot: "https://picsum.photos/400/200?random=52",
+      snapshot: "/img/sleeping-absence-security-guards/s1.jpg",
       zone: "Assembly Line A",
       camera: "CAM-52",
       createdAt: getOneHourBefore().fullDate,
@@ -270,7 +272,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.voilation))
+              new Set(recentViolations.map((item) => item.voilation)),
             ),
           },
           {
@@ -278,7 +280,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.zone))
+              new Set(recentViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -286,7 +288,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

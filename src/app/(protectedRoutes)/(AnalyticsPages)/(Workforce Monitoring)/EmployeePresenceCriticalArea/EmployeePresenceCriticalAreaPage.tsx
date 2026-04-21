@@ -54,7 +54,7 @@ const EmployeePresence: React.FC = () => {
   const backendEmployeePresenceData = [
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/employee-presence-critical-areas/e1.png",
       zone: "Critical Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
@@ -63,16 +63,16 @@ const EmployeePresence: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/employee-presence-critical-areas/e4.jpg",
       zone: "Critical Zone B",
       camera: "CAM-12",
-      createdAt:getOneHourBefore().fullDate,
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:26",
       alarmTriggered: true,
     },
     {
       id: 203,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/employee-presence-critical-areas/e3.jpg",
       zone: "Critical Zone C",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
@@ -219,7 +219,7 @@ const EmployeePresence: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.zone))
+              new Set(recentEmployeeViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -227,7 +227,7 @@ const EmployeePresence: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.cameraId))
+              new Set(recentEmployeeViolations.map((v) => v.cameraId)),
             ),
           },
           {

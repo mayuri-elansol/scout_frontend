@@ -27,7 +27,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleViolation | null>(
-    null
+    null,
   );
   const backendVehicleData = [
     {
@@ -37,7 +37,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       vehicleNumber: "MH12AB1234",
       zone: "Main Gate",
       camera: "CAM-09",
-      snapshot: "https://picsum.photos/400/200?random=9",
+      snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
       alarmTriggered: true,
       createdAt: "2025-09-23 17:05",
       updatedAt: "2025-09-23 17:06",
@@ -49,7 +49,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       vehicleNumber: "MH14XY5678",
       zone: "Parking Lot",
       camera: "CAM-10",
-      snapshot: "https://picsum.photos/400/200?random=10",
+      snapshot: "/img/vehicle-count-anpr-gates/v2.jpg",
       alarmTriggered: true,
       createdAt: "2025-09-23 17:15",
       updatedAt: "2025-09-23 17:16",
@@ -61,7 +61,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       vehicleNumber: "MH12AB1234",
       zone: "Main Gate",
       camera: "CAM-09",
-      snapshot: "https://picsum.photos/400/200?random=9",
+      snapshot: "/img/vehicle-count-anpr-gates/v3.png",
       alarmTriggered: true,
       createdAt: "2025-09-23 17:05",
       updatedAt: "2025-09-23 17:06",
@@ -73,7 +73,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
       vehicleNumber: "MH14XY5678",
       zone: "Parking Lot",
       camera: "CAM-10",
-      snapshot: "https://picsum.photos/400/200?random=10",
+      snapshot: "/img/vehicle-count-anpr-gates/v2.jpg",
       alarmTriggered: true,
       createdAt: "2025-09-23 17:15",
       updatedAt: "2025-09-23 17:16",
@@ -245,7 +245,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.zone))
+              new Set(recentVehicleViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -253,7 +253,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((v) => v.cameraId))
+              new Set(recentVehicleViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -267,7 +267,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Type",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.vehicleType))
+              new Set(recentVehicleViolations.map((item) => item.vehicleType)),
             ),
           },
           {
@@ -275,7 +275,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.vehicleNumber))
+              new Set(
+                recentVehicleViolations.map((item) => item.vehicleNumber),
+              ),
             ),
           },
           { id: "time", label: "Start Date", type: "date" },

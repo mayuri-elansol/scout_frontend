@@ -24,7 +24,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<UnauthorizedAccess | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
@@ -60,7 +60,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const backendData = [
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/unauthorised-access-restricted-areas/u1.jpg",
       zone: "Chemical Storage",
       camera: "CAM-11",
       createdat: getOneHourBefore().fullDate,
@@ -69,7 +69,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
       zone: "Zone A",
       camera: "CAM-12",
       createdat: getOneHourBefore().fullDate,
@@ -78,7 +78,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 203,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/unauthorised-access-restricted-areas/u3.jpg",
       zone: "Restricted Lab",
       camera: "CAM-13",
       createdat: getOneHourBefore().fullDate,
@@ -87,7 +87,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 204,
-      snapshot: "https://picsum.photos/400/200?random=14",
+      snapshot: "/img/unauthorised-access-restricted-areas/u4.jpg",
       zone: "Warehouse Entry",
       camera: "CAM-14",
       createdat: getOneHourBefore().fullDate,
@@ -96,7 +96,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 205,
-      snapshot: "https://picsum.photos/400/200?random=15",
+      snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
       zone: "Zone C",
       camera: "CAM-15",
       createdat: getOneHourBefore().fullDate,
@@ -105,7 +105,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/unauthorised-access-restricted-areas/u4.jpg",
       zone: "Chemical Storage",
       camera: "CAM-11",
       createdat: getOneHourBefore().fullDate,
@@ -114,7 +114,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
       zone: "Zone A",
       camera: "CAM-12",
       createdat: getOneHourBefore().fullDate,
@@ -123,7 +123,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       id: 203,
-      snapshot: "https://picsum.photos/400/200?random=13",
+      snapshot: "/img/unauthorised-access-restricted-areas/u3.jpg",
       zone: "Restricted Lab",
       camera: "CAM-13",
       createdat: getOneHourBefore().fullDate,
