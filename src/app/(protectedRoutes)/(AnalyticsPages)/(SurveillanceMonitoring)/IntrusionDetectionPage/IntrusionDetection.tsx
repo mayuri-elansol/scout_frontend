@@ -29,7 +29,7 @@ const IntrusionDetection: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<IntrusionViolation | null>(
-    null
+    null,
   );
   const intrusionKpiData = [
     {
@@ -65,7 +65,7 @@ const IntrusionDetection: React.FC = () => {
   const backendIntrusionData = [
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/intrusion-detection-perimeter/i2.jpg",
       zone: "Perimeter Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
@@ -74,7 +74,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/intrusion-detection-perimeter/i3.jpg",
       zone: "Perimeter Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
@@ -83,7 +83,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 203,
-      snapshot: "https://picsum.photos/400/200?random=11",
+      snapshot: "/img/intrusion-detection-perimeter/i4.jpg",
       zone: "Perimeter Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
@@ -92,7 +92,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 204,
-      snapshot: "https://picsum.photos/400/200?random=12",
+      snapshot: "/img/intrusion-detection-perimeter/i5.jpg",
       zone: "Perimeter Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
@@ -234,7 +234,7 @@ const IntrusionDetection: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentIntrusionViolations.map((item) => item.zone))
+              new Set(recentIntrusionViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -242,7 +242,7 @@ const IntrusionDetection: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentIntrusionViolations.map((v) => v.cameraId))
+              new Set(recentIntrusionViolations.map((v) => v.cameraId)),
             ),
           },
           {
