@@ -481,38 +481,85 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   }, [open, useCaseName, recalcCanvasSize, imageLoaded]);
 
-  useEffect(() => {
-    if (!open) return;
+//   useEffect(() => {
+//   if (!open) return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    if (canvas.width === 0 || canvas.height === 0) return;
+//   const canvas = canvasRef.current;
+//   if (!canvas) return;
 
-    const img = new Image();
-    imageRef.current = img;
-    img.crossOrigin = 'anonymous';
+//   // wait until canvas has valid size
+// if (canvasWidth < 100 || canvasHeight < 100) {
+//   console.log("waiting for canvas size...");
+//   return;
+// }
 
-    img.onload = () => {
-      setImageLoaded(true);
+//   const img = new Image();
+//   imageRef.current = img;
+//   img.crossOrigin = 'anonymous';
 
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+//   img.onload = () => {
+//     setImageLoaded(true);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
+//     const ctx = canvas.getContext('2d');
+//     if (!ctx) return;
 
-    img.onerror = () => {
-      console.error('Image failed to load:', cameraFeedUrl);
-    };
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+//     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+//   };
 
-    const url =
-      cameraFeedUrl && cameraFeedUrl.trim() !== ''
-        ? cameraFeedUrl
-        : '/img/siteimage.jpg';
+//   img.onerror = () => {
+//     console.error('Image failed to load:', cameraFeedUrl);
+//   };
 
-    img.src = url + `?_t=${Date.now()}`;
-  }, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
+//   const url =
+//     cameraFeedUrl && cameraFeedUrl.trim() !== ''
+//       ? cameraFeedUrl
+//       : '/img/siteimage.jpg';
+
+//   img.src = url + `?_t=${Date.now()}`;
+
+// }, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
+
+useEffect(() => {
+  if (!open) return;
+
+  const canvas = canvasRef.current;
+  if (!canvas) return;
+
+  // ensure canvas sized
+  if (canvasWidth < 100 || canvasHeight < 100) return;
+
+  console.log("Loading frame:", cameraFeedUrl);
+
+  const img = new Image();
+  imageRef.current = img;
+
+  img.onload = () => {
+    console.log("Frame loaded");
+
+    setImageLoaded(true);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  };
+
+  img.onerror = (err) => {
+    console.error("Frame load error", err);
+
+    // retry once
+    setTimeout(() => {
+      img.src = `${cameraFeedUrl}?retry=${Date.now()}`;
+    }, 500);
+  };
+
+  img.src = `${cameraFeedUrl}?t=${Date.now()}`;
+
+}, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
+
+
 
   // ✅ FIX: Redraw canvas when image loads or shapes change (excluding currentShape to avoid flicker)
   useEffect(() => {

@@ -447,7 +447,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
       return '/img/siteimage.jpg';
     }
-    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
   }, [camera?.id, tenantId]);
 
 
@@ -492,23 +492,31 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     );
   };
 
-  useEffect(() => {
-    if (!showCameraView) {
-      setFrameUrl(null);
-      return;
-    }
+  // useEffect(() => {
+  //   if (!showCameraView) {
+  //     setFrameUrl(null);
+  //     return;
+  //   }
 
-    setFrameUrl(getCameraFeedUrl());
-    // setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+  //   setFrameUrl(getCameraFeedUrl());
+  //   // setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
 
-    const interval = setInterval(() => {
-      setFrameUrl(getCameraFeedUrl());
-    }, 1000);
+  //   const interval = setInterval(() => {
+  //     setFrameUrl(getCameraFeedUrl());
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, [showCameraView, getCameraFeedUrl]);
+  //   return () => clearInterval(interval);
+  // }, [showCameraView, getCameraFeedUrl]);
 
+useEffect(() => {
+  if (!showCameraView) {
+    setFrameUrl(null);
+    return;
+  }
 
+  setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+
+}, [showCameraView, getCameraFeedUrl]);
 
 
   function handleCloseSnackbar(): void {
