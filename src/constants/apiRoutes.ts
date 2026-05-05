@@ -58,8 +58,8 @@ export const apiRoutes = {
 
   surveillanceMonitoringDashboard: {
     root: "surveillanceDashboard",
-    getsurveillanceMonitoringDashboardAnalyticsKpi:
-      "get-surveillance-monitoring-dashboard-analytics-kpi",
+    getsurveillanceMonitoringDashboardAnalytics:
+      "get-surveillance-monitoring-dashboard-analytics",
   },
   WorkforceMonitoringDashboard: {
     root: "workforceMonitoringDashboard",
@@ -70,8 +70,8 @@ export const apiRoutes = {
   },
   OperationalMonitoringDashboard: {
     root: "operationalMonitoringDashboard",
-    getOperationalMonitoringDashboardAnalyticsKpi:
-      "get-operational-monitoring-dashboard-analytics-kpi",
+    getOperationalMonitoringDashboardAnalytics:
+      "get-operational-monitoring-dashboard-analytics",
   },
   SafetyMonitoringDashboard: {
     root: "safetyMonitoringDashboard",
@@ -140,6 +140,8 @@ export const apiRoutes = {
       "get-fall-laydown--detection-analytics-download-details-report-for-single-id",
     getFallLaydownDetectionAnalyticsDetailedReportForSingleId:
       "get-fall-laydown-detection-analytics-details-report-for-single-id",
+    getFallDetectionAnalyticsDownloadDetailedCsvReport: 'get-fall-detection-analytics-download-details-csv-report'
+
   },
   fireSmokeDetection: {
     root: "fireSmokeDetection",
@@ -156,6 +158,9 @@ export const apiRoutes = {
       "get-fireSmoke-detection-analytics-download-details-report-for-single-id",
     getFireSmokeDetectionAnalyticsDetailedReportForSingleId:
       "get-fireSmoke-detection-analytics-details-report-for-single-id",
+
+    getFireSmokeDetectionAnalyticsDownloadDetailedCsvReport: 'get-fireSmoke-detection-analytics-download-details-csv-report',
+
   },
   vehicleSpeedMonitoringInsidePremises: {
     root: "vehicleSpeedMonitoringInsidePremises",
@@ -283,20 +288,27 @@ export const apiRoutes = {
   },
   employeePresenceDetectionInCriticalAreas: {
     root: "employeePresenceDetectionInCriticalAreas",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsKpi:
-      "get-employee-presence-detection-in-critical-areas-analytics-kpi",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsRecentVoliations:
-      "get-employee-presence-detection-in-critical-areas-analytics-recent-voliations",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsCameraStatusByZone:
-      "get-employee-presence-detection-in-critical-areas-analytics-camera-status-by-zone",
+      getEmployeePresenceDetectionInCriticalAreasAnalyticsKpiRecentZoneViolation: 'get-employee-presence-detection-in-critical-areas-analytics-kpi-recent-zone-violations',
     getEmployeePresenceDetectionInCriticalAreasAnalyticsDetailedReport:
       "get-employee-presence-detection-in-critical-areas-analytics-details-report",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedReport:
-      "get-employee-presence-detection-in-critical-areas-analytics-download-details-report",
+    getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedpdfReport:
+      "get-employee-presence-detection-in-critical-areas-analytics-download-details-pdf-report",
     getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedReportForSingleId:
       "get-employee-presence-detection-in-critical-areas-analytics-download-details-report-for-single-id",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDetailedReportForSingleId:
-      "get-employee-presence-detection-in-critical-areas-time-monitoring-analytics-details-report-for-single-id",
+    getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedcsvReport:
+      "get-employee-presence-detection-in-critical-areas-analytics-download-details-csv-report",
+  },
+     employeePresenceDetectionInRestrictedAreas: {
+    root: "employeePresenceDetectionInRestrictedAreas",
+      getEmployeePresenceDetectionInRestrictedAreasAnalyticsKpiRecentZoneViolation: 'get-employee-presence-detection-in-restricted-areas-analytics-kpi-recent-zone-violations',
+    getEmployeePresenceDetectionInRestrictedAreasAnalyticsDetailedReport:
+      "get-employee-presence-detection-in-restricted-areas-analytics-details-report",
+    getEmployeePresenceDetectionInRestrictedAreasAnalyticsDownloadDetailedpdfReport:
+      "get-employee-presence-detection-in-restricted-areas-analytics-download-details-pdf-report",
+    getEmployeePresenceDetectionInRestrictedAreasAnalyticsDownloadDetailedReportForSingleId:
+      "get-employee-presence-detection-in-restricted-areas-analytics-download-details-report-for-single-id",
+    getEmployeePresenceDetectionInRestrictedAreasAnalyticsDownloadDetailedcsvReport:
+      "get-employee-presence-detection-in-restricted-areas-analytics-download-details-csv-report",
   },
   mobilePhoneUsageInRestrictedAreas: {
     root: "mobilePhoneUsageInRestrictedAreas",
@@ -315,22 +327,17 @@ export const apiRoutes = {
     getMobilePhoneUsageInRestrictedAreasAnalyticsDetailedReportForSingleId:
       "get-mobile-phone-usage-in-restricted-areas-time-monitoring-analytics-details-report-for-single-id",
   },
-  peopleCountInFactoryPremisesBasedOnEntryExitCounting: {
-    root: "peopleCountInFactoryPremisesBasedOnEntryExitCounting",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsKpi:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-kpi",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsRecentVoliations:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-recent-voliations",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsCameraStatusByZone:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-camera-status-by-zone",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDetailedReport:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-details-report",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedReport:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-download-details-report",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDownloadDetailedReportForSingleId:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-download-details-report-for-single-id",
-    getEmployeePresenceDetectionInCriticalAreasAnalyticsDetailedReportForSingleId:
-      "get-people-count-in-factory-premises-based-on-entry-exit-counting-analytics-details-report-for-single-id",
+  peopleCountInFactoryPremises: {
+    root: 'peopleCountInFactoryPremises',
+    getPeopleCountInFactoryPremisesKpiZoneRecentViolation: 'get-people-count-in-factory-premises-kpi-zone-recent-violation',
+    getPeopleCountInFactoryPremisesDetailedReport: 'get-people-count-in-factory-premises-details-report',
+    getPeopleCountInFactoryPremisesDownloadDetailedPdfReport:
+      'get-people-count-in-factory-download-details-pdf-report',
+          getPeopleCountInFactoryPremisesDownloadDetailedcsvReport:
+      "get-employee-presence-detection-in-critical-areas-analytics-download-details-csv-report",
+
+    getPeopleCountInFactoryPremisesDownloadDetailedReportForSingleId:
+      'get-people-count-in-factory-download-details-report-for-single-id',
   },
   sleepingOrAbsenceOfSecurityPersonnel: {
     root: "sleepingOrAbsenceOfSecurityPersonnel",
@@ -403,16 +410,20 @@ export const apiRoutes = {
   },
 
   unauthorizedAccessInRestrictedAreas: {
-    getUnauthorizedAccessInRestrictedAreasAnalyticsKpi:
-      "get-unauthorized-access-in-restricted-areas-analytics-kpi",
+    root :"unauthorizedAccessInRestrictedAreas",
+    getUnauthorizedAccessInRestrictedAreasAnalyticsData:
+      "get-unauthorized-access-in-restricted-areas-analytics-data",
     getUnauthorizedAccessInRestrictedAreasAnalyticsRecentViolations:
       "get-unauthorized-access-in-restricted-areas-analytics-recent-violations",
     getUnauthorizedAccessInRestrictedAreasAnalyticsCameraStatusByZone:
       "get-unauthorized-access-in-restricted-areas-analytics-camera-status-by-zone",
     getUnauthorizedAccessInRestrictedAreasAnalyticsDetailedReport:
       "get-unauthorized-access-in-restricted-areas-analytics-details-report",
-    getUnauthorizedAccessInRestrictedAreasAnalyticsDownloadDetailedReport:
-      "get-unauthorized-access-in-restricted-areas-analytics-download-details-report",
+    getUnauthorizedAccessInRestrictedAreasAnalyticsDownloadPdfDetailedReport:
+      "get-unauthorized-access-in-restricted-areas-analytics-download-pdf-details-report",
+          getUnauthorizedAccessInRestrictedAreasAnalyticsDownloadCSVDetailedReport:
+      "get-unauthorized-access-in-restricted-areas-analytics-download-csv-details-report",
+
     getUnauthorizedAccessInRestrictedAreasAnalyticsDownloadDetailedReportForSingleId:
       "get-unauthorized-access-in-restricted-areas-analytics-download-details-report-for-single-id",
     getUnauthorizedAccessInRestrictedAreasAnalyticsDetailedReportForSingleId:

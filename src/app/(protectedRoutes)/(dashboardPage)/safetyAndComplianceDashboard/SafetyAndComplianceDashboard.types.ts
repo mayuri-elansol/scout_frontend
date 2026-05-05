@@ -1,4 +1,3 @@
-import { SafetyMonitoringConfig } from "./SafetyAndComplianceDashboardConfig";
 
 // ─── Shared ───────────────────────────────────────────────────────────────────
 
@@ -19,8 +18,10 @@ export interface KpiData {
 // ─── Fire & Smoke ─────────────────────────────────────────────────────────────
 
 export interface FireSmokeBucket {
-  label: string;
-  fireCount: number;
+  date: string;
+  time?: string;      // hour granularity only
+  day?: string;  
+    fireCount: number;
   smokeCount: number;
 }
 
@@ -29,11 +30,34 @@ export interface FireSmokeZoneWiseCount {
   smoke: Record<string, number>;
 }
 
-export interface FireSmokeGraphData {
-  granularity: "hour" | "weekday" | "week";
-  buckets: FireSmokeBucket[];
-  zoneWiseCount: FireSmokeZoneWiseCount;
+export interface PieData {
+  label: string;
+  value: number;
+  color: string;
 }
+
+export interface FireSmokeGraphData {
+  granularity: "hour" | "weekday" | "week";  
+  series: FireSmokeBucket[];             
+  hazardTypePieData: PieData[];
+  zoneWisePieData: PieData[];
+}
+export interface PPEKitBucket {
+  date:string;
+  time?:string;
+  day?:string;
+  vest: number;
+  helmet: number;
+  glasses:number;
+}
+
+export interface PPEGraphData {
+  granularity: "hour" | "weekday" | "week";
+  series: PPEKitBucket[];
+  violationTypePieData: PieData[];
+  zoneWisePieData: PieData[];
+}
+
 
 // ─── Fall / Laydown ───────────────────────────────────────────────────────────
 
@@ -45,8 +69,9 @@ export interface FallLaydownSeriesPoint {
 export interface FallLaydownGraphData {
   granularity: "hour" | "weekday" | "week";
   series: FallLaydownSeriesPoint[];
-  zoneWiseCount: Record<string, number>;
+  zoneWisePieData: PieData[];
 }
+
 
 // ─── Empty Graph (PPE, Vehicle, Emergency Exit, Crowd) ────────────────────────
 
@@ -61,8 +86,14 @@ export type GraphData =
 
 // ─── Per-title response shapes ────────────────────────────────────────────────
 
+export interface PPEKitDetectionResponse {
+  title: "PPE Violations";
+  kpi: KpiData;
+  graphs: { data: PPEGraphData };
+}
+
 export interface FireSmokeResponse {
-  title: "Fire & Smoke  Alerts";
+  title: "Fire & Smoke Alerts";
   kpi: KpiData;
   graphs: { data: FireSmokeGraphData };
 }
@@ -86,6 +117,7 @@ export interface EmptyDataResponse {
 // ─── Main Union Type ──────────────────────────────────────────────────────────
 
 export type SurveillanceDashboardResponse =
+  | PPEKitDetectionResponse
   | FireSmokeResponse
   | FallLaydownResponse
   | EmptyDataResponse;

@@ -8,8 +8,8 @@ import {
 } from "@mui/icons-material";
 
 import RestaurantIcon from "@mui/icons-material/Restaurant";
-export const WorkforceMonitoringConfig = {
-  "People Count": {
+export const OperationalInsightsConfig = {
+  "People Inside": {
     icon: People,
     route: "/peopleCountPage",
     tooltipMessage:

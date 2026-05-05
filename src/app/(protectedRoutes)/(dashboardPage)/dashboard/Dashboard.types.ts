@@ -11,7 +11,7 @@ export interface KpiCard {
   lastDetectionTime?: string;
 }
 export interface CameraTamperingKpiCard {
-  title: keyof typeof CameraTamperingDashboardConfig;
+  title: string;
   colour: "red" | "green" | "gray" | "blue";
   violationsCount?: number;
 }
@@ -26,35 +26,23 @@ export interface DashboardItem {
   graphs: DashboardGraphs;
 }
 
+
 export interface MainDashboardResponse {
-  surveillance: DashboardItem[];
-  workforce: DashboardItem[];
-  safety: DashboardItem[];
-  operational: DashboardItem[];
-  cameraTampering: CameraTamperingKpiCard[];
+  surveillance: KpiCard[];
+  workforce: KpiCard[];
+  safety: KpiCard[];
+  operational: KpiCard[];
+  cameraTampering: KpiCard[];
 }
-export interface MainDashboardResponse {
-  title: keyof typeof MainDashboardConfig;
-  enabled?: boolean;
-  kpi: {
-    title: string;
-    colour: "red" | "green" | "blue" | "gray";
-    violationsCount?: number;
-    lastDetection?: string;
-    lastDetectionTime?: string;
-  };
-  graphs?: {
-    data?: {
-      gate: string;
-      idleCount: number;
-      workingCount: number;
-      notPresentCount: number;
-    }[];
-  };
-}
+
+
 export interface DashboardMonitoringSocketPayload {
   type: "MAIN_DASHBOARD_UPDATE";
   tenantId: string;
   serverTimestamp: string;
-  data: MainDashboardResponse;
+ data: {
+    dashboard: MainDashboardResponse;
+    cameraTampering: CameraTamperingKpiCard[];
+  };
+
 }

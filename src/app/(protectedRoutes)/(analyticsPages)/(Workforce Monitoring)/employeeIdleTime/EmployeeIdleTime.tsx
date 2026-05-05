@@ -72,6 +72,8 @@ const EmployeeIdleTime: React.FC = () => {
 
   const [employeeIdleTimeDetailedReport, setEmployeeIdleTimeDetailedReport] =
     useState<EmployeeIdleTimeDetailedReportResponse | null>(null);
+  const [isExporting, setIsExporting] = useState(false);//report loader
+  const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
 
   /* ---------- API HOOKS ---------- */
 
@@ -290,7 +292,9 @@ const EmployeeIdleTime: React.FC = () => {
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: EmployeeIdelTimeFilterParams) => {
       try {
+        setIsExporting(true)
         const payload = {
+
           tenantId,
           violation: filters.violation || undefined,
           zone: filters.zone || undefined,
@@ -310,6 +314,8 @@ const EmployeeIdleTime: React.FC = () => {
         }
       } catch (error) {
         console.error("❌ Export failed:", error);
+      } finally {
+        setIsExporting(false)
       }
     },
     [
@@ -321,10 +327,13 @@ const EmployeeIdleTime: React.FC = () => {
   );
 
   const handleDownloadSingle = useCallback(
-    async (row: EmployeeIdleTimeViolation) => {
+    async (row: EmployeeIdleTimeViolation, index: number) => {
       try {
-        console.log("row for the employee idel time", row);
-        const payload = {
+        setDownloadingRows((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(index);
+          return newSet;
+        }); const payload = {
           tenantId,
           violation: String(row.violation),
           zone: row.zone,
@@ -336,6 +345,12 @@ const EmployeeIdleTime: React.FC = () => {
         await downloadEmpIdelTimeSinglePdf(payload);
       } catch (error) {
         console.error("❌ Single PDF download failed", error);
+      } finally {
+        setDownloadingRows((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
       }
     },
     [tenantId, downloadEmpIdelTimeSinglePdf],
@@ -380,21 +395,21 @@ const EmployeeIdleTime: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {EmployeeIdelTimeKpiLoading || !employeeIdleTimeKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
-                <Grid
-                  key={index + 1}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
+              <Grid
+                key={index + 1}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
             : employeeIdleTimeKpiData.map((kpi) => (
-                <Grid
-                  key={kpi.title}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
         </Grid>
 
         <Grid container spacing={3}>
@@ -428,9 +443,12 @@ const EmployeeIdleTime: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        onDownload={(row) =>
-          handleDownloadSingle(row as EmployeeIdleTimeViolation)
+        exportLoading={isExporting}
+
+        onDownload={(row, index) =>
+          handleDownloadSingle(row as EmployeeIdleTimeViolation, index)
         }
+        downloadingRows={downloadingRows}
         onView={(row) => handleViewSingle(row as EmployeeIdleTimeViolation)}
         downloadFileName="employee-idle-time-report"
         loading={EmployeeIdelTimeDetailedReportLoading}

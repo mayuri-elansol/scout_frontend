@@ -87,5 +87,16 @@ export const baseProtectedApi = createApi({
     "FallLaydownDetectionZoneViolations",
     "FallLaydownDetectionDetailedReport",
     "FallLaydownDetectionRecentViolations",
+    "UnauthorizedAccessData",
+    "UnauthorizedAccessDetailedReport",
+    "EmployeePresenceCriticalAreaData",
+    "EmployeePresenceCriticalAreaDetailedReport",
+    "EmployeePresenceRestrictedAreaDetailedReport",
+    "EmployeePresenceRestrictedAreaData",
+    "PeopleCountData",
+    "PeopleCountDetailedReport",
+    "OperationalDashboardData"
+    
+
   ],
 });

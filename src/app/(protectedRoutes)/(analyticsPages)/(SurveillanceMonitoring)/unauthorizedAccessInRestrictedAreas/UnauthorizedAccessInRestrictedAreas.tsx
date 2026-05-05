@@ -1,91 +1,88 @@
 
-
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import { Box, Grid, Paper, Typography } from "@mui/material";
-import { Groups } from "@mui/icons-material";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import { v4 as uuidv4 } from "uuid";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { Groups } from "@mui/icons-material";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import {
-  
-  useGetOrgShiftTimeEmpCriticalDataQuery,
-  useGetEmployeePresenceCriticalAreaDetailedCsvReportMutation,
-  useGetEmployeePresenceCriticalAreaDetailedPdfReportMutation,
-  useGetEmployeePresenceCriticalAreaSingleReportPdfMutation,
-  useLazyGetEmployeePresenceCriticalAreaDataQuery,
-  useLazyGetEmployeePresenceCriticalAreaDetailedReportQuery,
-} from "./EmployeePresenceCriticalAreaApi";
 import { RootState } from "@/app/store/store";
 import { useSelector } from "react-redux";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
-import { EmployeePresenceCriticalAreaKpiConfig } from "./EmployeePresenceCriticalAreaConfig";
+
+import {
+  useGetOrgShiftTimeUnauthorizedAccessInRestrictedAreasDataQuery,
+  useGetUnauthorizedAccessInRestrictedAreasDetailedCsvReportMutation,
+  useGetUnauthorizedAccessInRestrictedAreasDetailedPdfReportMutation,
+  useGetUnauthorizedAccessInRestrictedAreasSingleReportPdfMutation,
+  useLazyGetUnauthorizedAccessInRestrictedAreasDataQuery,        // ← single lazy: returns { kpi, zoneViolations, recentViolations }
+  useLazyGetUnauthorizedAccessInRestrictedAreasDetailedReportQuery,
+} from "./UnauthorizedAccessInRestrictedAreasApi";
+import { UnauthorizedAccessConfig } from "./UnauhtorizedAccessInRestrictedAreaConfig";
 import {
   KpiTitle,
-  EmployeePresenceCriticalAreaDetailedReportResponse,
-  EmployeePresenceCriticalAreaFilterParams,
-  EmployeePresenceCriticalAreaViolation,
-  EmployeePresenceCriticalAreaKpiItem,
-  EmployeePresenceCriticalAreaZoneViolation,
-  EmployeePresenceCriticalAreaSocketPayload,
-} from "./EmployeePresenceCriticalArea.types";
+  UnauthorizedAccessInRestrictedAreasDetailedReportResponse,
+  UnauthorizedAccessInRestrictedAreasFilterParams,
+  UnauthorizedAccessInRestrictedAreasViolation,
+  UnauthorizedAccessInRestrictedAreasKpiItem,
+  UnauthorizedAccessInRestrictedAreasZoneViolation,
+  UnauthorizedAccessInRestrictedAreasSocketPayload,
+} from "./UnauthorizedAccessInRestrictedAreas.types";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 
-const EmployeePresence: React.FC = () => {
+const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const tenantId: string = user?.org_id ?? "";
 
   /* ---------- STATE ---------- */
-  const [filters, setFilters] =
-    useState<EmployeePresenceCriticalAreaFilterParams>({});
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const [unauthorizedAccessFilters, setUnauthorizedAccessFilters] =
+    useState<UnauthorizedAccessInRestrictedAreasFilterParams>({});
+  const [unauthorizedAccessPage, setUnauthorizedAccessPage] = useState(0);
+  const [unauthorizedAccessLimit, setUnauthorizedAccessLimit] = useState(10);
   const [isExporting, setIsExporting] = useState(false);
   const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
-    useState<EmployeePresenceCriticalAreaViolation | null>(null);
+    useState<UnauthorizedAccessInRestrictedAreasViolation | null>(null);
 
   // Live mode flag — false when time filter range is active
   const [isLiveMode, setIsLiveMode] = useState(true);
 
   // Overview display state — fed by initial fetch, time filter fetch, OR socket
-  const [displayKpi, setDisplayKpi] = useState<EmployeePresenceCriticalAreaKpiItem[]>([]);
-  const [displayZoneViolations, setDisplayZoneViolations] = useState<EmployeePresenceCriticalAreaZoneViolation[]>([]);
-  const [recentViolationsLive, setRecentViolationsLive] = useState<EmployeePresenceCriticalAreaViolation[]>([]);
+  const [displayKpi, setDisplayKpi] = useState<UnauthorizedAccessInRestrictedAreasKpiItem[]>([]);
+  const [displayZoneViolations, setDisplayZoneViolations] = useState<UnauthorizedAccessInRestrictedAreasZoneViolation[]>([]);
+  const [recentViolationsLive, setRecentViolationsLive] = useState<UnauthorizedAccessInRestrictedAreasViolation[]>([]);
 
   const [detailedReport, setDetailedReport] =
-    useState<EmployeePresenceCriticalAreaDetailedReportResponse | null>(null);
+    useState<UnauthorizedAccessInRestrictedAreasDetailedReportResponse | null>(null);
 
   /* ---------- API HOOKS ---------- */
   const { data: orgShifts } =
-    useGetOrgShiftTimeEmpCriticalDataQuery(
+    useGetOrgShiftTimeUnauthorizedAccessInRestrictedAreasDataQuery(
       { tenantId },
       { skip: !tenantId },
     );
 
   // One call → gets kpi + zoneViolations + recentViolations together
   const [fetchOverviewData, { isFetching: overviewLoading }] =
-    useLazyGetEmployeePresenceCriticalAreaDataQuery();
+    useLazyGetUnauthorizedAccessInRestrictedAreasDataQuery();
 
   const [fetchDetailedReportApi, { isFetching: detailedReportLoading }] =
-    useLazyGetEmployeePresenceCriticalAreaDetailedReportQuery();
+    useLazyGetUnauthorizedAccessInRestrictedAreasDetailedReportQuery();
 
   const [downloadSinglePdf] =
-    useGetEmployeePresenceCriticalAreaSingleReportPdfMutation();
+    useGetUnauthorizedAccessInRestrictedAreasSingleReportPdfMutation();
   const [downloadCsvReport] =
-    useGetEmployeePresenceCriticalAreaDetailedCsvReportMutation();
+    useGetUnauthorizedAccessInRestrictedAreasDetailedCsvReportMutation();
   const [downloadPdfReport] =
-    useGetEmployeePresenceCriticalAreaDetailedPdfReportMutation();
+    useGetUnauthorizedAccessInRestrictedAreasDetailedPdfReportMutation();
 
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
@@ -104,32 +101,39 @@ const EmployeePresence: React.FC = () => {
     if (!tenantId) return;
     const loadDetailedReport = async () => {
       const alarmValue =
-        filters?.alarmTriggered === undefined
+        unauthorizedAccessFilters?.alarmTriggered === undefined
           ? undefined
-          : filters.alarmTriggered === "True";
+          : unauthorizedAccessFilters.alarmTriggered === "True";
 
       const body = {
         tenantId,
-        page: page + 1,
-        limit,
-        zone: filters?.zone || undefined,
-        cameraName: filters?.camera|| undefined,
+        page: unauthorizedAccessPage + 1,
+        limit: unauthorizedAccessLimit,
+        zone: unauthorizedAccessFilters?.zone || undefined,
+        cameraName: unauthorizedAccessFilters?.cameraName || undefined,
         alarmTriggered: alarmValue,
-        startDate: formatLocalDateTime(filters?.startDate),
-        endDate: formatLocalDateTime(filters?.endDate),
+        startDate: formatLocalDateTime(unauthorizedAccessFilters?.startDate),
+        endDate: formatLocalDateTime(unauthorizedAccessFilters?.endDate),
       };
       const response = await fetchDetailedReportApi(body).unwrap();
       setDetailedReport(response);
     };
     loadDetailedReport().catch(console.error);
-  }, [tenantId, page, limit, filters, fetchDetailedReportApi]);
+  }, [
+    tenantId,
+    unauthorizedAccessPage,
+    unauthorizedAccessLimit,
+    unauthorizedAccessFilters,
+    fetchDetailedReportApi,
+  ]);
 
   /* ---------- SOCKET — only active in live mode ---------- */
-  useSocketEvent<EmployeePresenceCriticalAreaSocketPayload>({
+  useSocketEvent<UnauthorizedAccessInRestrictedAreasSocketPayload>({
     tenantId,
     enabled: isLiveMode,
-    event: SOCKET_EVENTS.EMPLOYEE_PRESENCE_DETECTION_IN_CRITICAL_AREAS_UPDATE,
+    event: SOCKET_EVENTS.UNAUTHORIZED_ACCESS_IN_RESTRICTED_AREAS_UPDATE,
     handler: (payload) => {
+      // Payload shape is identical to the API response: { kpi, zoneViolations, recentViolations }
       setDisplayKpi(payload.kpi ?? []);
       setDisplayZoneViolations(payload.zoneViolations ?? []);
       setRecentViolationsLive(payload.recentViolations ?? []);
@@ -166,7 +170,7 @@ const EmployeePresence: React.FC = () => {
   /* ---------- DERIVED DATA ---------- */
   const kpiData = useMemo(() => {
     return displayKpi.map((item) => {
-      const config = EmployeePresenceCriticalAreaKpiConfig[item.title as KpiTitle];
+      const config = UnauthorizedAccessConfig[item.title as KpiTitle];
       return {
         title: item.title,
         value: item.value,
@@ -200,43 +204,75 @@ const EmployeePresence: React.FC = () => {
 
   /* ---------- HANDLERS ---------- */
   const handleSubmitFilter = useCallback(
-    (newFilters: EmployeePresenceCriticalAreaFilterParams) => {
-      setPage(0);
-      setFilters(newFilters);
+    (filters: UnauthorizedAccessInRestrictedAreasFilterParams) => {
+      setUnauthorizedAccessPage(0);
+      setUnauthorizedAccessFilters(filters);
     },
     [],
   );
 
   const handleReset = useCallback(() => {
-    setFilters({});
-    setPage(0);
+    setUnauthorizedAccessFilters({});
+    setUnauthorizedAccessPage(0);
   }, []);
 
-  const handleExport = useCallback(
-    async (format: "csv" | "pdf", exportFilters: EmployeePresenceCriticalAreaFilterParams) => {
+  // const handleExport = useCallback(
+  //   async (format: "csv" | "pdf", filters: UnauthorizedAccessInRestrictedAreasFilterParams) => {
+  //     try {
+  //       setIsExporting(true);
+  //       const payload = {
+  //         tenantId,
+  //         zone: filters.zone || "undefined",
+  //         camera: filters.cameraName || "undefined",
+  //         startDate: formatLocalDateTime(filters.startDate),
+  //         endDate: formatLocalDateTime(filters.endDate),
+  //       };
+  //       if (format === "csv") await downloadCsvReport(payload);
+  //       if (format === "pdf") await downloadPdfReport(payload).unwrap();
+  //     } catch (error) {
+  //       console.error("❌ Export failed:", error);
+  //     } finally {
+  //       setIsExporting(false);
+  //     }
+  //   },
+  //   [tenantId, downloadCsvReport, downloadPdfReport],
+  // );
+ const handleExport = useCallback(
+    async (format: "csv" | "pdf", filters: UnauthorizedAccessInRestrictedAreasFilterParams) => {
       try {
         setIsExporting(true);
         const payload = {
           tenantId,
-          zone: exportFilters.zone || undefined,
-          camera: exportFilters.camera || undefined,
-          startDate: formatLocalDateTime(exportFilters.startDate),
-          endDate: formatLocalDateTime(exportFilters.endDate),
+          zone: filters.zone || undefined,
+          camera: filters.cameraName || undefined,
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
         };
 
-        if (format === "csv") await downloadCsvReport(payload);
-        if (format === "pdf") await downloadPdfReport(payload).unwrap();
+        // ================= CSV =================
+        if (format === "csv") {
+          await downloadCsvReport(payload);
+        }
+
+        // ================= PDF =================
+        if (format === "pdf") {
+          await downloadPdfReport(payload).unwrap();
+        }
       } catch (error) {
         console.error("❌ Export failed:", error);
-      } finally {
+      }finally{
         setIsExporting(false);
       }
     },
-    [tenantId, downloadCsvReport, downloadPdfReport],
+    [
+      tenantId,
+      downloadCsvReport,
+      downloadPdfReport,
+      formatLocalDateTime,
+    ],
   );
-
   const handleDownloadSingle = useCallback(
-    async (row: EmployeePresenceCriticalAreaViolation, index: number) => {
+    async (row: UnauthorizedAccessInRestrictedAreasViolation, index: number) => {
       try {
         setDownloadingRows((prev) => new Set(prev).add(index));
         await downloadSinglePdf({
@@ -262,7 +298,7 @@ const EmployeePresence: React.FC = () => {
   );
 
   const handleViewSingle = useCallback(
-    (row: EmployeePresenceCriticalAreaViolation) => {
+    (row: UnauthorizedAccessInRestrictedAreasViolation) => {
       setViewPopupData(row);
       setViewPopupOpen(true);
     },
@@ -271,7 +307,7 @@ const EmployeePresence: React.FC = () => {
 
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;
-    const v = violation as EmployeePresenceCriticalAreaViolation;
+    const v = violation as UnauthorizedAccessInRestrictedAreasViolation;
     try {
       await downloadSinglePdf({
         tenantId,
@@ -318,7 +354,7 @@ const EmployeePresence: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
-              tooltipMessage="Latest 20 violations where employee entered in critical areas with details."
+              tooltipMessage="Latest 20 detected unauthorized access incidents with details."
               violations={recentViolationsLive}
               loading={overviewLoading}
               onDownload={handleDownloadViolation}
@@ -328,7 +364,7 @@ const EmployeePresence: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsForUi}
               loading={overviewLoading}
-              tooltipMessage="Shows employee entered in critical zone"
+              tooltipMessage="Shows unauthorized access incidents per zone"
             />
           </Grid>
         </Grid>
@@ -337,7 +373,7 @@ const EmployeePresence: React.FC = () => {
       {/* Detailed Report Table */}
       <ReportTable
         title="Detailed Report"
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed unauthorized access report with filter, reset, and CSV/PDF download options."
         data={detailedReport?.data || []}
         columns={tableColumns}
         filters={tableFilters}
@@ -346,19 +382,19 @@ const EmployeePresence: React.FC = () => {
         onExport={handleExport}
         exportLoading={isExporting}
         onDownload={(row, index) =>
-          handleDownloadSingle(row as EmployeePresenceCriticalAreaViolation, index)
+          handleDownloadSingle(row as UnauthorizedAccessInRestrictedAreasViolation, index)
         }
         downloadingRows={downloadingRows}
-        onView={(row) => handleViewSingle(row as EmployeePresenceCriticalAreaViolation)}
-        downloadFileName="employee-presence-critical-report"
+        onView={(row) => handleViewSingle(row as UnauthorizedAccessInRestrictedAreasViolation)}
+        downloadFileName="unauthorized-access-report"
         loading={detailedReportLoading}
         totalCount={detailedReport?.total || 0}
-        page={page}
-        rowsPerPage={limit}
-        onPageChange={(newPage) => setPage(newPage)}
+        page={unauthorizedAccessPage}
+        rowsPerPage={unauthorizedAccessLimit}
+        onPageChange={(newPage) => setUnauthorizedAccessPage(newPage)}
         onRowsPerPageChange={(rows) => {
-          setLimit(rows);
-          setPage(0);
+          setUnauthorizedAccessLimit(rows);
+          setUnauthorizedAccessPage(0);
         }}
       />
 
@@ -377,4 +413,4 @@ const EmployeePresence: React.FC = () => {
   );
 };
 
-export default EmployeePresence;
+export default UnauthorizedAccessInRestrictedAreas;

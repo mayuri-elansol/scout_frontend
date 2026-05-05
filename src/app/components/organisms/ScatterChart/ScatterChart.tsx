@@ -11,6 +11,7 @@ interface HourData {
 
 interface ZoneSeries {
   zone: string;
+  color:string;
   data: HourData[];
 }
 
@@ -32,10 +33,6 @@ interface Props {
   readonly item: ApiItem; // Pass any single card object
 }
 // Function to generate pastel colors
-const generatePastelColor = (index: number, total: number) => {
-  const hue = (index * 360) / total;
-  return `hsl(${hue}, 70%, 80%)`;
-};
 
 export default function DynamicViolationScatterChart({ item }: Props) {
   const zoneSeries = useMemo(
@@ -73,7 +70,7 @@ export default function DynamicViolationScatterChart({ item }: Props) {
     return zoneSeries.map((zoneItem, index) => ({
       label: zoneItem.zone,
       markerSize: 8,
-      color: generatePastelColor(index, zoneSeries.length),
+      color: zoneItem.color ,
       valueFormatter: (params) => formatScatterValue(params, yLabels, name),
       data: zoneItem.data
         .filter((d) => d.count > 0)

@@ -65,6 +65,9 @@ const IntrusionDetection: React.FC = () => {
   const [viewPopupData, setViewPopupData] = useState<IntrusionViolation | null>(
     null,
   );
+  const [isExporting, setIsExporting] = useState(false);//report loader
+    const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
+  
 
   /*-------intrusion api ----------*/
 
@@ -227,14 +230,13 @@ const IntrusionDetection: React.FC = () => {
     }));
   }, [displayIntrusionZoneViolations]);
 
-  // recent violation
+  // download report
   const handleDownloadIntrusionViolation = async (
     url: string,
     violation: Violation,
   ) => {
     if (!violation) return;
     const IntrusionViolation = violation as IntrusionViolation;
-    console.log("intruion incident violation", IntrusionViolation);
     try {
       const payload = {
         tenantId: tenantId,
@@ -304,6 +306,7 @@ const IntrusionDetection: React.FC = () => {
   const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: IntrusionFilterParams) => {
       try {
+        setIsExporting(true)
         const payload = {
           tenantId,
           zone: filters.zone || undefined,
@@ -329,6 +332,8 @@ const IntrusionDetection: React.FC = () => {
         }
       } catch (error) {
         console.error("❌ Export failed:", error);
+      }finally{
+          setIsExporting(false)
       }
     },
     [
@@ -340,9 +345,13 @@ const IntrusionDetection: React.FC = () => {
   );
 
   const handleDownloadSingle = useCallback(
-    async (row: IntrusionViolation) => {
-      console.log("download single row=================", row);
+    async (row: IntrusionViolation,index:number) => {
       try {
+        setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(index);
+      return newSet;
+    });
         const payload = {
           tenantId,
           violation: String(row.incident ?? row.violation),
@@ -356,6 +365,12 @@ const IntrusionDetection: React.FC = () => {
         await downloadIntrusionSinglePdf(payload);
       } catch (error) {
         console.error("❌ Single PDF download failed", error);
+      }finally {
+       setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
       }
     },
     [tenantId, downloadIntrusionSinglePdf],
@@ -432,7 +447,10 @@ const IntrusionDetection: React.FC = () => {
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        onDownload={(row) => handleDownloadSingle(row as IntrusionViolation)}
+                exportLoading={isExporting}
+
+        onDownload={(row,index) => handleDownloadSingle(row as IntrusionViolation,index)}
+        downloadingRows={downloadingRows}
         onView={(row) => handleViewSingle(row as IntrusionViolation)}
         downloadFileName="intrusion-violations-report"
         loading={intrusionreportLoading}

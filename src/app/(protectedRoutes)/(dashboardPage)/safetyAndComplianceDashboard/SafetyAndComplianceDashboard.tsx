@@ -17,6 +17,9 @@ import { useSelector } from "react-redux";
 import { FEATURE } from "@/app/config/featureRegistry";
 import { useTranslation } from "react-i18next";
 import {
+  FireSmokeBucket,
+  FireSmokeGraphData,
+  PPEGraphData,
   SafetySocketPayload,
   SurveillanceDashboardResponse,
 } from "./SafetyAndComplianceDashboard.types";
@@ -30,6 +33,7 @@ import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import TimeScaleLineChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart";
 const SafetyAndComplianceDashboard: React.FC = () => {
   const { t } = useTranslation();
   const { user, features } = useSelector((state: RootState) => state.auth);
@@ -64,21 +68,22 @@ const SafetyAndComplianceDashboard: React.FC = () => {
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
 
-  useSocketEvent<SafetySocketPayload>({
-    tenantId,
-    enabled: isSafetyDashboardLiveMode,
-    event: SOCKET_EVENTS.SAFETY_DASHBOARD_UPDATE,
-    handler: (payload) => {
-      console.log("📡 Safety socket payload:", payload);
 
-      // Safety check
-      if (!payload?.data) return;
+  // ✅ Fix — stable handler reference
+const handleSafetySocketUpdate = useCallback(
+  (payload: SafetySocketPayload) => {
+    if (!payload?.data) return;
+    setDisplaySafetyKpi(payload.data);
+  },
+  [], // no deps needed — setDisplaySafetyKpi is stable
+);
 
-      // Update full dashboard (KPI + graphs)
-      setDisplaySafetyKpi(payload.data);
-    },
-  });
-
+useSocketEvent<SafetySocketPayload>({
+  tenantId,
+  enabled: isSafetyDashboardLiveMode,
+  event: SOCKET_EVENTS.SAFETY_DASHBOARD_UPDATE,
+  handler: handleSafetySocketUpdate,
+});
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
@@ -118,96 +123,95 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     });
   }, [displaySafetyKpi, t]);
 
-  const ppeDashboard = displaySafetyKpi.find(
-    (d) => d.title === "PPE Violations",
-  );
+
   const fireSmokeDashboard = displaySafetyKpi.find(
-    (d) => d.title === "Fire & Smoke  Alerts",
+    (d) => d.title === "Fire & Smoke Alerts",
   );
 
-  const vehicleInWalkwaysDashboard = displaySafetyKpi.find(
-    (d) => d.title === "Vehicle In Walkways",
-  );
+
   const fallLaydownDashboard = displaySafetyKpi.find(
     (d) => d.title === "Fall / Laydown Alerts",
   );
 
-  const emergencyExitBlockageDashboard = displaySafetyKpi.find(
-    (d) => d.title === "Emergency Exit Blockage",
+
+  const ppeDashboard = displaySafetyKpi.find(
+  (d) => d.title === "PPE Violations"
+);
+
+const graphDataForPPE =
+  ppeDashboard?.graphs?.data &&
+  typeof ppeDashboard.graphs.data === "object" &&
+  !Array.isArray(ppeDashboard.graphs.data) &&
+  "violationTypePieData" in ppeDashboard.graphs.data
+    ? (ppeDashboard.graphs.data as PPEGraphData)
+    : undefined;
+
+// ✅ Now safe
+const ppeViolationTypePieData =
+  graphDataForPPE?.violationTypePieData ?? [];
+const ppeZoneWisePieData =
+  graphDataForPPE?.zoneWisePieData ?? [];
+
+
+
+// ✅ ppe graph
+const ppeSeries = graphDataForPPE?.series ?? [];
+const ppeXAxisDates  = ppeSeries.map((item) => item.date ?? "");   // "28/04", "29/04"
+const ppeXAxisTimes  = ppeSeries.map((item) => item.time ?? item.day ?? ""); // "15:00" or "Mon"
+const ppeGranularity = graphDataForPPE?.granularity ?? "hour";
+
+
+
+  //graph data for fire smoke detection
+const graphDataForFireSmoke =
+  fireSmokeDashboard?.graphs?.data &&
+  typeof fireSmokeDashboard.graphs.data === "object" &&
+  !Array.isArray(fireSmokeDashboard.graphs.data) &&
+  "hazardTypePieData" in fireSmokeDashboard.graphs.data
+    ? (fireSmokeDashboard.graphs.data as FireSmokeGraphData)
+    : undefined;
+
+const fireSmokeGranularity = graphDataForFireSmoke?.granularity ?? "hour";
+const fireSmokeSeries      = graphDataForFireSmoke?.series ?? [];
+
+const fireSmokeXAxisDates = fireSmokeSeries.map((item: FireSmokeBucket) => item.date ?? "");
+const fireSmokeXAxisTimes = fireSmokeSeries.map((item: FireSmokeBucket) => item.time ?? item.day ?? "");
+
+
+
+  const hazardTypePieData = graphDataForFireSmoke?.hazardTypePieData ?? [];
+  const zoneWisePieData = graphDataForFireSmoke?.zoneWisePieData ?? [];
+
+  const totalHazardType = hazardTypePieData.reduce(
+    (sum, item) => sum + item.value,
+    0
   );
-  const crowdGatheringDashboard = displaySafetyKpi.find(
-    (d) => d.title === "Crowd Gathering Alerts",
-  );
-  const fireSmokeBuckets = fireSmokeDashboard?.graphs?.data?.buckets ?? [];
-  const fireSmokeZoneWise = fireSmokeDashboard?.graphs?.data?.zoneWiseCount;
 
-  const fireSmokeHourlyData = fireSmokeBuckets.map((b: any) => ({
-    time: b.label,
-    fire: b.fireCount,
-    smoke: b.smokeCount,
-    gas: 0,
-    oil: 0,
-  }));
 
-  const totalFire = Object.values(fireSmokeZoneWise?.fire ?? {}).reduce(
-    (a: number, b) => a + (b as number),
-    0,
-  );
-  const totalSmoke = Object.values(fireSmokeZoneWise?.smoke ?? {}).reduce(
-    (a: number, b) => a + (b as number),
-    0,
-  );
-  const totalHazard = totalFire + totalSmoke;
 
-  const hazardTypePieData = [
-    { label: "Fire", value: totalFire, color: "#ffcdd2" },
-    { label: "Smoke", value: totalSmoke, color: "#FFCBB3" },
-  ];
+  //graph data for fall detection
+  const graphDataForFallDetection =
+    fallLaydownDashboard?.graphs?.data &&
+      !Array.isArray(fallLaydownDashboard.graphs.data)
+      ? fallLaydownDashboard.graphs.data
+      : undefined;
 
-  const zoneColors = ["#ffcdd2", "#FFCBB3", "#FFEAA7", "#C7EDCC", "#A8E6CF"];
-  const allZones = new Set([
-    ...Object.keys(fireSmokeZoneWise?.fire ?? {}),
-    ...Object.keys(fireSmokeZoneWise?.smoke ?? {}),
-  ]);
-  const zoneWisePieData = Array.from(allZones).map((zone, i) => ({
-    label: zone,
-    value:
-      (fireSmokeZoneWise?.fire?.[zone] ?? 0) +
-      (fireSmokeZoneWise?.smoke?.[zone] ?? 0),
-    color: zoneColors[i % zoneColors.length],
-  }));
-
-  const totalFireCount = fireSmokeDashboard?.kpi?.totalFireCount ?? 0;
-  const totalSmokeCount = fireSmokeDashboard?.kpi?.totalSmokeCount ?? 0;
-
-  const totalHazardCount = totalFireCount + totalSmokeCount;
-
-  const zoneWisePieDataDummy = [
-    // Existing zones
-    ...Array.from(allZones).map((zone, i) => ({
-      label: zone,
-      value:
-        (fireSmokeZoneWise?.fire?.[zone] ?? 0) +
-        (fireSmokeZoneWise?.smoke?.[zone] ?? 0),
-      color: zoneColors[i % zoneColors.length],
-    })),
-
-    // ✅ Add TOTAL / ELANSOL slice
-    {
-      label: "Elansol", // or "All Zones" or "Total"
-      value: totalHazardCount,
-      color: "#8884d8", // choose any distinct color
-    },
-  ];
-
+  const zoneWisePieDataForFall = graphDataForFallDetection?.zoneWisePieData ?? [];
   /* ================= FALL DETECTION ================= */
 
-  const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
+const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
 
-  const fallHourlyData = fallSeries.map((item: any) => ({
-    time: item.label,
-    falls: item.count,
-  }));
+const xAxisTimes = fallSeries.map((item: any) => item.time);
+const xAxisDates = fallSeries.map((item: any) => item.date);
+
+const lineSeries = [
+  {
+    label: "Fall Incidents",
+    data: fallSeries.map((item: any) => item.count),
+    color: "#FFCBB3",
+    showMark: true,
+  },
+];
 
   const tabs: TabConfig[] = [
     {
@@ -232,8 +236,8 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               },
             }}
           >
-            <DynamicBarChart
-              data={hourlyData}
+            {/* <DynamicBarChart
+              data={ppeHourlyData}
               xAxisKey="time"
               series={[
                 { dataKey: "helmet", label: "Helmet", color: "#ffcdd2" },
@@ -242,7 +246,32 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               ]}
               yAxisLabel="Violation Count"
               stackId="ppe"
-            />
+            /> */}
+            <TimeScaleLineChart
+  granularity={ppeGranularity}
+  xAxisDates={ppeXAxisDates}
+  xAxisTimes={ppeXAxisTimes}
+  series={[
+    {
+      label:    "Helmet",
+      data:     ppeSeries.map((item) => item.helmet),
+      color:    "#ffcdd2",
+      showMark: true,
+    },
+    {
+      label:    "Vest",
+      data:     ppeSeries.map((item) => item.vest),
+      color:    "#FFEAA7",
+      showMark: true,
+    },
+    {
+      label:    "Glasses",
+      data:     ppeSeries.map((item) => item.glasses),
+      color:    "#A8E6CF",
+      showMark: true,
+    },
+  ]}
+/>
           </Grid>
 
           {/* Right side*/}
@@ -273,7 +302,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
+              {/* <DynamicPieChart
                 data={
                   [
                     // { label: "Helmet", value: 29, color: "#ffcdd2" },
@@ -283,7 +312,15 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 }
                 count={2.5}
                 carttitle="PPE Violation Distribution"
-              />
+              /> */}
+
+              {ppeViolationTypePieData.length > 0 && (
+  <DynamicPieChart
+    data={ppeViolationTypePieData}
+   //count={totalPpeViolationType}
+    carttitle="PPE Violation Distribution"
+  />
+)}
             </Box>
 
             {/* Second Pie Chart */}
@@ -298,7 +335,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
+              {/* <DynamicPieChart
                 data={
                   [
                     // { label: "Production Gate", value: 31, color: "#ffcdd2" },
@@ -310,14 +347,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 }
                 count={2.5}
                 carttitle="PPE Violations by Zone"
-              />
+              /> */}
+              {ppeZoneWisePieData.length > 0 && (
+  <DynamicPieChart
+    data={ppeZoneWisePieData}
+    //count={totalPpeZone}
+    carttitle="PPE Violations by Zone"
+  />
+)}
             </Box>
           </Grid>
         </Grid>
       ),
       featureId: FEATURE.PPE_DETECTION,
     },
-  
+
     {
       label: "Hazardous Zone Activity",
       content: (
@@ -340,20 +384,26 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               },
             }}
           >
-            <DynamicBarChart
-              data={fireSmokeHourlyData}
-              xAxisKey="time"
-              series={[
-                { dataKey: "fire", label: "Fire Violations", color: "#ffcdd2" },
-                {
-                  dataKey: "smoke",
-                  label: "Smoke Violations",
-                  color: "#FFCBB3",
-                },
-              ]}
-              yAxisLabel="Violation Count"
-              stackId="hazard"
-            />
+        
+            <TimeScaleLineChart
+    granularity={fireSmokeGranularity}
+    xAxisDates={fireSmokeXAxisDates}
+    xAxisTimes={fireSmokeXAxisTimes}
+    series={[
+      {
+        label:    "Fire",
+        data:     fireSmokeSeries.map((item) => item.fireCount),
+        color:    "#ffcdd2",
+        showMark: true,
+      },
+      {
+        label:    "Smoke",
+        data:     fireSmokeSeries.map((item) => item.smokeCount),
+        color:    "#FFCBB3",
+        showMark: true,
+      },
+    ]}
+  />
           </Grid>
 
           {/* Right side */}
@@ -383,11 +433,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
-                data={hazardTypePieData}
-                count={totalHazard}
-                carttitle="Hazard Type Distribution"
-              />
+              {hazardTypePieData.length > 0 && totalHazardType > 0 && (
+                <DynamicPieChart
+                  data={hazardTypePieData}
+                  carttitle="Hazard Type Distribution"
+                />
+              )}
             </Box>
 
             {/* Zone-wise Pie */}
@@ -402,14 +453,13 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
-                // data={zoneWisePieData}
-                data={[
-                  { label: "Elansol", value: totalHazard, color: "#ffcdd2" },
-                ]}
-                count={totalHazard}
-                carttitle="Zone-wise Hazard Detection"
-              />
+
+              {zoneWisePieData.length > 0 && (
+                <DynamicPieChart
+                  data={zoneWisePieData}
+                  carttitle="Zone-wise Hazard Detection"
+                />
+              )}
             </Box>
           </Grid>
         </Grid>
@@ -504,7 +554,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                     // { label: "Side Exit", value: 1, color: "#A8E6CF" },
                   ]
                 }
-                count={2.5}
                 carttitle="Vehicle in Walkways by Zone"
               />
             </Box>
@@ -535,33 +584,12 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               },
             }}
           >
-            {/* <DynamicBarChart
-              data={hourlyData}
-              xAxisKey="time"
-              series={[
-                {
-                  dataKey: "falls",
-                  label: "Fall Incidents",
-                  color: "#FFCBB3",
-                },
-              ]}
-              yAxisLabel="Incident Count"
-              stackId="fall"
-            /> */}
-
-            <DynamicBarChart
-              data={fallHourlyData}
-              xAxisKey="time"
-              series={[
-                {
-                  dataKey: "falls",
-                  label: "Fall Incidents",
-                  color: "#FFCBB3",
-                },
-              ]}
-              yAxisLabel="Count"
-              stackId="fall"
-            />
+  <TimeScaleLineChart
+  series={lineSeries}
+  xAxisDates={xAxisDates}
+  xAxisTimes={xAxisTimes}
+  granularity="hour"
+/>
           </Grid>
 
           {/* Right side*/}
@@ -590,21 +618,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 height: { xs: 140, md: "50%" },
+                
               }}
             >
-              <DynamicPieChart
-                data={
-                  [
-                    // { label: "Production Gate", value: 5, color: "#FFCBB3" },
-                    // { label: "Warehouse Gate", value: 3, color: "#FFE0B3" },
-                    // { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                    // { label: "Main Entrance", value: 4, color: "#A8E6CF" },
-                    // { label: "Side Exit", value: 1, color: "#B3E5FC" },
-                  ]
-                }
-                count={2.5}
-                carttitle="Zone-wise Fall/Laydown Incidents"
-              />
+
+              {zoneWisePieDataForFall.length > 0 && (
+                <DynamicPieChart
+                  data={zoneWisePieDataForFall}
+                  carttitle="Zone-wise Fall/Laydown Incidents"
+                />
+              )}
             </Box>
           </Grid>
         </Grid>
@@ -699,7 +722,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                     // { label: "Side Exit", value: 1, color: "#B0E0E6" },
                   ]
                 }
-                count={2.5}
                 carttitle="Zone-wise Blocked Emergency Exits"
               />
             </Box>
@@ -796,7 +818,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                     // { label: "Side Exit", value: 1, color: "#B0E0E6" },
                   ]
                 }
-                count={2.5}
                 carttitle="Zone-wise Crowd Gathering Incidents"
               />
             </Box>
@@ -840,21 +861,21 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {safetykpiLoading || !displaySafetyKpi.length
           ? Array.from({ length: 4 }).map((_, index) => (
-              <Grid
-                key={index + 1}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
+            <Grid
+              key={index + 1}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <KpiCardSkeleton />
+            </Grid>
+          ))
           : safetyKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <DashboardKpiCard {...kpi} />
-              </Grid>
-            ))}
+            <Grid
+              key={kpi.title}
+              size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+            >
+              <DashboardKpiCard {...kpi} />
+            </Grid>
+          ))}
       </Grid>
 
       {/* Tabs Section */}

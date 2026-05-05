@@ -1,17 +1,6 @@
 import { fireSmokeDetectionKpiConfig } from "./fireSmokeDetectionConfig";
 
-export interface Violation {
-  voilation: string;
-  zone: string;
-  time: string;
-  imageUrl: string;
-  incident: string;
-  [key: string]: string | number | boolean; // extra dynamic fields
-}
 
-export interface FireSmokeDetectionViolation extends Violation {
-  cameraName: string;
-}
 
 export interface FilterParams {
   incident?: string;
@@ -28,11 +17,11 @@ export interface FireSmokeDetectionKpiItem {
 }
 
 export interface FireSmokeDetectionViolation {
-  violation: string;
+  incident: string;
   zone: string;
   time: string;
   imageUrl: string;
-  cameraName: string;
+  camera: string;
   alarmTriggered: string;
   [key: string]: string | number | boolean;
 }
@@ -60,26 +49,26 @@ export interface FireSmokeDetectionSocketPayload {
 }
 
 export interface FireSmokeDetectionFilterParams {
-  violation?: string;
+  incident?: string;
   zone?: string;
-  cameraName?: string;
+  camera?: string;
   startDate?: string;
   endDate?: string;
-
   alarmTriggered?: string;
 }
+
+
 
 export type FireSmokeDetectionSingleReportRequest = {
   tenantId: string;
   incident?: string;
   zone?: string;
-
+  alarmTriggered?: string;
   cameraId?: string;
   imageUrl?: string;
   time?: string;
 };
-
-export type FireSmokeDetectionCsvReportRequest = {
+export type FireSmokeDetectionReportRequest = {
   tenantId: string;
   startDate: string;
   endDate: string;

@@ -7,7 +7,13 @@ export const WorkforceMonitoringConfig = {
     icon: People,
     route: "/employeePresenceCriticalArea",
     tooltipMessage:
-      "Shows the number of employees detected in critical areas where restricted access is enforced.",
+      "Shows the number of employees detected in critical areas .",
+  },
+    "Employee in Restricted Area": {
+    icon: People,
+    route: "/employeePresenceRestrictedArea",
+    tooltipMessage:
+      "Shows the number of employees detected in restricted areas.",
   },
   "Employee Idle Time": {
     icon: Visibility,

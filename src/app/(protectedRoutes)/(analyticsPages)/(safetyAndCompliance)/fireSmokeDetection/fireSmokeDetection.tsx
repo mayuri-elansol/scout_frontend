@@ -24,8 +24,14 @@ import {
   FireSmokeDetectionSocketPayload,
   FireSmokeDetectionViolation,
   FireSmokeDetectionZoneViolation,
+
 } from "./fireSmokeDetection.types";
+
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 import {
+  useGetFireSmokeDetectionDetailedCsvReportMutation,
+  useGetFireSmokeDetectionDetailedPdfReportMutation,
+  useGetFireSmokeDetectionSingleReportPdfMutation,
   useGetOrgShiftTimeFireSmokeDataQuery,
   useLazyGetFireSmokeDetectionDetailedReportQuery,
   useLazyGetFireSmokeDetectionKpiDataQuery,
@@ -57,6 +63,8 @@ const FireSmokeDetection: React.FC = () => {
   const [displayFireSmokeKpi, setDisplayFireSmokeKpi] = useState<
     FireSmokeDetectionKpiItem[]
   >([]);
+  const [isExporting, setIsExporting] = useState(false);//report loader
+  const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
 
   const [displayFireSmokeZoneViolations, setDisplayFireSmokeZoneViolations] =
     useState<FireSmokeDetectionZoneViolation[]>([]);
@@ -83,12 +91,12 @@ const FireSmokeDetection: React.FC = () => {
     { isFetching: FireSmokeDetailedReportLoading },
   ] = useLazyGetFireSmokeDetectionDetailedReportQuery();
 
-  // const [downloadEmpIdelTimeSinglePdf] =
-  //   useGetEmployeeIdleTimeDetectionSingleReportPdfMutation();
-  // const [downloadEmpIdelTimeCsvReport] =
-  //   useGetEmployeeIdleTimeDetectionDetailedCsvReportMutation();
-  // const [downloadEmpIdelTimePdfReport] =
-  //   useGetEmployeeIdleTimeDetectionDetailedPdfReportMutation();
+  const [downloadFireSmokeDetectionSinglePdf] =
+    useGetFireSmokeDetectionSingleReportPdfMutation();
+  const [downloadFireSmokeDetectionCsvReport] =
+    useGetFireSmokeDetectionDetailedCsvReportMutation();
+  const [downloadFireSmokeDetectionPdfReport] =
+    useGetFireSmokeDetectionDetailedPdfReportMutation();
 
   /* ---------- INITIAL LOAD ---------- */
 
@@ -127,9 +135,9 @@ const FireSmokeDetection: React.FC = () => {
         tenantId,
         page: fireSmokePage + 1,
         limit: fireSmokeLimit,
-        violation: fireSmokeFilters?.violation || undefined,
+        incident: fireSmokeFilters?.incident || undefined,
         zone: fireSmokeFilters?.zone || undefined,
-        cameraName: fireSmokeFilters?.cameraName || undefined,
+        cameraName: fireSmokeFilters?.camera || undefined,
         alarmTriggered: alarmValue,
         startDate: formatLocalDateTime(fireSmokeFilters?.startDate),
         endDate: formatLocalDateTime(fireSmokeFilters?.endDate),
@@ -236,16 +244,16 @@ const FireSmokeDetection: React.FC = () => {
   /* ---------- REPORT HANDLERS ---------- */
 
   const tableColumns = [
-    { id: "violation", label: t("Incident") },
+    { id: "incident", label: t("Incident") },
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
-    { id: "cameraName", label: t("Cameras") },
+    { id: "camera", label: t("Cameras") },
     { id: "alarmTriggered", label: t("Alarm Triggered") },
   ];
 
   const tableFilters = [
     {
-      id: "violation",
+      id: "incident",
       label: t("Incident"),
       type: "select" as const,
       options: ["Fire detected", "Smoke detected"],
@@ -258,7 +266,7 @@ const FireSmokeDetection: React.FC = () => {
       options: fireSmokeDetailedReport?.zones || [],
     },
     {
-      id: "cameraName",
+      id: "camera",
       label: t("Cameras"),
       type: "select" as const,
 
@@ -288,59 +296,76 @@ const FireSmokeDetection: React.FC = () => {
     setFireSmokePage(0);
   }, []);
 
-  // const handleExport = useCallback(
-  //   async (format: "csv" | "pdf", filters: EmployeeIdelTimeFilterParams) => {
-  //     try {
-  //       const payload = {
-  //         tenantId,
-  //         violation: filters.violation || undefined,
-  //         zone: filters.zone || undefined,
-  //         cameraId: filters.cameraId || undefined,
-  //         startDate: formatLocalDateTime(filters.startDate),
-  //         endDate: formatLocalDateTime(filters.endDate),
-  //       };
+  const handleExport = useCallback(
 
-  //       // ================= CSV =================
-  //       if (format === "csv") {
-  //         await downloadEmpIdelTimeCsvReport(payload);
-  //       }
+    async (format: "csv" | "pdf", filters: FireSmokeDetectionFilterParams) => {
+      try {
+        setIsExporting(true);
+        const payload = {
+          tenantId,
+          incident: filters.incident || undefined,
+          zone: filters.zone || undefined,
+          camera: filters.camera || undefined,
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
+        };
 
-  //       // ================= PDF =================
-  //       if (format === "pdf") {
-  //         await downloadEmpIdelTimePdfReport(payload).unwrap();
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Export failed:", error);
-  //     }
-  //   },
-  //   [
-  //     tenantId,
-  //     downloadEmpIdelTimeCsvReport,
-  //     downloadEmpIdelTimePdfReport,
-  //     formatLocalDateTime,
-  //   ],
-  // );
+        // ================= CSV =================
+        if (format === "csv") {
+          await downloadFireSmokeDetectionCsvReport(payload);
+        }
 
-  // const handleDownloadSingle = useCallback(
-  //   async (row: EmployeeIdleTimeViolation) => {
-  //     try {
-  //       console.log("row for the employee idel time", row);
-  //       const payload = {
-  //         tenantId,
-  //         violation: String(row.violation),
-  //         zone: row.zone,
-  //         time: row.time,
-  //         cameraId: row.cameraId,
-  //         imageUrl: row.imageUrl,
-  //       };
+        // ================= PDF =================
+        if (format === "pdf") {
+          await downloadFireSmokeDetectionPdfReport(payload).unwrap();
+        }
+      } catch (error) {
+        console.error("❌ Export failed:", error);
+      } finally {
+        setIsExporting(false); // ✅ STOP LOADER
+      }
 
-  //       await downloadEmpIdelTimeSinglePdf(payload);
-  //     } catch (error) {
-  //       console.error("❌ Single PDF download failed", error);
-  //     }
-  //   },
-  //   [tenantId, downloadEmpIdelTimeSinglePdf],
-  // );
+    },
+    [
+      tenantId,
+      downloadFireSmokeDetectionCsvReport,
+      downloadFireSmokeDetectionPdfReport,
+      formatLocalDateTime,
+    ],
+  );
+
+  const handleDownloadSingle = useCallback(
+    async (row: FireSmokeDetectionViolation, index: number) => {
+      try {
+        setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(index);
+      return newSet;
+    });
+        const payload = {
+          tenantId,
+          incident: String(row.incident),
+          zone: row.zone,
+          time: row.time,
+          camera: row.camera,
+          imageUrl: row.imageUrl,
+          alarmTriggered: row.alarmTriggered,
+
+        };
+
+        await downloadFireSmokeDetectionSinglePdf(payload);
+      } catch (error) {
+        console.error("❌ Single PDF download failed", error);
+      } finally {
+       setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
+      }
+    },
+    [tenantId, downloadFireSmokeDetectionSinglePdf],
+  );
 
   const handleViewSingle = useCallback((row: FireSmokeDetectionViolation) => {
     console.log("view single row", row);
@@ -348,25 +373,26 @@ const FireSmokeDetection: React.FC = () => {
     setViewPopupOpen(true);
   }, []);
 
-  // const handleDownloadViolation = async (url: string, violation: Violation) => {
-  //   if (!violation) return;
-  //   const empViolation = violation as EmployeeIdleTimeViolation;
-  //   console.log("employee idel time single data=============", empViolation);
-  //   try {
-  //     const payload = {
-  //       tenantId: tenantId,
-  //       violation: String(empViolation.violation),
-  //       zone: empViolation.zone,
-  //       time: empViolation.time,
-  //       cameraId: empViolation.cameraId,
-  //       imageUrl: url,
-  //     };
+  const handleDownloadViolation = async (url: string, violation: Violation) => {
+    if (!violation) return;
+    const fireSmokeIncident = violation as FireSmokeDetectionViolation;
+    try {
+      const payload = {
+        tenantId: tenantId,
+        incident: String(fireSmokeIncident.incident),
+        zone: fireSmokeIncident.zone,
+        time: fireSmokeIncident.time,
+        camera: fireSmokeIncident.camera,
+        imageUrl: url,
+        alarmTriggered: fireSmokeIncident.alarmTriggered,
+      };
 
-  //     await downloadEmpIdelTimeSinglePdf(payload);
-  //   } catch (err) {
-  //     console.error("PDF download failed", err);
-  //   }
-  // };
+      await downloadFireSmokeDetectionSinglePdf(payload);
+    } catch (err) {
+      console.error("PDF download failed", err);
+    }
+  };
+
 
   return (
     <Box>
@@ -382,21 +408,21 @@ const FireSmokeDetection: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {FireSmokeKpiLoading || !fireSmokeKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
-                <Grid
-                  key={index + 1}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
+              <Grid
+                key={index + 1}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
             : fireSmokeKpiData.map((kpi) => (
-                <Grid
-                  key={kpi.title}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
         </Grid>
 
         <Grid container spacing={3}>
@@ -406,7 +432,7 @@ const FireSmokeDetection: React.FC = () => {
               violations={fireSmokeRecentViolationsLive}
               loading={FireSmokeRecentLoading}
               tooltipMessage="Latest 20 detected fire or smoke incidents with details."
-              //  onDownload={handleDownloadViolation}
+              onDownload={handleDownloadViolation}
             />
           </Grid>
 
@@ -429,10 +455,13 @@ const FireSmokeDetection: React.FC = () => {
         filters={tableFilters}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
-        // onExport={handleExport}
-        // onDownload={(row) =>
-        //   handleDownloadSingle(row as EmployeeIdleTimeViolation)
-        // }
+        onExport={handleExport}
+        exportLoading={isExporting}
+        onDownload={(row, index) =>
+          handleDownloadSingle(row as FireSmokeDetectionViolation, index)
+        }
+        downloadingRows={downloadingRows}
+
         onView={(row) => handleViewSingle(row as FireSmokeDetectionViolation)}
         downloadFileName="fire-smoke-detection-report"
         loading={FireSmokeDetailedReportLoading}
@@ -451,11 +480,11 @@ const FireSmokeDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        // onDownload={(url) => {
-        //   if (!viewPopupData) return;
+        onDownload={(url) => {
+          if (!viewPopupData) return;
 
-        //   handleDownloadViolation(url, viewPopupData);
-        // }}
+          handleDownloadViolation(url, viewPopupData);
+        }}
       />
     </Box>
   );

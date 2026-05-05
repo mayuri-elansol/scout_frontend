@@ -7,7 +7,7 @@ export const surveillanceMonitoringDashboardApi =
     endpoints: (builder) => ({
       getSurveillanceMonitoringDashboardKpiData: builder.query({
         query: (body) => ({
-          url: `${apiRoutes.surveillanceMonitoringDashboard.root}/${apiRoutes.surveillanceMonitoringDashboard.getsurveillanceMonitoringDashboardAnalyticsKpi}`,
+          url: `${apiRoutes.surveillanceMonitoringDashboard.root}/${apiRoutes.surveillanceMonitoringDashboard.getsurveillanceMonitoringDashboardAnalytics}`,
           method: "POST",
           body,
         }),

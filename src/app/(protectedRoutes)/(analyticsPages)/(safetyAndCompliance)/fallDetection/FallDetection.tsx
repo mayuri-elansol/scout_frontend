@@ -21,6 +21,9 @@ import {
   FallDetectionZoneViolation,
 } from "./fallDetection.types";
 import {
+  useGetFallDetectionDetailedCsvReportMutation,
+  useGetFallDetectionDetailedPdfReportMutation,
+  useGetFallDetectionSingleReportPdfMutation,
   useGetOrgShiftTimeFallLaydownDataQuery,
   useLazyGetFallLaydownDetectionDetailedReportQuery,
   useLazyGetFallLaydownDetectionKpiDataQuery,
@@ -31,6 +34,7 @@ import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
 import { fallDetectionKpiConfig } from "./fallDetectionConfig";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 
 const FallDetection: React.FC = () => {
   const { t } = useTranslation();
@@ -43,7 +47,8 @@ const FallDetection: React.FC = () => {
 
   const [fallLaydownPage, setFallLaydownPage] = useState(0);
   const [fallLaydownLimit, setFallLaydownLimit] = useState(10);
-
+const [isExporting, setIsExporting] = useState(false);//report loader
+  const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] =
     useState<FallDetectionViolation | null>(null);
@@ -83,6 +88,13 @@ const FallDetection: React.FC = () => {
     fetchFallLaydownDetailedReportApi,
     { isFetching: FallLaydownDetailedReportLoading },
   ] = useLazyGetFallLaydownDetectionDetailedReportQuery();
+
+  const [downloadFallDetectionSinglePdf] =
+    useGetFallDetectionSingleReportPdfMutation();
+  const [downloadFallDetectionCsvReport] =
+    useGetFallDetectionDetailedCsvReportMutation();
+   const [downloadFallDetectionPdfReport] =
+    useGetFallDetectionDetailedPdfReportMutation();
 
   /* ---------- INITIAL LOAD ---------- */
 
@@ -223,10 +235,10 @@ const FallDetection: React.FC = () => {
   /* ---------- REPORT HANDLERS ---------- */
 
   const tableColumns = [
-    { id: "violation", label: t("Incident") },
+    { id: "incident", label: t("Incident") },
     { id: "time", label: t("Time") },
     { id: "zone", label: t("Zone") },
-    { id: "cameraName", label: t("Cameras") },
+    { id: "camera", label: t("Cameras") },
     { id: "alarmTriggered", label: t("Alarm Triggered") },
   ];
 
@@ -239,7 +251,7 @@ const FallDetection: React.FC = () => {
       options: fallLaydownDetailedReport?.zones || [],
     },
     {
-      id: "cameraName",
+      id: "camera",
       label: t("Cameras"),
       type: "select" as const,
 
@@ -260,7 +272,6 @@ const FallDetection: React.FC = () => {
       console.log("filter params", filters);
       setFallLaydownPage(0); // ← set page FIRST
       setFallLaydownFilters(filters); // ← then filters
-      // React batches both → useEffect fires exactly ONCE
     },
     [], // no deps needed
   );
@@ -269,223 +280,106 @@ const FallDetection: React.FC = () => {
     setFallLaydownPage(0);
   }, []);
 
-  // const handleExport = useCallback(
-  //   async (format: "csv" | "pdf", filters: EmployeeIdelTimeFilterParams) => {
-  //     try {
-  //       const payload = {
-  //         tenantId,
-  //         violation: filters.violation || undefined,
-  //         zone: filters.zone || undefined,
-  //         cameraId: filters.cameraId || undefined,
-  //         startDate: formatLocalDateTime(filters.startDate),
-  //         endDate: formatLocalDateTime(filters.endDate),
-  //       };
+  const handleExport = useCallback(
+    async (format: "csv" | "pdf", filters: FallDetectionFilterParams) => {
+      try {
+        setIsExporting(true);
+        const payload = {
+          tenantId,
+          zone: filters.zone || undefined,
+          camera: filters.cameraName || undefined,
+          startDate: formatLocalDateTime(filters.startDate),
+          endDate: formatLocalDateTime(filters.endDate),
+        };
 
-  //       // ================= CSV =================
-  //       if (format === "csv") {
-  //         await downloadEmpIdelTimeCsvReport(payload);
-  //       }
+        // ================= CSV =================
+        if (format === "csv") {
+          await downloadFallDetectionCsvReport(payload);
+        }
 
-  //       // ================= PDF =================
-  //       if (format === "pdf") {
-  //         await downloadEmpIdelTimePdfReport(payload).unwrap();
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ Export failed:", error);
-  //     }
-  //   },
-  //   [
-  //     tenantId,
-  //     downloadEmpIdelTimeCsvReport,
-  //     downloadEmpIdelTimePdfReport,
-  //     formatLocalDateTime,
-  //   ],
-  // );
+        // ================= PDF =================
+        if (format === "pdf") {
+          await downloadFallDetectionPdfReport(payload).unwrap();
+        }
+      } catch (error) {
+        console.error("❌ Export failed:", error);
+      }finally{
+        setIsExporting(false);
+      }
+    },
+    [
+      tenantId,
+      downloadFallDetectionCsvReport,
+      downloadFallDetectionPdfReport,
+      formatLocalDateTime,
+    ],
+  );
 
-  // const handleDownloadSingle = useCallback(
-  //   async (row: EmployeeIdleTimeViolation) => {
-  //     try {
-  //       console.log("row for the employee idel time", row);
-  //       const payload = {
-  //         tenantId,
-  //         violation: String(row.violation),
-  //         zone: row.zone,
-  //         time: row.time,
-  //         cameraId: row.cameraId,
-  //         imageUrl: row.imageUrl,
-  //       };
+  const handleDownloadSingle = useCallback(
+    async (row: FallDetectionViolation,index:number) => {
+      try {
+ setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(index);
+      return newSet;
+    });        const payload = {
+          tenantId,
+          incident: String(row.incident),
+          zone: row.zone,
+          time: row.time,
+          camera: row.camera,
+          imageUrl: row.imageUrl,                
+          alarmTriggered: row.alarmTriggered,
 
-  //       await downloadEmpIdelTimeSinglePdf(payload);
-  //     } catch (error) {
-  //       console.error("❌ Single PDF download failed", error);
-  //     }
-  //   },
-  //   [tenantId, downloadEmpIdelTimeSinglePdf],
-  // );
+
+        };
+
+        await downloadFallDetectionSinglePdf(payload);
+      } catch (error) {
+        console.error("❌ Single PDF download failed", error);
+      } finally {
+       setDownloadingRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
+      }
+    },
+    [tenantId, downloadFallDetectionSinglePdf],
+  );
 
   const handleFallLaydownViewSingle = useCallback(
     (row: FallDetectionViolation) => {
-      console.log("view single row", row);
       setViewPopupData(row);
       setViewPopupOpen(true);
     },
     [],
   );
 
-  // const handleDownloadViolation = async (url: string, violation: Violation) => {
-  //   if (!violation) return;
-  //   const empViolation = violation as EmployeeIdleTimeViolation;
-  //   console.log("employee idel time single data=============", empViolation);
-  //   try {
-  //     const payload = {
-  //       tenantId: tenantId,
-  //       violation: String(empViolation.violation),
-  //       zone: empViolation.zone,
-  //       time: empViolation.time,
-  //       cameraId: empViolation.cameraId,
-  //       imageUrl: url,
-  //     };
+  //recent violation download
+  const handleDownloadViolation = async (url: string, violation: Violation) => {
+    if (!violation) return;
+    const fallRecentViolation = violation as FallDetectionViolation;
+    try {
+      const payload = {
+        tenantId: tenantId,
+        incident: String(fallRecentViolation.incident),
+        zone: fallRecentViolation.zone,
+        time: fallRecentViolation.time,
+        camera: fallRecentViolation.camera,
+        imageUrl: url,
+                alarmTriggered: fallRecentViolation.alarmTriggered,
 
-  //     await downloadEmpIdelTimeSinglePdf(payload);
-  //   } catch (err) {
-  //     console.error("PDF download failed", err);
-  //   }
-  // };
+      };
+
+      await downloadFallDetectionSinglePdf(payload);
+    } catch (err) {
+      console.error("PDF download failed", err);
+    }
+  };
 
   return (
-    // <Box>
-    //   <Paper
-    //     sx={{
-    //       p: 3,
-    //       mb: 4,
-    //       backgroundColor: "#ffffff",
-    //       borderRadius: 2,
-    //     }}
-    //   >
-    //     <Box
-    //       sx={{
-    //         display: "flex",
-    //         justifyContent: "space-between",
-    //         alignItems: "center",
-    //         mb: 2,
-    //       }}
-    //     >
-    //       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-    //         <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
-    //           <Box component="span" sx={{ mr: 2 }}>
-    //             📊 Overview
-    //           </Box>
-    //         </Typography>
-    //       </Box>
-
-    //       <TimeFilter onRangeChange={() => console.log("on range chnged")} />
-    //     </Box>
-    //     {/* KPI Cards */}
-
-    //     <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
-    //       {KpiCardLoading
-    //         ? // Show skeletons while loading
-    //           skeletonKeys.map((index) => (
-    //             <Grid
-    //               size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-    //               key={uuidv4() + index}
-    //             >
-    //               <KpiCardSkeleton />
-    //             </Grid>
-    //           ))
-    //         : // Show actual KPI cards
-    //           fallKpiData.map((kpi, index) => (
-    //             <Grid
-    //               size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-    //               key={uuidv4() + index}
-    //             >
-    //               <KpiCard {...kpi} />
-    //             </Grid>
-    //           ))}
-    //     </Grid>
-
-    //     {/* Content Grid */}
-    //     <Grid container spacing={3}>
-    //       {/* Recent  Violations */}
-    //       <Grid size={{ xs: 12, lg: 8 }}>
-    //         <RecentViolations
-    //           label="Recent Violations"
-    //           violations={recentLaydownViolations}
-    //           loading={false}
-    //           tooltipMessage="Latest 20 detected laydown/sleeping/falldown violations with details."
-    //         />
-    //       </Grid>
-    //       {/* Compliance by Zone */}
-
-    //       <Grid size={{ xs: 12, lg: 4 }}>
-    //         <ZoneViolations
-    //           violationsZone={zoneViolationsData}
-    //           loading={false}
-    //           tooltipMessage="Shows laydown/sleeping/falldown violations per zone"
-    //         />
-    //       </Grid>
-    //     </Grid>
-    //   </Paper>
-
-    //   {/* Report */}
-    //   <ReportTable
-    //     totalCount={4}
-    //     page={0}
-    //     rowsPerPage={10}
-    //     title="Detailed Report"
-    //     tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-    //     columns={[
-    //       { id: "voilation", label: "Violation", minWidth: 200 },
-    //       { id: "time", label: "Time", minWidth: 120 },
-    //       { id: "zone", label: "Zone", minWidth: 120 },
-    //       { id: "cameraId", label: "Cameras", minWidth: 120 },
-    //       { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 120 },
-    //     ]}
-    //     data={recentLaydownViolations}
-    //     filters={[
-    //       {
-    //         id: "zone",
-    //         label: "Zone",
-    //         type: "select",
-    //         options: Array.from(
-    //           new Set(recentLaydownViolations.map((item) => item.zone)),
-    //         ),
-    //       },
-    //       {
-    //         id: "cameraId",
-    //         label: "Cameras",
-    //         type: "select",
-    //         options: Array.from(
-    //           new Set(recentLaydownViolations.map((item) => item.cameraId)),
-    //         ),
-    //       },
-    //       {
-    //         id: "alarmTriggered",
-    //         label: "Alarm Triggered",
-    //         type: "select",
-    //         options: ["true", "false"],
-    //       },
-    //       { id: "time", label: "Start Date", type: "date" },
-    //       { id: "time", label: "End Date", type: "date" },
-    //     ]}
-    //     onView={handleViewSingle}
-    //     onSubmit={handleSubmitFilter}
-    //     onReset={handleReset}
-    //     onExport={handleExport}
-    //     downloadFileName="ppe-violations-report"
-    //     loading={false}
-    //   />
-    //   {/* View Alert Popup */}
-    //   {viewPopupData && (
-    //     <ViewAlertPopup
-    //       open={viewPopupOpen}
-    //       handleClose={() => setViewPopupOpen(false)}
-    //       details={viewPopupData}
-    //       imageKey="imageUrl"
-    //       onDownload={(url) => console.log("Download:", url)}
-    //     />
-    //   )}
-    // </Box>
+  
 
     <Box>
       <Paper sx={{ p: 3, backgroundColor: "#fff", borderRadius: 2 }}>
@@ -524,7 +418,7 @@ const FallDetection: React.FC = () => {
               violations={fallLaydownRecentViolationsLive}
               loading={FallLaydownRecentLoading}
               tooltipMessage="Latest 20 detected fall incidents with details."
-              //  onDownload={handleDownloadViolation}
+                onDownload={handleDownloadViolation}
             />
           </Grid>
 
@@ -547,10 +441,12 @@ const FallDetection: React.FC = () => {
         filters={tableFilters}
         onSubmit={handleFallLaydownSubmitFilter}
         onReset={handleFallLaydownReset}
-        // onExport={handleExport}
-        // onDownload={(row) =>
-        //   handleDownloadSingle(row as EmployeeIdleTimeViolation)
-        // }
+        onExport={handleExport}
+         exportLoading={isExporting}
+        onDownload={(row,index) =>
+          handleDownloadSingle(row as FallDetectionViolation,index)
+        }
+        downloadingRows={downloadingRows}
         onView={(row) =>
           handleFallLaydownViewSingle(row as FallDetectionViolation)
         }
@@ -571,11 +467,11 @@ const FallDetection: React.FC = () => {
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        // onDownload={(url) => {
-        //   if (!viewPopupData) return;
+        onDownload={(url) => {
+          if (!viewPopupData) return;
 
-        //   handleDownloadViolation(url, viewPopupData);
-        // }}
+          handleDownloadViolation(url, viewPopupData);
+        }}
       />
     </Box>
   );

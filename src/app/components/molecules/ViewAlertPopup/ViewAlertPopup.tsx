@@ -9,6 +9,7 @@ import {
   Box,
   Typography,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
@@ -33,6 +34,7 @@ function ViewAlertPopup<
   onDownload,
 }: ViewAlertPopupProps<T>) {
   const [imageError, setImageError] = useState(false);
+  const [loading, setLoading] = useState(false); // ← local loader
 
   const imageUrl = imageKey && details ? String(details[imageKey]) : "";
 
@@ -43,7 +45,18 @@ function ViewAlertPopup<
   const handleImageError = () => setImageError(true);
 
   const showPlaceholder = !imageUrl || imageUrl.trim() === "" || imageError;
+const handleDownloadClick = async () => {
+  if (!onDownload || !imageUrl) return;
 
+  try {
+    setLoading(true);           // show loader
+    await onDownload(imageUrl); // wait for async parent
+  } catch (err) {
+    console.error("Download failed", err);
+  } finally {
+    setLoading(false);         
+  }
+};
   return (
     <Dialog
       open={open}
@@ -103,8 +116,7 @@ function ViewAlertPopup<
                   sx={{ mb: 0.5 }}
                   component="div"
                 >
-                  {/* <strong>{key}:</strong> */}
-                                    <strong>{key === "cameraId" ? "Camera" : key}:</strong>
+                  <strong>{key}:</strong>
 
                    {String(value)}
                 </Typography>
@@ -125,6 +137,19 @@ function ViewAlertPopup<
           >
             <DownloadForOfflineIcon fontSize="large" />
           </IconButton>
+
+
+          {/* <IconButton
+            onClick={handleDownloadClick}
+            sx={{ color: "#3072b0", position: "relative" }}
+            disabled={loading} // disable while loading
+          >
+            {loading ? (
+              <CircularProgress size={28} color="inherit" /> // spinner
+            ) : (
+              <DownloadForOfflineIcon fontSize="large" />
+            )}
+          </IconButton> */}
         </Box>
 
         {/* Image Preview */}

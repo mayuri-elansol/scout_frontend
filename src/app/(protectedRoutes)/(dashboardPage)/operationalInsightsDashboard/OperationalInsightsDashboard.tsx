@@ -1,252 +1,244 @@
+
+
+
 "use client";
-
-import React from "react";
-import { Box, Grid, Paper } from "@mui/material";
-import {
-  People,
-  DirectionsCar,
-  LocalShipping,
-  Block,
-} from "@mui/icons-material";
-import { v4 as uuidv4 } from "uuid";
-
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Box, CircularProgress, Grid, Paper, Typography } from "@mui/material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardTabs, {
-  TabConfig,
-} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
-
-import CanteenUsageChart, {
-  WorkingSlot,
-} from "@/app/components/organisms/LineChart/LineCharts";
-
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import JointBarGraphChart, {
-  VehicleChartData,
-} from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import CanteenUsageChart from "@/app/components/organisms/LineChart/LineCharts";
+import TimeLineAreaChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart"; // same chart WorkforceMonitoring uses
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { FEATURE } from "@/app/config/featureRegistry";
+import { SOCKET_EVENTS } from "@/sockets/socket.events";
+import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { OperationalInsightsConfig } from "./OperationalInsightsDashboardConfig";
+import {
+  OperationalInsightsDashboardResponse,
+  OperationalInsightsSocketPayload,
+  PeopleInsideGraphData,
+  CanteenGraphData,
+} from "./OperationalInsightsDashboard.types";
+import {
+  useGetOrgShiftTimeDataQuery,
+  useLazyGetOperationalDashboardDataQuery,
+} from "./OperationalInsightsDashboardApi";
+import JointBarGraphChart from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
+import Loader from "@/app/components/atoms/Loader/Loader";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// Mirrors buildCriticalAreaProps from WorkforceMonitoring — People Inside has
+// the same { granularity, series[{ zone, color, data[{ date, time, entryCount, exitCount }] }] } shape
+function buildPeopleInsideProps(dashboardData: OperationalInsightsDashboardResponse[]) {
+  const usecase = dashboardData.find((d) => d.title === "People Inside");
+  const graphData = usecase?.graphs?.data as PeopleInsideGraphData | undefined;
+
+  const rawData = graphData?.series[0]?.data ?? [];
+
+  const series = [
+    {
+      label: "Entry Count",
+        color: "#93C4F5", // pastel blue
+
+      showMark: false,
+      data: rawData.map((p) => p.entryCount),
+    },
+    {
+      label: "Exit Count",
+    color: "#F5A693", // pastel orange
+
+      showMark: false,
+      data: rawData.map((p) => p.exitCount),
+    },
+  ];
+
+  const xAxisDates = rawData.map((p) => p.date);
+  const xAxisTimes = rawData.map((p) => p.time);
+  const granularity: PeopleInsideGraphData["granularity"] = graphData?.granularity ?? "hour";
+
+  return { series, xAxisDates, xAxisTimes, granularity };
+}
+function buildCanteenData(dashboardData: OperationalInsightsDashboardResponse[]): CanteenGraphData {
+  const usecase = dashboardData.find((d) => d.title === "Canteen Usage Monitoring");
+  const raw = usecase?.graphs?.data;
+  if (!raw || Array.isArray(raw)) return { times: [], usageData: [], workingSlots: [] };
+  return raw as CanteenGraphData;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 const OperationalInsightsDashboard: React.FC = () => {
+  const { t } = useTranslation();
+  const { user, features } = useSelector((state: RootState) => state.auth);
+  const tenantId: string = user?.org_id ?? "";
 
- const { user,features } = useSelector((state: RootState) => state.auth);
-    const tenantId: string = user?.org_id ?? "";
-  
-  
-  const kpiData = [
-    {
-      title: "People Count",
-      violationsCount: 53,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
-      icon: People,
-      route: "/PeopleCountPage",
-      tooltipMessage:
-        "Shows detected intrusion incidents in monitored zones during restricted hours.",
-      colour: "red",
-    },
-    {
-      title: "Vehicle Count",
-      violationsCount: 2,
-      lastDetection: "Main Gate A",
-      lastDetectionTime: "10.20 PM",
-      icon: DirectionsCar,
-      route: "/VehicleCount",
-      tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
-      colour: "red",
-    },
-    {
-      title: "Canteen Usage Monitoring",
-      violationsCount: 13,
-      lastDetection: "Main Canteen",
-      lastDetectionTime: "3:24 AM",
-      icon: RestaurantIcon,
-      route: "/MonitoringCanteenUsage&Timings",
-      tooltipMessage: "Displays canteen usage and monitoring.",
-      colour: "red",
-    },
+  const [isLiveMode, setIsLiveMode] = useState(true);
+  const [dashboardData, setDashboardData] = useState<OperationalInsightsDashboardResponse[]>([]);
 
-    {
-      title: "Vehicle Loading/Unloading Monitoring",
-      violationsCount: 8,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:10 PM",
-      icon: LocalShipping,
-      route: "/VehicleUnloadingLoading",
+  // ── API ──────────────────────────────────────────────────────────────────
+  const { data: orgShifts } = useGetOrgShiftTimeDataQuery(
+    { tenantId },
+    { skip: !tenantId }
+  );
 
-      tooltipMessage: "Displays vehical loading and unloading oprations",
-      colour: "red",
+  const [fetchOperationalKpi, { isFetching: operationalKpiLoading }] =
+    useLazyGetOperationalDashboardDataQuery();
+
+  // ── Initial load ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    if (!tenantId) return;
+    fetchOperationalKpi({ tenantId })
+      .unwrap()
+      .then((data) => setDashboardData(data ?? []))
+      .catch(console.error);
+  }, [tenantId, fetchOperationalKpi]);
+
+  // ── Socket (live mode) ────────────────────────────────────────────────────
+  useSocketEvent<OperationalInsightsSocketPayload>({
+    tenantId,
+    enabled: isLiveMode,
+    event: SOCKET_EVENTS.OPERATIONAL_INSIGHTS_UPDATE,
+    handler: (payload) => {
+      if (!payload?.data) return;
+      setDashboardData(payload.data);
     },
-    {
-      title: "Unauthorised Parking / Blocking Aisles",
-      violationsCount: 5,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:27 PM",
-      icon: Block,
-      route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
-      tooltipMessage: "Shows unauthorized parking or equipment blocking.",
-      colour: "red",
+  });
+
+  // ── Time filter ───────────────────────────────────────────────────────────
+  const handleTimeRangeChange = useCallback(
+    async (range: { start?: string; end?: string }) => {
+      if (!range.start && !range.end) {
+        setIsLiveMode(true);
+        const res = await fetchOperationalKpi({ tenantId }).unwrap();
+        setDashboardData(res ?? []);
+        return;
+      }
+      setIsLiveMode(false);
+      const data = await fetchOperationalKpi({
+        tenantId,
+        startDate: range.start,
+        endDate: range.end,
+      }).unwrap();
+      setDashboardData(data ?? []);
     },
-  ];
+    [tenantId, fetchOperationalKpi]
+  );
 
-  const times = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00"];
-  const series: VehicleChartData[] = [
-    { label: "Entry", data: [5, 8, 3, 12, 7, 8], color: "#A8E6CF" },
-    { label: "Exit", data: [7, 4, 9, 6, 10, 12], color: "#B0E0E6" },
-  ];
-  const usageData = [12, 20, 18, 25, 30, 22];
+  // ── Derived data ──────────────────────────────────────────────────────────
+  const operationalKpiData = useMemo(
+    () =>
+      dashboardData.map((item) => {
+        const config = OperationalInsightsConfig[item.title];
+        return {
+          title: t(item.kpi.title),
+          colour: item.kpi.colour,
+          violationsCount: item.kpi.violationsCount || 0,
+          lastDetection: item.kpi.lastDetection || "-",
+          lastDetectionTime: item.kpi.lastDetectionTime || "-",
+          icon: config?.icon,
+          route: config?.route || "/",
+          tooltipMessage: config?.tooltipMessage || "",
+        };
+      }),
+    [dashboardData, t]
+  );
 
-  const workingSlots: WorkingSlot[] = [
-    { startTime: 12, stopTime: 13, label: "Lunch Time" },
-    { startTime: 15, stopTime: 16, label: "Tea Break" },
-  ];
- 
+  const peopleInsideProps = useMemo(() => buildPeopleInsideProps(dashboardData), [dashboardData]);
+  const canteenData       = useMemo(() => buildCanteenData(dashboardData),       [dashboardData]);
+
+  // ── Tabs ──────────────────────────────────────────────────────────────────
   const tabs: TabConfig[] = [
     {
       label: "People Count",
+      featureId: FEATURE.PEOPLE_COUNT,
       content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            <JointBarGraphChart times={times} seriesData={series} />
+        <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }} padding={{ xs: "10px" }}>
+            {operationalKpiLoading ? (
+              <Loader />
+            ) : (
+              <TimeLineAreaChart {...peopleInsideProps} />
+            )}
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.PEOPLE_COUNT
     },
     {
       label: "Vehicle Count & ANPR",
+      featureId: FEATURE.VEHICLE_COUNT,
       content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            <JointBarGraphChart times={times} seriesData={series} />
+        <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
+            {operationalKpiLoading ? (
+              <CircularProgress />
+            ) : (
+              // <JointBarGraphChart
+              //   times={vehicleCountData.times}
+              //   seriesData={vehicleCountData.series}
+              // />
+              <Typography >No data available</Typography>
+            )}
+            
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.VEHICLE_COUNT
     },
     {
       label: "Canteen Usage",
+      featureId: FEATURE.CANTEEN_USAGE,
       content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            <CanteenUsageChart
-              times={times}
-              usageData={usageData}
-              workingTime={workingSlots}
-            />
+        <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
+            {operationalKpiLoading ? (
+              <CircularProgress />
+            ) : (
+              <CanteenUsageChart
+                times={canteenData.times}
+                usageData={canteenData.usageData}
+                workingTime={canteenData.workingSlots}
+              />
+            )}
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.CANTEEN_USAGE
     },
     {
       label: "Vehicle Monitoring",
+      featureId: FEATURE.VEHICLE_UNLOADING_LOADING,
       content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            <JointBarGraphChart times={times} seriesData={series} />
+        <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
+            {/* {operationalKpiLoading ? (
+              <CircularProgress />
+            ) : (
+              <JointBarGraphChart
+                times={vehicleMonitorData.times}
+                seriesData={vehicleMonitorData.series}
+              />
+            )} */}
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.VEHICLE_UNLOADING_LOADING
     },
     {
-      label: "Unauthorized parking",
+      label: "Unauthorized Parking",
+      featureId: FEATURE.UNAUTHORIZED_PARKING,
       content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-            {/* <DynamicViolationScatterChart data={violationData} /> */}
+        <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
+          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
+            {/* Wire up DynamicViolationScatterChart once the parking data shape is confirmed */}
+            {/* <DynamicViolationScatterChart data={parkingData} /> */}
           </Grid>
         </Grid>
       ),
-      featureId:FEATURE.UNAUTHORIZED_PARKING
     },
   ];
 
+  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <Paper
       sx={{
@@ -257,7 +249,6 @@ const OperationalInsightsDashboard: React.FC = () => {
         backgroundColor: "#ffffff",
         borderRadius: 2,
         flex: 1,
-        // minHeight: 0,
         minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
@@ -270,34 +261,28 @@ const OperationalInsightsDashboard: React.FC = () => {
           mb: 2,
         }}
       >
-        {/* Right: Time Filter */}
-        <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
+        <TimeFilter
+          onRangeChange={handleTimeRangeChange}
+          shifts={orgShifts || []}
+        />
       </Box>
 
-      {/* KPI Cards Grid */}
-
-      <Grid container spacing={1.5} sx={{ mb: 1 }} alignItems="stretch">
-        {kpiData.map((kpi, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            key={uuidv4() + index}
-          >
-            {/* <DashboardKpiCard {...kpi} /> */}
-          </Grid>
-        ))}
+      <Grid container spacing={2.5} sx={{ mb: 4 }}>
+        {operationalKpiLoading || !dashboardData.length
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <Grid key={i} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+                <KpiCardSkeleton />
+              </Grid>
+            ))
+          : operationalKpiData.map((kpi) => (
+              <Grid key={kpi.title} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+                <DashboardKpiCard {...kpi} />
+              </Grid>
+            ))}
       </Grid>
 
-      {/* Tabs Section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          //  minHeight: 0,
-          minHeight: { xs: "500px", sm: "600px", md: 0 },
-        }}
-      >
-        <DashboardTabs tabs={tabs}  features={features}/>
+      <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+        <DashboardTabs tabs={tabs} features={features} />
       </Box>
     </Paper>
   );

@@ -1,18 +1,21 @@
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
 
-export interface IntrusionTrendPoint {
-  label: string;
-  count: number;
+export interface graphResponsePoint {
+ date: string;
+  time?: string;  
+  day?: string; 
+    count: number;
 }
 
-export interface IntrusionTrendSeries {
+export interface TrendSeries {
   zone: string;
-  data: IntrusionTrendPoint[];
+  color:string;
+  data: graphResponsePoint[];
 }
 
-export interface IntrusionTrendResponse {
+export interface TrendResponse {
   granularity: "hour" | "weekday" | "week";
-  series: IntrusionTrendSeries[];
+  series: TrendSeries[];
 }
 
 export interface SurveillanceDashboardResponse {
@@ -25,7 +28,7 @@ export interface SurveillanceDashboardResponse {
     colour: "red" | "green" | "blue" | "gray";
   };
   graphs: {
-    data: IntrusionTrendResponse;
+    data: TrendResponse;
   };
 }
 

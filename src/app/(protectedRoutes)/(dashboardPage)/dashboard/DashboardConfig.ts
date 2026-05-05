@@ -7,6 +7,9 @@ export const MainDashboardConfig = {
   "Employee in Critical Area": {
     route: "/employeePresenceCriticalArea",
   },
+   "Employee in Restricted Area": {
+    route: "/employeePresenceRestrictedArea",
+  },
   "Employee Idle Time": {
     route: "/employeeIdleTime",
   },
@@ -21,9 +24,10 @@ export const MainDashboardConfig = {
   "Intrusion Detection": {
     route: "/intrusionDetectionPage",
   },
-  "Unauthorized Access In Restrcited Areas": {
+  "Unauthorized Access In Restricted Areas": {
     route: "/unauthorizedAccessInRestrictedAreas",
   },
+
   "Camera Tempering Detection": {
     route: "/cameraTampering",
   },
@@ -36,7 +40,7 @@ export const MainDashboardConfig = {
   "PPE Violations": {
     route: "/ppeKitDetectionPage",
   },
-  "Fire & Smoke  Alerts": {
+  "Fire & Smoke Alerts": {
     route: "/fireSmokeDetection",
   },
   "Vehicle In Walkways": {
@@ -54,6 +58,7 @@ export const MainDashboardConfig = {
   },
 
   //opretation monitoring
+
 
   "People Count": {
     route: "/peopleCountPage",

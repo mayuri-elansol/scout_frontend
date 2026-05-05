@@ -1,25 +1,8 @@
 import { fallDetectionKpiConfig } from "./fallDetectionConfig";
 
-export interface Violation {
-  voilation: string;
-  zone: string;
-  time: string;
-  imageUrl: string;
-  incident: string;
-  [key: string]: string | number | boolean;
-}
 
-export interface FallDetectionViolation extends Violation {
-  cameraName: string;
-}
 
-// export interface FilterParams {
-//   incident?: string;
-//   zone?: string;
-//   cameraId?: string;
-//   startDate?: string;
-//   endDate?: string;
-// }
+
 
 export type KpiColour = "red" | "green" | "blue";
 export interface FallDetectionKpiItem {
@@ -29,7 +12,7 @@ export interface FallDetectionKpiItem {
 }
 
 export interface FallDetectionViolation {
-  violation: string;
+  incident: string;
   zone: string;
   time: string;
   imageUrl: string;
@@ -74,7 +57,7 @@ export type FallDetectionSingleReportRequest = {
   time?: string;
 };
 
-export type FallDetectionCsvReportRequest = {
+export type FallDetectionReportRequest = {
   tenantId: string;
   startDate: string;
   endDate: string;

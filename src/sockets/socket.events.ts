@@ -1,10 +1,6 @@
 export const SOCKET_EVENTS = {
   PPE_UPDATE: "ppe_update",
-  FIRE_UPDATE: "fire_update",
-  CROWD_UPDATE: "crowd_update",
-
   FIRE_SMOKE_UPDATE: "Fire_Smoke_Update",
-
   FALL_DETECTION_UPDATE: "Fall_Detection_Update",
   SAFETY_DASHBOARD_UPDATE: "Safety_Dashboard_Update",
   INTRUSION_UPDATE: "intrusion_update",
@@ -13,4 +9,11 @@ export const SOCKET_EVENTS = {
   WORKFORCE_UPDATE: "workforce_dashboard_update",
   MAIN_DASHBOARD_UPDATE: "main_dashboard_update",
   MOVEMENT_DURING_SHUTDOWN_HR_UPDATE: "movement_during_shutdown_hr_update",
+  UNAUTHORIZED_ACCESS_IN_RESTRICTED_AREAS_UPDATE : "Unauthorized_Access_In_Restricted_Areas_Update",
+  EMPLOYEE_PRESENCE_DETECTION_IN_CRITICAL_AREAS_UPDATE : "Employee_Presence_In_Critical_Area_Update",
+    EMPLOYEE_PRESENCE_DETECTION_IN_RESTRICTED_AREAS_UPDATE : "Employee_Presence_In_Restricted_Area_Update",
+    PEOPLE_COUNT_UPDATE:"People_Count_In_Factory_Premises_Update",
+    OPERATIONAL_INSIGHTS_UPDATE:"Operational_Insights_Update"
+
+
 } as const;

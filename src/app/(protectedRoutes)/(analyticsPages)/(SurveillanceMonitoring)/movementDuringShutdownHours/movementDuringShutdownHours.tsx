@@ -63,6 +63,8 @@ const MovementDuringShutdownHours: React.FC = () => {
 
   const [viewMovementPopupData, setViewMovementPopupData] =
     useState<MovemnetDuringShutDownHrViolation | null>(null);
+  const [isExporting, setIsExporting] = useState(false);//report loader
+  const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
 
   /*-------movement api ----------*/
 
@@ -281,40 +283,7 @@ const MovementDuringShutdownHours: React.FC = () => {
     { id: "startDate", label: t("Start Date"), type: "date" as const },
     { id: "endDate", label: t("End Date"), type: "date" as const },
   ];
-  // const handleMovementSubmitFilter = useCallback(
-  //   async (filters: MovemnetDuringShutDownHrFilterParams) => {
-  //     console.log("filter params", filters);
-  //     setMovementFilters(filters);
-  //     const alarmValue =
-  //       filters.alarmTriggered === undefined
-  //         ? undefined
-  //         : filters.alarmTriggered === "True";
-  //     const body = {
-  //       tenantId: tenantId,
-  //       zone: filters.zone || undefined,
-  //       cameraId: filters.cameraId || undefined,
 
-  //       alarmTriggered: alarmValue,
-
-  //       startDate: formatLocalDateTime(filters.startDate),
-  //       endDate: formatLocalDateTime(filters.endDate),
-  //       page: 1,
-  //       limit: movementLimit,
-  //     };
-
-  //     console.log("🚀 Sending payload:", body);
-
-  //     const response = await fetchDetailedMovementReportApi(body).unwrap();
-  //     setMovementPage(0);
-  //     setDetailedMovementReport(response);
-  //   },
-  //   [
-  //     tenantId,
-  //     fetchDetailedMovementReportApi,
-  //     formatLocalDateTime,
-  //     movementLimit,
-  //   ],
-  // );
 
   const handleMovementSubmitFilter = useCallback(
     (filters: MovemnetDuringShutDownHrFilterParams) => {
@@ -337,6 +306,7 @@ const MovementDuringShutdownHours: React.FC = () => {
       filters: MovemnetDuringShutDownHrFilterParams,
     ) => {
       try {
+        setIsExporting(true)
         const payload = {
           tenantId,
           zone: filters.zone || undefined,
@@ -362,6 +332,8 @@ const MovementDuringShutdownHours: React.FC = () => {
         }
       } catch (error) {
         console.error("❌ Export failed:", error);
+      } finally {
+        setIsExporting(false)
       }
     },
     [
@@ -373,8 +345,13 @@ const MovementDuringShutdownHours: React.FC = () => {
   );
 
   const handleDownloadMovementSingle = useCallback(
-    async (row: MovemnetDuringShutDownHrViolation) => {
+    async (row: MovemnetDuringShutDownHrViolation, index: number) => {
       try {
+        setDownloadingRows((prev) => {
+          const newSet = new Set(prev);
+          newSet.add(index);
+          return newSet;
+        });
         const payload = {
           tenantId,
           violation: String(row.incident ?? row.violation),
@@ -389,6 +366,12 @@ const MovementDuringShutdownHours: React.FC = () => {
         await downloadMovementSinglePdf(payload);
       } catch (error) {
         console.error("❌ Single PDF download failed", error);
+      } finally {
+        setDownloadingRows((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
       }
     },
     [tenantId, downloadMovementSinglePdf],
@@ -438,21 +421,21 @@ const MovementDuringShutdownHours: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {movementkpiLoading || !MovementKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
-                <Grid
-                  key={index + 1}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCardSkeleton />
-                </Grid>
-              ))
+              <Grid
+                key={index + 1}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCardSkeleton />
+              </Grid>
+            ))
             : MovementKpiData.map((kpi) => (
-                <Grid
-                  key={kpi.title}
-                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-                >
-                  <KpiCard {...kpi} />
-                </Grid>
-              ))}
+              <Grid
+                key={kpi.title}
+                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+              >
+                <KpiCard {...kpi} />
+              </Grid>
+            ))}
         </Grid>
         {/* Content Grid */}
         <Grid container spacing={3}>
@@ -489,9 +472,11 @@ const MovementDuringShutdownHours: React.FC = () => {
         onSubmit={handleMovementSubmitFilter}
         onReset={handleMovementReset}
         onExport={handleMovementExport}
-        onDownload={(row) =>
-          handleDownloadMovementSingle(row as MovemnetDuringShutDownHrViolation)
+        exportLoading={isExporting}
+        onDownload={(row, index) =>
+          handleDownloadMovementSingle(row as MovemnetDuringShutDownHrViolation, index)
         }
+        downloadingRows={downloadingRows}
         onView={(row) =>
           handleViewMovementSingle(row as MovemnetDuringShutDownHrViolation)
         }

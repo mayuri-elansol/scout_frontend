@@ -19,13 +19,13 @@ export interface PieDataItem {
 export interface DynamicPieChartProps {
   carttitle: string;
   data: PieDataItem[];
-  count: number;
+ // count: number;
 }
 
 const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   data,
   carttitle,
-  count,
+ // count,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState<{
@@ -67,9 +67,14 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
     `${((params.value / TOTAL) * 100).toFixed(0)}%`;
 
   // Calculate optimal chart size based on container
-  const chartSize = Math.min(containerSize.width, containerSize.height);
-  const outerRadius = count ? Math.max(chartSize / count, 40) : 40;
+  // const chartSize = Math.min(containerSize.width, containerSize.height);
+  // const outerRadius = count ? Math.max(chartSize / count, 80) : 80;
+//   const chartSize = Math.min(containerSize.width, containerSize.height);
+// const outerRadius = Math.max(chartSize / 2.5, 80);
 
+
+const chartSize = Math.min(containerSize.width, containerSize.height);
+const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Math.min cap
   if (!data || data.length === 0) {
     return (
       <Box

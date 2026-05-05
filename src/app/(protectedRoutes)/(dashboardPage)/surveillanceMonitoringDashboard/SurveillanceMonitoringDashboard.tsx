@@ -22,12 +22,19 @@ import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardCo
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import {
+  graphResponsePoint,
   SurveillanceDashboardResponse,
   SurveillanceSocketPayload,
+  TrendResponse,
 } from "./SurveillanceMonitoringDashboard.types";
 import { useSocketEvent } from "@/customhooks/useSocketEvent";
 import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { FEATURE } from "@/app/config/featureRegistry";
+import Loader from "@/app/components/atoms/Loader/Loader";
+import TimeScaleLineChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart";
+
+
+
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -121,12 +128,54 @@ const SurveillanceMonitoring: React.FC = () => {
     (d) => d.title === "Intrusion Detection",
   );
   const unauthorizedDashboard = displaySurveillanceKpi.find(
-    (d) => d.title === "Unauthorized Access",
+    (d) => d.title === "Unauthorized Access In Restricted Areas",
   );
 
   const movementDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Movement During Shutdown",
   );
+// inside SurveillanceMonitoring component, near top
+
+function toTimeScaleProps(data: TrendResponse) {
+  const firstSeries = data.series[0]?.data ?? [];
+
+  // X-axis labels come from the first zone's data array (all zones share same buckets)
+  const xAxisDates = firstSeries.map((p) => p.date ?? "");
+  const xAxisTimes = firstSeries.map((p) => p.time ?? p.day ?? "");
+
+  // Each zone becomes one line series
+  const series = data.series.map((z) => ({
+    label:    z.zone,
+    color:    z.color,
+    data:     z.data.map((p) => p.count),
+    showMark: false,
+  }));
+
+  return { xAxisDates, xAxisTimes, series };
+}
+// Intrusion
+const intrusionGraphData =
+  intrusionDashboard?.graphs?.data &&
+  !Array.isArray(intrusionDashboard.graphs.data) &&
+  "series" in intrusionDashboard.graphs.data
+    ? (intrusionDashboard.graphs.data as TrendResponse)
+    : undefined;
+
+// Movement During Shutdown
+const movementGraphData =
+  movementDashboard?.graphs?.data &&
+  !Array.isArray(movementDashboard.graphs.data) &&
+  "series" in movementDashboard.graphs.data
+    ? (movementDashboard.graphs.data as TrendResponse)
+    : undefined;
+
+// Unauthorized Access
+const unauthorizedGraphData =
+  unauthorizedDashboard?.graphs?.data &&
+  !Array.isArray(unauthorizedDashboard.graphs.data) &&
+  "series" in unauthorizedDashboard.graphs.data
+    ? (unauthorizedDashboard.graphs.data as TrendResponse)
+    : undefined;
 
   const tabs: TabConfig[] = [
     {
@@ -154,22 +203,25 @@ const SurveillanceMonitoring: React.FC = () => {
             {/* {intrusionDashboard && (
               <DynamicViolationScatterChart item={intrusionDashboard} />
             )} */}
-            {SurveillancekpiLoading ? (
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            ) : (
-              intrusionDashboard && (
-                <DynamicViolationScatterChart item={intrusionDashboard} />
-              )
-            )}
+      {SurveillancekpiLoading ? (
+  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <CircularProgress />
+  </Box>
+) : intrusionGraphData ? (
+  // <TimeScaleLineChart
+  //   granularity={intrusionGraphData.granularity}
+  //   {...toTimeScaleProps(intrusionGraphData)}
+  // />
+
+  <TimeScaleLineChart
+  granularity={intrusionGraphData.granularity}
+  {...toTimeScaleProps(intrusionGraphData)}
+  series={toTimeScaleProps(intrusionGraphData).series.map((s: any) => ({
+    ...s,
+    showMark: true,   // ✅ force enable
+  }))}
+/>
+) : null}
           </Grid>
         </Grid>
       ),
@@ -190,8 +242,7 @@ const SurveillanceMonitoring: React.FC = () => {
             size={{ xs: 12 }}
             sx={{
               display: "flex",
-              // height: { xs: "50vh", md: "100%" },
-              height: { xs: "50vh", md: "360px" }, // ensure enough height
+               height: { xs: "50vh", md: "100%" },
 
               width: "100%",
               "& .MuiCardContent-root": {
@@ -200,26 +251,21 @@ const SurveillanceMonitoring: React.FC = () => {
             }}
             padding={{ xs: "10px" }}
           >
-            {/* {movementDashboard && (
-              <DynamicViolationScatterChart item={movementDashboard} />
-            )}{" "} */}
-
-            {SurveillancekpiLoading ? (
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CircularProgress />
-              </Box>
-            ) : (
-              movementDashboard && (
-                <DynamicViolationScatterChart item={movementDashboard} />
-              )
-            )}
+      
+{SurveillancekpiLoading ? (
+  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <CircularProgress />
+  </Box>
+) : movementGraphData ? (
+  <TimeScaleLineChart
+    granularity={movementGraphData.granularity}
+    {...toTimeScaleProps(movementGraphData)}
+     series={toTimeScaleProps(movementGraphData).series.map((s: any) => ({
+    ...s,
+    showMark: true,   
+  }))}
+  />
+) : null}
           </Grid>
         </Grid>
       ),
@@ -279,7 +325,6 @@ const SurveillanceMonitoring: React.FC = () => {
             >
               <DynamicPieChart
                 data={chart.data}
-                count={2.5}
                 carttitle={chart.title}
               />
             </Grid>
@@ -311,12 +356,24 @@ const SurveillanceMonitoring: React.FC = () => {
               },
             }}
           >
-            {unauthorizedDashboard && (
-              <DynamicViolationScatterChart item={unauthorizedDashboard} />
-            )}{" "}
+       {SurveillancekpiLoading ? (
+  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Loader />
+  </Box>
+) : unauthorizedGraphData ? (
+  <TimeScaleLineChart
+    granularity={unauthorizedGraphData.granularity}
+    {...toTimeScaleProps(unauthorizedGraphData)}
+       series={toTimeScaleProps(unauthorizedGraphData).series.map((s: any) => ({
+    ...s,
+    showMark: true,   
+  }))}
+  />
+) : null}
           </Grid>
         </Grid>
       ),
+      
       featureId: FEATURE.UNAUTHORIZED_ACCESS,
     },
   ];
