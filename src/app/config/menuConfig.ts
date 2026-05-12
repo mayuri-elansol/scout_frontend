@@ -157,7 +157,7 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/PPEKitDetectionPage",
       },
       {
-        name: "Fire, Smoke, Oil and Visible Gas Leak Detection",
+        name: "Fire & Smoke Detection",
         page: "fire-smoke-oil-leak-detection",
         path: "/FireSmokeOilLeakDetection",
       },
