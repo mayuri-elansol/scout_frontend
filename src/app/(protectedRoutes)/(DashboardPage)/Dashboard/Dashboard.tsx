@@ -44,7 +44,7 @@ const Dashboard: React.FC = () => {
       iconBg: "#bbdefb",
     },
     {
-      title: "Fire / Smoke / Gas / Oil Alerts",
+      title: "Fire & Smoke Alerts",
       violationsCount: 1,
       lastDetection: "Zone B",
       lastDetectionTime: "09:58 AM",

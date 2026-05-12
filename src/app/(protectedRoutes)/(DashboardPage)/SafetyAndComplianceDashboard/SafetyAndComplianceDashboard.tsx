@@ -641,7 +641,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       tooltipMessage: "Shows total PPE rule violations detected today.",
     },
     {
-      title: "Fire / Smoke / Gas / Oil Alerts",
+      title: "Fire & Smoke Alerts",
       violationsCount: 1,
       lastDetection: "Zone B",
       lastDetectionTime: "09:58 AM",
