@@ -162,16 +162,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                   label: "Smoke Violations",
                   color: "#FFCBB3",
                 },
-                {
-                  dataKey: "gas",
-                  label: "Gas Violations",
-                  color: "#FFEAA7",
-                },
-                {
-                  dataKey: "oil",
-                  label: "Oil Violations",
-                  color: "#A8E6CF",
-                },
               ]}
               yAxisLabel="Violation Count"
               stackId="hazard"
@@ -210,8 +200,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 data={[
                   { label: "Fire", value: 29, color: "#ffcdd2" },
                   { label: "Smoke", value: 28, color: "#FFCBB3" },
-                  { label: "Gas", value: 28, color: "#FFEAA7" },
-                  { label: "Oil", value: 15, color: "#A8E6CF" },
                 ]}
                 count={2.5}
                 carttitle="Hazard Type Distribution"
