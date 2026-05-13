@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import DashboardKpiCard, {
   DashboardKpiCardProps,
 } from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import DashboardTabs, {
+import  {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";

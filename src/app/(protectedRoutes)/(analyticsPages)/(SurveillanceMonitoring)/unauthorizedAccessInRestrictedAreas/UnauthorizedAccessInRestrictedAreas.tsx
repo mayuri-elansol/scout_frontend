@@ -170,7 +170,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   /* ---------- DERIVED DATA ---------- */
   const kpiData = useMemo(() => {
     return displayKpi.map((item) => {
-      const config = UnauthorizedAccessConfig[item.title as KpiTitle];
+const config = UnauthorizedAccessConfig[item.title];
       return {
         title: item.title,
         value: item.value,
@@ -216,28 +216,8 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     setUnauthorizedAccessPage(0);
   }, []);
 
-  // const handleExport = useCallback(
-  //   async (format: "csv" | "pdf", filters: UnauthorizedAccessInRestrictedAreasFilterParams) => {
-  //     try {
-  //       setIsExporting(true);
-  //       const payload = {
-  //         tenantId,
-  //         zone: filters.zone || "undefined",
-  //         camera: filters.cameraName || "undefined",
-  //         startDate: formatLocalDateTime(filters.startDate),
-  //         endDate: formatLocalDateTime(filters.endDate),
-  //       };
-  //       if (format === "csv") await downloadCsvReport(payload);
-  //       if (format === "pdf") await downloadPdfReport(payload).unwrap();
-  //     } catch (error) {
-  //       console.error("❌ Export failed:", error);
-  //     } finally {
-  //       setIsExporting(false);
-  //     }
-  //   },
-  //   [tenantId, downloadCsvReport, downloadPdfReport],
-  // );
- const handleExport = useCallback(
+
+  const handleExport = useCallback(
     async (format: "csv" | "pdf", filters: UnauthorizedAccessInRestrictedAreasFilterParams) => {
       try {
         setIsExporting(true);

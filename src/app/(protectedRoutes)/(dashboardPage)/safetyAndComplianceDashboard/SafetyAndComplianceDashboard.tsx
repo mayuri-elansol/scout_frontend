@@ -11,12 +11,12 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
-import { hourlyData } from "@/app/config/chartDataConfig";
 import { RootState } from "@/app/store/store";
 import { useSelector } from "react-redux";
 import { FEATURE } from "@/app/config/featureRegistry";
 import { useTranslation } from "react-i18next";
 import {
+  FallSeriesItem,
   FireSmokeBucket,
   FireSmokeGraphData,
   PPEGraphData,
@@ -56,15 +56,27 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     useLazyGetSafetyAndComplianceDashboardKpiDataQuery();
 
   /* ---------- INITIAL LOAD ---------- */
-  useEffect(() => {
-    if (!tenantId) return;
-    const load = async () => {
-      const kpi = await fetchSafetyKpi({ tenantId }).unwrap();
-      setDisplaySafetyKpi(kpi ?? []);
-    };
+  // useEffect(() => {
+  //   if (!tenantId) return;
+  //   const load = async () => {
+  //     const kpi = await fetchSafetyKpi({ tenantId }).unwrap();
+  //     setDisplaySafetyKpi(kpi ?? []);
+  //   };
 
-    load();
-  }, [tenantId]);
+  //   load();
+  // }, [tenantId]);
+
+
+  useEffect(() => {
+  if (!tenantId) return;
+
+  const load = async () => {
+    const kpi = await fetchSafetyKpi({ tenantId }).unwrap();
+    setDisplaySafetyKpi(kpi ?? []);
+  };
+
+  load();
+}, [tenantId, fetchSafetyKpi]);
 
   /* ---------- SOCKET (LIVE ONLY) ---------- */
 
@@ -199,20 +211,36 @@ const fireSmokeXAxisTimes = fireSmokeSeries.map((item: FireSmokeBucket) => item.
   const zoneWisePieDataForFall = graphDataForFallDetection?.zoneWisePieData ?? [];
   /* ================= FALL DETECTION ================= */
 
-const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
+// const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
 
-const xAxisTimes = fallSeries.map((item: any) => item.time);
-const xAxisDates = fallSeries.map((item: any) => item.date);
+// const xAxisTimes = fallSeries.map((item: any) => item.time);
+// const xAxisDates = fallSeries.map((item: any) => item.date);
+
+// const lineSeries = [
+//   {
+//     label: "Fall Incidents",
+//     data: fallSeries.map((item: any) => item.count),
+//     color: "#FFCBB3",
+//     showMark: true,
+//   },
+// ];
+
+
+const fallSeries: FallSeriesItem[] =
+  fallLaydownDashboard?.graphs?.data?.series ?? [];
+
+const xAxisTimes = fallSeries.map((item) => item.time ?? "");
+
+const xAxisDates = fallSeries.map((item) => item.date ?? "");
 
 const lineSeries = [
   {
     label: "Fall Incidents",
-    data: fallSeries.map((item: any) => item.count),
+    data: fallSeries.map((item) => item.count),
     color: "#FFCBB3",
     showMark: true,
   },
 ];
-
   const tabs: TabConfig[] = [
     {
       label: "PPE Compliance",

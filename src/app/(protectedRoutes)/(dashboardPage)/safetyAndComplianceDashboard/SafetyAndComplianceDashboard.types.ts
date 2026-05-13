@@ -35,9 +35,9 @@ export interface PieData {
   value: number;
   color: string;
 }
-
+type Granularity = "hour" | "weekday" | "week";
 export interface FireSmokeGraphData {
-  granularity: "hour" | "weekday" | "week";  
+  granularity: Granularity;  
   series: FireSmokeBucket[];             
   hazardTypePieData: PieData[];
   zoneWisePieData: PieData[];
@@ -130,3 +130,8 @@ export interface SafetySocketPayload {
   serverTimestamp: string;
   data: SurveillanceDashboardResponse[];
 }
+export type FallSeriesItem = {
+  time?: string;
+  date?: string;
+  count: number;
+};

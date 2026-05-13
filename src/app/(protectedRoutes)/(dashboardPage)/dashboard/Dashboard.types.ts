@@ -1,5 +1,5 @@
 import {
-  CameraTamperingDashboardConfig,
+  
   MainDashboardConfig,
 } from "./DashboardConfig";
 

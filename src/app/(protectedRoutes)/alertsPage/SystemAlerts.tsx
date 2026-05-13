@@ -10,7 +10,7 @@ import WorkforceIcon from "@mui/icons-material/People";
 import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import { v4 as uuidv4 } from "uuid";
-import DynamicTabs, {
+import  {
   TabConfig,
 } from "../../components/organisms/DashboardTabs/DashboardTabs";
 

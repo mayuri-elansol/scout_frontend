@@ -1,6 +1,6 @@
 import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardConfig";
 
-export interface graphResponsePoint {
+export interface GraphResponsePoint {
  date: string;
   time?: string;  
   day?: string; 
@@ -10,7 +10,7 @@ export interface graphResponsePoint {
 export interface TrendSeries {
   zone: string;
   color:string;
-  data: graphResponsePoint[];
+  data: GraphResponsePoint[];
 }
 
 export interface TrendResponse {

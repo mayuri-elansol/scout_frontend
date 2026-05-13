@@ -21,19 +21,6 @@ export type GetRoiParams = {
     usecaseId: string;
 };
 
-// export type RoiResponse = {
-//     status?: string;
-//     message?: string;
-//     modelThreshold?: number;
-//     rois?: {
-//         id: string;
-//         type: ROIShape["type"];
-//         label: string;
-//         mode: ROIShape["mode"];
-//         color: string;
-//         points: ROIShape["points"];
-//     }[];
-// };
 
 export type RoiResponse = {
   roiCordinates?: {

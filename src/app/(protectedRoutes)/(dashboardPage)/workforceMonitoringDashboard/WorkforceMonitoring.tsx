@@ -351,7 +351,7 @@ const WorkforceMonitoring: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {WorkforcekpiLoading || !dashboardData.length
           ? Array.from({ length: 4 }).map((_, index) => (
-              <Grid key={index} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+              <Grid key={index+1} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
                 <KpiCardSkeleton />
               </Grid>
             ))

@@ -9,7 +9,6 @@ import DashboardTabs, {
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
-import DynamicViolationScatterChart from "@/app/components/organisms/ScatterChart/ScatterChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -22,7 +21,7 @@ import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardCo
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import {
-  graphResponsePoint,
+  
   SurveillanceDashboardResponse,
   SurveillanceSocketPayload,
   TrendResponse,
@@ -176,7 +175,105 @@ const unauthorizedGraphData =
   "series" in unauthorizedDashboard.graphs.data
     ? (unauthorizedDashboard.graphs.data as TrendResponse)
     : undefined;
+const renderChart = () => {
+  if (SurveillancekpiLoading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
+  if (!intrusionGraphData) {
+    return null;
+  }
+
+  const chartProps = toTimeScaleProps(intrusionGraphData);
+
+  return (
+    <TimeScaleLineChart
+      granularity={intrusionGraphData.granularity}
+      {...chartProps}
+      series={chartProps.series.map((s) => ({
+        ...s,
+        showMark: true,
+      }))}
+    />
+  );
+};
+const renderMovementChart = () => {
+  if (SurveillancekpiLoading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!movementGraphData) {
+    return null;
+  }
+
+  const chartProps = toTimeScaleProps(movementGraphData);
+
+  return (
+    <TimeScaleLineChart
+      granularity={movementGraphData.granularity}
+      {...chartProps}
+      series={chartProps.series.map((s) => ({
+        ...s,
+        showMark: true,
+      }))}
+    />
+  );
+};
+const renderUnauthorizedChart = () => {
+  if (SurveillancekpiLoading) {
+    return (
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader />
+      </Box>
+    );
+  }
+
+  if (!unauthorizedGraphData) {
+    return null;
+  }
+
+  const chartProps = toTimeScaleProps(unauthorizedGraphData);
+
+  return (
+    <TimeScaleLineChart
+      granularity={unauthorizedGraphData.granularity}
+      {...chartProps}
+      series={chartProps.series.map((s) => ({
+        ...s,
+        showMark: true,
+      }))}
+    />
+  );
+};
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection",
@@ -200,28 +297,8 @@ const unauthorizedGraphData =
               },
             }}
           >
-            {/* {intrusionDashboard && (
-              <DynamicViolationScatterChart item={intrusionDashboard} />
-            )} */}
-      {SurveillancekpiLoading ? (
-  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <CircularProgress />
-  </Box>
-) : intrusionGraphData ? (
-  // <TimeScaleLineChart
-  //   granularity={intrusionGraphData.granularity}
-  //   {...toTimeScaleProps(intrusionGraphData)}
-  // />
-
-  <TimeScaleLineChart
-  granularity={intrusionGraphData.granularity}
-  {...toTimeScaleProps(intrusionGraphData)}
-  series={toTimeScaleProps(intrusionGraphData).series.map((s: any) => ({
-    ...s,
-    showMark: true,   // ✅ force enable
-  }))}
-/>
-) : null}
+        
+      {renderChart()}
           </Grid>
         </Grid>
       ),
@@ -252,20 +329,7 @@ const unauthorizedGraphData =
             padding={{ xs: "10px" }}
           >
       
-{SurveillancekpiLoading ? (
-  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <CircularProgress />
-  </Box>
-) : movementGraphData ? (
-  <TimeScaleLineChart
-    granularity={movementGraphData.granularity}
-    {...toTimeScaleProps(movementGraphData)}
-     series={toTimeScaleProps(movementGraphData).series.map((s: any) => ({
-    ...s,
-    showMark: true,   
-  }))}
-  />
-) : null}
+{renderMovementChart()}
           </Grid>
         </Grid>
       ),
@@ -356,20 +420,7 @@ const unauthorizedGraphData =
               },
             }}
           >
-       {SurveillancekpiLoading ? (
-  <Box sx={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-    <Loader />
-  </Box>
-) : unauthorizedGraphData ? (
-  <TimeScaleLineChart
-    granularity={unauthorizedGraphData.granularity}
-    {...toTimeScaleProps(unauthorizedGraphData)}
-       series={toTimeScaleProps(unauthorizedGraphData).series.map((s: any) => ({
-    ...s,
-    showMark: true,   
-  }))}
-  />
-) : null}
+       {renderUnauthorizedChart()}
           </Grid>
         </Grid>
       ),

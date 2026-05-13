@@ -27,7 +27,6 @@ import {
   useGetOrgShiftTimeDataQuery,
   useLazyGetOperationalDashboardDataQuery,
 } from "./OperationalInsightsDashboardApi";
-import JointBarGraphChart from "@/app/components/organisms/JointBarGraphChart/JointBarGraphChart";
 import Loader from "@/app/components/atoms/Loader/Loader";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -36,7 +35,7 @@ import Loader from "@/app/components/atoms/Loader/Loader";
 // the same { granularity, series[{ zone, color, data[{ date, time, entryCount, exitCount }] }] } shape
 function buildPeopleInsideProps(dashboardData: OperationalInsightsDashboardResponse[]) {
   const usecase = dashboardData.find((d) => d.title === "People Inside");
-  const graphData = usecase?.graphs?.data as PeopleInsideGraphData | undefined;
+  const graphData = usecase?.graphs?.data ;
 
   const rawData = graphData?.series[0]?.data ?? [];
 
@@ -212,14 +211,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
           <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
-            {/* {operationalKpiLoading ? (
-              <CircularProgress />
-            ) : (
-              <JointBarGraphChart
-                times={vehicleMonitorData.times}
-                seriesData={vehicleMonitorData.series}
-              />
-            )} */}
+        
           </Grid>
         </Grid>
       ),
@@ -270,7 +262,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {operationalKpiLoading || !dashboardData.length
           ? Array.from({ length: 5 }).map((_, i) => (
-              <Grid key={i} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+              <Grid key={`skeleton-${i + 1}`} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
                 <KpiCardSkeleton />
               </Grid>
             ))

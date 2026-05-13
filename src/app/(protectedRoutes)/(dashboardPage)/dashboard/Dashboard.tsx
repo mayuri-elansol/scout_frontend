@@ -18,7 +18,7 @@ import {
 } from "./DashboardConfig";
 import {
   CameraTamperingKpiCard,
-  DashboardItem,
+  
   DashboardMonitoringSocketPayload,
   MainDashboardResponse,
 } from "./Dashboard.types";

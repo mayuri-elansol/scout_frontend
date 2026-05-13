@@ -29,7 +29,7 @@ import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
 import { EmployeePresenceRestrictedAreaKpiConfig } from "./EmployeePresenceRestrictedAreaConfig";
 import {
-  KpiTitle,
+
   EmployeePresenceRestrictedAreaDetailedReportResponse,
   EmployeePresenceRestrictedAreaFilterParams,
   EmployeePresenceRestrictedAreaViolation,
@@ -164,7 +164,7 @@ const EmployeePresence: React.FC = () => {
   /* ---------- DERIVED DATA ---------- */
   const kpiData = useMemo(() => {
     return displayKpi.map((item) => {
-      const config = EmployeePresenceRestrictedAreaKpiConfig[item.title as KpiTitle];
+      const config = EmployeePresenceRestrictedAreaKpiConfig[item.title ];
       return {
         title: item.title,
         value: item.value,
@@ -300,7 +300,7 @@ const EmployeePresence: React.FC = () => {
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {overviewLoading || !kpiData.length
             ? Array.from({ length: 6 }).map((_, i) => (
-                <Grid key={i} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
+                <Grid  key={`skeleton-${i + 1}`} size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}>
                   <KpiCardSkeleton />
                 </Grid>
               ))

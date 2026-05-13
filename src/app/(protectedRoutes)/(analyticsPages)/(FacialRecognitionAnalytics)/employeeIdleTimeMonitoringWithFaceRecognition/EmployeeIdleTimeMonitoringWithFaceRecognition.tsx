@@ -2,7 +2,6 @@
 
 import React from "react";
 import CameraStatus from "@/app/components/organisms/CameraStatus/CameraStatus";
-import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { Shield, Warning, CheckCircle, Schedule } from "@mui/icons-material";
@@ -95,18 +94,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
     startDate?: string;
     endDate?: string;
   }
-  const handleSubmitFilter = async (filters: FilterParams) => {
-    console.log("Selected Filters:", filters);
-    // Example: { status: "Active", employeeName: "John", startDate: "2025-09-01", endDate: "2025-09-05" }
-  };
 
-  const handleReset = () => {
-    console.log("reset button clickedd");
-  };
-
-  const handleExport = (format: "csv" | "pdf") => {
-    console.log("Export requested clikcedd:", format);
-  };
   const KpiCardLoading = false;
   return (
     <Box>
@@ -183,95 +171,7 @@ const EmployeeIdleTimeMonitoringWithFaceRecognition: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-      {/*  Violations Report */}
-      {/* <ReportTable
-        title="Report Table"
-        columns={[
-          { id: "violationId", label: "Violation ID", minWidth: 120 },
-          { id: "time", label: "Timestamp", minWidth: 80 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "employeeId", label: "Employee ID", minWidth: 120 },
-          { id: "violationType", label: "Violation Type", minWidth: 150 },
-          { id: "severity", label: "Severity", minWidth: 100 },
-          { id: "status", label: "Status", minWidth: 100 },
-          { id: "priority", label: "Priority", minWidth: 80 },
-          { id: "resolution", label: "Action Taken", minWidth: 150 },
-        ]}
-        data={[
-          {
-            violationId: "PPE-7892",
-            time: "15:42",
-            zone: "Production Floor A",
-            employeeId: "John Mitchell",
-            violationType: "Missing Hard Hat",
-            severity: "Critical",
-            status: "VIOLATION",
-            priority: "Critical",
-            resolution: "Employee notified, PPE provided",
-          },
-          {
-            violationId: "PPE-7891",
-            time: "15:28",
-            zone: "Welding Station",
-            employeeId: "Lisa Anderson",
-            violationType: "Improper Safety Glasses",
-            severity: "High",
-            status: "RESOLVED",
-            priority: "High",
-            resolution: "Correct eyewear issued",
-          },
-          {
-            violationId: "PPE-7890",
-            time: "15:15",
-            zone: "Chemical Storage",
-            employeeId: "Sarah Chen",
-            violationType: "Missing Safety Gloves",
-            severity: "Critical",
-            status: "PENDING",
-            priority: "Critical",
-            resolution: "Under investigation",
-          },
-          {
-            violationId: "PPE-7889",
-            time: "14:58",
-            zone: "Assembly Line B",
-            employeeId: "Michael Torres",
-            violationType: "Incorrect Footwear",
-            severity: "Medium",
-            status: "RESOLVED",
-            priority: "Medium",
-            resolution: "Safety boots provided",
-          },
-          {
-            violationId: "PPE-7888",
-            time: "14:32",
-            zone: "Maintenance Area",
-            employeeId: "David Kim",
-            violationType: "Missing Safety Vest",
-            severity: "High",
-            status: "VIOLATION",
-            priority: "High",
-            resolution: "Supervisor notified",
-          },
-        ]}
-        filters={[
-          {
-            id: "employeeId",
-            label: "Employee",
-            type: "select",
-            options: ["David Kim", "Missing", "Resolved"],
-          },
-          { id: "time", label: "Start Date", type: "date" },
-          { id: "time", label: "End Date", type: "date" },
-        ]}
-        onSubmit={handleSubmitFilter}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName="ppe-violations-report"
-        loading={false}
-        tooltipMessage="report table"
-      /> */}
-    </Box>
+       </Box>
   );
 };
 

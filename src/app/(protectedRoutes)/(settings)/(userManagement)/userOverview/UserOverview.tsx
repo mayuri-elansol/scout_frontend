@@ -185,7 +185,6 @@ const UserOverview: React.FC = () => {
           size="small"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          // sx={{ minWidth: 300 }}
         />
         {canAddUser && (
           <Button

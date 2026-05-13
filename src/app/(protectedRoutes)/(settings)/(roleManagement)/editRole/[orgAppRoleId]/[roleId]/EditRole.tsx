@@ -58,11 +58,18 @@ const EditRole: React.FC = () => {
       { skip: !userId || !tenantId },
     );
 
-  const { data: roleFeaturesRes, isLoading: isRoleLoading } =
-    useGetFeaturesOfRoleByRoleIdQuery(
-      { tenantId: tenantId!, roleId: roleId!, orgAppRoleId: orgAppRoleId! },
-      { skip: !tenantId || !roleId || !orgAppRoleId },
-    );
+// ✅ Narrow types first, then no assertions needed
+const isReady = !!tenantId && !!roleId && !!orgAppRoleId;
+
+const { data: roleFeaturesRes, isLoading: isRoleLoading } =
+  useGetFeaturesOfRoleByRoleIdQuery(
+    {
+      tenantId: tenantId ?? "",
+      roleId: roleId ?? "",
+      orgAppRoleId: orgAppRoleId ?? "",
+    },
+    { skip: !isReady },
+  );
 
   const [assignFeatureToRole, { isLoading: isAssigning }] =
     useAssignFeatureToRoleMutation();
@@ -321,9 +328,8 @@ const EditRole: React.FC = () => {
               size="large"
               onClick={handleSave}
               disabled={!hasChanges || isAssigning}
-              // sx={{ px: 8, py: 1.5 }}
             >
-              {isAssigning ? "Saving..." : "Save "}
+              {isAssigning ? "Saving..." : "Save"}
             </Button>
           </Box>
         </Paper>

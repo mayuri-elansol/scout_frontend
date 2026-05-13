@@ -28,7 +28,7 @@ export const featuresApi = baseProtectedApi.injectEndpoints({
         // drill down to innermost array and return as RoleFeature[]
         return response.data.data;
       },
-      invalidatesTags: ["AddFeatures"],
+      invalidatesTags: ["RoleOverview"],
     }),
   }),
 });

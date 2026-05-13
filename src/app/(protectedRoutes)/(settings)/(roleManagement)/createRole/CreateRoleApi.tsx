@@ -19,7 +19,7 @@ export const createRoleApi = baseProtectedApi.injectEndpoints({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["CreateRole"],
+      invalidatesTags: ["AddFeatures"],
     }),
   }),
 });
