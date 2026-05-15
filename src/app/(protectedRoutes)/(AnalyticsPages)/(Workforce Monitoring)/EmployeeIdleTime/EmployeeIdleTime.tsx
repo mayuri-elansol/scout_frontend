@@ -13,7 +13,7 @@ import PersonOffIcon from "@mui/icons-material/PersonOff";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const EmployeeIdleTime: React.FC = () => {
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
@@ -34,7 +34,7 @@ const EmployeeIdleTime: React.FC = () => {
   const EmployeeIdleTimeKpiData = [
     {
       title: "Total Idle Events",
-      value: "23",
+      value: "1",
       icon: AccessTime,
       tooltipMessage:
         "Total number of idle time events detected by the system.",
@@ -47,7 +47,7 @@ const EmployeeIdleTime: React.FC = () => {
     },
     {
       title: "Last Idle Detection Zone",
-      value: "Assembly Line A",
+      value: "Zone A",
       icon: Room,
       tooltipMessage: "The zone where the most recent idle event was detected.",
     },
@@ -59,7 +59,7 @@ const EmployeeIdleTime: React.FC = () => {
       isWorking: false,
       notPresent: false,
       trackingId: "TRK-01",
-      zone: "Production Floor A",
+      zone: "Zone A",
       snapshot: "/img/employee-idle-time-monitoring/i1.png",
       cameraid: "CAM-I01",
       createdAt: getOneHourBefore().fullDate,
@@ -71,47 +71,11 @@ const EmployeeIdleTime: React.FC = () => {
       isWorking: true,
       notPresent: false,
       trackingId: "TRK-02",
-      zone: "Welding Station",
+      zone: "Zone B",
       snapshot: "/img/employee-idle-time-monitoring/i2.jpg",
       cameraid: "CAM-I02",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:45",
-    },
-    {
-      id: 303,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-03",
-      zone: "Chemical Storage",
-      snapshot: "/img/employee-idle-time-monitoring/i1.png",
-      cameraid: "CAM-I03",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:35",
-    },
-    {
-      id: 304,
-      isIdle: false,
-      isWorking: false,
-      notPresent: true,
-      trackingId: "TRK-04",
-      zone: "Assembly Line B",
-      snapshot: "/img/employee-idle-time-monitoring/i2.jpg",
-      cameraid: "CAM-I04",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:25",
-    },
-    {
-      id: 305,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-05",
-      zone: "Maintenance Area",
-      snapshot: "/img/employee-idle-time-monitoring/i1.png",
-      cameraid: "CAM-I05",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:15",
     },
   ];
 
@@ -135,46 +99,21 @@ const EmployeeIdleTime: React.FC = () => {
 
   const zoneIdleData = [
     {
-      zone: "Production Floor A",
-      incidents: 7,
+      zone: "Zone A",
+      incidents: 1,
       subViolations: [
-        { label: "Idle", value: 4, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
-      ],
-    },
-    {
-      zone: "Welding Station",
-      incidents: 5,
-      subViolations: [
-        { label: "Working", value: 4, icon: WorkOutlineIcon },
         { label: "Idle", value: 1, icon: AccessTimeIcon },
+        { label: "Working", value: 0, icon: WorkOutlineIcon },
+        { label: "Not Present", value: 0, icon: PersonOffIcon },
       ],
     },
     {
-      zone: "Chemical Storage",
-      incidents: 6,
+      zone: "Zone B",
+      incidents: 1,
       subViolations: [
-        { label: "Idle", value: 3, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
-      ],
-    },
-    {
-      zone: "Assembly Line B",
-      incidents: 4,
-      subViolations: [
-        { label: "Not Present", value: 2, icon: PersonOffIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-      ],
-    },
-    {
-      zone: "Maintenance Area",
-      incidents: 8,
-      subViolations: [
-        { label: "Idle", value: 5, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Working", value: 1, icon: WorkOutlineIcon },
+        { label: "Idle", value: 0, icon: AccessTimeIcon },
+        { label: "Not Present", value: 0, icon: PersonOffIcon },
       ],
     },
   ];

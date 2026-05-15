@@ -13,7 +13,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import PeopleIcon from "@mui/icons-material/People";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const PeopleCount: React.FC = () => {
   interface PeopleCountViolation {
@@ -34,9 +34,9 @@ const PeopleCount: React.FC = () => {
   const backendData = [
     {
       id: 201,
-      enteredCount: 15,
-      exitCount: 10,
-      zone: "Production Floor A",
+      enteredCount: 4,
+      exitCount: 0,
+      zone: "Zone A",
       snapshot: "/img/people-count-factory-premises/p1.jpg",
       cameraid: "CAM-11",
       alarmTriggered: true,
@@ -45,9 +45,9 @@ const PeopleCount: React.FC = () => {
     },
     {
       id: 202,
-      enteredCount: 8,
-      exitCount: 5,
-      zone: "Welding Station",
+      enteredCount: 5,
+      exitCount: 0,
+      zone: "Zone B",
       snapshot: "/img/people-count-factory-premises/p2.jpg",
       cameraid: "CAM-12",
       alarmTriggered: false,
@@ -56,74 +56,38 @@ const PeopleCount: React.FC = () => {
     },
     {
       id: 203,
-      enteredCount: 12,
-      exitCount: 11,
-      zone: "Chemical Storage",
+      enteredCount: 0,
+      exitCount: 16,
+      zone: "Zone C",
       snapshot: "/img/people-count-factory-premises/p3.jpg",
       cameraid: "CAM-13",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:20",
     },
-    {
-      id: 204,
-      enteredCount: 20,
-      exitCount: 18,
-      zone: "Assembly Line B",
-      snapshot: "/img/people-count-factory-premises/p2.jpg",
-      cameraid: "CAM-14",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-30 09:05",
-    },
-    {
-      id: 205,
-      enteredCount: 5,
-      exitCount: 2,
-      zone: "Maintenance Area",
-      snapshot: "/img/people-count-factory-premises/p3.jpg",
-      cameraid: "CAM-15",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-30 08:40",
-    },
   ];
 
   const zonePeopleCountData = [
     {
-      zone: "Production Floor A",
+      zone: "Zone A",
 
       subViolations: [
-        { label: "entered Count", value: 3, icon: PeopleIcon },
-        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+        { label: "entered Count", value: 4, icon: PeopleIcon },
+        { label: "exit Count", value: 0, icon: ExitToAppIcon },
       ],
     },
     {
-      zone: "Welding Station",
+      zone: "Zone B",
       subViolations: [
-        { label: "entered Count", value: 3, icon: PeopleIcon },
-        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+        { label: "entered Count", value: 5, icon: PeopleIcon },
+        { label: "exit Count", value: 0, icon: ExitToAppIcon },
       ],
     },
     {
-      zone: "Chemical Storage",
+      zone: "Zone C",
       subViolations: [
-        { label: "entered Count", value: 3, icon: PeopleIcon },
-        { label: "exit Count", value: 2, icon: ExitToAppIcon },
-      ],
-    },
-    {
-      zone: "Assembly Line B",
-      subViolations: [
-        { label: "entered Count", value: 3, icon: PeopleIcon },
-        { label: "exit Count", value: 2, icon: ExitToAppIcon },
-      ],
-    },
-    {
-      zone: "Maintenance Area",
-      subViolations: [
-        { label: "entered Count", value: 3, icon: PeopleIcon },
-        { label: "exit Count", value: 2, icon: ExitToAppIcon },
+        { label: "entered Count", value: 16, icon: PeopleIcon },
+        { label: "exit Count", value: 0, icon: ExitToAppIcon },
       ],
     },
   ];
@@ -144,7 +108,7 @@ const PeopleCount: React.FC = () => {
   const peopleCountKpiData = [
     {
       title: "People Inside",
-      value: "267",
+      value: "25",
       icon: People,
 
       tooltipMessage: "Current number of people present inside the area.",
@@ -156,7 +120,7 @@ const PeopleCount: React.FC = () => {
     },
     {
       title: "Entry Count",
-      value: "512",
+      value: "25",
       icon: Login,
 
       tooltipMessage: "Total number of people who entered today.",
@@ -168,7 +132,7 @@ const PeopleCount: React.FC = () => {
     },
     {
       title: "Exit Count",
-      value: "245",
+      value: "0",
       icon: Logout,
       tooltipMessage: "Total number of people who exited today.",
       trendColor: "#2196f3",

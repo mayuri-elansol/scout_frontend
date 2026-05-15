@@ -16,7 +16,7 @@ import { useState } from "react";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const FireSmokeOilLeakDetection: React.FC = () => {
   interface RecentViolationData {
@@ -38,7 +38,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       detection: true,
       objectname: "fire",
       snapshot: "/img/f1.jpg",
-      zone: "Production Floor A",
+      zone: "Zone A",
       camera: "CAM-06",
       timestamp: "2025-09-23 16:00",
       alarmTriggered: true,
@@ -50,7 +50,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       detection: true,
       objectname: "smoke",
       snapshot: "/img/f2.jpg",
-      zone: "Welding Station",
+      zone: "Zone B",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
@@ -62,7 +62,7 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       detection: true,
       objectname: "fire",
       snapshot: "/img/f3.jpg",
-      zone: "Chemical Storage",
+      zone: "Zone A",
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
@@ -70,11 +70,11 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       updatedAt: "2025-09-23 16:21",
     },
     {
-      id: 202,
+      id: 204,
       detection: true,
       objectname: "smoke",
       snapshot: "/img/f1.jpg",
-      zone: "Welding Station",
+      zone: "Zone B",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
@@ -83,11 +83,11 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     },
 
     {
-      id: 202,
+      id: 205,
       detection: true,
       objectname: "smoke",
       snapshot: "/img/f2.jpg",
-      zone: "Welding Station",
+      zone: "Zone A",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
@@ -96,11 +96,11 @@ const FireSmokeOilLeakDetection: React.FC = () => {
     },
 
     {
-      id: 203,
+      id: 206,
       detection: true,
       objectname: "fire",
       snapshot: "/img/f3.jpg",
-      zone: "Chemical Storage",
+      zone: "Zone B",
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
@@ -108,11 +108,11 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       updatedAt: "2025-09-23 16:21",
     },
     {
-      id: 202,
+      id: 207,
       detection: true,
       objectname: "smoke",
       snapshot: "/img/f1.jpg",
-      zone: "Welding Station",
+      zone: "Zone A",
       camera: "CAM-07",
       timestamp: "2025-09-23 16:10",
       alarmTriggered: true,
@@ -120,11 +120,11 @@ const FireSmokeOilLeakDetection: React.FC = () => {
       updatedAt: "2025-09-23 16:12",
     },
     {
-      id: 203,
+      id: 208,
       detection: true,
       objectname: "fire",
       snapshot: "/img/f3.jpg",
-      zone: "Chemical Storage",
+      zone: "Zone B",
       camera: "CAM-08",
       timestamp: "2025-09-23 16:20",
       alarmTriggered: false,
@@ -177,8 +177,8 @@ const FireSmokeOilLeakDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Production Floor A",
-      incident: 5,
+      zone: "Zone A",
+      incident: 4,
 
       subViolations: [
         {
@@ -188,36 +188,19 @@ const FireSmokeOilLeakDetection: React.FC = () => {
         },
         {
           label: "Smoke",
-          value: 3,
+          value: 2,
           icon: SmokeFree,
         },
       ],
     },
     {
-      zone: "Welding Station",
-      incident: 8,
+      zone: "Zone B",
+      incident: 4,
 
       subViolations: [
         {
           label: "Fire",
-          value: 4,
-          icon: LocalFireDepartment,
-        },
-        {
-          label: "Smoke",
-          value: 4,
-          icon: SmokeFree,
-        },
-      ],
-    },
-    {
-      zone: "Chemical Storage",
-      incident: 3,
-
-      subViolations: [
-        {
-          label: "Gas Leak",
-          value: 1,
+          value: 2,
           icon: LocalFireDepartment,
         },
         {

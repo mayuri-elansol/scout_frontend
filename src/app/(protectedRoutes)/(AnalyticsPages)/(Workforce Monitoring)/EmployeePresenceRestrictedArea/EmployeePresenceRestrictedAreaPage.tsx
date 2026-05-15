@@ -12,7 +12,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const EmployeePresenceRestrictedAreaPage: React.FC = () => {
   interface EmployeePresenceViolation {
@@ -225,7 +225,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.zone))
+              new Set(recentEmployeeViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -233,7 +233,7 @@ const EmployeePresenceRestrictedAreaPage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.cameraId))
+              new Set(recentEmployeeViolations.map((v) => v.cameraId)),
             ),
           },
           {

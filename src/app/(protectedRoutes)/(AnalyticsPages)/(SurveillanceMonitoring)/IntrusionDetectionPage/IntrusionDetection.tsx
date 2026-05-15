@@ -13,7 +13,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const IntrusionDetection: React.FC = () => {
   interface IntrusionViolation {
@@ -34,13 +34,13 @@ const IntrusionDetection: React.FC = () => {
   const intrusionKpiData = [
     {
       title: "Intrusion Detected",
-      value: "7",
+      value: "4",
       icon: Security,
       tooltipMessage: "Shows the total number of intrusions detected so far.",
     },
     {
       title: "Security Level (Safe/Unsafe)",
-      value: "Safe",
+      value: "Unsafe",
       tooltipMessage:
         "Displays whether the security status is safe or unsafe at the moment.",
 
@@ -48,7 +48,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Recent Intrusion Time",
-      value: getOneHourBefore().time,
+      value: getOneHourBefore().fullDate,
       icon: AccessTime,
 
       tooltipMessage:
@@ -56,7 +56,7 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       title: "Zone Breaches",
-      value: "2 (Zone A, Zone C)",
+      value: "4 (Zone A, Zone B,Zone C, Zone D)",
       icon: LocationOn,
       tooltipMessage:
         "Displays the number of zones breached and lists those zones.",
@@ -66,7 +66,7 @@ const IntrusionDetection: React.FC = () => {
     {
       id: 201,
       snapshot: "/img/intrusion-detection-perimeter/i2.jpg",
-      zone: "Perimeter Zone A",
+      zone: "Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -75,7 +75,7 @@ const IntrusionDetection: React.FC = () => {
     {
       id: 202,
       snapshot: "/img/intrusion-detection-perimeter/i3.jpg",
-      zone: "Perimeter Zone B",
+      zone: "Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -84,7 +84,7 @@ const IntrusionDetection: React.FC = () => {
     {
       id: 203,
       snapshot: "/img/intrusion-detection-perimeter/i4.jpg",
-      zone: "Perimeter Zone A",
+      zone: "Zone C",
       camera: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -93,7 +93,7 @@ const IntrusionDetection: React.FC = () => {
     {
       id: 204,
       snapshot: "/img/intrusion-detection-perimeter/i5.jpg",
-      zone: "Perimeter Zone B",
+      zone: "Zone D",
       camera: "CAM-12",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -123,12 +123,20 @@ const IntrusionDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Perimeter Zone A",
-      incident: 2,
+      zone: "Zone A",
+      incident: 1,
     },
     {
-      zone: "Perimeter Zone B",
-      incident: 2,
+      zone: "Zone B",
+      incident: 1,
+    },
+    {
+      zone: "Zone C",
+      incident: 1,
+    },
+    {
+      zone: "Zone D",
+      incident: 1,
     },
   ];
   const KpiCardLoading = false;

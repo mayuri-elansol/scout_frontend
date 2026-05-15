@@ -16,8 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 const VehicleCount: React.FC = () => {
@@ -42,7 +41,7 @@ const VehicleCount: React.FC = () => {
   const VehicleCountKpiData = [
     {
       title: "Total Vehicle Entries",
-      value: "120",
+      value: "6",
       icon: Login,
       tooltipMessage:
         "Total number of vehicles that entered through all gates during the selected time period.",
@@ -54,7 +53,7 @@ const VehicleCount: React.FC = () => {
     },
     {
       title: "Total Vehicle Exits",
-      value: "92",
+      value: "1",
       icon: Logout,
       tooltipMessage:
         "Total number of vehicles that exited through all gates during the selected time period.",
@@ -66,7 +65,7 @@ const VehicleCount: React.FC = () => {
     },
     {
       title: "Vehicles Inside",
-      value: "28",
+      value: "5",
       icon: DirectionsCar,
       tooltipMessage:
         "Total number of vehicles currently inside the premises (calculated as entries minus exits).",
@@ -78,7 +77,7 @@ const VehicleCount: React.FC = () => {
     },
     {
       title: "Total Valid Numbers",
-      value: "145",
+      value: "0",
       icon: CheckCircle,
       tooltipMessage:
         "Number of detected vehicles with valid license plate numbers.",
@@ -90,7 +89,7 @@ const VehicleCount: React.FC = () => {
     },
     {
       title: "Total Invalid Numbers",
-      value: "7",
+      value: "2",
       icon: ReportProblem,
       tooltipMessage:
         "Number of detected vehicles with invalid or unreadable license plate numbers.",
@@ -100,50 +99,27 @@ const VehicleCount: React.FC = () => {
     {
       id: 201,
       numberDetected: "MH12AB1234",
-      status: "Entry",
+      status: "Exit",
       validNumber: false,
       snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
-      zone: "Main Gate A",
+      zone: "Zone A",
       camera: "CAM-ENTRY-01",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 09:43",
       alarmTriggered: false,
     },
-    {
-      id: 202,
-      numberDetected: "MH14XY7890",
-      status: "Exit",
-      validNumber: false,
-      snapshot: "/img/vehicle-count-anpr-gates/v2.jpg",
-      zone: "Exit Gate B",
-      camera: "CAM-EXIT-02",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 10:00",
-      alarmTriggered: true,
-    },
+
     {
       id: 203,
       numberDetected: "GJ05TR5678",
       status: "Entry",
       validNumber: false,
       snapshot: "/img/vehicle-count-anpr-gates/v3.png",
-      zone: "Warehouse Entry",
+      zone: "Zone B",
       camera: "CAM-ENTRY-03",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 10:14",
       alarmTriggered: false,
-    },
-    {
-      id: 204,
-      numberDetected: "DL09GH4567",
-      status: "Exit",
-      validNumber: false,
-      snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
-      zone: "Service Exit",
-      camera: "CAM-EXIT-04",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 10:32",
-      alarmTriggered: true,
     },
   ];
 
@@ -171,38 +147,17 @@ const VehicleCount: React.FC = () => {
 
   const vehicleZoneViolationsData = [
     {
-      zone: "Main Gate A",
-      violations: 5,
+      zone: "Zone A",
+      violations: 1,
       subViolations: [
-        { label: "Invalid Number Plate", value: 3, icon: ErrorOutlineIcon },
+        { label: "Invalid Number Plate", value: 1, icon: ErrorOutlineIcon },
       ],
     },
     {
-      zone: "Exit Gate B",
-      violations: 7,
+      zone: "Zone B",
+      violations: 1,
       subViolations: [
-        { label: "Invalid Number Plate", value: 4, icon: ErrorOutlineIcon },
-      ],
-    },
-    {
-      zone: "Warehouse Entry",
-      violations: 4,
-      subViolations: [
-        { label: "Invalid Number Plate", value: 2, icon: ErrorOutlineIcon },
-      ],
-    },
-    {
-      zone: "Service Exit",
-      violations: 6,
-      subViolations: [
-        { label: "Invalid Number Plate", value: 3, icon: ErrorOutlineIcon },
-      ],
-    },
-    {
-      zone: "Visitor Gate",
-      violations: 3,
-      subViolations: [
-        { label: "Invalid Number Plate", value: 2, icon: ErrorOutlineIcon },
+        { label: "Invalid Number Plate", value: 1, icon: ErrorOutlineIcon },
       ],
     },
   ];

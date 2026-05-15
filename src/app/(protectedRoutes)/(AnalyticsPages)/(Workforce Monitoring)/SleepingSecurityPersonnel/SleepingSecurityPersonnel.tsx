@@ -10,7 +10,7 @@ import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -52,7 +52,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
     {
       title: "Zone Violations",
-      value: "Zone A, Zone C",
+      value: "Gate 2,Gate 1",
       icon: LocationOn,
       tooltipMessage:
         "Lists the zones where sleeping security personnel violations were detected.",
@@ -64,29 +64,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       sleeping: true,
       absence: false,
       snapshot: "/img/sleeping-absence-security-guards/s2.avif",
-      zone: "Main Gate",
-      camera: "CAM-51",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-24 08:17",
-    },
-    {
-      id: 902,
-      sleeping: false,
-      absence: true,
-
-      snapshot: "/img/sleeping-absence-security-guards/s1.jpg",
-      zone: "Assembly Line A",
-      camera: "CAM-52",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-24 08:27",
-    },
-    {
-      id: 901,
-      sleeping: true,
-      absence: false,
-
-      snapshot: "/img/sleeping-absence-security-guards/s2.avif",
-      zone: "Main Gate",
+      zone: "Gate 2",
       camera: "CAM-51",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:17",
@@ -96,7 +74,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       sleeping: false,
       absence: true,
       snapshot: "/img/sleeping-absence-security-guards/s1.jpg",
-      zone: "Assembly Line A",
+      zone: "Gate 1",
       camera: "CAM-52",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:27",
@@ -121,24 +99,24 @@ const SleepingSecurityPersonnel: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Main Gate",
-      violations: 3,
+      zone: "Gate 2",
+      violations: 1,
       subViolations: [
         {
           label: "Sleeping",
-          value: 2,
+          value: 1,
           icon: HotelIcon,
         },
         {
           label: "Absence",
-          value: 1,
+          value: 0,
           icon: PersonOffIcon,
         },
       ],
     },
     {
-      zone: "Assembly Line A",
-      violations: 2,
+      zone: "Gate 1",
+      violations: 1,
       subViolations: [
         {
           label: "Sleeping",
@@ -147,7 +125,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
         },
         {
           label: "Absence",
-          value: 1,
+          value: 0,
           icon: PersonOffIcon,
         },
       ],

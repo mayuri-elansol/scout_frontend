@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const CrowdGathering: React.FC = () => {
   interface ViolationRow {
@@ -38,7 +38,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: true,
       mobCount: 25,
       snapshot: "/img/c1.jpg",
-      zone: "Hazard Zone A",
+      zone: "Zone A",
       camera: "CAM-21",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
@@ -47,9 +47,9 @@ const CrowdGathering: React.FC = () => {
       id: 702,
       gatheredMore: true,
       alarmTriggered: false,
-      mobCount: 12,
+      mobCount: 50,
       snapshot: "/img/c5.jpg",
-      zone: "Hazard Zone B",
+      zone: "Zone B",
       camera: "CAM-22",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
@@ -60,7 +60,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: true,
       mobCount: 25,
       snapshot: "/img/c3.jpg",
-      zone: "Hazard Zone A",
+      zone: "Zone C",
       camera: "CAM-21",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
@@ -71,7 +71,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: true,
       mobCount: 25,
       snapshot: "/img/c4.jpg",
-      zone: "Hazard Zone A",
+      zone: "Zone D",
       camera: "CAM-21",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
@@ -82,7 +82,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: false,
       mobCount: 12,
       snapshot: "/img/c5.jpg",
-      zone: "Hazard Zone B",
+      zone: "Zone B",
       camera: "CAM-22",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
@@ -93,7 +93,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: true,
       mobCount: 25,
       snapshot: "/img/c3.jpg",
-      zone: "Hazard Zone A",
+      zone: "Zone C",
       camera: "CAM-21",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:06",
@@ -104,7 +104,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: false,
       mobCount: 12,
       snapshot: "/img/c5.jpg",
-      zone: "Hazard Zone B",
+      zone: "Zone B",
       camera: "CAM-22",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
@@ -115,7 +115,7 @@ const CrowdGathering: React.FC = () => {
       alarmTriggered: false,
       mobCount: 12,
       snapshot: "/img/c1.jpg",
-      zone: "Hazard Zone B",
+      zone: "Zone A",
       camera: "CAM-22",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 20:16",
@@ -132,7 +132,7 @@ const CrowdGathering: React.FC = () => {
     },
     {
       title: "Crowded Zone",
-      value: "Hazard Zone A",
+      value: "Zone B",
       icon: Groups,
       tooltipMessage:
         "Displays the zone that currently has the highest crowd gathering.",
@@ -181,12 +181,21 @@ const CrowdGathering: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Hazard Zone A",
-      violations: 5,
+      zone: "Zone B",
+      violations: 3,
     },
     {
-      zone: "Hazard Zone B",
-      violations: 3,
+      zone: "Zone A",
+      violations: 2,
+    },
+
+    {
+      zone: "Zone C",
+      violations: 2,
+    },
+    {
+      zone: "Zone D",
+      violations: 1,
     },
   ];
   interface FilterParams {
@@ -305,7 +314,7 @@ const CrowdGathering: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentCrowdViolations.map((item) => item.zone))
+              new Set(recentCrowdViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -313,7 +322,7 @@ const CrowdGathering: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentCrowdViolations.map((item) => item.cameraId))
+              new Set(recentCrowdViolations.map((item) => item.cameraId)),
             ),
           },
           {

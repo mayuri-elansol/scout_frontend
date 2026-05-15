@@ -13,7 +13,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOnehalftBefore, getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
@@ -34,13 +34,13 @@ const VehicleUnloadingLoading: React.FC = () => {
   const VehicleUnloadingLoadingKpiData = [
     {
       title: "Total Loading/Unloading Event",
-      value: "87",
+      value: "2",
       icon: LocalShipping,
       tooltipMessage: "Total loading/unloading events recorded.",
     },
     {
       title: "Average Loading/Unloading Time",
-      value: "1.56 hrs",
+      value: "30 mins",
       icon: AccessTimeIcon,
       tooltipMessage:
         "Shows the Average Time for Vehical Loading/Unloading event",
@@ -48,7 +48,7 @@ const VehicleUnloadingLoading: React.FC = () => {
 
     {
       title: "Busiest Zone",
-      value: "Zone A",
+      value: "Loading Bay A,Loading Bay B",
       icon: Timeline,
       tooltipMessage: "Zone with the highest operation activity.",
     },
@@ -69,23 +69,23 @@ const VehicleUnloadingLoading: React.FC = () => {
       id: 302,
       trackId: "TRK-002",
       loadingState: "Stop",
-      snapshot: "/img/vehicle-loading-unloading-monitoring/v4.jpg",
-      zone: "Loading Bay B",
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v2.jpg",
+      zone: "Loading Bay A",
       camera: "CAM-22",
       alarmTriggered: false,
-      createdAt: getOneHourBefore().fullDate,
+      createdAt: getOnehalftBefore().fullDate,
       updatedAt: "2025-10-09 09:35",
     },
     {
-      id: 303,
-      trackId: "TRK-003",
+      id: 304,
+      trackId: "TRK-004",
       loadingState: "Start",
-      snapshot: "/img/vehicle-loading-unloading-monitoring/v2.jpg",
-      zone: "Unloading Bay A",
-      camera: "CAM-23",
-      alarmTriggered: true,
+      snapshot: "/img/vehicle-loading-unloading-monitoring/v1.webp",
+      zone: "Unloading Bay B",
+      camera: "CAM-24",
+      alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 10:05",
+      updatedAt: "2025-10-09 11:05",
     },
     {
       id: 304,
@@ -95,19 +95,8 @@ const VehicleUnloadingLoading: React.FC = () => {
       zone: "Unloading Bay B",
       camera: "CAM-24",
       alarmTriggered: false,
-      createdAt: getOneHourBefore().fullDate,
+      createdAt: getOnehalftBefore().fullDate,
       updatedAt: "2025-10-09 11:05",
-    },
-    {
-      id: 305,
-      trackId: "TRK-005",
-      loadingState: "Start",
-      snapshot: "/img/vehicle-loading-unloading-monitoring/v3.webp",
-      zone: "Loading Bay C",
-      camera: "CAM-25",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 12:20",
     },
   ];
 
@@ -129,42 +118,18 @@ const VehicleUnloadingLoading: React.FC = () => {
   const zoneLoadingData = [
     {
       zone: "Loading Bay A",
-      incident: 12,
+      incident: 1,
       subViolations: [
-        { label: "Start", value: 7, icon: PlayCircleIcon },
-        { label: "Stop", value: 5, icon: StopCircleIcon },
+        { label: "Start", value: 1, icon: PlayCircleIcon },
+        { label: "Stop", value: 1, icon: StopCircleIcon },
       ],
     },
     {
       zone: "Loading Bay B",
-      incident: 9,
+      incident: 1,
       subViolations: [
-        { label: "Start", value: 4, icon: PlayCircleIcon },
-        { label: "Stop", value: 5, icon: StopCircleIcon },
-      ],
-    },
-    {
-      zone: "Unloading Bay A",
-      incident: 15,
-      subViolations: [
-        { label: "Start", value: 9, icon: PlayCircleIcon },
-        { label: "Stop", value: 6, icon: StopCircleIcon },
-      ],
-    },
-    {
-      zone: "Unloading Bay B",
-      incident: 8,
-      subViolations: [
-        { label: "Start", value: 4, icon: PlayCircleIcon },
-        { label: "Stop", value: 4, icon: StopCircleIcon },
-      ],
-    },
-    {
-      zone: "Loading Bay C",
-      incident: 10,
-      subViolations: [
-        { label: "Start", value: 6, icon: PlayCircleIcon },
-        { label: "Stop", value: 4, icon: StopCircleIcon },
+        { label: "Start", value: 1, icon: PlayCircleIcon },
+        { label: "Stop", value: 1, icon: StopCircleIcon },
       ],
     },
   ];

@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const EmergencyExitBlockage: React.FC = () => {
   interface ReportData extends Record<string, string | number | boolean> {
@@ -61,7 +61,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e1.jpg",
-      zone: "Emergency Exit A",
+      zone: "Zone A",
       camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
@@ -72,7 +72,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e2.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone B",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -82,7 +82,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e3.jpg",
-      zone: "Emergency Exit A",
+      zone: "Zone C",
       camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
@@ -93,7 +93,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e1.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone A",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -103,7 +103,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e2.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone C",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -114,7 +114,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e3.jpg",
-      zone: "Emergency Exit A",
+      zone: "Zone B",
       camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:06",
@@ -124,7 +124,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e2.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone C",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -134,7 +134,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e3.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone B",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -144,7 +144,7 @@ const EmergencyExitBlockage: React.FC = () => {
       blockage: true,
       alarmTriggered: true,
       snapshot: "/img/e1.jpg",
-      zone: "Assembly Line Exit",
+      zone: "Zone A",
       camera: "CAM-16",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 19:21",
@@ -170,17 +170,21 @@ const EmergencyExitBlockage: React.FC = () => {
 
   console.log(
     "emergency exit bolockage voilation",
-    recentExitBlockageViolations
+    recentExitBlockageViolations,
   );
 
   const zoneViolationsData = [
     {
-      zone: "Emergency Exit A",
+      zone: "Zone A",
       BlockedExit: 3,
     },
     {
-      zone: "Assembly Line Exit",
-      BlockedExit: 6,
+      zone: "Zone B",
+      BlockedExit: 3,
+    },
+    {
+      zone: "Zone C",
+      BlockedExit: 3,
     },
   ];
   interface FilterParams {
@@ -309,7 +313,9 @@ const EmergencyExitBlockage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentExitBlockageViolations.map((item) => item.cameraId))
+              new Set(
+                recentExitBlockageViolations.map((item) => item.cameraId),
+              ),
             ),
           },
           {

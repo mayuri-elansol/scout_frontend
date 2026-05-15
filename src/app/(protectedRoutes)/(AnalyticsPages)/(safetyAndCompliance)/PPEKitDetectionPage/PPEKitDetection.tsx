@@ -23,27 +23,8 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-export const getOneHourBefore = (): {
-  fullDate: string;
-  time: string;
-} => {
-  const date = new Date();
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
-  // subtract exactly 1 hour
-  date.setTime(date.getTime() - 60 * 60 * 1000);
-
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-
-  return {
-    fullDate: `${day}-${month}-${year} ${hours}:${minutes}`,
-    time: `${hours}:${minutes}`,
-  };
-};
 const PPEDetection: React.FC = () => {
   interface PPEViolation {
     voilation: string;
@@ -63,7 +44,7 @@ const PPEDetection: React.FC = () => {
   const ppeKpiData = [
     {
       title: "Total Violations",
-      value: "87",
+      value: "5",
       icon: Shield,
       tooltipMessage:
         "Total number of PPE violations detected across all monitored zones.",
@@ -77,27 +58,27 @@ const PPEDetection: React.FC = () => {
     },
     {
       title: "Last Detection Time",
-      value: getOneHourBefore().time,
+      value: getOneHourBefore().fullDate,
       icon: AccessTime,
       tooltipMessage: "The time when the last PPE violation was detected.",
     },
     {
       title: "Missing Helmet",
-      value: "12",
+      value: "4",
       icon: EngineeringIcon,
       tooltipMessage:
         "Number of detected instances where workers were missing helmets.",
     },
     {
       title: "Missing Vest",
-      value: "12",
+      value: "1",
       icon: Checkroom,
       tooltipMessage:
         "Number of detected instances where workers were missing safety vests.",
     },
     {
       title: "Missing Glasses",
-      value: "9",
+      value: "4",
       icon: Visibility,
       tooltipMessage:
         "Number of detected instances where workers were missing safety glasses.",
@@ -110,7 +91,7 @@ const PPEDetection: React.FC = () => {
       helmet: false,
       vest: true,
       glasses: false,
-      zone: "Production Floor A",
+      zone: "Zone A",
       snapshot: "/img/p1.jpg",
       cameraid: "CAM-01",
       alarmTriggered: true,
@@ -121,7 +102,7 @@ const PPEDetection: React.FC = () => {
       helmet: true,
       vest: false,
       glasses: false,
-      zone: "Welding Station",
+      zone: "Zone B",
       snapshot: "/img/p2.png",
       cameraid: "CAM-02",
       alarmTriggered: true,
@@ -132,7 +113,7 @@ const PPEDetection: React.FC = () => {
       helmet: false,
       vest: true,
       glasses: false,
-      zone: "Chemical Storage",
+      zone: "Zone A",
       snapshot: "/img/p3.avif",
       cameraid: "CAM-03",
       alarmTriggered: true,
@@ -143,7 +124,7 @@ const PPEDetection: React.FC = () => {
       helmet: false,
       vest: true,
       glasses: false,
-      zone: "Assembly Line B",
+      zone: "Zone A",
       snapshot: "/img/p2.png",
       cameraid: "CAM-04",
       alarmTriggered: false,
@@ -154,54 +135,9 @@ const PPEDetection: React.FC = () => {
       helmet: false,
       vest: true,
       glasses: true,
-      zone: "Maintenance Area",
+      zone: "Zone B",
       snapshot: "/img/p1.jpg",
       cameraid: "CAM-05",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-    {
-      id: 106,
-      helmet: true,
-      vest: false,
-      glasses: false,
-      zone: "Welding Station",
-      snapshot: "/img/p2.png",
-      cameraid: "CAM-02",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-
-    {
-      id: 108,
-      helmet: false,
-      vest: true,
-      glasses: false,
-      zone: "Production Floor A",
-      snapshot: "/img/p1.jpg",
-      cameraid: "CAM-01",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-    {
-      id: 109,
-      helmet: true,
-      vest: false,
-      glasses: false,
-      zone: "Welding Station",
-      snapshot: "/img/p3.avif",
-      cameraid: "CAM-02",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-    {
-      id: 107,
-      helmet: true,
-      vest: true,
-      glasses: false,
-      zone: "Chemical Storage",
-      snapshot: "/img/p2.png",
-      cameraid: "CAM-03",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
     },
@@ -227,55 +163,21 @@ const PPEDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Production Floor A",
-      violations: 8,
-      subViolations: [
-        { label: "Helmet", value: 3, icon: EngineeringIcon },
-        { label: "Vest", value: 2, icon: CheckroomIcon },
-        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
-      ],
-    },
-    {
-      zone: "Welding Station",
-      violations: 6,
-      subViolations: [
-        { label: "Helmet", value: 4, icon: EngineeringIcon },
-        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
-      ],
-    },
-    {
-      zone: "Chemical Storage",
-      violations: 5,
-      subViolations: [
-        { label: "Vest", value: 2, icon: CheckroomIcon },
-        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
-      ],
-    },
-    {
-      zone: "Assembly Line B",
+      zone: "Zone A",
       violations: 7,
       subViolations: [
-        { label: "Helmet", value: 2, icon: EngineeringIcon },
-        { label: "Vest", value: 3, icon: CheckroomIcon },
-        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+        { label: "Helmet", value: 4, icon: EngineeringIcon },
+
+        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
       ],
     },
     {
-      zone: "Warehouse",
-      violations: 4,
+      zone: "Zone B",
+      violations: 3,
       subViolations: [
         { label: "Helmet", value: 1, icon: EngineeringIcon },
-        { label: "Vest", value: 2, icon: CheckroomIcon },
         { label: "Glasses", value: 1, icon: VisibilityOffIcon },
-      ],
-    },
-    {
-      zone: "Maintenance Area",
-      violations: 9,
-      subViolations: [
-        { label: "Helmet", value: 4, icon: EngineeringIcon },
-        { label: "Vest", value: 3, icon: CheckroomIcon },
-        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+        { label: "Vest", value: 1, icon: CheckroomIcon },
       ],
     },
   ];
@@ -421,7 +323,7 @@ const PPEDetection: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {

@@ -20,13 +20,13 @@ import {
   VideocamOutlined,
   WifiTethering,
   WifiOff,
-  Domain,
 } from "@mui/icons-material";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import { v4 as uuidv4 } from "uuid";
 
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const Dashboard: React.FC = () => {
   const kpiData = [
@@ -34,20 +34,16 @@ const Dashboard: React.FC = () => {
       title: "PPE Violations",
       violationsCount: 5,
       lastDetection: "Zone A",
-      lastDetectionTime: "09:58 AM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: HealthAndSafety,
       route: "/PPEKitDetectionPage",
       tooltipMessage: "Shows total PPE rule violations detected today.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
     {
       title: "Fire & Smoke Alerts",
-      violationsCount: 1,
-      lastDetection: "Zone B",
-      lastDetectionTime: "09:58 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: LocalFireDepartment,
       route: "/FireSmokeOilLeakDetection",
       tooltipMessage:
@@ -55,40 +51,36 @@ const Dashboard: React.FC = () => {
     },
     {
       title: "Vehicle In Walkways",
-      violationsCount: 12,
-      lastDetection: "Parking Zone",
-      lastDetectionTime: "10:58 AM",
+      violationsCount: 8,
+      lastDetection: "Zone B",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DirectionsCar,
       route: "/ObjectDetection",
       tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
     {
       title: "Fall / Laydown Alerts",
-      violationsCount: 1,
-      lastDetection: "Production Floor",
-      lastDetectionTime: "10:40 AM",
+      violationsCount: 9,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
     },
     {
       title: "Emergency Exit Blockage",
-      violationsCount: 2,
-      lastDetection: "Exit 3",
-      lastDetectionTime: "9:28 AM",
+      violationsCount: 9,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DoorFront,
       route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
     {
       title: "Crowd Gathering Alerts",
-      violationsCount: 0,
-      lastDetection: "Cafeteria",
-      lastDetectionTime: "11:05 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Groups,
       route: "/CrowdGathering",
       tooltipMessage:
@@ -99,9 +91,9 @@ const Dashboard: React.FC = () => {
   const surveillanceDashboradkpiData = [
     {
       title: "Intrusion Detection",
-      violationsCount: 3,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
+      violationsCount: 4,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Security,
       route: "/IntrusionDetectionPage",
       tooltipMessage:
@@ -109,33 +101,29 @@ const Dashboard: React.FC = () => {
     },
     {
       title: "Unauthorized Access In Restrcited Areas",
-      violationsCount: 4,
-      lastDetection: "Zone C",
-      lastDetectionTime: "3:10 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/UnauthorizedAccessInRestrictedAreas",
       tooltipMessage: "Displays unauthorized acess in restricted ares.",
     },
     {
       title: "Camera Tempering Detection",
-      violationsCount: 2,
+      violationsCount: 6,
       lastDetection: "Zone C",
-      lastDetectionTime: "2:42 PM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: VideocamOff,
       route: "/CameraTampering",
       tooltipMessage:
         "Displays people detected inside premises during shutdown hours.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
 
     {
       title: "Movement During Shutdown",
-      violationsCount: 2,
-      lastDetection: "Warehouse Zone 4",
-      lastDetectionTime: "01:45 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/PeoplePresence",
       tooltipMessage:
@@ -145,9 +133,9 @@ const Dashboard: React.FC = () => {
   const operationalDashboardkpiData = [
     {
       title: "People Count",
-      violationsCount: 53,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
+      violationsCount: 25,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/PeopleCountPage",
       tooltipMessage:
@@ -155,45 +143,37 @@ const Dashboard: React.FC = () => {
     },
     {
       title: "Vehicle Count",
-      violationsCount: 2,
-      lastDetection: "Main Gate A",
-      lastDetectionTime: "10.20 PM",
+      violationsCount: 6,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
     {
       title: "Canteen Usage Monitoring",
-      violationsCount: 13,
+      violationsCount: 21,
       lastDetection: "Main Canteen",
-      lastDetectionTime: "3:24 AM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
     },
 
     {
-      title: "Vehicle Loading Unloading Monitoring",
-      violationsCount: 8,
+      title: "Vehicle Loading/Unloading Monitoring",
+      violationsCount: 2,
       lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:10 PM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
       tooltipMessage: "Displays vehical loading and unloading oprations",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
     {
       title: "Unauthorised Parking / Blocking Aisles",
-      violationsCount: 5,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:27 PM",
+      violationsCount: 4,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",
@@ -202,10 +182,10 @@ const Dashboard: React.FC = () => {
   const WorkForcekpiData = [
     {
       title: "Employee in Critical Area",
-      value: "7",
+      value: "2",
       violationsCount: 7,
-      lastDetection: "Critical Zone A",
-      lastDetectionTime: "03:25 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
@@ -213,38 +193,34 @@ const Dashboard: React.FC = () => {
     },
 
     {
-      title: "Employee Idel Time",
-      value: "0",
+      title: "Employee Idle Events",
+      value: "1",
       violationsCount: 2,
-      lastDetection: "Production Floor A",
-      lastDetectionTime: "4:20 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Visibility,
       route: "/EmployeeIdleTime",
       tooltipMessage:
         "Shows employee presence in areas that require special clearance.",
     },
     {
-      title: "Mobile Usage in Critical Area",
+      title: "Mobile Phone Usage in Critical Area",
       value: "3",
       violationsCount: 3,
-      lastDetection: "Critical Zone C",
-      lastDetectionTime: "01:50 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Smartphone,
       route: "/MobilePhoneUsage",
       tooltipMessage:
         "Displays incidents of unauthorized mobile phone usage inside critical areas.",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      iconBg: "#bbdefb",
     },
 
     {
-      title: "Sleeping / Absence  Security Personnel",
+      title: "Sleeping / Absence of Security Personnel",
       value: "2",
       violationsCount: 2,
-      lastDetection: "Gate 2 - Shift B",
-      lastDetectionTime: "02:30 AM",
+      lastDetection: "Gate 2",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Security,
       route: "/SleepingSecurityPersonnel",
       tooltipMessage:
@@ -267,7 +243,7 @@ const Dashboard: React.FC = () => {
     },
     {
       title: "Cameras Online",
-      violationsCount: 105,
+      violationsCount: 118,
       lastDetection: "Last Updated",
       lastDetectionTime: "10:15 AM",
       icon: WifiTethering,
@@ -280,30 +256,30 @@ const Dashboard: React.FC = () => {
     },
     {
       title: "Cameras Offline",
-      violationsCount: 15,
-      lastDetection: "Zone C - Entry Gate",
+      violationsCount: 2,
+      lastDetection: "Zone B ",
       lastDetectionTime: "09:45 AM",
       icon: WifiOff,
       tooltipMessage: "Shows cameras currently not transmitting video feed.",
     },
-    {
-      title: "Tampering Incidents Today",
-      violationsCount: 12,
-      lastDetection: "Zone B - Warehouse",
-      lastDetectionTime: "09:58 AM",
-      icon: WarningAmber,
-      tooltipMessage:
-        "Number of tampering incidents (blurred, covered, or offline) detected today.",
-    },
-    {
-      title: "Zones Affected",
-      violationsCount: 4,
-      lastDetection: "Zones B, C, D",
-      lastDetectionTime: "—",
-      icon: Domain,
-      tooltipMessage:
-        "Total number of zones currently affected by camera issues.",
-    },
+    // {
+    //   title: "Tampering Incidents Today",
+    //   violationsCount: 12,
+    //   lastDetection: "Zone B - Warehouse",
+    //   lastDetectionTime: "09:58 AM",
+    //   icon: WarningAmber,
+    //   tooltipMessage:
+    //     "Number of tampering incidents (blurred, covered, or offline) detected today.",
+    // },
+    // {
+    //   title: "Zones Affected",
+    //   violationsCount: 4,
+    //   lastDetection: "Zones B, C, D",
+    //   lastDetectionTime: "—",
+    //   icon: Domain,
+    //   tooltipMessage:
+    //     "Total number of zones currently affected by camera issues.",
+    // },
   ];
   return (
     // <Paper

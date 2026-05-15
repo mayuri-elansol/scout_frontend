@@ -11,7 +11,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const EmployeePresence: React.FC = () => {
   interface EmployeePresenceViolation {
@@ -30,7 +30,7 @@ const EmployeePresence: React.FC = () => {
   const employeeKpiData = [
     {
       title: "Employees in Critical Area",
-      value: "12",
+      value: "2",
       icon: Groups,
 
       tooltipMessage:
@@ -38,7 +38,7 @@ const EmployeePresence: React.FC = () => {
     },
     {
       title: "Zone Violations",
-      value: "3 (Zone A, Zone B, Zone C)",
+      value: "2 (Zone A, Zone B,)",
       icon: LocationOn,
       tooltipMessage:
         "Displays the count and name of critical zones where employees entered .",
@@ -54,8 +54,8 @@ const EmployeePresence: React.FC = () => {
   const backendEmployeePresenceData = [
     {
       id: 201,
-      snapshot: "/img/employee-presence-critical-areas/e1.png",
-      zone: "Critical Zone A",
+      snapshot: "/img/employee-presence-critical-areas/z2.jpg",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:16",
@@ -63,20 +63,11 @@ const EmployeePresence: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "/img/employee-presence-critical-areas/e4.jpg",
-      zone: "Critical Zone B",
+      snapshot: "/img/employee-presence-critical-areas/z1.jpg",
+      zone: "Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:26",
-      alarmTriggered: true,
-    },
-    {
-      id: 203,
-      snapshot: "/img/employee-presence-critical-areas/e3.jpg",
-      zone: "Critical Zone C",
-      camera: "CAM-13",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-25 09:41",
       alarmTriggered: true,
     },
   ];
@@ -94,16 +85,12 @@ const EmployeePresence: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Critical Zone A",
-      violations: 10,
+      zone: "Zone A",
+      violations: 1,
     },
     {
-      zone: "Critical Zone B",
-      violations: 5,
-    },
-    {
-      zone: "Critical Zone C",
-      violations: 3,
+      zone: "Zone B",
+      violations: 1,
     },
   ];
   const KpiCardLoading = false;

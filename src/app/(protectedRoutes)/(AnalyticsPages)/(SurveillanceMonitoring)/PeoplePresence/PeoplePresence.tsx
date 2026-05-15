@@ -11,7 +11,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import PeopleIcon from "@mui/icons-material/People";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 const PeoplePresence: React.FC = () => {
   interface PeoplePresenceViolation {
     incident: string;
@@ -31,33 +31,33 @@ const PeoplePresence: React.FC = () => {
 
   const PeoplePresenceKpiData = [
     {
-      title: "Total People Count",
-      value: "87",
+      title: "Total Movement Events",
+      value: "8",
       icon: Groups,
       tooltipMessage:
-        "Shows the total number of people detected in monitored zones.",
+        "Shows the total number of movement events detected in monitored zones.",
     },
     {
       title: "Detected Zones",
-      value: "Zone A, Zone B",
+      value: "Zone A, Zone B,Zone C",
       icon: LocationOn,
-      tooltipMessage: "Lists the zones where people are currently detected.",
+      tooltipMessage: "Lists the zones where movement is currently detected.",
     },
     {
       title: "Last Incidence",
       value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
-        "Shows the time when the most recent people presence was detected.",
+        "Shows the time when the most recent movement event was detected.",
     },
   ];
   const backendPeoplePresenceData = [
     {
       id: 801,
       snapshot: "/img/movement-shutdown-hours/m1.jpg",
-      zone: "Production Floor",
+      zone: "Zone A",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
@@ -65,9 +65,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 802,
       snapshot: "/img/movement-shutdown-hours/m2.jpg",
-      zone: "Loading Dock",
+      zone: "Zone B",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
@@ -75,9 +75,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 801,
       snapshot: "/img/movement-shutdown-hours/u2.jpg",
-      zone: "Production Floor",
+      zone: "Zone C",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
@@ -85,9 +85,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 802,
       snapshot: "/img/movement-shutdown-hours/u1.jpg",
-      zone: "Loading Dock",
+      zone: "Zone D",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
@@ -95,9 +95,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 801,
       snapshot: "/img/movement-shutdown-hours/m2.jpg",
-      zone: "Production Floor",
+      zone: "Zone B",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
@@ -105,9 +105,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 802,
       snapshot: "/img/movement-shutdown-hours/u3.jpg",
-      zone: "Loading Dock",
+      zone: "Zone E",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
@@ -115,9 +115,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 801,
       snapshot: "/img/movement-shutdown-hours/m1.jpg",
-      zone: "Production Floor",
+      zone: "Zone A",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
@@ -125,9 +125,9 @@ const PeoplePresence: React.FC = () => {
     {
       id: 802,
       snapshot: "/img/movement-shutdown-hours/u1.jpg",
-      zone: "Loading Dock",
+      zone: "Zone D",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
@@ -150,15 +150,36 @@ const PeoplePresence: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Production Floor",
-      peopleCount: 15,
+      zone: "Zone A",
+      peopleCount: 2,
       icons: {
         peopleCount: PeopleIcon,
       },
     },
     {
-      zone: "Loading Dock",
-      peopleCount: 7,
+      zone: "Zone B",
+      peopleCount: 2,
+      icons: {
+        peopleCount: PeopleIcon,
+      },
+    },
+    {
+      zone: "Zone D",
+      peopleCount: 2,
+      icons: {
+        peopleCount: PeopleIcon,
+      },
+    },
+    {
+      zone: "Zone C",
+      peopleCount: 1,
+      icons: {
+        peopleCount: PeopleIcon,
+      },
+    },
+    {
+      zone: "Zone E",
+      peopleCount: 1,
       icons: {
         peopleCount: PeopleIcon,
       },

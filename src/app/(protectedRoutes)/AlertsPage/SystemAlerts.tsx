@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 import DynamicTabs, {
   TabConfig,
 } from "../../components/organisms/DashboardTabs/DashboardTabs";
-import { getOneHourBefore } from "../(AnalyticsPages)/(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const sampleData = [
   {

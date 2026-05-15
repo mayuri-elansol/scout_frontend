@@ -12,7 +12,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 const CameraTampering: React.FC = () => {
   interface CameraTamperingViolation {
     voilation: string;
@@ -32,20 +32,20 @@ const CameraTampering: React.FC = () => {
   const CameraTamperingKpiData = [
     {
       title: "Total Offline Cameras",
-      value: "42",
+      value: "2",
       tooltipMessage:
         "Shows the total number of offline cameras currently monitored in the system.",
       icon: VideocamOffIcon,
     },
     {
       title: "Total Tampred Cameras",
-      value: "5",
+      value: "4",
       tooltipMessage: "The total number of tampered detected cameras .",
       icon: Warning,
     },
     {
       title: "Offline Camera Zone",
-      value: "Zone A",
+      value: "Zone B",
       trendColor: "#2196f3",
       color: "#2196f3",
       bgColor: "#e3f2fd",
@@ -57,7 +57,7 @@ const CameraTampering: React.FC = () => {
     },
     {
       title: "Tampred Camera Zone",
-      value: "Zone B",
+      value: "Zone C",
       trendColor: "#2196f3",
       color: "#2196f3",
       bgColor: "#e3f2fd",
@@ -73,7 +73,7 @@ const CameraTampering: React.FC = () => {
     {
       id: 201,
       tamperingType: "Lens Covered",
-      zone: "Production Floor A",
+      zone: "Zone C",
       snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T01",
       alarmTriggered: true,
@@ -82,7 +82,7 @@ const CameraTampering: React.FC = () => {
     {
       id: 202,
       tamperingType: "Blur Vision",
-      zone: "Welding Station",
+      zone: "Zone A",
       snapshot: "/img/camera-tampering-detection/blur.jpg",
       cameraid: "CAM-T02",
       alarmTriggered: true,
@@ -91,7 +91,7 @@ const CameraTampering: React.FC = () => {
     {
       id: 204,
       tamperingType: "Offline",
-      zone: "Assembly Line B",
+      zone: "Zone B",
       snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
@@ -99,8 +99,8 @@ const CameraTampering: React.FC = () => {
     },
     {
       id: 205,
-      tamperingType: "Lens Obstructed",
-      zone: "Maintenance Area",
+      tamperingType: "Lens Covered",
+      zone: "Zone C",
       snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T05",
       alarmTriggered: true,
@@ -109,7 +109,7 @@ const CameraTampering: React.FC = () => {
     {
       id: 202,
       tamperingType: "Blur Vision",
-      zone: "Welding Station",
+      zone: "Zone A",
       snapshot: "/img/camera-tampering-detection/blur2.jpg",
       cameraid: "CAM-T02",
       alarmTriggered: true,
@@ -119,7 +119,7 @@ const CameraTampering: React.FC = () => {
     {
       id: 204,
       tamperingType: "Offline",
-      zone: "Assembly Line B",
+      zone: "Zone B",
       snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
@@ -142,45 +142,22 @@ const CameraTampering: React.FC = () => {
 
   const zoneTamperingData = [
     {
-      zone: "Production Floor A",
-      violations: 7,
+      zone: "Zone A",
+      violations: 2,
       subViolations: [
-        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
         { label: "Blur Vision", value: 2, icon: VisibilityOffIcon },
-        { label: "Disconnected", value: 2, icon: Warning },
       ],
     },
     {
-      zone: "Welding Station",
-      violations: 5,
-      subViolations: [
-        { label: "Blur Vision", value: 3, icon: VisibilityOffIcon },
-        { label: "Lens Covered", value: 2, icon: VisibilityOffIcon },
-      ],
+      zone: "Zone B",
+      violations: 2,
+      subViolations: [{ label: "Offline", value: 2, icon: Warning }],
     },
     {
-      zone: "Chemical Storage",
-      violations: 4,
+      zone: "Zone C",
+      violations: 2,
       subViolations: [
-        { label: "Disconnected", value: 2, icon: Warning },
-        { label: "Offline", value: 2, icon: Warning },
-      ],
-    },
-    {
-      zone: "Assembly Line B",
-      violations: 6,
-      subViolations: [
-        { label: "Offline", value: 4, icon: Warning },
         { label: "Lens Obstructed", value: 2, icon: VisibilityOffIcon },
-      ],
-    },
-    {
-      zone: "Maintenance Area",
-      violations: 8,
-      subViolations: [
-        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
-        { label: "Lens Obstructed", value: 3, icon: VisibilityOffIcon },
-        { label: "Offline", value: 2, icon: Warning },
       ],
     },
   ];

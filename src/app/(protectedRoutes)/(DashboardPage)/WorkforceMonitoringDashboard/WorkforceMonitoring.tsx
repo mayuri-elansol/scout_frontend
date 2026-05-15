@@ -14,15 +14,16 @@ import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicViolationScatterChart, {
   ViolationData,
 } from "@/app/components/organisms/ScatterChart/ScatterChart";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const WorkforceMonitoring: React.FC = () => {
   const WorkForcekpiData = [
     {
       title: "Employee in Critical Area",
-      value: "7",
+      value: "2",
       violationsCount: 7,
-      lastDetection: "Critical Zone A",
-      lastDetectionTime: "03:25 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/EmployeePresenceCriticalArea",
       tooltipMessage:
@@ -30,11 +31,11 @@ const WorkforceMonitoring: React.FC = () => {
     },
 
     {
-      title: "Employee Idel Time",
-      value: "0",
+      title: "Employee Idle Events",
+      value: "1",
       violationsCount: 2,
-      lastDetection: "Production Floor A",
-      lastDetectionTime: "4:20 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Visibility,
       route: "/EmployeeIdleTime",
       tooltipMessage:
@@ -44,8 +45,8 @@ const WorkforceMonitoring: React.FC = () => {
       title: "Mobile Phone Usage in Critical Area",
       value: "3",
       violationsCount: 3,
-      lastDetection: "Critical Zone C",
-      lastDetectionTime: "01:50 PM",
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Smartphone,
       route: "/MobilePhoneUsage",
       tooltipMessage:
@@ -56,8 +57,8 @@ const WorkforceMonitoring: React.FC = () => {
       title: "Sleeping / Absence of Security Personnel",
       value: "2",
       violationsCount: 2,
-      lastDetection: "Gate 2 - Shift B",
-      lastDetectionTime: "02:30 AM",
+      lastDetection: "Gate 2",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Security,
       route: "/SleepingSecurityPersonnel",
       tooltipMessage:
@@ -78,9 +79,6 @@ const WorkforceMonitoring: React.FC = () => {
     { time: "03:00", zone: "Zone C", count: 5 },
     { time: "04:00", zone: "Zone C", count: 8 },
     { time: "05:00", zone: "Zone D", count: 2 },
-    { time: "06:00", zone: "Zone E", count: 11 },
-    { time: "07:00", zone: "Zone F", count: 5 },
-    { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
     {

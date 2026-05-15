@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const MobilePhoneUsage: React.FC = () => {
   interface ViolationData {
@@ -30,7 +30,7 @@ const MobilePhoneUsage: React.FC = () => {
   const MobilePhoneUsageKpiData = [
     {
       title: "Total Violations",
-      value: "18",
+      value: "3",
       icon: PhoneIphone,
       trendColor: "#f44336",
       color: "#f44336",
@@ -50,7 +50,7 @@ const MobilePhoneUsage: React.FC = () => {
     },
     {
       title: "Zone Detection",
-      value: "Assembly Line",
+      value: "Zone A",
       icon: LocationOn,
       tooltipMessage:
         "The zone where the latest mobile phone usage violation was detected.",
@@ -61,7 +61,7 @@ const MobilePhoneUsage: React.FC = () => {
       id: 201,
       voilation: true,
       snapshot: "/img/mobile-usage-restricted-zones/m1.avif",
-      zone: "Assembly Line",
+      zone: "Zone A",
       cameraid: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -71,7 +71,7 @@ const MobilePhoneUsage: React.FC = () => {
       id: 202,
       voilation: true,
       snapshot: "/img/mobile-usage-restricted-zones/m2.jpg",
-      zone: "Production Floor A",
+      zone: "Zone B",
       cameraid: "CAM-12",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -81,31 +81,11 @@ const MobilePhoneUsage: React.FC = () => {
       id: 203,
       voilation: true,
       snapshot: "/img/mobile-usage-restricted-zones/m3.png",
-      zone: "Warehouse",
+      zone: "Zone C",
       cameraid: "CAM-13",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 17:06",
-    },
-    {
-      id: 204,
-      voilation: true,
-      snapshot: "/img/mobile-usage-restricted-zones/m2.jpg",
-      zone: "Main Entrance",
-      cameraid: "CAM-14",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:21",
-    },
-    {
-      id: 205,
-      voilation: true,
-      snapshot: "/img/mobile-usage-restricted-zones/m1.avif",
-      zone: "Parking Area",
-      cameraid: "CAM-15",
-      alarmTriggered: false,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:36",
     },
   ];
 
@@ -127,23 +107,15 @@ const MobilePhoneUsage: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Assembly Line",
+      zone: "Zone A",
       violations: 1,
     },
     {
-      zone: "Production Floor A",
+      zone: "Zone B",
       violations: 1,
     },
     {
-      zone: "Warehouse",
-      violations: 1,
-    },
-    {
-      zone: "Main Entrance",
-      violations: 1,
-    },
-    {
-      zone: "Parking Area",
+      zone: "Zone C",
       violations: 1,
     },
   ];

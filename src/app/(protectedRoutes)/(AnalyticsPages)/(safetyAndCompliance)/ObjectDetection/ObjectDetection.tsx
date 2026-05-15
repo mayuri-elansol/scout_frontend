@@ -19,7 +19,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ForkliftIcon from "@mui/icons-material/Forklift";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 const ObjectDetection: React.FC = () => {
   interface ForkliftDetectionEvent {
     voilation: string;
@@ -57,7 +57,7 @@ const ObjectDetection: React.FC = () => {
     },
     {
       title: "Affected Zones (Last 3)",
-      value: "Zone A, Zone B, Zone C",
+      value: "Zone B, Zone A",
       tooltipMessage:
         "Displays the last three zones where blocked Walkways were detected.",
       icon: LocationOn,
@@ -70,7 +70,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Forklift",
       snapshot: "/img/v3.jpg",
-      zone: "Walkway Zone A",
+      zone: "Zone B",
       camera: "CAM-101",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -81,7 +81,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Vehicle",
       snapshot: "/img/v5.jpg",
-      zone: "Walkway Zone B",
+      zone: "Zone A",
       camera: "CAM-102",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -92,7 +92,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Forklift",
       snapshot: "/img/v3.jpg",
-      zone: "Walkway Zone C",
+      zone: "Zone B",
       camera: "CAM-103",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -101,9 +101,9 @@ const ObjectDetection: React.FC = () => {
     {
       id: 204,
       detected: true,
-      objectName: "Vehicle",
+      objectName: "Forklift",
       snapshot: "/img/v5.jpg",
-      zone: "Walkway Zone A",
+      zone: "Zone A",
       camera: "CAM-104",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -114,7 +114,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Forklift",
       snapshot: "/img/v5.jpg",
-      zone: "Walkway Zone B",
+      zone: "Zone B",
       camera: "CAM-105",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -125,7 +125,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Forklift",
       snapshot: "/img/v3.jpg",
-      zone: "Walkway Zone C",
+      zone: "Zone A",
       camera: "CAM-103",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -136,7 +136,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Vehicle",
       snapshot: "/img/v5.jpg",
-      zone: "Walkway Zone A",
+      zone: "Zone B",
       camera: "CAM-104",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -147,7 +147,7 @@ const ObjectDetection: React.FC = () => {
       detected: true,
       objectName: "Forklift",
       snapshot: "/img/v1.jpg",
-      zone: "Walkway Zone B",
+      zone: "Zone A",
       camera: "CAM-105",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -168,26 +168,15 @@ const ObjectDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Walkway Zone A",
-      violations: 3,
-      subViolations: [
-        { label: "Forklift", value: 1, icon: ForkliftIcon },
-        { label: "Vehicle", value: 2, icon: DirectionsCar },
-      ],
+      zone: "Zone B",
+      violations: 4,
+      subViolations: [{ label: "Forklift", value: 4, icon: ForkliftIcon }],
     },
     {
-      zone: "Walkway Zone B",
-      violations: 2,
+      zone: "Zone A",
+      violations: 4,
       subViolations: [
-        { label: "Forklift", value: 2, icon: ForkliftIcon },
-        { label: "Vehicle", value: 1, icon: DirectionsCar },
-      ],
-    },
-    {
-      zone: "Walkway Zone C",
-      violations: 2,
-      subViolations: [
-        { label: "Forklift", value: 1, icon: ForkliftIcon },
+        { label: "Forklift", value: 3, icon: ForkliftIcon },
         { label: "Vehicle", value: 1, icon: DirectionsCar },
       ],
     },
@@ -317,7 +306,7 @@ const ObjectDetection: React.FC = () => {
             label: "Object Name",
             type: "select",
             options: Array.from(
-              new Set(recentDetections.map((v) => v.objectName))
+              new Set(recentDetections.map((v) => v.objectName)),
             ),
           },
           {
@@ -331,7 +320,7 @@ const ObjectDetection: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentDetections.map((v) => v.cameraId))
+              new Set(recentDetections.map((v) => v.cameraId)),
             ),
           },
           {

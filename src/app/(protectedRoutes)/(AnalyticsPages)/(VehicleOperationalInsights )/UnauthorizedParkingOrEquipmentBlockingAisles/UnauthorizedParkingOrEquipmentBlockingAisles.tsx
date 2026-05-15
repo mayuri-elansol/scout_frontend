@@ -10,11 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
 
 import CarIcon from "@mui/icons-material/DirectionsCar";
-import EquipmentIcon from "@mui/icons-material/Build";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -35,14 +34,14 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
   const UnauthorizedParkingKpiData = [
     {
       title: "Blocked Parking",
-      value: "87",
+      value: "4",
       tooltipMessage:
         "Shows the total number of parking that are currently blocked.",
       icon: Block,
     },
     {
       title: "Clear Parking",
-      value: "12",
+      value: "1",
       tooltipMessage:
         "Shows the total number of parking that are currently clear and safe for use.",
       icon: CheckCircle,
@@ -66,16 +65,16 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       id: 201,
       typeOf: "Car",
       snapshot: "/img/unauthorised-parking-blocking-aisles/p2.jpg",
-      zone: "Loading Bay A",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 08:45",
     },
     {
       id: 202,
-      typeOf: "Not Car",
+      typeOf: "Car",
       snapshot: "/img/unauthorised-parking-blocking-aisles/p1.jpg",
-      zone: "Warehouse Zone B",
+      zone: "Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 09:18",
@@ -84,28 +83,10 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
       id: 203,
       typeOf: "Car",
       snapshot: "/img/unauthorised-parking-blocking-aisles/p3.jpg",
-      zone: "Assembly Area C",
+      zone: "Zone C",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 10:08",
-    },
-    {
-      id: 204,
-      typeOf: "Not Car",
-      snapshot: "/img/unauthorised-parking-blocking-aisles/p2.jpg",
-      zone: "Maintenance Area",
-      camera: "CAM-14",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 11:28",
-    },
-    {
-      id: 205,
-      typeOf: "Car",
-      snapshot: "/img/unauthorised-parking-blocking-aisles/p1.jpg",
-      zone: "Parking Zone D",
-      camera: "CAM-15",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 12:45",
     },
   ];
 
@@ -130,44 +111,19 @@ const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Loading Bay A",
-      violations: 5,
-      subViolations: [
-        { label: "Car", value: 3, icon: CarIcon },
-        { label: "Equipment", value: 2, icon: EquipmentIcon },
-      ],
-    },
-    {
-      zone: "Warehouse Zone B",
-      violations: 4,
-      subViolations: [
-        { label: "Car", value: 1, icon: CarIcon },
-        { label: "Equipment", value: 3, icon: EquipmentIcon },
-      ],
-    },
-    {
-      zone: "Assembly Area C",
-      violations: 6,
-      subViolations: [
-        { label: "Car", value: 4, icon: CarIcon },
-        { label: "Equipment", value: 2, icon: EquipmentIcon },
-      ],
-    },
-    {
-      zone: "Maintenance Area",
-      violations: 3,
-      subViolations: [
-        { label: "Car", value: 1, icon: CarIcon },
-        { label: "Equipment", value: 2, icon: EquipmentIcon },
-      ],
-    },
-    {
-      zone: "Parking Zone D",
+      zone: "Zone A",
       violations: 2,
-      subViolations: [
-        { label: "Car", value: 2, icon: CarIcon },
-        { label: "Equipment", value: 0, icon: EquipmentIcon },
-      ],
+      subViolations: [{ label: "Car", value: 2, icon: CarIcon }],
+    },
+    {
+      zone: "Zone B",
+      violations: 1,
+      subViolations: [{ label: "Car", value: 1, icon: CarIcon }],
+    },
+    {
+      zone: "Zone C",
+      violations: 1,
+      subViolations: [{ label: "Car", value: 1, icon: CarIcon }],
     },
   ];
   interface FilterParams {

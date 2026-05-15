@@ -31,7 +31,7 @@ const kpiData = [
   },
   {
     title: "Cameras Online",
-    violationsCount: 105,
+    violationsCount: 118,
     lastDetection: "Last Updated",
     lastDetectionTime: "10:15 AM",
     icon: WifiTethering,
@@ -39,15 +39,15 @@ const kpiData = [
   },
   {
     title: "Cameras Offline",
-    violationsCount: 15,
-    lastDetection: "Zone C - Entry Gate",
+    violationsCount: 2,
+    lastDetection: "Zone B",
     lastDetectionTime: "09:45 AM",
     icon: WifiOff,
     tooltipMessage: "Shows cameras currently not transmitting video feed.",
   },
   {
     title: "Tampering Incidents Today",
-    violationsCount: 12,
+    violationsCount: 6,
     lastDetection: "Zone B - Warehouse",
     lastDetectionTime: "09:58 AM",
     icon: WarningAmber,
@@ -57,7 +57,7 @@ const kpiData = [
   {
     title: "Zones Affected",
     violationsCount: 4,
-    lastDetection: "Zones B, C, D",
+    lastDetection: "Zone A, Zone B, Zone C",
     lastDetectionTime: "—",
     icon: Domain,
     tooltipMessage:

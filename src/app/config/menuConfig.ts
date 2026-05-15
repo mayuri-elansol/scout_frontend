@@ -152,7 +152,7 @@ export const analyticsMenu: CategoryConfig[] = [
     icon: Shield,
     items: [
       {
-        name: "PPE Detection (Helmet,Vest,Gloves,Mask)",
+        name: "PPE Detection (Helmet,Vest,Glasses)",
         page: "ppe-detection",
         path: "/PPEKitDetectionPage",
       },

@@ -27,13 +27,14 @@ import JointBarGraphChart, {
 import DynamicViolationScatterChart, {
   ViolationData,
 } from "@/app/components/organisms/ScatterChart/ScatterChart";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 const OperationalInsightsDashboard: React.FC = () => {
   const kpiData = [
     {
       title: "People Count",
-      violationsCount: 53,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
+      violationsCount: 25,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/PeopleCountPage",
       tooltipMessage:
@@ -41,18 +42,18 @@ const OperationalInsightsDashboard: React.FC = () => {
     },
     {
       title: "Vehicle Count",
-      violationsCount: 2,
-      lastDetection: "Main Gate A",
-      lastDetectionTime: "10.20 PM",
+      violationsCount: 6,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DirectionsCar,
       route: "/VehicleCount",
       tooltipMessage: "Displays vehical count and anpr at entry exit gate.",
     },
     {
       title: "Canteen Usage Monitoring",
-      violationsCount: 13,
+      violationsCount: 21,
       lastDetection: "Main Canteen",
-      lastDetectionTime: "3:24 AM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: RestaurantIcon,
       route: "/MonitoringCanteenUsage&Timings",
       tooltipMessage: "Displays canteen usage and monitoring.",
@@ -60,18 +61,18 @@ const OperationalInsightsDashboard: React.FC = () => {
 
     {
       title: "Vehicle Loading/Unloading Monitoring",
-      violationsCount: 8,
+      violationsCount: 2,
       lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:10 PM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: LocalShipping,
       route: "/VehicleUnloadingLoading",
       tooltipMessage: "Displays vehical loading and unloading oprations",
     },
     {
       title: "Unauthorised Parking / Blocking Aisles",
-      violationsCount: 5,
-      lastDetection: "Loading Bay A",
-      lastDetectionTime: "10:27 PM",
+      violationsCount: 4,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Block,
       route: "/UnauthorizedParkingOrEquipmentBlockingAisles",
       tooltipMessage: "Shows unauthorized parking or equipment blocking.",

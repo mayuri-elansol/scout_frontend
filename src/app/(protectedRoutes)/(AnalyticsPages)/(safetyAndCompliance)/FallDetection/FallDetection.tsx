@@ -7,7 +7,6 @@ import RecentViolations from "@/app/components/molecules/RecentViolations/Recent
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import {
-  NotificationsActive,
   CheckCircle,
   Schedule,
   ReportProblem,
@@ -16,7 +15,7 @@ import {
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const FallDetection: React.FC = () => {
   interface RecentViolationData {
@@ -43,16 +42,10 @@ const FallDetection: React.FC = () => {
       tooltipMessage:
         "Total number of fall, laydown, or sleeping incidents detected across all monitored zones.",
     },
-    {
-      title: "Active Alarms",
-      value: "6",
-      icon: NotificationsActive,
-      tooltipMessage:
-        "Number of incidents where alarms were triggered due to detected falls or unsafe conditions.",
-    },
+
     {
       title: "Incident-Free Zones",
-      value: "3 / 5",
+      value: "2 / 5",
       icon: CheckCircle,
       tooltipMessage:
         "Number of zones without any fall or laydown incidents out of the total monitored zones.",
@@ -82,7 +75,7 @@ const FallDetection: React.FC = () => {
     {
       id: 401,
       snapshot: "/img/fall.avif",
-      zone: "Production Floor A",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:06",
@@ -91,7 +84,7 @@ const FallDetection: React.FC = () => {
     {
       id: 402,
       snapshot: "/img/fall2.webp",
-      zone: "Warehouse",
+      zone: "Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:13",
@@ -100,7 +93,7 @@ const FallDetection: React.FC = () => {
     {
       id: 403,
       snapshot: "/img/fall3.webp",
-      zone: "Maintenance Area",
+      zone: "Zone C",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:19",
@@ -109,7 +102,7 @@ const FallDetection: React.FC = () => {
     {
       id: 404,
       snapshot: "/img/fall.avif",
-      zone: "Production Floor A",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:06",
@@ -118,7 +111,7 @@ const FallDetection: React.FC = () => {
     {
       id: 405,
       snapshot: "/img/fall.avif",
-      zone: "Warehouse",
+      zone: "Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:13",
@@ -127,7 +120,7 @@ const FallDetection: React.FC = () => {
     {
       id: 406,
       snapshot: "/img/fall.avif",
-      zone: "Maintenance Area",
+      zone: "Zone C",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:19",
@@ -136,7 +129,7 @@ const FallDetection: React.FC = () => {
     {
       id: 403,
       snapshot: "/img/fall3.webp",
-      zone: "Maintenance Area",
+      zone: "Zone B",
       camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:19",
@@ -145,7 +138,7 @@ const FallDetection: React.FC = () => {
     {
       id: 404,
       snapshot: "/img/fall.avif",
-      zone: "Production Floor A",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:06",
@@ -154,7 +147,7 @@ const FallDetection: React.FC = () => {
     {
       id: 405,
       snapshot: "/img/fall2.webp",
-      zone: "Warehouse",
+      zone: "Zone B",
       camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 18:13",
@@ -178,16 +171,17 @@ const FallDetection: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Production Floor A",
-      violations: 3,
+      zone: "Zone B",
+      violations: 4,
     },
     {
-      zone: "Warehouse",
+      zone: "Zone A",
       violations: 3,
     },
+
     {
-      zone: "Maintenance Area",
-      violations: 3,
+      zone: "Zone C",
+      violations: 2,
     },
   ];
   interface FilterParams {
@@ -307,7 +301,7 @@ const FallDetection: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentLaydownViolations.map((item) => item.zone))
+              new Set(recentLaydownViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -315,7 +309,7 @@ const FallDetection: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentLaydownViolations.map((item) => item.cameraId))
+              new Set(recentLaydownViolations.map((item) => item.cameraId)),
             ),
           },
           {

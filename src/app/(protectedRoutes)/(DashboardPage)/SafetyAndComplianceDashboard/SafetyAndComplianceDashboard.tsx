@@ -21,6 +21,7 @@ import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
 import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
 import { hourlyData } from "@/app/config/chartDataConfig";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const SafetyAndComplianceDashboard: React.FC = () => {
   const tabs: TabConfig[] = [
@@ -623,16 +624,16 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       title: "PPE Violations",
       violationsCount: 5,
       lastDetection: "Zone A",
-      lastDetectionTime: "09:58 AM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: HealthAndSafety,
       route: "/PPEKitDetectionPage",
       tooltipMessage: "Shows total PPE rule violations detected today.",
     },
     {
       title: "Fire & Smoke Alerts",
-      violationsCount: 1,
-      lastDetection: "Zone B",
-      lastDetectionTime: "09:58 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: LocalFireDepartment,
       route: "/FireSmokeOilLeakDetection",
       tooltipMessage:
@@ -640,36 +641,36 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     },
     {
       title: "Vehicle In Walkways",
-      violationsCount: 12,
-      lastDetection: "Parking Zone",
-      lastDetectionTime: "10:58 AM",
+      violationsCount: 8,
+      lastDetection: "Zone B",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DirectionsCar,
       route: "/ObjectDetection",
       tooltipMessage: "Shows overspeed and unsafe driving incidents detected.",
     },
     {
       title: "Fall / Laydown Alerts",
-      violationsCount: 1,
-      lastDetection: "Production Floor",
-      lastDetectionTime: "10:40 AM",
+      violationsCount: 9,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: WarningAmber,
       route: "/FallDetection",
       tooltipMessage: "Indicates workers detected lying down or falling.",
     },
     {
       title: "Emergency Exit Blockage",
-      violationsCount: 2,
-      lastDetection: "Exit 3",
-      lastDetectionTime: "9:28 AM",
+      violationsCount: 9,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: DoorFront,
       route: "/EmergencyExitBlockage",
       tooltipMessage: "Detects obstruction or blockage near emergency exits.",
     },
     {
       title: "Crowd Gathering Alerts",
-      violationsCount: 3,
-      lastDetection: "Cafeteria",
-      lastDetectionTime: "11:05 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Groups,
       route: "/CrowdGathering",
       tooltipMessage:

@@ -15,7 +15,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const MonitoringCanteenUsageTimings: React.FC = () => {
   interface CanteenUsage {
@@ -32,25 +32,25 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
   const canteenKpiCards = [
     {
       title: "Breakfast Usage",
-      value: "120",
+      value: "5",
       icon: FreeBreakfastIcon,
       tooltipMessage: "Total number of breakfasts served.",
     },
     {
       title: "Lunch Usage",
-      value: "250",
+      value: "16",
       icon: LunchDiningIcon,
       tooltipMessage: "Total number of lunches served.",
     },
     {
       title: "Dinner Usage",
-      value: "180",
+      value: "0",
       icon: DinnerDiningIcon,
       tooltipMessage: "Total number of dinners served.",
     },
     {
       title: "Total Canteen Usage",
-      value: "550",
+      value: "21",
       icon: RestaurantIcon,
       tooltipMessage: "Total meals served in the canteen.",
     },
@@ -80,33 +80,6 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-09 12:35",
     },
-    {
-      id: 203,
-      usage: "Dinner",
-      count: 60,
-      zone: "Main Canteen",
-      snapshot: "/img/canteen-usage-monitoring/c1.avif",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 19:05",
-    },
-    {
-      id: 204,
-      usage: "Breakfast",
-      count: 30,
-      zone: "Secondary Canteen",
-      snapshot: "/img/canteen-usage-monitoring/c2.jpg",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 08:50",
-    },
-    {
-      id: 205,
-      usage: "Lunch",
-      count: 70,
-      zone: "Secondary Canteen",
-      snapshot: "/img/canteen-usage-monitoring/c1.avif",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-09 12:50",
-    },
   ];
   const recentCanteenUsage = backendData.map((item) => {
     return {
@@ -121,45 +94,11 @@ const MonitoringCanteenUsageTimings: React.FC = () => {
   const zoneUsageData = [
     {
       zone: "Main Canteen",
-      totalUsage: 190,
+      totalUsage: 21,
       subViolations: [
-        { label: "Breakfast", value: 50, icon: FreeBreakfastIcon },
-        { label: "Lunch", value: 80, icon: LunchDiningIcon },
-        { label: "Dinner", value: 60, icon: DinnerDiningIcon },
-      ],
-    },
-    {
-      zone: "Secondary Canteen",
-      totalUsage: 100,
-      subViolations: [
-        { label: "Breakfast", value: 30, icon: FreeBreakfastIcon },
-        { label: "Lunch", value: 70, icon: LunchDiningIcon },
-      ],
-    },
-    {
-      zone: "VIP Canteen",
-      totalUsage: 75,
-      subViolations: [
-        { label: "Breakfast", value: 25, icon: FreeBreakfastIcon },
-        { label: "Lunch", value: 30, icon: LunchDiningIcon },
-        { label: "Dinner", value: 20, icon: DinnerDiningIcon },
-      ],
-    },
-    {
-      zone: "Staff Canteen",
-      totalUsage: 120,
-      subViolations: [
-        { label: "Breakfast", value: 40, icon: FreeBreakfastIcon },
-        { label: "Lunch", value: 50, icon: LunchDiningIcon },
-        { label: "Dinner", value: 30, icon: DinnerDiningIcon },
-      ],
-    },
-    {
-      zone: "Remote Canteen",
-      totalUsage: 60,
-      subViolations: [
-        { label: "Breakfast", value: 20, icon: FreeBreakfastIcon },
-        { label: "Lunch", value: 40, icon: LunchDiningIcon },
+        { label: "Breakfast", value: 5, icon: FreeBreakfastIcon },
+        { label: "Lunch", value: 16, icon: LunchDiningIcon },
+        { label: "Dinner", value: 0, icon: DinnerDiningIcon },
       ],
     },
   ];

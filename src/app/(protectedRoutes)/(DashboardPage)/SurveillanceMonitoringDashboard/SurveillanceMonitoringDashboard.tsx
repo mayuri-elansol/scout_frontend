@@ -14,14 +14,15 @@ import DynamicViolationScatterChart, {
   ViolationData,
 } from "@/app/components/organisms/ScatterChart/ScatterChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 
 const SurveillanceMonitoring: React.FC = () => {
   const kpiData = [
     {
       title: "Intrusion Detection",
-      violationsCount: 3,
-      lastDetection: "Zone B - Gate 2",
-      lastDetectionTime: "02:15 AM",
+      violationsCount: 4,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: Security,
       route: "/IntrusionDetectionPage",
       tooltipMessage:
@@ -29,18 +30,18 @@ const SurveillanceMonitoring: React.FC = () => {
     },
     {
       title: "Unauthorized Access In Restrcited Areas",
-      violationsCount: 4,
-      lastDetection: "Zone C",
-      lastDetectionTime: "3:10 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/UnauthorizedAccessInRestrictedAreas",
       tooltipMessage: "Displays unauthorized acess in restricted ares.",
     },
     {
       title: "Camera Tempering Detection",
-      violationsCount: 2,
+      violationsCount: 6,
       lastDetection: "Zone C",
-      lastDetectionTime: "2:42 PM",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: VideocamOff,
       route: "/CameraTampering",
       tooltipMessage:
@@ -49,9 +50,9 @@ const SurveillanceMonitoring: React.FC = () => {
 
     {
       title: "Movement During Shutdown",
-      violationsCount: 2,
-      lastDetection: "Warehouse Zone 4",
-      lastDetectionTime: "01:45 AM",
+      violationsCount: 8,
+      lastDetection: "Zone A",
+      lastDetectionTime: getOneHourBefore().fullDate,
       icon: People,
       route: "/PeoplePresence",
       tooltipMessage:
@@ -75,9 +76,6 @@ const SurveillanceMonitoring: React.FC = () => {
     { time: "03:00", zone: "Zone C", count: 5 },
     { time: "04:00", zone: "Zone C", count: 8 },
     { time: "05:00", zone: "Zone D", count: 2 },
-    { time: "06:00", zone: "Zone E", count: 11 },
-    { time: "07:00", zone: "Zone F", count: 5 },
-    { time: "08:00", zone: "Zone G", count: 8 },
   ];
   const tabs: TabConfig[] = [
     {

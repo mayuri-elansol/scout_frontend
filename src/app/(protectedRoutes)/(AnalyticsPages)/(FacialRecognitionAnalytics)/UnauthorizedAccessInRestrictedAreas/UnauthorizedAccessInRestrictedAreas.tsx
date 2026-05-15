@@ -11,7 +11,7 @@ import { Groups, LocationOn, AccessTime } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "@/utils/getOneHrBefore";
 const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   interface UnauthorizedAccess {
     voilation: string;
@@ -31,7 +31,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
   const UnauthorizedAccessKpiData = [
     {
       title: "Unauthorized Access In Restricted Areas",
-      value: "12",
+      value: "8",
       icon: Groups,
       trendColor: "#f44336",
       color: "#f44336",
@@ -43,7 +43,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     },
     {
       title: "Zone Violations (Last 3)",
-      value: "Warehouse Entry, Restricted Lab, Zone C",
+      value: "Zone A,Zone B ,Zone C",
       icon: LocationOn,
       tooltipMessage:
         "Displays the count and name of restricted zones where unauthorized aeople entered .",
@@ -61,7 +61,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 201,
       snapshot: "/img/unauthorised-access-restricted-areas/u1.jpg",
-      zone: "Chemical Storage",
+      zone: "Zone A",
       camera: "CAM-11",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:45",
@@ -70,7 +70,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 202,
       snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
-      zone: "Zone A",
+      zone: "Zone B",
       camera: "CAM-12",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:30",
@@ -79,7 +79,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 203,
       snapshot: "/img/unauthorised-access-restricted-areas/u3.jpg",
-      zone: "Restricted Lab",
+      zone: "Zone C",
       camera: "CAM-13",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:18",
@@ -88,7 +88,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 204,
       snapshot: "/img/unauthorised-access-restricted-areas/u4.jpg",
-      zone: "Warehouse Entry",
+      zone: "Zone D",
       camera: "CAM-14",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:00",
@@ -97,7 +97,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 205,
       snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
-      zone: "Zone C",
+      zone: "Zone B",
       camera: "CAM-15",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 14:36",
@@ -106,7 +106,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 201,
       snapshot: "/img/unauthorised-access-restricted-areas/u4.jpg",
-      zone: "Chemical Storage",
+      zone: "Zone D",
       camera: "CAM-11",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:45",
@@ -115,7 +115,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 202,
       snapshot: "/img/unauthorised-access-restricted-areas/u2.jpg",
-      zone: "Zone A",
+      zone: "Zone B",
       camera: "CAM-12",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:30",
@@ -124,7 +124,7 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
     {
       id: 203,
       snapshot: "/img/unauthorised-access-restricted-areas/u3.jpg",
-      zone: "Restricted Lab",
+      zone: "Zone C",
       camera: "CAM-13",
       createdat: getOneHourBefore().fullDate,
       updatedat: "2025-09-23 15:18",
@@ -142,24 +142,21 @@ const UnauthorizedAccessInRestrictedAreas: React.FC = () => {
 
   const zoneViolationsData = [
     {
-      zone: "Chemical Storage",
-      violations: 7,
-    },
-    {
-      zone: "Zone A",
-      violations: 5,
-    },
-    {
-      zone: "Restricted Lab",
-      violations: 6,
-    },
-    {
-      zone: "Warehouse Entry",
-      violations: 4,
+      zone: "Zone B",
+      violations: 3,
     },
     {
       zone: "Zone C",
-      violations: 3,
+      violations: 2,
+    },
+
+    {
+      zone: "Zone D",
+      violations: 2,
+    },
+    {
+      zone: "Zone A",
+      violations: 1,
     },
   ];
 
