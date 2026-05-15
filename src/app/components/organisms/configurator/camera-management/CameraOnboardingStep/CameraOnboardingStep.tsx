@@ -31,8 +31,6 @@ import {
 } from "@mui/icons-material";
 
 
-
-
 import {
   useAddCameraMutation,
   useDetectNvrChannelsMutation,
@@ -83,6 +81,7 @@ interface CameraFormData {
   port: string;
   zoneId: string;
   locationId: string;
+  rtspUrl: string;
 }
 
 interface FormErrors {
@@ -91,6 +90,7 @@ interface FormErrors {
   username?: string;
   password?: string;
   port?: string;
+  rtspUrl?: string;
 }
 
 const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
@@ -108,6 +108,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     port: "554",
     zoneId: "",
     locationId: "",
+    rtspUrl: "",
   });
 
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
@@ -180,7 +181,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   const [nvrCameras, setNvrCameras] = useState<NvrCamera[]>([]);
 
   const [selectedNvrCams, setSelectedNvrCams] = useState<number[]>([]);
-  const { data: zonesData } =useGetCameraZonesQuery()
+  const { data: zonesData } = useGetCameraZonesQuery()
 
   const [addCamera] = useAddCameraMutation();
   const [detectNvrChannels] = useDetectNvrChannelsMutation();
@@ -307,6 +308,9 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
     ) {
       newErrors.port = "Port must be a number between 1 and 65535";
     }
+    if (!formData.rtspUrl.trim()) {
+  newErrors.rtspUrl = "RTSP URL is required";
+}
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -336,6 +340,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         userName: formData.username.trim(),
         password: formData.password.trim(),
         RTSPport: formData.port.trim(),
+        rtspUrl: formData.rtspUrl.trim(),
         cameraZone: zoneList.find((z) => z.id === selectedZone)?.zoneName ?? "",
         cameraLocation:
           locationList.find((l) => l.id === selectedLocation)?.locationName ?? "",
@@ -357,15 +362,22 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
         port: "554",
         zoneId: "",
         locationId: "",
+        rtspUrl: "",
       });
       setSelectedZone("");
       setSelectedLocation("");
 
       showToast("Camera added successfully!", "success");
-    } catch (error) {
-      console.error("Add camera error:", error);
-    }
+    } catch (error: any) {
+  console.error("Add camera error:", error);
 
+  const message =
+    error?.data?.message ||
+    error?.message ||
+    "Failed to add camera";
+
+  showToast(message, "error");
+}
     setIsAdding(false);
   };
 
@@ -546,6 +558,20 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                     <form onSubmit={handleAddCamera}>
                       <Grid container spacing={2}>
+
+                        <Grid size={{ xs: 12 }}>
+                          <TextField
+                            label="Camera name"
+                            value={formData.cameraname}
+                            onChange={handleInputChange("cameraname")}
+                            error={!!errors.cameraname}
+                            helperText={errors.cameraname}
+                            required
+                            fullWidth
+                            size="small"
+                          />
+                        </Grid>
+
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             label="IP Address"
@@ -559,18 +585,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           />
                         </Grid>
 
-                        <Grid size={{ xs: 6 }}>
-                          <TextField
-                            label="Camera name"
-                            value={formData.cameraname}
-                            onChange={handleInputChange("cameraname")}
-                            error={!!errors.cameraname}
-                            helperText={errors.cameraname}
-                            required
-                            fullWidth
-                            size="small"
-                          />
-                        </Grid>
+
 
                         <Grid size={{ xs: 6 }}>
                           <TextField
@@ -635,6 +650,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           </TextField>
                         </Grid>
 
+
+
                         <Grid size={{ xs: 6 }}>
                           <TextField
                             select
@@ -656,6 +673,30 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                               </option>
                             ))}
                           </TextField>
+                        </Grid>
+
+                        {/* <Grid size={{ xs: 12 }}>
+                        <TextField
+                          label="rtsp link"
+                          required
+                          fullWidth
+                          size="small"
+                          value={nvrData.rtsplink}
+                          onChange={(e) =>
+                            setNvrData({ ...nvrData, rtsplink: e.target.value })
+                          }
+                        />
+                      </Grid> */}
+
+                        <Grid size={{ xs: 12 }}>
+                          <TextField
+                            label="RTSP URL"
+                            required
+                            fullWidth
+                            size="small"
+                            value={formData.rtspUrl}
+                            onChange={handleInputChange("rtspUrl")}
+                          />
                         </Grid>
 
                         <Grid size={{ xs: 12 }}>
@@ -762,7 +803,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 12 }}>
+                      {/* <Grid size={{ xs: 12 }}>
                         <TextField
                           label="rtsp link"
                           required
@@ -772,6 +813,16 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           onChange={(e) =>
                             setNvrData({ ...nvrData, rtsplink: e.target.value })
                           }
+                        />
+                      </Grid> */}
+                      <Grid size={{ xs: 12 }}>
+                        <TextField
+                          label="RTSP URL"
+                          required
+                          fullWidth
+                          size="small"
+                          value={formData.rtspUrl}
+                          onChange={handleInputChange("rtspUrl")}
                         />
                       </Grid>
                     </Grid>

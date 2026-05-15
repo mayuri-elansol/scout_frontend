@@ -43,8 +43,6 @@ import {
   Block as ExcludeIcon,
   ArrowDropDown as ArrowDropDownIcon,
   Menu as MenuIcon,
-  Add as AddIcon,
-  Remove as RemoveIcon,
 } from '@mui/icons-material';
 import { ROIShape } from '@/app/types/roi';
 import { showToast } from '@/app/store/slices/toasterSlice';
@@ -66,32 +64,23 @@ interface RoiSelectionModalProps {
   existingROI?: ROIShape[];
   onSave: (roiShapes: ROIShape[]) => void;
   labels: string[];
-
   enableThreshold?: boolean;
   thresholdValue?: number | null;
   onThresholdChange?: (value: number | null) => void;
 }
 
-/* ----------------------------- Constants ----------------------------- */
-
-
-
 const ROI_COLORS = [
-  '#00ff00', // Bright Green
-  '#ff0000', // Red
-  '#0000ff', // Blue
-  '#ffff00', // Yellow
-  '#ff00ff', // Magenta
-  '#00ffff', // Cyan
-  '#ff8800', // Orange
-  '#8800ff', // Purple
-  '#00ff88', // Teal Green
-  '#ff1493', // Deep Pink
+  '#00ff00',
+  '#ff0000',
+  '#0000ff',
+  '#ffff00',
+  '#ff00ff',
+  '#00ffff',
+  '#ff8800',
+  '#8800ff',
+  '#00ff88',
+  '#ff1493',
 ];
-
-
-
-/* ----------------------------- Component ----------------------------- */
 
 const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   open,
@@ -107,15 +96,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
-  
+
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const prevUseCaseRef = useRef<string>('');
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const isDrawingRef = useRef(false);
-
 
   const [drawingTool, setDrawingTool] = useState<DrawingTool>('rectangle');
   const [roiMode, setRoiMode] = useState<'include' | 'exclude'>('include');
@@ -138,10 +125,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       ...shape,
       points: shape.points.map(p => ({
         x: +(p.x / canvas.width).toFixed(6),
-        y: +(p.y / canvas.height).toFixed(6)
-      }))
+        y: +(p.y / canvas.height).toFixed(6),
+      })),
     }));
-
   };
 
   const [selectedROIIndex, setSelectedROIIndex] = useState<number | null>(null);
@@ -160,10 +146,7 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState<string>('');
 
-  const denormalizeROI = (
-    shapes: ROIShape[],
-    canvas: HTMLCanvasElement
-  ): ROIShape[] => {
+  const denormalizeROI = (shapes: ROIShape[], canvas: HTMLCanvasElement): ROIShape[] => {
     return shapes.map((shape, index) => ({
       ...shape,
       id: shape.id ?? crypto.randomUUID(),
@@ -176,10 +159,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }));
   };
 
-
   useEffect(() => {
     if (!open) return;
-
     if (labels && labels.length > 0) {
       setSelectedLabel(labels[0]);
     } else {
@@ -187,9 +168,6 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   }, [labels, open]);
 
-
-
-  // Image ref for loading
   const imageRef = useRef<HTMLImageElement | null>(null);
 
   const drawBaseShape = (
@@ -223,14 +201,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   };
 
-
-  const drawPolygonHandles = (
-    ctx: CanvasRenderingContext2D,
-    shape: ROIShape,
-    color: string
-  ) => {
+  const drawPolygonHandles = (ctx: CanvasRenderingContext2D, shape: ROIShape, color: string) => {
     if (shape.type !== 'polygon' || shape.completed) return;
-
     shape.points.forEach((point, index) => {
       ctx.beginPath();
       ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
@@ -242,40 +214,23 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     });
   };
 
-
-  const drawShapeLabel = (
-    ctx: CanvasRenderingContext2D,
-    shape: ROIShape,
-    label: number | null
-  ) => {
+  const drawShapeLabel = (ctx: CanvasRenderingContext2D, shape: ROIShape, label: number | null) => {
     if (shape.points.length === 0) return;
-
     const centerX = shape.points.reduce((s, p) => s + p.x, 0) / shape.points.length;
     const centerY = shape.points.reduce((s, p) => s + p.y, 0) / shape.points.length;
-
     const fallbackLabel = `ROI ${label ?? ''}`;
     const text = `${shape.mode === 'exclude' ? '❌' : '✓'} ${shape.name || fallbackLabel}`;
-
     ctx.setLineDash([]);
     ctx.font = 'bold 12px Arial';
-
     const padding = 8;
     const width = ctx.measureText(text).width + padding;
-
-    ctx.fillStyle = shape.mode === 'exclude'
-      ? 'rgba(255,0,0,0.9)'
-      : 'rgba(0,0,0,0.7)';
-
+    ctx.fillStyle = shape.mode === 'exclude' ? 'rgba(255,0,0,0.9)' : 'rgba(0,0,0,0.7)';
     ctx.fillRect(centerX - width / 2, centerY - 12, width, 24);
     ctx.fillStyle = '#fff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(text, centerX, centerY);
   };
-
-
-
-  // Helper function to draw shapes  
 
   const drawShape = useCallback((
     ctx: CanvasRenderingContext2D,
@@ -286,34 +241,24 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     isSelected: boolean
   ) => {
     if (shape.points.length === 0) return;
-
     ctx.save();
-
     ctx.fillStyle = (() => {
       const r = Number.parseInt(color.slice(1, 3), 16);
       const g = Number.parseInt(color.slice(3, 5), 16);
       const b = Number.parseInt(color.slice(5, 7), 16);
       return `rgba(${r},${g},${b},${shape.mode === 'exclude' ? 0.18 : 0.25})`;
     })();
-
     drawBaseShape(ctx, shape, color, isSelected);
     drawPolygonHandles(ctx, shape, color);
     drawShapeLabel(ctx, shape, label);
-
     ctx.restore();
   }, []);
 
-
-  // ✅ FIX: Separate function to draw canvas content
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-
-    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw image if loaded
     if (imageLoaded && imageRef.current) {
       try {
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
@@ -321,27 +266,20 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
         console.error('Error drawing image:', error);
       }
     }
-
-    // Draw all ROI shapes
     roiShapes.forEach((shape, index) => {
       const isSelected = index === selectedROIIndex;
       drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
     });
-
-    // Draw current shape being drawn
     if (currentShape && currentShape.points.length > 0) {
       drawShape(ctx, currentShape, selectedColor, null, true, false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageLoaded, roiShapes, selectedROIIndex, selectedColor, currentShape]);
 
-
   useEffect(() => {
     if (!open) return;
-
     const canvas = canvasRef.current;
     if (!canvas || !imageLoaded) return;
-
     if (existingROI && existingROI.length > 0) {
       const denormalized = denormalizeROI(existingROI, canvas);
       setRoiShapes(denormalized);
@@ -350,46 +288,33 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       setRoiShapes([]);
       setHistory([[]]);
     }
-
     setHistoryIndex(0);
     setCurrentShape(null);
     currentShapeRef.current = null;
     setIsDrawing(false);
     setSelectedROIIndex(null);
     setEditingNameIndex(null);
-    // 🔥 FORCE REDRAW AFTER ROI LOAD
     requestAnimationFrame(() => {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       if (imageRef.current) {
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
       }
     });
-
   }, [open, existingROI, imageLoaded]);
 
-
-
-  // Calculate canvas size based on container
   const recalcCanvasSize = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
     if (!canvas || !container) return;
-
     const containerRect = container.getBoundingClientRect();
     const containerWidth = containerRect.width;
     const containerHeight = containerRect.height;
-
     if (containerHeight < 50) return;
-
     const targetAspectRatio = 16 / 9;
     const containerAspectRatio = containerWidth / containerHeight;
-
     let newCanvasWidth, newCanvasHeight;
-
     if (containerAspectRatio > targetAspectRatio) {
       newCanvasHeight = containerHeight;
       newCanvasWidth = containerHeight * targetAspectRatio;
@@ -397,77 +322,51 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
       newCanvasWidth = containerWidth;
       newCanvasHeight = containerWidth / targetAspectRatio;
     }
-
     newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
     newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
-
     canvas.width = newCanvasWidth;
     canvas.height = newCanvasHeight;
-
-
-
     setCanvasWidth(newCanvasWidth);
     setCanvasHeight(newCanvasHeight);
   }, []);
 
-
-  // 🔥 CRITICAL FIX: ensure canvas gets size AFTER dialog opens
   useEffect(() => {
     if (open === false) return;
-
-    console.log('⏰ Dialog opened, waiting for canvas...');
-
     const delayedCanvasResize = () => {
       requestAnimationFrame(() => {
         requestAnimationFrame(recalcCanvasSize);
       });
     };
-
     const timeoutId = setTimeout(delayedCanvasResize, 150);
-
-
     return () => clearTimeout(timeoutId);
   }, [open, recalcCanvasSize]);
-
-
 
   useEffect(() => {
     if (!open || !imageLoaded) return;
     if (isDrawingRef.current) return;
-
-    // Call drawCanvas directly without adding it to dependencies
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     if (imageRef.current) {
       ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
     }
-
     roiShapes.forEach((shape, index) => {
       const isSelected = index === selectedROIIndex;
       drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
     });
-
     if (currentShape && currentShape.points.length > 0) {
       drawShape(ctx, currentShape, selectedColor, null, true, false);
     }
   }, [roiShapes, selectedROIIndex, selectedColor, imageLoaded, open, currentShape, drawShape]);
 
-
-
-  // Handle use case changes - recalculate canvas size if needed
   useEffect(() => {
     if (open) {
       const useCaseChanged = prevUseCaseRef.current !== useCaseName;
       prevUseCaseRef.current = useCaseName;
-
       if (useCaseChanged) {
         setTimeout(() => {
           recalcCanvasSize();
-          // Don't reload image, just redraw if already loaded
           if (imageLoaded && imageRef.current) {
             const canvas = canvasRef.current;
             const ctx = canvas?.getContext('2d');
@@ -481,96 +380,35 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     }
   }, [open, useCaseName, recalcCanvasSize, imageLoaded]);
 
-//   useEffect(() => {
-//   if (!open) return;
+  useEffect(() => {
+    if (!open) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    if (canvasWidth < 100 || canvasHeight < 100) return;
+    const img = new Image();
+    imageRef.current = img;
+    img.onload = () => {
+      setImageLoaded(true);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.onerror = () => {
+      setTimeout(() => {
+        img.src = `${cameraFeedUrl}?retry=${Date.now()}`;
+      }, 500);
+    };
+    img.src = `${cameraFeedUrl}?t=${Date.now()}`;
+  }, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
 
-//   const canvas = canvasRef.current;
-//   if (!canvas) return;
-
-//   // wait until canvas has valid size
-// if (canvasWidth < 100 || canvasHeight < 100) {
-//   console.log("waiting for canvas size...");
-//   return;
-// }
-
-//   const img = new Image();
-//   imageRef.current = img;
-//   img.crossOrigin = 'anonymous';
-
-//   img.onload = () => {
-//     setImageLoaded(true);
-
-//     const ctx = canvas.getContext('2d');
-//     if (!ctx) return;
-
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-//   };
-
-//   img.onerror = () => {
-//     console.error('Image failed to load:', cameraFeedUrl);
-//   };
-
-//   const url =
-//     cameraFeedUrl && cameraFeedUrl.trim() !== ''
-//       ? cameraFeedUrl
-//       : '/img/siteimage.jpg';
-
-//   img.src = url + `?_t=${Date.now()}`;
-
-// }, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
-
-useEffect(() => {
-  if (!open) return;
-
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-
-  // ensure canvas sized
-  if (canvasWidth < 100 || canvasHeight < 100) return;
-
-  console.log("Loading frame:", cameraFeedUrl);
-
-  const img = new Image();
-  imageRef.current = img;
-
-  img.onload = () => {
-    console.log("Frame loaded");
-
-    setImageLoaded(true);
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-
-  img.onerror = (err) => {
-    console.error("Frame load error", err);
-
-    // retry once
-    setTimeout(() => {
-      img.src = `${cameraFeedUrl}?retry=${Date.now()}`;
-    }, 500);
-  };
-
-  img.src = `${cameraFeedUrl}?t=${Date.now()}`;
-
-}, [open, cameraFeedUrl, canvasWidth, canvasHeight]);
-
-
-
-  // ✅ FIX: Redraw canvas when image loads or shapes change (excluding currentShape to avoid flicker)
   useEffect(() => {
     if (open && imageLoaded) {
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext('2d');
       if (!canvas || !ctx || !imageRef.current) return;
-
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-
       roiShapes.forEach((shape, index) => {
         const isSelected = index === selectedROIIndex;
         drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
@@ -578,34 +416,23 @@ useEffect(() => {
     }
   }, [open, imageLoaded, roiShapes, selectedROIIndex, selectedColor, drawShape]);
 
-  // Handle window and container resize
   useEffect(() => {
     if (!open) return;
-
     const handleResize = () => {
       if (isDrawingRef.current) return;
       recalcCanvasSize();
       setTimeout(drawCanvas, 50);
     };
-
-
     window.addEventListener('resize', handleResize);
-
     const container = containerRef.current;
     const resizeObserver = new ResizeObserver(handleResize);
-    if (container) {
-      resizeObserver.observe(container);
-    }
-
+    if (container) resizeObserver.observe(container);
     return () => {
       window.removeEventListener('resize', handleResize);
       resizeObserver.disconnect();
     };
   }, [open, recalcCanvasSize, drawCanvas]);
 
-
-
-  // Fix for addToHistory function
   const addToHistory = useCallback((newShapes: ROIShape[]) => {
     const newHistory = history.slice(0, historyIndex + 1);
     newHistory.push([...newShapes]);
@@ -616,7 +443,6 @@ useEffect(() => {
   const getCanvasCoordinates = (e: React.MouseEvent<HTMLCanvasElement>): Point => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
-
     const rect = canvas.getBoundingClientRect();
     return {
       x: ((e.clientX - rect.left) * canvas.width) / rect.width,
@@ -629,7 +455,6 @@ useEffect(() => {
     if (!canvas) return false;
     const ctx = canvas.getContext('2d');
     if (!ctx) return false;
-
     if (shape.type === 'rectangle' && shape.points.length === 2) {
       const [p1, p2] = shape.points;
       const minX = Math.min(p1.x, p2.x);
@@ -649,12 +474,9 @@ useEffect(() => {
     return false;
   };
 
-
-
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     isDrawingRef.current = true;
     const point = getCanvasCoordinates(e);
-
     if (drawingTool === 'rectangle') {
       const newShape = {
         id: crypto.randomUUID(),
@@ -687,32 +509,25 @@ useEffect(() => {
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing || !currentShapeRef.current) return;
     const point = getCanvasCoordinates(e);
-
     if (drawingTool === 'rectangle') {
       const updatedShape = {
         ...currentShapeRef.current,
         points: [currentShapeRef.current.points[0], point],
       };
       currentShapeRef.current = updatedShape;
-
-      // Draw immediately without state update to avoid flicker
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext('2d');
       if (canvas && ctx && imageRef.current) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-
         roiShapes.forEach((shape, index) => {
-          const isSelected = index === selectedROIIndex;
-          drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
+          drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
         });
-
         drawShape(ctx, updatedShape, selectedColor, null, true, false);
       }
     } else if (drawingTool === 'freehand') {
       const lastPoint = currentShapeRef.current.points.at(-1);
       if (!lastPoint) return;
-
       const distance = Math.hypot(point.x - lastPoint.x, point.y - lastPoint.y);
       if (distance >= 3) {
         const updatedShape = {
@@ -720,19 +535,14 @@ useEffect(() => {
           points: [...currentShapeRef.current.points, point],
         };
         currentShapeRef.current = updatedShape;
-
-        // Draw immediately without state update to avoid flicker
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
         if (canvas && ctx && imageRef.current) {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-
           roiShapes.forEach((shape, index) => {
-            const isSelected = index === selectedROIIndex;
-            drawShape(ctx, shape, shape.color, index + 1, false, isSelected);
+            drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
           });
-
           drawShape(ctx, updatedShape, selectedColor, null, true, false);
         }
       }
@@ -741,9 +551,7 @@ useEffect(() => {
 
   const handleCanvasMouseUp = () => {
     isDrawingRef.current = false;
-
     if (!currentShapeRef.current) return;
-
     if (drawingTool === 'rectangle' || drawingTool === 'freehand') {
       if (currentShapeRef.current.points.length >= 2) {
         const completedShape = { ...currentShapeRef.current, completed: true };
@@ -756,7 +564,6 @@ useEffect(() => {
       setIsDrawing(false);
     }
   };
-
 
   const selectROIAtPoint = (point: Point) => {
     for (let i = roiShapes.length - 1; i >= 0; i--) {
@@ -784,90 +591,59 @@ useEffect(() => {
 
   const handlePolygonProgress = (point: Point) => {
     if (!currentShapeRef.current) return;
-
     const firstPoint = currentShapeRef.current.points[0];
     const distance = Math.hypot(point.x - firstPoint.x, point.y - firstPoint.y);
-
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / (rect.width ?? 1);
     const closeThreshold = 15 * scaleX;
-
-    // ✅ Close polygon
     if (distance < closeThreshold && currentShapeRef.current.points.length >= 3) {
-      const completedShape: ROIShape = {
-        ...currentShapeRef.current,
-        completed: true,
-      };
-
+      const completedShape: ROIShape = { ...currentShapeRef.current, completed: true };
       const newShapes = [...roiShapes, completedShape];
       setRoiShapes(newShapes);
       addToHistory(newShapes);
-
       currentShapeRef.current = null;
       setCurrentShape(null);
       return;
     }
-
-    // ➕ Add new point
     const updatedShape: ROIShape = {
       ...currentShapeRef.current,
       points: [...currentShapeRef.current.points, point],
     };
-
     currentShapeRef.current = updatedShape;
     setCurrentShape(updatedShape);
-
-    // 🔥 Draw preview immediately (no flicker)
     const ctx = canvas.getContext('2d');
     if (!ctx || !imageRef.current) return;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(imageRef.current, 0, 0, canvas.width, canvas.height);
-
     roiShapes.forEach((shape, index) => {
       drawShape(ctx, shape, shape.color, index + 1, false, index === selectedROIIndex);
     });
-
     drawShape(ctx, updatedShape, selectedColor, null, true, false);
   };
 
-
   const handleCanvasClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (isDrawing) return;
-
     const point = getCanvasCoordinates(e);
-
     if (drawingTool !== 'polygon' && !currentShapeRef.current) {
-      if (!selectROIAtPoint(point)) {
-        setSelectedROIIndex(null);
-      }
+      if (!selectROIAtPoint(point)) setSelectedROIIndex(null);
       return;
     }
-
     if (drawingTool !== 'polygon') return;
-
     if (!currentShapeRef.current) {
       startPolygon(point);
       return;
     }
-
     handlePolygonProgress(point);
   };
 
   const handleCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     const point = getCanvasCoordinates(e);
-
     for (let i = roiShapes.length - 1; i >= 0; i--) {
       if (isPointInShape(point, roiShapes[i])) {
-        setContextMenu({
-          x: e.clientX,
-          y: e.clientY,
-          roiIndex: i,
-        });
+        setContextMenu({ x: e.clientX, y: e.clientY, roiIndex: i });
         setSelectedROIIndex(i);
         return;
       }
@@ -878,9 +654,7 @@ useEffect(() => {
     const newShapes: ROIShape[] = roiShapes.filter((_, i) => i !== index);
     setRoiShapes(newShapes);
     addToHistory(newShapes);
-    if (selectedROIIndex === index) {
-      setSelectedROIIndex(null);
-    }
+    if (selectedROIIndex === index) setSelectedROIIndex(null);
   };
 
   const handleROINameChange = (index: number, newName: string) => {
@@ -923,19 +697,16 @@ useEffect(() => {
       slotProps={{
         paper: {
           sx: {
-            width: {
-              xs: '100%',
-              sm: '95%',
-              md: '95%',
-              lg: '90%',
-              xl: '1200px',
-            },
+            width: { xs: '100%', sm: '95%', md: '95%', lg: '90%', xl: '1200px' },
             maxWidth: '1300px',
-            height: { xs: '100vh', sm: '95vh', md: '90vh' },
+            // Fill as much vertical space as possible; the canvas container
+            // uses flex:1/minHeight:0 to consume whatever is left after the
+            // toolbar and hint text, so no blank gap appears.
+            height: { xs: '100vh', sm: '95vh', md: '92vh' },
             m: { xs: 0, sm: 1, md: 2 },
-            bgcolor: 'white'
-          }
-        }
+            bgcolor: 'white',
+          },
+        },
       }}
     >
       <DialogContent
@@ -948,44 +719,51 @@ useEffect(() => {
           overflow: 'hidden',
         }}
       >
-        {/* Left area: Canvas and toolbar */}
+        {/* ── Left: toolbar + canvas + hint ── */}
         <Box
           sx={{
             flex: '1 1 auto',
+            minWidth: 0,
+            minHeight: 0,
             p: { xs: 1, sm: 2 },
             bgcolor: 'white',
             display: 'flex',
             flexDirection: 'column',
-            width: '100%',
-            minWidth: 0,
+            overflow: 'hidden',
           }}
         >
+          {/* Header */}
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 1, sm: 2 } }}>
             <IconButton
               onClick={() => setDrawerOpen(true)}
-              sx={{
-                display: { xs: 'inline-flex', md: 'none' },
-              }}
+              sx={{ display: { xs: 'inline-flex', md: 'none' } }}
             >
               <MenuIcon />
             </IconButton>
-
-            <Typography variant="h6" color="black" sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.125rem' } }}>
+            <Typography
+              variant="h6"
+              color="black"
+              sx={{ fontSize: { xs: '0.95rem', sm: '1rem', md: '1.125rem' } }}
+            >
               Configure ROI - {useCaseName}
             </Typography>
-
             <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
               <Chip
                 label={`${roiShapes.length} ROI(s)`}
                 color={roiShapes.length > 0 ? 'success' : 'default'}
                 size="small"
               />
-              <IconButton onClick={onClose} size="small" sx={{ border: '1px solid', borderColor: 'divider' }}>
+              <IconButton
+                onClick={onClose}
+                size="small"
+                sx={{ border: '1px solid', borderColor: 'divider' }}
+              >
                 <CloseIcon />
               </IconButton>
             </Box>
           </Box>
 
+          {/* Toolbar */}
           <Box
             sx={{
               display: 'flex',
@@ -1015,19 +793,29 @@ useEffect(() => {
             >
               <ToggleButton value="rectangle">
                 <RectangleIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
-                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Rectangle</Typography>
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  Rectangle
+                </Typography>
               </ToggleButton>
               <ToggleButton value="polygon">
                 <PolygonIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
-                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Polygon</Typography>
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  Polygon
+                </Typography>
               </ToggleButton>
               <ToggleButton value="freehand">
                 <FreehandIcon sx={{ mr: { xs: 0, sm: 0.5 }, fontSize: { xs: 16, sm: 18 } }} />
-                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>Freehand</Typography>
+                <Typography variant="caption" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                  Freehand
+                </Typography>
               </ToggleButton>
             </ToggleButtonGroup>
 
-            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }} />
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }}
+            />
 
             <Button
               size="small"
@@ -1047,13 +835,9 @@ useEffect(() => {
               }}
             >
               {roiMode === 'include' ? (
-                <>
-                  <IncludeIcon sx={{ mr: 0.5, fontSize: 16 }} /> Include
-                </>
+                <><IncludeIcon sx={{ mr: 0.5, fontSize: 16 }} /> Include</>
               ) : (
-                <>
-                  <ExcludeIcon sx={{ mr: 0.5, fontSize: 16 }} /> Exclude
-                </>
+                <><ExcludeIcon sx={{ mr: 0.5, fontSize: 16 }} /> Exclude</>
               )}
             </Button>
 
@@ -1065,24 +849,22 @@ useEffect(() => {
               variant="outlined"
               sx={{
                 minWidth: 100,
-                '& .MuiSelect-select': {
-                  fontSize: { xs: '0.72rem', sm: '0.8rem' },
-                  py: '8px',
-                },
-                '& .MuiOutlinedInput-root': {
-                  height: '35px',
-                }
+                '& .MuiSelect-select': { fontSize: { xs: '0.72rem', sm: '0.8rem' }, py: '8px' },
+                '& .MuiOutlinedInput-root': { height: '35px' },
               }}
             >
               {(labels.length > 0 ? labels : ['ROI']).map((labelOption) => (
-
                 <MenuItem key={labelOption} value={labelOption}>
                   {labelOption}
                 </MenuItem>
               ))}
             </TextField>
 
-            <Divider orientation="vertical" flexItem sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }} />
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ bgcolor: 'grey.300', display: { xs: 'none', sm: 'block' } }}
+            />
 
             <Tooltip title="Undo">
               <span>
@@ -1133,10 +915,13 @@ useEffect(() => {
             </Tooltip>
           </Box>
 
+          {/* ── Canvas container — flex:1/minHeight:0 so it fills the remaining
+               space exactly, with no blank padding above or below ── */}
           <Box
             ref={containerRef}
             sx={{
-              flex: '1 1 auto',
+              flex: '1 1 0',
+              minHeight: 0,
               width: '100%',
               display: 'flex',
               justifyContent: 'center',
@@ -1146,52 +931,54 @@ useEffect(() => {
               bgcolor: '#f5f5f5',
               borderRadius: 1,
               border: '2px solid #e0e0e0',
-              height: { xs: '50vh', sm: '60vh', md: '70vh' },
-              maxHeight: { xs: '50vh', sm: '60vh', md: '70vh' },
             }}
           >
             <canvas
               ref={canvasRef}
               width={canvasWidth}
               height={canvasHeight}
-              style={{
-                cursor: 'crosshair',
-                // width: '100%',
-                // height: '100%',
-                objectFit: 'contain',
-                display: 'block',
-              }}
+              style={{ cursor: 'crosshair', objectFit: 'contain', display: 'block' }}
               onMouseDown={handleCanvasMouseDown}
               onMouseMove={handleCanvasMouseMove}
               onMouseUp={handleCanvasMouseUp}
               onClick={handleCanvasClick}
               onContextMenu={handleCanvasContextMenu}
             />
-
             {!imageLoaded && (
-              <Box sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                textAlign: 'center',
-                color: 'grey.500',
-              }}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  textAlign: 'center',
+                  color: 'grey.500',
+                }}
+              >
                 <CircularProgress size={24} sx={{ mb: 1 }} />
                 <Typography variant="body2">Loading camera feed...</Typography>
               </Box>
             )}
           </Box>
 
-          <Box sx={{ mt: { xs: 1, sm: 2 }, color: 'grey.700', fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem' } }}>
+          {/* Hint text */}
+          <Box
+            sx={{
+              mt: { xs: 0.5, sm: 1 },
+              color: 'grey.700',
+              fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem' },
+            }}
+          >
             <Typography variant="caption">
-              <strong>Rectangle:</strong> Click & drag | <strong>Polygon:</strong> Click points, click near start to close |{' '}
-              <strong>Freehand:</strong> Click & drag | <strong>Right-click ROI:</strong> Edit menu
+              <strong>Rectangle:</strong> Click &amp; drag |{' '}
+              <strong>Polygon:</strong> Click points, click near start to close |{' '}
+              <strong>Freehand:</strong> Click &amp; drag |{' '}
+              <strong>Right-click ROI:</strong> Edit menu
             </Typography>
           </Box>
         </Box>
 
-        {/* Right sidebar for desktop */}
+        {/* ── Right sidebar (desktop) ── */}
         {isMdUp && (
           <Box
             sx={{
@@ -1206,11 +993,23 @@ useEffect(() => {
             }}
           >
             <Box sx={{ p: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.78rem' }}>
+              <Typography
+                variant="caption"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.78rem' }}
+              >
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 0.25, mt: 0.5, columnGap: '4px', rowGap: '8px' }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(5, 1fr)',
+                  gap: 0.25,
+                  mt: 0.5,
+                  columnGap: '4px',
+                  rowGap: '8px',
+                }}
+              >
                 {ROI_COLORS.map((color) => (
                   <Box
                     key={color}
@@ -1231,89 +1030,53 @@ useEffect(() => {
             </Box>
 
             {enableThreshold && (
-  <Box
-    sx={{
-      px: 1.5,
-      py: 1,
-      borderBottom: '1px solid',
-      borderColor: 'divider',
-    }}
-  >
-    <Typography
-      variant="caption"
-      sx={{ fontWeight: 600, fontSize: '0.78rem', mb: 0.5 }}
-    >
-      Set Threshold
-    </Typography>
-
-    <Box
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        border: '1px solid',
-        borderColor: 'grey.400',
-        borderRadius: 1,
-        height: 32,
-        px: 1,
-        width: '100%',
-      }}
-    >
-      {/* − */}
-      <IconButton
-        size="small"
-        sx={{ p: 0.25 }}
-        onClick={() =>
-          onThresholdChange?.(Math.max(0, (thresholdValue ?? 0) - 1))
-        }
-      >
-        –
-      </IconButton>
-
-      {/* CENTER VALUE */}
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <InputBase
-          value={thresholdValue ?? 0}
-          onChange={(e) => {
-            const v = parseInt(e.target.value, 10);
-            onThresholdChange?.(isNaN(v) ? 0 : v);
-          }}
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-            style: {
-              textAlign: 'center',
-              fontSize: '0.85rem',
-              width: 40,
-            },
-          }}
-        />
-      </Box>
-
-      {/* + */}
-      <IconButton
-        size="small"
-        sx={{ p: 0.25 }}
-        onClick={() =>
-          onThresholdChange?.((thresholdValue ?? 0) + 1)
-        }
-      >
-        +
-      </IconButton>
-    </Box>
-  </Box>
-)}
-
-
-
-
-
-
+              <Box sx={{ px: 1.5, py: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+                <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem', mb: 0.5 }}>
+                  Set Threshold
+                </Typography>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    border: '1px solid',
+                    borderColor: 'grey.400',
+                    borderRadius: 1,
+                    height: 32,
+                    px: 1,
+                    width: '100%',
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    sx={{ p: 0.25 }}
+                    onClick={() => onThresholdChange?.(Math.max(0, (thresholdValue ?? 0) - 1))}
+                  >
+                    –
+                  </IconButton>
+                  <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                    <InputBase
+                      value={thresholdValue ?? 0}
+                      onChange={(e) => {
+                        const v = parseInt(e.target.value, 10);
+                        onThresholdChange?.(isNaN(v) ? 0 : v);
+                      }}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                        style: { textAlign: 'center', fontSize: '0.85rem', width: 40 },
+                      }}
+                    />
+                  </Box>
+                  <IconButton
+                    size="small"
+                    sx={{ p: 0.25 }}
+                    onClick={() => onThresholdChange?.((thresholdValue ?? 0) + 1)}
+                  >
+                    +
+                  </IconButton>
+                </Box>
+              </Box>
+            )}
 
             <Box sx={{ flex: 1, overflow: 'auto', p: 1 }}>
               <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.78rem' }}>
@@ -1322,7 +1085,7 @@ useEffect(() => {
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={`${shape.id}`}
+                    key={shape.id}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.5,
@@ -1356,10 +1119,7 @@ useEffect(() => {
                               setEditingNameIndex(null);
                             }}
                             onBlur={() => setEditingNameIndex(null)}
-                            slotProps={{
-                              select: { native: true }
-                            }}
-
+                            slotProps={{ select: { native: true } }}
                             size="small"
                             fullWidth
                             variant="standard"
@@ -1369,7 +1129,6 @@ useEffect(() => {
                             }}
                           >
                             {(labels.length > 0 ? labels : ['ROI']).map((labelOption) => (
-
                               <option key={labelOption} value={labelOption}>
                                 {labelOption}
                               </option>
@@ -1385,7 +1144,7 @@ useEffect(() => {
                                   fontSize: '0.75rem',
                                   display: 'flex',
                                   alignItems: 'center',
-                                  gap: 0.5, // ✅ GAP HERE
+                                  gap: 0.5,
                                 }}
                               >
                                 <span>{shape.name}</span>
@@ -1405,8 +1164,6 @@ useEffect(() => {
                             }
                             sx={{ m: 0 }}
                           />
-
-
                         )}
                         <IconButton
                           size="small"
@@ -1424,7 +1181,12 @@ useEffect(() => {
                 ))}
               </List>
               {roiShapes.length === 0 && (
-                <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ display: 'block', mt: 2, fontSize: '0.75rem' }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  textAlign="center"
+                  sx={{ display: 'block', mt: 2, fontSize: '0.75rem' }}
+                >
                   No ROIs yet
                 </Typography>
               )}
@@ -1437,16 +1199,15 @@ useEffect(() => {
                 startIcon={<SaveIcon />}
                 onClick={() => {
                   if (roiShapes.length === 0) {
-                     dispatch(
-                                showToast({
-                                  id: crypto.randomUUID(),
-                                  message: getErrorMessage("Please draw at least one ROI region before saving.") ,
-                                  severity: "error",
-                                })
-                              );
+                    dispatch(
+                      showToast({
+                        id: crypto.randomUUID(),
+                        message: getErrorMessage('Please draw at least one ROI region before saving.'),
+                        severity: 'error',
+                      })
+                    );
                     return;
                   }
-
                   const canvas = canvasRef.current!;
                   const normalizedShapes = normalizeROI(roiShapes, canvas);
                   onSave(normalizedShapes);
@@ -1458,14 +1219,20 @@ useEffect(() => {
               >
                 Save ({roiShapes.length})
               </Button>
-              <Button fullWidth variant="outlined" onClick={onClose} sx={{ fontSize: '0.85rem', py: 0.5 }} size="small">
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={onClose}
+                sx={{ fontSize: '0.85rem', py: 0.5 }}
+                size="small"
+              >
                 Cancel
               </Button>
             </Box>
           </Box>
         )}
 
-        {/* Drawer for mobile */}
+        {/* ── Mobile drawer ── */}
         <Drawer
           anchor="left"
           open={drawerOpen}
@@ -1481,65 +1248,48 @@ useEffect(() => {
                 margin: 0,
                 borderRadius: { xs: 0, sm: '0 8px 8px 0' },
                 boxShadow: 6,
-              }
-            }
+              },
+            },
           }}
           sx={{ zIndex: 1300 }}
         >
           <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', bgcolor: 'white', p: 0.5 }}>
-            <Box sx={{
-              p: 0.75,
-              borderBottom: '1px solid',
-              borderColor: 'divider',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between'
-            }}>
-              <Typography variant="subtitle2" sx={{ fontSize: '0.8rem', fontWeight: 600 }}>ROI List</Typography>
+            <Box
+              sx={{
+                p: 0.75,
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Typography variant="subtitle2" sx={{ fontSize: '0.8rem', fontWeight: 600 }}>
+                ROI List
+              </Typography>
               <IconButton onClick={() => setDrawerOpen(false)} size="small" sx={{ p: 0.25 }}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </Box>
 
             <Box sx={{ p: 0.75, borderBottom: '1px solid', borderColor: 'divider' }}>
-              <Typography variant="caption" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.7rem' }}>
+              <Typography
+                variant="caption"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5, fontWeight: 600, fontSize: '0.7rem' }}
+              >
                 <PaletteIcon fontSize="small" />
                 Color
               </Typography>
-
               <Box
-  sx={{
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-  }}
->
-  <InputBase
-    value={thresholdValue ?? 0}
-    inputProps={{
-      inputMode: 'numeric',
-      style: {
-        textAlign: 'center',
-        fontSize: '0.75rem',
-        width: 34,
-      },
-    }}
-  />
-</Box>
-
-
-
-
-
-              <Box sx={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(5, 20px)',
-                // gap: '8px',
-                columnGap: '4px',
-                rowGap: '8px',
-                mt: 0.75,
-                justifyContent: 'center'
-              }}>
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(5, 20px)',
+                  columnGap: '4px',
+                  rowGap: '8px',
+                  mt: 0.75,
+                  justifyContent: 'center',
+                }}
+              >
                 {ROI_COLORS.map((color) => (
                   <Box
                     key={color}
@@ -1560,13 +1310,16 @@ useEffect(() => {
             </Box>
 
             <Box sx={{ flex: 1, overflow: 'auto', p: 0.75 }}>
-              <Typography variant="caption" sx={{ fontWeight: 600, fontSize: '0.7rem', display: 'block', mb: 0.75 }}>
+              <Typography
+                variant="caption"
+                sx={{ fontWeight: 600, fontSize: '0.7rem', display: 'block', mb: 0.75 }}
+              >
                 ROIs ({roiShapes.length})
               </Typography>
               <List dense sx={{ p: 0 }}>
                 {roiShapes.map((shape, index) => (
                   <Paper
-                    key={`${shape.id}`}
+                    key={shape.id}
                     elevation={selectedROIIndex === index ? 2 : 0}
                     sx={{
                       mb: 0.25,
@@ -1576,9 +1329,7 @@ useEffect(() => {
                       cursor: 'pointer',
                       '&:hover': { bgcolor: 'action.hover' },
                     }}
-                    onClick={() => {
-                      setSelectedROIIndex(index === selectedROIIndex ? null : index);
-                    }}
+                    onClick={() => setSelectedROIIndex(index === selectedROIIndex ? null : index)}
                   >
                     <ListItem disablePadding sx={{ gap: 0.25 }}>
                       <Box sx={{ display: 'flex', gap: 0.25, alignItems: 'center', width: '100%' }}>
@@ -1594,14 +1345,10 @@ useEffect(() => {
                         />
                         <ListItemText
                           primary={
-                            <Typography
-                              variant="caption"
-                              sx={{ fontWeight: 500, fontSize: '0.65rem' }}
-                            >
+                            <Typography variant="caption" sx={{ fontWeight: 500, fontSize: '0.65rem' }}>
                               {shape.name}
                             </Typography>
                           }
-
                           secondary={
                             <Typography
                               variant="caption"
@@ -1616,7 +1363,6 @@ useEffect(() => {
                           }
                           sx={{ m: 0 }}
                         />
-
                         <IconButton
                           size="small"
                           onClick={(e) => {
@@ -1633,7 +1379,12 @@ useEffect(() => {
                 ))}
               </List>
               {roiShapes.length === 0 && (
-                <Typography variant="caption" color="text.secondary" textAlign="center" sx={{ display: 'block', mt: 1.5, fontSize: '0.65rem' }}>
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  textAlign="center"
+                  sx={{ display: 'block', mt: 1.5, fontSize: '0.65rem' }}
+                >
                   No ROIs yet
                 </Typography>
               )}
@@ -1647,27 +1398,21 @@ useEffect(() => {
                 onClick={() => {
                   if (roiShapes.length === 0) {
                     dispatch(
-                                showToast({
-                                  id: crypto.randomUUID(),
-                                  message: getErrorMessage("Please draw at least one ROI region before saving.") ,
-                                  severity: "error",
-                                })
-                              );
+                      showToast({
+                        id: crypto.randomUUID(),
+                        message: getErrorMessage('Please draw at least one ROI region before saving.'),
+                        severity: 'error',
+                      })
+                    );
                     return;
                   }
-
                   const canvas = canvasRef.current!;
                   const normalizedShapes = normalizeROI(roiShapes, canvas);
                   onSave(normalizedShapes);
                   onClose();
                 }}
                 disabled={roiShapes.length === 0}
-                sx={{
-                  mb: 0.5,
-                  fontSize: '0.7rem',
-                  py: 0.375,
-                  minHeight: '32px'
-                }}
+                sx={{ mb: 0.5, fontSize: '0.7rem', py: 0.375, minHeight: '32px' }}
                 size="small"
               >
                 Save ({roiShapes.length})
@@ -1676,11 +1421,7 @@ useEffect(() => {
                 fullWidth
                 variant="outlined"
                 onClick={() => setDrawerOpen(false)}
-                sx={{
-                  fontSize: '0.7rem',
-                  py: 0.375,
-                  minHeight: '32px'
-                }}
+                sx={{ fontSize: '0.7rem', py: 0.375, minHeight: '32px' }}
                 size="small"
               >
                 Close
@@ -1689,23 +1430,21 @@ useEffect(() => {
           </Box>
         </Drawer>
 
-        {/* Mode Selection Menu */}
-        <Menu anchorEl={modeMenuAnchor} open={Boolean(modeMenuAnchor)} onClose={() => setModeMenuAnchor(null)}>
+        {/* Mode menu */}
+        <Menu
+          anchorEl={modeMenuAnchor}
+          open={Boolean(modeMenuAnchor)}
+          onClose={() => setModeMenuAnchor(null)}
+        >
           <MenuItem
-            onClick={() => {
-              setRoiMode('include');
-              setModeMenuAnchor(null);
-            }}
+            onClick={() => { setRoiMode('include'); setModeMenuAnchor(null); }}
             selected={roiMode === 'include'}
           >
             <IncludeIcon fontSize="small" style={{ marginRight: 4 }} />
             <Typography variant="body2">Include (Detect Zone)</Typography>
           </MenuItem>
           <MenuItem
-            onClick={() => {
-              setRoiMode('exclude');
-              setModeMenuAnchor(null);
-            }}
+            onClick={() => { setRoiMode('exclude'); setModeMenuAnchor(null); }}
             selected={roiMode === 'exclude'}
           >
             <ExcludeIcon fontSize="small" style={{ marginRight: 4 }} />
@@ -1713,7 +1452,7 @@ useEffect(() => {
           </MenuItem>
         </Menu>
 
-        {/* ROI Context Menu */}
+        {/* ROI context menu */}
         <Menu
           open={contextMenu !== null}
           onClose={() => setContextMenu(null)}
@@ -1723,45 +1462,31 @@ useEffect(() => {
           <MenuItem
             onClick={() => {
               if (contextMenu) {
-                setLabelMenu({
-                  x: contextMenu.x,
-                  y: contextMenu.y,
-                  roiIndex: contextMenu.roiIndex,
-                });
+                setLabelMenu({ x: contextMenu.x, y: contextMenu.y, roiIndex: contextMenu.roiIndex });
                 setContextMenu(null);
               }
             }}
           >
-            <EditIcon fontSize="small" style={{ marginRight: 4 }} />
-            Edit Label
+            <EditIcon fontSize="small" style={{ marginRight: 4 }} /> Edit Label
           </MenuItem>
-
           <MenuItem
             onClick={() => {
-              if (contextMenu !== null) {
-                handleROIModeToggle(contextMenu.roiIndex);
-                setContextMenu(null);
-              }
+              if (contextMenu !== null) { handleROIModeToggle(contextMenu.roiIndex); setContextMenu(null); }
             }}
           >
-            <ToggleIcon fontSize="small" style={{ marginRight: 4 }} />
-            Toggle Include/Exclude
+            <ToggleIcon fontSize="small" style={{ marginRight: 4 }} /> Toggle Include/Exclude
           </MenuItem>
-
           <MenuItem
             onClick={() => {
               if (contextMenu !== null) {
                 const currentIndex = ROI_COLORS.indexOf(roiShapes[contextMenu.roiIndex].color);
-                const nextColor = ROI_COLORS[(currentIndex + 1) % ROI_COLORS.length];
-                handleROIColorChange(contextMenu.roiIndex, nextColor);
+                handleROIColorChange(contextMenu.roiIndex, ROI_COLORS[(currentIndex + 1) % ROI_COLORS.length]);
               }
               setContextMenu(null);
             }}
           >
-            <PaletteIcon fontSize="small" style={{ marginRight: 4 }} />
-            Change Color
+            <PaletteIcon fontSize="small" style={{ marginRight: 4 }} /> Change Color
           </MenuItem>
-
           <MenuItem
             onClick={() => {
               if (contextMenu !== null) handleDeleteROI(contextMenu.roiIndex);
@@ -1769,12 +1494,11 @@ useEffect(() => {
             }}
             sx={{ color: 'error.main' }}
           >
-            <DeleteIcon fontSize="small" style={{ marginRight: 4 }} />
-            Delete ROI
+            <DeleteIcon fontSize="small" style={{ marginRight: 4 }} /> Delete ROI
           </MenuItem>
         </Menu>
 
-        {/* Label Picker Menu */}
+        {/* Label picker */}
         <Menu
           open={labelMenu !== null}
           onClose={() => setLabelMenu(null)}
@@ -1782,7 +1506,6 @@ useEffect(() => {
           anchorPosition={labelMenu ? { top: labelMenu.y, left: labelMenu.x } : undefined}
         >
           {(labels.length > 0 ? labels : ['ROI']).map((opt) => (
-
             <MenuItem
               key={opt}
               selected={labelMenu !== null && roiShapes[labelMenu.roiIndex]?.name === opt}
