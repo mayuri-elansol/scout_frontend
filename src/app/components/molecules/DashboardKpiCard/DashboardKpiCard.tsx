@@ -29,6 +29,14 @@ const DashboardKpiCard: React.FC<DashboardKpiCardProps> = ({
 
   const getVariantStyles = () => {
     const numericValue = Number(violationsCount);
+    if (title === "Cameras Online") {
+      return {
+        color: "#4caf50",
+        bgColor: "#e8f5e9",
+        borderColor: "#4caf50",
+        iconBg: "#c8e6c9",
+      };
+    }
 
     if (!isNaN(numericValue)) {
       if (numericValue === 0) {

@@ -36,6 +36,10 @@ const kpiData = [
     lastDetectionTime: "10:15 AM",
     icon: WifiTethering,
     tooltipMessage: "Number of cameras currently active and transmitting data.",
+    color: "#4caf50",
+    bgColor: "#e8f5e9",
+    borderColor: "#4caf50",
+    iconBg: "#c8e6c9",
   },
   {
     title: "Cameras Offline",
