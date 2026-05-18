@@ -304,28 +304,78 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
     });
   }, [open, existingROI, imageLoaded]);
 
+  // const recalcCanvasSize = useCallback(() => {
+  //   const canvas = canvasRef.current;
+  //   const container = containerRef.current;
+  //   if (!canvas || !container) return;
+  //   const containerRect = container.getBoundingClientRect();
+  //   const containerWidth = containerRect.width;
+  //   const containerHeight = containerRect.height;
+  //   if (containerHeight < 50) return;
+  //   // const targetAspectRatio = 16 / 9;
+  //   const targetAspectRatio = imageRef.current
+  // ? imageRef.current.width / imageRef.current.height
+  // : 16 / 9;
+  //   const containerAspectRatio = containerWidth / containerHeight;
+  //   let newCanvasWidth, newCanvasHeight;
+  //   if (containerAspectRatio > targetAspectRatio) {
+  //     newCanvasHeight = containerHeight;
+  //     newCanvasWidth = containerHeight * targetAspectRatio;
+  //   } else {
+  //     newCanvasWidth = containerWidth;
+  //     newCanvasHeight = containerWidth / targetAspectRatio;
+  //   }
+  //   newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
+  //   newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
+  //   canvas.width = newCanvasWidth;
+  //   canvas.height = newCanvasHeight;
+  //   setCanvasWidth(newCanvasWidth);
+  //   setCanvasHeight(newCanvasHeight);
+  // }, []);
+
   const recalcCanvasSize = useCallback(() => {
     const canvas = canvasRef.current;
     const container = containerRef.current;
+
     if (!canvas || !container) return;
+
     const containerRect = container.getBoundingClientRect();
+
     const containerWidth = containerRect.width;
     const containerHeight = containerRect.height;
+
     if (containerHeight < 50) return;
-    const targetAspectRatio = 16 / 9;
-    const containerAspectRatio = containerWidth / containerHeight;
-    let newCanvasWidth, newCanvasHeight;
-    if (containerAspectRatio > targetAspectRatio) {
+
+    // const targetAspectRatio = imageRef.current
+    //   ? imageRef.current.width / imageRef.current.height
+    //   : 16 / 9;
+
+    const targetAspectRatio =
+      imageRef.current &&
+        imageRef.current.width > 0 &&
+        imageRef.current.height > 0
+        ? imageRef.current.width / imageRef.current.height
+        : 16 / 9;
+
+    let newCanvasWidth = containerWidth;
+
+    let newCanvasHeight = containerWidth / targetAspectRatio;
+
+    // Prevent overflow vertically
+    if (newCanvasHeight > containerHeight) {
       newCanvasHeight = containerHeight;
       newCanvasWidth = containerHeight * targetAspectRatio;
-    } else {
-      newCanvasWidth = containerWidth;
-      newCanvasHeight = containerWidth / targetAspectRatio;
     }
-    newCanvasWidth = Math.min(newCanvasWidth, containerWidth);
-    newCanvasHeight = Math.min(newCanvasHeight, containerHeight);
+
+    if (
+      !Number.isFinite(newCanvasWidth) ||
+      !Number.isFinite(newCanvasHeight)
+    ) {
+      return;
+    }
     canvas.width = newCanvasWidth;
     canvas.height = newCanvasHeight;
+
     setCanvasWidth(newCanvasWidth);
     setCanvasHeight(newCanvasHeight);
   }, []);
@@ -702,7 +752,8 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
             // Fill as much vertical space as possible; the canvas container
             // uses flex:1/minHeight:0 to consume whatever is left after the
             // toolbar and hint text, so no blank gap appears.
-            height: { xs: '100vh', sm: '95vh', md: '92vh' },
+            // height: { xs: '100vh', sm: '95vh', md: '92vh' },
+            height: { xs: '100vh', sm: '88vh', md: '85vh' },
             m: { xs: 0, sm: 1, md: 2 },
             bgcolor: 'white',
           },
@@ -923,9 +974,11 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
               flex: '1 1 0',
               minHeight: 0,
               width: '100%',
+              height: '100%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
+              // alignItems: 'flex-start',
               position: 'relative',
               overflow: 'hidden',
               bgcolor: '#f5f5f5',
@@ -937,7 +990,13 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
               ref={canvasRef}
               width={canvasWidth}
               height={canvasHeight}
-              style={{ cursor: 'crosshair', objectFit: 'contain', display: 'block' }}
+              // style={{ cursor: 'crosshair', objectFit: 'contain', display: 'block' }}
+              style={{
+                cursor: 'crosshair',
+                display: 'block',
+                maxWidth: '100%',
+                maxHeight: '100%',
+              }}
               onMouseDown={handleCanvasMouseDown}
               onMouseMove={handleCanvasMouseMove}
               onMouseUp={handleCanvasMouseUp}
@@ -964,7 +1023,9 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
           {/* Hint text */}
           <Box
             sx={{
-              mt: { xs: 0.5, sm: 1 },
+              // mt: { xs: 0.5, sm: 1 },
+              mt: 0.5,
+              py: 0,
               color: 'grey.700',
               fontSize: { xs: '0.65rem', sm: '0.7rem', md: '0.75rem' },
             }}
