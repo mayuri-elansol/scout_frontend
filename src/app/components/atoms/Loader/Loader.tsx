@@ -3,7 +3,7 @@
 import { Box, CircularProgress } from "@mui/material";
 
 const Loader = () => {
-   if (typeof window === "undefined") return null;
+  //  if (typeof window === "undefined") return null;
   return (
     <Box
       sx={{

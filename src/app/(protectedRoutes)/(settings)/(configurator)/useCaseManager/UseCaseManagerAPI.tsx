@@ -25,10 +25,32 @@ export type Camera = {
   status?: string;
 };
 
+// export type Assignment = {
+//   id: string;
+//   usecaseId: string;
+//   cameraId: string;
+//   createdAt?: string;
+// };
+
 export type Assignment = {
   id: string;
+
+  cameraMapperId?: string;
+
   usecaseId: string;
+
   cameraId: string;
+
+  fpsRate?: number;
+
+  fpsUnit?: 'second' | 'minute' | 'hour';
+
+  inferenceMode?: '24_hours' | 'custom';
+
+  startTime?: string;
+
+  endTime?: string;
+
   createdAt?: string;
 };
 
@@ -40,6 +62,20 @@ export type AssignCamerasPayload = {
 export type UnassignCameraPayload = {
   usecaseId: string;
   cameraId: string;
+};
+
+export type ConfigureUsecasePayload = {
+  cameraMapperId: string;
+
+  fpsRate?: number;
+
+  fpsUnit?: 'second' | 'minute' | 'hour';
+
+  inferenceMode?: '24_hours' | 'custom';
+
+  startTime?: string;
+
+  endTime?: string;
 };
 
 /* ---------- API ---------- */
@@ -127,6 +163,24 @@ export const useCaseManagerApi = baseProtectedApi.injectEndpoints({
       ],
     }),
 
+    configureUsecase: builder.mutation<
+  {
+    status: string;
+    message: string;
+    data?: string;
+    error?: string;
+  },
+  ConfigureUsecasePayload
+>({
+  query: (body) => ({
+    url: `${apiRoutes.configurator.root}${apiRoutes.configurator.useCaseManager}/configure`,
+    method: 'POST',
+    body,
+  }),
+
+  invalidatesTags: ['UseCaseManager'],
+}),
+
   }),
 });
 
@@ -137,6 +191,7 @@ export const {
   useGetCamerasQuery,
   useGetAssignmentsQuery,
   useAssignCamerasMutation,
+  useConfigureUsecaseMutation,
   useGetCameraAssignmentsQuery,
   useUnassignCameraMutation,
   useLazyGetAssignmentsQuery,

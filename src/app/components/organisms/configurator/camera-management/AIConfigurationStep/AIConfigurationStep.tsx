@@ -5,12 +5,13 @@ import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
 import UseCaseConfigurationDialog, {
   UseCaseConfigurationData,
 } from '../UseCaseConfigurationDialog/UseCaseConfigurationDialog';
-import { configureUsecase } from '@/app/services/configurator/usecaseService';
+
 import {
   useGetUsecasesQuery,
   useAssignCamerasMutation,
   useUnassignCameraMutation,
   useLazyGetCameraAssignmentsQuery,
+  useConfigureUsecaseMutation,
 } from '@/app/(protectedRoutes)/(settings)/(configurator)/useCaseManager/UseCaseManagerAPI';
 import {
   useLazyGetRoiQuery,
@@ -56,7 +57,7 @@ interface ROIData {
   coordinates?: { x: number; y: number; width: number; height: number }[];
 }
 
-interface FineTuningData {
+interface ConfigurationData {
   tuned: boolean;
   fpsRate?: number;
   fpsUnit?: 'second' | 'minute' | 'hour';
@@ -68,7 +69,7 @@ interface FineTuningData {
 interface AIConfig {
   useCases: string[];
   roiData: Record<string, ROIData>;
-  fineTuning: Record<string, FineTuningData>;
+  configure: Record<string, ConfigurationData>;
   enabled: boolean;
   viewName?: string;
 }
@@ -108,6 +109,7 @@ interface UseCaseData {
   labels: string[];
   is_threshold?: boolean;
   modelThreshold?: number | null;
+  configure?: ConfigurationData;
 }
 
 type FrameStatus = 'idle' | 'loading' | 'loaded' | 'error';
@@ -125,6 +127,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const { data: useCasesResponse, isLoading: loadingUseCases } = useGetUsecasesQuery();
   const [assignCameras] = useAssignCamerasMutation();
   const [unassignCamera] = useUnassignCameraMutation();
+  const [configureUsecaseMutation] =
+    useConfigureUsecaseMutation();
   const [getCameraAssignments] = useLazyGetCameraAssignmentsQuery();
 
   // ROI RTK Query hooks
@@ -137,14 +141,57 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
       const res = await getCameraAssignments(camera.id).unwrap();
       if (!Array.isArray(res)) return mapped;
-      return mapped.map((uc) => ({
-        ...uc,
-        selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
-        cameraMapperId: res.find(
-  (a: { usecaseId: string }) =>
-    a.usecaseId === uc.id
-)?.cameraMapperId,
-      }));
+      //       return mapped.map((uc) => ({
+      //         ...uc,
+      //         selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
+      //         cameraMapperId: res.find(
+      //   (a: { usecaseId: string }) =>
+      //     a.usecaseId === uc.id
+      // )?.cameraMapperId,
+
+      // }));
+
+      return mapped.map((uc) => {
+
+        const assignment = res.find(
+          (a: any) => a.usecaseId === uc.id
+        );
+
+        return {
+          ...uc,
+
+          selected: !!assignment,
+
+          cameraMapperId:
+            assignment?.cameraMapperId,
+
+          configureUsecase:
+            !!(
+              assignment?.fpsRate &&
+              assignment?.fpsUnit &&
+              assignment?.inferenceMode
+            ),
+
+          configure: assignment
+            ? {
+              tuned: !!assignment.fpsRate,
+
+              fpsRate: assignment.fpsRate,
+
+              fpsUnit: assignment.fpsUnit,
+
+              inferenceMode:
+                assignment.inferenceMode,
+
+              startTime:
+                assignment.startTime,
+
+              endTime:
+                assignment.endTime,
+            }
+            : undefined,
+        };
+      });
     },
     [camera.id, getCameraAssignments]
   );
@@ -217,8 +264,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const [roiModalOpen, setRoiModalOpen] = useState(false);
   const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<string | null>(null);
 
-  const[configDialogOpen, setConfigDialogOpen] = useState(false);
-  const[currentUseCaseForConfig, setCurrentUseCaseForConfig] = useState<string | null>(null);
+  const [configDialogOpen, setConfigDialogOpen] = useState(false);
+  const [currentUseCaseForConfig, setCurrentUseCaseForConfig] = useState<string | null>(null);
 
   // Loading and notification states
   const [loading, setLoading] = useState(false);
@@ -228,9 +275,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
-const [useCaseConfigurations, setUseCaseConfigurations] =
-  useState<Record<string, FineTuningData>>({});
-  
+  const [useCaseConfigurations, setUseCaseConfigurations] =
+    useState<Record<string, ConfigurationData>>({});
+
   const getCameraFeedUrl = useCallback(() => {
     if (!camera?.id || !tenantId) return '/img/siteimage.jpg';
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
@@ -433,92 +480,92 @@ const [useCaseConfigurations, setUseCaseConfigurations] =
     setCurrentUseCaseForROI(null);
   };
 
-  const handleFineTune = (useCaseId: string) => {
+  const handleCamera_Usecase_Configure = (useCaseId: string) => {
     setCurrentUseCaseForConfig(useCaseId);
     setConfigDialogOpen(true);
   };
 
 
   const handleSaveUsecaseConfiguration = async (
-  config: UseCaseConfigurationData
-) => {
+    config: UseCaseConfigurationData
+  ) => {
 
-  if (!currentUseCaseForConfig) return;
+    if (!currentUseCaseForConfig) return;
 
-  try {
+    try {
 
-    const currentUseCase = useCases.find(
-      uc => uc.id === currentUseCaseForConfig
-    );
-
-    if (!currentUseCase?.cameraMapperId) {
-      throw new Error(
-        'Camera mapper ID not found'
+      const currentUseCase = useCases.find(
+        uc => uc.id === currentUseCaseForConfig
       );
-    }
 
-    await configureUsecase({
-      cameraMapperId:
-        currentUseCase.cameraMapperId,
+      if (!currentUseCase?.cameraMapperId) {
+        throw new Error(
+          'Camera mapper ID not found'
+        );
+      }
 
-      fpsRate: config.fpsRate,
+      await configureUsecaseMutation({
+        cameraMapperId:
+          currentUseCase.cameraMapperId,
 
-      fpsUnit: config.fpsUnit,
+        fpsRate: config.fpsRate,
 
-      inferenceMode:
-        config.inferenceMode,
+        fpsUnit: config.fpsUnit,
 
-      startTime:
-        config.inferenceMode === 'custom'
-          ? config.startTime
-          : undefined,
+        inferenceMode:
+          config.inferenceMode,
 
-      endTime:
-        config.inferenceMode === 'custom'
-          ? config.endTime
-          : undefined,
-    });
+        startTime:
+          config.inferenceMode === 'custom'
+            ? config.startTime
+            : undefined,
 
-    setUseCaseConfigurations(prev => ({
-      ...prev,
-      [currentUseCaseForConfig]: {
-        tuned: true,
-        ...config,
-      },
-    }));
+        endTime:
+          config.inferenceMode === 'custom'
+            ? config.endTime
+            : undefined,
+      }).unwrap();
 
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === currentUseCaseForConfig
-          ? {
+      setUseCaseConfigurations(prev => ({
+        ...prev,
+        [currentUseCaseForConfig]: {
+          tuned: true,
+          ...config,
+        },
+      }));
+
+      setUseCases(prev =>
+        prev.map(useCase =>
+          useCase.id === currentUseCaseForConfig
+            ? {
               ...useCase,
               configureUsecase: true,
             }
-          : useCase
-      )
-    );
+            : useCase
+        )
+      );
 
-    setConfigDialogOpen(false);
+      setConfigDialogOpen(false);
 
-    setSnackbar({
-      open: true,
-      severity: 'success',
-      message:
-        'Use case configured successfully',
-    });
+      setSnackbar({
+        open: true,
+        severity: 'success',
+        message:
+          'Use case configured successfully',
+      });
 
-  } catch (error) {
+    } catch (error) {
 
-    console.error(error);
+      console.error(error);
 
-    setSnackbar({
-      open: true,
-      severity: 'error',
-      message:
-        'Failed to configure use case',
-    });
-  }
-};
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        message:
+          'Failed to configure use case',
+      });
+    }
+  };
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
@@ -527,7 +574,7 @@ const [useCaseConfigurations, setUseCaseConfigurations] =
         if (uc.roiConfigured) acc[uc.id] = { configured: true, shapes: uc.roiShapes };
         return acc;
       }, {} as Record<string, ROIData>),
-     fineTuning: useCaseConfigurations,
+      configure: useCaseConfigurations,
       enabled: useCases.some(uc => uc.selected),
       viewName: viewName ?? selectedViewCase ?? '',
     };
@@ -725,7 +772,7 @@ const [useCaseConfigurations, setUseCaseConfigurations] =
                               <Button
                                 size="small"
                                 variant={useCase.configureUsecase ? 'contained' : 'outlined'}
-                                onClick={() => handleFineTune(useCase.id)}
+                                onClick={() => handleCamera_Usecase_Configure(useCase.id)}
                                 disabled={!useCase.selected}
                                 startIcon={useCase.configureUsecase ? <CheckCircleIcon /> : <TuneIcon />}
                                 color={useCase.configureUsecase ? 'success' : 'primary'}
@@ -811,22 +858,20 @@ const [useCaseConfigurations, setUseCaseConfigurations] =
       />
 
       <UseCaseConfigurationDialog
-  open={configDialogOpen}
-  onClose={() => setConfigDialogOpen(false)}
-  onSave={handleSaveUsecaseConfiguration}
-  useCaseName={
-    useCases.find(
-      uc => uc.id === currentUseCaseForConfig
-    )?.name ?? ''
-  }
-  initialData={
-  currentUseCaseForConfig
-    ? (useCaseConfigurations[
-        currentUseCaseForConfig
-      ] as UseCaseConfigurationData)
-    : undefined
-}
-/>
+        open={configDialogOpen}
+        onClose={() => setConfigDialogOpen(false)}
+        onSave={handleSaveUsecaseConfiguration}
+        useCaseName={
+          useCases.find(
+            uc => uc.id === currentUseCaseForConfig
+          )?.name ?? ''
+        }
+        initialData={
+          useCases.find(
+            uc => uc.id === currentUseCaseForConfig
+          )?.configure as UseCaseConfigurationData
+        }
+      />
 
       <Snackbar
         open={snackbar.open}
