@@ -2,6 +2,10 @@
 
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
+import UseCaseConfigurationDialog, {
+  UseCaseConfigurationData,
+} from '../UseCaseConfigurationDialog/UseCaseConfigurationDialog';
+import { configureUsecase } from '@/app/services/configurator/usecaseService';
 import {
   useGetUsecasesQuery,
   useAssignCamerasMutation,
@@ -54,8 +58,11 @@ interface ROIData {
 
 interface FineTuningData {
   tuned: boolean;
-  model?: string;
-  accuracy?: number;
+  fpsRate?: number;
+  fpsUnit?: 'second' | 'minute' | 'hour';
+  inferenceMode?: '24_hours' | 'custom';
+  startTime?: string;
+  endTime?: string;
 }
 
 interface AIConfig {
@@ -95,7 +102,8 @@ interface UseCaseData {
   selected: boolean;
   roiConfigured: boolean;
   roiShapes?: ROIShape[];
-  fineTuned: boolean;
+  cameraMapperId?: string;
+  configureUsecase: boolean;
   enabled: boolean;
   labels: string[];
   is_threshold?: boolean;
@@ -132,6 +140,10 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       return mapped.map((uc) => ({
         ...uc,
         selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
+        cameraMapperId: res.find(
+  (a: { usecaseId: string }) =>
+    a.usecaseId === uc.id
+)?.cameraMapperId,
       }));
     },
     [camera.id, getCameraAssignments]
@@ -169,7 +181,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         description: uc.description ?? '',
         selected: false,
         roiConfigured: false,
-        fineTuned: false,
+        configureUsecase: false,
         enabled: false,
         roiShapes: [],
         labels: uc.labels ?? [],
@@ -205,6 +217,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const [roiModalOpen, setRoiModalOpen] = useState(false);
   const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<string | null>(null);
 
+  const[configDialogOpen, setConfigDialogOpen] = useState(false);
+  const[currentUseCaseForConfig, setCurrentUseCaseForConfig] = useState<string | null>(null);
+
   // Loading and notification states
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -213,6 +228,9 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
+const [useCaseConfigurations, setUseCaseConfigurations] =
+  useState<Record<string, FineTuningData>>({});
+  
   const getCameraFeedUrl = useCallback(() => {
     if (!camera?.id || !tenantId) return '/img/siteimage.jpg';
     return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
@@ -416,10 +434,91 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   };
 
   const handleFineTune = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase => useCase.id === useCaseId ? { ...useCase, fineTuned: true } : useCase)
-    );
+    setCurrentUseCaseForConfig(useCaseId);
+    setConfigDialogOpen(true);
   };
+
+
+  const handleSaveUsecaseConfiguration = async (
+  config: UseCaseConfigurationData
+) => {
+
+  if (!currentUseCaseForConfig) return;
+
+  try {
+
+    const currentUseCase = useCases.find(
+      uc => uc.id === currentUseCaseForConfig
+    );
+
+    if (!currentUseCase?.cameraMapperId) {
+      throw new Error(
+        'Camera mapper ID not found'
+      );
+    }
+
+    await configureUsecase({
+      cameraMapperId:
+        currentUseCase.cameraMapperId,
+
+      fpsRate: config.fpsRate,
+
+      fpsUnit: config.fpsUnit,
+
+      inferenceMode:
+        config.inferenceMode,
+
+      startTime:
+        config.inferenceMode === 'custom'
+          ? config.startTime
+          : undefined,
+
+      endTime:
+        config.inferenceMode === 'custom'
+          ? config.endTime
+          : undefined,
+    });
+
+    setUseCaseConfigurations(prev => ({
+      ...prev,
+      [currentUseCaseForConfig]: {
+        tuned: true,
+        ...config,
+      },
+    }));
+
+    setUseCases(prev =>
+      prev.map(useCase =>
+        useCase.id === currentUseCaseForConfig
+          ? {
+              ...useCase,
+              configureUsecase: true,
+            }
+          : useCase
+      )
+    );
+
+    setConfigDialogOpen(false);
+
+    setSnackbar({
+      open: true,
+      severity: 'success',
+      message:
+        'Use case configured successfully',
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    setSnackbar({
+      open: true,
+      severity: 'error',
+      message:
+        'Failed to configure use case',
+    });
+  }
+};
 
   const handleSubmit = () => {
     const aiConfig: AIConfig = {
@@ -428,10 +527,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         if (uc.roiConfigured) acc[uc.id] = { configured: true, shapes: uc.roiShapes };
         return acc;
       }, {} as Record<string, ROIData>),
-      fineTuning: useCases.reduce((acc, uc) => {
-        if (uc.fineTuned) acc[uc.id] = { tuned: true };
-        return acc;
-      }, {} as Record<string, FineTuningData>),
+     fineTuning: useCaseConfigurations,
       enabled: useCases.some(uc => uc.selected),
       viewName: viewName ?? selectedViewCase ?? '',
     };
@@ -579,7 +675,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                           <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>Select</TableCell>
                           <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>Use Case</TableCell>
                           <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>Add ROI</TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>Fine Tune</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>Configure</TableCell>
                           <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>View</TableCell>
                         </TableRow>
                       </TableHead>
@@ -628,14 +724,14 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
                             <TableCell>
                               <Button
                                 size="small"
-                                variant={useCase.fineTuned ? 'contained' : 'outlined'}
+                                variant={useCase.configureUsecase ? 'contained' : 'outlined'}
                                 onClick={() => handleFineTune(useCase.id)}
                                 disabled={!useCase.selected}
-                                startIcon={useCase.fineTuned ? <CheckCircleIcon /> : <TuneIcon />}
-                                color={useCase.fineTuned ? 'success' : 'primary'}
+                                startIcon={useCase.configureUsecase ? <CheckCircleIcon /> : <TuneIcon />}
+                                color={useCase.configureUsecase ? 'success' : 'primary'}
                                 sx={{ minWidth: '90px' }}
                               >
-                                {useCase.fineTuned ? 'Tuned' : 'Fine Tune'}
+                                {useCase.configureUsecase ? 'Configured' : 'Configure'}
                               </Button>
                             </TableCell>
                             <TableCell>
@@ -713,6 +809,24 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
           );
         }}
       />
+
+      <UseCaseConfigurationDialog
+  open={configDialogOpen}
+  onClose={() => setConfigDialogOpen(false)}
+  onSave={handleSaveUsecaseConfiguration}
+  useCaseName={
+    useCases.find(
+      uc => uc.id === currentUseCaseForConfig
+    )?.name ?? ''
+  }
+  initialData={
+  currentUseCaseForConfig
+    ? (useCaseConfigurations[
+        currentUseCaseForConfig
+      ] as UseCaseConfigurationData)
+    : undefined
+}
+/>
 
       <Snackbar
         open={snackbar.open}

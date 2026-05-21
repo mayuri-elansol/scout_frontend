@@ -333,52 +333,91 @@ const RoiSelectionModal: React.FC<RoiSelectionModalProps> = ({
   //   setCanvasHeight(newCanvasHeight);
   // }, []);
 
+  // const recalcCanvasSize = useCallback(() => {
+  //   const canvas = canvasRef.current;
+  //   const container = containerRef.current;
+
+  //   if (!canvas || !container) return;
+
+  //   const containerRect = container.getBoundingClientRect();
+
+  //   const containerWidth = containerRect.width;
+  //   const containerHeight = containerRect.height;
+
+  //   if (containerHeight < 50) return;
+
+  //   // const targetAspectRatio = imageRef.current
+  //   //   ? imageRef.current.width / imageRef.current.height
+  //   //   : 16 / 9;
+
+  //   const targetAspectRatio =
+  //     imageRef.current &&
+  //       imageRef.current.width > 0 &&
+  //       imageRef.current.height > 0
+  //       ? imageRef.current.width / imageRef.current.height
+  //       : 16 / 9;
+
+  //   let newCanvasWidth = containerWidth;
+
+  //   let newCanvasHeight = containerWidth / targetAspectRatio;
+
+  //   // Prevent overflow vertically
+  //   if (newCanvasHeight > containerHeight) {
+  //     newCanvasHeight = containerHeight;
+  //     newCanvasWidth = containerHeight * targetAspectRatio;
+  //   }
+
+  //   if (
+  //     !Number.isFinite(newCanvasWidth) ||
+  //     !Number.isFinite(newCanvasHeight)
+  //   ) {
+  //     return;
+  //   }
+  //   canvas.width = newCanvasWidth;
+  //   canvas.height = newCanvasHeight;
+
+  //   setCanvasWidth(newCanvasWidth);
+  //   setCanvasHeight(newCanvasHeight);
+  // }, []);
+
+
   const recalcCanvasSize = useCallback(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
+  const canvas = canvasRef.current;
+  const container = containerRef.current;
 
-    if (!canvas || !container) return;
+  if (!canvas || !container) return;
 
-    const containerRect = container.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
 
-    const containerWidth = containerRect.width;
-    const containerHeight = containerRect.height;
+  const containerWidth = containerRect.width;
+  const containerHeight = containerRect.height;
 
-    if (containerHeight < 50) return;
+  if (containerHeight < 50) return;
 
-    // const targetAspectRatio = imageRef.current
-    //   ? imageRef.current.width / imageRef.current.height
-    //   : 16 / 9;
+  const imageAspectRatio =
+    imageRef.current &&
+    imageRef.current.width > 0 &&
+    imageRef.current.height > 0
+      ? imageRef.current.width / imageRef.current.height
+      : 16 / 9;
 
-    const targetAspectRatio =
-      imageRef.current &&
-        imageRef.current.width > 0 &&
-        imageRef.current.height > 0
-        ? imageRef.current.width / imageRef.current.height
-        : 16 / 9;
+  let newCanvasWidth = containerWidth;
+  let newCanvasHeight = containerWidth / imageAspectRatio;
 
-    let newCanvasWidth = containerWidth;
+  // If height exceeds available area
+  if (newCanvasHeight > containerHeight) {
+    newCanvasHeight = containerHeight;
+    newCanvasWidth = containerHeight * imageAspectRatio;
+  }
 
-    let newCanvasHeight = containerWidth / targetAspectRatio;
+  canvas.width = Math.floor(newCanvasWidth);
+  canvas.height = Math.floor(newCanvasHeight);
 
-    // Prevent overflow vertically
-    if (newCanvasHeight > containerHeight) {
-      newCanvasHeight = containerHeight;
-      newCanvasWidth = containerHeight * targetAspectRatio;
-    }
+  setCanvasWidth(Math.floor(newCanvasWidth));
+  setCanvasHeight(Math.floor(newCanvasHeight));
+}, []);
 
-    if (
-      !Number.isFinite(newCanvasWidth) ||
-      !Number.isFinite(newCanvasHeight)
-    ) {
-      return;
-    }
-    canvas.width = newCanvasWidth;
-    canvas.height = newCanvasHeight;
 
-    setCanvasWidth(newCanvasWidth);
-    setCanvasHeight(newCanvasHeight);
-  }, []);
 
   useEffect(() => {
     if (open === false) return;
