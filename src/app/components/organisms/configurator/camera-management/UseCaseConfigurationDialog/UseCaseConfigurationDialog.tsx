@@ -113,10 +113,10 @@ const UseCaseConfigurationDialog: React.FC<
           }}
         >
           <TextField
-            label="FPS Rate"
+            label="Frame Rate"
             type="number"
             fullWidth
-            value={config.fpsRate}
+            value={config.fpsRate ?? ''}
             onChange={(e) =>
               setConfig(prev => ({
                 ...prev,
@@ -129,7 +129,7 @@ const UseCaseConfigurationDialog: React.FC<
             select
             label="Measurement"
             fullWidth
-            value={config.fpsUnit}
+            value={config.fpsUnit ?? ''}
             onChange={(e) =>
               setConfig(prev => ({
                 ...prev,
@@ -168,7 +168,7 @@ const UseCaseConfigurationDialog: React.FC<
           select
           fullWidth
           label="Inference Mode"
-          value={config.inferenceMode}
+          value={config.inferenceMode ?? ''}
           onChange={(e) =>
             setConfig(prev => ({
               ...prev,
@@ -199,7 +199,7 @@ const UseCaseConfigurationDialog: React.FC<
               label="Start Time"
               type="time"
               fullWidth
-              value={config.startTime}
+              value={config.startTime ?? ''}
               onChange={(e) =>
                 setConfig(prev => ({
                   ...prev,
@@ -215,7 +215,7 @@ const UseCaseConfigurationDialog: React.FC<
               label="End Time"
               type="time"
               fullWidth
-              value={config.endTime}
+              value={config.endTime ?? ''}
               onChange={(e) =>
                 setConfig(prev => ({
                   ...prev,

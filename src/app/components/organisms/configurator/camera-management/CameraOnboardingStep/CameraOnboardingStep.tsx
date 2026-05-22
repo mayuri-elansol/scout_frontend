@@ -164,6 +164,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
   // NVR Form state
   const [nvrData, setNvrData] = useState({
+    nvrBrand: "hikvision",
     name: "",
     ip: "",
     port: "8000",
@@ -309,8 +310,8 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       newErrors.port = "Port must be a number between 1 and 65535";
     }
     if (!formData.rtspUrl.trim()) {
-  newErrors.rtspUrl = "RTSP URL is required";
-}
+      newErrors.rtspUrl = "RTSP URL is required";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -369,15 +370,15 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
       showToast("Camera added successfully!", "success");
     } catch (error: any) {
-  console.error("Add camera error:", error);
+      console.error("Add camera error:", error);
 
-  const message =
-    error?.data?.message ||
-    error?.message ||
-    "Failed to add camera";
+      const message =
+        error?.data?.message ||
+        error?.message ||
+        "Failed to add camera";
 
-  showToast(message, "error");
-}
+      showToast(message, "error");
+    }
     setIsAdding(false);
   };
 
@@ -461,6 +462,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
       setNvrData({
         name: "",
+        nvrBrand: "",
         ip: "",
         port: "8000",
         username: "",
@@ -734,7 +736,54 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                         />
                       </Grid>
 
-                      <Grid size={{ xs: 12 }}>
+                      <Grid size={{ xs: 6 }}>
+                        <TextField
+                          select
+                          label="NVR Brand"
+                          fullWidth
+                          size="small"
+                          value={nvrData.nvrBrand}
+                          onChange={(e) =>
+                            setNvrData({
+                              ...nvrData,
+                              nvrBrand: e.target.value,
+                            })
+                          }
+                          slotProps={{
+                            select: { native: true },
+                          }}
+                        >
+                          <option value="hikvision">
+                            Hikvision
+                          </option>
+
+                          <option value="prama">
+                            Prama
+                          </option>
+
+                          <option value="dahua">
+                            Dahua
+                          </option>
+
+                          <option value="cpplus">
+                            CP Plus
+                          </option>
+
+                          <option value="uniview">
+                            Uniview
+                          </option>
+
+                          <option value="matrix">
+                            Matrix
+                          </option>
+
+                          <option value="generic">
+                            Generic
+                          </option>
+                        </TextField>
+                      </Grid>
+
+                      <Grid size={{ xs: 6 }}>
                         <TextField
                           label="NVR IP Address"
                           required
@@ -742,7 +791,10 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           size="small"
                           value={nvrData.ip}
                           onChange={(e) =>
-                            setNvrData({ ...nvrData, ip: e.target.value })
+                            setNvrData({
+                              ...nvrData,
+                              ip: e.target.value,
+                            })
                           }
                         />
                       </Grid>
@@ -846,6 +898,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                           setIsDiscovering(true);
                           const { activeChannels } = await detectNvrChannels({
                             nvrName: nvrData.name,
+                            brandName: nvrData.nvrBrand,
                             ip: nvrData.ip,
                             port: Number(nvrData.port),
                             username: nvrData.username,
@@ -936,28 +989,6 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
                             const mapped = selected
                               .filter(cam => {
                                 const channel = extractRtspChannelNumber(cam.rtspUrl);
-
-                                // // 1️⃣ Already onboarded
-                                // if (isDuplicateNvrCamera(nvrData.ip, channel, cameras)) {
-                                //   showToast(
-                                //     `Camera already onboarded (IP: ${nvrData.ip}, Channel: ${channel})`,
-                                //     "warning"
-                                //   );
-                                //   return false;
-                                // }
-
-                                // // 2️⃣ Already selected in this batch
-                                // if (
-                                //   pendingAssignments.some(
-                                //     p => p.cameraIp === nvrData.ip && p.channel === channel
-                                //   )
-                                // ) {
-                                //   showToast(
-                                //     `Camera already selected (Channel ${channel})`,
-                                //     "warning"
-                                //   );
-                                //   return false;
-                                // }
 
                                 return true;
                               })
