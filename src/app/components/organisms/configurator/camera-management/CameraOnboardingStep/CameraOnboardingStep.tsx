@@ -193,22 +193,22 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
   };
 
 
-  const isDuplicateNvrCamera = (
-    ip: string,
-    channel: number,
-    cameras: OnboardingCamera[]
-  ) => {
-    return cameras.some(cam => {
-      if (cam.ipAddress !== ip) return false;
+  // const isDuplicateNvrCamera = (
+  //   ip: string,
+  //   channel: number,
+  //   cameras: OnboardingCamera[]
+  // ) => {
+  //   return cameras.some(cam => {
+  //     if (cam.ipAddress !== ip) return false;
 
-      // Extract channel from existing camera name
-      // Example: MainNVR-CH-1
-      const match = cam.cameraname?.match(/CH-(\d+)/);
-      const existingChannel = match ? Number(match[1]) : null;
+  //     // Extract channel from existing camera name
+  //     // Example: MainNVR-CH-1
+  //     const match = cam.cameraname?.match(/CH-(\d+)/);
+  //     const existingChannel = match ? Number(match[1]) : null;
 
-      return existingChannel === channel;
-    });
-  };
+  //     return existingChannel === channel;
+  //   });
+  // };
 
 
 
@@ -369,13 +369,34 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
       setSelectedLocation("");
 
       showToast("Camera added successfully!", "success");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Add camera error:", error);
 
-      const message =
-        error?.data?.message ||
-        error?.message ||
-        "Failed to add camera";
+      // const message =
+      //   error?.data?.message ||
+      //   error?.message ||
+      //   "Failed to add camera";
+
+      // showToast(message, "error");
+
+      let message = "Failed to add camera";
+
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "data" in error
+      ) {
+
+        const err = error as {
+          data?: { message?: string };
+          message?: string;
+        };
+
+        message =
+          err.data?.message ||
+          err.message ||
+          message;
+      }
 
       showToast(message, "error");
     }
@@ -988,7 +1009,7 @@ const CameraOnboardingStep: React.FC<CameraOnboardingStepProps> = ({
 
                             const mapped = selected
                               .filter(cam => {
-                                const channel = extractRtspChannelNumber(cam.rtspUrl);
+                                // const channel = extractRtspChannelNumber(cam.rtspUrl);
 
                                 return true;
                               })

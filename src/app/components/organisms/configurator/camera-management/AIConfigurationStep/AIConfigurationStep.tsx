@@ -141,20 +141,10 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
       const res = await getCameraAssignments(camera.id).unwrap();
       if (!Array.isArray(res)) return mapped;
-      //       return mapped.map((uc) => ({
-      //         ...uc,
-      //         selected: res.some((a: { usecaseId: string }) => a.usecaseId === uc.id),
-      //         cameraMapperId: res.find(
-      //   (a: { usecaseId: string }) =>
-      //     a.usecaseId === uc.id
-      // )?.cameraMapperId,
-
-      // }));
-
       return mapped.map((uc) => {
 
         const assignment = res.find(
-          (a: any) => a.usecaseId === uc.id
+          (a: {usecaseId: string}) => a.usecaseId === uc.id
         );
 
         return {
@@ -828,7 +818,7 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
           Back to Camera List
         </Button>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" color="inherit">Save Configuration</Button>
+          {/* <Button variant="outlined" color="inherit">Save Configuration</Button> */}
           <Button
             variant="contained"
             onClick={handleSubmit}
