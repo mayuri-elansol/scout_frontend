@@ -44,7 +44,7 @@ export const MainDashboardConfig = {
     route: "/fireSmokeDetection",
   },
   "Vehicle In Walkways": {
-    route: "/vehicalSpeedMonitoring",
+    route: "/forkliftVehicleInWalkways",
   },
   "Fall / Laydown Alerts": {
     route: "/fallDetection",

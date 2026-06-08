@@ -95,8 +95,15 @@ export const baseProtectedApi = createApi({
     "EmployeePresenceRestrictedAreaData",
     "PeopleCountData",
     "PeopleCountDetailedReport",
-    "OperationalDashboardData"
-    
+    "OperationalDashboardData",
+    "CrowdGatheringAnalytics",
+    "CrowdGatheringDetailedReport",
+    "ForkliftVehicleInWalkwaysDetailedReport",
+    "ForkliftVehicleInWalkwaysAnalytics",
+    "EmergencyExitBlockageDetectionAnalytics",
+    "EmergencyExitBlockageDetectionDetailedReport"
+
+
 
   ],
 });

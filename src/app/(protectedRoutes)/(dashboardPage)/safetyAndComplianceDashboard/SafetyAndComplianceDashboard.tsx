@@ -22,6 +22,7 @@ import {
   PPEGraphData,
   SafetySocketPayload,
   SurveillanceDashboardResponse,
+  VehicleWalkwayResponse,
 } from "./SafetyAndComplianceDashboard.types";
 import {
   useGetOrgShiftTimeSafetyDataQuery,
@@ -209,21 +210,7 @@ const fireSmokeXAxisTimes = fireSmokeSeries.map((item: FireSmokeBucket) => item.
       : undefined;
 
   const zoneWisePieDataForFall = graphDataForFallDetection?.zoneWisePieData ?? [];
-  /* ================= FALL DETECTION ================= */
 
-// const fallSeries = fallLaydownDashboard?.graphs?.data?.series ?? [];
-
-// const xAxisTimes = fallSeries.map((item: any) => item.time);
-// const xAxisDates = fallSeries.map((item: any) => item.date);
-
-// const lineSeries = [
-//   {
-//     label: "Fall Incidents",
-//     data: fallSeries.map((item: any) => item.count),
-//     color: "#FFCBB3",
-//     showMark: true,
-//   },
-// ];
 
 
 const fallSeries: FallSeriesItem[] =
@@ -241,6 +228,70 @@ const lineSeries = [
     showMark: true,
   },
 ];
+
+
+// Add after fallLaydownDashboard declaration
+
+const crowdGatheringDashboard = displaySafetyKpi.find(
+  (d) => d.title === "Crowd Gathering Alerts",
+);
+
+const graphDataForCrowdGathering =
+  crowdGatheringDashboard?.graphs?.data &&
+  !Array.isArray(crowdGatheringDashboard.graphs.data)
+    ? crowdGatheringDashboard.graphs.data
+    : undefined;
+
+const crowdGranularity = graphDataForCrowdGathering?.granularity ?? "hour";
+const crowdSeries = graphDataForCrowdGathering?.series ?? [];
+
+const crowdXAxisDates = crowdSeries.map((item) => item.date ?? "");
+const crowdXAxisTimes = crowdSeries.map((item) => item.time ?? "");
+
+// ---------------- VEHICLE IN WALKWAYS ----------------
+const vehicleWalkwayDashboard = displaySafetyKpi.find(
+  (d): d is VehicleWalkwayResponse =>
+    d.title === "Vehicle In Walkways",
+);
+
+const graphDataForVehicleWalkway =
+  vehicleWalkwayDashboard?.graphs?.data;
+
+const vehicleGranularity =
+  graphDataForVehicleWalkway?.granularity ?? "hour";
+
+const vehicleSeries =
+  graphDataForVehicleWalkway?.series ?? [];
+
+const vehicleZoneWisePieData =
+  graphDataForVehicleWalkway?.zoneWisePieData ?? [];
+
+const vehicleXAxisTimes =
+  vehicleSeries[0]?.data.map((item) => item.time ?? "") ?? [];
+
+const vehicleXAxisDates =
+  vehicleSeries[0]?.data.map((item) => item.date ?? "") ?? [];
+
+const vehicleLineSeries = vehicleSeries.map(
+  (series, index) => ({
+    label: series.label,
+
+    data: series.data.map((item) => item.value),
+
+    color:
+      [
+        "#ffcdd2",
+        "#FFEAA7",
+        "#A8E6CF",
+        "#B0E0E6",
+        "#D4A5FF",
+      ][index % 5],
+
+    showMark: true,
+  }),
+);
+
+const zoneWisePieDataForCrowd = graphDataForCrowdGathering?.zoneWisePieData ?? [];
   const tabs: TabConfig[] = [
     {
       label: "PPE Compliance",
@@ -264,17 +315,7 @@ const lineSeries = [
               },
             }}
           >
-            {/* <DynamicBarChart
-              data={ppeHourlyData}
-              xAxisKey="time"
-              series={[
-                { dataKey: "helmet", label: "Helmet", color: "#ffcdd2" },
-                { dataKey: "vest", label: "Vest", color: "#FFEAA7" },
-                { dataKey: "glass", label: "Glass", color: "#A8E6CF" },
-              ]}
-              yAxisLabel="Violation Count"
-              stackId="ppe"
-            /> */}
+
             <TimeScaleLineChart
   granularity={ppeGranularity}
   xAxisDates={ppeXAxisDates}
@@ -330,17 +371,7 @@ const lineSeries = [
                 height: { xs: 140, md: "50%" },
               }}
             >
-              {/* <DynamicPieChart
-                data={
-                  [
-                    // { label: "Helmet", value: 29, color: "#ffcdd2" },
-                    // { label: "Vest", value: 28, color: "#FFEAA7" },
-                    // { label: "Glass", value: 28, color: "#A8E6CF" },
-                  ]
-                }
-                count={2.5}
-                carttitle="PPE Violation Distribution"
-              /> */}
+           
 
               {ppeViolationTypePieData.length > 0 && (
   <DynamicPieChart
@@ -363,19 +394,7 @@ const lineSeries = [
                 height: { xs: 140, md: "50%" },
               }}
             >
-              {/* <DynamicPieChart
-                data={
-                  [
-                    // { label: "Production Gate", value: 31, color: "#ffcdd2" },
-                    // { label: "Warehouse Gate", value: 43, color: "#FFD3A5" },
-                    // { label: "Parking Gate", value: 26, color: "#FFEAA7" },
-                    // { label: "Main Entrance", value: 20, color: "#C7EDCC" },
-                    // { label: "Side Exit", value: 71, color: "#A8E6CF" },
-                  ]
-                }
-                count={2.5}
-                carttitle="PPE Violations by Zone"
-              /> */}
+       
               {ppeZoneWisePieData.length > 0 && (
   <DynamicPieChart
     data={ppeZoneWisePieData}
@@ -516,32 +535,12 @@ const lineSeries = [
               },
             }}
           >
-            <DynamicBarChart
-              data={
-                [
-                  // { gate: "Production Gate", blocked: 5, clear: 19 },
-                  // { gate: "Warehouse Gate", blocked: 3, clear: 21 },
-                  // { gate: "Parking Gate", blocked: 2, clear: 22 },
-                  // { gate: "Main Entrance", blocked: 4, clear: 20 },
-                  // { gate: "Side Exit", blocked: 1, clear: 23 },
-                ]
-              }
-              xAxisKey="gate"
-              series={[
-                {
-                  dataKey: "blocked",
-                  label: "Blocked Hours",
-                  color: "#ffcdd2",
-                },
-                {
-                  dataKey: "clear",
-                  label: "Clear Hours",
-                  color: "#A8E6CF",
-                },
-              ]}
-              yAxisLabel="Hours "
-              stackId="exitStatus"
-            />
+            <TimeScaleLineChart
+          granularity={vehicleGranularity}
+          xAxisDates={vehicleXAxisDates}
+          xAxisTimes={vehicleXAxisTimes}
+          series={vehicleLineSeries}
+        />
           </Grid>
 
           {/* Right side*/}
@@ -572,18 +571,12 @@ const lineSeries = [
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
-                data={
-                  [
-                    // { label: "Production Gate", value: 5, color: "#ffcdd2" },
-                    // { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
-                    // { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                    // { label: "Main Entrance", value: 4, color: "#C7EDCC" },
-                    // { label: "Side Exit", value: 1, color: "#A8E6CF" },
-                  ]
-                }
-                carttitle="Vehicle in Walkways by Zone"
-              />
+              {vehicleZoneWisePieData.length > 0 && (
+            <DynamicPieChart
+              data={vehicleZoneWisePieData}
+              carttitle="Vehicle in Walkways by Zone"
+            />
+          )}
             </Box>
           </Grid>
         </Grid>
@@ -774,38 +767,31 @@ const lineSeries = [
             sx={{
               display: "flex",
               height: { xs: "50vh", md: "100%" },
-              width: "100%",
+               width: "100%",
               "& .MuiCardContent-root": {
                 height: "100%",
               },
             }}
           >
-            <DynamicBarChartWithThreshold
-              data={
-                [
-                  // { month: "Jan", users: 20 },
-                  // { month: "Feb", users: 50 },
-                  // { month: "Mar", users: 80 },
-                  // { month: "Jan", users: 20 },
-                  // { month: "April", users: 50 },
-                  // { month: "May", users: 80 },
-                  // { month: "June", users: 20 },
-                  // { month: "July", users: 50 },
-                  // { month: "August", users: 80 },
-                ]
-              }
-              xAxisKey="month"
-              series={[
-                {
-                  dataKey: "users",
-                  label: "Users",
-                  color: "#B0E0E6",
-                },
-              ]}
-              thresholdValue={60}
-              thresholdLabel="Target"
-              thresholdColor="#FFB84D"
-            />
+           <TimeScaleLineChart
+          granularity={crowdGranularity}
+          xAxisDates={crowdXAxisDates}
+          xAxisTimes={crowdXAxisTimes}
+          series={[
+            {
+              label: "Crowd Incidents",
+              data: crowdSeries.map((item: any) => item.count),
+              color: "#B0E0E6",
+              showMark: true,
+            },
+            {
+              label: "Mob Count",
+              data: crowdSeries.map((item: any) => item.mobCount),
+              color: "#FFEAA7",
+              showMark: true,
+            },
+          ]}
+        />
           </Grid>
 
           {/* Right side*/}
@@ -836,18 +822,12 @@ const lineSeries = [
                 height: { xs: 140, md: "50%" },
               }}
             >
-              <DynamicPieChart
-                data={
-                  [
-                    // { label: "Production Gate", value: 5, color: "#ffcdd2" },
-                    // { label: "Warehouse Gate", value: 3, color: "#FFCBB3" },
-                    // { label: "Parking Gate", value: 2, color: "#FFEAA7" },
-                    // { label: "Main Entrance", value: 4, color: "#C8E6C9" },
-                    // { label: "Side Exit", value: 1, color: "#B0E0E6" },
-                  ]
-                }
-                carttitle="Zone-wise Crowd Gathering Incidents"
-              />
+           {zoneWisePieDataForCrowd.length > 0 && (
+            <DynamicPieChart
+              data={zoneWisePieDataForCrowd}
+              carttitle="Zone-wise Crowd Gathering Incidents"
+            />
+          )}
             </Box>
           </Grid>
         </Grid>
@@ -855,7 +835,72 @@ const lineSeries = [
       featureId: FEATURE.CROWD_DETECTION,
     },
   ];
+ const normalizeSafetyDashboardKpis = (
+  response: any[],
+): SurveillanceDashboardResponse[] => {
+  if (!Array.isArray(response)) return [];
 
+  return response.map((item) => {
+    const kpi = item?.kpi ?? {};
+
+    const graphs = item?.graphs?.data ?? {};
+
+    // ---------- SAFE SERIES NORMALIZATION ----------
+    const rawSeries = Array.isArray(graphs?.series) ? graphs.series : [];
+
+    const normalizedSeries = rawSeries.map((s: any) => {
+      const data = Array.isArray(s?.data) ? s.data : [];
+
+      return {
+        label: s?.label ?? "",
+        data: data.map((d: any) => ({
+          time: d?.time ?? "",
+          date: d?.date ?? "",
+          value: d?.value ?? d?.count ?? 0,
+        })),
+      };
+    });
+
+    // ---------- KPI NORMALIZATION ----------
+    const normalizedKpi = {
+      title: kpi?.title ?? item?.title ?? "",
+      colour: kpi?.colour ?? "gray",
+      violationsCount: kpi?.violationsCount ?? 0,
+      lastDetectionTime: kpi?.lastDetectionTime ?? "-",
+      lastDetection: kpi?.lastDetection ?? "-",
+    };
+
+    // ---------- PIE DATA SAFE HANDLING ----------
+    const zoneWisePieData = Array.isArray(graphs?.zoneWisePieData)
+      ? graphs.zoneWisePieData
+      : [];
+
+    const hazardTypePieData = Array.isArray(graphs?.hazardTypePieData)
+      ? graphs.hazardTypePieData
+      : [];
+
+    const violationTypePieData = Array.isArray(graphs?.violationTypePieData)
+      ? graphs.violationTypePieData
+      : [];
+
+    return {
+      ...item,
+
+      kpi: normalizedKpi,
+
+      graphs: {
+        data: {
+          series: normalizedSeries,
+          granularity: graphs?.granularity ?? "hour",
+
+          zoneWisePieData,
+          hazardTypePieData,
+          violationTypePieData,
+        },
+      },
+    };
+  });
+};
   return (
     <Paper
       sx={{

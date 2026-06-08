@@ -1,6 +1,4 @@
 
-// ─── Shared ───────────────────────────────────────────────────────────────────
-
 export type KpiColour = "red" | "green" | "blue" | "gray";
 
 export interface KpiData {
@@ -9,80 +7,111 @@ export interface KpiData {
   violationsCount?: number;
   lastDetection?: string;
   lastDetectionTime?: string;
-
-  // ✅ ADD THESE
   totalFireCount?: number;
   totalSmokeCount?: number;
 }
 
-// ─── Fire & Smoke ─────────────────────────────────────────────────────────────
-
-export interface FireSmokeBucket {
-  date: string;
-  time?: string;      // hour granularity only
-  day?: string;  
-    fireCount: number;
-  smokeCount: number;
-}
-
-export interface FireSmokeZoneWiseCount {
-  fire: Record<string, number>;
-  smoke: Record<string, number>;
-}
+// ─── Pie Data ─────────────────────────────────────────────────────────────────
 
 export interface PieData {
   label: string;
   value: number;
   color: string;
 }
+
 type Granularity = "hour" | "weekday" | "week";
+
+// ─── Fire & Smoke ─────────────────────────────────────────────────────────────
+
+export interface FireSmokeBucket {
+  date: string;
+  time?: string;
+  day?: string;
+  fireCount: number;
+  smokeCount: number;
+}
+
 export interface FireSmokeGraphData {
-  granularity: Granularity;  
-  series: FireSmokeBucket[];             
+  granularity: Granularity;
+  series: FireSmokeBucket[];
   hazardTypePieData: PieData[];
   zoneWisePieData: PieData[];
 }
+
+// ─── PPE ──────────────────────────────────────────────────────────────────────
+
 export interface PPEKitBucket {
-  date:string;
-  time?:string;
-  day?:string;
+  date: string;
+  time?: string;
+  day?: string;
   vest: number;
   helmet: number;
-  glasses:number;
+  glasses: number;
 }
 
 export interface PPEGraphData {
-  granularity: "hour" | "weekday" | "week";
+  granularity: Granularity;
   series: PPEKitBucket[];
   violationTypePieData: PieData[];
   zoneWisePieData: PieData[];
 }
 
-
 // ─── Fall / Laydown ───────────────────────────────────────────────────────────
 
-export interface FallLaydownSeriesPoint {
-  label: string;
+export interface FallSeriesItem {
+  date?: string;
+  time?: string;
+  day?: string;
   count: number;
 }
 
 export interface FallLaydownGraphData {
-  granularity: "hour" | "weekday" | "week";
-  series: FallLaydownSeriesPoint[];
+  granularity: Granularity;
+  series: FallSeriesItem[];
   zoneWisePieData: PieData[];
 }
 
+// ─── Crowd Gathering ──────────────────────────────────────────────────────────
 
-// ─── Empty Graph (PPE, Vehicle, Emergency Exit, Crowd) ────────────────────────
+export interface CrowdSeriesItem {
+  date?: string;
+  time?: string;
+  day?: string;
+  count: number;
+  mobCount: number;
+}
+
+export interface CrowdGraphData {
+  granularity: Granularity;
+  series: CrowdSeriesItem[];
+  zoneWisePieData: PieData[];
+}
+// ─── Vehicle In Walkways ──────────────────────────────────────────
+
+export interface VehicleWalkwayPoint {
+  time?: string;
+  date?: string;
+  value: number;
+}
+
+export interface VehicleWalkwaySeries {
+  label: string;
+  data: VehicleWalkwayPoint[];
+}
+
+export interface VehicleWalkwayGraphData {
+  granularity: Granularity;
+  series: VehicleWalkwaySeries[];
+  zoneWisePieData: PieData[];
+}
+export interface VehicleWalkwayResponse {
+  title: "Vehicle In Walkways";
+  kpi: KpiData;
+  graphs: { data: VehicleWalkwayGraphData };
+}
+// ─── Empty Graph ──────────────────────────────────────────────────────────────
 
 export type EmptyGraphData = [];
-
-// ─── Union Graph Data ─────────────────────────────────────────────────────────
-
-export type GraphData =
-  | FireSmokeGraphData
-  | FallLaydownGraphData
-  | EmptyGraphData;
 
 // ─── Per-title response shapes ────────────────────────────────────────────────
 
@@ -104,12 +133,14 @@ export interface FallLaydownResponse {
   graphs: { data: FallLaydownGraphData };
 }
 
+export interface CrowdGatheringResponse {
+  title: "Crowd Gathering Alerts";
+  kpi: KpiData;
+  graphs: { data: CrowdGraphData };
+}
+
 export interface EmptyDataResponse {
-  title:
-    | "PPE Violations"
-    | "Vehicle In Walkways"
-    | "Emergency Exit Blockage"
-    | "Crowd Gathering Alerts";
+  title: "Emergency Exit Blockage";
   kpi: KpiData;
   graphs: { data: EmptyGraphData };
 }
@@ -120,8 +151,9 @@ export type SurveillanceDashboardResponse =
   | PPEKitDetectionResponse
   | FireSmokeResponse
   | FallLaydownResponse
+  | CrowdGatheringResponse
+  | VehicleWalkwayResponse
   | EmptyDataResponse;
-
 // ─── Socket Payload ───────────────────────────────────────────────────────────
 
 export interface SafetySocketPayload {
@@ -130,8 +162,3 @@ export interface SafetySocketPayload {
   serverTimestamp: string;
   data: SurveillanceDashboardResponse[];
 }
-export type FallSeriesItem = {
-  time?: string;
-  date?: string;
-  count: number;
-};

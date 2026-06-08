@@ -23,7 +23,7 @@ export const SafetyMonitoringConfig = {
   },
   "Vehicle In Walkways": {
     icon: DirectionsCar,
-    route: "/vehicalSpeedMonitoring",
+    route: "/forkliftVehicleInWalkways",
     tooltipMessage: "Shows vehical or forklift driving incidents in walkways.",
   },
   "Fall / Laydown Alerts": {

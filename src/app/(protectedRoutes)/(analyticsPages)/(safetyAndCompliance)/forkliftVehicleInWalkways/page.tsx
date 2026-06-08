@@ -1,4 +1,4 @@
-import ObjectDetection from './ObjectDetection';
+import ObjectDetection from './ForkliftVehicleInWalkways';
 
 
 export default function page() {

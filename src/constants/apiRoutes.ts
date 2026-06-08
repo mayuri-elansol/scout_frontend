@@ -162,56 +162,34 @@ export const apiRoutes = {
     getFireSmokeDetectionAnalyticsDownloadDetailedCsvReport: 'get-fireSmoke-detection-analytics-download-details-csv-report',
 
   },
-  vehicleSpeedMonitoringInsidePremises: {
-    root: "vehicleSpeedMonitoringInsidePremises",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsKpi:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-kpi",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsRecentVoliations:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-recent-voliations",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsCameraStatusByZone:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-camera-status-by-zone",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsDetailedReport:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-details-report",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsDownloadDetailedReport:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-download-details-report",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsDownloadDetailedReportForSingleId:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-download-details-report-for-single-id",
-    getVehicleSpeedMonitoringInsidePremisesAnalyticsDetailedReportForSingleId:
-      "get-vehicle-speed-monitoring-inside-premises-analytics-details-report-for-single-id",
+ forkliftVehicleInWalkways: {
+    root: 'forkliftVehicleInWalkways',
+    getForkliftVehicleInWalkwaysAnalyticsData: 'get-forklift-vehicle-in-walkways-analytics-kpi-recent-zone-violations',
+    getForkliftVehicleInWalkwaysAnalyticsDetailedReport: 'get-forklift-vehicle-in-walkways-analytics-details-report',
+    getForkliftVehicleInWalkwaysAnalyticsDownloadDetailedPdfReport: 'get-forklift-vehicle-in-walkways-analytics-download-details-pdf-report',
+    getForkliftVehicleInWalkwaysAnalyticsDownloadDetailedCSVReport: 'get-forklift-vehicle-in-walkways-analytics-download-details-csv-report',
+    getForkliftVehicleInWalkwaysAnalyticsDownloadDetailedReportForSingleId: 'get-forklift-vehicle-in-walkways-analytics-download-details-report-for-single-id',
   },
   emergencyExitBlockageDetection: {
-    root: "emergencyExitBlockageDetection",
-    getEmergencyExitBlockageDetectionAnalyticsKpi:
-      "get-emergency-exit-blockage-detection-analytics-kpi",
-    getEmergencyExitBlockageDetectionAnalyticsRecentVoliations:
-      "get-emergency-exit-blockage-detection-analytics-recent-voliations",
-    getEmergencyExitBlockageDetectionAnalyticsCameraStatusByZone:
-      "get-emergency-exit-blockage-detection-analytics-camera-status-by-zone",
-    getEmergencyExitBlockageDetectionAnalyticsDetailedReport:
-      "get-emergency-exit-blockage-detection-analytics-details-report",
-    getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedReport:
-      "get-emergency-exit-blockage-detection-analytics-download-details-report",
-    getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedReportForSingleId:
-      "get-emergency-exit-blockage-detection-analytics-download-details-report-for-single-id",
-    getEmergencyExitBlockageDetectionAnalyticsDetailedReportForSingleId:
-      "get-emergency-exit-blockage-detection-analytics-details-report-for-single-id",
+    root: 'emergencyExitBlockageDetection',
+    getEmergencyExitBlockageDetectionAnalyticsData: 'get-emergency-exit-blockage-detection-analytics-kpi-zone-recent-violations',
+    getEmergencyExitBlockageDetectionAnalyticsDetailedReport: 'get-emergency-exit-blockage-detection-analytics-details-report',
+    getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedPdfReport: 'get-emergency-exit-blockage-detection-analytics-download-details-pdf-report',
+    getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedCSVReport: 'get-emergency-exit-blockage-detection-analytics-download-details-csv-report',
+    getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedReportForSingleId: 'get-emergency-exit-blockage-detection-analytics-download-details-report-for-single-id',
   },
+ 
   crowdGatheringInHazardousZones: {
     root: "crowdGatheringInHazardousZones",
-    getCrowdGatheringInHazardousZonesAnalyticsKpi:
-      "get-crowd-gathering-in-hazardous-zones-analytics-kpi",
-    getCrowdGatheringInHazardousZonesAnalyticsRecentVoliations:
-      "get-crowd-gathering-in-hazardous-zones-analytics-recent-voliations",
-    getCrowdGatheringInHazardousZonesAnalyticsCameraStatusByZone:
-      "get-crowd-gathering-in-hazardous-zones-analytics-camera-status-by-zone",
+        getCrowdGatheringInHazardousZonesAnalyticsData: 'get-crowd-gathering-in-hazardous-zones-analytics-kpi-recent-zone-violations',
     getCrowdGatheringInHazardousZonesAnalyticsDetailedReport:
       "get-crowd-gathering-in-hazardous-zones-analytics-details-report",
-    getCrowdGatheringInHazardousZonesAnalyticsDownloadDetailedReport:
-      "get-crowd-gathering-in-hazardous-zones-analytics-download-details-report",
+    getCrowdGatheringInHazardousZonesAnalyticsDownloadDetailedPdfReport:
+      "get-crowd-gathering-in-hazardous-zones-analytics-download-details-pdf-report",
     getCrowdGatheringInHazardousZonesAnalyticsDownloadDetailedReportForSingleId:
       "get-crowd-gathering-in-hazardous-zones-analytics-download-details-report-for-single-id",
-    getCrowdGatheringInHazardousZonesAnalyticsDetailedReportForSingleId:
-      "get-crowd-gathering-in-hazardous-zones-analytics-details-report-for-single-id",
+    getCrowdGatheringInHazardousZonesAnalyticsDownloadDetailedCSVReport:
+      "get-crowd-gathering-in-hazardous-zones-analytics-download-details-csv-report",
   },
   intrusionDetectionAtPremisesPerimeter: {
     root: "intrusionDetectionAtPremisesPerimeter",
