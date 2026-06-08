@@ -19,9 +19,8 @@ const mockCamera: OrgCamera = {
   aiConfig: {
     useCases: [],
     roiData: {},
-    fineTuning: {},
+    configure: {},
     enabled: true,
-    
   },
 };
 
