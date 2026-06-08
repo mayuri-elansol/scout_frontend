@@ -17,7 +17,8 @@ export interface OrgCamera {
   aiConfig?: {
     useCases: string[];
     roiData: Record<string, { configured: boolean }>;
-    fineTuning: Record<string, { tuned: boolean }>;
+    // fineTuning: Record<string, { tuned: boolean }>;
+    configure: Record<string, { tuned: boolean }>;
     enabled: boolean;
     viewName?: string;
   };
