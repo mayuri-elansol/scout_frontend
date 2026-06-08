@@ -1,12 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import RoiSelectionModal from '../ROISelectionModel/RoiSelectionModal';
+import UseCaseConfigurationDialog, {
+  UseCaseConfigurationData,
+} from '../UseCaseConfigurationDialog/UseCaseConfigurationDialog';
+
 import {
   useGetUsecasesQuery,
   useAssignCamerasMutation,
   useUnassignCameraMutation,
   useLazyGetCameraAssignmentsQuery,
+  useConfigureUsecaseMutation,
 } from '@/app/(protectedRoutes)/(settings)/(configurator)/useCaseManager/UseCaseManagerAPI';
 import {
   useLazyGetRoiQuery,
@@ -41,6 +46,7 @@ import {
   Settings as SettingsIcon,
   Tune as TuneIcon,
   RadioButtonUnchecked as ROIIcon,
+  Refresh as RefreshIcon,
 } from '@mui/icons-material';
 
 import { ROIShape } from '@/app/types/roi';
@@ -51,33 +57,22 @@ interface ROIData {
   coordinates?: { x: number; y: number; width: number; height: number }[];
 }
 
-interface FineTuningData {
+interface ConfigurationData {
   tuned: boolean;
-  model?: string;
-  accuracy?: number;
+  fpsRate?: number;
+  fpsUnit?: 'second' | 'minute' | 'hour';
+  inferenceMode?: '24_hours' | 'custom';
+  startTime?: string;
+  endTime?: string;
 }
 
 interface AIConfig {
   useCases: string[];
   roiData: Record<string, ROIData>;
-  fineTuning: Record<string, FineTuningData>;
+  configure: Record<string, ConfigurationData>;
   enabled: boolean;
   viewName?: string;
 }
-
-// interface CameraData {
-//   id: string;
-//   ipAddress: string;
-//   username: string;
-//   password: string;
-//   port: string;
-//   make: string;
-//   cameraname: string;
-//   location?: string;
-//   rtspStream: string;
-//   status: 'connected' | 'failed' | 'pending';
-//   aiConfig?: AIConfig
-// }
 
 interface CameraData {
   id: string;
@@ -87,11 +82,11 @@ interface CameraData {
   port: string;
   make: string;
   cameraname: string;
-  zone?: string;          // ✅ ADD THIS
+  zone?: string;
   location?: string;
   rtspStream: string;
   status: 'connected' | 'failed' | 'pending';
-  aiConfig?: AIConfig
+  aiConfig?: AIConfig;
 }
 
 interface AIConfigurationStepProps {
@@ -108,14 +103,18 @@ interface UseCaseData {
   selected: boolean;
   roiConfigured: boolean;
   roiShapes?: ROIShape[];
-  fineTuned: boolean;
+  cameraMapperId?: string;
+  configureUsecase: boolean;
   enabled: boolean;
   labels: string[];
-
-  
   is_threshold?: boolean;
   modelThreshold?: number | null;
+  configure?: ConfigurationData;
 }
+
+type FrameStatus = 'idle' | 'loading' | 'loaded' | 'error';
+
+const MAX_RETRIES = 3;
 
 const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   camera,
@@ -128,6 +127,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const { data: useCasesResponse, isLoading: loadingUseCases } = useGetUsecasesQuery();
   const [assignCameras] = useAssignCamerasMutation();
   const [unassignCamera] = useUnassignCameraMutation();
+  const [configureUsecaseMutation] =
+    useConfigureUsecaseMutation();
   const [getCameraAssignments] = useLazyGetCameraAssignmentsQuery();
 
   // ROI RTK Query hooks
@@ -139,47 +140,66 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
   const loadAssignments = React.useCallback(
     async (mapped: UseCaseData[]): Promise<UseCaseData[]> => {
       const res = await getCameraAssignments(camera.id).unwrap();
+      if (!Array.isArray(res)) return mapped;
+      return mapped.map((uc) => {
 
-      if (!Array.isArray(res)) {
-        return mapped;
-      }
+        const assignment = res.find(
+          (a: {usecaseId: string}) => a.usecaseId === uc.id
+        );
 
-      return mapped.map((uc) => ({
-        ...uc,
-        selected: res.some(
-          (a: { usecaseId: string }) => a.usecaseId === uc.id
-        ),
-      }));
+        return {
+          ...uc,
+
+          selected: !!assignment,
+
+          cameraMapperId:
+            assignment?.cameraMapperId,
+
+          configureUsecase:
+            !!(
+              assignment?.fpsRate &&
+              assignment?.fpsUnit &&
+              assignment?.inferenceMode
+            ),
+
+          configure: assignment
+            ? {
+              tuned: !!assignment.fpsRate,
+
+              fpsRate: assignment.fpsRate,
+
+              fpsUnit: assignment.fpsUnit,
+
+              inferenceMode:
+                assignment.inferenceMode,
+
+              startTime:
+                assignment.startTime,
+
+              endTime:
+                assignment.endTime,
+            }
+            : undefined,
+        };
+      });
     },
     [camera.id, getCameraAssignments]
   );
 
-
-
   const loadRoiForUseCases = React.useCallback(
-    
     async (useCases: UseCaseData[]): Promise<UseCaseData[]> => {
-      
       return Promise.all(
         useCases.map(async (uc) => {
-          console.log('RAW usecase from API:', uc);
-
           if (!uc.selected) return uc;
-
           try {
-            const res = await getRoi({
-              cameraId: camera.id,
-              usecaseId: uc.id,
-            }).unwrap();
-
+            const res = await getRoi({ cameraId: camera.id, usecaseId: uc.id }).unwrap();
             return {
               ...uc,
               roiConfigured: res.rois.length > 0,
               roiShapes: res.rois,
               modelThreshold: res.modelThreshold ?? null,
             };
-
-          } catch (error) {
+          } catch {
             return uc;
           }
         })
@@ -188,17 +208,8 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     [camera.id, getRoi]
   );
 
-
-
   useEffect(() => {
-    
-    if (
-      loadingUseCases ||
-      !useCasesResponse ||
-      !Array.isArray(useCasesResponse)
-    ) {
-      return;
-    }
+    if (loadingUseCases || !useCasesResponse || !Array.isArray(useCasesResponse)) return;
 
     const run = async () => {
       const mapped: UseCaseData[] = useCasesResponse.map((uc) => ({
@@ -207,12 +218,11 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
         description: uc.description ?? '',
         selected: false,
         roiConfigured: false,
-        fineTuned: false,
+        configureUsecase: false,
         enabled: false,
         roiShapes: [],
         labels: uc.labels ?? [],
-
-        is_threshold: uc.is_threshold ?? false, // 🔥 IMPORTANT
+        is_threshold: uc.is_threshold ?? false,
         modelThreshold: null,
       }));
 
@@ -227,25 +237,25 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     };
 
     void run();
-  }, [
-    loadingUseCases,
-    useCasesResponse,
-    loadAssignments,
-    loadRoiForUseCases,
-  ]);
-
-
+  }, [loadingUseCases, useCasesResponse, loadAssignments, loadRoiForUseCases]);
 
   const [selectedViewCase, setSelectedViewCase] = useState<string | null>(null);
   const [viewName, setViewName] = useState('');
   const [showCameraView, setShowCameraView] = useState(true);
 
+  // Frame state — fetch once on mount, retry on failure only, never poll
   const [frameUrl, setFrameUrl] = useState<string | null>(null);
-
+  const [frameStatus, setFrameStatus] = useState<FrameStatus>('idle');
+  const [frameError, setFrameError] = useState<string | null>(null);
+  const retryCountRef = useRef(0);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ROI Modal state
   const [roiModalOpen, setRoiModalOpen] = useState(false);
   const [currentUseCaseForROI, setCurrentUseCaseForROI] = useState<string | null>(null);
+
+  const [configDialogOpen, setConfigDialogOpen] = useState(false);
+  const [currentUseCaseForConfig, setCurrentUseCaseForConfig] = useState<string | null>(null);
 
   // Loading and notification states
   const [loading, setLoading] = useState(false);
@@ -255,201 +265,64 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
     severity: 'success' as 'success' | 'error' | 'info',
   });
 
-  const handleUseCaseSelect = async (usecaseId: string) => {
-    const useCase = useCases.find(uc => uc.id === usecaseId);
-    const isSelected = !useCase?.selected;
+  const [useCaseConfigurations, setUseCaseConfigurations] =
+    useState<Record<string, ConfigurationData>>({});
 
-    // Optimistic update
-    setUseCases(prev =>
-      prev.map(uc =>
-        uc.id === usecaseId ? { ...uc, selected: isSelected } : uc
-      )
-    );
-
-    try {
-      if (isSelected) {
-        // ASSIGN
-        await assignCameras({
-          usecaseId: usecaseId,
-          cameraIds: [camera.id]
-        }).unwrap();
-      } else {
-        // UNASSIGN
-        await unassignCamera({
-          usecaseId: usecaseId,
-          cameraId: camera.id
-        }).unwrap();
-      }
-
-      setSnackbar({
-        open: true,
-        severity: "success",
-        message: isSelected
-          ? "Camera assigned to usecase"
-          : "Camera unassigned",
-      });
-    } catch (error) {
-      console.error(error);
-
-      // Revert optimistic update on error
-      setUseCases(prev =>
-        prev.map(uc =>
-          uc.id === usecaseId ? { ...uc, selected: !isSelected } : uc
-        )
-      );
-
-      setSnackbar({
-        open: true,
-        severity: "error",
-        message: "Failed to update assignment",
-      });
-    }
-  };
-
-  const handleAddROI = async (useCaseId: string) => {
-    setCurrentUseCaseForROI(useCaseId);
-
-    try {
-      // Use RTK Query to get ROI
-      const res = await getRoi({
-        cameraId: camera.id,
-        usecaseId: useCaseId,
-      }).unwrap();
-
-
-      setUseCases(prev =>
-        prev.map(uc =>
-          uc.id === useCaseId
-            ? { ...uc, roiShapes: res.rois, roiConfigured: res.rois.length > 0, modelThreshold: res.modelThreshold ?? null }
-            : uc
-        )
-      );
-
-
-    } catch {
-      // No ROI exists yet → open empty canvas
-    }
-
-    setRoiModalOpen(true);
-  };
-
-  const handleROISave = async (roiShapes: ROIShape[]) => {
-    if (!currentUseCaseForROI) return;
-
-    try {
-      setLoading(true);
-
-      const currentUC = useCases.find(u => u.id === currentUseCaseForROI);
-
-      await saveRoi({
-        cameraId: camera.id,
-        usecaseId: currentUseCaseForROI,
-        modelThreshold: currentUC?.modelThreshold ?? undefined,
-        rois: roiShapes.map(r => ({
-          type: r.type,
-          label: r.name,
-          mode: r.mode,
-          color: r.color,
-          points: r.points,
-        })),
-      }).unwrap();
-
-
-      const rois = await getRoi({
-        cameraId: camera.id,
-        usecaseId: currentUseCaseForROI,
-      }).unwrap();
-
-      setUseCases(prev =>
-        prev.map(uc =>
-          uc.id === currentUseCaseForROI
-            ? {
-              ...uc,
-              roiConfigured: rois.rois.length > 0,
-              roiShapes: rois.rois,
-              modelThreshold: rois.modelThreshold ?? null,
-            }
-            : uc
-        )
-      );
-
-
-
-
-      setSnackbar({
-        open: true,
-        message: 'ROI saved successfully',
-        severity: 'success',
-      });
-
-    } catch (err) {
-      console.error(err);
-      setSnackbar({
-        open: true,
-        message: 'Failed to save ROI',
-        severity: 'error',
-      });
-    } finally {
-      setLoading(false);
-      setRoiModalOpen(false);
-      setCurrentUseCaseForROI(null);
-    }
-  };
-
-  const handleROIClose = () => {
-    setRoiModalOpen(false);
-    setCurrentUseCaseForROI(null);
-  };
-
-  const handleFineTune = (useCaseId: string) => {
-    setUseCases(prev =>
-      prev.map(useCase =>
-        useCase.id === useCaseId ? { ...useCase, fineTuned: true } : useCase
-      )
-    );
-  };
-
-  const handleSubmit = () => {
-    const aiConfig: AIConfig = {
-      useCases: useCases.filter(uc => uc.selected).map(uc => uc.id),
-      roiData: useCases.reduce((acc, uc) => {
-        if (uc.roiConfigured) {
-          acc[uc.id] = {
-            configured: true,
-            shapes: uc.roiShapes,
-          };
-        }
-        return acc;
-      }, {} as Record<string, ROIData>),
-      fineTuning: useCases.reduce((acc, uc) => {
-        if (uc.fineTuned) acc[uc.id] = { tuned: true };
-        return acc;
-      }, {} as Record<string, FineTuningData>),
-      enabled: useCases.some(uc => uc.selected),
-      viewName: viewName ?? selectedViewCase ?? '',
-    };
-
-    onSave(aiConfig);
-  };
-
-  const getCurrentUseCaseName = () => {
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    return useCase?.name ?? '';
-  };
-
-  const getExistingROI = () => {
-    const useCase = useCases.find(uc => uc.id === currentUseCaseForROI);
-    return useCase?.roiShapes ?? [];
-  };
-
-  const getCameraFeedUrl = React.useCallback(() => {
-    if (!camera?.id || !tenantId) {
-      console.error('Missing tenantId or cameraId', { tenantId, cameraId: camera?.id });
-      return '/img/siteimage.jpg';
-    }
-    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
+  const getCameraFeedUrl = useCallback(() => {
+    if (!camera?.id || !tenantId) return '/img/siteimage.jpg';
+    return `${process.env.NEXT_PUBLIC_BACKEND_URL}/configurator/camera-manager/${tenantId}/${camera.id}/frame`;
   }, [camera?.id, tenantId]);
 
+  const fetchFrame = useCallback(() => {
+    setFrameStatus('loading');
+    setFrameError(null);
+    setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+  }, [getCameraFeedUrl]);
+
+  const handleFrameLoad = useCallback(() => {
+    retryCountRef.current = 0;
+    setFrameStatus('loaded');
+    setFrameError(null);
+  }, []);
+
+  const handleFrameError = useCallback(() => {
+    if (retryCountRef.current < MAX_RETRIES) {
+      retryCountRef.current += 1;
+      const delayMs = Math.pow(2, retryCountRef.current) * 1000; // 2s, 4s, 8s
+      console.warn(`Camera frame failed. Retry ${retryCountRef.current}/${MAX_RETRIES} in ${delayMs / 1000}s`);
+      setFrameStatus('loading');
+      retryTimerRef.current = setTimeout(() => {
+        setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+      }, delayMs);
+    } else {
+      console.error('Camera frame failed after max retries.');
+      setFrameStatus('error');
+      setFrameError('Unable to load camera frame. Camera may be offline.');
+    }
+  }, [getCameraFeedUrl]);
+
+  // Fetch once when the view is shown; clean up on hide
+  useEffect(() => {
+    if (!showCameraView) {
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+      retryCountRef.current = 0;
+      setFrameUrl(null);
+      setFrameStatus('idle');
+      setFrameError(null);
+      return;
+    }
+    retryCountRef.current = 0;
+    fetchFrame();
+    return () => {
+      if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+    };
+  }, [showCameraView, fetchFrame]);
+
+  const handleManualRefresh = useCallback(() => {
+    if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
+    retryCountRef.current = 0;
+    fetchFrame();
+  }, [fetchFrame]);
 
   const renderCameraContent = () => {
     if (!showCameraView) {
@@ -462,83 +335,254 @@ const AIConfigurationStep: React.FC<AIConfigurationStepProps> = ({
       );
     }
 
-    if (frameUrl) {
+    if (frameStatus === 'error') {
       return (
-        <Box
-          component="img"
-          src={frameUrl}
-          alt="Live Camera Frame"
-          sx={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-            borderRadius: 1,
-          }}
-          onError={() => {
-            console.error('Failed to load camera frame');
-            setFrameUrl(null);
-          }}
-        />
+        <Box sx={{ textAlign: 'center', color: 'grey.400' }}>
+          <Typography variant="body2" sx={{ mb: 1 }}>{frameError}</Typography>
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<RefreshIcon />}
+            onClick={handleManualRefresh}
+            sx={{ color: 'grey.300', borderColor: 'grey.600' }}
+          >
+            Retry
+          </Button>
+        </Box>
       );
     }
 
     return (
-      <Box sx={{ textAlign: 'center', color: 'grey.500' }}>
-        <CircularProgress />
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          Loading camera feed...
-        </Typography>
-      </Box>
+      <>
+        {/* Spinner while loading / retrying */}
+        {frameStatus === 'loading' && (
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <CircularProgress />
+            <Typography variant="body2" sx={{ mt: 1, color: 'grey.400' }}>
+              Loading camera feed...
+            </Typography>
+          </Box>
+        )}
+
+        {/* Image — hidden until loaded so no broken-image flash */}
+        {frameUrl && (
+          <Box
+            component="img"
+            src={frameUrl}
+            alt="Camera Frame"
+            onLoad={handleFrameLoad}
+            onError={handleFrameError}
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              borderRadius: 1,
+              display: frameStatus === 'loaded' ? 'block' : 'none',
+            }}
+          />
+        )}
+      </>
     );
   };
 
-  // useEffect(() => {
-  //   if (!showCameraView) {
-  //     setFrameUrl(null);
-  //     return;
-  //   }
+  const handleUseCaseSelect = async (usecaseId: string) => {
+    const useCase = useCases.find(uc => uc.id === usecaseId);
+    const isSelected = !useCase?.selected;
 
-  //   setFrameUrl(getCameraFeedUrl());
-  //   // setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+    setUseCases(prev =>
+      prev.map(uc => uc.id === usecaseId ? { ...uc, selected: isSelected } : uc)
+    );
 
-  //   const interval = setInterval(() => {
-  //     setFrameUrl(getCameraFeedUrl());
-  //   }, 1000);
+    try {
+      if (isSelected) {
+        await assignCameras({ usecaseId, cameraIds: [camera.id] }).unwrap();
+      } else {
+        await unassignCamera({ usecaseId, cameraId: camera.id }).unwrap();
+      }
+      setSnackbar({
+        open: true,
+        severity: 'success',
+        message: isSelected ? 'Camera assigned to usecase' : 'Camera unassigned',
+      });
+    } catch (error) {
+      console.error(error);
+      setUseCases(prev =>
+        prev.map(uc => uc.id === usecaseId ? { ...uc, selected: !isSelected } : uc)
+      );
+      setSnackbar({ open: true, severity: 'error', message: 'Failed to update assignment' });
+    }
+  };
 
-  //   return () => clearInterval(interval);
-  // }, [showCameraView, getCameraFeedUrl]);
+  const handleAddROI = async (useCaseId: string) => {
+    setCurrentUseCaseForROI(useCaseId);
+    try {
+      const res = await getRoi({ cameraId: camera.id, usecaseId: useCaseId }).unwrap();
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === useCaseId
+            ? { ...uc, roiShapes: res.rois, roiConfigured: res.rois.length > 0, modelThreshold: res.modelThreshold ?? null }
+            : uc
+        )
+      );
+    } catch {
+      // No ROI yet — open empty canvas
+    }
+    setRoiModalOpen(true);
+  };
 
-useEffect(() => {
-  if (!showCameraView) {
-    setFrameUrl(null);
-    return;
-  }
+  const handleROISave = async (roiShapes: ROIShape[]) => {
+    if (!currentUseCaseForROI) return;
+    try {
+      setLoading(true);
+      const currentUC = useCases.find(u => u.id === currentUseCaseForROI);
+      await saveRoi({
+        cameraId: camera.id,
+        usecaseId: currentUseCaseForROI,
+        modelThreshold: currentUC?.modelThreshold ?? undefined,
+        rois: roiShapes.map(r => ({
+          type: r.type, label: r.name, mode: r.mode, color: r.color, points: r.points,
+        })),
+      }).unwrap();
 
-  setFrameUrl(`${getCameraFeedUrl()}?_t=${Date.now()}`);
+      const rois = await getRoi({ cameraId: camera.id, usecaseId: currentUseCaseForROI }).unwrap();
+      setUseCases(prev =>
+        prev.map(uc =>
+          uc.id === currentUseCaseForROI
+            ? { ...uc, roiConfigured: rois.rois.length > 0, roiShapes: rois.rois, modelThreshold: rois.modelThreshold ?? null }
+            : uc
+        )
+      );
+      setSnackbar({ open: true, message: 'ROI saved successfully', severity: 'success' });
+    } catch (err) {
+      console.error(err);
+      setSnackbar({ open: true, message: 'Failed to save ROI', severity: 'error' });
+    } finally {
+      setLoading(false);
+      setRoiModalOpen(false);
+      setCurrentUseCaseForROI(null);
+    }
+  };
 
-}, [showCameraView, getCameraFeedUrl]);
+  const handleROIClose = () => {
+    setRoiModalOpen(false);
+    setCurrentUseCaseForROI(null);
+  };
+
+  const handleCamera_Usecase_Configure = (useCaseId: string) => {
+    setCurrentUseCaseForConfig(useCaseId);
+    setConfigDialogOpen(true);
+  };
 
 
-  function handleCloseSnackbar(): void {
+  const handleSaveUsecaseConfiguration = async (
+    config: UseCaseConfigurationData
+  ) => {
+
+    if (!currentUseCaseForConfig) return;
+
+    try {
+
+      const currentUseCase = useCases.find(
+        uc => uc.id === currentUseCaseForConfig
+      );
+
+      if (!currentUseCase?.cameraMapperId) {
+        throw new Error(
+          'Camera mapper ID not found'
+        );
+      }
+
+      await configureUsecaseMutation({
+        cameraMapperId:
+          currentUseCase.cameraMapperId,
+
+        fpsRate: config.fpsRate,
+
+        fpsUnit: config.fpsUnit,
+
+        inferenceMode:
+          config.inferenceMode,
+
+        startTime:
+          config.inferenceMode === 'custom'
+            ? config.startTime
+            : undefined,
+
+        endTime:
+          config.inferenceMode === 'custom'
+            ? config.endTime
+            : undefined,
+      }).unwrap();
+
+      setUseCaseConfigurations(prev => ({
+        ...prev,
+        [currentUseCaseForConfig]: {
+          tuned: true,
+          ...config,
+        },
+      }));
+
+      setUseCases(prev =>
+        prev.map(useCase =>
+          useCase.id === currentUseCaseForConfig
+            ? {
+              ...useCase,
+              configureUsecase: true,
+            }
+            : useCase
+        )
+      );
+
+      setConfigDialogOpen(false);
+
+      setSnackbar({
+        open: true,
+        severity: 'success',
+        message:
+          'Use case configured successfully',
+      });
+
+    } catch (error) {
+
+      console.error(error);
+
+      setSnackbar({
+        open: true,
+        severity: 'error',
+        message:
+          'Failed to configure use case',
+      });
+    }
+  };
+
+  const handleSubmit = () => {
+    const aiConfig: AIConfig = {
+      useCases: useCases.filter(uc => uc.selected).map(uc => uc.id),
+      roiData: useCases.reduce((acc, uc) => {
+        if (uc.roiConfigured) acc[uc.id] = { configured: true, shapes: uc.roiShapes };
+        return acc;
+      }, {} as Record<string, ROIData>),
+      configure: useCaseConfigurations,
+      enabled: useCases.some(uc => uc.selected),
+      viewName: viewName ?? selectedViewCase ?? '',
+    };
+    onSave(aiConfig);
+  };
+
+  function handleCloseSnackbar() {
     setSnackbar(prev => ({ ...prev, open: false }));
   }
-
 
   return (
     <Box sx={{ p: 1, minHeight: 500, position: 'relative' }}>
       {(loading || isSavingRoi) && (
         <Box
           sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            bgcolor: 'rgba(255, 255, 255, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
+            position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+            bgcolor: 'rgba(255,255,255,0.8)', display: 'flex',
+            alignItems: 'center', justifyContent: 'center', zIndex: 9999,
           }}
         >
           <Box sx={{ textAlign: 'center' }}>
@@ -550,42 +594,34 @@ useEffect(() => {
 
       <Grid container spacing={1.5}>
         <Grid size={{ xs: 12, lg: 5 }}>
-          <Card variant="outlined" sx={{ mb: 2 }}>
-            <CardContent>
-              <Typography
-                variant="h6"
-                gutterBottom
-                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-              >
+          {/* Camera info + controls */}
+          <Card variant="outlined" sx={{ mb: 1.5 }}>
+            <CardContent sx={{ pb: '12px !important' }}>
+              <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <SettingsIcon color="primary" />
                 Camera Configuration
               </Typography>
 
-              <Box sx={{ mb: 2 }}>
-  <Typography variant="body2" color="text.secondary">
-    <strong>Camera Name:</strong> {camera.cameraname}
-  </Typography>
-
-  <Typography variant="body2" color="text.secondary">
-    <strong>Camera ID:</strong> {camera.id}
-  </Typography>
-
-  <Typography variant="body2" color="text.secondary">
-    <strong>Zone:</strong> {camera.zone ?? "N/A"}
-  </Typography>
-
-  <Typography variant="body2" color="text.secondary">
-    <strong>Location:</strong> {camera.location ?? "N/A"}
-  </Typography>
-
-  <Typography variant="body2" color="text.secondary">
-    <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
-  </Typography>
-
-  <Typography variant="body2" color="text.secondary">
-    <strong>Connection Type:</strong> {camera.make}
-  </Typography>
-</Box>
+              <Box sx={{ mb: 1.5 }}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Camera Name:</strong> {camera.cameraname}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Camera ID:</strong> {camera.id}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Zone:</strong> {camera.zone ?? 'N/A'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Location:</strong> {camera.location ?? 'N/A'}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>IP Address:</strong> {camera.ipAddress}:{camera.port}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Connection Type:</strong> {camera.make}
+                </Typography>
+              </Box>
 
               <TextField
                 label="View Name"
@@ -594,31 +630,51 @@ useEffect(() => {
                 fullWidth
                 size="small"
                 placeholder="Enter view name for this camera"
-                sx={{ mb: 2 }}
+                sx={{ mb: 1.5 }}
               />
 
-              <Button
-                variant="outlined"
-                onClick={() => setShowCameraView(!showCameraView)}
-                fullWidth
-                sx={{ mb: 2 }}
-              >
-                {showCameraView ? 'Hide' : 'Show'} Camera View
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setShowCameraView(!showCameraView)}
+                  fullWidth
+                  size="small"
+                >
+                  {showCameraView ? 'Hide' : 'Show'} Camera View
+                </Button>
+                {showCameraView && frameStatus !== 'loading' && (
+                  <Button
+                    variant="outlined"
+                    onClick={handleManualRefresh}
+                    size="small"
+                    sx={{ minWidth: 'auto', px: 1.5 }}
+                    title="Refresh frame"
+                  >
+                    <RefreshIcon fontSize="small" />
+                  </Button>
+                )}
+              </Box>
             </CardContent>
           </Card>
 
-          <Card variant="outlined" sx={{ bgcolor: 'grey.900', minHeight: 350 }}>
-            <CardContent
+          {/*
+            Frame card — height is driven purely by the 16:9 aspect-ratio box.
+            No minHeight, no fixed px — zero blank space above or below the image.
+          */}
+          <Card variant="outlined" sx={{ bgcolor: 'grey.900', overflow: 'hidden' }}>
+            <Box
               sx={{
+                width: '100%',
+                aspectRatio: '16 / 9',
+                position: 'relative',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                minHeight: 320,
+                overflow: 'hidden',
               }}
             >
               {renderCameraContent()}
-            </CardContent>
+            </Box>
           </Card>
         </Grid>
 
@@ -644,7 +700,7 @@ useEffect(() => {
                 }}
               >
                 {loadingUseCases ? (
-                  <Box sx={{ textAlign: "center", p: 4 }}>
+                  <Box sx={{ textAlign: 'center', p: 4 }}>
                     <CircularProgress />
                     <Typography sx={{ mt: 2 }}>Loading use cases...</Typography>
                   </Box>
@@ -653,21 +709,11 @@ useEffect(() => {
                     <Table stickyHeader size="small">
                       <TableHead>
                         <TableRow>
-                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
-                            Select
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>
-                            Use Case
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
-                            Add ROI
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>
-                            Fine Tune
-                          </TableCell>
-                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>
-                            View
-                          </TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>Select</TableCell>
+                          <TableCell sx={{ fontWeight: 600, minWidth: '300px', bgcolor: 'background.paper' }}>Use Case</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>Add ROI</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '120px', bgcolor: 'background.paper' }}>Configure</TableCell>
+                          <TableCell sx={{ fontWeight: 600, width: '80px', bgcolor: 'background.paper' }}>View</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -687,19 +733,13 @@ useEffect(() => {
                             </TableCell>
                             <TableCell>
                               <Box>
-                                <Typography variant="body2" fontWeight={540}>
-                                  {useCase.name}
-                                </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                  {useCase.description}
-                                </Typography>
+                                <Typography variant="body2" fontWeight={540}>{useCase.name}</Typography>
+                                <Typography variant="caption" color="text.secondary">{useCase.description}</Typography>
                                 {useCase.roiConfigured && useCase.roiShapes && (
                                   <Box sx={{ mt: 0.5 }}>
                                     <Chip
                                       label={`${useCase.roiShapes.length} ROI(s) in DB`}
-                                      size="small"
-                                      color="success"
-                                      variant="outlined"
+                                      size="small" color="success" variant="outlined"
                                     />
                                   </Box>
                                 )}
@@ -721,14 +761,14 @@ useEffect(() => {
                             <TableCell>
                               <Button
                                 size="small"
-                                variant={useCase.fineTuned ? 'contained' : 'outlined'}
-                                onClick={() => handleFineTune(useCase.id)}
+                                variant={useCase.configureUsecase ? 'contained' : 'outlined'}
+                                onClick={() => handleCamera_Usecase_Configure(useCase.id)}
                                 disabled={!useCase.selected}
-                                startIcon={useCase.fineTuned ? <CheckCircleIcon /> : <TuneIcon />}
-                                color={useCase.fineTuned ? 'success' : 'primary'}
+                                startIcon={useCase.configureUsecase ? <CheckCircleIcon /> : <TuneIcon />}
+                                color={useCase.configureUsecase ? 'success' : 'primary'}
                                 sx={{ minWidth: '90px' }}
                               >
-                                {useCase.fineTuned ? 'Tuned' : 'Fine Tune'}
+                                {useCase.configureUsecase ? 'Configured' : 'Configure'}
                               </Button>
                             </TableCell>
                             <TableCell>
@@ -755,14 +795,8 @@ useEffect(() => {
 
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  px: 2,
-                  py: 1,
-                  bgcolor: 'action.hover',
-                  borderRadius: 1,
-                  mb: 2,
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  px: 2, py: 1, bgcolor: 'action.hover', borderRadius: 1, mb: 2,
                 }}
               >
                 <Typography variant="body2" color="text.secondary">
@@ -783,11 +817,8 @@ useEffect(() => {
         <Button onClick={onBack} color="inherit" variant="outlined">
           Back to Camera List
         </Button>
-
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button variant="outlined" color="inherit">
-            Save Configuration
-          </Button>
+          {/* <Button variant="outlined" color="inherit">Save Configuration</Button> */}
           <Button
             variant="contained"
             onClick={handleSubmit}
@@ -803,28 +834,34 @@ useEffect(() => {
         open={roiModalOpen}
         onClose={handleROIClose}
         cameraFeedUrl={getCameraFeedUrl()}
-        useCaseName={getCurrentUseCaseName()}
-        existingROI={getExistingROI()}
+        useCaseName={useCases.find(uc => uc.id === currentUseCaseForROI)?.name ?? ''}
+        existingROI={useCases.find(uc => uc.id === currentUseCaseForROI)?.roiShapes ?? []}
         onSave={handleROISave}
         labels={useCases.find(u => u.id === currentUseCaseForROI)?.labels ?? []}
-
-        enableThreshold={
-          useCases.find(u => u.id === currentUseCaseForROI)?.is_threshold ?? false
-        }
-        thresholdValue={
-          useCases.find(u => u.id === currentUseCaseForROI)?.modelThreshold ?? null
-        }
+        enableThreshold={useCases.find(u => u.id === currentUseCaseForROI)?.is_threshold ?? false}
+        thresholdValue={useCases.find(u => u.id === currentUseCaseForROI)?.modelThreshold ?? null}
         onThresholdChange={(value) => {
           setUseCases(prev =>
-            prev.map(u =>
-              u.id === currentUseCaseForROI
-                ? { ...u, modelThreshold: value }
-                : u
-            )
+            prev.map(u => u.id === currentUseCaseForROI ? { ...u, modelThreshold: value } : u)
           );
         }}
       />
 
+      <UseCaseConfigurationDialog
+        open={configDialogOpen}
+        onClose={() => setConfigDialogOpen(false)}
+        onSave={handleSaveUsecaseConfiguration}
+        useCaseName={
+          useCases.find(
+            uc => uc.id === currentUseCaseForConfig
+          )?.name ?? ''
+        }
+        initialData={
+          useCases.find(
+            uc => uc.id === currentUseCaseForConfig
+          )?.configure as UseCaseConfigurationData
+        }
+      />
 
       <Snackbar
         open={snackbar.open}
@@ -832,11 +869,7 @@ useEffect(() => {
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity={snackbar.severity}
-          sx={{ width: '100%' }}
-        >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

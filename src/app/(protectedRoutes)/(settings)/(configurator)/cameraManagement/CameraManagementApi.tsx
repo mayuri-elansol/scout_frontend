@@ -18,6 +18,7 @@ export type AddCameraPayload = {
 
 export type DetectNvrChannelsPayload = {
   nvrName: string;
+  brandName: string;
   ip: string;
   port: number;
   username: string;
