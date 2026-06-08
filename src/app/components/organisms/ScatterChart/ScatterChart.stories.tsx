@@ -42,34 +42,37 @@ const demoItem = {
   graphs: {
     data: {
       granularity: "Hour",
-      series: [
-        {
-          zone: "Zone A",
-          data: [
-            { label: "08:00", count: 3 },
-            { label: "09:00", count: 5 },
-            { label: "10:00", count: 7 },
-          ],
-        },
-        {
-          zone: "Zone B",
-          data: [
-            { label: "08:00", count: 1 },
-            { label: "09:00", count: 6 },
-            { label: "10:00", count: 4 },
-            { label: "11:00", count: 3 },
-          ],
-        },
-        {
-          zone: "Zone C",
-          data: [
-            { label: "08:00", count: 2 },
-            { label: "09:00", count: 4 },
-            { label: "10:00", count: 8 },
-            { label: "11:00", count: 5 },
-          ],
-        },
-      ],
+   series: [
+  {
+    zone: "Zone A",
+    color: "#ef4444",
+    data: [
+      { label: "08:00", count: 3 },
+      { label: "09:00", count: 5 },
+      { label: "10:00", count: 7 },
+    ],
+  },
+  {
+    zone: "Zone B",
+    color: "#3b82f6",
+    data: [
+      { label: "08:00", count: 1 },
+      { label: "09:00", count: 6 },
+      { label: "10:00", count: 4 },
+      { label: "11:00", count: 3 },
+    ],
+  },
+  {
+    zone: "Zone C",
+    color: "#22c55e",
+    data: [
+      { label: "08:00", count: 2 },
+      { label: "09:00", count: 4 },
+      { label: "10:00", count: 8 },
+      { label: "11:00", count: 5 },
+    ],
+  },
+]
     },
   },
 };
@@ -97,13 +100,14 @@ export const SingleZone: Story = {
         data: {
           granularity: "Hour",
           series: [
-            {
-              zone: "Zone A",
-              data: [
-                { label: "08:00", count: 2 },
-                { label: "09:00", count: 4 },
-              ],
-            },
+           {
+  zone: "Zone A",
+  color: "#ef4444",
+  data: [
+    { label: "08:00", count: 2 },
+    { label: "09:00", count: 4 },
+  ],
+}
           ],
         },
       },
