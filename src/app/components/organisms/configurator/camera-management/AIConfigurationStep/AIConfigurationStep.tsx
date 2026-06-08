@@ -72,8 +72,9 @@ interface AIConfig {
   configure: Record<string, ConfigurationData>;
   enabled: boolean;
   viewName?: string;
+  
 }
-
+ 
 interface CameraData {
   id: string;
   ipAddress: string;

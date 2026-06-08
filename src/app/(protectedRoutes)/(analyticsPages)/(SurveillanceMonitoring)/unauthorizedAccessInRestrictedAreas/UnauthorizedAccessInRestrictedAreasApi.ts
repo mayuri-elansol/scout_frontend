@@ -2,7 +2,12 @@ import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi"
 import { apiRoutes } from "@/constants/apiRoutes";
 import { ShiftType, UnauthorizedAccessInRestrictedAreasReportRequest, UnauthorizedAccessInRestrictedAreasSingleReportRequest, UnauthorizedAccessResponse } from "./UnauthorizedAccessInRestrictedAreas.types";
 import { rtkAPIToast } from "@/utils/rtkAPIToast";
-import { hideToast, showToast } from "@/app/store/slices/toasterSlice";
+import { hideToast, showToast } from "@/app/store/slices/toasterSlice"
+type ApiError = {
+  data?: { message?: string };
+  error?: { data?: { message?: string } };
+  message?: string;
+};;
 
 export const unauthorizedAccessInRestrictedAreasApi =
   baseProtectedApi.injectEndpoints({
@@ -75,12 +80,19 @@ export const unauthorizedAccessInRestrictedAreasApi =
         "Failed to download the Unauthorized Access report. Please try again.",
       duration: 5000,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     // ✅ MANUAL fallback handling
-    const backendMessage =
-      error?.data?.message ||
-      error?.error?.data?.message ||
-      error?.message;
+    // const backendMessage =
+    //   error?.data?.message ||
+    //   error?.error?.data?.message ||
+    //   error?.message;
+
+
+const err = error as ApiError;
+  const backendMessage =
+    err?.data?.message ||
+    err?.error?.data?.message ||
+    err?.message
 
     dispatch(
       showToast({

@@ -1,13 +1,14 @@
 import { baseProtectedApi } from "@/app/store/api/protectedAPI/baseProtectedApi";
 import { apiRoutes } from "@/constants/apiRoutes";
-import { ShiftType } from "./OperationalInsightsDashboard.types";
+import { OperationalInsightsDashboardResponse, ShiftType } from "./OperationalInsightsDashboard.types";
 ;
 
 export const operationalDashboardApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
     
     // 🔹 KPI DATA (People Inside, Alerts, etc.)
-    getOperationalDashboardData: builder.query<any, any>({
+    getOperationalDashboardData: builder.query<OperationalInsightsDashboardResponse[], { tenantId: string; startDate?: string; endDate?: string }>({
+   // getOperationalDashboardData: builder.query<any, any>({
       query: (body) => ({
         url: `${apiRoutes.OperationalMonitoringDashboard.root}/${apiRoutes.OperationalMonitoringDashboard.getOperationalMonitoringDashboardAnalytics}`,
         method: "POST",

@@ -21,6 +21,7 @@ import { WorkforceMonitoringConfig } from "./WorkforceMonitoringDashboardConfig"
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import {
   CriticalAreaGraphData,
+  WorkforceGatePoint,
   WorkforceMonitoringDashboardResponse,
   WorkforceMonitoringSocketPayload,
 } from "./WorkforceMonitoringDashboard.types";
@@ -64,21 +65,29 @@ function buildCriticalAreaProps(
 }
 
 // ─── Helper: build flat bar-chart data ───────────────────────────────────────
+// function buildFlatBarData(
+//   dashboardData: WorkforceMonitoringDashboardResponse[],
+//   title: string
+// ) {
+//   const usecase = dashboardData.find((d) => d.title === title);
+//   const raw = usecase?.graphs?.data;
+//   if (!Array.isArray(raw)) return [];
+//   return raw.map((g) => ({
+//     gate: g.gate,
+//     Idle: g.idleCount,
+//     Working: g.workingCount,
+//     NotPresent: g.notPresentCount,
+//   }));
+// }
 function buildFlatBarData(
   dashboardData: WorkforceMonitoringDashboardResponse[],
   title: string
-) {
+): WorkforceGatePoint[] {
   const usecase = dashboardData.find((d) => d.title === title);
   const raw = usecase?.graphs?.data;
   if (!Array.isArray(raw)) return [];
-  return raw.map((g) => ({
-    gate: g.gate,
-    Idle: g.idleCount,
-    Working: g.workingCount,
-    NotPresent: g.notPresentCount,
-  }));
+  return raw; // already WorkforceGatePoint[]
 }
-
 // ─── Component ────────────────────────────────────────────────────────────────
 const WorkforceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -217,6 +226,7 @@ const WorkforceMonitoring: React.FC = () => {
                     { dataKey: "Working", label: "Working Count", color: "#AEEEEE" },
                     { dataKey: "NotPresent", label: "Not Present Count", color: "#FFF5BA" },
                   ]}
+                  
                   yAxisLabel="Count"
                   stackId="exitStatus"
                 />

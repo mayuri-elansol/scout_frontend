@@ -10,12 +10,12 @@ import DashboardTabs, {
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
 import DynamicPieChart from "@/app/components/organisms/PieChart/PieChart";
-import DynamicBarChartWithThreshold from "@/app/components/organisms/BarChartWithThreshold/BarChartWithThreshold";
 import { RootState } from "@/app/store/store";
 import { useSelector } from "react-redux";
 import { FEATURE } from "@/app/config/featureRegistry";
 import { useTranslation } from "react-i18next";
 import {
+  CrowdSeriesItem,
   FallSeriesItem,
   FireSmokeBucket,
   FireSmokeGraphData,
@@ -243,8 +243,8 @@ const graphDataForCrowdGathering =
     : undefined;
 
 const crowdGranularity = graphDataForCrowdGathering?.granularity ?? "hour";
-const crowdSeries = graphDataForCrowdGathering?.series ?? [];
-
+//const crowdSeries = graphDataForCrowdGathering?.series ?? [];
+const crowdSeries = (graphDataForCrowdGathering?.series ?? []) as CrowdSeriesItem[];
 const crowdXAxisDates = crowdSeries.map((item) => item.date ?? "");
 const crowdXAxisTimes = crowdSeries.map((item) => item.time ?? "");
 
@@ -780,13 +780,13 @@ const zoneWisePieDataForCrowd = graphDataForCrowdGathering?.zoneWisePieData ?? [
           series={[
             {
               label: "Crowd Incidents",
-              data: crowdSeries.map((item: any) => item.count),
+              data: crowdSeries.map((item) => item.count),
               color: "#B0E0E6",
               showMark: true,
             },
             {
               label: "Mob Count",
-              data: crowdSeries.map((item: any) => item.mobCount),
+              data: crowdSeries.map((item) => item.mobCount),
               color: "#FFEAA7",
               showMark: true,
             },
@@ -835,72 +835,7 @@ const zoneWisePieDataForCrowd = graphDataForCrowdGathering?.zoneWisePieData ?? [
       featureId: FEATURE.CROWD_DETECTION,
     },
   ];
- const normalizeSafetyDashboardKpis = (
-  response: any[],
-): SurveillanceDashboardResponse[] => {
-  if (!Array.isArray(response)) return [];
 
-  return response.map((item) => {
-    const kpi = item?.kpi ?? {};
-
-    const graphs = item?.graphs?.data ?? {};
-
-    // ---------- SAFE SERIES NORMALIZATION ----------
-    const rawSeries = Array.isArray(graphs?.series) ? graphs.series : [];
-
-    const normalizedSeries = rawSeries.map((s: any) => {
-      const data = Array.isArray(s?.data) ? s.data : [];
-
-      return {
-        label: s?.label ?? "",
-        data: data.map((d: any) => ({
-          time: d?.time ?? "",
-          date: d?.date ?? "",
-          value: d?.value ?? d?.count ?? 0,
-        })),
-      };
-    });
-
-    // ---------- KPI NORMALIZATION ----------
-    const normalizedKpi = {
-      title: kpi?.title ?? item?.title ?? "",
-      colour: kpi?.colour ?? "gray",
-      violationsCount: kpi?.violationsCount ?? 0,
-      lastDetectionTime: kpi?.lastDetectionTime ?? "-",
-      lastDetection: kpi?.lastDetection ?? "-",
-    };
-
-    // ---------- PIE DATA SAFE HANDLING ----------
-    const zoneWisePieData = Array.isArray(graphs?.zoneWisePieData)
-      ? graphs.zoneWisePieData
-      : [];
-
-    const hazardTypePieData = Array.isArray(graphs?.hazardTypePieData)
-      ? graphs.hazardTypePieData
-      : [];
-
-    const violationTypePieData = Array.isArray(graphs?.violationTypePieData)
-      ? graphs.violationTypePieData
-      : [];
-
-    return {
-      ...item,
-
-      kpi: normalizedKpi,
-
-      graphs: {
-        data: {
-          series: normalizedSeries,
-          granularity: graphs?.granularity ?? "hour",
-
-          zoneWisePieData,
-          hazardTypePieData,
-          violationTypePieData,
-        },
-      },
-    };
-  });
-};
   return (
     <Paper
       sx={{

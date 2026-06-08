@@ -47,6 +47,7 @@ export interface WorkforceGatePoint {
   idleCount: number;
   workingCount: number;
   notPresentCount: number;
+  [key: string]: string | number;
 }
 export interface FlatGraphResponse {
   title:

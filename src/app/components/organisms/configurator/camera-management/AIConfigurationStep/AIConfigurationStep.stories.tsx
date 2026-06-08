@@ -21,7 +21,7 @@ const mockCamera: OrgCamera = {
     roiData: {},
     fineTuning: {},
     enabled: true,
-    
+     configure: {}
   },
 };
 

@@ -67,7 +67,7 @@ const hasNoData = allValues.length === 0 || allZero;
         ]}
         margin={{ right: 40  }}
         slots={{
-          axisTickLabel: ({ text, x, y }: any) => {
+          axisTickLabel: ({ text, x, y }) => {
             const isXAxis = (text ?? "").includes("|");
             if (!isXAxis) {
               return (
