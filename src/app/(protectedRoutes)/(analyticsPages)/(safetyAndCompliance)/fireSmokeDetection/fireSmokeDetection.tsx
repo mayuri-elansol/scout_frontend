@@ -34,9 +34,7 @@ import {
   useGetFireSmokeDetectionSingleReportPdfMutation,
   useGetOrgShiftTimeFireSmokeDataQuery,
   useLazyGetFireSmokeDetectionDetailedReportQuery,
-  useLazyGetFireSmokeDetectionKpiDataQuery,
-  useLazyGetFireSmokeDetectionRecentViolationsQuery,
-  useLazyGetFireSmokeDetectionZoneViolationsQuery,
+useLazyGetFireSmokeDetectionDataQuery
 } from "./fireSmokeDetectionApi";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
@@ -80,12 +78,18 @@ const FireSmokeDetection: React.FC = () => {
     { tenantId },
     { skip: !tenantId },
   );
-  const [fetchFireSmokeKpi, { isFetching: FireSmokeKpiLoading }] =
-    useLazyGetFireSmokeDetectionKpiDataQuery();
-  const [fetchFireSmokeZoneViolations, { isLoading: FireSmokeZoneLoading }] =
-    useLazyGetFireSmokeDetectionZoneViolationsQuery();
-  const [fetchFireSmokeRecent, { isLoading: FireSmokeRecentLoading }] =
-    useLazyGetFireSmokeDetectionRecentViolationsQuery();
+  // const [fetchFireSmokeKpi, { isFetching: FireSmokeKpiLoading }] =
+  //   useLazyGetFireSmokeDetectionKpiDataQuery();
+  // const [fetchFireSmokeZoneViolations, { isLoading: FireSmokeZoneLoading }] =
+  //   useLazyGetFireSmokeDetectionZoneViolationsQuery();
+  // const [fetchFireSmokeRecent, { isLoading: FireSmokeRecentLoading }] =
+  //   useLazyGetFireSmokeDetectionRecentViolationsQuery();
+
+ // One call → gets kpi + zoneViolations + recentViolations together
+  const [fetchOverviewData, { isFetching: overviewLoading }] =
+    useLazyGetFireSmokeDetectionDataQuery();
+
+
   const [
     fetchFireSmokeDetailedReportApi,
     { isFetching: FireSmokeDetailedReportLoading },
@@ -100,28 +104,39 @@ const FireSmokeDetection: React.FC = () => {
 
   /* ---------- INITIAL LOAD ---------- */
 
-  useEffect(() => {
-    if (!tenantId) return;
+  // useEffect(() => {
+  //   if (!tenantId) return;
 
-    const loadInitial = async () => {
-      const [kpi, zones, recent] = await Promise.all([
-        fetchFireSmokeKpi({ tenantId }).unwrap(),
-        fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
-        fetchFireSmokeRecent({ tenantId }).unwrap(),
-      ]);
+  //   const loadInitial = async () => {
+  //     const [kpi, zones, recent] = await Promise.all([
+  //       fetchFireSmokeKpi({ tenantId }).unwrap(),
+  //       fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
+  //       fetchFireSmokeRecent({ tenantId }).unwrap(),
+  //     ]);
 
-      setDisplayFireSmokeKpi(kpi ?? []);
-      setDisplayFireSmokeZoneViolations(zones ?? []);
-      setFireSmokeRecentViolationsLive(recent ?? []);
-    };
+  //     setDisplayFireSmokeKpi(kpi ?? []);
+  //     setDisplayFireSmokeZoneViolations(zones ?? []);
+  //     setFireSmokeRecentViolationsLive(recent ?? []);
+  //   };
 
-    loadInitial().catch(console.error);
-  }, [
-    tenantId,
-    fetchFireSmokeKpi,
-    fetchFireSmokeZoneViolations,
-    fetchFireSmokeRecent,
-  ]);
+  //   loadInitial().catch(console.error);
+  // }, [
+  //   tenantId,
+  //   fetchFireSmokeKpi,
+  //   fetchFireSmokeZoneViolations,
+  //   fetchFireSmokeRecent,
+  // ]);
+  
+    useEffect(() => {
+      if (!tenantId) return;
+      const loadInitial = async () => {
+        const data = await fetchOverviewData({ tenantId }).unwrap();
+        setDisplayFireSmokeKpi(data?.kpi ?? []);
+        setDisplayFireSmokeZoneViolations(data?.zoneViolations ?? []);
+        setFireSmokeRecentViolationsLive(data?.recentViolations ?? []);
+      };
+      loadInitial().catch(console.error);
+    }, [tenantId, fetchOverviewData]);
   useEffect(() => {
     if (!tenantId) return;
 
@@ -171,62 +186,118 @@ const FireSmokeDetection: React.FC = () => {
   });
 
   /* ---------- TIME FILTER ---------- */
-  const handleFireSmokeRangeChange = useCallback(
+  // const handleFireSmokeRangeChange = useCallback(
+  //   async (range: { start?: string; end?: string }) => {
+  //     if (!range.start && !range.end) {
+  //       setIsFireSmokeLiveMode(true);
+
+  //       // ✅ CALL ALL APIs + SET STATE
+  //       const [kpi, zones, recent] = await Promise.all([
+  //         fetchFireSmokeKpi({ tenantId }).unwrap(),
+  //         fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
+  //         fetchFireSmokeRecent({ tenantId }).unwrap(),
+  //       ]);
+
+  //       setDisplayFireSmokeKpi(kpi ?? []);
+  //       setDisplayFireSmokeZoneViolations(zones ?? []);
+  //       setFireSmokeRecentViolationsLive(recent ?? []);
+  //       return;
+  //     }
+
+  //     setIsFireSmokeLiveMode(false);
+  //     const payload = {
+  //       tenantId: tenantId,
+  //       startDate: range.start,
+  //       endDate: range.end,
+  //     };
+  //     const [kpi, zones, recent] = await Promise.all([
+  //       fetchFireSmokeKpi(payload).unwrap(),
+  //       fetchFireSmokeZoneViolations(payload).unwrap(),
+  //       fetchFireSmokeRecent(payload).unwrap(),
+  //     ]);
+
+  //     setDisplayFireSmokeKpi(kpi ?? []);
+  //     setDisplayFireSmokeZoneViolations(zones ?? []);
+  //     setFireSmokeRecentViolationsLive(recent ?? []);
+  //   },
+  //   [
+  //     tenantId,
+  //     fetchFireSmokeKpi,
+  //     fetchFireSmokeZoneViolations,
+  //     fetchFireSmokeRecent,
+  //   ],
+  // );
+
+const handleFireSmokeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
+        // Range cleared → resume live mode
         setIsFireSmokeLiveMode(true);
-
-        // ✅ CALL ALL APIs + SET STATE
-        const [kpi, zones, recent] = await Promise.all([
-          fetchFireSmokeKpi({ tenantId }).unwrap(),
-          fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
-          fetchFireSmokeRecent({ tenantId }).unwrap(),
-        ]);
-
-        setDisplayFireSmokeKpi(kpi ?? []);
-        setDisplayFireSmokeZoneViolations(zones ?? []);
-        setFireSmokeRecentViolationsLive(recent ?? []);
+        const data = await fetchOverviewData({ tenantId }).unwrap();
+        setDisplayFireSmokeKpi(data?.kpi ?? []);
+        setDisplayFireSmokeZoneViolations(data?.zoneViolations ?? []);
+        setFireSmokeRecentViolationsLive(data?.recentViolations ?? []);
         return;
       }
 
+      // Range selected → freeze socket, fetch historical data
       setIsFireSmokeLiveMode(false);
-      const payload = {
-        tenantId: tenantId,
+      const data = await fetchOverviewData({
+        tenantId,
         startDate: range.start,
         endDate: range.end,
-      };
-      const [kpi, zones, recent] = await Promise.all([
-        fetchFireSmokeKpi(payload).unwrap(),
-        fetchFireSmokeZoneViolations(payload).unwrap(),
-        fetchFireSmokeRecent(payload).unwrap(),
-      ]);
-
-      setDisplayFireSmokeKpi(kpi ?? []);
-      setDisplayFireSmokeZoneViolations(zones ?? []);
-      setFireSmokeRecentViolationsLive(recent ?? []);
+      }).unwrap();
+      setDisplayFireSmokeKpi(data?.kpi ?? []);
+      setDisplayFireSmokeZoneViolations(data?.zoneViolations ?? []);
+      setFireSmokeRecentViolationsLive(data?.recentViolations ?? []);
     },
-    [
-      tenantId,
-      fetchFireSmokeKpi,
-      fetchFireSmokeZoneViolations,
-      fetchFireSmokeRecent,
-    ],
+    [tenantId, fetchOverviewData],
   );
-  const fireSmokeKpiData = useMemo(
-    () =>
-      displayFireSmokeKpi.map((item) => {
-        const config = fireSmokeDetectionKpiConfig[item.title];
 
-        return {
-          ...item,
-          title: t(item.title),
-          icon: config?.icon || EngineeringIcon,
-          tooltipMessage: config?.tooltipMessage || "",
-        };
-      }),
-    [displayFireSmokeKpi, t],
-  );
-  const zoneViolationsForUi = useMemo(() => {
+  // const fireSmokeKpiData = useMemo(
+  //   () =>
+  //     displayFireSmokeKpi.map((item) => {
+  //       const config = fireSmokeDetectionKpiConfig[item.title];
+
+  //       return {
+  //         ...item,
+  //         title: t(item.title),
+  //         icon: config?.icon || EngineeringIcon,
+  //         tooltipMessage: config?.tooltipMessage || "",
+  //       };
+  //     }),
+  //   [displayFireSmokeKpi, t],
+  // );
+  // const zoneViolationsForUi = useMemo(() => {
+  //   const iconMap: Record<string, SvgIconComponent> = {
+  //     fire: LocalFireDepartment,
+  //     smoke: SmokeFree,
+  //   };
+
+  //   return displayFireSmokeZoneViolations.map((z) => ({
+  //     ...z,
+  //     subViolations: z.subViolations?.map((s) => ({
+  //       ...s,
+  //       icon: iconMap[s.label],
+  //     })),
+  //   }));
+  // }, [displayFireSmokeZoneViolations]);
+
+ 
+   /* ---------- DERIVED DATA ---------- */
+   const fireSmokeKpiData = useMemo(() => {
+     return displayFireSmokeKpi.map((item) => {
+ const config = fireSmokeDetectionKpiConfig[item.title];
+       return {
+         title: item.title,
+         value: item.value,
+         icon: config?.icon || EngineeringIcon,
+         tooltipMessage: config?.tooltipMessage,
+       };
+     });
+   }, [displayFireSmokeKpi]);
+ 
+   const zoneViolationsForUi = useMemo(() => {
     const iconMap: Record<string, SvgIconComponent> = {
       fire: LocalFireDepartment,
       smoke: SmokeFree,
@@ -240,7 +311,6 @@ const FireSmokeDetection: React.FC = () => {
       })),
     }));
   }, [displayFireSmokeZoneViolations]);
-
   /* ---------- REPORT HANDLERS ---------- */
 
   const tableColumns = [
@@ -406,7 +476,7 @@ const FireSmokeDetection: React.FC = () => {
         </Box>
 
         <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {FireSmokeKpiLoading || !fireSmokeKpiData.length
+          {overviewLoading || !fireSmokeKpiData.length
             ? Array.from({ length: 6 }).map((_, index) => (
               <Grid
                 key={index + 1}
@@ -430,7 +500,7 @@ const FireSmokeDetection: React.FC = () => {
             <RecentViolations
               label={t("Recent Incidents")}
               violations={fireSmokeRecentViolationsLive}
-              loading={FireSmokeRecentLoading}
+              loading={overviewLoading}
               tooltipMessage="Latest 20 detected fire or smoke incidents with details."
               onDownload={handleDownloadViolation}
             />
@@ -440,7 +510,7 @@ const FireSmokeDetection: React.FC = () => {
             <ZoneViolations
               label={t("Zone Incidents")}
               violationsZone={zoneViolationsForUi}
-              loading={FireSmokeZoneLoading}
+              loading={overviewLoading}
               tooltipMessage="Shows fire or smoke incidents per zone"
             />
           </Grid>

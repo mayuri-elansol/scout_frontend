@@ -145,11 +145,13 @@ export const apiRoutes = {
   },
   fireSmokeDetection: {
     root: "fireSmokeDetection",
-    getFireSmokeDetectionAnalyticsKpi: "get-fireSmoke-detection-analytics-kpi",
-    getFireSmokeDetectionAnalyticsRecentViolations:
-      "get-fireSmoke-detection-analytics-recent-violations",
-    getFireSmokeDetectionAnalyticsZoneViolations:
-      "get-fireSmoke-detection-analytics-zone-violations",
+    // getFireSmokeDetectionAnalyticsKpi: "get-fireSmoke-detection-analytics-kpi",
+    // getFireSmokeDetectionAnalyticsRecentViolations:
+    //   "get-fireSmoke-detection-analytics-recent-violations",
+    // getFireSmokeDetectionAnalyticsZoneViolations:
+    //   "get-fireSmoke-detection-analytics-zone-violations",
+        getFireSmokeDetectionAnalyticsData: 'get-fireSmoke-detection-analytics-data',
+  
     getFireSmokeDetectionAnalyticsDetailedReport:
       "get-fireSmoke-detection-analytics-details-report",
     getFireSmokeDetectionAnalyticsDownloadDetailedReport:

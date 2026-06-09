@@ -86,3 +86,9 @@ export interface ShiftType {
   breakEndTime: string;
   status: string;
 }
+
+export type FireSmokeDetectionResponse = {
+  kpi: FireSmokeDetectionKpiItem[];
+  zoneViolations: FireSmokeDetectionZoneViolation[];
+  recentViolations: FireSmokeDetectionViolation[];
+};
