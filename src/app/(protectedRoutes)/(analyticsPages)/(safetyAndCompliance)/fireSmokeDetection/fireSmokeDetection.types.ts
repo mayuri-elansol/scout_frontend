@@ -23,7 +23,7 @@ export interface FireSmokeDetectionViolation {
   imageUrl: string;
   camera: string;
   alarmTriggered: string;
-  [key: string]: string | number | boolean;
+  [key: string]: string | number | boolean ;
 }
 
 export interface FireSmokeDetectionZoneViolation {

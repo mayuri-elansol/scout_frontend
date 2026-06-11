@@ -322,10 +322,17 @@ const handleFireSmokeRangeChange = useCallback(
     });
         const payload = {
           tenantId,
-          incident: String(row.incident),
+         // incident: String(row.incident),
+          
+        incident: String(
+          row.incident ??
+          row.violation ??
+          "Unknown Incident"
+        ),
           zone: row.zone,
           time: row.time,
-          camera: row.camera,
+          // camera: row.camera,
+          camera: row.camera || row.cameraName,
           imageUrl: row.imageUrl,
           alarmTriggered: row.alarmTriggered,
 
@@ -354,13 +361,19 @@ const handleFireSmokeRangeChange = useCallback(
   const handleDownloadViolation = async (url: string, violation: Violation) => {
     if (!violation) return;
     const fireSmokeIncident = violation as FireSmokeDetectionViolation;
+    console.log('download singel from reccent',fireSmokeIncident)
     try {
       const payload = {
         tenantId: tenantId,
-        incident: String(fireSmokeIncident.incident),
+        // incident: String(fireSmokeIncident.incident),
+        incident:
+    fireSmokeIncident.incident ??
+    fireSmokeIncident.violation ??
+    "Unknown Incident",
         zone: fireSmokeIncident.zone,
         time: fireSmokeIncident.time,
-        camera: fireSmokeIncident.camera,
+        // camera: fireSmokeIncident.camera,
+         camera: fireSmokeIncident.camera ?? fireSmokeIncident.cameraName,
         imageUrl: url,
         alarmTriggered: fireSmokeIncident.alarmTriggered,
       };
