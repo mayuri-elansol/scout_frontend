@@ -104,29 +104,7 @@ const FireSmokeDetection: React.FC = () => {
 
   /* ---------- INITIAL LOAD ---------- */
 
-  // useEffect(() => {
-  //   if (!tenantId) return;
-
-  //   const loadInitial = async () => {
-  //     const [kpi, zones, recent] = await Promise.all([
-  //       fetchFireSmokeKpi({ tenantId }).unwrap(),
-  //       fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
-  //       fetchFireSmokeRecent({ tenantId }).unwrap(),
-  //     ]);
-
-  //     setDisplayFireSmokeKpi(kpi ?? []);
-  //     setDisplayFireSmokeZoneViolations(zones ?? []);
-  //     setFireSmokeRecentViolationsLive(recent ?? []);
-  //   };
-
-  //   loadInitial().catch(console.error);
-  // }, [
-  //   tenantId,
-  //   fetchFireSmokeKpi,
-  //   fetchFireSmokeZoneViolations,
-  //   fetchFireSmokeRecent,
-  // ]);
-  
+ 
     useEffect(() => {
       if (!tenantId) return;
       const loadInitial = async () => {
@@ -186,48 +164,7 @@ const FireSmokeDetection: React.FC = () => {
   });
 
   /* ---------- TIME FILTER ---------- */
-  // const handleFireSmokeRangeChange = useCallback(
-  //   async (range: { start?: string; end?: string }) => {
-  //     if (!range.start && !range.end) {
-  //       setIsFireSmokeLiveMode(true);
-
-  //       // ✅ CALL ALL APIs + SET STATE
-  //       const [kpi, zones, recent] = await Promise.all([
-  //         fetchFireSmokeKpi({ tenantId }).unwrap(),
-  //         fetchFireSmokeZoneViolations({ tenantId }).unwrap(),
-  //         fetchFireSmokeRecent({ tenantId }).unwrap(),
-  //       ]);
-
-  //       setDisplayFireSmokeKpi(kpi ?? []);
-  //       setDisplayFireSmokeZoneViolations(zones ?? []);
-  //       setFireSmokeRecentViolationsLive(recent ?? []);
-  //       return;
-  //     }
-
-  //     setIsFireSmokeLiveMode(false);
-  //     const payload = {
-  //       tenantId: tenantId,
-  //       startDate: range.start,
-  //       endDate: range.end,
-  //     };
-  //     const [kpi, zones, recent] = await Promise.all([
-  //       fetchFireSmokeKpi(payload).unwrap(),
-  //       fetchFireSmokeZoneViolations(payload).unwrap(),
-  //       fetchFireSmokeRecent(payload).unwrap(),
-  //     ]);
-
-  //     setDisplayFireSmokeKpi(kpi ?? []);
-  //     setDisplayFireSmokeZoneViolations(zones ?? []);
-  //     setFireSmokeRecentViolationsLive(recent ?? []);
-  //   },
-  //   [
-  //     tenantId,
-  //     fetchFireSmokeKpi,
-  //     fetchFireSmokeZoneViolations,
-  //     fetchFireSmokeRecent,
-  //   ],
-  // );
-
+  
 const handleFireSmokeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
       if (!range.start && !range.end) {
@@ -254,36 +191,7 @@ const handleFireSmokeRangeChange = useCallback(
     [tenantId, fetchOverviewData],
   );
 
-  // const fireSmokeKpiData = useMemo(
-  //   () =>
-  //     displayFireSmokeKpi.map((item) => {
-  //       const config = fireSmokeDetectionKpiConfig[item.title];
 
-  //       return {
-  //         ...item,
-  //         title: t(item.title),
-  //         icon: config?.icon || EngineeringIcon,
-  //         tooltipMessage: config?.tooltipMessage || "",
-  //       };
-  //     }),
-  //   [displayFireSmokeKpi, t],
-  // );
-  // const zoneViolationsForUi = useMemo(() => {
-  //   const iconMap: Record<string, SvgIconComponent> = {
-  //     fire: LocalFireDepartment,
-  //     smoke: SmokeFree,
-  //   };
-
-  //   return displayFireSmokeZoneViolations.map((z) => ({
-  //     ...z,
-  //     subViolations: z.subViolations?.map((s) => ({
-  //       ...s,
-  //       icon: iconMap[s.label],
-  //     })),
-  //   }));
-  // }, [displayFireSmokeZoneViolations]);
-
- 
    /* ---------- DERIVED DATA ---------- */
    const fireSmokeKpiData = useMemo(() => {
      return displayFireSmokeKpi.map((item) => {
