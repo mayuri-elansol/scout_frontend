@@ -102,9 +102,9 @@ export const baseProtectedApi = createApi({
     "ForkliftVehicleInWalkwaysAnalytics",
     "EmergencyExitBlockageDetectionAnalytics",
     "EmergencyExitBlockageDetectionDetailedReport",
-
-
-"FireSmokeDetectionData" 
+    "CameraTamperingDetailedReport",
+    "CameraTamperingData",
+    "FireSmokeDetectionData" 
 
 ],
 });

@@ -180,7 +180,14 @@ export const apiRoutes = {
     getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedCSVReport: 'get-emergency-exit-blockage-detection-analytics-download-details-csv-report',
     getEmergencyExitBlockageDetectionAnalyticsDownloadDetailedReportForSingleId: 'get-emergency-exit-blockage-detection-analytics-download-details-report-for-single-id',
   },
- 
+   cameraTamperingDetection: {
+    root: 'cameraTamperingDetection',
+    getCameraTamperingDetectionAnalyticsData: 'get-camera-tampering-detection-analytics-kpi-zone-recent-violations',
+    getCameraTamperingDetectionAnalyticsDetailedReport: 'get-camera-tampering-detection-analytics-details-report',
+    getCameraTamperingDetectionAnalyticsDownloadDetailedPdfReport: 'get-camera-tampering-detection-analytics-download-details-pdf-report',
+    getCameraTamperingDetectionAnalyticsDownloadDetailedCSVReport: 'get-camera-tampering-detection-analytics-download-details-csv-report',
+    getCameraTamperingDetectionAnalyticsDownloadDetailedReportForSingleId: 'get-camera-tampering-detection-analytics-download-details-report-for-single-id'
+  },
   crowdGatheringInHazardousZones: {
     root: "crowdGatheringInHazardousZones",
         getCrowdGatheringInHazardousZonesAnalyticsData: 'get-crowd-gathering-in-hazardous-zones-analytics-kpi-recent-zone-violations',

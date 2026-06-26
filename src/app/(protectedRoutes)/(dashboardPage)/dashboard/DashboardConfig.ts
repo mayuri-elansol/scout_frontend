@@ -27,8 +27,8 @@ export const MainDashboardConfig = {
   "Unauthorized Access In Restricted Areas": {
     route: "/unauthorizedAccessInRestrictedAreas",
   },
-
-  "Camera Tempering Detection": {
+  
+  "Camera Tampering Detection": {
     route: "/cameraTampering",
   },
   "Movement During Shutdown": {

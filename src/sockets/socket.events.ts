@@ -14,9 +14,9 @@ export const SOCKET_EVENTS = {
   MOVEMENT_DURING_SHUTDOWN_HR_UPDATE: "movement_during_shutdown_hr_update",
   UNAUTHORIZED_ACCESS_IN_RESTRICTED_AREAS_UPDATE : "Unauthorized_Access_In_Restricted_Areas_Update",
   EMPLOYEE_PRESENCE_DETECTION_IN_CRITICAL_AREAS_UPDATE : "Employee_Presence_In_Critical_Area_Update",
-    EMPLOYEE_PRESENCE_DETECTION_IN_RESTRICTED_AREAS_UPDATE : "Employee_Presence_In_Restricted_Area_Update",
-    PEOPLE_COUNT_UPDATE:"People_Count_In_Factory_Premises_Update",
-    OPERATIONAL_INSIGHTS_UPDATE:"Operational_Insights_Update"
-
+  EMPLOYEE_PRESENCE_DETECTION_IN_RESTRICTED_AREAS_UPDATE : "Employee_Presence_In_Restricted_Area_Update",
+  PEOPLE_COUNT_UPDATE:"People_Count_In_Factory_Premises_Update",
+  OPERATIONAL_INSIGHTS_UPDATE:"Operational_Insights_Update",
+  CAMERA_TAMPERING_UPDATE:"Camera_Tampering_Update",
 
 } as const;

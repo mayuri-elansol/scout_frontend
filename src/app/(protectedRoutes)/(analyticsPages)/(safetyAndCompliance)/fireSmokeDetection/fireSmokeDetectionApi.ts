@@ -5,27 +5,7 @@ import { rtkAPIToast } from "@/utils/rtkAPIToast";
 
 export const fireSmokeDetectionApi = baseProtectedApi.injectEndpoints({
   endpoints: (builder) => ({
-    // getFireSmokeDetectionKpiData: builder.query({
-    //   query: (body) => ({
-    //     url: `${apiRoutes.fireSmokeDetection.root}/${apiRoutes.fireSmokeDetection.getFireSmokeDetectionAnalyticsKpi}`,
-    //     method: "POST",
-    //     body,
-    //   }),
-    //   providesTags: ["FireSmokeDetectionKpi"],
-    // }),
-
-    // getFireSmokeDetectionZoneViolations: builder.query({
-    //   query: (body: {
-    //     tenantId: string;
-    //     startDate?: string;
-    //     endDate?: string;
-    //   }) => ({
-    //     url: `${apiRoutes.fireSmokeDetection.root}/${apiRoutes.fireSmokeDetection.getFireSmokeDetectionAnalyticsZoneViolations}`,
-    //     method: "POST",
-    //     body,
-    //   }),
-    //   providesTags: ["FireSmokeDetectionZoneViolations"],
-    // }),
+   
 
     getFireSmokeDetectionDetailedReport: builder.query({
       query: (body) => ({
@@ -36,21 +16,12 @@ export const fireSmokeDetectionApi = baseProtectedApi.injectEndpoints({
       providesTags: ["FireSmokeDetectionDetailedReport"],
     }),
 
-    // getFireSmokeDetectionRecentViolations: builder.query({
-    //   query: (body) => ({
-    //     url: `${apiRoutes.fireSmokeDetection.root}/${apiRoutes.fireSmokeDetection.getFireSmokeDetectionAnalyticsRecentViolations}`,
-    //     method: "POST",
-    //     body,
-    //   }),
-    //   providesTags: ["FireSmokeDetectionRecentViolations"],
-    // }),
-
+   
       getFireSmokeDetectionData: builder.query<
   FireSmokeDetectionResponse,
   { tenantId: string; startDate?: string; endDate?: string }
 >({
         query: (body) => ({
-        //  url: `${apiRoutes.unauthorizedAccessInRestrictedAreas.root}/${apiRoutes.unauthorizedAccessInRestrictedAreas.getUnauthorizedAccessInRestrictedAreasAnalyticsData}`,
             url: `${apiRoutes.fireSmokeDetection.root}/${apiRoutes.fireSmokeDetection.getFireSmokeDetectionAnalyticsData}`,
        
         

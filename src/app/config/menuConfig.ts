@@ -268,6 +268,12 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/unauthorizedAccessInRestrictedAreas",
         featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
+          {
+        type: "link",
+        name: "Camera Tampering Detection",
+        path: "/cameraTampering",
+        featureId: FEATURE.CAMERA_TAMPERING,
+      },
     ],
   },
   {

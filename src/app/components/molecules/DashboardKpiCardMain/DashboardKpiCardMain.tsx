@@ -59,6 +59,7 @@ const DashboardKpiCardMain: React.FC<DashboardKpiCardProps> = ({
   const isDisabled = colour === "gray";
   return (
     <Card
+    
       onClick={() => !isDisabled && route && router.push(route)}
       sx={{
         backgroundColor: variantStyles.bgColor,

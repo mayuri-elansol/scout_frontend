@@ -126,6 +126,9 @@ const SurveillanceMonitoring: React.FC = () => {
   const intrusionDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Intrusion Detection",
   );
+  const cameraTamperingDashboard = displaySurveillanceKpi.find(
+  (d) => d.title === "Camera Tampering Detection",
+);
   const unauthorizedDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Unauthorized Access In Restricted Areas",
   );
@@ -168,6 +171,35 @@ const movementGraphData =
     ? (movementDashboard.graphs.data as TrendResponse)
     : undefined;
 
+//camera tampering pie chart 
+const onlinePieData =
+  cameraTamperingDashboard?.graphs?.pieCharts?.onlineCameras?.map(
+    (item: any) => ({
+      label: item.zone,
+      value: item.count,
+  color: item.color || "#999999",    }),
+  ) || [];
+
+const offlinePieData =
+  cameraTamperingDashboard?.graphs?.pieCharts?.offlineCameras?.map(
+    (item: any) => ({
+      label: item.zone,
+      value: item.count,
+  color: item.color || "#999999",    }),
+  ) || [];
+
+const tamperedPieData =
+  cameraTamperingDashboard?.graphs?.pieCharts?.tamperedCameras?.map(
+    (item: any) => ({
+      label: item.zone,
+      value: item.count,
+  color: item.color || "#999999",    }),
+  ) || [];
+
+  console.log("cameraTamperingDashboard", cameraTamperingDashboard);
+console.log("onlinePieData", onlinePieData);
+console.log("offlinePieData", offlinePieData);
+console.log("tamperedPieData", tamperedPieData);
 // Unauthorized Access
 const unauthorizedGraphData =
   unauthorizedDashboard?.graphs?.data &&
@@ -336,7 +368,7 @@ const renderUnauthorizedChart = () => {
       featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
     },
     {
-      label: "Camera Tempering Detection",
+      label: "Camera Tampering Detection",
       content: (
         <Grid
           container
@@ -351,27 +383,15 @@ const renderUnauthorizedChart = () => {
           {[
             {
               title: "Online Cameras by Zone",
-              data: [
-                // { label: "Zone A", value: 12, color: "#A8E6CF" },
-                // { label: "Zone B", value: 5, color: "#ffcdd2" },
-                // { label: "Zone C", value: 2, color: "#FFEAA7" },
-              ],
+              data: onlinePieData
             },
             {
               title: "Offline Cameras by Zone",
-              data: [
-                // { label: "Zone A", value: 20, color: "#A8E6CF" },
-                // { label: "Zone B", value: 3, color: "#ffcdd2" },
-                // { label: "Zone C", value: 1, color: "#FFEAA7" },
-              ],
+              data: offlinePieData
             },
             {
               title: "Tampered Cameras by Zone",
-              data: [
-                // { label: "Zone A", value: 20, color: "#A8E6CF" },
-                // { label: "Zone B", value: 3, color: "#ffcdd2" },
-                // { label: "Zone C", value: 1, color: "#FFEAA7" },
-              ],
+              data: tamperedPieData
             },
           ].map((chart, index) => (
             <Grid
@@ -391,6 +411,8 @@ const renderUnauthorizedChart = () => {
                 data={chart.data}
                 carttitle={chart.title}
               />
+   
+
             </Grid>
           ))}
         </Grid>

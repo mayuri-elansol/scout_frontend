@@ -162,6 +162,13 @@ const surveillanceDashboardKpis = useMemo(() => {
   if (!mainDashboardData?.surveillance) return [];
   return mainDashboardData.surveillance.map((item) => {
     const config = MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
+     console.log(
+      "Surveillance KPI:",
+      item.title,
+      "Route:",
+      config?.route
+    );
+
     return { ...item, route: config?.route || "/" };
   });
 }, [mainDashboardData]);

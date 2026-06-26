@@ -304,7 +304,7 @@ function ReportTable<T extends Record<string, string | number | boolean>>({
                 fullWidth: true,
                 error: !isDateRangeValid,
                 helperText: !isDateRangeValid
-                  ? "Invalid date range (max 3 months, start ≤ end)"
+                  ? "Invalid date range (max 1 months, start ≤ end. or end can't be greater than end date)"
                   : "",
                 sx: {
                   minWidth: 150,

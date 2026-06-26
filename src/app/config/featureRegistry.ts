@@ -28,7 +28,7 @@ export const FEATURE = {
   // Surveillance Monitoring
   INTRUSION_DETECTION: "SUC007",
   UNAUTHORIZED_ACCESS: "SUC008",
-  CAMERA_TAMPERING: "SUC009", //wrong id for now for godrej
+  CAMERA_TAMPERING: "SUC009",
   MOVEMENT_DURING_SHUTDOWN_HOUR: "SUC010",
 
   // Workforce Monitoring

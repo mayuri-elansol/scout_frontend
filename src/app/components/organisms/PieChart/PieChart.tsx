@@ -27,7 +27,7 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
   carttitle,
  // count,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+ const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState<{
     width: number;
     height: number;
@@ -75,6 +75,7 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
 
 const chartSize = Math.min(containerSize.width, containerSize.height);
 const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Math.min cap
+
   if (!data || data.length === 0) {
     return (
       <Box
@@ -116,7 +117,7 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
           gap: 1,
         }}
       >
-        {chartSize > 0 && (
+        {/* {chartSize > 0 && ( */}
           <>
             <PieChart
               series={[
@@ -152,7 +153,8 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
               {carttitle}
             </Typography>
           </>
-        )}
+        {/* )
+        } */}
       </Box>
     </CardContent>
   );

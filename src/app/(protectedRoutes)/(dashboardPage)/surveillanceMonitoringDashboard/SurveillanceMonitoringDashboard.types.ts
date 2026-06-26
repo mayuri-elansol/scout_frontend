@@ -29,6 +29,7 @@ export interface SurveillanceDashboardResponse {
   };
   graphs: {
     data: TrendResponse;
+     pieCharts?: CameraTamperingPieCharts;
   };
 }
 
@@ -37,4 +38,15 @@ export interface SurveillanceSocketPayload {
   tenantId: string;
   serverTimestamp: string;
   data: SurveillanceDashboardResponse[];
+}
+
+export interface PieChartItem {
+  zone: string;
+  count: number;
+}
+
+export interface CameraTamperingPieCharts {
+  onlineCameras: PieChartItem[];
+  offlineCameras: PieChartItem[];
+  tamperedCameras: PieChartItem[];
 }

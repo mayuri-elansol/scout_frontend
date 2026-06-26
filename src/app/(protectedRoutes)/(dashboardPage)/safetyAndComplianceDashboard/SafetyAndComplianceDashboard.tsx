@@ -293,6 +293,110 @@ const vehicleLineSeries = vehicleSeries.map(
 
 const zoneWisePieDataForCrowd = graphDataForCrowdGathering?.zoneWisePieData ?? [];
   const tabs: TabConfig[] = [
+      {
+      label: "Hazardous Zone Activity",
+      content: (
+        <Grid
+          container
+          sx={{
+            alignItems: "stretch",
+            height: "100%",
+          }}
+        >
+          {/* Left side */}
+          <Grid
+            size={{ xs: 12, md: 8 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+              "& .MuiCardContent-root": {
+                height: "100%",
+              },
+            }}
+          >
+        
+            <TimeScaleLineChart
+    granularity={fireSmokeGranularity}
+    xAxisDates={fireSmokeXAxisDates}
+    xAxisTimes={fireSmokeXAxisTimes}
+    series={[
+      {
+        label:    "Fire",
+        data:     fireSmokeSeries.map((item) => item.fireCount),
+        color:    "#ffcdd2",
+        showMark: true,
+      },
+      {
+        label:    "Smoke",
+        data:     fireSmokeSeries.map((item) => item.smokeCount),
+        color:    "#FFCBB3",
+        showMark: true,
+      },
+    ]}
+  />
+          </Grid>
+
+          {/* Right side */}
+          <Grid
+            size={{ xs: 12, md: 4 }}
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "row", md: "column" },
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexWrap: { xs: "wrap", md: "nowrap" },
+              gap: 2,
+              p: { xs: 1, md: 0 },
+              height: { xs: "40vh", md: "100%" },
+              width: "100%",
+            }}
+          >
+            {/* Hazard Type Pie */}
+            <Box
+              sx={{
+                flex: 1,
+                minWidth: { xs: "50%", md: "100%" },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: { xs: 140, md: "50%" },
+              }}
+            >
+              {hazardTypePieData.length > 0 && totalHazardType > 0 && (
+                <DynamicPieChart
+                  data={hazardTypePieData}
+                  carttitle="Hazard Type Distribution"
+                />
+              )}
+            </Box>
+
+            {/* Zone-wise Pie */}
+            <Box
+              sx={{
+                flex: 1,
+                minWidth: { xs: "50%", md: "100%" },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: { xs: 140, md: "50%" },
+              }}
+            >
+
+              {zoneWisePieData.length > 0 && (
+                <DynamicPieChart
+                  data={zoneWisePieData}
+                  carttitle="Zone-wise Hazard Detection"
+                />
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      ),
+      featureId: FEATURE.FIRE_SMOKE,
+    },
     {
       label: "PPE Compliance",
       content: (
@@ -409,110 +513,7 @@ const zoneWisePieDataForCrowd = graphDataForCrowdGathering?.zoneWisePieData ?? [
       featureId: FEATURE.PPE_DETECTION,
     },
 
-    {
-      label: "Hazardous Zone Activity",
-      content: (
-        <Grid
-          container
-          sx={{
-            alignItems: "stretch",
-            height: "100%",
-          }}
-        >
-          {/* Left side */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{
-              display: "flex",
-              height: { xs: "50vh", md: "100%" },
-              width: "100%",
-              "& .MuiCardContent-root": {
-                height: "100%",
-              },
-            }}
-          >
-        
-            <TimeScaleLineChart
-    granularity={fireSmokeGranularity}
-    xAxisDates={fireSmokeXAxisDates}
-    xAxisTimes={fireSmokeXAxisTimes}
-    series={[
-      {
-        label:    "Fire",
-        data:     fireSmokeSeries.map((item) => item.fireCount),
-        color:    "#ffcdd2",
-        showMark: true,
-      },
-      {
-        label:    "Smoke",
-        data:     fireSmokeSeries.map((item) => item.smokeCount),
-        color:    "#FFCBB3",
-        showMark: true,
-      },
-    ]}
-  />
-          </Grid>
-
-          {/* Right side */}
-          <Grid
-            size={{ xs: 12, md: 4 }}
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "row", md: "column" },
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: { xs: "wrap", md: "nowrap" },
-              gap: 2,
-              p: { xs: 1, md: 0 },
-              height: { xs: "40vh", md: "100%" },
-              width: "100%",
-            }}
-          >
-            {/* Hazard Type Pie */}
-            <Box
-              sx={{
-                flex: 1,
-                minWidth: { xs: "50%", md: "100%" },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: { xs: 140, md: "50%" },
-              }}
-            >
-              {hazardTypePieData.length > 0 && totalHazardType > 0 && (
-                <DynamicPieChart
-                  data={hazardTypePieData}
-                  carttitle="Hazard Type Distribution"
-                />
-              )}
-            </Box>
-
-            {/* Zone-wise Pie */}
-            <Box
-              sx={{
-                flex: 1,
-                minWidth: { xs: "50%", md: "100%" },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: { xs: 140, md: "50%" },
-              }}
-            >
-
-              {zoneWisePieData.length > 0 && (
-                <DynamicPieChart
-                  data={zoneWisePieData}
-                  carttitle="Zone-wise Hazard Detection"
-                />
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      ),
-      featureId: FEATURE.FIRE_SMOKE,
-    },
+  
     {
       label: "Vehicle In Walkways",
       content: (

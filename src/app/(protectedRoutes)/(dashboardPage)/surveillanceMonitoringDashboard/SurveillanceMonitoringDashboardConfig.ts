@@ -14,7 +14,7 @@ export const surveillanceDashboardConfig = {
     route: "/unauthorizedAccessInRestrictedAreas",
     tooltipMessage: "Displays unauthorized acess in restricted ares.",
   },
-  "Camera Tempering Detection": {
+  "Camera Tampering Detection": {
     icon: VideocamOff,
     route: "/cameraTampering",
     tooltipMessage:

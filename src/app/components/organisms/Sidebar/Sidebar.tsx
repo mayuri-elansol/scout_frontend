@@ -810,7 +810,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
             component="img"
             src={orgLogo}
             alt="Customer Logo"
-            sx={{ height: 46, width: 170, ml: 2, pb: 1 }}
+            //sx={{ height: 46, width: 170, ml: 2, pb: 1 }}
+                        sx={{ height: 46, width: 350,  pb: 1 }}
+
           />
         )}
       </Box>
