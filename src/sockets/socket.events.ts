@@ -17,6 +17,7 @@ export const SOCKET_EVENTS = {
   EMPLOYEE_PRESENCE_DETECTION_IN_RESTRICTED_AREAS_UPDATE : "Employee_Presence_In_Restricted_Area_Update",
   PEOPLE_COUNT_UPDATE:"People_Count_In_Factory_Premises_Update",
   OPERATIONAL_INSIGHTS_UPDATE:"Operational_Insights_Update",
-  CAMERA_TAMPERING_UPDATE:"Camera_Tampering_Update",
+  CAMERA_TAMPERING_UPDATE:"camera_tampering_update",
+CANTEEN_USAGE_MONITORING_UPDATE: "canteen_usage_monitoring_update"
 
 } as const;

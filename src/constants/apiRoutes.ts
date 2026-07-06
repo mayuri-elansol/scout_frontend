@@ -188,6 +188,14 @@ export const apiRoutes = {
     getCameraTamperingDetectionAnalyticsDownloadDetailedCSVReport: 'get-camera-tampering-detection-analytics-download-details-csv-report',
     getCameraTamperingDetectionAnalyticsDownloadDetailedReportForSingleId: 'get-camera-tampering-detection-analytics-download-details-report-for-single-id'
   },
+    monitoringCanteenUsageAndTimings: {
+    root:'monitoringCanteenUsageAndTimings',
+    getMonitoringCanteenUsageAndTimingsAnalyticsData: 'get-monitoring-canteen-usage-and-timings-analytics-data',
+    getMonitoringCanteenUsageAndTimingsAnalyticsDetailedReport: 'get-monitoring-canteen-usage-and-timings-analytics-detailed-report',
+    getMonitoringCanteenUsageAndTimingsAnalyticsDownloadDetailedPdfReport: 'get-monitoring-canteen-usage-and-timings-analytics-download-details-pdf-report',
+    getMonitoringCanteenUsageAndTimingsAnalyticsDownloadDetailedCSVReport: 'get-monitoring-canteen-usage-and-timings-analytics-download-details-csv-report',
+    getMonitoringCanteenUsageAndTimingsAnalyticsDownloadDetailedReportForSingleId: 'get-monitoring-canteen-usage-and-timings-analytics-download-details-report-for-single-id',
+  },
   crowdGatheringInHazardousZones: {
     root: "crowdGatheringInHazardousZones",
         getCrowdGatheringInHazardousZonesAnalyticsData: 'get-crowd-gathering-in-hazardous-zones-analytics-kpi-recent-zone-violations',
@@ -432,22 +440,7 @@ export const apiRoutes = {
     getFaceRecognitionForEntryExitLoggingAnalyticsDetailedReportForSingleId:
       "get-face-recognition-for-entry-exit-logging-analytics-details-report-for-single-id",
   },
-  monitoringCanteenUsageAndTimings: {
-    getMonitoringCanteenUsageAndTimingsAnalyticsKpi:
-      "get-monitoring-canteen-usage-and-timings-analytics-kpi",
-    getMonitoringCanteenUsageAndTimingsAnalyticsRecentViolations:
-      "get-monitoring-canteen-usage-and-timings-analytics-recent-violations",
-    getMonitoringCanteenUsageAndTimingsAnalyticsCameraStatusByZone:
-      "get-monitoring-canteen-usage-and-timings-analytics-camera-status-by-zone",
-    getMonitoringCanteenUsageAndTimingsAnalyticsDetailedReport:
-      "get-monitoring-canteen-usage-and-timings-analytics-detailed-report",
-    getMonitoringCanteenUsageAndTimingsAnalyticsDownloadDetailedReport:
-      "get-monitoring-canteen-usage-and-timings-analytics-download-details-report",
-    getMonitoringCanteenUsageAndTimingsAnalyticsDownloadDetailedReportForSingleId:
-      "get-monitoring-canteen-usage-and-timings-analytics-download-details-report-for-single-id",
-    getMonitoringCanteenUsageAndTimingsAnalyticsDetailedReportForSingleId:
-      "get-monitoring-canteen-usage-and-timings-analytics-details-report-for-single-id",
-  },
+
   employeeIdleTimeMonitoringWithFaceDetection: {
     getEmployeeIdleTimeMonitoringWithFaceDetectionAnalyticsKpi:
       "get-employee-idle-time-monitoring-with-face-detection-analytics-kpi",

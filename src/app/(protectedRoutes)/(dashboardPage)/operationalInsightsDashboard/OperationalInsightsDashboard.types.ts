@@ -51,12 +51,23 @@ export interface WorkingSlotData {
   stopTime: number;
   label: string;
 }
-export interface CanteenGraphData {
-  times: string[];
-  usageData: number[];
-  workingSlots: WorkingSlotData[];
+
+export interface CanteenGraphPoint {
+  date: string;
+  time: string;
+  breakfastCount: number;
+  lunchCount: number;
+  dinnerCount: number;
 }
-export interface CanteenUsageResponse {
+ 
+export interface CanteenGraphSeriesEntry {
+  data: CanteenGraphPoint[];
+}
+ 
+export interface CanteenGraphData {
+  granularity: "hour" | "weekday" | "week";
+  series: CanteenGraphSeriesEntry[];
+}export interface CanteenUsageResponse {
   title: "Canteen Usage Monitoring";
   kpi: OperationalKpi;
   graphs: { data: CanteenGraphData | [] };

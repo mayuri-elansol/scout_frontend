@@ -8,7 +8,6 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
 import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import CanteenUsageChart from "@/app/components/organisms/LineChart/LineCharts";
 import TimeLineAreaChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart"; // same chart WorkforceMonitoring uses
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -62,12 +61,43 @@ function buildPeopleInsideProps(dashboardData: OperationalInsightsDashboardRespo
 
   return { series, xAxisDates, xAxisTimes, granularity };
 }
-function buildCanteenData(dashboardData: OperationalInsightsDashboardResponse[]): CanteenGraphData {
+// Canteen Usage Monitoring returns the same envelope shape as People Inside —
+// { granularity, series[{ data[{ date, time, breakfastCount, lunchCount, dinnerCount }] }] } —
+// just with meal-type counts instead of entry/exit counts, so it reuses TimeLineAreaChart directly.
+function buildCanteenInsideProps(dashboardData: OperationalInsightsDashboardResponse[]) {
   const usecase = dashboardData.find((d) => d.title === "Canteen Usage Monitoring");
-  const raw = usecase?.graphs?.data;
-  if (!raw || Array.isArray(raw)) return { times: [], usageData: [], workingSlots: [] };
-  return raw as CanteenGraphData;
+  const graphData = usecase?.graphs?.data as CanteenGraphData | undefined;
+ 
+  const rawData = graphData?.series?.[0]?.data ?? [];
+ 
+  const series = [
+    {
+      label: "Breakfast",
+      color: "#F5C893", // pastel yellow/orange
+      showMark: false,
+      data: rawData.map((p) => p.breakfastCount),
+    },
+    {
+      label: "Lunch",
+      color: "#93C4F5", // pastel blue
+      showMark: false,
+      data: rawData.map((p) => p.lunchCount),
+    },
+    {
+      label: "Dinner",
+      color: "#C893F5", // pastel purple
+      showMark: false,
+      data: rawData.map((p) => p.dinnerCount),
+    },
+  ];
+ 
+  const xAxisDates = rawData.map((p) => p.date);
+  const xAxisTimes = rawData.map((p) => p.time);
+  const granularity: CanteenGraphData["granularity"] = graphData?.granularity ?? "hour";
+ 
+  return { series, xAxisDates, xAxisTimes, granularity };
 }
+ 
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const OperationalInsightsDashboard: React.FC = () => {
@@ -147,8 +177,7 @@ const OperationalInsightsDashboard: React.FC = () => {
   );
 
   const peopleInsideProps = useMemo(() => buildPeopleInsideProps(dashboardData), [dashboardData]);
-  const canteenData       = useMemo(() => buildCanteenData(dashboardData),       [dashboardData]);
-
+const canteenInsideProps = useMemo(() => buildCanteenInsideProps(dashboardData), [dashboardData]);
   // ── Tabs ──────────────────────────────────────────────────────────────────
   const tabs: TabConfig[] = [
     {
@@ -192,14 +221,10 @@ const OperationalInsightsDashboard: React.FC = () => {
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
           <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
-            {operationalKpiLoading ? (
-              <CircularProgress />
+             {operationalKpiLoading ? (
+              <Loader />
             ) : (
-              <CanteenUsageChart
-                times={canteenData.times}
-                usageData={canteenData.usageData}
-                workingTime={canteenData.workingSlots}
-              />
+              <TimeLineAreaChart {...canteenInsideProps} />
             )}
           </Grid>
         </Grid>

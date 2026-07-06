@@ -45,18 +45,17 @@ function ViewAlertPopup<
   const handleImageError = () => setImageError(true);
 
   const showPlaceholder = !imageUrl || imageUrl.trim() === "" || imageError;
-const handleDownloadClick = async () => {
-  if (!onDownload || !imageUrl) return;
+let dialogTitle = "Details";
 
-  try {
-    setLoading(true);           // show loader
-    await onDownload(imageUrl); // wait for async parent
-  } catch (err) {
-    console.error("Download failed", err);
-  } finally {
-    setLoading(false);         
+if (details) {
+  if ("incident" in details) {
+    dialogTitle = "Incident Details";
+  } else if ("violation" in details) {
+    dialogTitle = "Violation Details";
+  } else if ("usage" in details) {
+    dialogTitle = "Usage Details";
   }
-};
+}
   return (
     <Dialog
       open={open}
@@ -86,7 +85,8 @@ const handleDownloadClick = async () => {
           component="div"
           sx={{ fontWeight: 600 }}
         >
-          Violation Details
+          {/* Violation Details */}
+           {dialogTitle}
         </Typography>
         <IconButton onClick={handleClose} sx={{ color: "white" }}>
           <Close />
