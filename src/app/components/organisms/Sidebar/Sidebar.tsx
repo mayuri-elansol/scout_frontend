@@ -1,5 +1,3 @@
-
-
 "use client";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState, useMemo, useCallback } from "react";
@@ -425,7 +423,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
   const drawerWidth: string = "315px";
   const router = useRouter();
   const pathname = usePathname();
- 
+
   const { features } = useAuth();
 
   const [analyticsOpen, setAnalyticsOpen] = useState(true);
