@@ -374,11 +374,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
       featureId: FEATURE.FIRE_SMOKE,
     },
     {
-<<<<<<< HEAD
       label: "PPE Compliance",
-=======
-      label: "Hazardous Zone Activity",
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
       content: (
         <Grid
           container
@@ -399,7 +395,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               },
             }}
           >
-<<<<<<< HEAD
 
             <TimeScaleLineChart
   granularity={ppeGranularity}
@@ -429,38 +424,10 @@ const SafetyAndComplianceDashboard: React.FC = () => {
           </Grid>
 
           {/* Right side*/}
-=======
-            <TimeScaleLineChart
-              granularity={fireSmokeGranularity}
-              xAxisDates={fireSmokeXAxisDates}
-              xAxisTimes={fireSmokeXAxisTimes}
-              series={[
-                {
-                  label: "Fire",
-                  data: fireSmokeSeries.map((item) => item.fireCount),
-                  color: "#ffcdd2",
-                  showMark: true,
-                },
-                {
-                  label: "Smoke",
-                  data: fireSmokeSeries.map((item) => item.smokeCount),
-                  color: "#FFCBB3",
-                  showMark: true,
-                },
-              ]}
-            />
-          </Grid>
-
-          {/* Right side */}
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
           <Grid
             size={{ xs: 12, md: 4 }}
             sx={{
               display: "flex",
-<<<<<<< HEAD
-
-=======
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
               flexDirection: { xs: "row", md: "column" },
               justifyContent: "space-between",
               alignItems: "center",
@@ -471,11 +438,7 @@ const SafetyAndComplianceDashboard: React.FC = () => {
               width: "100%",
             }}
           >
-<<<<<<< HEAD
             {/* First Pie Chart */}
-=======
-            {/* Hazard Type Pie */}
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
             <Box
               sx={{
                 flex: 1,
@@ -487,7 +450,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-<<<<<<< HEAD
            
 
               {ppeViolationTypePieData.length > 0 && (
@@ -500,17 +462,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
             </Box>
 
             {/* Second Pie Chart */}
-=======
-              {hazardTypePieData.length > 0 && totalHazardType > 0 && (
-                <DynamicPieChart
-                  data={hazardTypePieData}
-                  carttitle="Hazard Type Distribution"
-                />
-              )}
-            </Box>
-
-            {/* Zone-wise Pie */}
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
             <Box
               sx={{
                 flex: 1,
@@ -522,7 +473,6 @@ const SafetyAndComplianceDashboard: React.FC = () => {
                 height: { xs: 140, md: "50%" },
               }}
             >
-<<<<<<< HEAD
        
               {ppeZoneWisePieData.length > 0 && (
   <DynamicPieChart
@@ -531,27 +481,14 @@ const SafetyAndComplianceDashboard: React.FC = () => {
     carttitle="PPE Violations by Zone"
   />
 )}
-=======
-              {zoneWisePieData.length > 0 && (
-                <DynamicPieChart
-                  data={zoneWisePieData}
-                  carttitle="Zone-wise Hazard Detection"
-                />
-              )}
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
             </Box>
           </Grid>
         </Grid>
       ),
-<<<<<<< HEAD
       featureId: FEATURE.PPE_DETECTION,
     },
 
   
-=======
-      featureId: FEATURE.FIRE_SMOKE,
-    },
->>>>>>> e9bf6c1c89215304ea75eb12770e2f6553ca3930
     {
       label: "PPE Compliance",
       content: (
