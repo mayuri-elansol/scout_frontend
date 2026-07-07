@@ -21,42 +21,42 @@ declare module "@mui/material/styles" {
 export const theme = createTheme({
   palette: {
     primary: {
-      main: "#1976d2",
-      light: "#42a5f5",
-      dark: "#1565c0",
+      main: "#2563EB",
+      light: "#60A5FA",
+      dark: "#1D4ED8",
     },
     secondary: {
-      main: "#4caf50",
-      light: "#81c784",
-      dark: "#388e3c",
+      main: "#0EA5E9",
+      light: "#38BDF8",
+      dark: "#0284C7",
     },
     error: {
-      main: "#f44336",
-      light: "#ef5350",
-      dark: "#d32f2f",
+      main: "#DC2626",
+      light: "#EF4444",
+      dark: "#B91C1C",
     },
     warning: {
-      main: "#ff9800",
-      light: "#ffb74d",
-      dark: "#f57c00",
+      main: "#F59E0B",
+      light: "#FBBF24",
+      dark: "#D97706",
     },
     info: {
-      main: "#2196f3",
-      light: "#64b5f6",
-      dark: "#1976d2",
+      main: "#0EA5E9",
+      light: "#38BDF8",
+      dark: "#0284C7",
     },
     success: {
-      main: "#4caf50",
-      light: "#81c784",
-      dark: "#388e3c",
+      main: "#16A34A",
+      light: "#4ADE80",
+      dark: "#15803D",
     },
     background: {
-      default: "#f8f9fa",
+      default: "#F5F7FA",
       paper: "#ffffff",
     },
     text: {
-      primary: "#333333",
-      secondary: "#666666",
+      primary: "#1C2025",
+      secondary: "#5C6B7D",
     },
     grey: {
       50: "#f8f9fa",
@@ -71,9 +71,9 @@ export const theme = createTheme({
       900: "#202124",
     },
     tertiary: {
-      main: "#ff5722",
-      light: "#ff8a65",
-      dark: "#e64a19",
+      main: "#8B5CF6",
+      light: "#A78BFA",
+      dark: "#7C3AED",
     },
   },
   typography: {
@@ -105,7 +105,7 @@ export const theme = createTheme({
     },
     h6: {
       fontSize: "1rem",
-      fontWeight: 600,
+      fontWeight: 700,
       lineHeight: 1.4,
     },
     subtitle1: {
@@ -115,7 +115,7 @@ export const theme = createTheme({
     },
     subtitle2: {
       fontSize: "0.875rem",
-      fontWeight: 500,
+      fontWeight: 600,
       lineHeight: 1.4,
     },
     body1: {
@@ -123,7 +123,7 @@ export const theme = createTheme({
       lineHeight: 1.5,
     },
     body2: {
-      fontSize: "0.875rem",
+      fontSize: "0.8125rem",
       lineHeight: 1.4,
     },
     caption: {
@@ -137,13 +137,13 @@ export const theme = createTheme({
   },
   spacing: 8,
   shape: {
-    borderRadius: 8,
+    borderRadius: 10,
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: "#f8f9fa",
+          backgroundColor: "#F5F7FA",
           fontFamily: "'Inter', sans-serif",
         },
 
@@ -172,20 +172,20 @@ export const theme = createTheme({
         root: {
           textTransform: "none",
           fontWeight: 500,
-          borderRadius: 6,
+          borderRadius: 8,
         },
         containedPrimary: {
-          backgroundColor: "#1976d2",
+          backgroundColor: "#2563EB",
           "&:hover": {
-            backgroundColor: "#1565c0",
+            backgroundColor: "#1D4ED8",
           },
         },
         outlinedPrimary: {
-          borderColor: "#1976d2",
-          color: "#1976d2",
+          borderColor: "#2563EB",
+          color: "#2563EB",
           "&:hover": {
-            borderColor: "#1565c0",
-            backgroundColor: "rgba(25, 118, 210, 0.04)",
+            borderColor: "#1D4ED8",
+            backgroundColor: "rgba(37, 99, 235, 0.04)",
           },
         },
       },
@@ -193,9 +193,9 @@ export const theme = createTheme({
     MuiCard: {
       styleOverrides: {
         root: {
-          borderRadius: 12,
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          border: "1px solid #e0e0e0",
+          borderRadius: 14,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+          border: "1px solid #E5E7EB",
         },
       },
     },
@@ -211,9 +211,9 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: "#ffffff",
-          color: "#333333",
+          color: "#1C2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          borderBottom: "1px solid #e0e0e0",
+          borderBottom: "1px solid #E5E7EB",
         },
       },
     },
@@ -223,10 +223,10 @@ export const theme = createTheme({
           borderRadius: 8,
           marginBottom: 4,
           "&.Mui-selected": {
-            backgroundColor: "#1976d2",
+            backgroundColor: "#2563EB",
             color: "#ffffff",
             "&:hover": {
-              backgroundColor: "#1565c0",
+              backgroundColor: "#1D4ED8",
             },
             "& .MuiListItemIcon-root": {
               color: "#ffffff",
@@ -244,15 +244,15 @@ export const theme = createTheme({
           fontWeight: 600,
         },
         colorError: {
-          backgroundColor: "#f44336",
+          backgroundColor: "#DC2626",
           color: "#ffffff",
         },
         colorWarning: {
-          backgroundColor: "#ff9800",
+          backgroundColor: "#F59E0B",
           color: "#ffffff",
         },
         colorSuccess: {
-          backgroundColor: "#4caf50",
+          backgroundColor: "#16A34A",
           color: "#ffffff",
         },
       },

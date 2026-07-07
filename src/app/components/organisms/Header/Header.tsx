@@ -30,7 +30,7 @@ import {
   analyticsMenu,
   dashboardMenu,
   LinkMenuItem,
-  liveStreamingMenu,
+ 
   MenuItemConfig,
   settingsMenu,
 } from "@/app/config/menuConfig";
@@ -39,6 +39,11 @@ import { usePathname } from "next/navigation";
 import { useGetOrgAndUserLogoQuery } from "@/app/(protectedRoutes)/(settings)/(userManagement)/addUser/AddUserApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
+import {
+  HEADER_HEIGHT,
+  SIDEBAR_WIDTH,
+  SIDEBAR_WIDTH_RAIL,
+} from "@/app/config/layoutConstants";
 
 interface SystemHealthData {
   message: string[];
@@ -123,8 +128,15 @@ const SystemHealthTooltipContent: React.FC<{
   );
 };
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  /** Mirrors the Sidebar's collapsed/rail state so the header can shrink
+   *  its left offset/width to match instead of leaving a gap or overlap. */
+  collapsed?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ collapsed = false }) => {
   const theme = useTheme();
+  const sidebarWidth = collapsed ? SIDEBAR_WIDTH_RAIL : SIDEBAR_WIDTH;
   const { isLoading, logout } = useAuth();
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -218,7 +230,7 @@ const getPageTitle = () => {
   };
 
   const allMenuItems: LinkMenuItem[] = [
-    ...flattenMenuItems(liveStreamingMenu),
+    // ...flattenMenuItems(liveStreamingMenu),
     ...dashboardMenu.flatMap((c) => flattenMenuItems(c.items)),
     ...flattenMenuItems(alertMenu),
     ...analyticsMenu.flatMap((c) => flattenMenuItems(c.items)),
@@ -242,7 +254,7 @@ const getPageTitle = () => {
 };
   useEffect(() => {
     const allMenuItems = [
-      ...liveStreamingMenu,
+      // ...liveStreamingMenu,
       ...dashboardMenu.flatMap((c) => c.items),
       ...alertMenu,
       ...analyticsMenu.flatMap((c) => c.items),
@@ -300,24 +312,22 @@ const getPageTitle = () => {
   }, []);
 
   return (
-    <>
+
       <AppBar
         position="fixed"
         sx={{
           zIndex: theme.zIndex.drawer + 1,
-          height: 63,
-          // height: "6.6vh",
-
+          height: HEADER_HEIGHT,
           backgroundColor: "white",
           color: "#1c2025",
           boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-          // boxShadow: "0 1px 3px rgba(0,0,0,0.1), -2px 0 3px rgba(0,0,0,0.1)",
-
-          ml: { xs: 0, lg: "315px" },
-          width: { xs: "100%", lg: "calc(100% - 316px)" },
+          left: { xs: 0, lg: `${sidebarWidth}px` },
+          width: { xs: "100%", lg: `calc(100% - ${sidebarWidth}px)` },
+          transition: "left .2s ease, width .2s ease",
+          "@media (prefers-reduced-motion: reduce)": { transition: "none" },
         }}
       >
-        <Toolbar sx={{ minHeight: "64px !important", px: 3 }}>
+        <Toolbar sx={{ minHeight: `${HEADER_HEIGHT}px !important`, px: 3 }}>
           {/* Left side: menu toggle for mobile + page title */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 2, flex: 1 }}>
             <IconButton
@@ -330,10 +340,10 @@ const getPageTitle = () => {
             </IconButton>
 
             <Typography
-              variant="h5"
+              variant="h6"
               sx={{
                 color: "#1c2025",
-                // fontSize: "20px",
+                fontSize: "16px",
                 pl: 1.2,
               }}
             >
@@ -346,7 +356,7 @@ const getPageTitle = () => {
             {currentDateTime && (
               <Typography
                 variant="body2"
-                sx={{ color: "#5c6b7d", fontSize: "14px" }}
+                sx={{ color: "#5c6b7d", fontSize: "12px" }}
               >
                 {currentDateTime}
               </Typography>
@@ -360,7 +370,7 @@ const getPageTitle = () => {
                 gap: 1,
                 cursor: "default",
                 px: 1.5,
-                py: 1,
+                py: 0.5,
                 borderRadius: "6px",
               }}
               onMouseEnter={handleHealthMouseEnter}
@@ -368,14 +378,14 @@ const getPageTitle = () => {
             >
               <Circle
                 sx={{
-                  fontSize: 10,
+                  fontSize: 8,
                   color: "#4caf50",
                   filter: "drop-shadow(0 0 2px rgba(76, 175, 80, 0.3))",
                 }}
               />
               <Typography
                 variant="body2"
-                sx={{ color: "#5c6b7d", fontSize: "14px", fontWeight: 500 }}
+                sx={{ color: "#5c6b7d", fontSize: "12px", fontWeight: 500 }}
               >
                 System Health
               </Typography>
@@ -400,10 +410,10 @@ const getPageTitle = () => {
                       <Avatar
                         src={data?.logoPath?.userLogo || undefined}
                         sx={{
-                          width: 40,
-                          height: 40,
+                          width: 32,
+                          height: 32,
                           backgroundColor: "#3072b0",
-                          fontSize: "14px",
+                          fontSize: "12px",
                           fontWeight: 600,
                         }}
                       >
@@ -478,44 +488,7 @@ const getPageTitle = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Drawer Sidebar */}
-      <Drawer
-        anchor="left"
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
-        sx={{
-          display: { xs: "block", lg: "none" },
-          "& .MuiDrawer-paper": { boxSizing: "border-box" },
-        }}
-      >
-        <Box
-          sx={{
-            pt: 1,
-            pb: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            gap: 1,
-          }}
-        >
-          <Box
-            component="img"
-            src="/elansol_technologies_logo.jpg"
-            alt="Elansol Logo"
-            sx={{ height: 60, width: "220px" }}
-            loading="lazy"
-          />
-        </Box>
-        <Sidebar
-          currentPage={"safety-compliance-dashboard"}
-          onPageChange={function (page: PageType): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
-      </Drawer>
-    </>
+    
   );
 };
 

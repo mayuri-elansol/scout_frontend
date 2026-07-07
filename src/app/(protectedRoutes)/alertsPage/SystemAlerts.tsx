@@ -1,233 +1,406 @@
 "use client";
-import React from "react";
-import { Box, Typography, Grid, Paper } from "@mui/material";
-import { Warning, DirectionsCar } from "@mui/icons-material";
-import AlertStatsCard from "../../components/molecules/AlertStatsCard/AlertStatsCard";
-import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
-import SafetyIcon from "@mui/icons-material/Shield";
-import Visibility from "@mui/icons-material/Visibility";
-import WorkforceIcon from "@mui/icons-material/People";
-import FaceRecognitionIcon from "@mui/icons-material/CenterFocusWeak";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { v4 as uuidv4 } from "uuid";
-import  {
-  TabConfig,
-} from "../../components/organisms/DashboardTabs/DashboardTabs";
 
-const sampleData = [
-  {
-    id: "SC-001",
-    useCaseType: "PPE Detection",
-    detectionTime: "2025-09-24 08:15",
-    zone: "Zone A",
-    camera: "Camera-01",
-  },
-  {
-    id: "SC-002",
-    useCaseType: "Object Detection",
-    detectionTime: "2025-09-24 09:20",
-    zone: "Walking Bay 3",
-    camera: "Camera-04",
-  },
-  {
-    id: "SC-003",
-    useCaseType: "Fire/Smoke/Oil/Gas",
-    detectionTime: "2025-09-24 10:05",
-    zone: "Zone C",
-    camera: "Camera-02",
-  },
-  {
-    id: "SC-004",
-    useCaseType: "Vehicle Speed Monitoring",
-    detectionTime: "2025-09-24 10:45",
-    zone: "Entry Gate 2",
-    camera: "Camera-07",
-  },
-  {
-    id: "SC-005",
-    useCaseType: "Fall Detection",
-    detectionTime: "2025-09-24 11:30",
-    zone: "Zone B",
-    camera: "Camera-05",
-  },
-  {
-    id: "SC-006",
-    useCaseType: "STP/ETP Overflow Detection",
-    detectionTime: "2025-09-24 12:15",
-    zone: "STP Area",
-    camera: "Camera-08",
-  },
-  {
-    id: "SC-007",
-    useCaseType: "Emergency Exit Blockage",
-    detectionTime: "2025-09-24 12:50",
-    zone: "Exit Zone 1",
-    camera: "Camera-03",
-  },
-  {
-    id: "SC-008",
-    useCaseType: "Crowd Gathering",
-    detectionTime: "2025-09-24 13:20",
-    zone: "Hazard Zone 4",
-    camera: "Camera-09",
-  },
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Grid,
+  Paper,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+  IconButton,
+  InputAdornment,
+  Stack,
+  Divider,
+  Avatar,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import {
+  CheckCircleOutline,
+  HighlightOff,
+  WarningAmberOutlined,
+  DoneAllOutlined,
+  ScheduleOutlined,
+  Search,
+  Clear,
+  FiberManualRecord,
+} from "@mui/icons-material";
+
+import StatCard from "@/app/components/molecules/DashboardKpiCardMain/StatCard";
+import EventCard, { EventSeverity } from "@/app/components/molecules/DashboardRecentEvent/EventCard";
+
+// ------------------------------------------------------------
+// Data
+// ------------------------------------------------------------
+
+const statsData = [
+  { icon: HighlightOff, tone: "red", value: 4, label: "Critical" },
+  { icon: WarningAmberOutlined, tone: "amber", value: 8, label: "Non-Critical" },
+  { icon: DoneAllOutlined, tone: "blue", value: 2, label: "Acknowledged" },
+  { icon: CheckCircleOutline, tone: "green", value: 1, label: "Resolved" },
+  { icon: ScheduleOutlined, tone: "gray", value: "2m 48s", label: "Avg Response" },
 ];
 
-const SystemAlerts: React.FC = () => {
-  const alertStats = [
-    { value: "0", label: "Total Alerts" },
-    { value: "2", label: "Safety and Compliances" },
-    { value: "3", label: "Security Monitoring" },
-    { value: "2", label: "Workforce Monitoring" },
-    { value: "3", label: "Operational Insight" },
-    { value: "3", label: "Facial Recognition" },
-  ];
+// Live alerts (recent)
+const liveAlerts = [
+  { camera: "CAM-08", zone: "Warehouse", time: "17:42", title: "Fire Detected", severity: "critical" },
+  { camera: "CAM-12", zone: "Assembly Line", time: "17:40", title: "Helmet Missing", severity: "warning" },
+  { camera: "CAM-15", zone: "Gate B", time: "17:39", title: "Unauthorized Person", severity: "critical" },
+  { camera: "CAM-04", zone: "Loading Dock", time: "17:37", title: "Forklift in Walkway", severity: "warning" },
+];
 
-  const alertTables = [
-    { key: "safety", label: "Safety & Compliances", icon: <SafetyIcon /> },
-    { key: "security", label: "Surveillance Monitoring", icon: <Visibility /> },
-    {
-      key: "workforce",
-      label: "Workforce Monitoring",
-      icon: <WorkforceIcon />,
-    },
-    {
-      key: "operational",
-      label: "Vehicle Operational Insight",
-      icon: <DirectionsCar />,
-    },
-    {
-      key: "facial",
-      label: "Facial Recognition",
-      icon: <FaceRecognitionIcon />,
-    },
-  ];
+const distributionData = [
+  { label: "Critical", value: 12, color: "#d32f2f" },
+  { label: "Non-Critical", value: 8, color: "#ed6c02" },
+];
 
-  // 🔹 Common handlers
-  const handleReset = () => console.log("Reset clicked");
-  const handleExport = (format: "csv" | "pdf") =>
-    console.log("Export:", format);
+const topCameras = [
+  { camera: "CAM-08", zone: "Warehouse", count: 2 },
+  { camera: "CAM-09", zone: "Assembly Line", count: 4 },
+  { camera: "CAM-12", zone: "Assembly Line", count: 1 },
+  { camera: "CAM-15", zone: "Gate B", count: 1 },
+];
 
-  // 🔹 Define all tab contents
-  const tabs: TabConfig[] = alertTables.map((t) => ({
-    label: (
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        {t.icon}
-        <span>{t.label}</span>
-      </Box>
-    ),
-    content: (
-      <ReportTable
-        totalCount={4}
-        page={0}
-        rowsPerPage={10}
-        key={t.key}
-        title={""}
-        columns={[
-          { id: "useCaseType", label: "Use Case Type", minWidth: 120 },
-          { id: "detectionTime", label: "Timestamp", minWidth: 80 },
-          { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "camera", label: "Camera", minWidth: 120 },
-        ]}
-        data={sampleData}
-        filters={[
-          {
-            id: "useCaseType",
-            label: "Use Case Type",
-            type: "select",
-            options: [
-              "PPE Detection",
-              "Object Detection",
-              "Fire/Smoke/Oil/Gas",
-              "Vehicle Speed Monitoring",
-              "Fall Detection",
-              "STP/ETP Overflow Detection",
-              "Emergency Exit Blockage",
-              "Crowd Gathering",
-            ],
-          },
-          {
-            id: "zone",
-            label: "Zone",
-            type: "select",
-            options: [
-              "Zone A",
-              "Walking Bay 3",
-              "Zone B",
-              "Zone C",
-              "Entry Gate 2",
-              "STP Area",
-              "Exit Zone 1",
-              "Hazard Zone 4",
-            ],
-          },
-          {
-            id: "camera",
-            label: "Camera",
-            type: "select",
-            options: [
-              "Camera-01",
-              "Camera-02",
-              "Camera-03",
-              "Camera-04",
-              "Camera-05",
-              "Camera-07",
-              "Camera-08",
-              "Camera-09",
-            ],
-          },
-          { id: "detectionTime", label: "Start Date", type: "date" },
-          { id: "detectionTime", label: "End Date", type: "date" },
-        ]}
-        onReset={handleReset}
-        onExport={handleExport}
-        downloadFileName={`${t.key}-alerts`}
-        loading={false}
-        tooltipMessage="Shows the usecase violations"
-      />
-    ),
-  }));
+// Full alert list for the table
+const initialAlerts = [
+  { time: "17:42", severity: "Critical", alert: "Fire Detected", camera: "CAM-08", zone: "1", status: "New" },
+  { time: "17:40", severity: "Non-Critical", alert: "Helmet Missing", camera: "CAM-12", zone: "1", status: "New" },
+  { time: "17:39", severity: "Critical", alert: "Unauthorized Person", camera: "CAM-15", zone: "1", status: "Acknowledged" },
+  { time: "17:37", severity: "Non-Critical", alert: "Forklift in Walkway", camera: "CAM-04", zone: "1", status: "Viewed" },
+  { time: "17:35", severity: "Non-Critical", alert: "Camera Tampering", camera: "CAM-02", zone: "1", status: "New" },
+  { time: "17:31", severity: "Critical", alert: "Smoke Detected", camera: "CAM-28", zone: "1", status: "Acknowledged" },
+  { time: "17:28", severity: "Non-Critical", alert: "Crowd Density High", camera: "CAM-09", zone: "1", status: "Viewed" },
+  { time: "17:24", severity: "Non-Critical", alert: "Vehicle Idling", camera: "CAM-06", zone: "1", status: "Viewed" },
+  { time: "17:19", severity: "Non-Critical", alert: "Vest Missing", camera: "CAM-14", zone: "1", status: "Viewed" },
+  { time: "17:12", severity: "Critical", alert: "Perimeter Breach", camera: "CAM-05", zone: "1", status: "Resolved" },
+  { time: "17:05", severity: "Non-Critical", alert: "Heat Anomaly", camera: "CAM-08", zone: "1", status: "Viewed" },
+  { time: "16:58", severity: "Non-Critical", alert: "Restricted Gathering", camera: "CAM-09", zone: "1", status: "Viewed" },
+];
+
+// ------------------------------------------------------------
+// Main Component
+// ------------------------------------------------------------
+
+const LiveAlertsPage: React.FC = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  // Filter states
+  const [search, setSearch] = useState("");
+  const [severityFilter, setSeverityFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+
+  // Filtered alerts
+  const filteredAlerts = initialAlerts.filter((alert) => {
+    const matchesSearch =
+      alert.alert.toLowerCase().includes(search.toLowerCase()) ||
+      alert.camera.toLowerCase().includes(search.toLowerCase()) ||
+      alert.zone.includes(search);
+    const matchesSeverity = severityFilter === "All" || alert.severity === severityFilter;
+    const matchesStatus = statusFilter === "All" || alert.status === statusFilter;
+    const matchesCategory = categoryFilter === "All"; // No category in data; placeholder
+    return matchesSearch && matchesSeverity && matchesStatus && matchesCategory;
+  });
+
+  const handleResetFilters = () => {
+    setSearch("");
+    setSeverityFilter("All");
+    setStatusFilter("All");
+    setCategoryFilter("All");
+  };
+
+  // Severity color mapping for table chips
+  const severityColor = (sev: string) => {
+    switch (sev) {
+      case "Critical": return "error";
+      case "Non-Critical": return "warning";
+      default: return "default";
+    }
+  };
 
   return (
-    <Paper
-      sx={{
-        pl: 3,
-        pr: 3,
-        pb: 3,
-        pt: 2,
-        mt: 1.2,
-        mb: 4,
-        borderRadius: 2,
-        backgroundColor: "#ffffff",
-      }}
-    >
-      {/* Header */}
-      <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          <Warning sx={{ fontSize: 28, color: "#f44336" }} />
-          <Typography
-            variant="h4"
-            sx={{ fontWeight: "bold", color: "#1c2025" }}
-          >
-            System Alerts & Notifications
-          </Typography>
-        </Box>
-        <TimeFilter onRangeChange={() => console.log("on ranged changed")} />
-      </Box>
-
-      {/* Alert Stats */}
-      <Grid container spacing={2} sx={{ mb: 6 }}>
-        {alertStats.map((stat, index) => (
-          <Grid key={uuidv4() + index} size={{ xs: 12, sm: 6, md: 2 }}>
-            <AlertStatsCard {...stat} />
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", gap: 3, p: 3 }}>
+      {/* Stats Cards */}
+      <Grid container spacing={2}>
+        {statsData.map((stat, idx) => (
+          <Grid item xs={6} sm={4} md={2.4} key={idx}>
+            <StatCard
+              icon={stat.icon}
+              tone={stat.tone as any}
+              value={stat.value}
+              label={stat.label}
+              // For Avg Response we don't show total; we can pass total as undefined
+              total={stat.label === "Avg Response" ? undefined : ""}
+            />
           </Grid>
         ))}
       </Grid>
 
-      {/* Dashboard Tabs */}
-      {/* <DynamicTabs tabs={tabs} /> */}
-    </Paper>
+      {/* Two-column layout: Live Alerts + Distribution | Top Cameras */}
+      <Grid container spacing={3}>
+        {/* Left column */}
+        <Grid item xs={12} md={8}>
+          <Stack spacing={3}>
+            {/* Live Alerts */}
+            <Paper sx={{ p: 2, borderRadius: 2, border: "1px solid", borderColor: "divider" }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+                <Typography variant="h6" fontWeight="600">
+                  LIVE ALERTS
+                </Typography>
+                <Chip
+                  label="Live"
+                  size="small"
+                  sx={{ bgcolor: "#4caf50", color: "#fff", fontWeight: 600 }}
+                  icon={<FiberManualRecord sx={{ fontSize: 12, color: "#fff" }} />}
+                />
+              </Box>
+              <Stack spacing={1}>
+                {liveAlerts.map((alert, idx) => (
+                  <Box
+                    key={idx}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      py: 0.5,
+                      borderBottom: idx < liveAlerts.length - 1 ? "1px solid" : "none",
+                      borderColor: "divider",
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="body2" fontWeight="500">
+                        {alert.title}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {alert.camera} - {alert.zone}
+                      </Typography>
+                    </Box>
+                    <Typography variant="caption" color="text.secondary">
+                      {alert.time}
+                    </Typography>
+                  </Box>
+                ))}
+              </Stack>
+            </Paper>
+
+            {/* Alert Distribution */}
+            <Paper sx={{ p: 2, borderRadius: 2, border: "1px solid", borderColor: "divider" }}>
+              <Typography variant="h6" fontWeight="600" gutterBottom>
+                ALERT DISTRIBUTION
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Breakdown of active alerts by severity level
+              </Typography>
+              <Stack spacing={2}>
+                {distributionData.map((item) => (
+                  <Box key={item.label}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
+                      <Typography variant="body2" fontWeight="500">
+                        {item.label}
+                      </Typography>
+                      <Typography variant="body2" fontWeight="500">
+                        Total Alerts: {item.value}
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        bgcolor: "#e0e0e0",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: `${(item.value / distributionData.reduce((acc, d) => acc + d.value, 0)) * 100}%`,
+                          bgcolor: item.color,
+                        }}
+                      />
+                    </Box>
+                  </Box>
+                ))}
+              </Stack>
+            </Paper>
+          </Stack>
+        </Grid>
+
+        {/* Right column: Top Cameras */}
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 2, borderRadius: 2, border: "1px solid", borderColor: "divider", height: "100%" }}>
+            <Typography variant="h6" fontWeight="600" gutterBottom>
+              TOP CAMERAS
+            </Typography>
+            <Stack spacing={2}>
+              {topCameras.map((cam) => (
+                <Box
+                  key={cam.camera}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    pb: 1,
+                  }}
+                >
+                  <Box>
+                    <Typography variant="body2" fontWeight="500">
+                      {cam.camera}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {cam.zone}
+                    </Typography>
+                  </Box>
+                  <Chip label={cam.count} size="small" color="primary" />
+                </Box>
+              ))}
+            </Stack>
+          </Paper>
+        </Grid>
+      </Grid>
+
+      {/* Alerts Table with Filters */}
+      <Paper sx={{ p: 2, borderRadius: 2, border: "1px solid", borderColor: "divider", mt: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap", gap: 1 }}>
+          <Typography variant="h6" fontWeight="600">
+            Active Alerts {filteredAlerts.length} of {initialAlerts.length}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {/* placeholder for additional info */}
+          </Typography>
+        </Box>
+
+        {/* Filter bar */}
+        <Grid container spacing={2} alignItems="center" sx={{ mb: 2 }}>
+          <Grid item xs={12} sm={4} md={3}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder="Search camera, zone, alert ID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+                endAdornment: search && (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={() => setSearch("")}>
+                      <Clear />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Severity</InputLabel>
+              <Select
+                value={severityFilter}
+                label="Severity"
+                onChange={(e) => setSeverityFilter(e.target.value)}
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Critical">Critical</MenuItem>
+                <MenuItem value="Non-Critical">Non-Critical</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={statusFilter}
+                label="Status"
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <MenuItem value="All">All statuses</MenuItem>
+                <MenuItem value="New">New</MenuItem>
+                <MenuItem value="Viewed">Viewed</MenuItem>
+                <MenuItem value="Acknowledged">Acknowledged</MenuItem>
+                <MenuItem value="Resolved">Resolved</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Category</InputLabel>
+              <Select
+                value={categoryFilter}
+                label="Category"
+                onChange={(e) => setCategoryFilter(e.target.value)}
+              >
+                <MenuItem value="All">All categories</MenuItem>
+                <MenuItem value="Safety">Safety</MenuItem>
+                <MenuItem value="Security">Security</MenuItem>
+                <MenuItem value="Operations">Operations</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={6} sm={3} md={2}>
+            <Button variant="outlined" fullWidth onClick={handleResetFilters}>
+              Reset
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* Table */}
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: "action.hover" }}>
+                <TableCell>Time</TableCell>
+                <TableCell>Severity</TableCell>
+                <TableCell>Alert</TableCell>
+                <TableCell>Camera</TableCell>
+                <TableCell>Zone</TableCell>
+                <TableCell>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredAlerts.map((row, idx) => (
+                <TableRow key={idx} hover>
+                  <TableCell>{row.time}</TableCell>
+                  <TableCell>
+                    <Chip
+                      label={row.severity}
+                      size="small"
+                      color={severityColor(row.severity) as any}
+                      variant="filled"
+                    />
+                  </TableCell>
+                  <TableCell>{row.alert}</TableCell>
+                  <TableCell>{row.camera}</TableCell>
+                  <TableCell>{row.zone}</TableCell>
+                  <TableCell>
+                    <Chip label={row.status} size="small" variant="outlined" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {/* Optional pagination would go here */}
+      </Paper>
+    </Box>
   );
 };
 
-export default SystemAlerts;
+export default LiveAlertsPage;

@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, CircularProgress, Grid, Paper } from "@mui/material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
+import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCardOld";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
@@ -64,21 +64,7 @@ function buildCriticalAreaProps(
   return { series, xAxisDates, xAxisTimes, granularity };
 }
 
-// ─── Helper: build flat bar-chart data ───────────────────────────────────────
-// function buildFlatBarData(
-//   dashboardData: WorkforceMonitoringDashboardResponse[],
-//   title: string
-// ) {
-//   const usecase = dashboardData.find((d) => d.title === title);
-//   const raw = usecase?.graphs?.data;
-//   if (!Array.isArray(raw)) return [];
-//   return raw.map((g) => ({
-//     gate: g.gate,
-//     Idle: g.idleCount,
-//     Working: g.workingCount,
-//     NotPresent: g.notPresentCount,
-//   }));
-// }
+
 function buildFlatBarData(
   dashboardData: WorkforceMonitoringDashboardResponse[],
   title: string

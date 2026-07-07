@@ -14,6 +14,7 @@ import { FeatureGuardProvider } from "@/Providers/globalFeatureflagProvider";
 import Loader from "../components/atoms/Loader/Loader";
 import AuthGuard from "@/utils/auth-guard";
 import PageTransitionWrapper from "@/customhooks/PageTransitionWrapper";
+import { HEADER_HEIGHT } from "../config/layoutConstants";
 
 interface ClientLayoutProps {
   children: ReactNode;
@@ -26,6 +27,7 @@ export default function ClientLayout({
 
   const [mounted, setMounted] = useState(false);
   const [currentPage, setCurrentPage] = useState<PageType>("dashboard");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const sidebartheme = useTheme();
   const isTabletOrPhone = useMediaQuery(
@@ -67,16 +69,9 @@ export default function ClientLayout({
       <CssBaseline />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Box sx={{ display: "flex", height: "100vh" }}>
-          <Header />
+          <Header collapsed={sidebarCollapsed} />
 
-          {/* Desktop Sidebar */}
-
-          {!isTabletOrPhone && (
-            <Sidebar
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          )}
+          <Sidebar onCollapsedChange={setSidebarCollapsed} />
 
           {/* Main Content */}
           <Box
@@ -87,7 +82,7 @@ export default function ClientLayout({
               pl: 2.5,
               pr: 2.5,
               pb: 2,
-              pt: 10,
+              pt: `${HEADER_HEIGHT + 16}px`,
               backgroundColor: "#f5f7fa",
               overflow: "auto",
               minHeight: 0,

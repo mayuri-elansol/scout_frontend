@@ -30,7 +30,7 @@ export const FeatureGuardProvider = ({ children }: FeatureGuardProviderProps) =>
 
   // Flatten all menus for lookup
   const allMenus: MenuItemConfig[] = [
-    ...menuConfig.liveStreamingMenu,
+    // ...menuConfig.liveStreamingMenu,
     ...menuConfig.alertMenu,
     ...menuConfig.dashboardMenu.flatMap(c => c.items),
     ...menuConfig.analyticsMenu.flatMap(c => c.items),

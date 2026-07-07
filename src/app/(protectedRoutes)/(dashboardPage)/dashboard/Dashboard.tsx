@@ -1,408 +1,580 @@
+// "use client";
+
+// import React, { useMemo, useState } from "react";
+// import { Box, Typography } from "@mui/material";
+// import {
+//   CheckCircleOutline,
+//   VideocamOffOutlined,
+//   ReportProblemOutlined,
+//   QueryStatsOutlined,
+//   VerifiedOutlined,
+//   AppsOutlined,
+//   BoltOutlined,
+//   LocalFireDepartmentOutlined,
+//   LocalShippingOutlined,
+//   GppMaybeOutlined,
+//   LockOpenOutlined,
+//   EngineeringOutlined,
+//   NoCrashOutlined,
+//   SmokingRoomsOutlined,
+// } from "@mui/icons-material";
+
+// import StatCard from "@/app/components/molecules/DashboardKpiCardMain/StatCard";
+// import AIUseCaseOverview from "@/app/components/molecules/DashboardChart/AIUseCaseOverview";
+// import DetectionTrendChart from "@/app/components/molecules/DashboardChart/DetectionTrendChart";
+// import EventCard, { EventSeverity } from "@/app/components/molecules/DashboardRecentEvent/EventCard";
+// import UseCaseTabs from "@/app/components/molecules/DashboardAIUseCasesSection/UseCaseTabs";
+// import UseCaseGrid, { UseCaseGridItem } from "@/app/components/molecules/DashboardAIUseCasesSection/UseCaseGrid";
+// import UpgradeBanner from "@/app/components/molecules/UpgradeBanner/UpgradeBanner";
+// import { CATEGORY_LABEL, DASHBOARD_COLORS, MuiIcon, UseCaseCategory } from "@/app/config/dashboardTheme";
+// import { analyticsMenu, LinkMenuItem } from "@/app/config/menuConfig";
+// import { FEATURE_ICON } from "@/app/config/featureIcons";
+// import { hasFeature } from "@/utils/hasFeature";
+// import { useSelector } from "react-redux";
+// import { RootState } from "@/app/store/store";
+
+// const DONUT_DATA = [
+//   { label: "Safety & Compliance", value: 58, color: DASHBOARD_COLORS.primary },
+//   { label: "Surveillance Monitoring", value: 42, color: DASHBOARD_COLORS.success },
+//   { label: "Operational Insights", value: 26, color: DASHBOARD_COLORS.warning },
+//   { label: "Workforce Monitoring", value: 17, color: DASHBOARD_COLORS.workforce },
+// ];
+
+// const TREND_CATEGORIES = [
+//   "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+//   "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+//   "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",
+// ];
+
+// const TREND_SERIES = [
+//   { label: "Safety & Compliance", color: DASHBOARD_COLORS.primary, data: [1, 1, 0, 1, 1, 2, 4, 7, 9, 8, 7, 8, 9, 7, 6, 5, 6, 7, 5, 3, 2, 2, 1, 1] },
+//   { label: "Surveillance Monitoring", color: DASHBOARD_COLORS.success, data: [3, 3, 2, 2, 3, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 3, 3, 3, 4, 5, 5, 4, 3, 3] },
+//   { label: "Operational Insights", color: DASHBOARD_COLORS.warning, data: [0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 3, 6, 7, 5, 3, 2, 2, 3, 1, 1, 0, 0, 0, 0] },
+//   { label: "Workforce Monitoring", color: DASHBOARD_COLORS.workforce, data: [0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 0, 0, 0, 0, 0] },
+// ];
+
+// /** Maps analyticsMenu's category titles to our 4 dashboard tabs (Facial
+//  *  Recognition Analytics isn't part of this donut/trend breakdown yet). */
+// const CATEGORY_TITLE_TO_KEY: Record<string, UseCaseCategory> = {
+//   "Safety & Compliance": "safety",
+//   "Surveillance Monitoring": "surveillance",
+//   "Operational Insight": "operational",
+//   "Workforce Monitoring": "workforce",
+// };
+
+// /** Full display name + demo count per featureId — real counts will come from
+//  *  the detections API once it's wired up; paths/icons below are already
+//  *  sourced from the real analyticsMenu config, not invented. */
+// const STATUS_META: Record<string, { name: string; value: number }> = {
+//   SUC001: { name: "PPE Detection (Helmet, Vest, Gloves, Mask)", value: 5 },
+//   SUC0029: { name: "Fire and Smoke Detection", value: 8 },
+//   SUC003: { name: "Fall Detection", value: 9 },
+//   SUC004: { name: "Forklift / Vehicle in Walkways", value: 8 },
+//   SUC005: { name: "Emergency Exit Blockage Detection", value: 9 },
+//   SUC006: { name: "Crowd Detection in Hazardous Zones", value: 8 },
+//   SUC007: { name: "Intrusion Detection at Perimeter", value: 4 },
+//   SUC010: { name: "Movement During Shutdown Hours", value: 8 },
+//   SUC008: { name: "Unauthorized Access in Restricted Areas", value: 8 },
+//   SUC009: { name: "Camera Tampering Detection", value: 6 },
+//   SUC016: { name: "People Count in Factory Premises", value: 25 },
+//   SUC017: { name: "Vehicle Count & ANPR at Gates", value: 6 },
+//   SUC018: { name: "Canteen Usage Monitoring", value: 21 },
+//   SUC019: { name: "Vehicle Unloading / Loading Monitoring", value: 2 },
+//   SUC020: { name: "Unauthorized Parking / Blocking Aisles", value: 4 },
+//   SUC013: { name: "Employee Idle Time Monitoring", value: 2 },
+//   SUC011: { name: "Employee Presence in Critical Areas", value: 7 },
+//   SUC012: { name: "Employee Presence in Restricted Areas", value: 3 },
+//   SUC014: { name: "Mobile Phone Usage in Restricted Zones", value: 3 },
+//   SUC015: { name: "Sleeping / Absence of Security Guards", value: 2 },
+// };
+
+// function useStatusItems(): UseCaseGridItem[] {
+//   const features = useSelector((state: RootState) => state.auth.features);
+
+//   return useMemo(
+//     () =>
+//       analyticsMenu.flatMap((category): UseCaseGridItem[] => {
+//         const key = CATEGORY_TITLE_TO_KEY[category.title];
+//         if (!key) return [];
+
+//         return category.items.filter((item): item is LinkMenuItem => item.type === "link").map((item) => {
+//           const meta = item.featureId ? STATUS_META[item.featureId] : undefined;
+//           return {
+//             icon: (item.featureId && FEATURE_ICON[item.featureId]) || AppsOutlined,
+//             category: key,
+//             title: meta?.name ?? item.name,
+//             value: meta?.value,
+//             locked: !hasFeature(features, item.featureId),
+//           };
+//         });
+//       }),
+//     [features],
+//   );
+// }
+
+// const RECENT_EVENTS: { severity: EventSeverity; icon: MuiIcon; title: string; meta: string; time: string }[] = [
+//   { severity: "critical", icon: LocalFireDepartmentOutlined, title: "Fire detected", meta: "Zone A · CAM-07", time: "2 min ago" },
+//   { severity: "critical", icon: GppMaybeOutlined, title: "Intrusion detected at perimeter", meta: "Zone C · CAM-14", time: "4 min ago" },
+//   { severity: "warning", icon: EngineeringOutlined, title: "Hard hat missing, safety glasses missing", meta: "Zone A · CAM-01", time: "6 min ago" },
+//   { severity: "warning", icon: LocalShippingOutlined, title: "Walkway blocked by forklift", meta: "Zone B · CAM-09", time: "9 min ago" },
+//   { severity: "info", icon: LockOpenOutlined, title: "Unauthorized access in restricted area", meta: "Zone A · CAM-03", time: "12 min ago" },
+//   { severity: "warning", icon: SmokingRoomsOutlined, title: "Smoke detected", meta: "Zone B · CAM-11", time: "18 min ago" },
+//   { severity: "info", icon: NoCrashOutlined, title: "Unauthorised parking blocking aisle", meta: "Zone A · CAM-05", time: "21 min ago" },
+//   { severity: "critical", icon: VideocamOffOutlined, title: "Camera tampering detected", meta: "Zone C · CAM-14", time: "25 min ago" },
+// ];
+
+// const CATEGORY_TABS: { key: UseCaseCategory; label: string }[] = (
+//   ["safety", "surveillance", "operational", "workforce"] as UseCaseCategory[]
+// ).map((key) => ({ key, label: CATEGORY_LABEL[key] }));
+
+// const Dashboard: React.FC = () => {
+//   const [activeCategory, setActiveCategory] = useState<UseCaseCategory>("safety");
+//   const statusItems = useStatusItems();
+
+//   const filteredUseCases = useMemo(
+//     () => statusItems.filter((item) => item.category === activeCategory),
+//     [statusItems, activeCategory],
+//   );
+
+//   return (
+//     <Box sx={{ height: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
+//       {/* 5 KPI cards */}
+//       <Box
+//         sx={{
+//           flexShrink: 0,
+//           display: "grid",
+//           gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(5, 1fr)" },
+//           gap: "14px",
+//         }}
+//       >
+//         <StatCard icon={CheckCircleOutline} tone="green" value={118} total=" /120" label="Cameras Online" onClick={() => {}} />
+//         <StatCard icon={VideocamOffOutlined} tone="red" value={2} label="Cameras Offline" onClick={() => {}} />
+//         <StatCard icon={ReportProblemOutlined} tone="amber" value={14} label="Open Incidents" />
+//         <StatCard icon={QueryStatsOutlined} tone="blue" value={143} label="Total Detections Today" />
+//         <StatCard icon={VerifiedOutlined} tone="gray" value={91} total="%" label="Compliance Rate" />
+//       </Box>
+
+//       {/* AI Use Case Overview | Detections Trend | Recent Events (spans both rows) | AI Use Cases Status.
+//           The row fills the leftover viewport space but never exceeds its own
+//           content height (maxHeight: max-content), so on very tall screens the
+//           charts stop at their 280px preferred size and the spare room stays
+//           below the cards. The stretched Recent Events panel therefore always
+//           bottom-aligns with the upgrade banner. */}
+//       {/* minHeight:0 lets the row actually compress on short viewports (so the
+//           charts' flexShrink can kick in down to their 176px minimum); without
+//           it the row's automatic minimum locks it at full content height. */}
+//       <Box sx={{ flex: 1, minHeight: 0, display: "flex", gap: "12px" }}>
+//         <Box sx={{ flex: 1, minWidth: 0, minHeight: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+//           {/* Charts prefer 280px, shrink to 176px on short viewports and grow
+//               up to 360px on tall ones; leftover beyond that goes to the
+//               status card, whose tile rows stretch to fill. */}
+//           <Box sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 280, minHeight: 176, maxHeight: 360, display: "flex", gap: "12px" }}>
+//             <AIUseCaseOverview data={DONUT_DATA} />
+//             <DetectionTrendChart categories={TREND_CATEGORIES} series={TREND_SERIES} />
+//           </Box>
+
+//           {/* AI Use Cases Status — absorbs whatever the capped charts can't;
+//               the tile grid rows stretch so the card fills without dead space. */}
+//           <Box
+//             sx={{
+//               flexGrow: 1,
+//               flexShrink: 0,
+//               display: "flex",
+//               flexDirection: "column",
+//               backgroundColor: DASHBOARD_COLORS.card,
+//               border: `1px solid ${DASHBOARD_COLORS.border}`,
+//               borderRadius: "12px",
+//               boxShadow: "0 1px 2px rgba(0,0,0,.08), 0 1px 3px 1px rgba(0,0,0,.06)",
+//             }}
+//           >
+//             <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "9px", padding: "12px 20px 0 20px" }}>
+//               <AppsOutlined sx={{ fontSize: 19, color: DASHBOARD_COLORS.secondary }} />
+//               <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>AI Use Cases Status</Typography>
+//             </Box>
+//             <Box sx={{ flexShrink: 0 }}>
+//               <UseCaseTabs tabs={CATEGORY_TABS} active={activeCategory} onChange={setActiveCategory} />
+//             </Box>
+//             <Box sx={{ flexGrow: 1, padding: "8px 16px 12px 16px" }}>
+//               <UseCaseGrid items={filteredUseCases} />
+//             </Box>
+//           </Box>
+
+//           <Box sx={{ flexShrink: 0 }}>
+//             <UpgradeBanner
+//               title="4 more AI use cases available with an upgrade"
+//               subtitle="Unlock advanced detection models across every zone."
+//             />
+//           </Box>
+//         </Box>
+
+//         {/* Recent Events — stretches to the row height, which the left column
+//             dictates. The inner content is absolutely positioned so the (long)
+//             events list never inflates the row's intrinsic height; it just
+//             fills whatever height the left column produced and scrolls. */}
+//         <Box
+//           sx={{
+//             width: 300,
+//             flexShrink: 0,
+//             alignSelf: "stretch",
+//             position: "relative",
+//             backgroundColor: DASHBOARD_COLORS.card,
+//             border: `1px solid ${DASHBOARD_COLORS.border}`,
+//             borderRadius: "12px",
+//             boxShadow: "0 1px 2px rgba(0,0,0,.08), 0 1px 3px 1px rgba(0,0,0,.06)",
+//             overflow: "hidden",
+//           }}
+//         >
+//         <Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+//           <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px 8px 24px" }}>
+//             <Box sx={{ display: "flex", alignItems: "center", gap: "9px" }}>
+//               <BoltOutlined sx={{ fontSize: 19, color: DASHBOARD_COLORS.secondary }} />
+//               <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>Recent Events</Typography>
+//             </Box>
+//             <Box
+//               sx={{
+//                 display: "inline-flex",
+//                 alignItems: "center",
+//                 gap: "5px",
+//                 fontSize: "10.5px",
+//                 fontWeight: 700,
+//                 color: DASHBOARD_COLORS.success,
+//                 "&::before": {
+//                   content: '""',
+//                   width: 6,
+//                   height: 6,
+//                   borderRadius: "50%",
+//                   backgroundColor: DASHBOARD_COLORS.success,
+//                 },
+//               }}
+//             >
+//               Live
+//             </Box>
+//           </Box>
+//           <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "2px 20px 16px 20px" }}>
+//             {RECENT_EVENTS.map((event, index) => (
+//               <EventCard
+//                 key={`${event.title}-${index}`}
+//                 severity={event.severity}
+//                 icon={event.icon}
+//                 title={event.title}
+//                 meta={event.meta}
+//                 time={event.time}
+//               />
+//             ))}
+//           </Box>
+//         </Box>
+//         </Box>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+// export default Dashboard;
 
 
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
-import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
+import React, { useMemo, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import {
-  useGetOrgShiftTimeDashboardDataQuery,
-  useLazyGetMainDashboardKpiDataQuery,
-  useLazyGetCameraTamperingDashboardKpiDataQuery,
-} from "./DashboardApi";
-import {
-  CameraTamperingDashboardConfig,
-  MainDashboardConfig,
-} from "./DashboardConfig";
-import {
-  CameraTamperingKpiCard,
-  
-  DashboardMonitoringSocketPayload,
-  MainDashboardResponse,
-} from "./Dashboard.types";
-import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import { useTranslation } from "react-i18next";
+  CheckCircleOutline,
+  VideocamOffOutlined,
+  ReportProblemOutlined,
+  QueryStatsOutlined,
+  VerifiedOutlined,
+  AppsOutlined,
+  BoltOutlined,
+  LocalFireDepartmentOutlined,
+  LocalShippingOutlined,
+  GppMaybeOutlined,
+  LockOpenOutlined,
+  EngineeringOutlined,
+  NoCrashOutlined,
+  SmokingRoomsOutlined,
+} from "@mui/icons-material";
+
+import StatCard from "@/app/components/molecules/DashboardKpiCardMain/StatCard";
+import AIUseCaseOverview from "@/app/components/molecules/DashboardChart/AIUseCaseOverview";
+import DetectionTrendChart from "@/app/components/molecules/DashboardChart/DetectionTrendChart";
+import EventCard, { EventSeverity } from "@/app/components/molecules/DashboardRecentEvent/EventCard";
+import UseCaseTabs from "@/app/components/molecules/DashboardAIUseCasesSection/UseCaseTabs";
+import UseCaseGrid, { UseCaseGridItem } from "@/app/components/molecules/DashboardAIUseCasesSection/UseCaseGrid";
+import UpgradeBanner from "@/app/components/molecules/UpgradeBanner/UpgradeBanner";
+import { CATEGORY_LABEL, DASHBOARD_COLORS, MuiIcon, UseCaseCategory } from "@/app/config/dashboardTheme";
+import { analyticsMenu, LinkMenuItem } from "@/app/config/menuConfig";
+import { FEATURE_ICON } from "@/app/config/featureIcons";
+import { hasFeature } from "@/utils/hasFeature";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { SOCKET_EVENTS } from "@/sockets/socket.events";
-import { useSocketEvent } from "@/customhooks/useSocketEvent";
+import { useRouter } from "next/navigation";   // <-- added
+
+// Import the route config
+import { MainDashboardConfig } from "./DashboardConfig"; // adjust path as needed
+
+const DONUT_DATA = [
+  { label: "Safety & Compliance", value: 58, color: DASHBOARD_COLORS.primary },
+  { label: "Surveillance Monitoring", value: 42, color: DASHBOARD_COLORS.success },
+  { label: "Operational Insights", value: 26, color: DASHBOARD_COLORS.warning },
+  { label: "Workforce Monitoring", value: 17, color: DASHBOARD_COLORS.workforce },
+];
+
+const TREND_CATEGORIES = [
+  "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+  "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+  "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00",
+];
+
+const TREND_SERIES = [
+  { label: "Safety & Compliance", color: DASHBOARD_COLORS.primary, data: [1, 1, 0, 1, 1, 2, 4, 7, 9, 8, 7, 8, 9, 7, 6, 5, 6, 7, 5, 3, 2, 2, 1, 1] },
+  { label: "Surveillance Monitoring", color: DASHBOARD_COLORS.success, data: [3, 3, 2, 2, 3, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 3, 3, 3, 4, 5, 5, 4, 3, 3] },
+  { label: "Operational Insights", color: DASHBOARD_COLORS.warning, data: [0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 3, 6, 7, 5, 3, 2, 2, 3, 1, 1, 0, 0, 0, 0] },
+  { label: "Workforce Monitoring", color: DASHBOARD_COLORS.workforce, data: [0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 0, 0, 0, 0, 0] },
+];
+
+/** Maps analyticsMenu's category titles to our 4 dashboard tabs (Facial
+ *  Recognition Analytics isn't part of this donut/trend breakdown yet). */
+const CATEGORY_TITLE_TO_KEY: Record<string, UseCaseCategory> = {
+  "Safety & Compliance": "safety",
+  "Surveillance Monitoring": "surveillance",
+  "Operational Insight": "operational",
+  "Workforce Monitoring": "workforce",
+};
+
+/** Full display name + demo count per featureId — real counts will come from
+ *  the detections API once it's wired up; paths/icons below are already
+ *  sourced from the real analyticsMenu config, not invented. */
+const STATUS_META: Record<string, { name: string; value: number }> = {
+  SUC001: { name: "PPE Detection (Helmet, Vest, Gloves, Mask)", value: 5 },
+  SUC0029: { name: "Fire and Smoke Detection", value: 8 },
+  SUC003: { name: "Fall Detection", value: 9 },
+  SUC004: { name: "Forklift / Vehicle in Walkways", value: 8 },
+  SUC005: { name: "Emergency Exit Blockage Detection", value: 9 },
+  SUC006: { name: "Crowd Detection in Hazardous Zones", value: 8 },
+  SUC007: { name: "Intrusion Detection at Perimeter", value: 4 },
+  SUC010: { name: "Movement During Shutdown Hours", value: 8 },
+  SUC008: { name: "Unauthorized Access in Restricted Areas", value: 8 },
+  SUC009: { name: "Camera Tampering Detection", value: 6 },
+  SUC016: { name: "People Count in Factory Premises", value: 25 },
+  SUC017: { name: "Vehicle Count & ANPR at Gates", value: 6 },
+  SUC018: { name: "Canteen Usage Monitoring", value: 21 },
+  SUC019: { name: "Vehicle Unloading / Loading Monitoring", value: 2 },
+  SUC020: { name: "Unauthorized Parking / Blocking Aisles", value: 4 },
+  SUC013: { name: "Employee Idle Time Monitoring", value: 2 },
+  SUC011: { name: "Employee Presence in Critical Areas", value: 7 },
+  SUC012: { name: "Employee Presence in Restricted Areas", value: 3 },
+  SUC014: { name: "Mobile Phone Usage in Restricted Zones", value: 3 },
+  SUC015: { name: "Sleeping / Absence of Security Guards", value: 2 },
+};
+
+// -------- NEW: Map display titles to routes (from MainDashboardConfig) --------
+const ROUTE_MAP: Record<string, string> = {
+  "PPE Detection (Helmet, Vest, Gloves, Mask)": MainDashboardConfig["PPE Violations"]?.route,
+  "Fire and Smoke Detection": MainDashboardConfig["Fire & Smoke Alerts"]?.route,
+  "Fall Detection": MainDashboardConfig["Fall / Laydown Alerts"]?.route,
+  "Forklift / Vehicle in Walkways": MainDashboardConfig["Vehicle In Walkways"]?.route,
+  "Emergency Exit Blockage Detection": MainDashboardConfig["Emergency Exit Blockage"]?.route,
+  "Crowd Detection in Hazardous Zones": MainDashboardConfig["Crowd Gathering Alerts"]?.route,
+  "Intrusion Detection at Perimeter": MainDashboardConfig["Intrusion Detection"]?.route,
+  "Movement During Shutdown Hours": MainDashboardConfig["Movement During Shutdown"]?.route,
+  "Unauthorized Access in Restricted Areas": MainDashboardConfig["Unauthorized Access In Restricted Areas"]?.route,
+  "Camera Tampering Detection": MainDashboardConfig["Camera Tampering Detection"]?.route,
+  "People Count in Factory Premises": MainDashboardConfig["People Count"]?.route,
+  "Vehicle Count & ANPR at Gates": MainDashboardConfig["Vehicle Count"]?.route,
+  "Canteen Usage Monitoring": MainDashboardConfig["Canteen Usage Monitoring"]?.route,
+  "Vehicle Unloading / Loading Monitoring": MainDashboardConfig["Vehicle Loading/Unloading Monitoring"]?.route,
+  "Unauthorized Parking / Blocking Aisles": MainDashboardConfig["Unauthorised Parking / Blocking Aisles"]?.route,
+  "Employee Idle Time Monitoring": MainDashboardConfig["Employee Idle Time"]?.route,
+  "Employee Presence in Critical Areas": MainDashboardConfig["Employee in Critical Area"]?.route,
+  "Employee Presence in Restricted Areas": MainDashboardConfig["Employee in Restricted Area"]?.route,
+  "Mobile Phone Usage in Restricted Zones": MainDashboardConfig["Mobile Phone Usage in Critical Area"]?.route,
+  "Sleeping / Absence of Security Guards": MainDashboardConfig["Sleeping / Absence of Security Personnel"]?.route,
+};
+// ---------------------------------------------------------------------------
+
+function useStatusItems(): UseCaseGridItem[] {
+  const features = useSelector((state: RootState) => state.auth.features);
+
+  return useMemo(
+    () =>
+      analyticsMenu.flatMap((category): UseCaseGridItem[] => {
+        const key = CATEGORY_TITLE_TO_KEY[category.title];
+        if (!key) return [];
+
+        return category.items.filter((item): item is LinkMenuItem => item.type === "link").map((item) => {
+          const meta = item.featureId ? STATUS_META[item.featureId] : undefined;
+          return {
+            icon: (item.featureId && FEATURE_ICON[item.featureId]) || AppsOutlined,
+            category: key,
+            title: meta?.name ?? item.name,
+            value: meta?.value,
+            locked: !hasFeature(features, item.featureId),
+          };
+        });
+      }),
+    [features],
+  );
+}
+
+const RECENT_EVENTS: { severity: EventSeverity; icon: MuiIcon; title: string; meta: string; time: string }[] = [
+  { severity: "critical", icon: LocalFireDepartmentOutlined, title: "Fire detected", meta: "Zone A · CAM-07", time: "2 min ago" },
+  { severity: "critical", icon: GppMaybeOutlined, title: "Intrusion detected at perimeter", meta: "Zone C · CAM-14", time: "4 min ago" },
+  { severity: "warning", icon: EngineeringOutlined, title: "Hard hat missing, safety glasses missing", meta: "Zone A · CAM-01", time: "6 min ago" },
+  { severity: "warning", icon: LocalShippingOutlined, title: "Walkway blocked by forklift", meta: "Zone B · CAM-09", time: "9 min ago" },
+  { severity: "info", icon: LockOpenOutlined, title: "Unauthorized access in restricted area", meta: "Zone A · CAM-03", time: "12 min ago" },
+  { severity: "warning", icon: SmokingRoomsOutlined, title: "Smoke detected", meta: "Zone B · CAM-11", time: "18 min ago" },
+  { severity: "info", icon: NoCrashOutlined, title: "Unauthorised parking blocking aisle", meta: "Zone A · CAM-05", time: "21 min ago" },
+  { severity: "critical", icon: VideocamOffOutlined, title: "Camera tampering detected", meta: "Zone C · CAM-14", time: "25 min ago" },
+];
+
+const CATEGORY_TABS: { key: UseCaseCategory; label: string }[] = (
+  ["safety", "surveillance", "operational", "workforce"] as UseCaseCategory[]
+).map((key) => ({ key, label: CATEGORY_LABEL[key] }));
+
 const Dashboard: React.FC = () => {
-  const { t } = useTranslation();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const tenantId: string = user?.org_id ?? "";
-  console.log("tenant id from the dashboard", tenantId);
-  /* ---------- STATE ---------- */
-  const [isDashboardLiveMode, setIsDashboardLiveMode] = useState(true);
+  const [activeCategory, setActiveCategory] = useState<UseCaseCategory>("safety");
+  const statusItems = useStatusItems();
+  const router = useRouter();   // <-- added
 
-  const [mainDashboardData, setMainDashboardData] =
-    useState<MainDashboardResponse | null>(null);
-  const [cameraTamperingKpis, setCameraTamperingKpis] = useState<
-    CameraTamperingKpiCard[]
-  >([]);
-  /* ---------- API HOOKS ---------- */
-
-  const { data: orgShifts } = useGetOrgShiftTimeDashboardDataQuery(
-    { tenantId },
-    { skip: !tenantId },
+  const filteredUseCases = useMemo(
+    () => statusItems.filter((item) => item.category === activeCategory),
+    [statusItems, activeCategory],
   );
 
-  const [fetchMainDashboardKpi, { isFetching: MainDashboardkpiLoading }] =
-    useLazyGetMainDashboardKpiDataQuery();
+  // -------- NEW: Click handler for UseCaseGrid items --------
+  const handleUseCaseClick = (item: UseCaseGridItem) => {
+    // If locked, optionally show a message or do nothing
+    if (item.locked) {
+      // You could add a toast or snackbar here
+      return;
+    }
 
-  const [
-    fetchCameraTamperingDashboardKpi,
-    { isFetching: CameraTamperingDashboardkpiLoading },
-  ] = useLazyGetCameraTamperingDashboardKpiDataQuery();
+    const route = ROUTE_MAP[item.title];
+    if (route) {
+      router.push(route);
+    } else {
+      // Optionally log or notify that no route is configured
+      console.warn(`No route found for "${item.title}"`);
+    }
+  };
+  // ---------------------------------------------------------
 
-  //initial load
-
-  useEffect(() => {
-    if (!tenantId) return;
-
-    const loadDashboardData = async () => {
-      try {
-        const [mainRes, cameraRes] = await Promise.allSettled([
-          fetchMainDashboardKpi({ tenantId }).unwrap(),
-          fetchCameraTamperingDashboardKpi({ tenantId }).unwrap(),
-        ]);
-
-        // ✅ MAIN DASHBOARD
-        if (mainRes.status === "fulfilled") {
-          setMainDashboardData(mainRes.value);
-        } else {
-          console.error("Main Dashboard API Failed:", mainRes.reason);
-        }
-
-        // ✅ CAMERA TAMPERING
-        if (cameraRes.status === "fulfilled") {
-          setCameraTamperingKpis(cameraRes.value);
-        } else {
-          console.error("Camera Tampering API Failed:", cameraRes.reason);
-          setCameraTamperingKpis([]); // fallback
-        }
-      } catch (error) {
-        console.error("Unexpected Error:", error);
-      }
-    };
-    loadDashboardData();
-  }, [tenantId, fetchMainDashboardKpi, fetchCameraTamperingDashboardKpi]);
-
-  /* ---------- SOCKET (LIVE ONLY) ---------- */
-useSocketEvent<DashboardMonitoringSocketPayload>({
-  tenantId,
-  enabled: isDashboardLiveMode,
-  event: SOCKET_EVENTS.MAIN_DASHBOARD_UPDATE,
-  handler: (payload) => {
-    console.log("📡 MAIN DASHBOARD Monitoring socket payload:", payload);
-
-      if (!payload?.data) return;
-
-  setMainDashboardData(payload.data.dashboard ?? null);
-  setCameraTamperingKpis(payload.data.cameraTampering ?? []);
-
-  },
-});
-
-  /* ---------- TIME FILTER ---------- */
-
-  const handleTimeRangeChange = useCallback(
-    async (range: { start?: string; end?: string }) => {
-      if (!tenantId) return;
-
-      try {
-        if (!range.start && !range.end) {
-          setIsDashboardLiveMode(true);
-
-          const [mainDashboardResponse, cameraTamperingResponse] =
-            await Promise.all([
-              fetchMainDashboardKpi({ tenantId }).unwrap(),
-              fetchCameraTamperingDashboardKpi({ tenantId }).unwrap(),
-            ]);
-
-          setMainDashboardData(mainDashboardResponse);
-          setCameraTamperingKpis(cameraTamperingResponse);
-          return;
-        }
-
-        setIsDashboardLiveMode(false);
-
-        const payload = {
-          tenantId,
-          startDate: range.start,
-          endDate: range.end,
-        };
-
-        const [mainDashboardResponse, cameraTamperingResponse] =
-          await Promise.all([
-            fetchMainDashboardKpi(payload).unwrap(),
-            fetchCameraTamperingDashboardKpi(payload).unwrap(),
-          ]);
-
-        setMainDashboardData(mainDashboardResponse);
-        setCameraTamperingKpis(cameraTamperingResponse);
-      } catch (error) {
-        console.error("Dashboard filter error:", error);
-      }
-    },
-    [tenantId, fetchMainDashboardKpi, fetchCameraTamperingDashboardKpi],
-  );
-
-
-const safetyDashboardKpis = useMemo(() => {
-  if (!mainDashboardData?.safety) return [];
-  return mainDashboardData.safety.map((item) => {
-    const config = MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
-    return { ...item, route: config?.route || "/" };
-  });
-}, [mainDashboardData]);
-
-const surveillanceDashboardKpis = useMemo(() => {
-  if (!mainDashboardData?.surveillance) return [];
-  return mainDashboardData.surveillance.map((item) => {
-    const config = MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
-     console.log(
-      "Surveillance KPI:",
-      item.title,
-      "Route:",
-      config?.route
-    );
-
-    return { ...item, route: config?.route || "/" };
-  });
-}, [mainDashboardData]);
-
-const operationalDashboardKpis = useMemo(() => {
-  if (!mainDashboardData?.operational) return [];
-  return mainDashboardData.operational.map((item) => {
-    const config = MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
-    return { ...item, route: config?.route || "/" };
-  });
-}, [mainDashboardData]);
-
-const workforceDashboardKpis = useMemo(() => {
-  if (!mainDashboardData?.workforce) return [];
-  return mainDashboardData.workforce.map((item) => {
-    const config = MainDashboardConfig[item.title as keyof typeof MainDashboardConfig];
-    return { ...item, route: config?.route || "/" };
-  });
-}, [mainDashboardData]);
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        pt: 2,
-        px: 3,
-        backgroundColor: "#ffffff",
-        borderRadius: 2,
-        flex: 1,
-        // minHeight: 0,
-        minHeight: { xs: "auto", sm: "auto", md: 0 },
-      }}
-    >
-      {/* Top Right Time Filter */}
-      <Box sx={{ display: "flex", justifyContent: "end", mt: 0.5 }}>
-        <TimeFilter
-          onRangeChange={handleTimeRangeChange}
-          shifts={orgShifts || []}
-        />
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column", gap: "12px" }}>
+      {/* 5 KPI cards */}
+      <Box
+        sx={{
+          flexShrink: 0,
+          display: "grid",
+          gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(3, 1fr)", lg: "repeat(5, 1fr)" },
+          gap: "14px",
+        }}
+      >
+        <StatCard icon={CheckCircleOutline} tone="green" value={118} total=" /120" label="Cameras Online" onClick={() => {}} />
+        <StatCard icon={VideocamOffOutlined} tone="red" value={2} label="Cameras Offline" onClick={() => {}} />
+        <StatCard icon={ReportProblemOutlined} tone="amber" value={14} label="Open Incidents" />
+        <StatCard icon={QueryStatsOutlined} tone="blue" value={143} label="Total Detections Today" />
+        <StatCard icon={VerifiedOutlined} tone="gray" value={91} total="%" label="Compliance Rate" />
       </Box>
 
-      <Grid container spacing={2.5} sx={{ my: 1 }}>
-        {CameraTamperingDashboardkpiLoading || !cameraTamperingKpis.length
-          ? Array.from({ length: 5 }).map((_, index) => (
-              <Grid key={index + 1} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : cameraTamperingKpis.map((item) => {
-              const config = CameraTamperingDashboardConfig[item.title as keyof typeof CameraTamperingDashboardConfig];
+      {/* AI Use Case Overview | Detections Trend | Recent Events (spans both rows) | AI Use Cases Status. */}
+      <Box sx={{ flex: 1, minHeight: 0, display: "flex", gap: "12px" }}>
+        <Box sx={{ flex: 1, minWidth: 0, minHeight: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+          {/* Charts prefer 280px, shrink to 176px on short viewports and grow up to 360px on tall ones; leftover beyond that goes to the status card */}
+          <Box sx={{ flexGrow: 1, flexShrink: 1, flexBasis: 280, minHeight: 176, maxHeight: 360, display: "flex", gap: "12px" }}>
+            <AIUseCaseOverview data={DONUT_DATA} />
+            <DetectionTrendChart categories={TREND_CATEGORIES} series={TREND_SERIES} />
+          </Box>
 
-              return (
-                <Grid key={item.title} size={{ xs: 12, sm: 3, md: 3, lg: 2.4 }}>
-                  <DashboardKpiCardMain
-                    title={item.title}
-                    colour={item.colour}
-                    violationsCount={item.violationsCount}
-                    route={config?.route || "/"}
-                  />
-                </Grid>
-              );
-            })}
-      </Grid>
-
-      {/* Dashboard Sections Grid */}
-      <Grid container spacing={2} sx={{ mb: 1.3 }}>
-        {/* Row 1 - Safety & Compliance */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper
+          {/* AI Use Cases Status — absorbs whatever the capped charts can't */}
+          <Box
             sx={{
+              flexGrow: 1,
+              flexShrink: 0,
               display: "flex",
               flexDirection: "column",
-              p: 1,
-              backgroundColor: "#ffffff",
-              borderRadius: 2,
+              backgroundColor: DASHBOARD_COLORS.card,
+              border: `1px solid ${DASHBOARD_COLORS.border}`,
+              borderRadius: "12px",
+              boxShadow: "0 1px 2px rgba(0,0,0,.08), 0 1px 3px 1px rgba(0,0,0,.06)",
             }}
           >
-            <Typography
-              variant="h6"
+            <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "9px", padding: "12px 20px 0 20px" }}>
+              <AppsOutlined sx={{ fontSize: 19, color: DASHBOARD_COLORS.secondary }} />
+              <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>AI Use Cases Status</Typography>
+            </Box>
+            <Box sx={{ flexShrink: 0 }}>
+              <UseCaseTabs tabs={CATEGORY_TABS} active={activeCategory} onChange={setActiveCategory} />
+            </Box>
+            <Box sx={{ flexGrow: 1, padding: "8px 16px 12px 16px" }}>
+              {/* Pass the click handler to UseCaseGrid */}
+              <UseCaseGrid items={filteredUseCases} onItemClick={handleUseCaseClick} />
+            </Box>
+          </Box>
+
+          <Box sx={{ flexShrink: 0 }}>
+            <UpgradeBanner
+              title="4 more AI use cases available with an upgrade"
+              subtitle="Unlock advanced detection models across every zone."
+            />
+          </Box>
+        </Box>
+
+        {/* Recent Events — stretches to the row height, which the left column dictates */}
+        <Box
+          sx={{
+            width: 300,
+            flexShrink: 0,
+            alignSelf: "stretch",
+            position: "relative",
+            backgroundColor: DASHBOARD_COLORS.card,
+            border: `1px solid ${DASHBOARD_COLORS.border}`,
+            borderRadius: "12px",
+            boxShadow: "0 1px 2px rgba(0,0,0,.08), 0 1px 3px 1px rgba(0,0,0,.06)",
+            overflow: "hidden",
+          }}
+        >
+        <Box sx={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column" }}>
+          <Box sx={{ flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 24px 8px 24px" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "9px" }}>
+              <BoltOutlined sx={{ fontSize: 19, color: DASHBOARD_COLORS.secondary }} />
+              <Typography sx={{ fontSize: "16px", fontWeight: 600 }}>Recent Events</Typography>
+            </Box>
+            <Box
               sx={{
-                fontWeight: "bold",
-                fontSize: 18,
-                mb: 1,
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                gap: 1,
+                gap: "5px",
+                fontSize: "10.5px",
+                fontWeight: 700,
+                color: DASHBOARD_COLORS.success,
+                "&::before": {
+                  content: '""',
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  backgroundColor: DASHBOARD_COLORS.success,
+                },
               }}
             >
-              <Shield sx={{ color: "#1976d2", fontSize: 23 }} /> Safety And
-              Compliance
-            </Typography>
-
-            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
-              {mainDashboardData?.safety?.length
-                ? safetyDashboardKpis.map((kpi, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <DashboardKpiCardMain {...kpi} />
-                    </Grid>
-                  ))
-                : Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <KpiCardSkeleton />
-                    </Grid>
-                  ))}
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Row 1 - Surveillance Monitoring */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              p: 1,
-              backgroundColor: "#ffffff",
-              borderRadius: 2,
-              minHeight: 280,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: 18,
-                mb: 1,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <Visibility sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
-              Surveillance Monitoring
-            </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
-              {mainDashboardData?.surveillance?.length
-                ? surveillanceDashboardKpis.map((kpi, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <DashboardKpiCardMain {...kpi} />
-                    </Grid>
-                  ))
-                : Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <KpiCardSkeleton />
-                    </Grid>
-                  ))}
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Row 2 - Operational Insights */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              p: 1,
-              backgroundColor: "#ffffff",
-              borderRadius: 2,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: 18,
-                mb: 1,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <DirectionsCar sx={{ color: "#1976d2", fontSize: 23 }} />{" "}
-              Operational Insights
-            </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
-              {mainDashboardData?.operational?.length
-                ? operationalDashboardKpis.map((kpi, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <DashboardKpiCardMain {...kpi} />
-                    </Grid>
-                  ))
-                : Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <KpiCardSkeleton />
-                    </Grid>
-                  ))}
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Row 2 - Workforce Monitoring */}
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Paper
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              p: 1,
-              backgroundColor: "#ffffff",
-              borderRadius: 2,
-              minHeight: 280,
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-                fontSize: 18,
-                mb: 1,
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
-              <People sx={{ color: "#1976d2", fontSize: 23 }} /> Workforce
-              Monitoring
-            </Typography>
-            <Grid container spacing={2.5} sx={{ mb: 0.5 }}>
-              {mainDashboardData?.workforce?.length
-                ? workforceDashboardKpis.map((kpi, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <DashboardKpiCardMain {...kpi} />
-                    </Grid>
-                  ))
-                : Array.from({ length: 4 }).map((_, index) => (
-                    <Grid key={index + 1} size={{ xs: 12, md: 4, sm: 6 }}>
-                      <KpiCardSkeleton />
-                    </Grid>
-                  ))}
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Paper>
+              Live
+            </Box>
+          </Box>
+          <Box sx={{ flex: 1, minHeight: 0, overflowY: "auto", padding: "2px 20px 16px 20px" }}>
+            {RECENT_EVENTS.map((event, index) => (
+              <EventCard
+                key={`${event.title}-${index}`}
+                severity={event.severity}
+                icon={event.icon}
+                title={event.title}
+                meta={event.meta}
+                time={event.time}
+              />
+            ))}
+          </Box>
+        </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
