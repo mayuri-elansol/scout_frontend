@@ -28,65 +28,83 @@ const xAxisKeys = ["", ...xAxisTimes.map((time, i) => `${xAxisDates[i]}|${time}`
 const paddedSeries = series.map((s) => ({
   ...s,
   data: [null, ...s.data],
+  showMark: false, // no circles on the line
 }));
 const allValues = series.flatMap((s) => s.data);
 const allZero = allValues.length > 0 && allValues.every((v) => v === 0);
 const hasNoData = allValues.length === 0 || allZero;
 
   return (
-  <Box sx={{ width: "100%",  display: "flex", alignItems: "center", justifyContent: "center" }}>
+  <Box
+    sx={{
+      width: "100%",
+      minWidth: 0,
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      "& > div": { minWidth: 0, width: "100%" },
+    }}
+  >
     {hasNoData ? (
       <Box sx={{ fontSize: 16, color: "#888" }}>
         No data available
       </Box>
     ) : (
+      <>
       <LineChart
-        height={450}
+        height={278}
         skipAnimation
         series={paddedSeries}
         xAxis={[
           {
             scaleType: "point",
             data: xAxisKeys,
-            label: xAxisLabelMap[granularity],
+            // Axis label is rendered as an HTML caption below the chart instead
+            // (the SVG label kept clipping under the two-line tick labels).
+            height: 44,
             tickLabelStyle: {
               fontSize: 8,
               textAnchor: "middle",
             },
-             labelStyle: {
-      transform: "translateY(20px)", // fine-tune spacing
-    },
           },
         ]}
         yAxis={[
           {
-            width: 70,
+            width: 44,
             label: "Count",
             min: 0,
+            labelStyle: {
+              fontSize: 11,
+            },
           },
         ]}
-        margin={{ right: 40  }}
+        margin={{ right: 16, bottom: 8 }}
         slots={{
           axisTickLabel: ({ text, x, y }) => {
             const isXAxis = (text ?? "").includes("|");
             if (!isXAxis) {
               return (
                 <g transform={`translate(${x}, ${y})`}>
-                  <text textAnchor="end" dominantBaseline="central" fontSize={12}>
+                  <text textAnchor="end" dominantBaseline="central" fontSize={9}>
                     {text}
                   </text>
                 </g>
               );
             }
             const [date, time] = (text ?? "").split("|");
+            // "YYYY-MM-DD" → "DD/MM"; anything else is shown as-is
+            const [yyyy, mm, dd] = date.split("-");
+            const shortDate = yyyy && mm && dd ? `${dd}/${mm}` : date;
             return (
               <g transform={`translate(${x}, ${y})`}>
                 <text textAnchor="middle" dominantBaseline="hanging">
-                  <tspan x="0" dy="0" fontSize={10}>
+                  <tspan x="0" dy="0" fontSize={8}>
                     {time}
                   </tspan>
-                  <tspan x="0" dy="11" fontSize={10}>
-                    {date}
+                  <tspan x="0" dy="10" fontSize={8}>
+                    {shortDate}
                   </tspan>
                 </text>
               </g>
@@ -94,14 +112,29 @@ const hasNoData = allValues.length === 0 || allZero;
           },
         }}
         sx={{
+          width: "100%",
           "& .MuiLineElement-root": {
-            strokeWidth: 4,
+            strokeWidth: 2,
+            
           },
           "& .MuiChartsAxis-label": {
             fontWeight: 500,
           },
         }}
       />
+      <Box
+        sx={{
+          fontSize: 11,
+          fontWeight: 500,
+          color: "text.secondary",
+          textAlign: "center",
+          lineHeight: "22px",
+          flexShrink: 0,
+        }}
+      >
+        {xAxisLabelMap[granularity]}
+      </Box>
+      </>
     )}
   </Box>
 );

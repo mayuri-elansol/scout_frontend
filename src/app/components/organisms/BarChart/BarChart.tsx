@@ -39,7 +39,8 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
       <CardContent
         sx={{
           width: "100%",
-          height: 620, // same as chart height
+          height: "100%",
+          minHeight: 240,
           display: "flex", // ✅ flex container
           justifyContent: "center", // ✅ horizontal centering
           alignItems: "center", // ✅ vertical centering
@@ -68,17 +69,23 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
         width: "100%",
         height: "100%",
         p: 0,
+        display: "flex",
+        flexDirection: "column",
         "&:last-child": { paddingBottom: 0 },
       }}
     >
       <Box
         sx={{
           width: "100%",
-          height: 360, // ✅ HARD HEIGHT
+          minWidth: 0,
+          overflow: "hidden",
+          flex: 1,
+          minHeight: 240,
         }}
       >
+        {/* no fixed height — v8 charts track their container size, so the chart
+            (legend + SVG) fills whatever height the parent card provides */}
         <BarChart
-          height={520} // ✅ REQUIRED
           series={chartSeries}
           xAxis={[
             {
@@ -86,7 +93,7 @@ const DynamicBarChart = <T extends Record<string, string | number>>({
               data: xLabels,
               tickLabelStyle: {
                 textAnchor: isMobile ? "end" : "middle",
-                fontSize: isMobile ? 9 : 11,
+                fontSize: isMobile ? 9 : 10,
               },
             },
           ]}

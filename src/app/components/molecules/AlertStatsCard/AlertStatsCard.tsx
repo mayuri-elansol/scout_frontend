@@ -1,99 +1,104 @@
-import React from "react";
-import { Paper, Typography } from "@mui/material";
+// import { Grid } from '@mui/material';
+// import {
+//   WarningAmberOutlined,
+//   InfoOutlined,
+//   VisibilityOutlined,
+//   CheckCircleOutlined,
+//   TimerOutlined,
+// } from '@mui/icons-material';
+// import StatCard, { StatCardTone } from '../DashboardKpiCardMain/StatCard';
+// import { MuiIcon } from '@/app/config/dashboardTheme';
 
-interface AlertStatsCardProps {
-  value: string;
+// const stats: {
+//   id: string;
+//   label: string;
+//   value: string | number;
+//   icon: MuiIcon;
+//   tone: StatCardTone;
+// }[] = [
+//   { id: 'critical', label: 'Critical', value: 4, icon: WarningAmberOutlined, tone: 'red' },
+//   { id: 'nonCritical', label: 'Non-Critical', value: 8, icon: InfoOutlined, tone: 'gray' },
+//   { id: 'acknowledged', label: 'Acknowledged', value: 2, icon: VisibilityOutlined, tone: 'amber' },
+//   { id: 'resolved', label: 'Resolved', value: 1, icon: CheckCircleOutlined, tone: 'green' },
+//   // { id: 'avgResponse', label: 'Avg Response', value: '2m 48s', icon: TimerOutlined, tone: 'green' },
+// ];
+
+// export default function AlertStatsCards() {
+//   return (
+//     <Grid container spacing={2}>
+//       {stats.map((stat) => (
+//         <Grid size={{ xs: 12, sm: 6, md: 2.4 }} key={stat.id}>
+//           <StatCard
+//             icon={stat.icon}
+//             tone={stat.tone}
+//             value={stat.value}
+//             label={stat.label}
+//           />
+//         </Grid>
+//       ))}
+      
+//     </Grid>
+//   );
+// }
+
+import { Box, Grid } from '@mui/material';
+import {
+  WarningAmberOutlined,
+  InfoOutlined,
+  VisibilityOutlined,
+  CheckCircleOutlined,
+} from '@mui/icons-material';
+import StatCard, { StatCardTone } from '../DashboardKpiCardMain/StatCard';
+import { MuiIcon, DASHBOARD_COLORS } from '@/app/config/dashboardTheme';
+
+const stats: {
+  id: string;
   label: string;
-}
+  value: string | number;
+  icon: MuiIcon;
+  tone: StatCardTone;
+}[] = [
+  { id: 'critical', label: 'Critical', value: 4, icon: WarningAmberOutlined, tone: 'red' },
+  { id: 'nonCritical', label: 'Non-Critical', value: 8, icon: InfoOutlined, tone: 'gray' },
+  { id: 'acknowledged', label: 'Acknowledged', value: 2, icon: VisibilityOutlined, tone: 'amber' },
+  { id: 'resolved', label: 'Resolved', value: 1, icon: CheckCircleOutlined, tone: 'green' },
+];
 
-const AlertStatsCard: React.FC<AlertStatsCardProps> = ({ value, label }) => {
-  const getSizeStyles = () => {
-    const numbericvalue = Number(value);
-
-    if (numbericvalue === 0) {
-      return {
-        trendColor: "#4caf50",
-        color: "#4caf50",
-        bgColor: "#e8f5e9",
-        borderColor: "#4caf50",
-        padding: 1.5,
-        fontSize: "32px",
-        minHeight: "120px",
-        labelSize: "14px",
-      };
-    } else if (numbericvalue > 0) {
-      return {
-        trendColor: "#f44336",
-        color: "#f44336",
-        bgColor: "#ffebee",
-        borderColor: "#f44336",
-        padding: 1.5,
-        fontSize: "32px",
-        minHeight: "120px",
-        labelSize: "14px",
-      };
-    }
-
-    return {
-      trendColor: "#2196f3",
-      color: "#2196f3",
-      bgColor: "#e3f2fd",
-      borderColor: "#2196f3",
-      padding: 2,
-      fontSize: "24px",
-      minHeight: "80px",
-      labelSize: "12px",
-    };
-  };
-
-  const sizeStyles = getSizeStyles();
-
+export default function AlertStatsCards() {
   return (
-    <Paper
-      sx={{
-        p: sizeStyles.padding,
-        textAlign: "center",
-        border: `1px solid ${sizeStyles.borderColor}40`,
-        borderRadius: 2,
-        backgroundColor: sizeStyles.bgColor,
-        display: "flex",
-        flex: 1,
-        minHeight: sizeStyles.minHeight,
-        flexDirection: "column",
-        justifyContent: "center",
-        transition: "all 0.3s ease",
-        "&:hover": {
-          boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+    <Grid container spacing={2}>
+      {stats.map((stat) => (
+        <Grid size={{ xs: 12, sm: 6, md: 2.4 }} key={stat.id}>
+          <StatCard
+            icon={stat.icon}
+            tone={stat.tone}
+            value={stat.value}
+            label={stat.label}
+          />
+        </Grid>
+      ))}
 
-          borderColor: sizeStyles.borderColor,
-          transform: "translateY(-1px)",
-        },
-      }}
-    >
-      <Typography
-        sx={{
-          bgcolor: sizeStyles.bgColor,
-          fontSize: sizeStyles.fontSize,
-          fontWeight: "bold",
-          color: sizeStyles.color,
-          mb: 0.5,
-          lineHeight: 1,
-        }}
-      >
-        {value}
-      </Typography>
-      <Typography
-        sx={{
-          fontSize: sizeStyles.labelSize,
-          color: "#666",
-          fontWeight: 500,
-        }}
-      >
-        {label}
-      </Typography>
-    </Paper>
+      {/* Empty grey card – replaces Avg Response */}
+     <Grid size={{ xs: 12, sm: 6, md: 2.4 }}>
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      gap: "11px",
+      padding: "14px",
+      border: `1.5px solid ${DASHBOARD_COLORS.border}`,
+     // borderRadius: "10px",
+      backgroundColor: "#F0F2F5",
+                  borderRadius: "12px",
+        boxShadow: "0 1px 2px rgba(0,0,0,.08), 0 1px 3px 1px rgba(0,0,0,.06)",
+
+      cursor: "default",
+      height: "100%", // take full height of grid item
+    }}
+  >
+    {/* No content – completely empty */}
+  </Box>
+</Grid>
+    </Grid>
   );
-};
-
-export default AlertStatsCard;
-export type { AlertStatsCardProps };
+}

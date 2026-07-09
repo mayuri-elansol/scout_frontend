@@ -95,7 +95,7 @@ const DetectionTrendChart: React.FC<DetectionTrendChartProps> = ({
             hideLegend
             grid={{ horizontal: true }}
             sx={{
-              "& .MuiLineElement-root": { strokeWidth: 2 },
+              "& .MuiLineElement-root": { strokeWidth: 1 },
               "& .MuiChartsAxis-line": { stroke: DASHBOARD_COLORS.border },
               "& .MuiChartsAxis-tick": { stroke: DASHBOARD_COLORS.border },
               "& .MuiChartsGrid-line": { stroke: "#EEF1F5" },

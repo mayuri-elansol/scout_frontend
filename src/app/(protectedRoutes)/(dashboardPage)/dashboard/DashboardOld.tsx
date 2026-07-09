@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Grid, Paper, Typography } from "@mui/material";
 import { DirectionsCar, Shield, Visibility, People } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMain";
+import DashboardKpiCardMain from "@/app/components/molecules/DashboardKpiCardMain/DashboardKpiCardMainOld";
 import {
   useGetOrgShiftTimeDashboardDataQuery,
   useLazyGetMainDashboardKpiDataQuery,

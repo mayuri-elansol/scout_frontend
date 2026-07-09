@@ -87,7 +87,15 @@ export interface CrowdGraphData {
   zoneWisePieData: PieData[];
 }
 // ─── Vehicle In Walkways ──────────────────────────────────────────
-
+export interface ShiftType {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
+}
 export interface VehicleWalkwayPoint {
   time?: string;
   date?: string;
@@ -105,7 +113,7 @@ export interface VehicleWalkwayGraphData {
   zoneWisePieData: PieData[];
 }
 export interface VehicleWalkwayResponse {
-  title: "Vehicle In Walkways";
+  title: "Forklift / Vehicle in Walkways";
   kpi: KpiData;
   graphs: { data: VehicleWalkwayGraphData };
 }
@@ -113,36 +121,51 @@ export interface VehicleWalkwayResponse {
 
 export type EmptyGraphData = [];
 
+// ─── Emergency Exit Blockage ──────────────────────────────────────────────────
+
+export interface ExitGateBarData {
+  gate: string;
+  blocked: number;
+  clear: number;
+  [key: string]: string | number; // bar chart consumes Record<string, string | number>
+}
+
+export interface EmergencyExitGraphData {
+  granularity: Granularity;
+  barChartData: ExitGateBarData[];
+  zoneWisePieData: PieData[];
+}
+
 // ─── Per-title response shapes ────────────────────────────────────────────────
 
 export interface PPEKitDetectionResponse {
-  title: "PPE Violations";
+  title: "PPE Detection (Helmet, Vest, Glasses)";
   kpi: KpiData;
   graphs: { data: PPEGraphData };
 }
 
 export interface FireSmokeResponse {
-  title: "Fire & Smoke Alerts";
+  title: "Fire and Smoke Detection";
   kpi: KpiData;
   graphs: { data: FireSmokeGraphData };
 }
 
 export interface FallLaydownResponse {
-  title: "Fall / Laydown Alerts";
+  title: "Fall Detection";
   kpi: KpiData;
   graphs: { data: FallLaydownGraphData };
 }
 
 export interface CrowdGatheringResponse {
-  title: "Crowd Gathering Alerts";
+  title: "Crowd Detection in Hazardous Zones";
   kpi: KpiData;
   graphs: { data: CrowdGraphData };
 }
 
 export interface EmptyDataResponse {
-  title: "Emergency Exit Blockage";
+  title: "Emergency Exit Blockage Detection";
   kpi: KpiData;
-  graphs: { data: EmptyGraphData };
+  graphs: { data: EmergencyExitGraphData | EmptyGraphData };
 }
 
 // ─── Main Union Type ──────────────────────────────────────────────────────────

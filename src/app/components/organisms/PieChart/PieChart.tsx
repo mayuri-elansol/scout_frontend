@@ -74,7 +74,26 @@ const DynamicPieChart: React.FC<DynamicPieChartProps> = ({
 
 
 const chartSize = Math.min(containerSize.width, containerSize.height);
-const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Math.min cap
+// Preferred radius: between 80 and 120 based on container size.
+const preferredRadius = Math.min(Math.max(chartSize / 2.5, 80), 120);
+// Hard cap: the chart (plus ~28px for the title below it) must fit inside the
+// container in both directions, otherwise it overflows and causes scrollbars.
+const TITLE_ALLOWANCE = 28;
+const maxRadiusForContainer =
+  containerSize.width > 0 && containerSize.height > 0
+    ? Math.min(
+        (containerSize.width - 16) / 2,
+        (containerSize.height - TITLE_ALLOWANCE) / 2
+      )
+    : 120;
+// Never below 40 so the chart stays visible even in tiny slots.
+const outerRadius = Math.max(
+  Math.min(preferredRadius, maxRadiusForContainer),
+  40
+);
+// Title and arc-label fonts scale down with the pie so proportions stay balanced.
+const titleFontSize = outerRadius >= 100 ? 12 : outerRadius >= 70 ? 11 : 10;
+const arcLabelFontSize = outerRadius >= 100 ? 13 : outerRadius >= 70 ? 11 : 9;
 
   if (!data || data.length === 0) {
     return (
@@ -97,6 +116,8 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
       sx={{
         width: "100%",
         height: "100%",
+        minWidth: 0,
+        overflow: "hidden",
         p: "0px !important",
         display: "flex",
         flexDirection: "column",
@@ -112,7 +133,9 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          flexShrink: 0,
+          flexShrink: 1,
+          minWidth: 0,
+          maxWidth: "100%",
           flexDirection: "column",
           gap: 1,
         }}
@@ -137,7 +160,7 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
                 },
                 [`& .${pieArcLabelClasses.root}`]: {
                   fill: "white",
-                  fontSize: isMobile ? 10 : 13,
+                  fontSize: isMobile ? 10 : arcLabelFontSize,
                   fontWeight: 600,
                 },
                 "& path": {
@@ -148,7 +171,13 @@ const outerRadius = Math.min(Math.max(chartSize / 2.5, 80), 120); // ← add Mat
               margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
             />
             <Typography
-              sx={{ fontWeight: 400, textAlign: "center", fontSize: "14px" }}
+              sx={{
+                fontWeight: 500,
+                textAlign: "center",
+                fontSize: isMobile ? "10px" : `${titleFontSize}px`,
+                lineHeight: 1.2,
+                maxWidth: outerRadius * 2 + 40,
+              }}
             >
               {carttitle}
             </Typography>

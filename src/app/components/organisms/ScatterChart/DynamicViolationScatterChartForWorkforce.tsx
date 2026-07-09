@@ -100,7 +100,7 @@
 
 import React, { useMemo } from "react";
 import { ScatterChart, ScatterSeries } from "@mui/x-charts/ScatterChart";
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 export interface WorkforceGatePoint {
   gate: string;
@@ -170,40 +170,42 @@ export default function DynamicViolationScatterChartForWorkforce({
 
   if (!data.length) {
     return (
-      <Stack width="100%" height={650} justifyContent="center" alignItems="center">
+      <Stack width="100%" height="100%" minHeight={260} justifyContent="center" alignItems="center">
         <Typography color="text.secondary">No data available</Typography>
       </Stack>
     );
   }
 
   return (
-    <Stack width="100%">
+    <Stack width="100%" height="100%" minHeight={260} sx={{ minWidth: 0, overflow: "hidden" }}>
       <Typography align="center" fontWeight={600}>
         Employee in Critical Area (Gate vs Status)
       </Typography>
-      <ScatterChart
-        height={650}
-        series={series}
-        xAxis={[
-          {
-            min: -0.5,
-            max: gates.length - 0.5,
-            tickMinStep: 1,
-            valueFormatter: (value: number) => gates[value] ?? "",
-          },
-        ]}
-        yAxis={[
-          {
-            min: 0,
-            max: statusLabels.length - 1,
-            tickMinStep: 1,
-            label: "Status",
-            width: 100,
-            valueFormatter: (value: number) => statusLabels[value] ?? "",
-          },
-        ]}
-        grid={{ horizontal: true, vertical: true }}
-      />
+      {/* no fixed height — the chart tracks the remaining container space */}
+      <Box sx={{ flex: 1, minHeight: 0, width: "100%" }}>
+        <ScatterChart
+          series={series}
+          xAxis={[
+            {
+              min: -0.5,
+              max: gates.length - 0.5,
+              tickMinStep: 1,
+              valueFormatter: (value: number) => gates[value] ?? "",
+            },
+          ]}
+          yAxis={[
+            {
+              min: 0,
+              max: statusLabels.length - 1,
+              tickMinStep: 1,
+              label: "Status",
+              width: 100,
+              valueFormatter: (value: number) => statusLabels[value] ?? "",
+            },
+          ]}
+          grid={{ horizontal: true, vertical: true }}
+        />
+      </Box>
     </Stack>
   );
 }

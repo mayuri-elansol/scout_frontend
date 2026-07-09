@@ -36,7 +36,10 @@ export interface CriticalAreaGraphData {
   series: CriticalAreaSeries[];
 }
 export interface EmployeeInCriticalAreaResponse {
-  title: "Employee in Critical Area" | "Employee in Restricted Area";
+  title:
+    | "Employee Presence in Critical Areas"
+    | "Employee Presence in Restricted Areas"
+    | "Mobile Phone Usage in Restricted Zones";
   kpi: WorkforceKpi;
   graphs: { data: CriticalAreaGraphData };
 }
@@ -51,9 +54,8 @@ export interface WorkforceGatePoint {
 }
 export interface FlatGraphResponse {
   title:
-    | "Employee Idle Time"
-    | "Mobile Phone Usage in Critical Area"
-    | "Sleeping / Absence of Security Personnel";
+    | "Employee Idle Time Monitoring"
+    | "Sleeping / Absence of Security Guards";
   kpi: WorkforceKpi;
   graphs?: { data?: WorkforceGatePoint[] };
 }

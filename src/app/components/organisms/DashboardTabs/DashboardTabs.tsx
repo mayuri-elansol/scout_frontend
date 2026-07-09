@@ -123,11 +123,9 @@ const firstEnabledIndex = tabs.findIndex(
         tabButton
       )}
 
-      {index < tabs.length - 1 &&
-        value !== index &&
-        value !== index + 1 && (
-          <div className={styles.tabDivider}></div>
-        )}
+      {index < tabs.length - 1 && (
+        <div className={styles.tabDivider}></div>
+      )}
     </React.Fragment>
   );
 })}
@@ -140,7 +138,9 @@ const firstEnabledIndex = tabs.findIndex(
       >
         {tabs.map((tab, index) => (
           <TabPanel key={index + 1} value={value} index={index}>
-            <Paper sx={{ m: 2, height: "100%" }}>{tab.content}</Paper>
+            <Paper sx={{ m: 2, flex: 1, minHeight: 0, minWidth: 0 }}>
+              {tab.content}
+            </Paper>
           </TabPanel>
         ))}
       </Box>

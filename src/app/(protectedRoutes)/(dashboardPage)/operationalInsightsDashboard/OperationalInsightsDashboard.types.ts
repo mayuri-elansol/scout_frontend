@@ -33,16 +33,17 @@ export interface PeopleInsideGraphData {
   series: PeopleInsideSeries[];
 }
 export interface PeopleInsideResponse {
-  title: "People Inside";
+  title: "People Count in Factory Premises";
   kpi: OperationalKpi;
   graphs: { data: PeopleInsideGraphData };
 }
 
 // ─── Vehicle Count ────────────────────────────────────────────────────────────
+// Same envelope as People Inside: entry/exit counts over time.
 export interface VehicleCountResponse {
-  title: "Vehicle Count";
+  title: "Vehicle Count & ANPR at Gates";
   kpi: OperationalKpi;
-  graphs: { data: [] };
+  graphs: { data: PeopleInsideGraphData | [] };
 }
 
 // ─── Canteen Usage Monitoring ─────────────────────────────────────────────────
@@ -74,17 +75,33 @@ export interface CanteenGraphData {
 }
 
 // ─── Vehicle Loading/Unloading Monitoring ─────────────────────────────────────
+// Same envelope as People Inside: entry/exit counts over time.
 export interface VehicleLoadingResponse {
-  title: "Vehicle Loading/Unloading Monitoring";
+  title: "Vehicle Unloading / Loading Monitoring";
   kpi: OperationalKpi;
-  graphs: { data: [] };
+  graphs: { data: PeopleInsideGraphData | [] };
 }
 
 // ─── Unauthorised Parking / Blocking Aisles ───────────────────────────────────
+// One line per zone: violation counts over time.
+export interface ZoneCountPoint {
+  date: string;
+  time: string;
+  count: number;
+}
+export interface ZoneCountSeries {
+  zone: string;
+  color: string;
+  data: ZoneCountPoint[];
+}
+export interface ParkingGraphData {
+  granularity: "hour" | "weekday" | "week";
+  series: ZoneCountSeries[];
+}
 export interface UnauthorisedParkingResponse {
-  title: "Unauthorised Parking / Blocking Aisles";
+  title: "Unauthorized Parking / Blocking Aisles";
   kpi: OperationalKpi;
-  graphs: { data: [] };
+  graphs: { data: ParkingGraphData | [] };
 }
 
 // ─── Union ────────────────────────────────────────────────────────────────────

@@ -43,6 +43,7 @@ export interface SurveillanceSocketPayload {
 export interface PieChartItem {
   zone: string;
   count: number;
+  color?: string;
 }
 
 export interface CameraTamperingPieCharts {

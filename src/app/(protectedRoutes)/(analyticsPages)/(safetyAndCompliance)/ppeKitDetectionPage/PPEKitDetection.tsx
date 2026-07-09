@@ -44,6 +44,8 @@ import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCar
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
+import ViolationsTrend, { TrendDataPoint } from "@/app/components/molecules/ViolationsTrend/ViolationsTrend";
+import ViolationBreakdown, { BreakdownItem } from "@/app/components/molecules/ViolationBreakdown/ViolationBreakdown";
 
 /* ================= COMPONENT ================= */
 
@@ -151,7 +153,51 @@ const PPEDetection: React.FC = () => {
     },
     [tenantId, fetchKpi, fetchZoneViolations, fetchRecent],
   );
+// -------- Derived data for new components --------
+const breakdownData = useMemo(() => {
+  const breakdownItems: BreakdownItem[] = [];
+  let total = 0;
 
+  displayKpi.forEach((item) => {
+    if (item.title === "Total Violations") {
+      total = Number(item.value);
+    } else {
+      // Only include non‑total items as breakdown categories
+      breakdownItems.push({
+        label: item.title,
+        count: Number(item.value),
+      });
+    }
+  });
+
+  return { total, breakdownItems };
+}, [displayKpi]);
+
+const lastDetectionTime = useMemo(() => {
+  if (recentViolationsLive.length === 0) return "--:--:--";
+  // Sort by time descending and take the latest
+  const sorted = [...recentViolationsLive].sort(
+    (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+  );
+  const latest = sorted[0];
+  return latest.time ? new Date(latest.time).toLocaleTimeString() : "--:--:--";
+}, [recentViolationsLive]);
+
+// ⚠️ Replace with real trend data from an API later
+const trendData = useMemo<TrendDataPoint[]>(
+  () => [
+    { date: "Jun 25", value: 4 },
+    { date: "Jun 26", value: 6 },
+    { date: "Jun 27", value: 3 },
+    { date: "Jun 28", value: 8 },
+    { date: "Jun 29", value: 5 },
+    { date: "Jun 30", value: 7 },
+    { date: "Jul 01", value: 9 },
+  ],
+  []
+);
+
+const trendPercentage = useMemo(() => 18, []);
   const ppeKpiData = useMemo(
     () =>
       displayKpi.map((item) => {
@@ -368,7 +414,7 @@ const PPEDetection: React.FC = () => {
           <TimeFilter onRangeChange={handleTimeRangeChange} />
         </Box>
 
-        <Grid container spacing={2.5} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={2.5} sx={{ mb: 4 }}>
           {kpiLoading
             ? Array.from({ length: 6 }).map((_, index) => (
               <Grid
@@ -386,8 +432,34 @@ const PPEDetection: React.FC = () => {
                 <KpiCard {...kpi} />
               </Grid>
             ))}
-        </Grid>
+        </Grid> */}
+<Grid container spacing={3} sx={{ mb: 4 }}>
+  {/* Violation Breakdown – left column */}
+  <Grid size={{ xs: 12, md: 6 }}>
+    {kpiLoading ? (
+      <Box sx={{ height: 220, bgcolor: "#f5f5f5", borderRadius: 2 }} />
+    ) : (
+      <ViolationBreakdown
+        totalViolations={breakdownData.total}
+        breakdown={breakdownData.breakdownItems}
+        lastDetection={lastDetectionTime}
+      />
+    )}
+  </Grid>
 
+  {/* Violations Trend – right column */}
+  <Grid size={{ xs: 12, md: 6 }}>
+    {kpiLoading ? (
+      <Box sx={{ height: 220, bgcolor: "#f5f5f5", borderRadius: 2 }} />
+    ) : (
+      <ViolationsTrend
+        data={trendData}
+        trendPercentage={trendPercentage}
+        trendLabel="↑"
+      />
+    )}
+  </Grid>
+</Grid>
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations

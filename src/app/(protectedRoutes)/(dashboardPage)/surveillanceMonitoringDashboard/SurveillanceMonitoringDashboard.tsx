@@ -2,8 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, CircularProgress, Grid, Paper } from "@mui/material";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import DashboardKpiCard from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCardOld";
+import DashboardKpiCard from "@/app/components/molecules/MonitoringDashboardKpiCard/MonitoringDashboardKpiCard";
 import DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
@@ -31,9 +30,15 @@ import { SOCKET_EVENTS } from "@/sockets/socket.events";
 import { FEATURE } from "@/app/config/featureRegistry";
 import Loader from "@/app/components/atoms/Loader/Loader";
 import TimeScaleLineChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart";
+import CollapsibleTimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/CollapsibleTimeFilter";
 
+// ---------- MOCK DATA IMPORTS ----------
+import {
+  mockSurveillanceDashboardData,
+  mockSurveillanceShifts,
+} from "./Mockdata";
 
-
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 
 const SurveillanceMonitoring: React.FC = () => {
   const { t } = useTranslation();
@@ -51,13 +56,20 @@ const SurveillanceMonitoring: React.FC = () => {
 
   const { data: orgShifts } = useGetOrgShiftTimeSurveillanceDataQuery(
     { tenantId },
-    { skip: !tenantId },
+    { skip: !tenantId || USE_MOCK }, // 👈 Skip when mock mode is on
   );
   const [fetchSurveillanceKpi, { isFetching: SurveillancekpiLoading }] =
     useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     if (!tenantId) return;
+
+    if (USE_MOCK) {
+      // 👈 Use static mock data
+      setDisplaySurveillanceKpi(mockSurveillanceDashboardData);
+      return;
+    }
+
     const load = async () => {
       const kpi = await fetchSurveillanceKpi({ tenantId }).unwrap();
       setDisplaySurveillanceKpi(kpi ?? []);
@@ -71,7 +83,7 @@ const SurveillanceMonitoring: React.FC = () => {
 
   useSocketEvent<SurveillanceSocketPayload>({
     tenantId,
-    enabled: isLiveMode,
+    enabled: isLiveMode && !USE_MOCK, // 👈 Disable socket in mock mode
     event: SOCKET_EVENTS.SURVEILLANCE_UPDATE,
     handler: (payload) => {
       console.log("📡 Surveillance socket payload:", payload);
@@ -87,6 +99,12 @@ const SurveillanceMonitoring: React.FC = () => {
   /* ---------- TIME FILTER ---------- */
   const handleTimeRangeChange = useCallback(
     async (range: { start?: string; end?: string }) => {
+      if (USE_MOCK) {
+        // 👈 Return mock data (optionally filter by range if needed)
+        setDisplaySurveillanceKpi(mockSurveillanceDashboardData);
+        return;
+      }
+
       if (!range.start && !range.end) {
         setIsLiveMode(true);
         const res = await fetchSurveillanceKpi({ tenantId }).unwrap();
@@ -112,10 +130,10 @@ const SurveillanceMonitoring: React.FC = () => {
 
       return {
         title: t(item.kpi.title),
-        colour: item.kpi.colour,
+        tone: item.kpi.colour,
         violationsCount: item.kpi.violationsCount || 0,
         lastDetection: item.kpi.lastDetection || "-",
-        lastDetectionTime: item.kpi.lastDetectionTime || "-",
+        lastDetectionTime: item.kpi.lastDetectionTime || "",
         icon: config?.icon || EngineeringIcon,
         route: config?.route || "/",
         tooltipMessage: config?.tooltipMessage || "",
@@ -124,17 +142,17 @@ const SurveillanceMonitoring: React.FC = () => {
   }, [displaySurveillanceKpi, t]);
 
   const intrusionDashboard = displaySurveillanceKpi.find(
-    (d) => d.title === "Intrusion Detection",
+    (d) => d.title === "Intrusion Detection at Perimeter",
   );
   const cameraTamperingDashboard = displaySurveillanceKpi.find(
   (d) => d.title === "Camera Tampering Detection",
 );
   const unauthorizedDashboard = displaySurveillanceKpi.find(
-    (d) => d.title === "Unauthorized Access In Restricted Areas",
+    (d) => d.title === "Unauthorized Access in Restricted Areas",
   );
 
   const movementDashboard = displaySurveillanceKpi.find(
-    (d) => d.title === "Movement During Shutdown",
+    (d) => d.title === "Movement During Shutdown Hours",
   );
 // inside SurveillanceMonitoring component, near top
 
@@ -308,7 +326,7 @@ const renderUnauthorizedChart = () => {
 };
   const tabs: TabConfig[] = [
     {
-      label: "Intrusion Detection",
+      label: "Intrusion Detection at Perimeter",
       content: (
         <Grid
           container
@@ -337,7 +355,7 @@ const renderUnauthorizedChart = () => {
       featureId: FEATURE.INTRUSION_DETECTION,
     },
     {
-      label: "Movement During shutdown",
+      label: "Movement During Shutdown Hours",
       content: (
         <Grid
           container
@@ -421,7 +439,7 @@ const renderUnauthorizedChart = () => {
     },
 
     {
-      label: "Unauthorized Access ",
+      label: "Unauthorized Access in Restricted Areas",
       content: (
         <Grid
           container
@@ -465,41 +483,42 @@ const renderUnauthorizedChart = () => {
         minHeight: { xs: "auto", sm: "auto", md: 0 },
       }}
     >
+      {/* KPI cards + TimeFilter share one row — no dedicated filter row */}
       <Box
         sx={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "end",
+          alignItems: "flex-start",
+          gap: 2,
           flexWrap: "wrap",
-          mb: 2,
+          mb: 4,
         }}
       >
-        {/* Right: Time Filter */}
-        <TimeFilter
-          onRangeChange={handleTimeRangeChange}
-          shifts={orgShifts || []}
-        />
+        <Grid container spacing={2.5} sx={{ flex: 1, minWidth: 0 }}>
+          {SurveillancekpiLoading || !displaySurveillanceKpi.length
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <Grid
+                  key={index + 1}
+                  size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : surveillanceKpiData.map((kpi) => (
+                <Grid
+                  key={kpi.title}
+                  size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+                >
+                  <DashboardKpiCard {...kpi} />
+                </Grid>
+              ))}
+        </Grid>
+        <Box sx={{ flexShrink: 0 }}>
+          <CollapsibleTimeFilter
+            onRangeChange={handleTimeRangeChange}
+            shifts={USE_MOCK ? mockSurveillanceShifts : (orgShifts || [])} // 👈 Mock shifts when needed
+          />
+        </Box>
       </Box>
-
-      <Grid container spacing={2.5} sx={{ mb: 4 }}>
-        {SurveillancekpiLoading || !displaySurveillanceKpi.length
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <Grid
-                key={index + 1}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-          : surveillanceKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-              >
-                <DashboardKpiCard {...kpi} />
-              </Grid>
-            ))}
-      </Grid>
 
       {/* Tabs Section */}
       <Box

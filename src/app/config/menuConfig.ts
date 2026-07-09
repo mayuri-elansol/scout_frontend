@@ -365,13 +365,13 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "PPE Detection",
+        name: "PPE Detection (Helmet, Vest,Glasses)",
         path: "/ppeKitDetectionPage",
         featureId: FEATURE.PPE_DETECTION,
       },
       {
         type: "link",
-        name: "Fire Detection",
+        name: "Fire and Smoke Detection",
         path: "/fireSmokeDetection",
         featureId: FEATURE.FIRE_SMOKE,
       },
@@ -383,19 +383,19 @@ export const analyticsMenu: CategoryConfig[] = [
       },
       {
         type: "link",
-        name: "Forklift Safety",
+        name: "Forklift / Vehicle in Walkways",
         path: "/forkliftVehicleInWalkways",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {
         type: "link",
-        name: "Exit Blockage",
+        name: "Emergency Exit Blockage Detection",
         path: "/emergencyExitBlockage",
         featureId: FEATURE.EMERGENCY_EXIT_BLOCKAGE,
       },
       {
         type: "link",
-        name: "Crowd Detection",
+        name: "Crowd Detection in Hazardous Zones",
         path: "/crowdGathering",
         featureId: FEATURE.CROWD_DETECTION,
       },
@@ -407,25 +407,25 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "Intrusion Detection",
+        name: "Intrusion Detection at Perimeter",
         path: "/intrusionDetectionPage",
         featureId: FEATURE.INTRUSION_DETECTION,
       },
       {
         type: "link",
-        name: "Shutdown Movement",
+        name: "Movement During Shutdown Hours",
         path: "/movementDuringShutdownHours",
         featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
       },
       {
         type: "link",
-        name: "Unauthorized Access",
+        name: "Unauthorized Access in Restricted Areas",
         path: "/unauthorizedAccessInRestrictedAreas",
         featureId: FEATURE.UNAUTHORIZED_ACCESS,
       },
       {
         type: "link",
-        name: "Camera Tampering",
+        name: "Camera Tampering Detection",
         path: "/cameraTampering",
         featureId: FEATURE.CAMERA_TAMPERING,
       },
@@ -437,31 +437,31 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "Idle Monitoring",
+        name: "Employee Idle Time Monitoring",
         path: "/employeeIdleTime",
         featureId: FEATURE.EMPLOYEE_IDLE_TIME,
       },
       {
         type: "link",
-        name: "Critical Presence",
+        name: "Employee Presence in Critical Areas",
         path: "/employeePresenceCriticalArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_CRITICAL_AREA,
       },
       {
         type: "link",
-        name: "Restricted Presence",
+        name: "Employee Presence in Restricted Areas",
         path: "/employeePresenceRestrictedArea",
         featureId: FEATURE.EMPLOYEE_PRESENCE_RESTRICTED_AREA,
       },
       {
         type: "link",
-        name: "Phone Usage",
+        name: "Mobile Phone Usage in Restricted Zones",
         path: "/mobilePhoneUsage",
         featureId: FEATURE.MOBILE_PHONE_USAGE,
       },
       {
         type: "link",
-        name: "Guard Sleeping",
+        name: "Sleeping / Absence of Security Guards",
         path: "/sleepingSecurityPersonnel",
         featureId: FEATURE.SLEEPING_SECURITY_PERSONNEL,
       },
@@ -473,31 +473,31 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "People Count",
+        name: "People Count in Factory Premises",
         path: "/peopleCountPage",
         featureId: FEATURE.PEOPLE_COUNT,
       },
       {
         type: "link",
-        name: "Vehicle Count",
+        name: "Vehicle Count & ANPR at Gates",
         path: "/vehicleCount",
         featureId: FEATURE.VEHICLE_COUNT,
       },
       {
         type: "link",
-        name: "Canteen Usage",
+        name: "Canteen Usage Monitoring",
         path: "/monitoringCanteenUsage&Timings",
         featureId: FEATURE.CANTEEN_USAGE,
       },
       {
         type: "link",
-        name: "Loading Monitor",
+        name: "Vehicle Unloading / Loading Monitoring",
         path: "/vehicleUnloadingLoading",
         featureId: FEATURE.VEHICLE_UNLOADING_LOADING,
       },
       {
         type: "link",
-        name: "Unauthorized Parking",
+        name: "Unauthorized Parking / Blocking Aisles",
         path: "/unauthorizedParkingOrEquipmentBlockingAisles",
         featureId: FEATURE.UNAUTHORIZED_PARKING,
       },
@@ -509,13 +509,13 @@ export const analyticsMenu: CategoryConfig[] = [
     items: [
       {
         type: "link",
-        name: "Face Recognition",
+        name: "Face Recognition for Entry/Exit Logging",
         path: "/faceRecognition",
         featureId: FEATURE.FACE_RECOGNITION,
       },
       {
         type: "link",
-        name: "Face Monitoring",
+        name: "Employee Idle Time Monitoring with Face Recognition",
         path: "/employeeIdleTimeMonitoringWithFaceRecognition",
         featureId: FEATURE.FACE_IDLE_MONITORING,
       },

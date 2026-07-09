@@ -12,13 +12,13 @@ import { v4 as uuidv4 } from "uuid";
 
 import DashboardKpiCard, {
   DashboardKpiCardProps,
-} from "@/app/components/molecules/DashboardKpiCard/DashboardKpiCard";
-import  {
+} from "@/app/components/molecules/MonitoringDashboardKpiCard/MonitoringDashboardKpiCard";
+import  DashboardTabs, {
   TabConfig,
 } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import DynamicBarChart from "@/app/components/organisms/BarChart/BarChart";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import CameraStatusDonutChart from "@/app/components/organisms/DonutChart/DonutChart";
+import CollapsibleTimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/CollapsibleTimeFilter";
 
 /* -------------------- KPI DATA -------------------- */
 const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
@@ -29,7 +29,7 @@ const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
       lastDetection: "System Overview",
       lastDetectionTime: "—",
       icon: VideocamOutlined,
-      colour: "green",
+      tone: "green",
     },
     {
       title: "Cameras Online",
@@ -37,7 +37,7 @@ const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
       lastDetection: "Last Updated",
       lastDetectionTime: "10:15 AM",
       icon: WifiTethering,
-      colour: "green",
+      tone: "green",
     },
     {
       title: "Cameras Offline",
@@ -45,7 +45,7 @@ const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
       lastDetection: "Zone C - Entry Gate",
       lastDetectionTime: "09:45 AM",
       icon: WifiOff,
-      colour: "red",
+      tone: "red",
     },
     {
       title: "Tampering Incidents Today",
@@ -53,7 +53,7 @@ const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
       lastDetection: "Zone B - Warehouse",
       lastDetectionTime: "09:58 AM",
       icon: WarningAmber,
-      colour: "blue",
+      tone: "blue",
     },
     {
       title: "Zones Affected",
@@ -61,7 +61,7 @@ const kpiData: Array<Omit<DashboardKpiCardProps, "route" | "tooltipMessage">> =
       lastDetection: "Zones B, C, D",
       lastDetectionTime: "—",
       icon: Domain,
-      colour: "blue",
+      tone: "blue",
     },
   ];
 
@@ -107,177 +107,197 @@ const cameraHealthByZone = [
 
 /* -------------------- MAIN COMPONENT -------------------- */
 export default function CameraTamperingDashboard() {
-  const tabs: TabConfig[] = [
-    /* ---------- TAB 1 ---------- */
-
-    {
-      label: "Tampering Trend",
-      content: (
-        <Grid
-          container
-          sx={{
-            height: "100%",
-            minHeight: 0,
-            alignItems: "stretch",
-          }}
-        >
-          {/* Left chart */}
-          <Grid
-            size={{ xs: 12, md: 8 }}
-            sx={{
-              display: "flex",
-              minHeight: 0,
-            }}
-          >
-            <DynamicBarChart
-              data={tamperingTrendData}
-              xAxisKey="time"
-              series={[
-                { dataKey: "offline", label: "Offline", color: "#ffcdd2" },
-                { dataKey: "blur", label: "Blur", color: "#FFEAA7" },
-                {
-                  dataKey: "lensCovered",
-                  label: "Lens Covered",
-                  color: "#A8E6CF",
-                },
-              ]}
-              yAxisLabel="Incident Count"
-            />
-          </Grid>
-
-          {/* Right donut */}
-          <Grid
-            size={{ xs: 12, md: 4 }}
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              minHeight: 0,
-            }}
-          >
-            <CameraStatusDonutChart data={tamperingTypeData} />
-          </Grid>
-        </Grid>
-      ),
-    },
-    /* ---------- TAB 2 ---------- */
-    {
-      label: "Camera Downtime (Top 10)",
-      content: (
-        <Grid container sx={{ height: "100%", minHeight: 0 }}>
-          <Grid
-            size={{ xs: 12 }}
-            sx={{ display: "flex", height: "100%", minHeight: 0 }}
-          >
-            <DynamicBarChart
-              data={cameraUptimeDowntimeData}
-              xAxisKey="camera"
-              series={[
-                {
-                  dataKey: "uptime",
-                  label: "Uptime %",
-                  color: "#A8E6CF",
-                },
-                {
-                  dataKey: "downtime",
-                  label: "Downtime %",
-                  color: "#ffcdd2",
-                },
-              ]}
-              yAxisLabel="Percentage (%)"
-            />
-          </Grid>
-        </Grid>
-      ),
-    },
-
-    /* ---------- TAB 3 ---------- */
-    {
-      label: "Zone-wise Camera Status",
-      content: (
-        <Grid container sx={{ height: "100%", minHeight: 0 }}>
-          <Grid
-            size={{ xs: 12 }}
-            sx={{ display: "flex", height: "100%", minHeight: 0 }}
-          >
-            <DynamicBarChart
-              data={cameraHealthByZone}
-              xAxisKey="zone"
-              series={[
-                {
-                  dataKey: "online",
-                  label: "Online",
-                  color: "#A8E6CF",
-                },
-                {
-                  dataKey: "offline",
-                  label: "Offline",
-                  color: "#ffcdd2",
-                },
-                {
-                  dataKey: "tampered",
-                  label: "Tampered",
-                  color: "#FFEAA7",
-                },
-              ]}
-              yAxisLabel="Camera Count"
-            />
-          </Grid>
-        </Grid>
-      ),
-    },
+    const cameraTrendData = [
+    { time: "00:00", online: 105, offline: 15 },
+    { time: "06:00", online: 108, offline: 12 },
+    { time: "12:00", online: 110, offline: 10 },
+    { time: "18:00", online: 102, offline: 18 },
   ];
+const tabs: TabConfig[] = [
+  // -------- TAB 1: Camera Trend --------
+{
+  label: "Camera Trend",
+  content: (
+    <Grid container sx={{ height: "100%", minHeight: 0 }}>
+      <Grid size={{ xs: 12 }} sx={{ display: "flex", height: "100%" }}>
+        <Box sx={{ width: "100%", height: 400, maxHeight: "100%" }}>
+          <DynamicBarChart
+            data={cameraTrendData}
+            xAxisKey="time"
+            series={[
+              { dataKey: "online", label: "Online", color: "#A8E6CF" },
+              { dataKey: "offline", label: "Offline", color: "#ffcdd2" },
+            ]}
+            yAxisLabel="Camera Count"
+          />
+        </Box>
+      </Grid>
+    </Grid>
+  ),
+},
+  // -------- TAB 2: Camera Uptime --------
+  {
+    label: "Camera Uptime",
+    content: (
+      <Grid container sx={{ height: "100%", minHeight: 0 }}>
+        <Grid size={{ xs: 12 }} sx={{ display: "flex", height: "100%", minHeight: 0 }}>
+          <DynamicBarChart
+            data={cameraUptimeDowntimeData}
+            xAxisKey="camera"
+            series={[
+              { dataKey: "uptime", label: "Uptime %", color: "#A8E6CF" },
+              { dataKey: "downtime", label: "Downtime %", color: "#ffcdd2" },
+            ]}
+            yAxisLabel="Percentage (%)"
+          />
+        </Grid>
+      </Grid>
+    ),
+  },
 
-  return (
-    <Paper
+  // -------- TAB 3: Top Cameras --------
+  {
+    label: "Top Cameras",
+    content: (
+      <Grid container sx={{ height: "100%", minHeight: 0 }}>
+        <Grid size={{ xs: 12 }} sx={{ display: "flex", height: "100%", minHeight: 0 }}>
+          <DynamicBarChart
+            // Use the same data but sort by uptime descending and take top 5
+            data={[...cameraUptimeDowntimeData]
+              .sort((a, b) => b.uptime - a.uptime)
+              .slice(0, 5)}
+            xAxisKey="camera"
+            series={[
+              { dataKey: "uptime", label: "Uptime %", color: "#A8E6CF" },
+            ]}
+            yAxisLabel="Uptime %"
+          />
+        </Grid>
+      </Grid>
+    ),
+  },
+
+  // -------- TAB 4: Camera Healthy Summary --------
+  {
+    label: "Camera Healthy Summary",
+    content: (
+      <Grid container sx={{ height: "100%", minHeight: 0 }}>
+        <Grid size={{ xs: 12 }} sx={{ display: "flex", height: "100%", minHeight: 0 }}>
+          <DynamicBarChart
+            data={cameraHealthByZone}
+            xAxisKey="zone"
+            series={[
+              { dataKey: "online", label: "Online", color: "#A8E6CF" },
+              { dataKey: "offline", label: "Offline", color: "#ffcdd2" },
+              { dataKey: "tampered", label: "Tampered", color: "#FFEAA7" },
+            ]}
+            yAxisLabel="Camera Count"
+          />
+        </Grid>
+      </Grid>
+    ),
+  },
+];
+
+  // return (
+  //   <Paper
+  //     sx={{
+  //       display: "flex",
+  //       flexDirection: "column",
+  //       flexGrow: 1,
+  //       pt: 2,
+  //       px: 3,
+  //       minHeight: 0, // ✅ allow shrinking
+  //       overflow: "hidden", // ✅ prevent runaway growth
+  //     }}
+  //   >
+  //     {/* Top Right Time Filter */}
+  //     <Box
+  //       sx={{
+  //         display: "flex",
+  //         alignItems: "center",
+  //         justifyContent: "end",
+  //         flexWrap: "wrap",
+  //         mb: 2,
+  //       }}
+  //     >
+  //         <CollapsibleTimeFilter onRangeChange={() => console.log("on range chnaged")}/>
+  //     </Box>
+
+  //     {/* KPI Cards Grid */}
+  //     <Grid container spacing={1.5} sx={{ mb: 2 }} alignItems="stretch">
+  //       {kpiData.map((kpi, index) => (
+  //         <Grid
+  //           size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+  //           key={uuidv4() + index}
+  //         >
+  //           <DashboardKpiCard {...kpi} />
+  //         </Grid>
+  //       ))}
+  //     </Grid>
+
+  //     {/* Tabs Section */}
+  //     <Box
+  //       sx={{
+  //         display: "flex",
+  //         flexDirection: "column",
+  //         flex: 1,
+  //         //  minHeight: 0,
+
+  //         minHeight: { xs: "500px", sm: "600px", md: 0 },
+  //       }}
+  //     >
+  //       <DashboardTabs tabs={tabs} features={[]} />
+  //     </Box>
+  //   </Paper>
+  // );
+return (
+  <Paper
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      pt: 2,
+      px: 3,
+      minHeight: 0,
+      overflow: "hidden",
+    }}
+  >
+    {/* Cards + Filter in one flex row */}
+    <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
-        flexGrow: 1,
-        pt: 2,
-        px: 3,
-        minHeight: 0, // ✅ allow shrinking
-        overflow: "hidden", // ✅ prevent runaway growth
+        flexWrap: "wrap",
+        alignItems: "center",
+        mb: 2,
       }}
     >
-      {/* Top Right Time Filter */}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "end",
-          flexWrap: "wrap",
-          mb: 2,
-        }}
-      >
-        <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
-      </Box>
-
-      {/* KPI Cards Grid */}
-      <Grid container spacing={1.5} sx={{ mb: 2 }} alignItems="stretch">
+      <Grid container spacing={1.5} sx={{ flex: 1 }}>
         {kpiData.map((kpi, index) => (
-          <Grid
-            size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
-            key={uuidv4() + index}
-          >
+          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }} key={uuidv4() + index}>
             <DashboardKpiCard {...kpi} />
           </Grid>
         ))}
       </Grid>
 
-      {/* Tabs Section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          //  minHeight: 0,
-
-          minHeight: { xs: "500px", sm: "600px", md: 0 },
-        }}
-      >
-        {/* <DashboardTabs tabs={tabs} /> */}
+      <Box sx={{ ml: 2, flexShrink: 0 }}>
+        <CollapsibleTimeFilter onRangeChange={() => console.log("on range changed")} />
       </Box>
-    </Paper>
-  );
+    </Box>
+
+    {/* Tabs Section */}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 400,
+        maxHeight: "60vh",
+        overflow: "hidden",
+      }}
+    >
+      <DashboardTabs tabs={tabs} features={[]} />
+    </Box>
+  </Paper>
+);
 }

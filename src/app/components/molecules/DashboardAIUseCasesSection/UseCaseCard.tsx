@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Tooltip } from "@mui/material";
 import { Lock } from "@mui/icons-material";
 import { DASHBOARD_COLORS, MuiIcon } from "@/app/config/dashboardTheme";
 
@@ -27,13 +27,14 @@ const UseCaseCard: React.FC<UseCaseCardProps> = ({
 }) => {
   if (locked) {
     return (
+      <Tooltip title={`Upgrade your plan to access ${title}`} arrow placement="top">
       <Box
         onClick={onClick}
         sx={{
           display: "flex",
           alignItems: "center",
           gap: "11px",
-          padding: "10px 12px",
+          padding: "14px",
           border: `1.5px dashed ${DASHBOARD_COLORS.border}`,
           borderRadius: "10px",
           backgroundColor: DASHBOARD_COLORS.bg,
@@ -55,7 +56,7 @@ const UseCaseCard: React.FC<UseCaseCardProps> = ({
             color: DASHBOARD_COLORS.textSecondary,
           }}
         >
-          <Lock sx={{ fontSize: 17 }} />
+          <Icon sx={{ fontSize: 17 }} />
         </Box>
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography
@@ -72,21 +73,10 @@ const UseCaseCard: React.FC<UseCaseCardProps> = ({
           >
             {title}
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "11px",
-              color: "#9CA3AF",
-              fontStyle: "italic",
-              mt: "2px",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            Unlock with an upgrade
-          </Typography>
         </Box>
+        <Lock sx={{ fontSize: 17, color: DASHBOARD_COLORS.textSecondary, flexShrink: 0 }} />
       </Box>
+      </Tooltip>
     );
   }
 
