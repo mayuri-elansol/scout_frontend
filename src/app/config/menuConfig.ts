@@ -366,13 +366,13 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         type: "link",
         name: "PPE Detection (Helmet, Vest,Glasses)",
-        path: "/ppeKitDetectionPage",
+        path: "/PPEKitDetection",
         featureId: FEATURE.PPE_DETECTION,
       },
       {
         type: "link",
         name: "Fire and Smoke Detection",
-        path: "/fireSmokeDetection",
+        path: "/fireSmokeOilLeakDetection",
         featureId: FEATURE.FIRE_SMOKE,
       },
       {
@@ -384,7 +384,7 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         type: "link",
         name: "Forklift / Vehicle in Walkways",
-        path: "/forkliftVehicleInWalkways",
+        path: "/objectDetection",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {

@@ -11,7 +11,7 @@ import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardS
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
 const EmployeePresence: React.FC = () => {
   interface EmployeePresenceViolation {
@@ -120,9 +120,9 @@ const EmployeePresence: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: EmployeePresenceViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as EmployeePresenceViolation);
     setViewPopupOpen(true);
   };
 
@@ -153,7 +153,9 @@ const EmployeePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -246,8 +248,7 @@ const EmployeePresence: React.FC = () => {
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-      />
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

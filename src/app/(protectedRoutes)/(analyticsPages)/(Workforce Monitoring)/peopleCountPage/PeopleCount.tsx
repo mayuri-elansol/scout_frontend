@@ -13,7 +13,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import PeopleIcon from "@mui/icons-material/People";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
 const PeopleCount: React.FC = () => {
   interface PeopleCountViolation {
@@ -179,9 +179,9 @@ const PeopleCount: React.FC = () => {
     },
   ];
   const KpiCardLoading = false;
-  const handleViewSingle = (row: PeopleCountViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as PeopleCountViolation);
     setViewPopupOpen(true);
   };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -211,7 +211,9 @@ const PeopleCount: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
@@ -306,8 +308,7 @@ const PeopleCount: React.FC = () => {
         downloadFileName="people-count-report"
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options."
-      />
+        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
       {/* View Alert Popup */}
 
       {viewPopupData && (

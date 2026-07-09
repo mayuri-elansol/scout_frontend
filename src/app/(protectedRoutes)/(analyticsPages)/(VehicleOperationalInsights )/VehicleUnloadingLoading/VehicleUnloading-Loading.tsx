@@ -13,7 +13,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
 const VehicleUnloadingLoading: React.FC = () => {
   interface VehicleLoadingEvent {
@@ -191,9 +191,9 @@ const VehicleUnloadingLoading: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: VehicleLoadingEvent) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as VehicleLoadingEvent);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -223,7 +223,9 @@ const VehicleUnloadingLoading: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -324,8 +326,7 @@ const VehicleUnloadingLoading: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="vehicle-loading-unloading-report"
-        loading={false}
-      />
+        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
       {/* View Alert Popup */}
 
       <ViewAlertPopup

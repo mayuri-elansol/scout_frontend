@@ -64,3 +64,13 @@ export interface FlatGraphResponse {
 export type WorkforceMonitoringDashboardResponse =
   | EmployeeInCriticalAreaResponse
   | FlatGraphResponse;
+
+  export interface ShiftType {
+  shiftId: string;
+  name: string;
+  startTime: string;
+  endTime: string;
+  breakStartTime: string;
+  breakEndTime: string;
+  status: string;
+}

@@ -311,11 +311,11 @@ const PPEDetection: React.FC = () => {
     link.download = fileName;
     link.click();
   };
-  const handleViewSingle = (row: PPEViolation) => {
-    console.log("view single row", row);
-    setViewPopupData(row);
-    setViewPopupOpen(true);
-  };
+const handleViewSingle = (row: Record<string, string | number | boolean>) => {
+  const violation = row as PPEViolation; // or just use row directly if we know it has the needed properties
+  setViewPopupData(violation);
+  setViewPopupOpen(true);
+};
   const KpiCardLoading = false;
 
   return (
@@ -339,7 +339,9 @@ const PPEDetection: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
@@ -439,8 +441,7 @@ const PPEDetection: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
-        loading={false}
-      />
+        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
 

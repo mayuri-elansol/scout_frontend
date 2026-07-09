@@ -10,7 +10,7 @@ import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -170,9 +170,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: SleepingSecurityViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as SleepingSecurityViolation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -203,7 +203,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -304,8 +306,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
         onExport={handleExport}
         loading={false}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-        onView={handleViewSingle}
-      />
+        onView={handleViewSingle} totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

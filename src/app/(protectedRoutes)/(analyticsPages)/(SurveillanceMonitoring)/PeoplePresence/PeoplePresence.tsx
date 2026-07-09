@@ -11,7 +11,7 @@ import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertP
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import PeopleIcon from "@mui/icons-material/People";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 const PeoplePresence: React.FC = () => {
   interface PeoplePresenceViolation {
     incident: string;
@@ -182,9 +182,9 @@ const PeoplePresence: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: PeoplePresenceViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as PeoplePresenceViolation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -214,7 +214,9 @@ const PeoplePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -308,8 +310,7 @@ const PeoplePresence: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options."
-      />
+        tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
       {/* View Alert Popup */}
       {viewPopupData && (
         <ViewAlertPopup

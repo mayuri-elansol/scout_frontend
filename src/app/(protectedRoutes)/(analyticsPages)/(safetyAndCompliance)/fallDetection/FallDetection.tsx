@@ -16,7 +16,7 @@ import {
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../PPEKitDetection/PPEKitDetection";
 
 const FallDetection: React.FC = () => {
   interface RecentViolationData {
@@ -208,9 +208,9 @@ const FallDetection: React.FC = () => {
     console.log("Export requested clikcedd:", format);
   };
 
-  const handleViewSingle = (row: RecentViolationData) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as RecentViolationData);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -240,7 +240,9 @@ const FallDetection: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -332,8 +334,7 @@ const FallDetection: React.FC = () => {
         onReset={handleReset}
         onExport={handleExport}
         downloadFileName="ppe-violations-report"
-        loading={false}
-      />
+        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
       {/* View Alert Popup */}
       {viewPopupData && (
         <ViewAlertPopup

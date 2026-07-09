@@ -12,7 +12,7 @@ import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilte
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 const CameraTampering: React.FC = () => {
   interface CameraTamperingViolation {
     voilation: string;
@@ -223,9 +223,9 @@ const CameraTampering: React.FC = () => {
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: CameraTamperingViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as CameraTamperingViolation );
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -256,7 +256,9 @@ const CameraTampering: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -356,8 +358,7 @@ const CameraTampering: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="camera-tampering-report"
-        loading={false}
-      />
+        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
 

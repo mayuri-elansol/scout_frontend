@@ -145,9 +145,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
   ];
 
   const KpiCardLoading = false;
-  const handleViewSingle = (row: VehicleViolation) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as VehicleViolation);
     setViewPopupOpen(true);
   };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -178,7 +178,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
@@ -283,8 +285,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
         ]}
         downloadFileName="vehicle-detection-report"
         loading={false}
-        onView={handleViewSingle}
-      />
+        onView={handleViewSingle} totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

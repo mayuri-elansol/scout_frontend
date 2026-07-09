@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
-import { getOneHourBefore } from "../PPEKitDetectionPage/PPEKitDetection";
+import { getOneHourBefore } from "../PPEKitDetection/PPEKitDetection";
 
 const EmergencyExitBlockage: React.FC = () => {
   interface ReportData extends Record<string, string | number | boolean> {
@@ -201,9 +201,9 @@ const EmergencyExitBlockage: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
-  const handleViewSingle = (row: ReportData) => {
+  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row);
+    setViewPopupData(row as ReportData);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -234,7 +234,9 @@ const EmergencyExitBlockage: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
@@ -327,8 +329,7 @@ const EmergencyExitBlockage: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-      />
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
       {/* View Alert Popup */}
       {viewPopupData && (
         <ViewAlertPopup
