@@ -3,179 +3,201 @@ import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Warning, Room } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { AccessTime, Room } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
-
-const EmployeeIdleTime: React.FC = () => {
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  interface EmployeeIdleEvent {
-    incident: string;
+const CameraTampering: React.FC = () => {
+  interface CameraTamperingViolation {
+    voilation: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
-
+    alarmTriggered: boolean;
     [key: string]: string | number | boolean;
   }
 
-  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
-    null
-  );
-  const EmployeeIdleTimeKpiData = [
+  const [viewPopupData, setViewPopupData] =
+    useState<CameraTamperingViolation | null>(null);
+
+  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  const CameraTamperingKpiData = [
     {
-      title: "Total Idle Events",
-      value: "23",
-      icon: AccessTime,
+      title: "Total Offline Cameras",
+      value: "42",
       tooltipMessage:
-        "Total number of idle time events detected by the system.",
+        "Shows the total number of offline cameras currently monitored in the system.",
+      icon: VideocamOffIcon,
     },
     {
-      title: "Last Idle Detection Time",
-      value: getOneHourBefore().time,
-      icon: AccessTime,
-      tooltipMessage: "The most recent idle detection timestamp.",
+      title: "Total Tampred Cameras",
+      value: "5",
+      tooltipMessage: "The total number of tampered detected cameras .",
+      icon: Warning,
     },
     {
-      title: "Last Idle Detection Zone",
-      value: "Assembly Line A",
+      title: "Offline Camera Zone",
+      value: "Zone A",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
       icon: Room,
-      tooltipMessage: "The zone where the most recent idle event was detected.",
+      tooltipMessage:
+        "The  zone where the most recent offline cameras occurred.",
+    },
+    {
+      title: "Tampred Camera Zone",
+      value: "Zone B",
+      trendColor: "#2196f3",
+      color: "#2196f3",
+      bgColor: "#e3f2fd",
+      borderColor: "#2196f3",
+      iconBg: "rgba(33, 150, 243, 0.1)",
+      icon: Room,
+      tooltipMessage:
+        "The  zone where the most recent tampred cameras occurred.",
     },
   ];
-  const backendIdleData = [
+
+  const backendData = [
     {
-      id: 301,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-01",
+      id: 201,
+      tamperingType: "Lens Covered",
       zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=21",
-      cameraid: "CAM-I01",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      cameraid: "CAM-T01",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:55",
     },
     {
-      id: 302,
-      isIdle: false,
-      isWorking: true,
-      notPresent: false,
-      trackingId: "TRK-02",
+      id: 202,
+      tamperingType: "Blur Vision",
       zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=22",
-      cameraid: "CAM-I02",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      cameraid: "CAM-T02",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:45",
     },
     {
-      id: 303,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-03",
+      id: 203,
+      tamperingType: "Disconnected",
       zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=23",
-      cameraid: "CAM-I03",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      cameraid: "CAM-T03",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:35",
     },
     {
-      id: 304,
-      isIdle: false,
-      isWorking: false,
-      notPresent: true,
-      trackingId: "TRK-04",
+      id: 204,
+      tamperingType: "Offline",
       zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=24",
-      cameraid: "CAM-I04",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      cameraid: "CAM-T04",
+      alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:25",
     },
     {
-      id: 305,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-05",
+      id: 205,
+      tamperingType: "Lens Obstructed",
       zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=25",
-      cameraid: "CAM-I05",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      cameraid: "CAM-T05",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:15",
+    },
+    {
+      id: 202,
+      tamperingType: "Blur Vision",
+      zone: "Welding Station",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      cameraid: "CAM-T02",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 203,
+      tamperingType: "Disconnected",
+      zone: "Chemical Storage",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      cameraid: "CAM-T03",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 204,
+      tamperingType: "Offline",
+      zone: "Assembly Line B",
+      snapshot: "https://picsum.photos/400/200?random=14",
+      cameraid: "CAM-T04",
+      alarmTriggered: false,
+      createdAt: getOneHourBefore().fullDate,
     },
   ];
 
-  const recentIdleEvents = backendIdleData.map((item) => {
-    const titleParts = [];
-
-    if (item.isIdle) titleParts.push("Employee Idle");
-    if (item.isWorking) titleParts.push("Employee Working");
-    if (item.notPresent) titleParts.push("Employee Not Present");
-
+  const recentTamperingEvents = backendData.map((item) => {
     return {
-      incident: titleParts.join(", ") ?? "No event",
+      voilation: item.tamperingType ?? "No tampering",
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
       cameraId: item.cameraid,
+      alarmTriggered: item.alarmTriggered,
     };
   });
 
-  console.log("RECENT IDLE EVENTS", recentIdleEvents);
+  console.log("RECENT TAMPERING DATA", recentTamperingEvents);
 
-  const zoneIdleData = [
+  const zoneTamperingData = [
     {
       zone: "Production Floor A",
-      incidents: 7,
+      violations: 7,
       subViolations: [
-        { label: "Idle", value: 4, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
+        { label: "Blur Vision", value: 2, icon: VisibilityOffIcon },
+        { label: "Disconnected", value: 2, icon: Warning },
       ],
     },
     {
       zone: "Welding Station",
-      incidents: 5,
+      violations: 5,
       subViolations: [
-        { label: "Working", value: 4, icon: WorkOutlineIcon },
-        { label: "Idle", value: 1, icon: AccessTimeIcon },
+        { label: "Blur Vision", value: 3, icon: VisibilityOffIcon },
+        { label: "Lens Covered", value: 2, icon: VisibilityOffIcon },
       ],
     },
     {
       zone: "Chemical Storage",
-      incidents: 6,
+      violations: 4,
       subViolations: [
-        { label: "Idle", value: 3, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Disconnected", value: 2, icon: Warning },
+        { label: "Offline", value: 2, icon: Warning },
       ],
     },
     {
       zone: "Assembly Line B",
-      incidents: 4,
+      violations: 6,
       subViolations: [
-        { label: "Not Present", value: 2, icon: PersonOffIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Offline", value: 4, icon: Warning },
+        { label: "Lens Obstructed", value: 2, icon: VisibilityOffIcon },
       ],
     },
     {
       zone: "Maintenance Area",
-      incidents: 8,
+      violations: 8,
       subViolations: [
-        { label: "Idle", value: 5, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Lens Covered", value: 3, icon: VisibilityOffIcon },
+        { label: "Lens Obstructed", value: 3, icon: VisibilityOffIcon },
+        { label: "Offline", value: 2, icon: Warning },
       ],
     },
   ];
@@ -203,7 +225,7 @@ const EmployeeIdleTime: React.FC = () => {
   };
   const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row as EmployeeIdleEvent);
+    setViewPopupData(row as CameraTamperingViolation );
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -226,6 +248,7 @@ const EmployeeIdleTime: React.FC = () => {
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
             <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
               <Box component="span" sx={{ mr: 2 }}>
                 📊 Overview
@@ -251,7 +274,7 @@ const EmployeeIdleTime: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              EmployeeIdleTimeKpiData.map((kpi, index) => (
+              CameraTamperingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -263,23 +286,22 @@ const EmployeeIdleTime: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              tooltipMessage="Latest 20 detected idel, working,not present employee with details."
-              label="Recent Incident"
-              violations={recentIdleEvents}
+              tooltipMessage="Latest 20 detected camera temparing event with details."
+              label="Recent Violations"
+              violations={recentTamperingEvents}
               loading={false}
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              violationsZone={zoneIdleData}
+              violationsZone={zoneTamperingData}
               loading={false}
-              tooltipMessage="Shows idel, working,not present employee per zone"
-              label="Zone Incident"
+              tooltipMessage="Shows offline,tampered cameras per zone"
             />
           </Grid>
         </Grid>
@@ -287,38 +309,46 @@ const EmployeeIdleTime: React.FC = () => {
       {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
-        tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed camera tampering/offline detection report with filter, reset, and CSV/PDF download options."
         columns={[
-          { id: "incident", label: "Incident" },
+          { id: "voilation", label: "Violation" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
           { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={recentIdleEvents}
+        data={recentTamperingEvents}
         filters={[
           {
-            id: "incident",
-            label: "Incident",
+            id: "voilation",
+            label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.incident))
+              new Set(recentTamperingEvents.map((v) => v.voilation))
             ),
           },
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: Array.from(new Set(recentIdleEvents.map((v) => v.zone))),
+            options: Array.from(
+              new Set(recentTamperingEvents.map((v) => v.zone))
+            ),
           },
           {
             id: "cameraId",
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.cameraId))
+              new Set(recentTamperingEvents.map((v) => v.cameraId))
             ),
           },
-
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}
@@ -327,8 +357,9 @@ const EmployeeIdleTime: React.FC = () => {
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        downloadFileName="employee-idle-time-report"
+        downloadFileName="camera-tampering-report"
         loading={false} totalCount={0} page={0} rowsPerPage={0}      />
+
       {/* View Alert Popup */}
 
       <ViewAlertPopup
@@ -342,4 +373,4 @@ const EmployeeIdleTime: React.FC = () => {
   );
 };
 
-export default EmployeeIdleTime;
+export default CameraTampering;

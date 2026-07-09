@@ -10,6 +10,7 @@ import { AccessTime, LocationOn, Security } from "@mui/icons-material";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
 import PersonOffIcon from "@mui/icons-material/PersonOff";
 import HotelIcon from "@mui/icons-material/Hotel";
@@ -44,7 +45,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
     },
     {
       title: "Last Incidence",
-      value: "10:45 AM",
+      value: getOneHourBefore().time,
       icon: AccessTime,
       tooltipMessage:
         "Displays the time of the most recent incident involving security personnel.",
@@ -65,7 +66,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=51",
       zone: "Main Gate",
       camera: "CAM-51",
-      createdAt: "2025-09-24 08:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:17",
     },
     {
@@ -75,7 +76,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=52",
       zone: "Assembly Line A",
       camera: "CAM-52",
-      createdAt: "2025-09-24 08:25",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:27",
     },
     {
@@ -85,7 +86,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=51",
       zone: "Main Gate",
       camera: "CAM-51",
-      createdAt: "2025-09-24 08:15",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:17",
     },
     {
@@ -95,7 +96,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
       snapshot: "https://picsum.photos/400/200?random=52",
       zone: "Assembly Line A",
       camera: "CAM-52",
-      createdAt: "2025-09-24 08:25",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:27",
     },
   ];
@@ -170,8 +171,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
     console.log("Export requested clikcedd:", format);
   };
   const handleViewSingle = (row: Record<string, string | number | boolean>) => {
-    const violation = row as SleepingSecurityViolation;
-    setViewPopupData(violation);
+    console.log("view single row", row);
+    setViewPopupData(row as SleepingSecurityViolation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -202,7 +203,9 @@ const SleepingSecurityPersonnel: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
+          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
+            throw new Error("Function not implemented.");
+          } } />
         </Box>
         {/* KPI Cards */}
 
@@ -253,9 +256,6 @@ const SleepingSecurityPersonnel: React.FC = () => {
 
       {/*  Violations Report */}
       <ReportTable
-        totalCount={4}
-        page={0}
-        rowsPerPage={10}
         title="Detailed Report"
         columns={[
           { id: "voilation", label: "Violation", minWidth: 200 },
@@ -272,7 +272,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.voilation)),
+              new Set(recentViolations.map((item) => item.voilation))
             ),
           },
           {
@@ -280,7 +280,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.zone)),
+              new Set(recentViolations.map((item) => item.zone))
             ),
           },
           {
@@ -288,7 +288,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId)),
+              new Set(recentViolations.map((v) => v.cameraId))
             ),
           },
           {
@@ -306,8 +306,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
         onExport={handleExport}
         loading={false}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-        onView={handleViewSingle}
-      />
+        onView={handleViewSingle} totalCount={0} page={0} rowsPerPage={0}      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

@@ -1,153 +1,175 @@
 "use client";
+
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
 import { Box, Grid, Paper, Typography } from "@mui/material";
-import { PhoneIphone, LocationOn, AccessTime } from "@mui/icons-material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
+import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
+
+import CarIcon from "@mui/icons-material/DirectionsCar";
+import EquipmentIcon from "@mui/icons-material/Build";
+import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
-import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 
-const MobilePhoneUsage: React.FC = () => {
-  interface ViolationData {
-    voilation: string;
+const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+  interface UnauthorizedParkingEvent {
+    eventMessage: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
     alarmTriggered: boolean;
+    updatedAt: string;
     [key: string]: string | number | boolean;
   }
-  const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
-    null
-  );
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  const MobilePhoneUsageKpiData = [
-    {
-      title: "Total Violations",
-      value: "18",
-      icon: PhoneIphone,
-      trendColor: "#f44336",
-      color: "#f44336",
-      bgColor: "#ffebee",
-      borderColor: "#f44336",
-      iconBg: "rgba(244, 67, 54, 0.1)",
 
+  const [viewPopupOpen, setViewPopupOpen] = useState(false);
+  const [viewPopupData, setViewPopupData] =
+    useState<UnauthorizedParkingEvent | null>(null);
+  const UnauthorizedParkingKpiData = [
+    {
+      title: "Blocked Parking",
+      value: "87",
       tooltipMessage:
-        "Total number of mobile phone usage violations detected in restricted areas.",
+        "Shows the total number of parking that are currently blocked.",
+      icon: Block,
     },
     {
-      title: "Latest Incidence",
-      value: getOneHourBefore().time,
-      icon: AccessTime,
+      title: "Clear Parking",
+      value: "12",
       tooltipMessage:
-        "The time when the most recent mobile phone usage violation was detected.",
+        "Shows the total number of parking that are currently clear and safe for use.",
+      icon: CheckCircle,
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Zone Detection",
-      value: "Assembly Line",
+      title: "Affected Zones (Last 3)",
+      value: "Zone A, Zone B, Zone C",
+      tooltipMessage:
+        "Displays the last three zones where blocked parking were detected.",
       icon: LocationOn,
-      tooltipMessage:
-        "The zone where the latest mobile phone usage violation was detected.",
     },
   ];
-  const backendMobilePhoneData = [
+
+  const backendData = [
     {
       id: 201,
-      voilation: true,
+      typeOf: "Car",
       snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Assembly Line",
-      cameraid: "CAM-11",
-      alarmTriggered: true,
+      zone: "Loading Bay A",
+      camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 16:43",
+      updatedAt: "2025-10-09 08:45",
     },
     {
       id: 202,
-      voilation: true,
+      typeOf: "Not Car",
       snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Production Floor A",
-      cameraid: "CAM-12",
-      alarmTriggered: false,
+      zone: "Warehouse Zone B",
+      camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 16:51",
+      updatedAt: "2025-10-09 09:18",
     },
     {
       id: 203,
-      voilation: true,
+      typeOf: "Car",
       snapshot: "https://picsum.photos/400/200?random=13",
-      zone: "Warehouse",
-      cameraid: "CAM-13",
-      alarmTriggered: false,
+      zone: "Assembly Area C",
+      camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:06",
+      updatedAt: "2025-10-09 10:08",
     },
     {
       id: 204,
-      voilation: true,
+      typeOf: "Not Car",
       snapshot: "https://picsum.photos/400/200?random=14",
-      zone: "Main Entrance",
-      cameraid: "CAM-14",
-      alarmTriggered: true,
+      zone: "Maintenance Area",
+      camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:21",
+      updatedAt: "2025-10-09 11:28",
     },
     {
       id: 205,
-      voilation: true,
+      typeOf: "Car",
       snapshot: "https://picsum.photos/400/200?random=15",
-      zone: "Parking Area",
-      cameraid: "CAM-15",
-      alarmTriggered: false,
+      zone: "Parking Zone D",
+      camera: "CAM-15",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:36",
+      updatedAt: "2025-10-09 12:45",
     },
   ];
 
-  // Map backend data to recentViolations format
-  const recentMobilePhoneViolations = backendMobilePhoneData.map((item) => {
+  const recentViolations = backendData.map((item) => {
+    const eventMessage =
+      item.typeOf === "Car"
+        ? "Unauthorized Car Parking"
+        : "Equipment Blocking Aisle";
+
     return {
-      voilation: item.voilation
-        ? "Mobile phone usage detected"
-        : "No violation",
+      eventMessage,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
-      cameraId: item.cameraid,
-      alarmTriggered: item.alarmTriggered,
+      cameraId: item.camera,
+      alarmTriggered: true,
+      updatedAt: item.updatedAt,
     };
   });
 
-  console.log("Recent Mobile Phone Violations", recentMobilePhoneViolations);
+  console.log(recentViolations);
 
   const zoneViolationsData = [
     {
-      zone: "Assembly Line",
-      violations: 1,
+      zone: "Loading Bay A",
+      violations: 5,
+      subViolations: [
+        { label: "Car", value: 3, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
     },
     {
-      zone: "Production Floor A",
-      violations: 1,
+      zone: "Warehouse Zone B",
+      violations: 4,
+      subViolations: [
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 3, icon: EquipmentIcon },
+      ],
     },
     {
-      zone: "Warehouse",
-      violations: 1,
+      zone: "Assembly Area C",
+      violations: 6,
+      subViolations: [
+        { label: "Car", value: 4, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
     },
     {
-      zone: "Main Entrance",
-      violations: 1,
+      zone: "Maintenance Area",
+      violations: 3,
+      subViolations: [
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
     },
     {
-      zone: "Parking Area",
-      violations: 1,
+      zone: "Parking Zone D",
+      violations: 2,
+      subViolations: [
+        { label: "Car", value: 2, icon: CarIcon },
+        { label: "Equipment", value: 0, icon: EquipmentIcon },
+      ],
     },
   ];
-
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -166,9 +188,13 @@ const MobilePhoneUsage: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+  };
   const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row as ViolationData);
+    setViewPopupData(row as UnauthorizedParkingEvent);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -216,7 +242,7 @@ const MobilePhoneUsage: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              MobilePhoneUsageKpiData.map((kpi, index) => (
+              UnauthorizedParkingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -232,9 +258,9 @@ const MobilePhoneUsage: React.FC = () => {
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
               label="Recent Violations"
-              violations={recentMobilePhoneViolations}
-              tooltipMessage="Latest 20 detected mobile phone usage violations with details."
+              violations={recentViolations}
               loading={false}
+              tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
           {/*  Compliance by Zone */}
@@ -243,7 +269,7 @@ const MobilePhoneUsage: React.FC = () => {
             <ZoneViolations
               violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows mobile phone usage violations per zone"
+              tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
             />
           </Grid>
         </Grid>
@@ -251,30 +277,38 @@ const MobilePhoneUsage: React.FC = () => {
       {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
+        tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
-          { id: "voilation", label: "Violation", minWidth: 150 },
-          { id: "time", label: "Time", minWidth: 140 },
+          { id: "eventMessage", label: "Voilation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
           { id: "zone", label: "Zone", minWidth: 120 },
-          { id: "cameraId", label: "Cameras", minWidth: 120 },
 
-          { id: "alarmTriggered", label: "Alarm Triggered", minWidth: 140 },
+          { id: "cameraId", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={recentMobilePhoneViolations}
+        data={recentViolations}
         filters={[
+          {
+            id: "eventMessage",
+            label: "Voilation",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.eventMessage))
+            ),
+          },
+
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.zone))
-            ),
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
           },
           {
             id: "cameraId",
-            label: "Cameras",
+            label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId))
             ),
           },
           {
@@ -283,36 +317,28 @@ const MobilePhoneUsage: React.FC = () => {
             type: "select",
             options: ["True", "False"],
           },
-          {
-            id: "time",
-            label: "Start Date",
-            type: "date",
-          },
-          {
-            id: "time",
-            label: "End Date",
-            type: "date",
-          },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
         ]}
-        downloadFileName="mobile-phone-usage-report"
+        downloadFileName="unauthorized-parking-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
-        onExport={handleExport}
-        loading={false}
+        onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        tooltipMessage="Detailed mobile phone usage  report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        onExport={handleExport}
+        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
+
       {/* View Alert Popup */}
-      {viewPopupData && (
-        <ViewAlertPopup
-          open={viewPopupOpen}
-          handleClose={() => setViewPopupOpen(false)}
-          details={viewPopupData}
-          imageKey="imageUrl"
-          onDownload={(url) => console.log("Download:", url)}
-        />
-      )}
+
+      <ViewAlertPopup
+        open={viewPopupOpen}
+        handleClose={() => setViewPopupOpen(false)}
+        details={viewPopupData}
+        imageKey="imageUrl"
+        onDownload={(url) => console.log("Download:", url)}
+      />
     </Box>
   );
 };
 
-export default MobilePhoneUsage;
+export default UnauthorizedParkingOrEquipmentBlockingAisles;
