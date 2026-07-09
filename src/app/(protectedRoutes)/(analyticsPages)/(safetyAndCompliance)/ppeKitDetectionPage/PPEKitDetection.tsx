@@ -1,516 +1,455 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
-
-import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
-import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
-import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
-import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
+import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
+import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
+import { Box, Grid, Paper, Typography } from "@mui/material";
+import {
+  Shield,
+  Visibility,
+  LocationOn,
+  AccessTime,
+  Checkroom,
+} from "@mui/icons-material";
+import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
+import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
+import { v4 as uuidv4 } from "uuid";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
+
+import { FilterParams } from "./PPEKitDetection.types";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import { SvgIconComponent } from "@mui/icons-material";
+export const getOneHourBefore = (): {
+  fullDate: string;
+  time: string;
+} => {
+  const date = new Date();
 
-import {
-  useLazyGetPPEKitDetectionKpiDataQuery,
-  useLazyGetPPEKitDetectionZoneViolationsQuery,
-  useLazyGetPpeKitDetectionRecentViolationsQuery,
-  useLazyGetPpeKitDetectionDetailedReportQuery,
-  useGetPpeKitDetectionDetailedCsvReportMutation,
-  useGetPpeKitDetectionDetailedPdfReportMutation,
-  useGetPpeKitDetectionSingleReportPdfMutation,
-} from "./PPEKitDetectionApi";
+  // subtract exactly 1 hour
+  date.setTime(date.getTime() - 60 * 60 * 1000);
 
-import { ppeKpiConfig } from "./PPEKitDetectionConfig";
-import {
-  KpiItem,
-  ZoneViolationInteface,
-  FilterParams,
-  PPEViolation,
-  PpeSocketPayload,
-  DetailedReportResponse,
-} from "./PPEKitDetection.types";
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
 
-import { SOCKET_EVENTS } from "@/sockets/socket.events";
-import { useSocketEvent } from "@/customhooks/useSocketEvent";
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
 
-import { Violation } from "@/app/components/molecules/ViolationCard/ViolationCard";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
-import { formatLocalDateTime } from "@/utils/formatLocalDateTime";
-import ViolationsTrend, { TrendDataPoint } from "@/app/components/molecules/ViolationsTrend/ViolationsTrend";
-import ViolationBreakdown, { BreakdownItem } from "@/app/components/molecules/ViolationBreakdown/ViolationBreakdown";
-
-/* ================= COMPONENT ================= */
-
+  return {
+    fullDate: `${day}-${month}-${year} ${hours}:${minutes}`,
+    time: `${hours}:${minutes}`,
+  };
+};
 const PPEDetection: React.FC = () => {
-  const { t } = useTranslation();
-  const { user } = useSelector((state: RootState) => state.auth);
-  const tenantId: string = user?.org_id ?? "";
-
-  /* ---------- STATE ---------- */
-  const [isLiveMode, setIsLiveMode] = useState(true);
-
-  const [displayKpi, setDisplayKpi] = useState<KpiItem[]>([]);
-  const [displayZoneViolations, setDisplayZoneViolations] = useState<
-    ZoneViolationInteface[]
-  >([]);
-  const [recentViolationsLive, setRecentViolationsLive] = useState<
-    PPEViolation[]
-  >([]);
-  const [detailedReport, setDetailedReport] =
-    useState<DetailedReportResponse | null>(null);
+  interface PPEViolation {
+    voilation: string;
+    zone: string;
+    time: string;
+    imageUrl: string;
+    cameraId: string;
+    alarmTriggered: boolean;
+    [key: string]: string | number | boolean;
+  }
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-
   const [viewPopupData, setViewPopupData] = useState<PPEViolation | null>(null);
-  const [isExporting, setIsExporting] = useState(false);//report loader
-  const [downloadingRows, setDownloadingRows] = useState<Set<number>>(new Set());//single report loader of report table
 
-  /* ---------- API HOOKS ---------- */
-  const [fetchKpi, { isLoading: kpiLoading }] =
-    useLazyGetPPEKitDetectionKpiDataQuery();
-  const [fetchZoneViolations, { isLoading: zoneLoading }] =
-    useLazyGetPPEKitDetectionZoneViolationsQuery();
-  const [fetchRecent, { isLoading: recentLoading }] =
-    useLazyGetPpeKitDetectionRecentViolationsQuery();
-  const [fetchDetailedReportApi, { isLoading: reportLoading }] =
-    useLazyGetPpeKitDetectionDetailedReportQuery();
-  const [downloadSinglePdf] = useGetPpeKitDetectionSingleReportPdfMutation();
-  const [downloadCsvReport] = useGetPpeKitDetectionDetailedCsvReportMutation();
-  const [downloadPdfReport] = useGetPpeKitDetectionDetailedPdfReportMutation();
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
 
-  /* ---------- INITIAL LOAD ---------- */
-  useEffect(() => {
-    const load = async () => {
-      const [kpi, zones, recent, detailed] = await Promise.all([
-        fetchKpi({ tenantId }).unwrap(),
-        fetchZoneViolations({ tenantId }).unwrap(),
-        fetchRecent({ tenantId }).unwrap(),
-        fetchDetailedReportApi({ tenantId }).unwrap(),
-      ]);
-
-      setDisplayKpi(kpi ?? []);
-      setDisplayZoneViolations(zones ?? []);
-      setRecentViolationsLive(recent ?? []);
-      setDetailedReport(detailed);
-    };
-
-    load().catch(console.error);
-  }, [
-    tenantId,
-    fetchKpi,
-    fetchZoneViolations,
-    fetchRecent,
-    fetchDetailedReportApi,
-  ]);
-
-  /* ---------- SOCKET (LIVE ONLY) ---------- */
-  useSocketEvent<PpeSocketPayload>({
-    tenantId,
-    enabled: isLiveMode,
-    event: SOCKET_EVENTS.PPE_UPDATE,
-    handler: (payload) => {
-      console.log("payload form the socket", payload);
-      setDisplayKpi(payload.kpi ?? []);
-      setDisplayZoneViolations(payload.zoneViolations ?? []);
-      setRecentViolationsLive(payload.recentViolations ?? []);
+  const ppeKpiData = [
+    {
+      title: "Total Violations",
+      value: "87",
+      icon: Shield,
+      tooltipMessage:
+        "Total number of PPE violations detected across all monitored zones.",
     },
-  });
-
-  /* ---------- TIME FILTER ---------- */
-  const handleTimeRangeChange = useCallback(
-    async (range: { start?: string; end?: string }) => {
-      if (!range.start && !range.end) {
-        setIsLiveMode(true);
-        fetchKpi({ tenantId });
-        fetchZoneViolations({ tenantId });
-        fetchRecent({ tenantId });
-        return;
-      }
-
-      setIsLiveMode(false);
-      const payload = {
-        tenantId: tenantId,
-        startDate: range.start,
-        endDate: range.end,
-      };
-      const [kpi, zones, recent] = await Promise.all([
-        fetchKpi(payload).unwrap(),
-        fetchZoneViolations(payload).unwrap(),
-        fetchRecent(payload).unwrap(),
-      ]);
-
-      setDisplayKpi(kpi ?? []);
-      setDisplayZoneViolations(zones ?? []);
-      setRecentViolationsLive(recent ?? []);
+    {
+      title: "Current Unsafe Zone",
+      value: "2",
+      icon: LocationOn,
+      tooltipMessage:
+        "Number of zones where unsafe PPE compliance was detected.",
     },
-    [tenantId, fetchKpi, fetchZoneViolations, fetchRecent],
-  );
-// -------- Derived data for new components --------
-const breakdownData = useMemo(() => {
-  const breakdownItems: BreakdownItem[] = [];
-  let total = 0;
-
-  displayKpi.forEach((item) => {
-    if (item.title === "Total Violations") {
-      total = Number(item.value);
-    } else {
-      // Only include non‑total items as breakdown categories
-      breakdownItems.push({
-        label: item.title,
-        count: Number(item.value),
-      });
-    }
-  });
-
-  return { total, breakdownItems };
-}, [displayKpi]);
-
-const lastDetectionTime = useMemo(() => {
-  if (recentViolationsLive.length === 0) return "--:--:--";
-  // Sort by time descending and take the latest
-  const sorted = [...recentViolationsLive].sort(
-    (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
-  );
-  const latest = sorted[0];
-  return latest.time ? new Date(latest.time).toLocaleTimeString() : "--:--:--";
-}, [recentViolationsLive]);
-
-// ⚠️ Replace with real trend data from an API later
-const trendData = useMemo<TrendDataPoint[]>(
-  () => [
-    { date: "Jun 25", value: 4 },
-    { date: "Jun 26", value: 6 },
-    { date: "Jun 27", value: 3 },
-    { date: "Jun 28", value: 8 },
-    { date: "Jun 29", value: 5 },
-    { date: "Jun 30", value: 7 },
-    { date: "Jul 01", value: 9 },
-  ],
-  []
-);
-
-const trendPercentage = useMemo(() => 18, []);
-  const ppeKpiData = useMemo(
-    () =>
-      displayKpi.map((item) => {
-        const config = ppeKpiConfig[item.title];
-
-        return {
-          ...item,
-          title: t(item.title),
-          icon: config?.icon || EngineeringIcon,
-          tooltipMessage: config?.tooltipMessage || "",
-        };
-      }),
-    [displayKpi, t],
-  );
-  const zoneViolationsForUi = useMemo(() => {
-    const iconMap: Record<string, SvgIconComponent> = {
-      Helmet: EngineeringIcon,
-      Vest: CheckroomIcon,
-      Glasses: VisibilityOffIcon,
-    };
-
-    return displayZoneViolations.map((z) => ({
-      ...z,
-      subViolations: z.subViolations?.map((s) => ({
-        ...s,
-        icon: iconMap[s.label],
-      })),
-    }));
-  }, [displayZoneViolations]);
-
-  /* ---------- REPORT HANDLERS ---------- */
-
-  const tableColumns = [
-    { id: "violation", label: t("Violation") },
-    { id: "time", label: t("Time") },
-    { id: "zone", label: t("Zone") },
-    { id: "cameraId", label: t("Cameras") },
-    { id: "alarmTriggered", label: t("Alarm Triggered") },
+    {
+      title: "Last Detection Time",
+      value: getOneHourBefore().time,
+      icon: AccessTime,
+      tooltipMessage: "The time when the last PPE violation was detected.",
+    },
+    {
+      title: "Missing Helmet",
+      value: "12",
+      icon: EngineeringIcon,
+      tooltipMessage:
+        "Number of detected instances where workers were missing helmets.",
+    },
+    {
+      title: "Missing Vest",
+      value: "12",
+      icon: Checkroom,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety vests.",
+    },
+    {
+      title: "Missing Glasses",
+      value: "9",
+      icon: Visibility,
+      tooltipMessage:
+        "Number of detected instances where workers were missing safety glasses.",
+    },
   ];
 
-  const tableFilters = [
+  const backendData = [
     {
-      id: "violation",
-      label: t("Violation"),
-      type: "select" as const,
-      options: [
-        "Hard hat missing",
-        "Safety vest not worn",
-        "Safety glasses missing",
+      id: 101,
+      helmet: false,
+      vest: true,
+      glasses: false,
+      zone: "Production Floor A",
+      snapshot: "/img/p1.jpg",
+      cameraid: "CAM-01",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 102,
+      helmet: true,
+      vest: false,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "/img/p2.png",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 103,
+      helmet: false,
+      vest: true,
+      glasses: false,
+      zone: "Chemical Storage",
+      snapshot: "/img/p3.avif",
+      cameraid: "CAM-03",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 104,
+      helmet: false,
+      vest: true,
+      glasses: false,
+      zone: "Assembly Line B",
+      snapshot: "/img/p2.png",
+      cameraid: "CAM-04",
+      alarmTriggered: false,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 105,
+      helmet: false,
+      vest: true,
+      glasses: true,
+      zone: "Maintenance Area",
+      snapshot: "/img/p1.jpg",
+      cameraid: "CAM-05",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 106,
+      helmet: true,
+      vest: false,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "/img/p2.png",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+
+    {
+      id: 108,
+      helmet: false,
+      vest: true,
+      glasses: false,
+      zone: "Production Floor A",
+      snapshot: "/img/p1.jpg",
+      cameraid: "CAM-01",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 109,
+      helmet: true,
+      vest: false,
+      glasses: false,
+      zone: "Welding Station",
+      snapshot: "/img/p3.avif",
+      cameraid: "CAM-02",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+    {
+      id: 107,
+      helmet: true,
+      vest: true,
+      glasses: false,
+      zone: "Chemical Storage",
+      snapshot: "/img/p2.png",
+      cameraid: "CAM-03",
+      alarmTriggered: true,
+      createdAt: getOneHourBefore().fullDate,
+    },
+  ];
+  const recentViolations = backendData.map((item) => {
+    const titleParts = [];
+
+    if (item.helmet === false) titleParts.push("Hard hat missing");
+    if (item.vest === false) titleParts.push("Safety vest not worn");
+    if (item.glasses === false) titleParts.push("Safety glasses missing");
+
+    return {
+      voilation: titleParts.join(", ") ?? "No violation",
+      zone: item.zone,
+      time: item.createdAt,
+      imageUrl: item.snapshot,
+      cameraId: item.cameraid,
+      alarmTriggered: item.alarmTriggered,
+    };
+  });
+
+  console.log("RELCENTVOLATION DATAA", recentViolations);
+
+  const zoneViolationsData = [
+    {
+      zone: "Production Floor A",
+      violations: 8,
+      subViolations: [
+        { label: "Helmet", value: 3, icon: EngineeringIcon },
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
       ],
     },
     {
-      id: "zone",
-      label: t("Zone"),
-      type: "select" as const,
-
-      options: detailedReport?.zones || [],
+      zone: "Welding Station",
+      violations: 6,
+      subViolations: [
+        { label: "Helmet", value: 4, icon: EngineeringIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
     },
     {
-      id: "cameraId",
-      label: t("Cameras"),
-      type: "select" as const,
-
-      options: detailedReport?.cameras || [],
+      zone: "Chemical Storage",
+      violations: 5,
+      subViolations: [
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 3, icon: VisibilityOffIcon },
+      ],
     },
     {
-      id: "alarmTriggered",
-      label: t("Alarm Triggered"),
-      type: "select" as const,
-      options: ["True", "False"],
+      zone: "Assembly Line B",
+      violations: 7,
+      subViolations: [
+        { label: "Helmet", value: 2, icon: EngineeringIcon },
+        { label: "Vest", value: 3, icon: CheckroomIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
     },
-    { id: "startDate", label: t("Start Date"), type: "date" as const },
-    { id: "endDate", label: t("End Date"), type: "date" as const },
+    {
+      zone: "Warehouse",
+      violations: 4,
+      subViolations: [
+        { label: "Helmet", value: 1, icon: EngineeringIcon },
+        { label: "Vest", value: 2, icon: CheckroomIcon },
+        { label: "Glasses", value: 1, icon: VisibilityOffIcon },
+      ],
+    },
+    {
+      zone: "Maintenance Area",
+      violations: 9,
+      subViolations: [
+        { label: "Helmet", value: 4, icon: EngineeringIcon },
+        { label: "Vest", value: 3, icon: CheckroomIcon },
+        { label: "Glasses", value: 2, icon: VisibilityOffIcon },
+      ],
+    },
   ];
 
-  const handleSubmitFilter = useCallback(
-    async (filters: FilterParams) => {
-      console.log("filter params", filters);
-
-      const body = {
-        tenantId: tenantId,
-
-        violation: filters.violation || undefined,
-        zone: filters.zone || undefined,
-        cameraId: filters.cameraId || undefined,
-
-        alarmTriggered:
-          filters.alarmTriggered === undefined
-            ? undefined
-            : filters.alarmTriggered === "True",
-        startDate: formatLocalDateTime(filters.startDate),
-        endDate: formatLocalDateTime(filters.endDate),
-      };
-
-      console.log("🚀 Sending payload:", body);
-
-      const response = await fetchDetailedReportApi(body).unwrap();
-      setDetailedReport(response);
-    },
-    [tenantId, fetchDetailedReportApi, formatLocalDateTime],
-  );
-
-  const handleReset = useCallback(async () => {
-    const response = await fetchDetailedReportApi({
-      tenantId: tenantId,
-    }).unwrap();
-    setDetailedReport(response);
-  }, [tenantId, fetchDetailedReportApi]);
-
-  const handleExport = useCallback(
-    async (format: "csv" | "pdf", filters: FilterParams) => {
-      try {
-        setIsExporting(true)
-        const payload = {
-          tenantId,
-
-          violation: filters.violation || undefined,
-          zone: filters.zone || undefined,
-          cameraId: filters.cameraId || undefined,
-
-          alarmTriggered:
-            filters.alarmTriggered === undefined
-              ? undefined
-              : filters.alarmTriggered === "True",
-
-          startDate: formatLocalDateTime(filters.startDate),
-          endDate: formatLocalDateTime(filters.endDate),
-        };
-
-        // ================= CSV =================
-        if (format === "csv") {
-          await downloadCsvReport(payload);
-        }
-
-        // ================= PDF =================
-        if (format === "pdf") {
-          await downloadPdfReport(payload).unwrap();
-        }
-      } catch (error) {
-        console.error("❌ Export failed:", error);
-      } finally {
-        setIsExporting(false)
-      }
-    },
-    [tenantId, downloadCsvReport, downloadPdfReport, formatLocalDateTime],
-  );
-
-  const handleDownloadSingle = useCallback(
-    async (row: PPEViolation, index: number) => {
-      try {
-        setDownloadingRows((prev) => {
-          const newSet = new Set(prev);
-          newSet.add(index);
-          return newSet;
-        });
-        const payload = {
-          tenantId,
-          violation: String(row.violation),
-          zone: row.zone,
-          time: row.time,
-          cameraId: row.cameraId,
-          alarmTriggered: row.alarmTriggered,
-          imageUrl: row.imageUrl,
-        };
-
-        await downloadSinglePdf(payload);
-      } catch (error) {
-        console.error("❌ Single PDF download failed", error);
-      } finally {
-        setDownloadingRows((prev) => {
-          const newSet = new Set(prev);
-          newSet.delete(index);
-          return newSet;
-        });
-      }
-    },
-    [tenantId, downloadSinglePdf],
-  );
-
-  const handleViewSingle = useCallback(
-    (row: PPEViolation) => {
-      console.log("view single row", row);
-      setViewPopupData(row);
-      setViewPopupOpen(true);
-    },
-    [], // setState functions are stable
-  );
-  const handleDownloadViolation = async (url: string, violation: Violation) => {
-    if (!violation) return;
-    const ppeViolation = violation as PPEViolation;
-    try {
-      const payload = {
-        tenantId: tenantId,
-        violation: String(ppeViolation.violation),
-        zone: ppeViolation.zone,
-        time: ppeViolation.time,
-        cameraId: ppeViolation.cameraId,
-        alarmTriggered: ppeViolation.alarmTriggered,
-        imageUrl: url,
-      };
-
-      await downloadSinglePdf(payload);
-    } catch (err) {
-      console.error("PDF download failed", err);
-    }
+  const handleSubmitFilter = async (filters: FilterParams) => {
+    console.log("Selected Filters:", filters);
   };
 
-  /* ---------- RENDER ---------- */
+  const handleReset = () => {
+    console.log("reset button clickedd");
+  };
+
+  const handleExport = (format: "csv" | "pdf") => {
+    console.log("Export requested:", format);
+
+    const fileName = format === "pdf" ? "ppe-report.pdf" : "ppe-report.csv";
+
+    const fileUrl = `/reports/${fileName}`;
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    link.click();
+  };
+  const handleDownloadSingle = () => {
+    console.log("download single row");
+    const fileName = "ppe-single-report.pdf";
+
+    const fileUrl = `/reports/${fileName}`;
+
+    const link = document.createElement("a");
+    link.href = fileUrl;
+    link.download = fileName;
+    link.click();
+  };
+  const handleViewSingle = (row: PPEViolation) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
+    setViewPopupOpen(true);
+  };
+  const KpiCardLoading = false;
+
   return (
     <Box>
-      <Paper sx={{ p: 3, backgroundColor: "#fff", borderRadius: 2 }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
-          <Typography variant="h6">📊 {t("Overview")}</Typography>
-          <TimeFilter onRangeChange={handleTimeRangeChange} />
+      {/* KPI Cards */}
+      <Paper sx={{ p: 3, mb: 0, backgroundColor: "#ffffff", borderRadius: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <ShowChartIcon sx={{ color: "#1976d2", fontSize: 24 }} /> */}
+            <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: 18 }}>
+              <Box component="span" sx={{ mr: 2 }}>
+                📊 Overview
+              </Box>
+            </Typography>
+          </Box>
+
+          <TimeFilter />
         </Box>
+        <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
+          {KpiCardLoading
+            ? // Show skeletons while loading
+              skeletonKeys.map((index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCardSkeleton />
+                </Grid>
+              ))
+            : // Show actual KPI cards
+              ppeKpiData.map((kpi, index) => (
+                <Grid
+                  size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
+                  key={uuidv4() + index}
+                >
+                  <KpiCard {...kpi} />
+                </Grid>
+              ))}
+        </Grid>
 
-        {/* <Grid container spacing={2.5} sx={{ mb: 4 }}>
-          {kpiLoading
-            ? Array.from({ length: 6 }).map((_, index) => (
-              <Grid
-                key={index + 1}
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              >
-                <KpiCardSkeleton />
-              </Grid>
-            ))
-            : ppeKpiData.map((kpi) => (
-              <Grid
-                key={kpi.title}
-                size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
-              >
-                <KpiCard {...kpi} />
-              </Grid>
-            ))}
-        </Grid> */}
-<Grid container spacing={3} sx={{ mb: 4 }}>
-  {/* Violation Breakdown – left column */}
-  <Grid size={{ xs: 12, md: 6 }}>
-    {kpiLoading ? (
-      <Box sx={{ height: 220, bgcolor: "#f5f5f5", borderRadius: 2 }} />
-    ) : (
-      <ViolationBreakdown
-        totalViolations={breakdownData.total}
-        breakdown={breakdownData.breakdownItems}
-        lastDetection={lastDetectionTime}
-      />
-    )}
-  </Grid>
-
-  {/* Violations Trend – right column */}
-  <Grid size={{ xs: 12, md: 6 }}>
-    {kpiLoading ? (
-      <Box sx={{ height: 220, bgcolor: "#f5f5f5", borderRadius: 2 }} />
-    ) : (
-      <ViolationsTrend
-        data={trendData}
-        trendPercentage={trendPercentage}
-        trendLabel="↑"
-      />
-    )}
-  </Grid>
-</Grid>
+        {/* Content Grid */}
         <Grid container spacing={3}>
+          {/* Recent PPE Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              label={t("Recent Violations")}
-              violations={recentViolationsLive}
-              loading={recentLoading}
-              tooltipMessage="Latest 20 detected PPE violations"
-              onDownload={handleDownloadViolation}
+              tooltipMessage="Latest 20 detected PPE violations with details."
+              label="Recent Violations"
+              violations={recentViolations}
+              loading={false}
             />
           </Grid>
+          {/* PPE Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              label={t("Zone Violations")}
-              violationsZone={zoneViolationsForUi}
-              loading={zoneLoading}
+              //showSubViolations
+              violationsZone={zoneViolationsData}
+              loading={false}
               tooltipMessage="Shows PPE violations per zone"
             />
           </Grid>
         </Grid>
       </Paper>
-
+      {/* PPE Violations Report */}
       <ReportTable
-        totalCount={4}
-        page={0}
-        rowsPerPage={10}
-        title={t("Detailed Report")}
+        title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-        data={detailedReport?.data || []}
-        columns={tableColumns}
-        filters={tableFilters}
+        columns={[
+          { id: "voilation", label: "Violation" },
+          { id: "time", label: "Time" },
+          { id: "zone", label: "Zone" },
+          { id: "cameraId", label: "Cameras" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
+        ]}
+        data={recentViolations}
+        filters={[
+          {
+            id: "voilation",
+            label: "Violation",
+            type: "select",
+
+            options: [
+              "Hard hat missing",
+              "Safety vest not worn",
+              "Safety glasses missing",
+            ],
+          },
+          {
+            id: "zone",
+            label: "Zone",
+            type: "select",
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
+          },
+          {
+            id: "cameraId",
+            label: "Cameras",
+            type: "select",
+            options: Array.from(
+              new Set(recentViolations.map((v) => v.cameraId))
+            ),
+          },
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
+          { id: "time", label: "Start Date", type: "date" },
+          { id: "time", label: "End Date", type: "date" },
+        ]}
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
         onExport={handleExport}
-        onDownload={(row, index) => handleDownloadSingle(row as PPEViolation, index)}
-        exportLoading={isExporting}
-        downloadingRows={downloadingRows}
-        onView={(row) => handleViewSingle(row as PPEViolation)}
+        onDownload={handleDownloadSingle}
+        onView={handleViewSingle}
         downloadFileName="ppe-violations-report"
-        loading={reportLoading}
+        loading={false}
       />
+
+      {/* View Alert Popup */}
 
       <ViewAlertPopup
         open={viewPopupOpen}
         handleClose={() => setViewPopupOpen(false)}
         details={viewPopupData}
         imageKey="imageUrl"
-        onDownload={(url) => {
-          if (!viewPopupData) return;
-          handleDownloadViolation(url, viewPopupData);
-        }}
+        onDownload={(url) => console.log("Download:", url)}
       />
     </Box>
   );

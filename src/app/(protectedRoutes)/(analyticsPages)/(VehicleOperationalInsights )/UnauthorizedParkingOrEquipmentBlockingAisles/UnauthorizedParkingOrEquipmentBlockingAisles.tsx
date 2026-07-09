@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import ReportTable from "@/app/components/organisms/ReportTable/ReportTable";
 import KpiCard from "@/app/components/molecules/KpiCard/KpiCard";
@@ -6,180 +7,169 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { AccessTime, Room } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import { Block, CheckCircle, LocationOn } from "@mui/icons-material";
+
+import CarIcon from "@mui/icons-material/DirectionsCar";
+import EquipmentIcon from "@mui/icons-material/Build";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
-const EmployeeIdleTime: React.FC = () => {
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  interface EmployeeIdleEvent {
-    incident: string;
+const UnauthorizedParkingOrEquipmentBlockingAisles: React.FC = () => {
+  const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
+  interface UnauthorizedParkingEvent {
+    eventMessage: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
-
+    alarmTriggered: boolean;
+    updatedAt: string;
     [key: string]: string | number | boolean;
   }
 
-  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
-    null
-  );
-  const EmployeeIdleTimeKpiData = [
+  const [viewPopupData, setViewPopupData] =
+    useState<UnauthorizedParkingEvent | null>(null);
+  const UnauthorizedParkingKpiData = [
     {
-      title: "Total Idle Events",
-      value: "23",
-      icon: AccessTime,
+      title: "Blocked Parking",
+      value: "87",
       tooltipMessage:
-        "Total number of idle time events detected by the system.",
+        "Shows the total number of parking that are currently blocked.",
+      icon: Block,
     },
     {
-      title: "Last Idle Detection Time",
-      value: getOneHourBefore().time,
-      icon: AccessTime,
-      tooltipMessage: "The most recent idle detection timestamp.",
+      title: "Clear Parking",
+      value: "12",
+      tooltipMessage:
+        "Shows the total number of parking that are currently clear and safe for use.",
+      icon: CheckCircle,
+      trendColor: "#4caf50",
+      color: "#4caf50",
+      bgColor: "#e8f5e9",
+      borderColor: "#4caf50",
+      iconBg: "rgba(76, 175, 80, 0.1)",
     },
     {
-      title: "Last Idle Detection Zone",
-      value: "Assembly Line A",
-      icon: Room,
-      tooltipMessage: "The zone where the most recent idle event was detected.",
+      title: "Affected Zones (Last 3)",
+      value: "Zone A, Zone B, Zone C",
+      tooltipMessage:
+        "Displays the last three zones where blocked parking were detected.",
+      icon: LocationOn,
     },
   ];
-  const backendIdleData = [
+
+  const backendData = [
     {
-      id: 301,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-01",
-      zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=21",
-      cameraid: "CAM-I01",
+      id: 201,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Loading Bay A",
+      camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:55",
+      updatedAt: "2025-10-09 08:45",
     },
     {
-      id: 302,
-      isIdle: false,
-      isWorking: true,
-      notPresent: false,
-      trackingId: "TRK-02",
-      zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=22",
-      cameraid: "CAM-I02",
+      id: 202,
+      typeOf: "Not Car",
+      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Warehouse Zone B",
+      camera: "CAM-12",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:45",
+      updatedAt: "2025-10-09 09:18",
     },
     {
-      id: 303,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-03",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=23",
-      cameraid: "CAM-I03",
+      id: 203,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=13",
+      zone: "Assembly Area C",
+      camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:35",
+      updatedAt: "2025-10-09 10:08",
     },
     {
-      id: 304,
-      isIdle: false,
-      isWorking: false,
-      notPresent: true,
-      trackingId: "TRK-04",
-      zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=24",
-      cameraid: "CAM-I04",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:25",
-    },
-    {
-      id: 305,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-05",
+      id: 204,
+      typeOf: "Not Car",
+      snapshot: "https://picsum.photos/400/200?random=14",
       zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=25",
-      cameraid: "CAM-I05",
+      camera: "CAM-14",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:15",
+      updatedAt: "2025-10-09 11:28",
+    },
+    {
+      id: 205,
+      typeOf: "Car",
+      snapshot: "https://picsum.photos/400/200?random=15",
+      zone: "Parking Zone D",
+      camera: "CAM-15",
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-10-09 12:45",
     },
   ];
 
-  const recentIdleEvents = backendIdleData.map((item) => {
-    const titleParts = [];
-
-    if (item.isIdle) titleParts.push("Employee Idle");
-    if (item.isWorking) titleParts.push("Employee Working");
-    if (item.notPresent) titleParts.push("Employee Not Present");
+  const recentViolations = backendData.map((item) => {
+    const eventMessage =
+      item.typeOf === "Car"
+        ? "Unauthorized Car Parking"
+        : "Equipment Blocking Aisle";
 
     return {
-      incident: titleParts.join(", ") ?? "No event",
+      eventMessage,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
-      cameraId: item.cameraid,
+      cameraId: item.camera,
+      alarmTriggered: true,
+      updatedAt: item.updatedAt,
     };
   });
 
-  console.log("RECENT IDLE EVENTS", recentIdleEvents);
+  console.log(recentViolations);
 
-  const zoneIdleData = [
+  const zoneViolationsData = [
     {
-      zone: "Production Floor A",
-      incidents: 7,
+      zone: "Loading Bay A",
+      violations: 5,
       subViolations: [
-        { label: "Idle", value: 4, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Car", value: 3, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
       ],
     },
     {
-      zone: "Welding Station",
-      incidents: 5,
+      zone: "Warehouse Zone B",
+      violations: 4,
       subViolations: [
-        { label: "Working", value: 4, icon: WorkOutlineIcon },
-        { label: "Idle", value: 1, icon: AccessTimeIcon },
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 3, icon: EquipmentIcon },
       ],
     },
     {
-      zone: "Chemical Storage",
-      incidents: 6,
+      zone: "Assembly Area C",
+      violations: 6,
       subViolations: [
-        { label: "Idle", value: 3, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
-      ],
-    },
-    {
-      zone: "Assembly Line B",
-      incidents: 4,
-      subViolations: [
-        { label: "Not Present", value: 2, icon: PersonOffIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Car", value: 4, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
       ],
     },
     {
       zone: "Maintenance Area",
-      incidents: 8,
+      violations: 3,
       subViolations: [
-        { label: "Idle", value: 5, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Car", value: 1, icon: CarIcon },
+        { label: "Equipment", value: 2, icon: EquipmentIcon },
+      ],
+    },
+    {
+      zone: "Parking Zone D",
+      violations: 2,
+      subViolations: [
+        { label: "Car", value: 2, icon: CarIcon },
+        { label: "Equipment", value: 0, icon: EquipmentIcon },
       ],
     },
   ];
-
   interface FilterParams {
     status?: string;
     employeeName?: string;
@@ -198,10 +188,11 @@ const EmployeeIdleTime: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: EmployeeIdleEvent) => {
+  const handleViewSingle = (row: UnauthorizedParkingEvent) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -249,7 +240,7 @@ const EmployeeIdleTime: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              EmployeeIdleTimeKpiData.map((kpi, index) => (
+              UnauthorizedParkingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -261,23 +252,22 @@ const EmployeeIdleTime: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              tooltipMessage="Latest 20 detected idel, working,not present employee with details."
-              label="Recent Incident"
-              violations={recentIdleEvents}
+              label="Recent Violations"
+              violations={recentViolations}
               loading={false}
+              tooltipMessage="Latest 20 unauthorized parking or equipment blocking with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              violationsZone={zoneIdleData}
+              violationsZone={zoneViolationsData}
               loading={false}
-              tooltipMessage="Shows idel, working,not present employee per zone"
-              label="Zone Incident"
+              tooltipMessage="Shows unauthorized parking or equipment blocking per zone"
             />
           </Grid>
         </Grid>
@@ -285,49 +275,58 @@ const EmployeeIdleTime: React.FC = () => {
       {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
-        tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed report of unauthorized parking and equipment blocking aisles"
         columns={[
-          { id: "incident", label: "Incident" },
-          { id: "time", label: "Time" },
-          { id: "zone", label: "Zone" },
-          { id: "cameraId", label: "Cameras" },
+          { id: "eventMessage", label: "Voilation", minWidth: 200 },
+          { id: "time", label: "Time", minWidth: 150 },
+          { id: "zone", label: "Zone", minWidth: 120 },
+
+          { id: "cameraId", label: "Camera", minWidth: 120 },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={recentIdleEvents}
+        data={recentViolations}
         filters={[
           {
-            id: "incident",
-            label: "Incident",
+            id: "eventMessage",
+            label: "Voilation",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.incident))
+              new Set(recentViolations.map((v) => v.eventMessage))
             ),
           },
+
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: Array.from(new Set(recentIdleEvents.map((v) => v.zone))),
+            options: Array.from(new Set(recentViolations.map((v) => v.zone))),
           },
           {
             id: "cameraId",
-            label: "Cameras",
+            label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId))
             ),
           },
-
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}
+        downloadFileName="unauthorized-parking-report"
         onSubmit={handleSubmitFilter}
         onReset={handleReset}
-        onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        downloadFileName="employee-idle-time-report"
+        onExport={handleExport}
         loading={false}
       />
+
       {/* View Alert Popup */}
 
       <ViewAlertPopup
@@ -341,4 +340,4 @@ const EmployeeIdleTime: React.FC = () => {
   );
 };
 
-export default EmployeeIdleTime;
+export default UnauthorizedParkingOrEquipmentBlockingAisles;

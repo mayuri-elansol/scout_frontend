@@ -6,176 +6,165 @@ import { Box, Grid, Paper, Typography } from "@mui/material";
 import RecentViolations from "@/app/components/molecules/RecentViolations/RecentViolations";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import { v4 as uuidv4 } from "uuid";
-import { AccessTime, Room } from "@mui/icons-material";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import { LocalShipping, Timeline } from "@mui/icons-material";
 import TimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/TimeFilter";
 import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolations";
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetectionPage/PPEKitDetection";
 
-const EmployeeIdleTime: React.FC = () => {
-  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
-  interface EmployeeIdleEvent {
+const VehicleUnloadingLoading: React.FC = () => {
+  interface VehicleLoadingEvent {
     incident: string;
+    trackId: string;
     zone: string;
     time: string;
     imageUrl: string;
     cameraId: string;
+    alarmTriggered: boolean;
 
     [key: string]: string | number | boolean;
   }
-
-  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
-  const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
-    null
-  );
-  const EmployeeIdleTimeKpiData = [
+  const [viewPopupData, setViewPopupData] =
+    useState<VehicleLoadingEvent | null>(null);
+  const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
+  const VehicleUnloadingLoadingKpiData = [
     {
-      title: "Total Idle Events",
-      value: "23",
-      icon: AccessTime,
+      title: "Total Loading/Unloading Event",
+      value: "87",
+      icon: LocalShipping,
+      tooltipMessage: "Total loading/unloading events recorded.",
+    },
+    {
+      title: "Average Loading/Unloading Time",
+      value: "1.56 hrs",
+      icon: AccessTimeIcon,
       tooltipMessage:
-        "Total number of idle time events detected by the system.",
+        "Shows the Average Time for Vehical Loading/Unloading event",
     },
+
     {
-      title: "Last Idle Detection Time",
-      value: getOneHourBefore().time,
-      icon: AccessTime,
-      tooltipMessage: "The most recent idle detection timestamp.",
-    },
-    {
-      title: "Last Idle Detection Zone",
-      value: "Assembly Line A",
-      icon: Room,
-      tooltipMessage: "The zone where the most recent idle event was detected.",
+      title: "Busiest Zone",
+      value: "Zone A",
+      icon: Timeline,
+      tooltipMessage: "Zone with the highest operation activity.",
     },
   ];
-  const backendIdleData = [
+  const backendData = [
     {
       id: 301,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-01",
-      zone: "Production Floor A",
+      trackId: "TRK-001",
+      loadingState: "Start",
       snapshot: "https://picsum.photos/400/200?random=21",
-      cameraid: "CAM-I01",
+      zone: "Loading Bay A",
+      camera: "CAM-21",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:55",
+      updatedAt: "2025-10-09 08:20",
     },
     {
       id: 302,
-      isIdle: false,
-      isWorking: true,
-      notPresent: false,
-      trackingId: "TRK-02",
-      zone: "Welding Station",
+      trackId: "TRK-002",
+      loadingState: "Stop",
       snapshot: "https://picsum.photos/400/200?random=22",
-      cameraid: "CAM-I02",
+      zone: "Loading Bay B",
+      camera: "CAM-22",
+      alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:45",
+      updatedAt: "2025-10-09 09:35",
     },
     {
       id: 303,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-03",
-      zone: "Chemical Storage",
+      trackId: "TRK-003",
+      loadingState: "Start",
       snapshot: "https://picsum.photos/400/200?random=23",
-      cameraid: "CAM-I03",
+      zone: "Unloading Bay A",
+      camera: "CAM-23",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:35",
+      updatedAt: "2025-10-09 10:05",
     },
     {
       id: 304,
-      isIdle: false,
-      isWorking: false,
-      notPresent: true,
-      trackingId: "TRK-04",
-      zone: "Assembly Line B",
+      trackId: "TRK-004",
+      loadingState: "Stop",
       snapshot: "https://picsum.photos/400/200?random=24",
-      cameraid: "CAM-I04",
+      zone: "Unloading Bay B",
+      camera: "CAM-24",
+      alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:25",
+      updatedAt: "2025-10-09 11:05",
     },
     {
       id: 305,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-05",
-      zone: "Maintenance Area",
+      trackId: "TRK-005",
+      loadingState: "Start",
       snapshot: "https://picsum.photos/400/200?random=25",
-      cameraid: "CAM-I05",
+      zone: "Loading Bay C",
+      camera: "CAM-25",
+      alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:15",
+      updatedAt: "2025-10-09 12:20",
     },
   ];
 
-  const recentIdleEvents = backendIdleData.map((item) => {
-    const titleParts = [];
-
-    if (item.isIdle) titleParts.push("Employee Idle");
-    if (item.isWorking) titleParts.push("Employee Working");
-    if (item.notPresent) titleParts.push("Employee Not Present");
+  const recentLoadingEvents = backendData.map((item) => {
+    const incident =
+      item.loadingState === "Start" ? "Loading started" : "Loading stopped";
 
     return {
-      incident: titleParts.join(", ") ?? "No event",
+      incident,
+      trackId: item.trackId,
       zone: item.zone,
       time: item.createdAt,
       imageUrl: item.snapshot,
-      cameraId: item.cameraid,
+      cameraId: item.camera,
+      alarmTriggered: item.alarmTriggered,
     };
   });
 
-  console.log("RECENT IDLE EVENTS", recentIdleEvents);
-
-  const zoneIdleData = [
+  const zoneLoadingData = [
     {
-      zone: "Production Floor A",
-      incidents: 7,
+      zone: "Loading Bay A",
+      incident: 12,
       subViolations: [
-        { label: "Idle", value: 4, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Start", value: 7, icon: PlayCircleIcon },
+        { label: "Stop", value: 5, icon: StopCircleIcon },
       ],
     },
     {
-      zone: "Welding Station",
-      incidents: 5,
+      zone: "Loading Bay B",
+      incident: 9,
       subViolations: [
-        { label: "Working", value: 4, icon: WorkOutlineIcon },
-        { label: "Idle", value: 1, icon: AccessTimeIcon },
+        { label: "Start", value: 4, icon: PlayCircleIcon },
+        { label: "Stop", value: 5, icon: StopCircleIcon },
       ],
     },
     {
-      zone: "Chemical Storage",
-      incidents: 6,
+      zone: "Unloading Bay A",
+      incident: 15,
       subViolations: [
-        { label: "Idle", value: 3, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Start", value: 9, icon: PlayCircleIcon },
+        { label: "Stop", value: 6, icon: StopCircleIcon },
       ],
     },
     {
-      zone: "Assembly Line B",
-      incidents: 4,
+      zone: "Unloading Bay B",
+      incident: 8,
       subViolations: [
-        { label: "Not Present", value: 2, icon: PersonOffIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
+        { label: "Start", value: 4, icon: PlayCircleIcon },
+        { label: "Stop", value: 4, icon: StopCircleIcon },
       ],
     },
     {
-      zone: "Maintenance Area",
-      incidents: 8,
+      zone: "Loading Bay C",
+      incident: 10,
       subViolations: [
-        { label: "Idle", value: 5, icon: AccessTimeIcon },
-        { label: "Working", value: 2, icon: WorkOutlineIcon },
-        { label: "Not Present", value: 1, icon: PersonOffIcon },
+        { label: "Start", value: 6, icon: PlayCircleIcon },
+        { label: "Stop", value: 4, icon: StopCircleIcon },
       ],
     },
   ];
@@ -198,10 +187,11 @@ const EmployeeIdleTime: React.FC = () => {
   const handleExport = (format: "csv" | "pdf") => {
     console.log("Export requested clikcedd:", format);
   };
+
   const handleDownloadSingle = () => {
     console.log("download single row");
   };
-  const handleViewSingle = (row: EmployeeIdleEvent) => {
+  const handleViewSingle = (row: VehicleLoadingEvent) => {
     console.log("view single row", row);
     setViewPopupData(row);
     setViewPopupOpen(true);
@@ -249,7 +239,7 @@ const EmployeeIdleTime: React.FC = () => {
                 </Grid>
               ))
             : // Show actual KPI cards
-              EmployeeIdleTimeKpiData.map((kpi, index) => (
+              VehicleUnloadingLoadingKpiData.map((kpi, index) => (
                 <Grid
                   size={{ xs: 12, sm: 6, md: 4, lg: 3, xl: 2 }}
                   key={uuidv4() + index}
@@ -261,23 +251,23 @@ const EmployeeIdleTime: React.FC = () => {
 
         {/* Content Grid */}
         <Grid container spacing={3}>
-          {/* Recent Violations */}
+          {/* Recent  Violations */}
           <Grid size={{ xs: 12, lg: 8 }}>
             <RecentViolations
-              tooltipMessage="Latest 20 detected idel, working,not present employee with details."
               label="Recent Incident"
-              violations={recentIdleEvents}
+              violations={recentLoadingEvents}
               loading={false}
+              tooltipMessage="Latest 20 Vehicle unloading and loading events with details."
             />
           </Grid>
-          {/* PPE Compliance by Zone */}
+          {/*  Compliance by Zone */}
 
           <Grid size={{ xs: 12, lg: 4 }}>
             <ZoneViolations
-              violationsZone={zoneIdleData}
-              loading={false}
-              tooltipMessage="Shows idel, working,not present employee per zone"
               label="Zone Incident"
+              violationsZone={zoneLoadingData}
+              loading={false}
+              tooltipMessage="Shows vehicle unloading and loading events per zone"
             />
           </Grid>
         </Grid>
@@ -285,38 +275,46 @@ const EmployeeIdleTime: React.FC = () => {
       {/*  Violations Report */}
       <ReportTable
         title="Detailed Report"
-        tooltipMessage="Detailed idle time events report with filter, reset, and CSV/PDF download options."
+        tooltipMessage="Detailed vehicle loading/unloading events report with filter, reset, and export options."
         columns={[
-          { id: "incident", label: "Incident" },
+          { id: "incident", label: "incident" },
           { id: "time", label: "Time" },
           { id: "zone", label: "Zone" },
-          { id: "cameraId", label: "Cameras" },
+          { id: "cameraId", label: "Camera" },
+          { id: "alarmTriggered", label: "Alarm Triggered" },
         ]}
-        data={recentIdleEvents}
+        data={recentLoadingEvents}
         filters={[
           {
             id: "incident",
             label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.incident))
+              new Set(recentLoadingEvents.map((v) => v.incident))
             ),
           },
           {
             id: "zone",
             label: "Zone",
             type: "select",
-            options: Array.from(new Set(recentIdleEvents.map((v) => v.zone))),
+            options: Array.from(
+              new Set(recentLoadingEvents.map((v) => v.zone))
+            ),
           },
           {
             id: "cameraId",
-            label: "Cameras",
+            label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.cameraId))
+              new Set(recentLoadingEvents.map((v) => v.cameraId))
             ),
           },
-
+          {
+            id: "alarmTriggered",
+            label: "Alarm Triggered",
+            type: "select",
+            options: ["True", "False"],
+          },
           { id: "time", label: "Start Date", type: "date" },
           { id: "time", label: "End Date", type: "date" },
         ]}
@@ -325,7 +323,7 @@ const EmployeeIdleTime: React.FC = () => {
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        downloadFileName="employee-idle-time-report"
+        downloadFileName="vehicle-loading-unloading-report"
         loading={false}
       />
       {/* View Alert Popup */}
@@ -341,4 +339,4 @@ const EmployeeIdleTime: React.FC = () => {
   );
 };
 
-export default EmployeeIdleTime;
+export default VehicleUnloadingLoading;

@@ -27,7 +27,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<VehicleViolation | null>(
-    null,
+    null
   );
   const backendVehicleData = [
     {
@@ -145,9 +145,9 @@ const VehicalSpeedMonitoring: React.FC = () => {
   ];
 
   const KpiCardLoading = false;
-  const handleViewSingle = (row: Record<string, string | number | boolean>) => {
-    const violation = row as VehicleViolation;
-    setViewPopupData(violation);
+  const handleViewSingle = (row: VehicleViolation) => {
+    console.log("view single row", row);
+    setViewPopupData(row);
     setViewPopupOpen(true);
   };
   const skeletonKeys = Array.from({ length: 6 }, () => uuidv4());
@@ -178,7 +178,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={() => console.log("on range chnaged")} />
+          <TimeFilter />
         </Box>
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
           {KpiCardLoading
@@ -226,9 +226,6 @@ const VehicalSpeedMonitoring: React.FC = () => {
 
       {/*  Report */}
       <ReportTable
-        totalCount={4}
-        page={0}
-        rowsPerPage={10}
         title="Detailed Report"
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
         columns={[
@@ -248,7 +245,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.zone)),
+              new Set(recentVehicleViolations.map((item) => item.zone))
             ),
           },
           {
@@ -256,7 +253,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((v) => v.cameraId)),
+              new Set(recentVehicleViolations.map((v) => v.cameraId))
             ),
           },
           {
@@ -270,7 +267,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Type",
             type: "select",
             options: Array.from(
-              new Set(recentVehicleViolations.map((item) => item.vehicleType)),
+              new Set(recentVehicleViolations.map((item) => item.vehicleType))
             ),
           },
           {
@@ -278,9 +275,7 @@ const VehicalSpeedMonitoring: React.FC = () => {
             label: "Vehicle Number",
             type: "select",
             options: Array.from(
-              new Set(
-                recentVehicleViolations.map((item) => item.vehicleNumber),
-              ),
+              new Set(recentVehicleViolations.map((item) => item.vehicleNumber))
             ),
           },
           { id: "time", label: "Start Date", type: "date" },

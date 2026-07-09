@@ -3,7 +3,7 @@ import {
   Shield,
   LocationOn,
   AccessTime,
-  Construction, // ✅ replaces invalid 'Engineering'
+  Engineering,
   Checkroom,
   Visibility,
 } from "@mui/icons-material";
@@ -23,7 +23,7 @@ export const ppeKpiConfig = {
     tooltipMessage: "The time when the last PPE violation was detected.",
   },
   "Missing Helmet": {
-    icon: Construction, // ✅ valid MUI icon for helmet/safety
+    icon: Engineering,
     tooltipMessage:
       "Number of detected instances where workers were missing helmets.",
   },
