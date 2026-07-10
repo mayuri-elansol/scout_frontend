@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import DashboardKpiCard from "./DashboardKpiCard";
 
 // Import icons for story examples
 import { Warning, Shield, Visibility } from "@mui/icons-material";
+import DashboardKpiCard from "./MonitoringDashboardKpiCard";
 
 const meta: Meta<typeof DashboardKpiCard> = {
   title: "Components/Molecules/DashboardKpiCard",

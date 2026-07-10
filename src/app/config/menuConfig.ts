@@ -384,7 +384,7 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         type: "link",
         name: "Forklift / Vehicle in Walkways",
-        path: "/objectDetection",
+        path: "/ObjectDetection",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {
@@ -417,12 +417,12 @@ export const analyticsMenu: CategoryConfig[] = [
         path: "/movementDuringShutdownHours",
         featureId: FEATURE.MOVEMENT_DURING_SHUTDOWN_HOUR,
       },
-      {
-        type: "link",
-        name: "Unauthorized Access in Restricted Areas",
-        path: "/unauthorizedAccessInRestrictedAreas",
-        featureId: FEATURE.UNAUTHORIZED_ACCESS,
-      },
+      // {
+      //   type: "link",
+      //   name: "Unauthorized Access in Restricted Areas",
+      //   path: "/unauthorizedAccessInRestrictedAreas",
+      //   featureId: FEATURE.UNAUTHORIZED_ACCESS,
+      // },
       {
         type: "link",
         name: "Camera Tampering Detection",
@@ -503,24 +503,24 @@ export const analyticsMenu: CategoryConfig[] = [
       },
     ],
   },
-  {
-    title: "Facial Recognition Analytics",
-    icon: FaceRecognitionIcon,
-    items: [
-      {
-        type: "link",
-        name: "Face Recognition for Entry/Exit Logging",
-        path: "/faceRecognition",
-        featureId: FEATURE.FACE_RECOGNITION,
-      },
-      {
-        type: "link",
-        name: "Employee Idle Time Monitoring with Face Recognition",
-        path: "/employeeIdleTimeMonitoringWithFaceRecognition",
-        featureId: FEATURE.FACE_IDLE_MONITORING,
-      },
-    ],
-  },
+  // {
+  //   title: "Facial Recognition Analytics",
+  //   icon: FaceRecognitionIcon,
+  //   items: [
+  //     {
+  //       type: "link",
+  //       name: "Face Recognition for Entry/Exit Logging",
+  //       path: "/faceRecognition",
+  //       featureId: FEATURE.FACE_RECOGNITION,
+  //     },
+  //     {
+  //       type: "link",
+  //       name: "Employee Idle Time Monitoring with Face Recognition",
+  //       path: "/employeeIdleTimeMonitoringWithFaceRecognition",
+  //       featureId: FEATURE.FACE_IDLE_MONITORING,
+  //     },
+  //   ],
+  // },
 ];
 /* =========================
    EXPORT

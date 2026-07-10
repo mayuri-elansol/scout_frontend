@@ -1,10 +1,16 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Sidebar from "./SidebarOld";
+import Sidebar from "./Sidebar";
 import type { PageType } from "../../../types";
 
-const meta: Meta<typeof Sidebar> = {
+// ✅ Create an alias that explicitly accepts the props used in stories
+const SidebarWithProps = Sidebar as React.FC<{
+  currentPage: PageType | string; // allow string to cover "safety-compliance-dashboard"
+  onPageChange: (page: PageType) => void;
+}>;
+
+const meta: Meta<typeof SidebarWithProps> = {
   title: "Components/Organisms/Sidebar",
-  component: Sidebar,
+  component: SidebarWithProps,
   parameters: {
     layout: "fullscreen",
     docs: {
@@ -19,14 +25,14 @@ const meta: Meta<typeof Sidebar> = {
     currentPage: {
       control: "select",
       options: [
-        "dashboard",
+        "safety-compliance-dashboard",
         "ppe-detection",
         "intrusion-detection",
         "employee-presence",
         "people-count",
         "live-streaming",
         "alerts",
-      ] as PageType[],
+      ] as const,
       description: "Currently active page",
     },
     onPageChange: {
