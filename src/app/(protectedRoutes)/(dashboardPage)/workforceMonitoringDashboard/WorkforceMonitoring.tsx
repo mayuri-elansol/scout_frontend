@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -33,19 +32,17 @@ import DashboardKpiCard from "@/app/components/molecules/MonitoringDashboardKpiC
 // ---------- MOCK DATA IMPORTS ----------
 import { mockWorkforceDashboardData, mockWorkforceShifts } from "./Mockdata";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+const USE_MOCK = true;
 
 // ─── Helper: safely extract CriticalAreaGraphData from union ─────────────────
-function isCriticalAreaGraphData(
-  data: unknown
-): data is CriticalAreaGraphData {
+function isCriticalAreaGraphData(data: unknown): data is CriticalAreaGraphData {
   return !!data && !Array.isArray(data) && typeof data === "object";
 }
 
 // ─── Helper: build chart props from a use-case title ─────────────────────────
 function buildCriticalAreaProps(
   dashboardData: WorkforceMonitoringDashboardResponse[],
-  title: string
+  title: string,
 ) {
   const usecase = dashboardData.find((d) => d.title === title);
   const raw = usecase?.graphs?.data;
@@ -68,10 +65,9 @@ function buildCriticalAreaProps(
   return { series, xAxisDates, xAxisTimes, granularity };
 }
 
-
 function buildFlatBarData(
   dashboardData: WorkforceMonitoringDashboardResponse[],
-  title: string
+  title: string,
 ): WorkforceGatePoint[] {
   const usecase = dashboardData.find((d) => d.title === title);
   const raw = usecase?.graphs?.data;
@@ -92,7 +88,7 @@ const WorkforceMonitoring: React.FC = () => {
   // ── API ──────────────────────────────────────────────────────────────────
   const { data: orgShifts } = useGetOrgShiftTimeWorkforceDataQuery(
     { tenantId },
-    { skip: !tenantId || USE_MOCK } // 👈 Skip when mock mode is on
+    { skip: !tenantId || USE_MOCK }, // 👈 Skip when mock mode is on
   );
 
   const [fetchWorkforceKpi, { isFetching: WorkforcekpiLoading }] =
@@ -148,7 +144,7 @@ const WorkforceMonitoring: React.FC = () => {
       }).unwrap();
       setDashboardData(kpi ?? []);
     },
-    [tenantId, fetchWorkforceKpi]
+    [tenantId, fetchWorkforceKpi],
   );
 
   // ── Derived data ──────────────────────────────────────────────────────────
@@ -167,38 +163,46 @@ const WorkforceMonitoring: React.FC = () => {
           tooltipMessage: config?.tooltipMessage || "",
         };
       }),
-    [dashboardData, t]
+    [dashboardData, t],
   );
 
   // FIX: consolidated + type-safe helpers replace 6 separate useMemos each
   const criticalAreaProps = useMemo(
-    () => buildCriticalAreaProps(dashboardData, "Employee Presence in Critical Areas"),
-    [dashboardData]
+    () =>
+      buildCriticalAreaProps(
+        dashboardData,
+        "Employee Presence in Critical Areas",
+      ),
+    [dashboardData],
   );
 
   const restrictedAreaProps = useMemo(
-    () => buildCriticalAreaProps(dashboardData, "Employee Presence in Restricted Areas"),
-    [dashboardData]
+    () =>
+      buildCriticalAreaProps(
+        dashboardData,
+        "Employee Presence in Restricted Areas",
+      ),
+    [dashboardData],
   );
 
   const employeeIdleGraphData = useMemo(
     () => buildFlatBarData(dashboardData, "Employee Idle Time Monitoring"),
-    [dashboardData]
+    [dashboardData],
   );
 
   const mobileUsageProps = useMemo(
     () =>
-      buildCriticalAreaProps(dashboardData, "Mobile Phone Usage in Restricted Zones"),
-    [dashboardData]
+      buildCriticalAreaProps(
+        dashboardData,
+        "Mobile Phone Usage in Restricted Zones",
+      ),
+    [dashboardData],
   );
 
   const sleepingAbsenceGraphData = useMemo(
     () =>
-      buildFlatBarData(
-        dashboardData,
-        "Sleeping / Absence of Security Guards"
-      ),
-    [dashboardData]
+      buildFlatBarData(dashboardData, "Sleeping / Absence of Security Guards"),
+    [dashboardData],
   );
 
   // ── Tabs ──────────────────────────────────────────────────────────────────
@@ -227,8 +231,16 @@ const WorkforceMonitoring: React.FC = () => {
                 xAxisKey="gate"
                 series={[
                   { dataKey: "Idle", label: "Idle Count", color: "#FFD1DC" },
-                  { dataKey: "Working", label: "Working Count", color: "#AEEEEE" },
-                  { dataKey: "NotPresent", label: "Not Present Count", color: "#FFF5BA" },
+                  {
+                    dataKey: "Working",
+                    label: "Working Count",
+                    color: "#AEEEEE",
+                  },
+                  {
+                    dataKey: "NotPresent",
+                    label: "Not Present Count",
+                    color: "#FFF5BA",
+                  },
                 ]}
                 yAxisLabel="Count"
                 stackId="exitStatus"
@@ -275,7 +287,6 @@ const WorkforceMonitoring: React.FC = () => {
             {/* FIX: now correctly uses restrictedArea props */}
             <TimeScaleLineChart {...restrictedAreaProps} />
             {/* <TimeScaleLineChart2 {...restrictedAreaProps} /> */}
-
           </Grid>
         </Grid>
       ),
@@ -317,7 +328,11 @@ const WorkforceMonitoring: React.FC = () => {
               xAxisKey="gate"
               series={[
                 { dataKey: "Absent", label: "Absent Count", color: "#FFC0CB" },
-                { dataKey: "Present", label: "Present Count", color: "#B0E0E6" },
+                {
+                  dataKey: "Present",
+                  label: "Present Count",
+                  color: "#B0E0E6",
+                },
               ]}
               yAxisLabel="Count"
               stackId="exitStatus"
@@ -355,7 +370,10 @@ const WorkforceMonitoring: React.FC = () => {
         <Grid container spacing={2.5} sx={{ flex: 1, minWidth: 0 }}>
           {WorkforcekpiLoading || !dashboardData.length
             ? Array.from({ length: 4 }).map((_, index) => (
-                <Grid key={index+1} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+                <Grid
+                  key={index + 1}
+                  size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+                >
                   <KpiCardSkeleton />
                 </Grid>
               ))
@@ -371,7 +389,7 @@ const WorkforceMonitoring: React.FC = () => {
         <Box sx={{ flexShrink: 0 }}>
           <CollapsibleTimeFilter
             onRangeChange={handleworkforceTimeRangeChange}
-            shifts={USE_MOCK ? mockWorkforceShifts : (orgShifts || [])} // 👈 Mock shifts when needed
+            shifts={USE_MOCK ? mockWorkforceShifts : orgShifts || []} // 👈 Mock shifts when needed
           />
         </Box>
       </Box>

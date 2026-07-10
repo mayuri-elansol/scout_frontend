@@ -1,4 +1,3 @@
-
 // "use client";
 
 // import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -21,7 +20,7 @@
 
 // import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 // import {
-  
+
 //   SurveillanceDashboardResponse,
 //   SurveillanceSocketPayload,
 //   TrendResponse,
@@ -190,7 +189,7 @@
 //     ? (movementDashboard.graphs.data as TrendResponse)
 //     : undefined;
 
-// //camera tampering pie chart 
+// //camera tampering pie chart
 // const onlinePieData =
 //   cameraTamperingDashboard?.graphs?.pieCharts?.onlineCameras?.map(
 //     (item: any) => ({
@@ -348,7 +347,7 @@
 //               },
 //             }}
 //           >
-        
+
 //       {renderChart()}
 //           </Grid>
 //         </Grid>
@@ -379,7 +378,7 @@
 //             }}
 //             padding={{ xs: "10px" }}
 //           >
-      
+
 // {renderMovementChart()}
 //           </Grid>
 //         </Grid>
@@ -430,7 +429,6 @@
 //                 data={chart.data}
 //                 carttitle={chart.title}
 //               />
-   
 
 //             </Grid>
 //           ))}
@@ -465,7 +463,7 @@
 //           </Grid>
 //         </Grid>
 //       ),
-      
+
 //       featureId: FEATURE.UNAUTHORIZED_ACCESS,
 //     },
 //   ];
@@ -539,7 +537,6 @@
 
 // export default SurveillanceMonitoring;
 
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -562,7 +559,6 @@ import { surveillanceDashboardConfig } from "./SurveillanceMonitoringDashboardCo
 
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import {
-  
   SurveillanceDashboardResponse,
   SurveillanceSocketPayload,
   TrendResponse,
@@ -580,7 +576,7 @@ import {
   mockSurveillanceShifts,
 } from "./Mockdata";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+const USE_MOCK = true;
 
 // ---------- TYPE DEFINITIONS ----------
 type CameraZoneData = {
@@ -609,7 +605,7 @@ const SurveillanceMonitoring: React.FC = () => {
   );
   const [fetchSurveillanceKpi, { isFetching: SurveillancekpiLoading }] =
     useLazyGetSurveillanceMonitoringDashboardKpiDataQuery();
-  
+
   /* ---------- INITIAL LOAD ---------- */
   useEffect(() => {
     if (!tenantId) return;
@@ -696,8 +692,8 @@ const SurveillanceMonitoring: React.FC = () => {
     (d) => d.title === "Intrusion Detection at Perimeter",
   );
   const cameraTamperingDashboard = displaySurveillanceKpi.find(
-  (d) => d.title === "Camera Tampering Detection",
-);
+    (d) => d.title === "Camera Tampering Detection",
+  );
   const unauthorizedDashboard = displaySurveillanceKpi.find(
     (d) => d.title === "Unauthorized Access in Restricted Areas",
   );
@@ -706,176 +702,179 @@ const SurveillanceMonitoring: React.FC = () => {
     (d) => d.title === "Movement During Shutdown Hours",
   );
 
-// inside SurveillanceMonitoring component, near top
+  // inside SurveillanceMonitoring component, near top
 
-function toTimeScaleProps(data: TrendResponse) {
-  const firstSeries = data.series[0]?.data ?? [];
+  function toTimeScaleProps(data: TrendResponse) {
+    const firstSeries = data.series[0]?.data ?? [];
 
-  // X-axis labels come from the first zone's data array (all zones share same buckets)
-  const xAxisDates = firstSeries.map((p) => p.date ?? "");
-  const xAxisTimes = firstSeries.map((p) => p.time ?? p.day ?? "");
+    // X-axis labels come from the first zone's data array (all zones share same buckets)
+    const xAxisDates = firstSeries.map((p) => p.date ?? "");
+    const xAxisTimes = firstSeries.map((p) => p.time ?? p.day ?? "");
 
-  // Each zone becomes one line series
-  const series = data.series.map((z) => ({
-    label:    z.zone,
-    color:    z.color,
-    data:     z.data.map((p) => p.count),
-    showMark: false,
-  }));
+    // Each zone becomes one line series
+    const series = data.series.map((z) => ({
+      label: z.zone,
+      color: z.color,
+      data: z.data.map((p) => p.count),
+      showMark: false,
+    }));
 
-  return { xAxisDates, xAxisTimes, series };
-}
-// Intrusion
-const intrusionGraphData =
-  intrusionDashboard?.graphs?.data &&
-  !Array.isArray(intrusionDashboard.graphs.data) &&
-  "series" in intrusionDashboard.graphs.data
-    ? (intrusionDashboard.graphs.data as TrendResponse)
-    : undefined;
+    return { xAxisDates, xAxisTimes, series };
+  }
+  // Intrusion
+  const intrusionGraphData =
+    intrusionDashboard?.graphs?.data &&
+    !Array.isArray(intrusionDashboard.graphs.data) &&
+    "series" in intrusionDashboard.graphs.data
+      ? (intrusionDashboard.graphs.data as TrendResponse)
+      : undefined;
 
-// Movement During Shutdown
-const movementGraphData =
-  movementDashboard?.graphs?.data &&
-  !Array.isArray(movementDashboard.graphs.data) &&
-  "series" in movementDashboard.graphs.data
-    ? (movementDashboard.graphs.data as TrendResponse)
-    : undefined;
+  // Movement During Shutdown
+  const movementGraphData =
+    movementDashboard?.graphs?.data &&
+    !Array.isArray(movementDashboard.graphs.data) &&
+    "series" in movementDashboard.graphs.data
+      ? (movementDashboard.graphs.data as TrendResponse)
+      : undefined;
 
-//camera tampering pie chart 
-const onlinePieData =
-  cameraTamperingDashboard?.graphs?.pieCharts?.onlineCameras?.map(
-    (item: CameraZoneData) => ({
-      label: item.zone,
-      value: item.count,
-  color: item.color || "#999999",    }),
-  ) || [];
+  //camera tampering pie chart
+  const onlinePieData =
+    cameraTamperingDashboard?.graphs?.pieCharts?.onlineCameras?.map(
+      (item: CameraZoneData) => ({
+        label: item.zone,
+        value: item.count,
+        color: item.color || "#999999",
+      }),
+    ) || [];
 
-const offlinePieData =
-  cameraTamperingDashboard?.graphs?.pieCharts?.offlineCameras?.map(
-    (item: CameraZoneData) => ({
-      label: item.zone,
-      value: item.count,
-  color: item.color || "#999999",    }),
-  ) || [];
+  const offlinePieData =
+    cameraTamperingDashboard?.graphs?.pieCharts?.offlineCameras?.map(
+      (item: CameraZoneData) => ({
+        label: item.zone,
+        value: item.count,
+        color: item.color || "#999999",
+      }),
+    ) || [];
 
-const tamperedPieData =
-  cameraTamperingDashboard?.graphs?.pieCharts?.tamperedCameras?.map(
-    (item: CameraZoneData) => ({
-      label: item.zone,
-      value: item.count,
-  color: item.color || "#999999",    }),
-  ) || [];
+  const tamperedPieData =
+    cameraTamperingDashboard?.graphs?.pieCharts?.tamperedCameras?.map(
+      (item: CameraZoneData) => ({
+        label: item.zone,
+        value: item.count,
+        color: item.color || "#999999",
+      }),
+    ) || [];
 
   console.log("cameraTamperingDashboard", cameraTamperingDashboard);
-console.log("onlinePieData", onlinePieData);
-console.log("offlinePieData", offlinePieData);
-console.log("tamperedPieData", tamperedPieData);
-// Unauthorized Access
-const unauthorizedGraphData =
-  unauthorizedDashboard?.graphs?.data &&
-  !Array.isArray(unauthorizedDashboard.graphs.data) &&
-  "series" in unauthorizedDashboard.graphs.data
-    ? (unauthorizedDashboard.graphs.data as TrendResponse)
-    : undefined;
-const renderChart = () => {
-  if (SurveillancekpiLoading) {
+  console.log("onlinePieData", onlinePieData);
+  console.log("offlinePieData", offlinePieData);
+  console.log("tamperedPieData", tamperedPieData);
+  // Unauthorized Access
+  const unauthorizedGraphData =
+    unauthorizedDashboard?.graphs?.data &&
+    !Array.isArray(unauthorizedDashboard.graphs.data) &&
+    "series" in unauthorizedDashboard.graphs.data
+      ? (unauthorizedDashboard.graphs.data as TrendResponse)
+      : undefined;
+  const renderChart = () => {
+    if (SurveillancekpiLoading) {
+      return (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+
+    if (!intrusionGraphData) {
+      return null;
+    }
+
+    const chartProps = toTimeScaleProps(intrusionGraphData);
+
     return (
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <TimeScaleLineChart
+        granularity={intrusionGraphData.granularity}
+        {...chartProps}
+        series={chartProps.series.map((s) => ({
+          ...s,
+          showMark: true,
+        }))}
+      />
     );
-  }
+  };
+  const renderMovementChart = () => {
+    if (SurveillancekpiLoading) {
+      return (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
 
-  if (!intrusionGraphData) {
-    return null;
-  }
+    if (!movementGraphData) {
+      return null;
+    }
 
-  const chartProps = toTimeScaleProps(intrusionGraphData);
+    const chartProps = toTimeScaleProps(movementGraphData);
 
-  return (
-    <TimeScaleLineChart
-      granularity={intrusionGraphData.granularity}
-      {...chartProps}
-      series={chartProps.series.map((s) => ({
-        ...s,
-        showMark: true,
-      }))}
-    />
-  );
-};
-const renderMovementChart = () => {
-  if (SurveillancekpiLoading) {
     return (
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
+      <TimeScaleLineChart
+        granularity={movementGraphData.granularity}
+        {...chartProps}
+        series={chartProps.series.map((s) => ({
+          ...s,
+          showMark: true,
+        }))}
+      />
     );
-  }
+  };
+  const renderUnauthorizedChart = () => {
+    if (SurveillancekpiLoading) {
+      return (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader />
+        </Box>
+      );
+    }
 
-  if (!movementGraphData) {
-    return null;
-  }
+    if (!unauthorizedGraphData) {
+      return null;
+    }
 
-  const chartProps = toTimeScaleProps(movementGraphData);
+    const chartProps = toTimeScaleProps(unauthorizedGraphData);
 
-  return (
-    <TimeScaleLineChart
-      granularity={movementGraphData.granularity}
-      {...chartProps}
-      series={chartProps.series.map((s) => ({
-        ...s,
-        showMark: true,
-      }))}
-    />
-  );
-};
-const renderUnauthorizedChart = () => {
-  if (SurveillancekpiLoading) {
     return (
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Loader />
-      </Box>
+      <TimeScaleLineChart
+        granularity={unauthorizedGraphData.granularity}
+        {...chartProps}
+        series={chartProps.series.map((s) => ({
+          ...s,
+          showMark: true,
+        }))}
+      />
     );
-  }
-
-  if (!unauthorizedGraphData) {
-    return null;
-  }
-
-  const chartProps = toTimeScaleProps(unauthorizedGraphData);
-
-  return (
-    <TimeScaleLineChart
-      granularity={unauthorizedGraphData.granularity}
-      {...chartProps}
-      series={chartProps.series.map((s) => ({
-        ...s,
-        showMark: true,
-      }))}
-    />
-  );
-};
+  };
   const tabs: TabConfig[] = [
     {
       label: "Intrusion Detection at Perimeter",
@@ -899,8 +898,7 @@ const renderUnauthorizedChart = () => {
               },
             }}
           >
-        
-      {renderChart()}
+            {renderChart()}
           </Grid>
         </Grid>
       ),
@@ -921,7 +919,7 @@ const renderUnauthorizedChart = () => {
             size={{ xs: 12 }}
             sx={{
               display: "flex",
-               height: { xs: "50vh", md: "100%" },
+              height: { xs: "50vh", md: "100%" },
 
               width: "100%",
               "& .MuiCardContent-root": {
@@ -930,8 +928,7 @@ const renderUnauthorizedChart = () => {
             }}
             padding={{ xs: "10px" }}
           >
-      
-{renderMovementChart()}
+            {renderMovementChart()}
           </Grid>
         </Grid>
       ),
@@ -953,15 +950,15 @@ const renderUnauthorizedChart = () => {
           {[
             {
               title: "Online Cameras by Zone",
-              data: onlinePieData
+              data: onlinePieData,
             },
             {
               title: "Offline Cameras by Zone",
-              data: offlinePieData
+              data: offlinePieData,
             },
             {
               title: "Tampered Cameras by Zone",
-              data: tamperedPieData
+              data: tamperedPieData,
             },
           ].map((chart, index) => (
             <Grid
@@ -977,12 +974,7 @@ const renderUnauthorizedChart = () => {
                 width: "100%",
               }}
             >
-              <DynamicPieChart
-                data={chart.data}
-                carttitle={chart.title}
-              />
-   
-
+              <DynamicPieChart data={chart.data} carttitle={chart.title} />
             </Grid>
           ))}
         </Grid>
@@ -1012,11 +1004,11 @@ const renderUnauthorizedChart = () => {
               },
             }}
           >
-       {renderUnauthorizedChart()}
+            {renderUnauthorizedChart()}
           </Grid>
         </Grid>
       ),
-      
+
       featureId: FEATURE.UNAUTHORIZED_ACCESS,
     },
   ];
@@ -1067,7 +1059,7 @@ const renderUnauthorizedChart = () => {
         <Box sx={{ flexShrink: 0 }}>
           <CollapsibleTimeFilter
             onRangeChange={handleTimeRangeChange}
-            shifts={USE_MOCK ? mockSurveillanceShifts : (orgShifts || [])} // 👈 Mock shifts when needed
+            shifts={USE_MOCK ? mockSurveillanceShifts : orgShifts || []} // 👈 Mock shifts when needed
           />
         </Box>
       </Box>

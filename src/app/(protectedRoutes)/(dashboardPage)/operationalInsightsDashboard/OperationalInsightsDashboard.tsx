@@ -1,12 +1,11 @@
-
-
-
 "use client";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, CircularProgress, Grid, Paper } from "@mui/material";
 import CollapsibleTimeFilter from "@/app/components/organisms/TimeFilterForAllKPI/CollapsibleTimeFilter";
 import DashboardKpiCard from "@/app/components/molecules/MonitoringDashboardKpiCard/MonitoringDashboardKpiCard";
-import DashboardTabs, { TabConfig } from "@/app/components/organisms/DashboardTabs/DashboardTabs";
+import DashboardTabs, {
+  TabConfig,
+} from "@/app/components/organisms/DashboardTabs/DashboardTabs";
 import KpiCardSkeleton from "@/app/components/molecules/KpiCardSkeleton/KpiCardSkeleton";
 import TimeLineAreaChart from "@/app/components/organisms/TimeScaleLineChart/TimeScaleLineChart"; // same chart WorkforceMonitoring uses
 import { useTranslation } from "react-i18next";
@@ -35,7 +34,7 @@ import {
   mockOperationalShifts,
 } from "./Mockdata";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
+const USE_MOCK = true;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -44,7 +43,7 @@ const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 // Reused by People Count, Vehicle Count & ANPR, and Vehicle Loading/Unloading.
 function buildEntryExitProps(
   dashboardData: OperationalInsightsDashboardResponse[],
-  title: string
+  title: string,
 ) {
   const usecase = dashboardData.find((d) => d.title === title);
   const raw = usecase?.graphs?.data;
@@ -58,14 +57,14 @@ function buildEntryExitProps(
   const series = [
     {
       label: "Entry Count",
-        color: "#93C4F5", // pastel blue
+      color: "#93C4F5", // pastel blue
 
       showMark: false,
       data: rawData.map((p) => p.entryCount),
     },
     {
       label: "Exit Count",
-    color: "#F5A693", // pastel orange
+      color: "#F5A693", // pastel orange
 
       showMark: false,
       data: rawData.map((p) => p.exitCount),
@@ -74,15 +73,18 @@ function buildEntryExitProps(
 
   const xAxisDates = rawData.map((p) => p.date);
   const xAxisTimes = rawData.map((p) => p.time);
-  const granularity: PeopleInsideGraphData["granularity"] = graphData?.granularity ?? "hour";
+  const granularity: PeopleInsideGraphData["granularity"] =
+    graphData?.granularity ?? "hour";
 
   return { series, xAxisDates, xAxisTimes, granularity };
 }
 
 // Unauthorized Parking: one line per zone — { granularity, series[{ zone, color, data[{ date, time, count }] }] }
-function buildParkingProps(dashboardData: OperationalInsightsDashboardResponse[]) {
+function buildParkingProps(
+  dashboardData: OperationalInsightsDashboardResponse[],
+) {
   const usecase = dashboardData.find(
-    (d) => d.title === "Unauthorized Parking / Blocking Aisles"
+    (d) => d.title === "Unauthorized Parking / Blocking Aisles",
   );
   const raw = usecase?.graphs?.data;
   const graphData =
@@ -101,19 +103,24 @@ function buildParkingProps(dashboardData: OperationalInsightsDashboardResponse[]
   const firstZone = graphData?.series[0]?.data ?? [];
   const xAxisDates = firstZone.map((p) => p.date);
   const xAxisTimes = firstZone.map((p) => p.time);
-  const granularity: ParkingGraphData["granularity"] = graphData?.granularity ?? "hour";
+  const granularity: ParkingGraphData["granularity"] =
+    graphData?.granularity ?? "hour";
 
   return { series, xAxisDates, xAxisTimes, granularity };
 }
 // Canteen Usage Monitoring returns the same envelope shape as People Inside —
 // { granularity, series[{ data[{ date, time, breakfastCount, lunchCount, dinnerCount }] }] } —
 // just with meal-type counts instead of entry/exit counts, so it reuses TimeLineAreaChart directly.
-function buildCanteenInsideProps(dashboardData: OperationalInsightsDashboardResponse[]) {
-  const usecase = dashboardData.find((d) => d.title === "Canteen Usage Monitoring");
+function buildCanteenInsideProps(
+  dashboardData: OperationalInsightsDashboardResponse[],
+) {
+  const usecase = dashboardData.find(
+    (d) => d.title === "Canteen Usage Monitoring",
+  );
   const graphData = usecase?.graphs?.data as CanteenGraphData | undefined;
- 
+
   const rawData = graphData?.series?.[0]?.data ?? [];
- 
+
   const series = [
     {
       label: "Breakfast",
@@ -134,14 +141,14 @@ function buildCanteenInsideProps(dashboardData: OperationalInsightsDashboardResp
       data: rawData.map((p) => p.dinnerCount),
     },
   ];
- 
+
   const xAxisDates = rawData.map((p) => p.date);
   const xAxisTimes = rawData.map((p) => p.time);
-  const granularity: CanteenGraphData["granularity"] = graphData?.granularity ?? "hour";
- 
+  const granularity: CanteenGraphData["granularity"] =
+    graphData?.granularity ?? "hour";
+
   return { series, xAxisDates, xAxisTimes, granularity };
 }
- 
 
 // ─── Component ────────────────────────────────────────────────────────────────
 const OperationalInsightsDashboard: React.FC = () => {
@@ -150,12 +157,14 @@ const OperationalInsightsDashboard: React.FC = () => {
   const tenantId: string = user?.org_id ?? "";
 
   const [isLiveMode, setIsLiveMode] = useState(true);
-  const [dashboardData, setDashboardData] = useState<OperationalInsightsDashboardResponse[]>([]);
+  const [dashboardData, setDashboardData] = useState<
+    OperationalInsightsDashboardResponse[]
+  >([]);
 
   // ── API ──────────────────────────────────────────────────────────────────
   const { data: orgShifts } = useGetOrgShiftTimeDataQuery(
     { tenantId },
-    { skip: !tenantId || USE_MOCK } // 👈 Skip when mock mode is on
+    { skip: !tenantId || USE_MOCK }, // 👈 Skip when mock mode is on
   );
 
   const [fetchOperationalKpi, { isFetching: operationalKpiLoading }] =
@@ -211,7 +220,7 @@ const OperationalInsightsDashboard: React.FC = () => {
       }).unwrap();
       setDashboardData(data ?? []);
     },
-    [tenantId, fetchOperationalKpi]
+    [tenantId, fetchOperationalKpi],
   );
 
   // ── Derived data ──────────────────────────────────────────────────────────
@@ -230,23 +239,34 @@ const OperationalInsightsDashboard: React.FC = () => {
           tooltipMessage: config?.tooltipMessage || "",
         };
       }),
-    [dashboardData, t]
+    [dashboardData, t],
   );
 
   const peopleInsideProps = useMemo(
-    () => buildEntryExitProps(dashboardData, "People Count in Factory Premises"),
-    [dashboardData]
+    () =>
+      buildEntryExitProps(dashboardData, "People Count in Factory Premises"),
+    [dashboardData],
   );
-  const canteenInsideProps = useMemo(() => buildCanteenInsideProps(dashboardData), [dashboardData]);
+  const canteenInsideProps = useMemo(
+    () => buildCanteenInsideProps(dashboardData),
+    [dashboardData],
+  );
   const vehicleCountProps = useMemo(
     () => buildEntryExitProps(dashboardData, "Vehicle Count & ANPR at Gates"),
-    [dashboardData]
+    [dashboardData],
   );
   const vehicleLoadingProps = useMemo(
-    () => buildEntryExitProps(dashboardData, "Vehicle Unloading / Loading Monitoring"),
-    [dashboardData]
+    () =>
+      buildEntryExitProps(
+        dashboardData,
+        "Vehicle Unloading / Loading Monitoring",
+      ),
+    [dashboardData],
   );
-  const parkingProps = useMemo(() => buildParkingProps(dashboardData), [dashboardData]);
+  const parkingProps = useMemo(
+    () => buildParkingProps(dashboardData),
+    [dashboardData],
+  );
   // ── Tabs ──────────────────────────────────────────────────────────────────
   const tabs: TabConfig[] = [
     {
@@ -254,7 +274,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       featureId: FEATURE.PEOPLE_COUNT,
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
-          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }} padding={{ xs: "10px" }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+            }}
+            padding={{ xs: "10px" }}
+          >
             {operationalKpiLoading ? (
               <Loader />
             ) : (
@@ -269,7 +297,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       featureId: FEATURE.VEHICLE_COUNT,
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
-          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }} padding={{ xs: "10px" }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+            }}
+            padding={{ xs: "10px" }}
+          >
             {operationalKpiLoading ? (
               <CircularProgress />
             ) : (
@@ -284,8 +320,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       featureId: FEATURE.CANTEEN_USAGE,
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
-          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }}>
-             {operationalKpiLoading ? (
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+            }}
+          >
+            {operationalKpiLoading ? (
               <Loader />
             ) : (
               <TimeLineAreaChart {...canteenInsideProps} />
@@ -299,7 +342,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       featureId: FEATURE.VEHICLE_UNLOADING_LOADING,
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
-          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }} padding={{ xs: "10px" }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+            }}
+            padding={{ xs: "10px" }}
+          >
             {operationalKpiLoading ? (
               <Loader />
             ) : (
@@ -314,7 +365,15 @@ const OperationalInsightsDashboard: React.FC = () => {
       featureId: FEATURE.UNAUTHORIZED_PARKING,
       content: (
         <Grid container sx={{ alignItems: "stretch", height: "100%" }}>
-          <Grid size={{ xs: 12 }} sx={{ display: "flex", height: { xs: "50vh", md: "100%" }, width: "100%" }} padding={{ xs: "10px" }}>
+          <Grid
+            size={{ xs: 12 }}
+            sx={{
+              display: "flex",
+              height: { xs: "50vh", md: "100%" },
+              width: "100%",
+            }}
+            padding={{ xs: "10px" }}
+          >
             {operationalKpiLoading ? (
               <Loader />
             ) : (
@@ -353,12 +412,18 @@ const OperationalInsightsDashboard: React.FC = () => {
         <Grid container spacing={2.5} sx={{ flex: 1, minWidth: 0 }}>
           {operationalKpiLoading || !dashboardData.length
             ? Array.from({ length: 5 }).map((_, i) => (
-                <Grid key={`skeleton-${i + 1}`} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+                <Grid
+                  key={`skeleton-${i + 1}`}
+                  size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+                >
                   <KpiCardSkeleton />
                 </Grid>
               ))
             : operationalKpiData.map((kpi) => (
-                <Grid key={kpi.title} size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}>
+                <Grid
+                  key={kpi.title}
+                  size={{ xs: 12, sm: 6, md: 6, lg: 4, xl: 3 }}
+                >
                   <DashboardKpiCard {...kpi} />
                 </Grid>
               ))}
@@ -366,7 +431,7 @@ const OperationalInsightsDashboard: React.FC = () => {
         <Box sx={{ flexShrink: 0 }}>
           <CollapsibleTimeFilter
             onRangeChange={handleTimeRangeChange}
-            shifts={USE_MOCK ? mockOperationalShifts : (orgShifts || [])} // 👈 Mock shifts when needed
+            shifts={USE_MOCK ? mockOperationalShifts : orgShifts || []} // 👈 Mock shifts when needed
           />
         </Box>
       </Box>
