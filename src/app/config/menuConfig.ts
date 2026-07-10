@@ -384,7 +384,7 @@ export const analyticsMenu: CategoryConfig[] = [
       {
         type: "link",
         name: "Forklift / Vehicle in Walkways",
-        path: "/ObjectDetection",
+        path: "/ObjectDetectionUsecase",
         featureId: FEATURE.OBJECT_DETECTION,
       },
       {
