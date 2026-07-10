@@ -192,7 +192,7 @@ export const settingsMenu: CategoryConfig[] = [
 ========================= */
 
 // export const analyticsMenu: CategoryConfig[] = [
- 
+
 //   {
 //     title: "Safety and Compliance",
 //     icon: Shield,

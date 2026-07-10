@@ -54,80 +54,80 @@ const PeoplePresence: React.FC = () => {
   const backendPeoplePresenceData = [
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
-      zone: "Production Floor",
+      snapshot: "/img/movement-shutdown-hours/m1.jpg",
+      zone: "Zone A",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
-      zone: "Loading Dock",
+      snapshot: "/img/movement-shutdown-hours/m2.jpg",
+      zone: "Zone B",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
-      zone: "Production Floor",
+      snapshot: "/img/movement-shutdown-hours/u2.jpg",
+      zone: "Zone C",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
-      zone: "Loading Dock",
+      snapshot: "/img/movement-shutdown-hours/u1.jpg",
+      zone: "Zone D",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
-      zone: "Production Floor",
+      snapshot: "/img/movement-shutdown-hours/m2.jpg",
+      zone: "Zone B",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
-      zone: "Loading Dock",
+      snapshot: "/img/movement-shutdown-hours/u3.jpg",
+      zone: "Zone E",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
     },
     {
       id: 801,
-      snapshot: "https://picsum.photos/400/200?random=31",
-      zone: "Production Floor",
+      snapshot: "/img/movement-shutdown-hours/m1.jpg",
+      zone: "Zone A",
       camera: "CAM-31",
-      count: 15,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:06",
     },
     {
       id: 802,
-      snapshot: "https://picsum.photos/400/200?random=32",
-      zone: "Loading Dock",
+      snapshot: "/img/movement-shutdown-hours/u1.jpg",
+      zone: "Zone D",
       camera: "CAM-32",
-      count: 7,
+      count: 1,
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 21:16",
@@ -214,9 +214,14 @@ const PeoplePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -284,7 +289,7 @@ const PeoplePresence: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.zone))
+              new Set(recentPeoplePresence.map((item) => item.zone)),
             ),
           },
           {
@@ -292,7 +297,7 @@ const PeoplePresence: React.FC = () => {
             label: "Camera",
             type: "select",
             options: Array.from(
-              new Set(recentPeoplePresence.map((item) => item.cameraId))
+              new Set(recentPeoplePresence.map((item) => item.cameraId)),
             ),
           },
           {
@@ -310,7 +315,11 @@ const PeoplePresence: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        tooltipMessage="Detailed incidents report with filter, reset, and CSV/PDF download options."
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
       {/* View Alert Popup */}
       {viewPopupData && (
         <ViewAlertPopup

@@ -63,8 +63,8 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 901,
       sleeping: true,
       absence: false,
-      snapshot: "https://picsum.photos/400/200?random=51",
-      zone: "Main Gate",
+      snapshot: "/img/sleeping-absence-security-guards/s2.avif",
+      zone: "Gate 2",
       camera: "CAM-51",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:17",
@@ -73,34 +73,13 @@ const SleepingSecurityPersonnel: React.FC = () => {
       id: 902,
       sleeping: false,
       absence: true,
-      snapshot: "https://picsum.photos/400/200?random=52",
-      zone: "Assembly Line A",
-      camera: "CAM-52",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-24 08:27",
-    },
-    {
-      id: 901,
-      sleeping: true,
-      absence: false,
-      snapshot: "https://picsum.photos/400/200?random=51",
-      zone: "Main Gate",
-      camera: "CAM-51",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-24 08:17",
-    },
-    {
-      id: 902,
-      sleeping: false,
-      absence: true,
-      snapshot: "https://picsum.photos/400/200?random=52",
-      zone: "Assembly Line A",
+      snapshot: "/img/sleeping-absence-security-guards/s1.jpg",
+      zone: "Gate 1",
       camera: "CAM-52",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-24 08:27",
     },
   ];
-
   const recentViolations = backendSleepingSecurityData.map((item) => {
     const titleParts = [];
 
@@ -203,9 +182,14 @@ const SleepingSecurityPersonnel: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -272,7 +256,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.voilation))
+              new Set(recentViolations.map((item) => item.voilation)),
             ),
           },
           {
@@ -280,7 +264,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((item) => item.zone))
+              new Set(recentViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -288,7 +272,7 @@ const SleepingSecurityPersonnel: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -306,7 +290,11 @@ const SleepingSecurityPersonnel: React.FC = () => {
         onExport={handleExport}
         loading={false}
         tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
-        onView={handleViewSingle} totalCount={0} page={0} rowsPerPage={0}      />
+        onView={handleViewSingle}
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

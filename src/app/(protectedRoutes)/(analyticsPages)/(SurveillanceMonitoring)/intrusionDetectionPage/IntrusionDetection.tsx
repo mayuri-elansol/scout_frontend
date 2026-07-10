@@ -29,7 +29,7 @@ const IntrusionDetection: React.FC = () => {
 
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<IntrusionViolation | null>(
-    null
+    null,
   );
   const intrusionKpiData = [
     {
@@ -65,8 +65,8 @@ const IntrusionDetection: React.FC = () => {
   const backendIntrusionData = [
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Perimeter Zone A",
+      snapshot: "/img/intrusion-detection-perimeter/i2.jpg",
+      zone: "Zone A",
       camera: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -74,8 +74,8 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Perimeter Zone B",
+      snapshot: "/img/intrusion-detection-perimeter/i3.jpg",
+      zone: "Zone B",
       camera: "CAM-12",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -83,8 +83,8 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 203,
-      snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Perimeter Zone A",
+      snapshot: "/img/intrusion-detection-perimeter/i4.jpg",
+      zone: "Zone C",
       camera: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -92,8 +92,8 @@ const IntrusionDetection: React.FC = () => {
     },
     {
       id: 204,
-      snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Perimeter Zone B",
+      snapshot: "/img/intrusion-detection-perimeter/i5.jpg",
+      zone: "Zone D",
       camera: "CAM-12",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -167,9 +167,14 @@ const IntrusionDetection: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -236,7 +241,7 @@ const IntrusionDetection: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentIntrusionViolations.map((item) => item.zone))
+              new Set(recentIntrusionViolations.map((item) => item.zone)),
             ),
           },
           {
@@ -244,7 +249,7 @@ const IntrusionDetection: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentIntrusionViolations.map((v) => v.cameraId))
+              new Set(recentIntrusionViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -259,7 +264,11 @@ const IntrusionDetection: React.FC = () => {
         downloadFileName="intrusion-detection-report"
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
       {viewPopupData && (
         <ViewAlertPopup
           open={viewPopupOpen}

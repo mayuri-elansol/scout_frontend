@@ -34,10 +34,10 @@ const PeopleCount: React.FC = () => {
   const backendData = [
     {
       id: 201,
-      enteredCount: 15,
-      exitCount: 10,
-      zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=11",
+      enteredCount: 4,
+      exitCount: 0,
+      zone: "Zone A",
+      snapshot: "/img/people-count-factory-premises/p1.jpg",
       cameraid: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -45,10 +45,10 @@ const PeopleCount: React.FC = () => {
     },
     {
       id: 202,
-      enteredCount: 8,
-      exitCount: 5,
-      zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      enteredCount: 5,
+      exitCount: 0,
+      zone: "Zone B",
+      snapshot: "/img/people-count-factory-premises/p2.jpg",
       cameraid: "CAM-12",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -56,36 +56,14 @@ const PeopleCount: React.FC = () => {
     },
     {
       id: 203,
-      enteredCount: 12,
-      exitCount: 11,
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=13",
+      enteredCount: 0,
+      exitCount: 16,
+      zone: "Zone C",
+      snapshot: "/img/people-count-factory-premises/p3.jpg",
       cameraid: "CAM-13",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-30 09:20",
-    },
-    {
-      id: 204,
-      enteredCount: 20,
-      exitCount: 18,
-      zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=14",
-      cameraid: "CAM-14",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-30 09:05",
-    },
-    {
-      id: 205,
-      enteredCount: 5,
-      exitCount: 2,
-      zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=15",
-      cameraid: "CAM-15",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-30 08:40",
     },
   ];
 
@@ -211,9 +189,14 @@ const PeopleCount: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
         <Grid container spacing={2.5} sx={{ mb: 4 }} alignItems="stretch">
@@ -285,7 +268,7 @@ const PeopleCount: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentViolations.map((v) => v.cameraId))
+              new Set(recentViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -308,7 +291,11 @@ const PeopleCount: React.FC = () => {
         downloadFileName="people-count-report"
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        tooltipMessage="Detailed person entry and exit  report with filter, reset, and CSV/PDF download options."
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
       {/* View Alert Popup */}
 
       {viewPopupData && (

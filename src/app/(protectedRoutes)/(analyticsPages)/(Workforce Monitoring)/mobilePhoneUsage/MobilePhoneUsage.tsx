@@ -24,7 +24,7 @@ const MobilePhoneUsage: React.FC = () => {
   }
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<ViolationData | null>(
-    null
+    null,
   );
   const skeletonKeys = Array.from({ length: 4 }, () => uuidv4());
   const MobilePhoneUsageKpiData = [
@@ -60,8 +60,8 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 201,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Assembly Line",
+      snapshot: "/img/mobile-usage-restricted-zones/m1.avif",
+      zone: "Zone A",
       cameraid: "CAM-11",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -70,8 +70,8 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 202,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Production Floor A",
+      snapshot: "/img/mobile-usage-restricted-zones/m2.jpg",
+      zone: "Zone B",
       cameraid: "CAM-12",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -80,32 +80,12 @@ const MobilePhoneUsage: React.FC = () => {
     {
       id: 203,
       voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=13",
-      zone: "Warehouse",
+      snapshot: "/img/mobile-usage-restricted-zones/m3.png",
+      zone: "Zone C",
       cameraid: "CAM-13",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 17:06",
-    },
-    {
-      id: 204,
-      voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=14",
-      zone: "Main Entrance",
-      cameraid: "CAM-14",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:21",
-    },
-    {
-      id: 205,
-      voilation: true,
-      snapshot: "https://picsum.photos/400/200?random=15",
-      zone: "Parking Area",
-      cameraid: "CAM-15",
-      alarmTriggered: false,
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-23 17:36",
     },
   ];
 
@@ -198,9 +178,14 @@ const MobilePhoneUsage: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -266,7 +251,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.zone))
+              new Set(recentMobilePhoneViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -274,7 +259,7 @@ const MobilePhoneUsage: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentMobilePhoneViolations.map((v) => v.cameraId))
+              new Set(recentMobilePhoneViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -300,7 +285,11 @@ const MobilePhoneUsage: React.FC = () => {
         onExport={handleExport}
         loading={false}
         onView={handleViewSingle}
-        tooltipMessage="Detailed mobile phone usage  report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        tooltipMessage="Detailed mobile phone usage  report with filter, reset, and CSV/PDF download options."
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
       {/* View Alert Popup */}
       {viewPopupData && (
         <ViewAlertPopup

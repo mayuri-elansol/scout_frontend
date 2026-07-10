@@ -54,8 +54,8 @@ const EmployeePresence: React.FC = () => {
   const backendEmployeePresenceData = [
     {
       id: 201,
-      snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Critical Zone A",
+      snapshot: "/img/employee-presence-critical-areas/z2.jpg",
+      zone: "Zone A",
       camera: "CAM-11",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-25 09:16",
@@ -63,20 +63,11 @@ const EmployeePresence: React.FC = () => {
     },
     {
       id: 202,
-      snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Critical Zone B",
+      snapshot: "/img/employee-presence-critical-areas/z1.jpg",
+      zone: "Zone B",
       camera: "CAM-12",
-      createdAt:getOneHourBefore().fullDate,
-      updatedAt: "2025-09-25 09:26",
-      alarmTriggered: true,
-    },
-    {
-      id: 203,
-      snapshot: "https://picsum.photos/400/200?random=13",
-      zone: "Critical Zone C",
-      camera: "CAM-13",
       createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-09-25 09:41",
+      updatedAt: "2025-09-25 09:26",
       alarmTriggered: true,
     },
   ];
@@ -153,9 +144,14 @@ const EmployeePresence: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -221,7 +217,7 @@ const EmployeePresence: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.zone))
+              new Set(recentEmployeeViolations.map((v) => v.zone)),
             ),
           },
           {
@@ -229,7 +225,7 @@ const EmployeePresence: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentEmployeeViolations.map((v) => v.cameraId))
+              new Set(recentEmployeeViolations.map((v) => v.cameraId)),
             ),
           },
           {
@@ -248,7 +244,11 @@ const EmployeePresence: React.FC = () => {
         onExport={handleExport}
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
-        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options." totalCount={0} page={0} rowsPerPage={0}      />
+        tooltipMessage="Detailed violations report with filter, reset, and CSV/PDF download options."
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
 
       {/* View Alert Popup */}
       {viewPopupData && (

@@ -27,10 +27,9 @@ const EmployeeIdleTime: React.FC = () => {
     [key: string]: string | number | boolean;
   }
 
-  
   const [viewPopupOpen, setViewPopupOpen] = useState(false);
   const [viewPopupData, setViewPopupData] = useState<EmployeeIdleEvent | null>(
-    null
+    null,
   );
   const EmployeeIdleTimeKpiData = [
     {
@@ -60,8 +59,8 @@ const EmployeeIdleTime: React.FC = () => {
       isWorking: false,
       notPresent: false,
       trackingId: "TRK-01",
-      zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=21",
+      zone: "Zone A",
+      snapshot: "/img/employee-idle-time-monitoring/i1.png",
       cameraid: "CAM-I01",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:55",
@@ -72,50 +71,13 @@ const EmployeeIdleTime: React.FC = () => {
       isWorking: true,
       notPresent: false,
       trackingId: "TRK-02",
-      zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=22",
+      zone: "Zone B",
+      snapshot: "/img/employee-idle-time-monitoring/i2.jpg",
       cameraid: "CAM-I02",
       createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-10-08 14:45",
     },
-    {
-      id: 303,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-03",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=23",
-      cameraid: "CAM-I03",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:35",
-    },
-    {
-      id: 304,
-      isIdle: false,
-      isWorking: false,
-      notPresent: true,
-      trackingId: "TRK-04",
-      zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=24",
-      cameraid: "CAM-I04",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:25",
-    },
-    {
-      id: 305,
-      isIdle: true,
-      isWorking: false,
-      notPresent: false,
-      trackingId: "TRK-05",
-      zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=25",
-      cameraid: "CAM-I05",
-      createdAt: getOneHourBefore().fullDate,
-      updatedAt: "2025-10-08 14:15",
-    },
   ];
-
   const recentIdleEvents = backendIdleData.map((item) => {
     const titleParts = [];
 
@@ -233,9 +195,14 @@ const EmployeeIdleTime: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -301,7 +268,7 @@ const EmployeeIdleTime: React.FC = () => {
             label: "Incident",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.incident))
+              new Set(recentIdleEvents.map((v) => v.incident)),
             ),
           },
           {
@@ -315,7 +282,7 @@ const EmployeeIdleTime: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentIdleEvents.map((v) => v.cameraId))
+              new Set(recentIdleEvents.map((v) => v.cameraId)),
             ),
           },
 
@@ -328,7 +295,11 @@ const EmployeeIdleTime: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="employee-idle-time-report"
-        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
+        loading={false}
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
       {/* View Alert Popup */}
 
       <ViewAlertPopup

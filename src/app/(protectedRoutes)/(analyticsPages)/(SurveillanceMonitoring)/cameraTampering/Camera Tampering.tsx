@@ -73,8 +73,8 @@ const CameraTampering: React.FC = () => {
     {
       id: 201,
       tamperingType: "Lens Covered",
-      zone: "Production Floor A",
-      snapshot: "https://picsum.photos/400/200?random=11",
+      zone: "Zone C",
+      snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T01",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -82,35 +82,26 @@ const CameraTampering: React.FC = () => {
     {
       id: 202,
       tamperingType: "Blur Vision",
-      zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Zone A",
+      snapshot: "/img/camera-tampering-detection/blur.jpg",
       cameraid: "CAM-T02",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
-    {
-      id: 203,
-      tamperingType: "Disconnected",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=13",
-      cameraid: "CAM-T03",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 204,
       tamperingType: "Offline",
-      zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Zone B",
+      snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
     },
     {
       id: 205,
-      tamperingType: "Lens Obstructed",
-      zone: "Maintenance Area",
-      snapshot: "https://picsum.photos/400/200?random=15",
+      tamperingType: "Lens Covered",
+      zone: "Zone C",
+      snapshot: "/img/camera-tampering-detection/lenseCover.png",
       cameraid: "CAM-T05",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
@@ -118,26 +109,18 @@ const CameraTampering: React.FC = () => {
     {
       id: 202,
       tamperingType: "Blur Vision",
-      zone: "Welding Station",
-      snapshot: "https://picsum.photos/400/200?random=12",
+      zone: "Zone A",
+      snapshot: "/img/camera-tampering-detection/blur2.jpg",
       cameraid: "CAM-T02",
       alarmTriggered: true,
       createdAt: getOneHourBefore().fullDate,
     },
-    {
-      id: 203,
-      tamperingType: "Disconnected",
-      zone: "Chemical Storage",
-      snapshot: "https://picsum.photos/400/200?random=13",
-      cameraid: "CAM-T03",
-      alarmTriggered: true,
-      createdAt: getOneHourBefore().fullDate,
-    },
+
     {
       id: 204,
       tamperingType: "Offline",
-      zone: "Assembly Line B",
-      snapshot: "https://picsum.photos/400/200?random=14",
+      zone: "Zone B",
+      snapshot: "/img/camera-tampering-detection/offline.jpg",
       cameraid: "CAM-T04",
       alarmTriggered: false,
       createdAt: getOneHourBefore().fullDate,
@@ -225,7 +208,7 @@ const CameraTampering: React.FC = () => {
   };
   const handleViewSingle = (row: Record<string, string | number | boolean>) => {
     console.log("view single row", row);
-    setViewPopupData(row as CameraTamperingViolation );
+    setViewPopupData(row as CameraTamperingViolation);
     setViewPopupOpen(true);
   };
   const KpiCardLoading = false;
@@ -256,9 +239,14 @@ const CameraTampering: React.FC = () => {
             </Typography>
           </Box>
 
-          <TimeFilter onRangeChange={function (range: { start: string; end: string; }): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <TimeFilter
+            onRangeChange={function (range: {
+              start: string;
+              end: string;
+            }): void {
+              throw new Error("Function not implemented.");
+            }}
+          />
         </Box>
         {/* KPI Cards */}
 
@@ -324,7 +312,7 @@ const CameraTampering: React.FC = () => {
             label: "Violation",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.voilation))
+              new Set(recentTamperingEvents.map((v) => v.voilation)),
             ),
           },
           {
@@ -332,7 +320,7 @@ const CameraTampering: React.FC = () => {
             label: "Zone",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.zone))
+              new Set(recentTamperingEvents.map((v) => v.zone)),
             ),
           },
           {
@@ -340,7 +328,7 @@ const CameraTampering: React.FC = () => {
             label: "Cameras",
             type: "select",
             options: Array.from(
-              new Set(recentTamperingEvents.map((v) => v.cameraId))
+              new Set(recentTamperingEvents.map((v) => v.cameraId)),
             ),
           },
           {
@@ -358,7 +346,11 @@ const CameraTampering: React.FC = () => {
         onDownload={handleDownloadSingle}
         onView={handleViewSingle}
         downloadFileName="camera-tampering-report"
-        loading={false} totalCount={0} page={0} rowsPerPage={0}      />
+        loading={false}
+        totalCount={0}
+        page={0}
+        rowsPerPage={0}
+      />
 
       {/* View Alert Popup */}
 

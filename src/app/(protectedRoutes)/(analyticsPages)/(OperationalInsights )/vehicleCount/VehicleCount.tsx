@@ -18,6 +18,7 @@ import ZoneViolations from "@/app/components/organisms/ZoneViolations/ZoneViolat
 import ViewAlertPopup from "@/app/components/molecules/ViewAlertPopup/ViewAlertPopup";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import { getOneHourBefore } from "../../(safetyAndCompliance)/PPEKitDetection/PPEKitDetection";
 const VehicleCount: React.FC = () => {
   interface VehicleCountEvent {
     incident: string;
@@ -98,61 +99,26 @@ const VehicleCount: React.FC = () => {
     {
       id: 201,
       numberDetected: "MH12AB1234",
-      status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=11",
-      zone: "Main Gate A",
+      status: "Exit",
+      validNumber: false,
+      snapshot: "/img/vehicle-count-anpr-gates/v1.jpg",
+      zone: "Zone A",
       camera: "CAM-ENTRY-01",
-      createdAt: "2025-09-23 09:42",
+      createdAt: getOneHourBefore().fullDate,
       updatedAt: "2025-09-23 09:43",
       alarmTriggered: false,
     },
-    {
-      id: 202,
-      numberDetected: "MH14XY7890",
-      status: "Exit",
-      validNumber: false,
-      snapshot: "https://picsum.photos/400/200?random=12",
-      zone: "Exit Gate B",
-      camera: "CAM-EXIT-02",
-      createdAt: "2025-09-23 09:58",
-      updatedAt: "2025-09-23 10:00",
-      alarmTriggered: true,
-    },
+
     {
       id: 203,
       numberDetected: "GJ05TR5678",
       status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=13",
-      zone: "Warehouse Entry",
-      camera: "CAM-ENTRY-03",
-      createdAt: "2025-09-23 10:12",
-      updatedAt: "2025-09-23 10:14",
-      alarmTriggered: false,
-    },
-    {
-      id: 204,
-      numberDetected: "DL09GH4567",
-      status: "Exit",
       validNumber: false,
-      snapshot: "https://picsum.photos/400/200?random=14",
-      zone: "Service Exit",
-      camera: "CAM-EXIT-04",
-      createdAt: "2025-09-23 10:30",
-      updatedAt: "2025-09-23 10:32",
-      alarmTriggered: true,
-    },
-    {
-      id: 205,
-      numberDetected: "MH15PQ2345",
-      status: "Entry",
-      validNumber: true,
-      snapshot: "https://picsum.photos/400/200?random=15",
-      zone: "Visitor Gate",
-      camera: "CAM-ENTRY-05",
-      createdAt: "2025-09-23 11:00",
-      updatedAt: "2025-09-23 11:02",
+      snapshot: "/img/vehicle-count-anpr-gates/v3.png",
+      zone: "Zone B",
+      camera: "CAM-ENTRY-03",
+      createdAt: getOneHourBefore().fullDate,
+      updatedAt: "2025-09-23 10:14",
       alarmTriggered: false,
     },
   ];
